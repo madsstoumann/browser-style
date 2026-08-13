@@ -1,0 +1,91 @@
+{
+  "$schema": "../../../cms/baseline/models/card.schema.json",
+  "id": "product-group-1",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-08-13T09:00:00Z",
+    "updatedAt": "2026-08-13T09:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Commerce"
+  },
+  "fields": {
+    "internalName": "Demo — Product variants (ProductGroup)",
+    "schemaType": "product",
+    "preset": {
+      "$ref": "card-preset/showcase"
+    },
+    "eyebrow": "Dresses",
+    "headline": "Persistence Silk Gown",
+    "summary": "Printed silk-satin, bias cut and fully lined — in two colourways and three sizes.",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/dress-1.png",
+        "alt": "Persistence silk gown, ivory colourway"
+      }
+    ],
+    "actions": [
+      {
+        "link": {
+          "url": "#",
+          "text": "Choose size"
+        },
+        "style": "primary"
+      }
+    ],
+    "details": {
+      "subtype": "ProductGroup",
+      "price": {
+        "current": 249,
+        "currency": "USD"
+      },
+      "availability": "In stock",
+      "rating": {
+        "value": 4.7,
+        "count": 312,
+        "max": 5
+      },
+      "variants": {
+        "variesBy": ["color", "size"],
+        "productGroupID": "PSG-01",
+        "items": [
+          {
+            "name": "Persistence Silk Gown — Ivory, S",
+            "sku": "PSG-01-IVY-S",
+            "color": "Ivory",
+            "size": "S",
+            "price": 249,
+            "currency": "USD"
+          },
+          {
+            "name": "Persistence Silk Gown — Ivory, M",
+            "sku": "PSG-01-IVY-M",
+            "color": "Ivory",
+            "size": "M",
+            "price": 249,
+            "currency": "USD"
+          },
+          {
+            "name": "Persistence Silk Gown — Midnight, M",
+            "sku": "PSG-01-MDN-M",
+            "color": "Midnight",
+            "size": "M",
+            "price": 269,
+            "currency": "USD"
+          },
+          {
+            "name": "Persistence Silk Gown — Midnight, L",
+            "sku": "PSG-01-MDN-L",
+            "color": "Midnight",
+            "size": "L",
+            "price": 269,
+            "currency": "USD",
+            "availability": "Out of stock"
+          }
+        ]
+      }
+    },
+    "tags": ["Silk", "Eveningwear"]
+  }
+}

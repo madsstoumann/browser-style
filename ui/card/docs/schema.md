@@ -63,6 +63,19 @@ key cannot distinguish a plain post from a forum posting. `HEADLINE_PROP_BY_ITEM
 seam, consulted before the `schemaType`-keyed `HEADLINE_PROP`. Populate it only for subtypes
 with a documented difference; a subtype that inherits cleanly still needs no renderer code.
 
+Two shapes of difference exist, and both resolve from the itemtype — neither reads
+`details.subtype` directly:
+
+| The subtype needs… | Seam | Case |
+|---|---|---|
+| a different **property spelling** for something the base already emits | `HEADLINE_PROP_BY_ITEMTYPE` | `DiscussionForumPosting` → `headline` |
+| **additional properties** that are invalid on the base type | a gate on `resolveItemtype(fields)` inside the `DETAILS` renderer | `ProductGroup` → `hasVariant` ([§ Product](#product--product-subtype-productgroup)) |
+
+The second shape is the dangerous one: emitting a subtype-only property while the `itemtype`
+stayed on the base is *invalid markup*, not merely unspecific. Gating it on the resolved
+itemtype — the same call that wrote the attribute — is what makes the two impossible to
+disagree.
+
 **The value is allowlisted, never taken verbatim.** Two reasons, both load-bearing:
 
 1. **Security.** The resolved string is interpolated into `itemtype="https://schema.org/…"`.
@@ -132,9 +145,61 @@ As Article, plus a “Breaking” `<ui-chip>` on the media and `dateModified`. S
 
 Envelope `summary` as `<ui-quote>` wrapping `<blockquote itemprop="text">` + author. Proposed part: `quote`.
 
-### Product — `Product`
+### Product — `Product` (subtype `ProductGroup`)
 
 Offer + AggregateRating, discount `<ui-sticker>`, save toggle. Proposed parts: `price`, `rating`.
+
+**Variants — `ProductGroup`.** Google's *Product variants* rich result is **not a new card type**:
+it is this type plus `details.subtype: "ProductGroup"` plus an optional `details.variants` block. A
+variant group carries every property the plain product card already emits. Demo instance:
+[`data/product-group.json`](../data/product-group.json).
+
+```json
+"details": {
+  "subtype": "ProductGroup",
+  "variants": {
+    "variesBy": ["color", "size"],
+    "productGroupID": "NL-COAT",
+    "items": [{ "name": "Northline Wool Coat — Forest, S", "sku": "NL-COAT-FRS-S", "color": "Forest", "size": "S", "price": 249, "currency": "USD", "availability": "Out of stock" }]
+  }
+}
+```
+
+Three points follow Google's live documentation rather than intuition:
+
+1. **`variesBy` takes full schema.org URLs**, not bare property names — it references a property
+   "through their full Schema.org URL (for example, `https://schema.org/color`)". Content authors
+   write the bare name; the renderer prefixes it.
+2. **`productGroupID` belongs to the group alone.** With nested `hasVariant` it "doesn't need to be
+   repeated under the `Product` properties using `inProductGroupWithID`" — so the renderer never
+   emits `inProductGroupWithID`. (That property is for the *unnested* form, which this engine does
+   not produce.)
+3. **Each variant needs its own `sku`** (or `gtin`) and carries the varying properties itself.
+
+The axis vocabulary is an allowlist — `color`, `size`, `material`, `pattern` — and it is the **same
+list on both sides**: what `variesBy` may name is exactly what an item may emit. An axis a variant
+cannot carry would advertise a property that appears nowhere in the markup, so unknown axes are
+dropped. (Google also documents `suggestedAge`/`suggestedGender`; they describe an audience rather
+than a per-item property, and the variant shape has no field for them.)
+
+**The gate is the resolved itemtype, never `details.subtype`.** `hasVariant`, `variesBy` and
+`productGroupID` are `ProductGroup`-**only** properties. `details.subtype` and `details.variants`
+are two independently typo-able fields that must agree, so nothing checks them against each other —
+the renderer instead gates the block on `resolveItemtype(fields) === 'ProductGroup'`, the same call
+that wrote the `itemtype` attribute. No input can therefore hang these properties on an
+`itemtype="…/Product"`.
+
+When `variants` is present but the type did not sharpen, the block is dropped — but **not
+silently**: a fixed comment takes its place, so an author whose variants vanished can see why in
+view-source instead of guessing.
+
+```html
+<!-- variants ignored: details.subtype is not ProductGroup -->
+```
+
+The comment is a fixed string with no interpolated data, and it ships only in the mis-authored
+case. It is the loudest signal available to a pure string function with no error channel: `render.js`
+degrades rather than throws, so raising here would be a new failure mode for one authoring slip.
 
 ### Event — `Event`
 

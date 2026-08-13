@@ -862,8 +862,20 @@ const availabilityHue = (availability) =>
 const availabilityUrl = (availability) =>
 	SCHEMA + (/(in)/i.test(availability || '') ? 'InStock' : /(low|limited)/i.test(availability || '') ? 'LimitedAvailability' : 'OutOfStock');
 
+/* ProductGroup variant axes. A variesBy value names a property Google reads FROM the
+   variants, so one allowlist drives both: what variesBy may say and what an item emits.
+   Allowlisted for the same two reasons as details.subtype — docs/schema.md § Subtypes. */
+const VARIANT_AXES = ['color', 'size', 'material', 'pattern'];
+
+/* Nested hasVariant needs no inProductGroupWithID, and variesBy takes FULL schema.org
+   URLs, not bare property names. Docs: docs/schema.md § Product */
+const variantsPart = (variants) =>
+	meta('productGroupID', variants.productGroupID)
+	+ (variants.variesBy || []).filter((axis) => VARIANT_AXES.includes(axis)).map((axis) => meta('variesBy', SCHEMA + axis)).join('')
+	+ `<ul data-part="list">${variants.items.map((item) => `<li${scope('hasVariant', 'Product')}><span itemprop="name">${esc(item.name)}</span>${meta('sku', item.sku)}${VARIANT_AXES.map((axis) => meta(axis, item[axis])).join('')}${item.price == null ? '' : `<span${scope('offers', 'Offer')}>${meta('priceCurrency', item.currency)}${meta('availability', availabilityUrl(item.availability || 'in stock'))} <data itemprop="price" value="${esc(item.price)}">${fmtPrice(item.currency, item.price)}</data></span>`}</li>`).join('')}</ul>`;
+
 const DETAILS = {
-	product(d) {
+	product(d, fields) {
 		/* PDP order: rating under the title, then price, then stock state */
 		let html = ratingPart('aggregateRating', 'AggregateRating', d.rating);
 		if (d.price) {
@@ -877,6 +889,14 @@ const DETAILS = {
 		if (d.availability) html += `<p data-part="meta"><ui-chip theme="pale ${availabilityHue(d.availability)}">${esc(d.availability)}</ui-chip></p>`;
 		/* sku is machine-readable only — no visible number on the card */
 		if (d.sku) html += meta('sku', d.sku);
+		/* hasVariant/variesBy/productGroupID are ProductGroup-ONLY properties, so the gate is
+		   the RESOLVED itemtype — never d.subtype, which could disagree with it and hang them
+		   on a plain Product. Skipping stays visible. Docs: docs/schema.md § Product */
+		if (d.variants?.items?.length) {
+			html += resolveItemtype(fields) === 'ProductGroup'
+				? variantsPart(d.variants)
+				: '<!-- variants ignored: details.subtype is not ProductGroup -->';
+		}
 		return html;
 	},
 

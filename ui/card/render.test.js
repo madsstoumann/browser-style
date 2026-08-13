@@ -2,7 +2,7 @@
  * Complements render.snapshot.js — the snapshot catches CHANGES, these assert CORRECTNESS. */
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
-import renderCard, { resolveItemtype } from './render.js';
+import renderCard, { resolveItemtype, SUBTYPES } from './render.js';
 
 /* Render a bare fields object with no preset — the DEFAULT_PRESET stack card. */
 export const render = (fields) => renderCard({ fields });
@@ -32,6 +32,113 @@ describe('review', () => {
 		/* positives: absence alone passes if the field simply stops rendering */
 		assert.match(html, /&lt;script&gt;alert\(1\)&lt;\/script&gt;/, 'headline present and escaped');
 		assert.match(html, /&quot;&gt;&lt;img src=x onerror=alert\(1\)&gt;/, 'name present and escaped');
+	});
+});
+
+/* ProductGroup is the `product` type + subtype + a variants block — not a new card type.
+   Docs: docs/schema.md § Product */
+describe('product variants', () => {
+	const variants = {
+		variesBy: ['color', 'size'],
+		productGroupID: 'AB123',
+		items: [
+			{ name: 'Small green coat', sku: 'AB123-S-GRN', color: 'Green', size: 'small', price: 39.99, currency: 'USD' },
+			{ name: 'Large green coat', sku: 'AB123-L-GRN', color: 'Green', size: 'large', price: 44.99, currency: 'USD', availability: 'Out of stock' }
+		]
+	};
+	const group = (extra = {}) => render({ schemaType: 'product', headline: 'Wool coat', details: { subtype: 'ProductGroup', variants, ...extra } });
+	const count = (html, needle) => html.split(needle).length - 1;
+
+	test('the subtype sharpens the itemtype to ProductGroup', () => {
+		assert.match(group(), /itemtype="https:\/\/schema\.org\/ProductGroup"/);
+	});
+
+	test('hasVariant appears once per item, variesBy once per axis', () => {
+		const html = group();
+		assert.equal(count(html, 'itemprop="hasVariant" itemscope itemtype="https://schema.org/Product"'), 2);
+		assert.equal(count(html, 'itemprop="variesBy"'), 2);
+		assert.equal(count(html, '<meta itemprop="productGroupID" content="AB123">'), 1);
+		assert.match(html, /itemprop="name">Small green coat</);
+		assert.match(html, /<meta itemprop="sku" content="AB123-S-GRN">/);
+		assert.match(html, /<meta itemprop="color" content="Green">/);
+		assert.match(html, /<meta itemprop="size" content="small">/);
+	});
+
+	/* Google: variesBy references a property "through their full Schema.org URL" */
+	test('variesBy carries full schema.org URLs, never bare property names', () => {
+		const html = group();
+		assert.match(html, /<meta itemprop="variesBy" content="https:\/\/schema\.org\/color">/);
+		assert.match(html, /<meta itemprop="variesBy" content="https:\/\/schema\.org\/size">/);
+		assert.ok(!html.includes('content="color"'), 'a bare property name is not a variesBy value');
+	});
+
+	/* the axis list is an allowlist: it also names what the items may emit */
+	test('an axis the renderer cannot emit is dropped from variesBy', () => {
+		const html = group({ variants: { ...variants, variesBy: ['color', 'flavour'] } });
+		assert.equal(count(html, 'itemprop="variesBy"'), 1);
+		assert.ok(!html.includes('flavour'), 'an unknown axis never reaches the output');
+	});
+
+	test('each variant offer carries currency, availability and a machine price', () => {
+		const html = group();
+		assert.equal(count(html, 'itemprop="offers" itemscope itemtype="https://schema.org/Offer"'), 2);
+		assert.match(html, /<data itemprop="price" value="39\.99">\$39\.99<\/data>/);
+		assert.match(html, /<meta itemprop="availability" content="https:\/\/schema\.org\/InStock">/);
+		assert.match(html, /<meta itemprop="availability" content="https:\/\/schema\.org\/OutOfStock">/);
+	});
+
+	/* THE gate. hasVariant/variesBy/productGroupID are ProductGroup-ONLY properties, so the
+	   block is gated on the RESOLVED itemtype — details.subtype and details.variants can
+	   never disagree. Skipping is not silent: a fixed comment says why they vanished. */
+	const IGNORED = '<!-- variants ignored: details.subtype is not ProductGroup -->';
+	test('variants on a plain Product are skipped, with a diagnostic', () => {
+		const html = render({ schemaType: 'product', headline: 'Wool coat', details: { variants } });
+		assert.match(html, /itemtype="https:\/\/schema\.org\/Product"/);
+		assert.ok(!html.includes('hasVariant'), 'hasVariant is not a Product property');
+		assert.ok(!html.includes('variesBy'), 'variesBy is not a Product property');
+		assert.ok(!html.includes('productGroupID'), 'productGroupID is not a Product property');
+		assert.ok(html.includes(IGNORED), 'the skip must leave a signal in the output');
+	});
+	test('variants under a sibling product subtype are skipped too', () => {
+		const html = render({ schemaType: 'product', headline: 'Coupe', details: { subtype: 'Vehicle', variants } });
+		assert.match(html, /itemtype="https:\/\/schema\.org\/Vehicle"/);
+		assert.ok(!html.includes('hasVariant'));
+		assert.ok(html.includes(IGNORED));
+	});
+	/* an unallowlisted subtype falls back to Product — the gate must catch that too */
+	test('a misspelled ProductGroup subtype does not smuggle the block through', () => {
+		const html = render({ schemaType: 'product', headline: 'Coat', details: { subtype: 'Productgroup', variants } });
+		assert.match(html, /itemtype="https:\/\/schema\.org\/Product"/);
+		assert.ok(!html.includes('hasVariant'));
+		assert.ok(html.includes(IGNORED));
+	});
+	/* sweep the whole product allowlist: the block follows the RESOLVER, so exactly the
+	   subtypes that resolve to ProductGroup get it — no hand-listed exceptions */
+	test('across every product subtype, hasVariant tracks the resolved itemtype', () => {
+		for (const subtype of [...SUBTYPES.product, 'Productgroup', 'ProductGroup ', undefined]) {
+			const fields = { schemaType: 'product', headline: 'X', details: { subtype, variants } };
+			assert.equal(render(fields).includes('hasVariant'), resolveItemtype(fields) === 'ProductGroup', String(subtype));
+		}
+	});
+	test('the diagnostic never rides a correctly typed group', () => {
+		assert.ok(!group().includes(IGNORED));
+		assert.ok(!render({ schemaType: 'product', headline: 'Coat', details: { sku: 'X' } }).includes('variants ignored'));
+	});
+
+	test('escapes hostile input in a variant field', () => {
+		const html = group({
+			variants: {
+				...variants,
+				productGroupID: '"><script>alert(1)</script>',
+				items: [{ name: '"><img src=x onerror=alert(1)>', sku: '</ul><script>x</script>', color: 'Green', price: 1, currency: 'USD' }]
+			}
+		});
+		assert.ok(!html.includes('<script>'), 'raw <script> must never reach output');
+		assert.ok(!html.includes('<img'), 'attribute breakout must be escaped');
+		/* positives: absence alone passes if the field simply stops rendering */
+		assert.match(html, /itemprop="name">&quot;&gt;&lt;img src=x onerror=alert\(1\)&gt;</, 'name present and escaped');
+		assert.match(html, /content="&lt;\/ul&gt;&lt;script&gt;x&lt;\/script&gt;"/, 'sku present and escaped');
+		assert.match(html, /content="&quot;&gt;&lt;script&gt;alert\(1\)&lt;\/script&gt;"/, 'productGroupID present and escaped');
 	});
 });
 
