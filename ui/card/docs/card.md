@@ -41,12 +41,12 @@ never had.
 
 | File | Role |
 |------|------|
-| [`cms/baseline/models/card.schema.json`](../../../cms/baseline/models/card.schema.json) | **Content model** (UCM). Structured envelope + `schemaType` select (35 values) + `preset` reference + one `details` object per type |
+| [`cms/baseline/models/card.schema.json`](../../../cms/baseline/models/card.schema.json) | **Content model** (UCM). Structured envelope + `schemaType` select (46 values) + `preset` reference + one `details` object per type |
 | [`cms/baseline/models/card-preset.schema.json`](../../../cms/baseline/models/card-preset.schema.json) | **Preset model** (UCM). The attributes on the host element itself |
 | [`data/card.presets.json`](../data/card.presets.json) | Preset instances — **25** named looks |
 | [`data/*.json`](../data) | 37 UCF card instances (one per schemaType + two presentation-only blocks) + [`index.json`](../data/index.json) manifest |
 | [`render.js`](../render.js) | Rendering engine: UCF + presets → DOM with microdata |
-| [`render.html`](../demo/render.html) | Live demo — all 35 typed cards rendered from data |
+| [`render.html`](../demo/render.html) | Live demo — the 51 cards of `data/index.json` rendered from data |
 | [`schema.html`](../demo/schema.html) | Hand-authored reference markup for every type (the spec render.js follows) |
 | [`content.css`](../content.css) | `<ui-content>` parts — all parts styled (incl. the 8 once-proposed structured parts) |
 
@@ -60,7 +60,7 @@ lives in one `details` object discriminated by `schemaType`.
 | Field | Type | Notes |
 |-------|------|-------|
 | `internalName` | string | CMS editor label (required, invariant) |
-| `schemaType` | select | 35 values — drives itemtype + microdata mapping |
+| `schemaType` | select | 46 values — drives itemtype + microdata mapping |
 | `preset` | reference → `card-preset` | The look & feel. Swap to restyle |
 | `eyebrow` | string | Kicker; → `articleSection`/`category`/`recipeCategory`/`about`/`industry` |
 | `headline` | string | → `headline` (article/news), `title` (job), `name` (rest) |
