@@ -56,6 +56,7 @@
     }
     &:where([media*="mrk(tml)"]) {
       --ui-carousel-band: var(--ui-carousel-tml-band, 4.25rem);
+      --ui-carousel-below-gap: 1rem;
       --ui-carousel-marker-inset: var(--ui-carousel-tml-inset, var(--ui-carousel-overlay-gap));
       &:where([media*="mrk(sm)"]) {
         --ui-carousel-tml-col: 5.5rem;
@@ -79,7 +80,7 @@
         --ui-carousel-tml-line-width: var(--border-width-heavy, 3px);
       }
     }
-    &:where([media*="mrk(tml)"]:is([media*="mrk(blw)"], [media*="mrk(abv)"], [media*="nav(blw)"], [media*="nav(abv)"])) {
+    &:where([media*="mrk(tml)"]:is([media*="mrk(blw)"], [media*="mrk(abv)"], [media*="nav(blw)"], [media*="nav(abv)"], [media*="mrk(rail)"])) {
       --ui-carousel-tml-color: color-mix(in oklab, CanvasText 65%, transparent);
       --ui-carousel-tml-color-current: CanvasText;
       --ui-carousel-tml-dot: color-mix(in oklab, CanvasText 45%, transparent);
@@ -615,11 +616,23 @@
       content: none;
     }
     :where(ui-card, ui-reveal, ui-media, lay-out[overflow]) {
+      &:where([media*="mrk(blw)"]) {
+        --ui-carousel-arrow-top: calc(anchor(center) - (var(--ui-carousel-below-gap, 0.5rem) + var(--ui-carousel-band, 2.75rem)) / 2 - var(--ui-carousel-arrow-size) / 2);
+      }
+      &:where([media*="mrk(abv)"]) {
+        --ui-carousel-arrow-top: calc(anchor(center) + (var(--ui-carousel-above-gap, 0.5rem) + var(--ui-carousel-band, 2.75rem)) / 2 - var(--ui-carousel-arrow-size) / 2);
+      }
       &:where([media*="arw(ts)"], [media*="arw(tc)"], [media*="arw(te)"]) {
         --ui-carousel-arrow-top: calc(anchor(top) + var(--ui-carousel-overlay-gap));
       }
       &:where([media*="arw(bs)"], [media*="arw(bc)"], [media*="arw(be)"]) {
         --ui-carousel-arrow-top: calc(anchor(bottom) - var(--ui-carousel-overlay-gap) - var(--ui-carousel-arrow-size));
+      }
+      &:where([media*="mrk(abv)"]):where([media*="arw(ts)"], [media*="arw(tc)"], [media*="arw(te)"]) {
+        --ui-carousel-arrow-top: calc(anchor(top) + var(--ui-carousel-above-gap, 0.5rem) + var(--ui-carousel-band, 2.75rem) + var(--ui-carousel-overlay-gap));
+      }
+      &:where([media*="mrk(blw)"]):where([media*="arw(bs)"], [media*="arw(bc)"], [media*="arw(be)"]) {
+        --ui-carousel-arrow-top: calc(anchor(bottom) - var(--ui-carousel-below-gap, 0.5rem) - var(--ui-carousel-band, 2.75rem) - var(--ui-carousel-overlay-gap) - var(--ui-carousel-arrow-size));
       }
     }
     :where(ui-card, ui-reveal):where([media*="arw(set)"]) :where(ui-media)::scroll-button(inline-start),
@@ -699,12 +712,6 @@
       }
     }
     :where(ui-card, ui-reveal, ui-media, lay-out[overflow]) {
-      &:where([media*="mrk(blw)"]) {
-        --ui-carousel-arrow-top: calc(anchor(center) - (var(--ui-carousel-below-gap, 0.5rem) + var(--ui-carousel-band, 2.75rem)) / 2 - var(--ui-carousel-arrow-size) / 2);
-      }
-      &:where([media*="mrk(abv)"]) {
-        --ui-carousel-arrow-top: calc(anchor(center) + (var(--ui-carousel-above-gap, 0.5rem) + var(--ui-carousel-band, 2.75rem)) / 2 - var(--ui-carousel-arrow-size) / 2);
-      }
       &:where([media*="nav(blw)"], [media*="arw(blw)"]) {
         --ui-carousel-arrow-top: calc(anchor(bottom) - var(--ui-carousel-band) / 2 - var(--ui-carousel-arrow-size) / 2);
       }
@@ -849,9 +856,6 @@
     }
     :where(ui-card, ui-reveal):where([media*="axis(y)"][media*="mrk(rail)"]) :where(ui-media),
     :where(ui-media, lay-out[overflow]):where([media*="axis(y)"][media*="mrk(rail)"]) {
-      &::scroll-button(*) {
-        content: none;
-      }
       &::scroll-marker-group {
         align-items: center;
         align-self: auto;
@@ -874,6 +878,53 @@
     :where(ui-media, lay-out[overflow]):where([media*="axis(y)"][media*="mrk(rail)"]) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker {
       flex: 0 1 auto;
       min-block-size: var(--ui-carousel-thumb-min, 2.5rem);
+    }
+    :where(ui-card, ui-reveal):where([media*="axis(y)"][media*="mrk(tml)"][media*="mrk(rail)"]) :where(ui-media)::scroll-marker-group,
+    :where(ui-media, lay-out[overflow]):where([media*="axis(y)"][media*="mrk(tml)"][media*="mrk(rail)"])::scroll-marker-group {
+      align-items: stretch;
+      gap: 0;
+      inline-size: auto;
+      scrollbar-width: var(--ui-carousel-tml-group-scrollbar, none);
+    }
+    :where(ui-card, ui-reveal):where([media*="axis(y)"][media*="mrk(tml)"][media*="mrk(rail)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker,
+    :where(ui-media, lay-out[overflow]):where([media*="axis(y)"][media*="mrk(tml)"][media*="mrk(rail)"]) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker {
+      align-content: center;
+      background:
+        radial-gradient(
+          circle at var(--_dir-s, left) var(--_tml-c) top 50%,
+          var(--ui-carousel-tml-dot-bg, #0000) 0 calc(var(--_tml-r) - 0.25px),
+          var(--ui-carousel-tml-dot, rgb(255 255 255 / 0.6)) calc(var(--_tml-r) + 0.25px) calc(var(--_tml-c) - 0.25px),
+          #0000 calc(var(--_tml-c) + 0.25px)) no-repeat,
+        var(--_tml-rail-img) no-repeat var(--_dir-s, left) var(--_tml-rail-y) top 0 / var(--ui-carousel-tml-line-width, 2px) calc(100% + 1px);
+      flex: 0 0 var(--ui-carousel-tml-row, calc(var(--ui-carousel-tml-col, 7rem) / 2));
+      min-block-size: 0;
+      padding-block: 0;
+      padding-inline: calc(var(--ui-carousel-tml-dot-size, 0.7rem) + var(--ui-carousel-tml-gap, 0.5rem)) var(--ui-carousel-tml-padding-inline, 0.25rem);
+      text-align: start;
+    }
+    :where(ui-card, ui-reveal):where([media*="axis(y)"][media*="mrk(tml)"][media*="mrk(rail)"]) :where(ui-media) > :first-child::scroll-marker,
+    :where(ui-media, lay-out[overflow]):where([media*="axis(y)"][media*="mrk(tml)"][media*="mrk(rail)"]) > :first-child::scroll-marker {
+      --_tml-rail-img: linear-gradient(#0000 50%, var(--ui-carousel-tml-rail, rgb(255 255 255 / 0.35)) 50%);
+    }
+    :where(ui-card, ui-reveal):where([media*="axis(y)"][media*="mrk(tml)"][media*="mrk(rail)"]) :where(ui-media) > :last-child::scroll-marker,
+    :where(ui-media, lay-out[overflow]):where([media*="axis(y)"][media*="mrk(tml)"][media*="mrk(rail)"]) > :last-child::scroll-marker {
+      --_tml-rail-img: linear-gradient(var(--ui-carousel-tml-rail, rgb(255 255 255 / 0.35)) 50%, #0000 50%);
+    }
+    :where(ui-card, ui-reveal):where([media*="axis(y)"][media*="mrk(tml)"][media*="mrk(rail)"]) :where(ui-media) > :only-child::scroll-marker,
+    :where(ui-media, lay-out[overflow]):where([media*="axis(y)"][media*="mrk(tml)"][media*="mrk(rail)"]) > :only-child::scroll-marker {
+      --_tml-rail-img: none;
+    }
+    :where(ui-card, ui-reveal):where([media*="axis(y)"][media*="mrk(tml)"][media*="mrk(rail)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
+    :where(ui-media, lay-out[overflow]):where([media*="axis(y)"][media*="mrk(tml)"][media*="mrk(rail)"]) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
+      background:
+        radial-gradient(
+          circle at var(--_dir-s, left) var(--_tml-c) top 50%,
+          var(--ui-carousel-tml-dot-current, #fff) 0 calc(var(--_tml-c) - 0.25px),
+          #0000 calc(var(--_tml-c) + 0.25px)) no-repeat,
+        var(--_tml-rail-img) no-repeat var(--_dir-s, left) var(--_tml-rail-y) top 0 / var(--ui-carousel-tml-line-width, 2px) calc(100% + 1px);
+      padding-block: 0;
+      padding-inline: calc(var(--ui-carousel-tml-dot-size, 0.7rem) + var(--ui-carousel-tml-gap, 0.5rem)) var(--ui-carousel-tml-padding-inline, 0.25rem);
+      text-align: start;
     }
     :where(ui-card, ui-reveal):where([media*="mrk(ts)"]) :where(ui-media)::scroll-marker-group,
     :where(ui-media, lay-out[overflow]):where([media*="mrk(ts)"])::scroll-marker-group,
@@ -1023,6 +1074,16 @@
       top: anchor(center);
       bottom: auto;
       transform: translateY(-50%);
+    }
+    :where(ui-card, ui-reveal):where(:is([media*="mrk(lbl)"], [media*="mrk(tml)"]):is([media*="mrk(blw)"], [media*="nav(blw)"])) :where(ui-media)::scroll-marker-group,
+    :where(ui-media, lay-out[overflow]):where(:is([media*="mrk(lbl)"], [media*="mrk(tml)"]):is([media*="mrk(blw)"], [media*="nav(blw)"]))::scroll-marker-group {
+      top: calc(anchor(bottom) - var(--ui-carousel-band, 2.75rem));
+      bottom: auto;
+    }
+    :where(ui-card, ui-reveal):where(:is([media*="mrk(lbl)"], [media*="mrk(tml)"]):is([media*="mrk(abv)"], [media*="nav(abv)"])) :where(ui-media)::scroll-marker-group,
+    :where(ui-media, lay-out[overflow]):where(:is([media*="mrk(lbl)"], [media*="mrk(tml)"]):is([media*="mrk(abv)"], [media*="nav(abv)"]))::scroll-marker-group {
+      top: anchor(top);
+      bottom: auto;
     }
     :where(ui-card, ui-reveal):where([media*="mrk(bar)"]) :where(ui-media)::scroll-marker-group,
     :where(ui-media, lay-out[overflow]):where([media*="mrk(bar)"])::scroll-marker-group {

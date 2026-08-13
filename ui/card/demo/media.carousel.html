@@ -707,7 +707,32 @@
 	<h3 id="markertimeline">Timeline — <code>mrk(tml)</code></h3>
 	<p><code>mrk(tml)</code> turns the markers into a timeline: a dot per slide on one continuous rail, labelled with the slide's <code>data-date</code>. The <code>aria-label</code> stays the accessible name, so a node shows <code>2016</code> while a screen reader hears the whole entry. Slides are tag-agnostic — mix images, video and themed <code>&lt;ui-content&gt;</code> plates.</p>
 	<lay-out>
-		<ui-media class="tml-accent" media="asr(16/9) rds(md) clip nav(mrk) mrk(tml) mrk(blw)">
+		<ui-media class="tml-accent" media="asr(16/9) rds(md) clip nav mrk(tml) mrk(blw) arw(set) arw(be)">
+			<ui-content class="tml-slide" role="group" theme="slate ink" content="pad(xl) scl(lg) eb(med)" data-date="2016" aria-label="2016 — Founded in a shared office in Copenhagen">
+				<small data-part="eyebrow">Founded</small>
+				<h3 data-part="headline">Two people, one stylesheet</h3>
+				<p data-part="summary">A shared office in Copenhagen, a single CSS file, and a stubborn conviction that the platform was enough.</p>
+			</ui-content>
+			<img src="/assets/images/websummit.png" alt="2018 — First conference talk" data-date="2018" decoding="async" loading="lazy">
+			<video src="/assets/video/city.mp4" poster="/assets/images/city.png" preload="none" muted loop playsinline data-date="2020" aria-label="2020 — The team goes fully remote"></video>
+			<ui-content class="tml-slide" role="group" theme="accent ink" content="pad(xl) scl(lg) eb(med)" data-date="2022" aria-label="2022 — The design token system ships">
+				<small data-part="eyebrow">Milestone</small>
+				<h3 data-part="headline">One vocabulary, 148 components</h3>
+				<p data-part="summary">The token system lands and every component is rebuilt on it — the first release where the parts genuinely share a language.</p>
+			</ui-content>
+			<img src="/assets/images/hubble.png" alt="2024 — The layout system is rewritten" data-date="2024" decoding="async" loading="lazy">
+			<ui-content class="tml-slide" role="group" theme="green ink" content="pad(xl) scl(lg) eb(med)" data-date="2026" aria-label="2026 — v4: the unified card engine ships">
+				<small data-part="eyebrow">Today</small>
+				<h3 data-part="headline">v4 — one card engine</h3>
+				<p data-part="summary">Articles, products, events and recipes all render from the same two primitives. No JavaScript required.</p>
+			</ui-content>
+		</ui-media>
+	</lay-out>
+
+	<h4>Vertical — <code>axis(y) mrk(tml) mrk(rail)</code></h4>
+	<p>On a vertical scroller the timeline becomes a <em>rail</em>: one vertical stroke through the dots at the inline-start edge, the <code>data-date</code> label beside each dot. Same node vocabulary — <code>mrk(sm..xl)</code> scales dot, label and row together. Arrows are ordinary: bare <code>nav</code> keeps the up/down pair (here stacked top-end via <code>arw(set) arw(te)</code>), <code>nav(mrk)</code> drops them.</p>
+	<lay-out>
+		<ui-media class="tml-accent" media="asr(16/9) rds(md) clip axis(y) nav mrk(tml) mrk(rail) arw(set) arw(te)">
 			<ui-content class="tml-slide" role="group" theme="slate ink" content="pad(xl) scl(lg) eb(med)" data-date="2016" aria-label="2016 — Founded in a shared office in Copenhagen">
 				<small data-part="eyebrow">Founded</small>
 				<h3 data-part="headline">Two people, one stylesheet</h3>

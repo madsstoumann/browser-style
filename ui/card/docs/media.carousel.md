@@ -76,7 +76,7 @@ media.md.)
 | `mrk(tml)`  | CSS | **Timeline** markers — a dot per slide on one continuous rail, labelled with the slide's `data-date` (`content: attr(data-date)`; the slide's `aria-label` stays the accessible name). Dot + rail are two background layers on the marker. Positions with the same 9-grid cells; styled via `--ui-carousel-tml-*`. Pair with `mrk(blw)`/`nav(blw)` for a band (the ink then defaults to `CanvasText`) |
 | `mrk(tmb)`| CSS | Image thumbnails; per-slide `--ui-carousel-thumb-url`; active thumb has a bottom timer stripe. Overlay in a corner, or `+ mrk(blw)`/`nav(blw)` for a gallery **filmstrip band** below — band auto-sizes to the thumb; image keeps `asr()` (`box-sizing: content-box`) and is rounded on all 4 corners to `rds()` |
 | `mrk(ts)` `mrk(te)` `mrk(bs)` `mrk(be)` | CSS | Corner placement for the overlay marker-group — logical (top-start / top-end / bottom-start / bottom-end). Center row `mrk(cs)` `mrk(cc)` `mrk(ce)` completes the 9-grid. Inset via `--ui-carousel-marker-inset` |
-| `mrk(rail)` | CSS | With `axis(y)` + `mrk(tmb)`: vertical thumbnail rail **beside** the media (inline-start; right in RTL). Reserves inline space (`padding-inline-start` + `content-box`) so the image keeps `asr()`; arrows dropped; thumbs shrink to `--ui-carousel-thumb-min` then the rail scrolls. Width `--ui-carousel-rail` |
+| `mrk(rail)` | CSS | With `axis(y)` + `mrk(tmb)`: vertical thumbnail rail **beside** the media (inline-start; right in RTL). Reserves inline space (`padding-inline-start` + `content-box`) so the image keeps `asr()`; arrows follow `nav` as usual (`nav(mrk)` drops them); thumbs shrink to `--ui-carousel-thumb-min` then the rail scrolls. Width `--ui-carousel-rail` |
 | `mrk(sbr)` | CSS | **System bar (WIP)** — styles the scroller's **real** scrollbar as a full-width bottom bar instead of drawing markers, so it is natively draggable with zero JS. One central `--ui-carousel-sbr-*` set (`-track` `-thumb` `-size` `-inset` `-radius` `-track-radius` `-thumb-radius` `-gap`) feeds both the standard (Firefox `scrollbar-color`) and `::-webkit-scrollbar` paths; `content-box` like `mrk(tmb)` so the bar is added outside the `asr()` image |
 | `tmb(<ratio>)` | CSS | Thumbnail aspect-ratio (default `4/3`): `1/1 · 4/3 · 3/4 · 16/9 · 3/2 · 2/3` (slash, mirrors `asr()`). Sets `--ui-carousel-thumb-ratio` (+ `-ratio-n`, the numeric form the `mrk(rail)` width calc uses) |
 | `mrk(xl)`   | CSS | Marker size 1rem |
@@ -378,10 +378,29 @@ mechanism follows from the markup shape.
   so they reuse the same two mechanisms: the **named anchor** (`--ui-carousel-timeline`) for
   the `anchor-size()` width cap plus `overflow-x: auto`, and the **height-agnostic
   re-anchoring** of the bottom/centre cells. The band is a plain token
-  (`--ui-carousel-tml-band`) because auto-height text can't be measured. Segments are
+  (`--ui-carousel-tml-band`) because auto-height text can't be measured.
+  **In a band (`mrk(blw|abv)`/`nav(blw|abv)`) the group is TOP-anchored to the band edge**
+  instead — bottom-anchoring would let the dot rail drift per `mrk(sm..xl)` (node height =
+  dot + gap + label, so a pinned bottom pushes the dot up as the node grows), and in an
+  `abv` band it left the band empty entirely. Top-anchored, the rail holds still across
+  sizes and labels grow down into the band — which is also what the polyfill's stretched
+  band row already did, so both paths agree by construction. Segments are
   visually seamless like `mrk(bar)`'s, so a focused node gets its own inset ring, and
   `:target-current` repeats the **full** geometry (same Chrome cascade quirk as `mrk(lbl)`)
   while swapping the ring dot for a filled one.
+  **Vertical — `axis(y) mrk(tml) mrk(rail)`.** On a vertical scroller the timeline becomes
+  a *rail* beside the media (the `mrk(tmb)` rail's slot, label nodes instead of thumbs):
+  one vertical stroke through the dots at the inline-start edge, the `data-date` label
+  beside each dot — the EventSeries look. The node is the horizontal one rotated: dot
+  inline-start + block-centred (`--_dir-s` keeps it logical in RTL), the rail spans the
+  node's block size, rows are `--ui-carousel-tml-row` tall (default `--ui-carousel-tml-col
+  / 2`, so `mrk(sm..xl)` scales spacing too). The inline reservation is a token —
+  `--ui-carousel-tml-rail-size` (4rem; **not** `--ui-carousel-tml-rail`, which is the
+  stroke *color*) — and the rail sits on the page bg, so it joins the band ink rule
+  (CanvasText defaults). The polyfill mirrors the node with the same `::before`/`::after`
+  pair turned vertical, and `mrk(rail)` shifts its `[data-layer]` inline-start by the
+  reservation — the same compensation `nav(abv)` does on the block axis (before it, rail
+  controls sat offset by the reservation in Safari, thumbs included).
   **Only one string of text per node** — `content:` cannot be styled in parts, so a
   date-plus-note node in two type styles is not possible; put the full sentence in
   `aria-label` and the short form in `data-date`.
@@ -453,6 +472,14 @@ mechanism follows from the markup shape.
   `--ui-carousel-arrow-top`; for **split** arrows only the block row is read (`tc` top ·
   `cc` centered = `anchor(center)`, the default · `bc` bottom). There is no `arw(ce)` (the
   inline-end column is `arw(set)`'s default) and no `arw(top|mid|bot)`.
+- **Row precedence on banded frames.** A dots band (`mrk(blw)`/`mrk(abv)`) re-centers
+  on-media arrows on the **visible media** — but only as a *default*: an explicit block
+  row beats the recenter, and on the band's own side it anchors to the visible media
+  edge, not the padded box (a bottom row on `mrk(blw)` sits just above the band; a top
+  row on `mrk(abv)` just below it). An **arrow band** (`nav(blw|abv)` / `arw(blw|abv)`)
+  always owns the vertical position — rows are ignored there. Both declared-order chains
+  are mirrored in `/ui/carousel/polyfill/carousel.css` (where the row+band arms carry a
+  `:not()` band guard, since its selectors are not zero-specificity).
 - **`arw(set)`** moves the left button next to the right one (adjacent pair at inline-end).
 - **Disabled (dead-end) arrow** dims to `--ui-carousel-arrow-disabled-opacity` (0.4) by
   default; **`arw(hid)`** sets it to 0 (auto-hide instead of dim).

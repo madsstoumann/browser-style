@@ -999,6 +999,10 @@
     padding-inline-start: calc(var(--ui-carousel-rail) + 2 * var(--ui-carousel-overlay-gap, 0.75rem));
     scroll-padding-inline-start: calc(var(--ui-carousel-rail) + 2 * var(--ui-carousel-overlay-gap, 0.75rem));
   }
+  ui-media:where([media*="axis(y)"][media*="mrk(rail)"][media*="mrk(tml)"], :is(ui-card, ui-reveal)[media*="axis(y)"][media*="mrk(rail)"][media*="mrk(tml)"] *) {
+    --ui-carousel-rail: var(--ui-carousel-tml-rail-size, 4rem);
+    box-sizing: content-box;
+  }
   @supports (scroll-marker-group: after) {
     ui-media:where(:is([media*=nav]:not([media*="nav("]), [media*="nav(mrk)"], [media*="nav(arw)"], [media*="nav(blw)"], [media*="nav(abv)"]), :is(ui-card, ui-reveal):is([media*=nav]:not([media*="nav("]), [media*="nav(mrk)"], [media*="nav(arw)"], [media*="nav(blw)"], [media*="nav(abv)"]) *) {
       scrollbar-width: none;
