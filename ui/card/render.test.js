@@ -27,6 +27,10 @@ describe('review', () => {
 			details: { reviewer: { name: '"><img src=x onerror=alert(1)>' } }
 		});
 		assert.ok(!html.includes('<script>'), 'raw <script> must never reach output');
+		/* keep this fixture media-free — a rendered <img> would false-fail the next assert */
 		assert.ok(!html.includes('<img'), 'attribute breakout must be escaped');
+		/* positives: absence alone passes if the field simply stops rendering */
+		assert.match(html, /&lt;script&gt;alert\(1\)&lt;\/script&gt;/, 'headline present and escaped');
+		assert.match(html, /&quot;&gt;&lt;img src=x onerror=alert\(1\)&gt;/, 'name present and escaped');
 	});
 });
