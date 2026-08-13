@@ -678,20 +678,22 @@ Recorded here rather than fixed inline — each is real, each is outside the fil
 
    Do this as a standalone hardening commit **before Task 4**, since Task 4 gates its renderer on the resolved itemtype and inherits this contract.
 
-   **Measured pre-hardening behaviour** (run against `4c229ad4`; it is five keys, not three):
+   **Measured pre-hardening behaviour** (against `4c229ad4`, rendering a real UCF with real presets — five keys, not three):
 
-   | `schemaType` | `resolveItemtype()` returns | `renderCard()` |
+   | `schemaType` | `resolveItemtype()` returned | `renderCard()` |
    |---|---|---|
-   | `constructor` | a Function | throws `TypeError` |
-   | `toString` | a Function | throws `TypeError` |
-   | `__proto__` | an Object | throws `TypeError` |
-   | `hasOwnProperty` | a Function | throws `TypeError` |
-   | `valueOf` | a Function | throws `TypeError` |
+   | `constructor` | a Function | **rendered**, emitting `itemtype="…/function Object() { [native code] }"` |
+   | `toString` | a Function | **rendered**, emitting raw function source |
+   | `valueOf` | a Function | **rendered**, emitting raw function source |
+   | `hasOwnProperty` | a Function | **rendered**, emitting raw function source |
+   | `__proto__` | an Object | threw `TypeError` |
    | `nope` (unknown) | `"CreativeWork"` | ok |
    | *(missing)* | `"CreativeWork"` | ok |
    | `article` | `"Article"` | ok |
 
-   Acceptance: every row above must read `"CreativeWork"` / ok after the fix, except `article`. `Object.hasOwn(SCHEMA_TYPES, k)` already discriminates correctly (`constructor` → false, `article` → true), so the guard is the only change needed. Test the whole table, not one representative key.
+   ⚠️ **An earlier revision of this table claimed all five threw. That was measured with bare `fields` and no presets, which takes a different path.** With real presets, four of the five render *successfully*, interpolating raw JavaScript source into an `itemtype` attribute — silent corruption that ships, rather than a loud crash. Not a live XSS (the values are fixed builtins containing no quotes), but it is unescaped interpolation into an attribute value. **Whether it throws is preset-dependent**, which is itself the argument for guarding inside the resolver rather than at each call site. Measure this class with a real UCF and real presets; a minimal-fields probe under-reports it.
+
+   Acceptance: every row must read `"CreativeWork"` / ok after the fix, except `article`. `Object.hasOwn(SCHEMA_TYPES, k)` discriminates correctly (`constructor` → false, `article` → true). Test the whole table, not one representative key.
 4. **A few hand-authored demo cards have drifted from renderer output** (found in Task 3). `demo/schema.html` is described as the reference markup `render.js` reproduces. A survey across all 38 cards shows that claim largely holds — 34 emit exactly the renderer's itemprop set — but four are one itemprop short: `ContactPoint` (`name`), `Course` (`provider`), `Place` (`telephone`), `SocialMediaPosting` (`jobTitle`). The `SocialMediaPosting` card has additional *presentational* drift: no `<q>` inside its `<blockquote>`, a plain-text dateline where the renderer emits `<time>`, the quote ordered after the byline, and a footer reading `3.2K likes · 410 reposts` where the renderer produces `3,200 likes · 410 shares`. None of it is wrong markup — it is just no longer what the renderer emits, so the page cannot be trusted as a byte-level reference even though it remains a sound *microdata* reference. Reconcile the four cards in a standalone commit; consider whether Task 17 should add a mechanical renderer-vs-page check so this cannot drift again silently.
 
 ## Risks
