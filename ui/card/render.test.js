@@ -78,5 +78,12 @@ describe('subtype sharpening', () => {
 		assert.equal(resolveItemtype({ schemaType: 'nonesuch', headline: 'X' }), 'CreativeWork');
 		assert.equal(resolveItemtype({ headline: 'X' }), 'CreativeWork');
 		assert.equal(resolveItemtype({ schemaType: 'social', details: { subtype: 'DiscussionForumPosting' } }), 'DiscussionForumPosting');
+		/* inherited Object.prototype keys are not schema types: a truthiness test on
+		   SCHEMA_TYPES[schemaType] let these through as a Function/Object, which then
+		   stringified into the itemtype attribute (and threw on `__proto__`) */
+		for (const schemaType of ['constructor', 'toString', '__proto__', 'hasOwnProperty', 'valueOf']) {
+			assert.equal(resolveItemtype({ schemaType, headline: 'X' }), 'CreativeWork', schemaType);
+			assert.match(render({ schemaType, headline: 'X' }), /itemtype="https:\/\/schema\.org\/CreativeWork"/, schemaType);
+		}
 	});
 });

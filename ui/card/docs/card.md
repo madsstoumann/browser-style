@@ -347,7 +347,7 @@ grid.insertAdjacentHTML('beforeend', renderCard(ucf, presets));
 | `renderCardFrom` | `(url, presets?, cards?) => Promise<string>` | fetch + render |
 | `loadPresets` | `(url) => Promise<object>` | fetch `card.presets.json` → id→preset map |
 | `SCHEMA_TYPES` | map | schemaType → base schema.org type |
-| `resolveItemtype` | `(fields) => string` | the itemtype a card actually gets — base type, sharpened by an allowlisted `details.subtype`. **Any code emitting an itemtype must call this**, not index `SCHEMA_TYPES`, or a sharpened card diverges between views |
+| `resolveItemtype` | `(fields) => string` | the itemtype a card actually gets — base type, sharpened by an allowlisted `details.subtype`. Total: any `fields` yields a plain schema.org type name, unknown and inherited-`Object.prototype` `schemaType`s alike falling back to `CreativeWork`. **Any code emitting an itemtype must call this**, not index `SCHEMA_TYPES`, or a sharpened card diverges between views |
 | `SUBTYPES` | map | schemaType → `Set` of allowlisted subtypes (kept in sync with [schema.md § Subtypes](schema.md#subtypes) by `tokens.lint.js`) |
 
 Pipeline: resolve preset → build `<ui-media>` (items; furniture emitted from the

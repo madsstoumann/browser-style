@@ -82,11 +82,15 @@ export const SUBTYPES = {
 	social: new Set(['DiscussionForumPosting', 'BlogPosting', 'LiveBlogPosting'])
 };
 
+/* Own-key test, not truthiness: a bare `SCHEMA_TYPES[x]` lets inherited Object.prototype
+   keys ("constructor", "toString", "__proto__") through. Docs: docs/schema.md § Subtypes */
+const baseType = (fields) => Object.hasOwn(SCHEMA_TYPES, fields?.schemaType) ? fields.schemaType : 'content';
+
 /* `subtype` beats `businessType` because the latter is only the pre-`subtype` business-only
    spelling, kept resolving for existing content. Takes raw fields and normalises the base type
    itself: every other itemtype producer (articles/build.js, demo/render.html) calls THIS. */
 export const resolveItemtype = (fields) => {
-	const type = SCHEMA_TYPES[fields.schemaType] ? fields.schemaType : 'content';
+	const type = baseType(fields);
 	const wanted = fields.details?.subtype || (type === 'business' ? fields.details?.businessType : null);
 	return wanted && SUBTYPES[type]?.has(wanted) ? wanted : SCHEMA_TYPES[type];
 };
@@ -1343,7 +1347,7 @@ const derivedBack = (fields, type) => {
    Backs are the "full" face: summary + body both render. */
 const flipsideBack = (flipside) => {
 	const fields = flipside?.fields ?? flipside ?? {};
-	const type = SCHEMA_TYPES[fields.schemaType] ? fields.schemaType : 'content';
+	const type = baseType(fields);
 	return contentColumn(fields, type, false, '', 'both');
 };
 
@@ -1436,7 +1440,7 @@ export function renderCard(ucf, presets = {}, cards = {}, options = null) {
 	TYPE_CHIP = !!options?.typeChip;
 	const fields = ucf?.fields ?? ucf ?? {};
 	const cardId = ucf?.id || null;
-	const type = SCHEMA_TYPES[fields.schemaType] ? fields.schemaType : 'content';
+	const type = baseType(fields);
 	const itemtype = SCHEMA + resolveItemtype(fields);
 	const preset = resolvePreset(fields, presets);
 	const tokens = { media: [] };
