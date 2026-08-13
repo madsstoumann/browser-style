@@ -26,15 +26,15 @@ type — a demo affordance, emitted by `render.js` only when `renderCard` gets `
 
 ## Structured `data-part` vocabulary
 
-The eleven parts the typed cards add on top of the envelope. All are **styled** in [`content.css`](../content.css) — this page is the reference markup `render.js` follows, not a wish list. Envelope parts carry the rest: `eyebrow`, `headline`, `subheadline`, `summary`, `meta` (salaries, specs, dates), `byline` + `byline-who` + `dateline` (people), `tags`, `actions` and `footer` (totals, recommendations). `caption` belongs to the media frame — see [media.html](../demo/media.html).
+The twelve parts the typed cards add on top of the envelope. All are **styled** in [`content.css`](../content.css) — this page is the reference markup `render.js` follows, not a wish list. Envelope parts carry the rest: `eyebrow`, `headline`, `subheadline`, `summary`, `meta` (salaries, specs, dates), `byline` + `byline-who` + `dateline` (people), `tags`, `actions` and `footer` (totals, recommendations). `caption` belongs to the media frame — see [media.html](../demo/media.html).
 
 | data-part | Element | Purpose | Used by |
 |---|---|---|---|
-| `price` | `<p>` + `<data>`/`<del>`/`<ui-chip>` | Price row (Offer / MonetaryAmount microdata), currency-formatted | product, job, course, booking, membership, software, book |
-| `rating` | `<div>` + readonly `.ui-rating` + `[data-sr]` label + count | Star rating (AggregateRating / Rating) | product, review, business, movie, book |
-| `list` | `<ul>` / `<ol>`; marker via `--ui-content-list-marker`, `data-variant="crossed"` for excluded items | Ingredients, qualifications, features, amenities, answers | recipe, job, course, booking, location, membership, how-to, Q&A, dataset |
+| `price` | `<p>` + `<data>`/`<del>`/`<ui-chip>` | Price row (Offer / MonetaryAmount microdata), currency-formatted | product, job, course, booking, membership, software, book, real estate |
+| `rating` | `<div>` + readonly `.ui-rating` + `[data-sr]` label + count | Star rating (AggregateRating / Rating / EmployerAggregateRating) | product, review, business, movie, book, job, TV series |
+| `list` | `<ul>` / `<ol>`; marker via `--ui-content-list-marker`, `data-variant="crossed"` for excluded items | Ingredients, qualifications, features, amenities, answers, tracks, seasons, episodes, menu items, terms | recipe, job, course, booking, location, membership, how-to, Q&A, dataset, menu, glossary, album, TV series, podcast series, real estate, service, loyalty, health |
 | `links` | `<ul>` of plain link rows | Related links — the envelope `links[]`, deliberately not buttons | any type |
-| `address` | `<address>` of stacked lines | Postal address (PostalAddress scope); a 2-letter country code stays machine-only | business, location, organization |
+| `address` | `<address>` of stacked lines | Postal address (PostalAddress scope); a 2-letter country code stays machine-only | business, location, organization, real estate |
 | `hours` | two-column `<dl>` | Opening hours, one row per pattern (`openingHoursSpecification`; the flat string only where the type owns it) | business, location, organization offices |
 | `office` | `<div>` wrapping name + address + contacts + hours | One local branch (`department` → LocalBusiness) | organization |
 | `stat` | `<p>` + `<data>` value + unit + trend | Big-number display | statistic |
@@ -374,13 +374,47 @@ License, temporal/spatial coverage and `variableMeasured` metas; each download i
 
 The verdict chip leads — it is the answer (`reviewRating` → `Rating`, `alternateName` visible, hue from the rating value); the quoted claim (`claimReviewed`) follows.
 
-## Types authored ahead of the renderer
+## Types authored markup-first
 
 The eleven types below — plus `EmployerAggregateRating` on the job card — were authored **markup
-first**: `demo/schema.html` is the specification and `render.js` transcribes it, not the other way
-round. They have no `schemaType` key and no instance in `data/` yet. Every `itemprop` below was
-checked mechanically against the schema.org vocabulary dump (`domainIncludes` walked up the
-`rdfs:subClassOf` chain), not by eye.
+first**: `demo/schema.html` was the specification and `render.js` was written to reproduce it, not
+the other way round. They now have a `schemaType` key, a `DETAILS` renderer and an instance in
+`data/`, and the transcription was verified by a mechanical comparator rather than by eye — eleven
+of the twelve reproduce their reference card exactly. Every `itemprop` below was checked
+mechanically against the schema.org vocabulary dump (`domainIncludes` walked up the
+`rdfs:subClassOf` chain).
+
+**Two page conventions the renderer does not reproduce**, both pre-dating these types and visible
+on every card: the page hoists `media=` onto `<ui-card>` where the renderer emits it on
+`<ui-media>`, and it places the machine `<meta>` block *above* the eyebrow where the renderer emits
+it after the summary (`DETAILS` runs after the envelope and has no hook to reorder). The comparator
+normalises both on both sides; nothing else is allowed to differ.
+Run it with `node ui/card/schema.compare.js` ([`schema.compare.js`](../schema.compare.js)); eleven
+of the twelve are an exact match, and the job card's three residual lines are older data/renderer
+divergences it shares with `job.json`, not anything the employer rating introduced.
+
+**Where a scope needs several rows** (`mainEntity`, `hasOfferCatalog`, `about`) it wraps them in a
+bare `<div itemscope>`. That div is grouping, not a box: `content.css` gives
+`ui-content > div[itemscope]:not([data-part], [hidden])` `display: contents` so its rows join the
+column's flex gap instead of collapsing to zero. The `:not([hidden])` arm matters — `display:
+contents` would otherwise defeat the hidden metadata scopes.
+
+**Ordered or unordered is data, not a type constant.** These cards introduce the page's first
+`<ol data-part="list">` — album tracks and TV seasons ascend, so ordinal markers are true — while
+podcast episodes stay `<ul>` because they descend and markers would lie. `details.ordered` carries
+the switch; each type defaults to the direction it usually runs in.
+
+**Two conventions the SSR engine fixes for you.** ISO durations are written **unpadded**
+(`PT39M2S`, not `PT39M02S`); both parse, and the shorter form is the one not to enshrine. And
+`Intl` separates an *alphabetic* currency code from its amount with **U+00A0** (`DKK 145`), so the
+code cannot wrap away from the number — invisible in a browser, and invisible to a
+whitespace-normalising diff, so `render.test.js` pins it explicitly.
+
+**Prose in these fields is plain text.** `render.js` escapes every interpolated value and re-allows
+only `<b>`, `<ui-gradient-text>` and `<high-light>`, and only in the headline and body. Two strings
+here originally carried an `<em>` and a `<code>`; they are now unmarked, because a reference the
+renderer provably cannot reproduce is not a reference. Widening that allowlist is the alternative
+if inline markup in `details` prose ever becomes worth the security surface.
 
 They reuse the existing `data-part` vocabulary unchanged — no new part was needed. Where a scope
 needs several rows (`mainEntity`, `hasOfferCatalog`, `about`), it wraps them in a bare `<div>`,
@@ -398,6 +432,9 @@ copy is all `Thing` (`name`, `description`, `url`, `image`). Each tier is a `<de
 - `hasTierBenefit` accepts **`TierBenefitEnumeration` members only**, and the complete set is four:
   `TierBenefitLoyaltyPoints`, `TierBenefitLoyaltyPrice`, `TierBenefitLoyaltyReturns`,
   `TierBenefitLoyaltyShipping`. One URL-valued `<meta>` per benefit, same spelling as `availability`.
+  ⚠️ **All four are valid schema.org; Google reads only two** — `TierBenefitLoyaltyPoints` and
+  `TierBenefitLoyaltyPrice`. A tier whose *only* benefits are Returns/Shipping is ineligible, so
+  every tier here leads with a supported value and the renderer keeps all four in its allowlist.
 - `hasTierRequirement` is polymorphic — free text on Blue, a nested `MonetaryAmount` on Silver and
   Gold. Both are legal (`CreditCard` / `MonetaryAmount` / `Text` / `UnitPriceSpecification`).
 - `membershipPointsEarned` belongs to the **tier**, and sits inside the `<summary>`: `<summary>`
@@ -405,7 +442,9 @@ copy is all `Thing` (`name`, `description`, `url`, `image`). Each tier is a `<de
 
 **Google** (loyalty program, live since June 2025) requires `name`, `description` and `hasTiers`
 on the programme and `name` + `hasTierBenefit` on every tier — all satisfied — plus the
-recommended `url`, `hasTierRequirement` and `membershipPointsEarned`, also all present.
+recommended `url`, `hasTierRequirement` and `membershipPointsEarned`, also all present. Google
+lists `url` as recommended on **each `MemberProgramTier`** as well as on the programme; the
+renderer takes `tiers[].url` for that, and these three demo tiers simply have no per-tier page.
 ⚠️ **Placement differs from this card.** Google wants the programme nested under the site's
 `Organization` via `hasMemberProgram`, and member *prices* on product pages as
 `Offer.priceSpecification` → `UnitPriceSpecification` with `validForMemberTier` pointing at a
@@ -423,6 +462,8 @@ is a `LearningResource`, and everything comes from there or from `CreativeWork`.
 and exactly one `acceptedAnswer` → `Answer` with its own `text`. Google requires only `hasPart`;
 `about` → `Thing` and `educationalAlignment` → `AlignmentObject` are recommended, and Google reads
 just two of `AlignmentObject`'s properties — `alignmentType` and `targetName`. Both are here.
+`learningResourceType: "Flashcard"` on the `Quiz` is valid `LearningResource` vocabulary that
+Google never mentions — it is semantic value only, not a requirement.
 
 ### Service — `Service`
 
@@ -460,11 +501,14 @@ Sections are `<details>` in a `<ui-accordion>` — `hasMenuSection` → `MenuSec
 
 `suitableForDiet` takes `RestrictedDiet` members by URL (11 of them: `DiabeticDiet`,
 `GlutenFreeDiet`, `HalalDiet`, `HinduDiet`, `KosherDiet`, `LowCalorieDiet`, `LowFatDiet`,
-`LowLactoseDiet`, `LowSaltDiet`, `VeganDiet`, `VegetarianDiet`) — each one that is visible also
-gets a `<ui-chip>`, so the machine value and the reader's value agree. `nutrition` →
+`LowLactoseDiet`, `LowSaltDiet`, `VeganDiet`, `VegetarianDiet`) — every visible `<ui-chip>` has a
+matching `<meta>`, so a reader never sees a claim the markup does not make. The converse does not
+hold and need not: a dish may declare more diets than it advertises (the cabbage is both vegetarian
+and gluten-free but only chips the first). `nutrition` →
 `NutritionInformation` is hidden; its `calories` is an `Energy` and `servingSize` is **`Text`**,
 so both are written as unit-bearing strings ("620 calories", "1 bowl"). A restaurant links to a
-menu with `hasMenu` (`menu` is the older synonym).
+menu with `hasMenu` (`menu` is the older synonym) — **no card on this page demonstrates that link**,
+because the menu is its own card subject here rather than a property of the café card above it.
 
 ### TV series — `TVSeries`
 
@@ -505,7 +549,10 @@ medical rich result — this markup is semantic value only.
 enumerations `albumProductionType` (`StudioAlbum`) and `albumReleaseType` (`AlbumRelease`).
 Tracks are `track` → `MusicRecording` in an `<ol data-part="list">`, each with `position` (valid:
 its domain is `CreativeWork`, which `MusicRecording` is) and an ISO `duration`. `numTracks` and
-`track` come from `MusicPlaylist`, the album's parent — `tracks` is superseded.
+`track` come from `MusicPlaylist`, the album's parent — `tracks` is superseded. **`numTracks`
+derives from the track list** unless `details.numTracks` states otherwise: a hand-kept count goes
+stale silently (this card once said nine over four rows), and the field survives only so a partial
+listing can still name the album total.
 
 ### Glossary — `DefinedTermSet`
 
@@ -519,7 +566,7 @@ panel, `termCode` as the slug. `DefinedTerm` is an **`Intangible`**, `DefinedTer
 The series as the card's subject — the [podcast card](#podcast--podcastepisode) is one episode with
 a nested series. `webFeed` (range `DataFeed` or `URL`) rides a real `<a href>` so the feed is
 crawlable, `author` → `Person` is the visible host byline, and episodes are `hasPart` →
-`PodcastEpisode`.
+`PodcastEpisode` in a `<ul>` — newest first, so ordinal markers would misnumber them.
 
 ⚠️ **There is no episode-count property.** `numberOfEpisodes` is used on `CreativeWorkSeason`,
 `RadioSeries`, `TVSeries` and `VideoGameSeries` — `PodcastSeries` and `CreativeWorkSeries` are not
@@ -532,8 +579,11 @@ parts, and the machine-readable answer is the `hasPart` cardinality. `startDate`
 Not a card: a **second top-level item inside the [job card](#job--jobposting)** — an element with
 `itemscope itemtype` and **no `itemprop`**, which is what makes microdata treat it as its own item
 rather than a property of the enclosing `JobPosting`. `itemReviewed` → `Organization` is the
-hiring company (the same `Nordlys ApS`), and `ratingValue` plus `ratingCount` are required;
-`bestRating` / `worstRating` are recommended and default to 5 / 1.
+hiring company (the same `Nordlys ApS`). `ratingValue` is required and Google's wording for the
+count is "**at least one of `ratingCount` or `reviewCount`**"; `bestRating` / `worstRating` are
+recommended and default to 5 / 1. The `itemReviewed` scope is `hidden`: a machine-only scope is
+still a flex item and would otherwise consume a gap slot, indenting the star row against every
+other rating row on the page.
 
 **Why not `aggregateRating` on the `JobPosting`:** the rating is of the *employer*, not of the
 posting, and Google's `JobPosting` documentation does not list `aggregateRating` among the

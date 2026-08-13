@@ -1,0 +1,40 @@
+{
+  "$schema": "../../../cms/baseline/models/card.schema.json",
+  "id": "tvepisode-1",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-07-04T12:00:00Z",
+    "updatedAt": "2026-07-05T09:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Media"
+  },
+  "fields": {
+    "internalName": "Demo — TV episode",
+    "schemaType": "tvepisode",
+    "preset": { "$ref": "card-preset/stack" },
+    "eyebrow": "Nordlight · S3 E4",
+    "headline": "The Long Dark Between",
+    "summary": "Ingrid takes the array offline for ninety seconds. It is enough.",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/techpeople.png",
+        "alt": "Still from Nordlight — the team around a holographic console"
+      }
+    ],
+    "actions": [
+      { "link": { "url": "#", "text": "Watch episode" }, "style": "primary" }
+    ],
+    "details": {
+      "episodeNumber": 4,
+      "duration": "PT58M",
+      "datePublished": "2026-03-05",
+      "datePublishedDisplay": "Mar 5, 2026",
+      "seriesName": "Nordlight",
+      "season": { "seasonNumber": 3, "name": "Terminus" },
+      "director": { "name": "Freja Nyholm", "label": "Directed by" },
+      "actors": ["Ingrid Solberg", "Mattias Vogel"]
+    }
+  }
+}

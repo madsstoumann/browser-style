@@ -121,6 +121,14 @@
       },
       "headingTag": "h2"
     },
+    "stack-square": {
+      "name": "Stack Square Preset",
+      "description": "Column card with a square media frame — album covers, podcast artwork, anything whose artwork is 1:1",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(1/1)",
+      "headingTag": "h2"
+    },
     "panel-subtle": {
       "name": "Panel Subtle Preset",
       "description": "Content-only, off-white surface, large type — quotes",
@@ -188,7 +196,7 @@
     },
     "testimonial": {
       "name": "Testimonial Preset",
-      "description": "Media-less review card \u2014 stars, quote, byline. Warm star tint via --ui-rating-c; pair with schemaType review + details.reviewedType Organization/Service.",
+      "description": "Media-less review card — stars, quote, byline. Warm star tint via --ui-rating-c; pair with schemaType review + details.reviewedType Organization/Service.",
       "element": "ui-card",
       "variant": "col",
       "styles": {

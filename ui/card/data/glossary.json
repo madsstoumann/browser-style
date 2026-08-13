@@ -1,0 +1,53 @@
+{
+  "$schema": "../../../cms/baseline/models/card.schema.json",
+  "id": "glossary-1",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-07-04T12:00:00Z",
+    "updatedAt": "2026-07-05T09:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Reference"
+  },
+  "fields": {
+    "internalName": "Demo — Glossary",
+    "schemaType": "glossary",
+    "preset": { "$ref": "card-preset/stack-accordion-divided" },
+    "eyebrow": "Glossary",
+    "headline": "Design-system glossary",
+    "summary": "The words this documentation uses in a specific sense, so a sentence means the same thing on every page. Four of them below.",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/popovers.png",
+        "alt": "Abstract illustration of layered UI panels"
+      }
+    ],
+    "details": {
+      "about": "Design systems",
+      "note": "40 terms · last revised Jun 2026",
+      "terms": [
+        {
+          "name": "Design token",
+          "termCode": "design-token",
+          "description": "A named value — a colour, a spacing step, a duration — stored once and referenced everywhere, so a change lands in one place instead of two hundred."
+        },
+        {
+          "name": "Container query",
+          "termCode": "container-query",
+          "description": "A style rule that reacts to the width of an element's own container rather than the viewport, which is what lets one card work as a hero and as a sidebar item."
+        },
+        {
+          "name": "Cascade layer",
+          "termCode": "cascade-layer",
+          "description": "An explicit priority band in the cascade. Rules in a later layer beat earlier ones regardless of specificity, which removes most reasons to write !important."
+        },
+        {
+          "name": "Light DOM component",
+          "termCode": "light-dom-component",
+          "description": "A custom element that keeps its children in the ordinary document tree instead of a shadow root, so page CSS, form submission and search engines all still see them."
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "$schema": "../../../cms/baseline/models/card.schema.json",
+  "id": "music-1",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-07-04T12:00:00Z",
+    "updatedAt": "2026-07-05T09:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Media"
+  },
+  "fields": {
+    "internalName": "Demo — Album",
+    "schemaType": "music",
+    "preset": { "$ref": "card-preset/stack-square" },
+    "eyebrow": "Dream pop",
+    "headline": "Slow Weather",
+    "summary": "Four tracks recorded live to tape in a Bornholm chapel over one November week, with the doors open.",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/band_dreampop.png",
+        "alt": "Halvmørke — band portrait in violet light"
+      }
+    ],
+    "details": {
+      "artist": "Halvmørke",
+      "datePublished": "2026-04-17",
+      "datePublishedDisplay": "Apr 17, 2026",
+      "durationDisplay": "19 min",
+      "productionType": "StudioAlbum",
+      "releaseType": "EPRelease",
+      "ordered": true,
+      "tracks": [
+        { "name": "Slow Weather", "duration": "PT4M12S", "durationDisplay": "4:12" },
+        { "name": "Kastellet", "duration": "PT3M48S", "durationDisplay": "3:48" },
+        { "name": "Everything Kept Falling", "duration": "PT6M5S", "durationDisplay": "6:05" },
+        { "name": "November, Open Doors", "duration": "PT4M31S", "durationDisplay": "4:31" }
+      ]
+    },
+    "tags": ["Dream pop", "Live to tape"]
+  }
+}

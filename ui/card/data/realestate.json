@@ -1,0 +1,64 @@
+{
+  "$schema": "../../../cms/baseline/models/card.schema.json",
+  "id": "realestate-1",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-07-18T12:00:00Z",
+    "updatedAt": "2026-07-18T12:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Property"
+  },
+  "fields": {
+    "internalName": "Demo — Real estate listing",
+    "schemaType": "realestate",
+    "preset": { "$ref": "card-preset/stack" },
+    "eyebrow": "For sale",
+    "headline": "Top-floor apartment, Havnegade 44",
+    "summary": "Three bedrooms and a south-facing terrace over the canal, five minutes from Kongens Nytorv.",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/coorperation.png",
+        "alt": "The harbourfront block at Havnegade 44, Copenhagen"
+      }
+    ],
+    "actions": [
+      { "link": { "url": "#", "text": "Book a viewing" }, "style": "primary" }
+    ],
+    "details": {
+      "datePosted": "2026-07-18",
+      "datePostedDisplay": "Jul 18, 2026",
+      "agent": "Nordlys Estate",
+      "viewings": "viewings Saturdays",
+      "price": {
+        "amount": 7250000,
+        "currency": "DKK",
+        "note": "DKK 61,441 per m²"
+      },
+      "property": {
+        "type": "Apartment",
+        "name": "Top-floor apartment, Havnegade 44",
+        "floorLevel": "5",
+        "petsAllowed": true,
+        "floorSize": 118,
+        "bedrooms": 3,
+        "bathrooms": 2,
+        "rooms": 5,
+        "yearBuilt": 2018,
+        "address": {
+          "streetAddress": "Havnegade 44, 5th floor",
+          "postalCode": "1058",
+          "addressLocality": "Copenhagen",
+          "addressCountry": "DK"
+        },
+        "amenities": [
+          "South-facing terrace, 14 m²",
+          "Lift to every floor",
+          "Underground parking, one space",
+          "District heating, energy label B"
+        ]
+      }
+    }
+  }
+}

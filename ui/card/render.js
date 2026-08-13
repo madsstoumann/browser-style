@@ -66,7 +66,18 @@ export const SCHEMA_TYPES = {
 	movie: 'Movie',
 	book: 'Book',
 	dataset: 'Dataset',
-	claim: 'ClaimReview'
+	claim: 'ClaimReview',
+	loyalty: 'MemberProgram',
+	quiz: 'Quiz',
+	service: 'Service',
+	realestate: 'RealEstateListing',
+	menu: 'Menu',
+	tvseries: 'TVSeries',
+	tvepisode: 'TVEpisode',
+	medical: 'MedicalWebPage',
+	music: 'MusicAlbum',
+	glossary: 'DefinedTermSet',
+	podcastseries: 'PodcastSeries'
 };
 
 /* itemtype sharpening — narrows a card to an allowlisted subtype of its base type.
@@ -104,6 +115,34 @@ const BOOK_FORMATS = new Set(['Hardcover', 'Paperback', 'EBook', 'AudiobookForma
 /* review itemReviewed types — Organization/Service make the review a testimonial */
 const REVIEWED_TYPES = new Set(['Product', 'Organization', 'Service']);
 
+/* ── enumeration / itemtype allowlists for the markup-first types.
+   Every one of these lands in a schema.org URL or an itemtype, so none may ever
+   be interpolated verbatim — same discipline as SUBTYPES/BOOK_FORMATS. ── */
+
+/* schema.org TierBenefitEnumeration — the complete set is these four. All four are
+   valid vocabulary; Google reads only Points and Price, so a tier whose ONLY benefits
+   are Returns/Shipping is ineligible. Docs: docs/schema.md § Loyalty programme */
+const TIER_BENEFITS = new Set(['TierBenefitLoyaltyPoints', 'TierBenefitLoyaltyPrice', 'TierBenefitLoyaltyReturns', 'TierBenefitLoyaltyShipping']);
+/* schema.org RestrictedDiet members — MenuItem.suitableForDiet takes these by URL */
+const RESTRICTED_DIETS = new Set(['DiabeticDiet', 'GlutenFreeDiet', 'HalalDiet', 'HinduDiet', 'KosherDiet', 'LowCalorieDiet', 'LowFatDiet', 'LowLactoseDiet', 'LowSaltDiet', 'VeganDiet', 'VegetarianDiet']);
+/* RealEstateListing.mainEntity — the ACCOMMODATION subtree only. Residence and
+   ApartmentComplex are Place, not Accommodation: the block emits yearBuilt, whose
+   domain is Accommodation alone, so neither could carry it. (ApartmentComplex is in
+   numberOfBedrooms' domain and nothing else here — not worth a per-property gate.) */
+const RESIDENCE_TYPES = new Set(['Accommodation', 'Apartment', 'House', 'SingleFamilyResidence', 'Suite', 'Room']);
+/* schema.org MusicAlbumProductionType / MusicAlbumReleaseType members */
+const ALBUM_PRODUCTION_TYPES = new Set(['CompilationAlbum', 'DJMixAlbum', 'DemoAlbum', 'LiveAlbum', 'MixtapeAlbum', 'RemixAlbum', 'SoundtrackAlbum', 'SpokenWordAlbum', 'StudioAlbum']);
+const ALBUM_RELEASE_TYPES = new Set(['AlbumRelease', 'BroadcastRelease', 'EPRelease', 'SingleRelease']);
+/* schema.org MedicalSpecialty members — WebPage.specialty takes a Specialty */
+const MEDICAL_SPECIALTIES = new Set(['Anesthesia', 'Cardiovascular', 'CommunityHealth', 'Dentistry', 'Dermatologic', 'DietNutrition', 'Emergency', 'Endocrine', 'Gastroenterologic', 'Genetic', 'Geriatric', 'Gynecologic', 'Hematologic', 'Infectious', 'LaboratoryScience', 'Midwifery', 'Musculoskeletal', 'Neurologic', 'Nursing', 'Obstetric', 'Oncologic', 'Optometric', 'Otolaryngologic', 'Pathology', 'Pediatric', 'PharmacySpecialty', 'Physiotherapy', 'PlasticSurgery', 'Podiatric', 'PrimaryCare', 'Psychiatric', 'PublicHealth', 'Pulmonary', 'Radiography', 'Renal', 'RespiratoryTherapy', 'Rheumatologic', 'SpeechPathology', 'Surgical', 'Toxicologic', 'Urologic']);
+/* the three MedicalEntity shapes a MedicalWebPage may be `about` */
+const MEDICAL_ABOUT_TYPES = new Set(['MedicalCondition', 'Drug', 'MedicalProcedure']);
+/* MedicalCondition aspect property → the type its value must carry */
+const MEDICAL_ASPECTS = { signOrSymptom: 'MedicalSignOrSymptom', riskFactor: 'MedicalRiskFactor', possibleTreatment: 'MedicalTherapy' };
+/* medicalAudience takes the TYPE MedicalAudience (subtype Patient) — NOT the
+   similarly named MedicalAudienceType enumeration (Clinician/MedicalResearcher) */
+const MEDICAL_AUDIENCES = new Set(['MedicalAudience', 'Patient']);
+
 /* Fallback when a card references no preset (or an unknown one).
    Real presets live in data/card.presets.json — instances of the
    card-preset model (cms/baseline/models/card-preset.schema.json). */
@@ -123,7 +162,7 @@ const headlineProp = (fields, type) => HEADLINE_PROP_BY_ITEMTYPE.get(resolveItem
 /* summary itemprop: review → reviewBody, quote/announcement/social → text, rest → description */
 const SUMMARY_PROP = { review: 'reviewBody', quote: 'text', announcement: 'text', social: 'text' };
 /* eyebrow itemprop (only where a sensible property exists) */
-const EYEBROW_PROP = { article: 'articleSection', news: 'articleSection', product: 'category', recipe: 'recipeCategory', course: 'about', job: 'industry', video: 'genre', movie: 'genre', book: 'genre' };
+const EYEBROW_PROP = { article: 'articleSection', news: 'articleSection', product: 'category', recipe: 'recipeCategory', course: 'about', job: 'industry', video: 'genre', movie: 'genre', book: 'genre', tvseries: 'genre', music: 'genre' };
 /* published itemprop: JobPosting/SpecialAnnouncement use datePosted, VideoObject uploadDate */
 const PUBLISHED_PROP = { job: 'datePosted', announcement: 'datePosted', video: 'uploadDate' };
 /* preset headingTag allowlist — heading LEVEL is placement, so it lives on the preset */
@@ -136,9 +175,9 @@ const NO_IMAGE_PROP = new Set(['review', 'contact']);
 /* types whose ROOT is the VideoObject — media props emit at root, never a nested scope */
 const ROOT_VIDEO_TYPES = new Set(['video']);
 /* Person has no keywords property. Intangible-rooted types (JobPosting, Offer,
-   Reservation, ContactPoint, ItemList, Observation) have none either —
-   null = visible chips only, no itemprop */
-const TAGS_PROP = { profile: 'knowsAbout', job: null, membership: null, booking: null, contact: null, comparison: null, statistic: null };
+   Reservation, ContactPoint, ItemList, Observation, MemberProgram, Service) have
+   none either — null = visible chips only, no itemprop */
+const TAGS_PROP = { profile: 'knowsAbout', job: null, membership: null, booking: null, contact: null, comparison: null, statistic: null, loyalty: null, service: null };
 
 /* ── string helpers (all data flows through esc) ── */
 
@@ -249,22 +288,27 @@ const styleAttr = (styles) => {
 	return rules.length ? rules.join('; ') : null;
 };
 
-/* star rating row — part "rating" */
-const ratingPart = (prop, ratingType, rating) => {
+/* star rating row — part "rating". `prop: null` opens the scope with NO itemprop,
+   which is what makes microdata read it as a SECOND TOP-LEVEL ITEM rather than a
+   property of the enclosing card — the EmployerAggregateRating shape. `lead` is
+   markup placed inside the scope ahead of the metas (itemReviewed); the two label
+   options override the star-row wording. Docs: docs/schema.md § Employer rating */
+const ratingPart = (prop, ratingType, rating, { lead = '', srLabel = null, visibleLabel = null } = {}) => {
 	if (!rating?.value) return '';
 	const max = rating.max ?? 5;
 	/* built from already-escaped pieces — num() escapes, so no outer esc() here */
-	const label = `Rated ${esc(rating.value)} out of ${esc(max)} stars${rating.count ? ` from ${num(rating.count)} ratings` : ''}`;
+	const label = srLabel ?? `Rated ${esc(rating.value)} out of ${esc(max)} stars${rating.count ? ` from ${num(rating.count)} ratings` : ''}`;
+	const visible = visibleLabel ?? `${esc(rating.value)} / ${esc(max)}${rating.count ? ` (${num(rating.count)} ratings)` : ''}`;
 	/* @browser.style/rating — a disabled range input masked with stars. It is
 	   DECORATIVE (aria-hidden): a role="img" wrapper may not contain an input, so
 	   the <span> carries the accessible text and the metas carry the machine value */
-	return `<div data-part="rating"${scope(prop, ratingType)}>
-		${meta('ratingValue', rating.value)}
+	return `<div data-part="rating"${prop ? scope(prop, ratingType) : ` itemscope itemtype="${SCHEMA + ratingType}"`}>
+		${lead}${meta('ratingValue', rating.value)}
 		${rating.count != null ? meta('ratingCount', rating.count) : ''}
 		${meta('bestRating', max)}${meta('worstRating', 1)}
 		<input class="ui-rating" type="range" min="1" max="${esc(max)}" value="${esc(rating.value)}" step="0.01" disabled aria-hidden="true">
 		<span data-sr>${label}</span>
-		<span aria-hidden="true">${esc(rating.value)} / ${esc(max)}${rating.count ? ` (${num(rating.count)} ratings)` : ''}</span>
+		<span aria-hidden="true">${visible}</span>
 	</div>`;
 };
 
@@ -381,6 +425,14 @@ const byline = (authors, prop = 'author', dateline = '') =>
 		${avatarPart(author)}
 		<span data-part="byline-who"><span itemprop="name">${esc(author.name)}</span>${author.role ? `<span itemprop="jobTitle">${esc(author.role)}</span>` : ''}</span>${index === 0 ? dateline : ''}
 	</address>`).join('');
+
+/* screen credits — director row + one actor scope per name. Shared by movie/
+   tvseries/tvepisode; the label carries its own punctuation because a series is
+   "Created and directed by" where a film is "Director:". `actor` accepts a Person
+   OR a PerformingGroup; Person is the safe default for a bare name. */
+const creditsPart = (d) =>
+	(d.director?.name ? `<p data-part="meta"${scope('director', 'Person')}>${esc(d.director.label || 'Director:')} <span itemprop="name">${esc(d.director.name)}</span></p>` : '')
+	+ (d.actors?.length ? `<p data-part="meta">Starring: ${d.actors.map((name) => `<span${scope('actor', 'Person')}><span itemprop="name">${esc(name)}</span></span>`).join(', ')}</p>` : '');
 
 /* quote part via @browser.style/quote — variant on the <ui-quote> wrapper styles it, data-part stays the card hook */
 const quotePart = (text, { itemprop = 'text', variant = null, cite = null } = {}) =>
@@ -903,6 +955,35 @@ const variantsPart = (variants) => {
 		+ `<ul data-part="list">${variants.items.map(variantItem).join('')}</ul>`;
 };
 
+/* leading year of an ISO date — "since 2023" in a series meta row */
+const startYear = (iso) => /^\d{4}/.exec(iso || '')?.[0] || null;
+
+/* A list of ALREADY-BUILT scoped <li> rows (each carries its own itemscope, so
+   listPart's plain-string shape does not fit). Ordered vs unordered is DATA
+   (`details.ordered`), because the answer is per list, not per type: album tracks
+   and TV seasons ascend, so ordinal markers are true; podcast episodes descend,
+   so markers would lie. The per-type default is the direction that type usually
+   runs in — data always wins. */
+const scopedList = (rows, ordered) => rows.length
+	? `<${ordered ? 'ol' : 'ul'} data-part="list">${rows.join('')}</${ordered ? 'ol' : 'ul'}>`
+	: '';
+
+/* one MenuItem row. suitableForDiet takes RestrictedDiet members by URL; the visible
+   chip is a separate label so the machine value and the reader's value agree.
+   calories is an Energy and servingSize is Text — both unit-bearing strings. */
+const menuItem = (item) => {
+	const offer = item.price == null ? '' : `<span${scope('offers', 'Offer')}>${meta('priceCurrency', item.currency)}<data itemprop="price" value="${esc(item.price)}">${fmtPrice(item.currency, item.price)}</data></span>`;
+	const nutrition = item.nutrition
+		? `<span${scope('nutrition', 'NutritionInformation')} hidden>${meta('calories', item.nutrition.calories)}${meta('proteinContent', item.nutrition.proteinContent)}${meta('servingSize', item.nutrition.servingSize)}</span>`
+		: '';
+	return `<li${scope('hasMenuItem', 'MenuItem')}>`
+		+ `<p><strong itemprop="name">${esc(item.name)}</strong>${offer ? ` · ${offer}` : ''}${item.label ? ` <ui-chip theme="pale green">${esc(item.label)}</ui-chip>` : ''}</p>`
+		+ (item.description ? `<span itemprop="description">${esc(item.description)}</span>` : '')
+		+ (item.diets || []).filter((diet) => RESTRICTED_DIETS.has(diet)).map((diet) => meta('suitableForDiet', SCHEMA + diet)).join('')
+		+ nutrition
+		+ '</li>';
+};
+
 const DETAILS = {
 	product(d, fields, parts, itemtype) {
 		/* PDP order: rating under the title, then price, then stock state */
@@ -1004,6 +1085,22 @@ const DETAILS = {
 				${meta('currency', salary.currency)}
 				<span${scope('value', 'QuantitativeValue')}>${meta('minValue', salary.min)}${meta('maxValue', salary.max)}${meta('unitText', salary.period || 'YEAR')}${esc(salary.currency)} ${num(salary.min)}–${num(salary.max)} <small>${esc(salary.periodDisplay || 'annually')}</small></span>
 			</p>`;
+		}
+		/* The employer rating is a SECOND TOP-LEVEL ITEM (itemscope, no itemprop): it
+		   rates the company, not the posting, and JobPosting has no aggregateRating —
+		   a nested one is simply ignored. Docs: docs/schema.md § Employer rating */
+		const employer = d.employerRating;
+		if (employer?.value) {
+			const org = employer.organization;
+			const max = employer.max ?? 5;
+			html += ratingPart(null, 'EmployerAggregateRating', employer, {
+				/* hidden: a machine-only scope is still a flex item and would otherwise
+				   eat a gap slot, indenting the star row against its siblings */
+				lead: org ? `<span${scope('itemReviewed', 'Organization')} hidden>${meta('name', org)}${meta('sameAs', employer.sameAs)}</span>` : '',
+				/* built from already-escaped pieces — num() escapes, so no outer esc() */
+				srLabel: `${esc(org || 'This employer')} rated ${esc(employer.value)} out of ${esc(max)}${employer.count != null ? ` by ${num(employer.count)} employees` : ''}`,
+				visibleLabel: `${esc(employer.value)} / ${esc(max)} employer rating${employer.count != null ? ` (${num(employer.count)} reviews)` : ''}`
+			});
 		}
 		const sections = [];
 		if (d.qualifications?.length) sections.push({ summary: 'Requirements', body: `<div>${listPart(d.qualifications, { itemprop: 'qualifications' })}</div>` });
@@ -1311,9 +1408,7 @@ const DETAILS = {
 		const bits = [d.dateReleasedDisplay, d.durationDisplay || (d.duration ? duration(d.duration) : null), d.contentRating].filter(Boolean).join(' · ');
 		if (bits) html += `<p data-part="meta">${esc(bits)}</p>`;
 		html += ratingPart('aggregateRating', 'AggregateRating', d.rating);
-		if (d.director?.name) html += `<p data-part="meta"${scope('director', 'Person')}>Director: <span itemprop="name">${esc(d.director.name)}</span></p>`;
-		if (d.actors?.length) html += `<p data-part="meta">Starring: ${d.actors.map((name) => `<span${scope('actor', 'Person')}><span itemprop="name">${esc(name)}</span></span>`).join(', ')}</p>`;
-		return html;
+		return html + creditsPart(d);
 	},
 
 	book(d) {
@@ -1360,14 +1455,267 @@ const DETAILS = {
 		}
 		if (d.claim) html += quotePart(d.claim, { itemprop: 'claimReviewed', cite: d.claimant });
 		return html;
+	},
+
+	/* MemberProgram owns exactly two properties — hasTiers and hostingOrganization;
+	   everything visible is Thing. The join CTA carries the programme's own `url`, so
+	   it lives here rather than in the envelope actions. Docs: docs/schema.md § Loyalty */
+	loyalty(d, fields, parts = {}) {
+		let html = d.hostingOrganization
+			? `<p data-part="meta"${scope('hostingOrganization', 'Organization')}>Run by <span itemprop="name">${esc(d.hostingOrganization)}</span></p>`
+			: '';
+		if (d.tiers?.length) {
+			html += accordion('member-tier', d.tiers.map((tier) => {
+				/* hasTierRequirement is polymorphic — free text, or a MonetaryAmount scope */
+				const amount = tier.requirementAmount;
+				const requirement = amount
+					? `<span${scope('hasTierRequirement', 'MonetaryAmount')}>${meta('currency', amount.currency)}${meta('value', amount.value)}${fmtPrice(amount.currency, amount.value)}</span>`
+					: tier.requirement ? `<span itemprop="hasTierRequirement">${esc(tier.requirement)}</span>` : '';
+				const benefits = (tier.benefits || []).map((benefit) =>
+					`<li>${TIER_BENEFITS.has(benefit.type) ? meta('hasTierBenefit', SCHEMA + benefit.type) : ''}${esc(benefit.text)}</li>`).join('');
+				return {
+					/* the points value belongs to the TIER and rides the summary: <summary>
+					   must be the first child, so a <meta> cannot precede it. Google lists
+					   `url` as recommended on each TIER, not only on the programme. */
+					summary: `<span itemprop="name">${esc(tier.name)}</span>${meta('membershipPointsEarned', tier.pointsEarned)}${meta('url', tier.url)}`,
+					body: `<div>${requirement ? `<p data-part="meta">Joining: ${requirement}${tier.requirementNote ? ` ${esc(tier.requirementNote)}` : ''}</p>` : ''}${benefits ? `<ul data-part="list">${benefits}</ul>` : ''}</div>`,
+					scopeAttrs: scope('hasTiers', 'MemberProgramTier')
+				};
+			}), parts.accordion);
+		}
+		if (d.joinUrl) html += `<nav data-part="actions"><a class="ui-button" data-variant="accent" itemprop="url" href="${esc(d.joinUrl)}">${esc(d.joinText || 'Join')}</a></nav>`;
+		return html;
+	},
+
+	/* Google's Education Q&A feature is flashcards only, and eduQuestionType is a
+	   QUESTION property — Quiz owns none of its own. Both values are fixed, not data:
+	   any other spelling makes the card ineligible. Docs: docs/schema.md § Quiz */
+	quiz(d, fields, parts = {}) {
+		const cards = d.cards || [];
+		let html = meta('learningResourceType', 'Flashcard')
+			+ (d.subject ? `<div${scope('educationalAlignment', 'AlignmentObject')} hidden>${meta('alignmentType', 'educationalSubject')}${meta('targetName', d.subject)}</div>` : '');
+		const bits = [
+			d.subject ? `Subject: <span${scope('about', 'Thing')}><span itemprop="name">${esc(d.subject)}</span></span>` : null,
+			cards.length ? `${cards.length} card${cards.length === 1 ? '' : 's'}` : null,
+			d.pace ? esc(d.pace) : null
+		].filter(Boolean).join(' · ');
+		if (bits) html += `<p data-part="meta">${bits}</p>`;
+		if (cards.length) {
+			html += accordion('quiz-card', cards.map((card) => ({
+				summary: `<span itemprop="text">${esc(card.question)}</span>${meta('eduQuestionType', 'Flashcard')}`,
+				body: `<div${scope('acceptedAnswer', 'Answer')}><p itemprop="text">${esc(card.answer)}</p></div>`,
+				scopeAttrs: scope('hasPart', 'Question')
+			})), parts.accordion);
+		}
+		return html;
+	},
+
+	/* OfferCatalog is an ItemList, so itemListElement is the nesting property; the
+	   scope is a bare <div> because a <meta itemprop="name"> cannot be a child of <ul>.
+	   servicePhone expects a ContactPoint, not a phone string. Docs: schema.md § Service */
+	service(d) {
+		let html = meta('serviceType', d.serviceType);
+		const provider = d.provider ? `<span${scope('provider', 'Organization')}><span itemprop="name">${esc(d.provider)}</span></span>` : '';
+		const area = d.areaServed ? `<span${scope('areaServed', 'Place')}><span itemprop="name">${esc(d.areaServed)}</span></span>` : '';
+		if (provider || area) html += `<p data-part="meta">${provider}${provider && area ? ' · serving ' : ''}${area}</p>`;
+		const catalog = d.catalog;
+		if (catalog?.items?.length) {
+			html += `<div${scope('hasOfferCatalog', 'OfferCatalog')}>${meta('name', catalog.name)}<ul data-part="list">${catalog.items.map((item) =>
+				`<li${scope('itemListElement', 'Offer')}>${meta('priceCurrency', item.currency)}<span${scope('itemOffered', 'Service')}><span itemprop="name">${esc(item.name)}</span></span> — <data itemprop="price" value="${esc(item.price)}">${fmtPrice(item.currency, item.price)}</data>${catalog.period ? `/${esc(catalog.period)}` : ''}</li>`
+			).join('')}</ul></div>`;
+		}
+		const channel = d.channel;
+		if (channel) {
+			const links = [
+				channel.url ? `<a class="ui-button" data-variant="accent" itemprop="serviceUrl" href="${esc(channel.url)}">${esc(channel.urlText || 'Get in touch')}</a>` : '',
+				channel.telephone ? `<span${scope('servicePhone', 'ContactPoint')}>${meta('contactType', channel.contactType)}<a class="ui-button" itemprop="telephone" href="tel:${esc(String(channel.telephone).replace(/\s/g, ''))}">${esc(channel.telephone)}</a></span>` : ''
+			].filter(Boolean);
+			html += `<div${scope('availableChannel', 'ServiceChannel')}>${(channel.languages || []).map((lang) => meta('availableLanguage', lang)).join('')}${meta('processingTime', channel.processingTime)}${links.length ? `<nav data-part="actions">${links.join(' ')}</nav>` : ''}</div>`;
+		}
+		return html;
+	},
+
+	/* RealEstateListing is a WebPage: the home hangs off mainEntity. `offers` is NOT
+	   valid on Accommodation/Place, so the price rides the LISTING, outside that scope.
+	   Every strictly-numeric property emits its machine value via <meta> with the unit
+	   words in a separate text node. Docs: docs/schema.md § Real estate */
+	realestate(d) {
+		let html = meta('datePosted', d.datePosted);
+		if (d.price) {
+			html += `<p data-part="price"${scope('offers', 'Offer')}>${meta('priceCurrency', d.price.currency)}${meta('availability', availabilityUrl(d.availability || 'in stock'))}<data itemprop="price" value="${esc(d.price.amount)}">${fmtPrice(d.price.currency, d.price.amount)}</data>${d.price.note ? ` <small>${esc(d.price.note)}</small>` : ''}</p>`;
+		}
+		const home = d.property;
+		if (home) {
+			const numbered = (prop, value, text) => value == null || value === '' ? null : `${meta(prop, value)}${text}`;
+			const facts = [
+				home.floorSize != null
+					? `<span${scope('floorSize', 'QuantitativeValue')}>${meta('unitCode', home.floorSizeUnit || 'MTK')}${meta('value', home.floorSize)}${num(home.floorSize)} ${esc(home.floorSizeLabel || 'm²')}</span>`
+					: null,
+				numbered('numberOfBedrooms', home.bedrooms, `${num(home.bedrooms)} bedroom${home.bedrooms === 1 ? '' : 's'}`),
+				numbered('numberOfBathroomsTotal', home.bathrooms, `${num(home.bathrooms)} bathroom${home.bathrooms === 1 ? '' : 's'}`),
+				numbered('numberOfRooms', home.rooms, `${num(home.rooms)} room${home.rooms === 1 ? '' : 's'}`),
+				/* esc(), not num(): a year is not a quantity — num() would print "2,018" */
+				numbered('yearBuilt', home.yearBuilt, `built ${esc(home.yearBuilt)}`)
+			].filter(Boolean).join(' · ');
+			const amenities = home.amenities?.length
+				? `<ul data-part="list">${home.amenities.map((amenity) =>
+					`<li${scope('amenityFeature', 'LocationFeatureSpecification')}>${meta('value', 'true')}<span itemprop="name">${esc(amenity)}</span></li>`).join('')}</ul>`
+				: '';
+			html += `<div${scope('mainEntity', RESIDENCE_TYPES.has(home.type) ? home.type : 'Accommodation')}>`
+				+ meta('name', home.name) + meta('floorLevel', home.floorLevel) + meta('petsAllowed', home.petsAllowed)
+				+ (facts ? `<p data-part="meta">${facts}</p>` : '')
+				+ addressPart(home.address) + amenities + '</div>';
+		}
+		const bits = [d.datePostedDisplay ? `Listed ${esc(d.datePostedDisplay)}` : null, d.agent ? esc(d.agent) : null, d.viewings ? esc(d.viewings) : null].filter(Boolean).join(' · ');
+		if (bits) html += `<p data-part="meta">${bits}</p>`;
+		return html;
+	},
+
+	/* Menu and MenuSection are CreativeWorks; MenuItem is an Intangible — which is why
+	   only the ITEM gets offers/nutrition/suitableForDiet. Docs: docs/schema.md § Menu */
+	menu(d, fields, parts = {}) {
+		let html = '';
+		if (d.sections?.length) {
+			html += accordion('menu-section', d.sections.map((section) => ({
+				summary: `<span itemprop="name">${esc(section.name)}</span>`,
+				body: `<div><ul data-part="list">${(section.items || []).map(menuItem).join('')}</ul></div>`,
+				scopeAttrs: scope('hasMenuSection', 'MenuSection')
+			})), parts.accordion);
+		}
+		if (d.note) html += `<footer data-part="footer">${esc(d.note)}</footer>`;
+		return html;
+	},
+
+	tvseries(d) {
+		let html = meta('numberOfSeasons', d.numberOfSeasons) + meta('numberOfEpisodes', d.numberOfEpisodes)
+			+ meta('startDate', d.startDate) + meta('contentRating', d.contentRating);
+		const year = startYear(d.startDate);
+		const bits = [
+			d.numberOfSeasons != null ? `${num(d.numberOfSeasons)} season${d.numberOfSeasons === 1 ? '' : 's'}` : null,
+			d.numberOfEpisodes != null ? `${num(d.numberOfEpisodes)} episode${d.numberOfEpisodes === 1 ? '' : 's'}` : null,
+			year ? `since ${esc(year)}` : null,
+			d.contentRating ? `rated ${esc(d.contentRating)}` : null
+		].filter(Boolean).join(' · ');
+		if (bits) html += `<p data-part="meta">${bits}</p>`;
+		html += ratingPart('aggregateRating', 'AggregateRating', d.rating) + creditsPart(d);
+		/* containsSeason's range is CreativeWorkSeason, which TVSeason satisfies.
+		   The superseded actors/episodes/seasons spellings are never emitted. */
+		return html + scopedList((d.seasons || []).map((season) =>
+			`<li${scope('containsSeason', 'TVSeason')}>${meta('seasonNumber', season.seasonNumber)}${meta('numberOfEpisodes', season.numberOfEpisodes)}<span itemprop="name">${esc(season.name)}</span>${season.display ? ` — ${esc(season.display)}` : ''}</li>`
+		), d.ordered ?? true);
+	},
+
+	/* episodeNumber/partOfSeason/partOfSeries/duration are all inherited from Episode —
+	   a renderer that looks them up on TVEpisode will not find them documented there */
+	tvepisode(d) {
+		let html = meta('episodeNumber', d.episodeNumber) + meta('duration', d.duration) + meta('datePublished', d.datePublished)
+			+ (d.seriesName ? `<div${scope('partOfSeries', 'TVSeries')} hidden>${meta('name', d.seriesName)}</div>` : '')
+			+ (d.season ? `<div${scope('partOfSeason', 'TVSeason')} hidden>${meta('seasonNumber', d.season.seasonNumber)}${meta('name', d.season.name)}</div>` : '');
+		const bits = [
+			d.season?.seasonNumber != null && d.episodeNumber != null ? `Season ${num(d.season.seasonNumber)}, episode ${num(d.episodeNumber)}` : null,
+			d.durationDisplay ? esc(d.durationDisplay) : d.duration ? esc(duration(d.duration)) : null,
+			d.datePublishedDisplay ? esc(d.datePublishedDisplay) : null
+		].filter(Boolean).join(' · ');
+		if (bits) html += `<p data-part="meta">${bits}</p>`;
+		return html + creditsPart(d);
+	},
+
+	/* specialty/reviewedBy/lastReviewed are WebPage properties MedicalWebPage merely
+	   inherits; medicalAudience is its only own usable one. The reviewedBy byline is
+	   VISIBLE markup, never a hidden meta — a signal a reader cannot see is not an
+	   E-E-A-T signal. Docs: docs/schema.md § Health */
+	medical(d) {
+		let html = (MEDICAL_SPECIALTIES.has(d.specialty) ? meta('specialty', SCHEMA + d.specialty) : '')
+			+ meta('lastReviewed', d.lastReviewed);
+		if (d.audience?.name) {
+			html += `<div${scope('medicalAudience', MEDICAL_AUDIENCES.has(d.audience.type) ? d.audience.type : 'MedicalAudience')} hidden>${meta('name', d.audience.name)}</div>`;
+		}
+		if (d.about?.name) {
+			const aspects = (d.about.aspects || [])
+				.filter((aspect) => Object.hasOwn(MEDICAL_ASPECTS, aspect.type))
+				.map((aspect) => `<li${scope(aspect.type, MEDICAL_ASPECTS[aspect.type])}><span itemprop="name">${esc(aspect.text)}</span></li>`).join('');
+			html += `<div${scope('about', MEDICAL_ABOUT_TYPES.has(d.about.type) ? d.about.type : 'MedicalCondition')}>${meta('name', d.about.name)}${aspects ? `<ul data-part="list">${aspects}</ul>` : ''}</div>`;
+		}
+		if (d.reviewedBy?.name) {
+			const dateline = d.lastReviewed
+				? `<small data-part="dateline"><span>${esc(d.reviewedLabel || 'Medically reviewed')}</span><time datetime="${esc(d.lastReviewed)}">${esc(d.lastReviewedDisplay || d.lastReviewed)}</time></small>`
+				: '';
+			html += byline([d.reviewedBy], 'reviewedBy', dateline);
+		}
+		if (d.disclaimer) html += `<footer data-part="footer">${esc(d.disclaimer)}</footer>`;
+		return html;
+	},
+
+	/* numTracks and track come from MusicPlaylist, the album's parent (`tracks` is
+	   superseded). numTracks DERIVES from the track list unless stated: a hand-kept
+	   count silently goes stale, and the field survives only for partial listings.
+	   Docs: docs/schema.md § Album */
+	music(d) {
+		const tracks = d.tracks || [];
+		const numTracks = d.numTracks ?? (tracks.length || null);
+		let html = meta('numTracks', numTracks) + meta('datePublished', d.datePublished)
+			+ (ALBUM_PRODUCTION_TYPES.has(d.productionType) ? meta('albumProductionType', SCHEMA + d.productionType) : '')
+			+ (ALBUM_RELEASE_TYPES.has(d.releaseType) ? meta('albumReleaseType', SCHEMA + d.releaseType) : '');
+		const bits = [
+			numTracks != null ? `${num(numTracks)} track${numTracks === 1 ? '' : 's'}` : null,
+			d.durationDisplay ? esc(d.durationDisplay) : null,
+			d.datePublishedDisplay ? `released ${esc(d.datePublishedDisplay)}` : null
+		].filter(Boolean).join(' · ');
+		if (bits) html += `<p data-part="meta">${bits}</p>`;
+		html += scopedList(tracks.map((track, index) =>
+			`<li${scope('track', 'MusicRecording')}>${meta('position', track.position ?? index + 1)}${meta('duration', track.duration)}<span itemprop="name">${esc(track.name)}</span>${track.durationDisplay ? ` <small>${esc(track.durationDisplay)}</small>` : ''}</li>`
+		), d.ordered ?? true);
+		if (d.note) html += `<footer data-part="footer">${esc(d.note)}</footer>`;
+		return html;
+	},
+
+	/* DefinedTerm is an Intangible, DefinedTermSet a CreativeWork; both are still
+	   pending.schema.org. Docs: docs/schema.md § Glossary */
+	glossary(d, fields, parts = {}) {
+		let html = d.about ? `<div${scope('about', 'Thing')} hidden>${meta('name', d.about)}</div>` : '';
+		if (d.terms?.length) {
+			html += accordion('glossary', d.terms.map((term) => ({
+				summary: `<span itemprop="name">${esc(term.name)}</span>${meta('termCode', term.termCode)}`,
+				body: `<div><p itemprop="description">${esc(term.description)}</p></div>`,
+				scopeAttrs: scope('hasDefinedTerm', 'DefinedTerm')
+			})), parts.accordion);
+		}
+		if (d.note) html += `<footer data-part="footer">${esc(d.note)}</footer>`;
+		return html;
+	},
+
+	/* There is NO episode-count property on PodcastSeries — the count is prose and the
+	   machine answer is the hasPart cardinality. webFeed rides a real <a href> so the
+	   feed is crawlable. Docs: docs/schema.md § Podcast series */
+	podcastseries(d) {
+		let html = meta('startDate', d.startDate);
+		const year = startYear(d.startDate);
+		const bits = [
+			d.cadence ? esc(d.cadence) : null,
+			d.episodeCount != null ? `${num(d.episodeCount)} episode${d.episodeCount === 1 ? '' : 's'}${year ? ` since ${esc(year)}` : ''}` : null,
+			d.feed?.url ? `<a itemprop="webFeed" href="${esc(d.feed.url)}">${esc(d.feed.text || 'RSS feed')}</a>` : null
+		].filter(Boolean).join(' · ');
+		if (bits) html += `<p data-part="meta">${bits}</p>`;
+		if (d.host?.name) html += byline([d.host], 'author');
+		/* newest first by convention — descending rows must NOT get ordinal markers */
+		html += scopedList((d.episodes || []).map((episode) =>
+			`<li${scope('hasPart', 'PodcastEpisode')}>${meta('episodeNumber', episode.episodeNumber)}${meta('duration', episode.duration)}<span itemprop="name">${esc(episode.name)}</span>${episode.durationDisplay ? ` <small>${esc(episode.durationDisplay)}</small>` : ''}</li>`
+		), d.ordered ?? false);
+		if (d.note) html += `<footer data-part="footer">${esc(d.note)}</footer>`;
+		return html;
 	}
 };
 
-/* profile: jobTitle/organization row takes the subheadline slot */
-const profileSubheadline = (d, textTag) =>
-	d?.jobTitle
+/* types whose subheadline row is a schema SCOPE rather than plain envelope text:
+   profile's jobTitle/organization, music's byArtist → MusicGroup */
+const SUBHEADLINE_SLOT = {
+	profile: (d, textTag) => d?.jobTitle
 		? `<${textTag} data-part="subheadline"><span itemprop="jobTitle">${esc(d.jobTitle)}</span>${d.organization ? ` · <span${scope('worksFor', 'Organization')}><span itemprop="name">${esc(d.organization)}</span></span>` : ''}</${textTag}>`
-		: '';
+		: '',
+	music: (d, textTag) => d?.artist
+		? `<${textTag} data-part="subheadline"${scope('byArtist', 'MusicGroup')}><span itemprop="name">${esc(d.artist)}</span></${textTag}>`
+		: ''
+};
 
 /* byline-early types: author identity precedes the commerce details (book).
    A preset's byline: "lede" opts any type in — the full-article shape. */
@@ -1380,8 +1728,8 @@ const BYLINE_EARLY = new Set(['book']);
    scope. Docs: docs/schema.md § Product */
 const contentColumn = (fields, type, overlay, extras = '', textMode = 'summary', parts = {}, bylineMode = 'tail', headingTag = 'h3', itemtype = null) => {
 	const slots = {};
-	if (type === 'profile' && fields.details) {
-		slots.subheadline = profileSubheadline(fields.details, overlay ? 'span' : 'p');
+	if (SUBHEADLINE_SLOT[type] && fields.details) {
+		slots.subheadline = SUBHEADLINE_SLOT[type](fields.details, overlay ? 'span' : 'p');
 	}
 	let tailFields = fields;
 	const lede = bylineMode === 'lede';

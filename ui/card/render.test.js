@@ -431,3 +431,401 @@ describe('subtype sharpening', () => {
 		}
 	});
 });
+
+/* ── the markup-first types: demo/schema.html is the specification, render.js the
+   implementation. Each test pins a decision that was made IN the markup and would
+   otherwise be re-litigated by the next person to touch the renderer. ── */
+
+describe('loyalty — MemberProgram', () => {
+	const tiers = [
+		{ name: 'Blue', pointsEarned: 1, requirement: 'free, no minimum spend', benefits: [{ type: 'TierBenefitLoyaltyPoints', text: '1 point per €1' }] },
+		{ name: 'Gold', pointsEarned: 3, requirementAmount: { currency: 'EUR', value: 2000 }, requirementNote: 'a year', benefits: [{ type: 'TierBenefitLoyaltyPrice', text: '12% off' }] }
+	];
+	const card = (extra = {}) => render({ schemaType: 'loyalty', headline: 'Rewards', details: { hostingOrganization: 'Nordlys Retail', tiers, ...extra } });
+
+	test('tiers ride hasTiers → MemberProgramTier, points inside the summary', () => {
+		const html = card();
+		assert.match(html, /itemtype="https:\/\/schema\.org\/MemberProgram"/);
+		assert.equal(count(html, 'itemprop="hasTiers" itemscope itemtype="https://schema.org/MemberProgramTier"'), 2);
+		/* <summary> must be the first child of <details>, so the meta cannot precede it */
+		assert.match(html, /<summary><span itemprop="name">Blue<\/span><meta itemprop="membershipPointsEarned" content="1">/);
+	});
+
+	test('hasTierBenefit takes TierBenefitEnumeration members only', () => {
+		const html = card({ tiers: [{ name: 'X', benefits: [{ type: 'TierBenefitLoyaltyPoints', text: 'ok' }, { type: 'TierBenefitFreeHugs', text: 'nope' }] }] });
+		assert.match(html, /<meta itemprop="hasTierBenefit" content="https:\/\/schema\.org\/TierBenefitLoyaltyPoints">/);
+		assert.ok(!html.includes('TierBenefitFreeHugs'), 'an invented benefit never reaches an enumeration URL');
+		assert.match(html, />nope</, 'but its visible text still renders');
+	});
+
+	test('hasTierRequirement is polymorphic — free text or a MonetaryAmount scope', () => {
+		const html = card();
+		assert.match(html, /<span itemprop="hasTierRequirement">free, no minimum spend<\/span>/);
+		assert.match(html, /<span itemprop="hasTierRequirement" itemscope itemtype="https:\/\/schema\.org\/MonetaryAmount"><meta itemprop="currency" content="EUR"><meta itemprop="value" content="2000">€2,000<\/span> a year/);
+	});
+
+	/* Google lists url as recommended on each TIER, not only the programme */
+	test('a tier url rides the tier', () => {
+		assert.match(card({ tiers: [{ name: 'Blue', url: 'https://x.example/blue' }] }), /<meta itemprop="url" content="https:\/\/x\.example\/blue">/);
+	});
+
+	/* MemberProgram is an Intangible — no keywords property */
+	test('tags render as chips with no itemprop', () => {
+		const html = render({ schemaType: 'loyalty', headline: 'R', tags: ['Points'] });
+		assert.match(html, /<ui-chip>Points<\/ui-chip>/);
+		assert.ok(!html.includes('keywords'), 'MemberProgram has no keywords property');
+	});
+});
+
+describe('quiz — Quiz', () => {
+	const cards = [{ question: 'What is a qubit?', answer: 'The quantum unit of information.' }];
+	const card = (extra = {}) => render({ schemaType: 'quiz', headline: 'Flashcards', details: { subject: 'Quantum computing', pace: 'self-paced', cards, ...extra } });
+
+	/* eduQuestionType's domain is Question (and SolveMathAction) — Quiz owns NO properties */
+	test('eduQuestionType rides the Question, never the Quiz', () => {
+		const html = card();
+		assert.match(html, /itemtype="https:\/\/schema\.org\/Quiz"/);
+		assert.match(html, /<summary><span itemprop="text">What is a qubit\?<\/span><meta itemprop="eduQuestionType" content="Flashcard">/);
+		/* the only eduQuestionType on the card is the one inside the Question scope */
+		assert.equal(count(html, 'eduQuestionType'), 1);
+		assert.equal(count(html, 'itemprop="hasPart" itemscope itemtype="https://schema.org/Question"'), 1);
+		assert.match(html, /<div itemprop="acceptedAnswer" itemscope itemtype="https:\/\/schema\.org\/Answer"><p itemprop="text">The quantum unit of information\.<\/p><\/div>/);
+	});
+
+	test('the subject is an about → Thing scope and the count is derived', () => {
+		const html = card({ cards: [...cards, { question: 'b', answer: 'c' }] });
+		assert.match(html, /Subject: <span itemprop="about" itemscope itemtype="https:\/\/schema\.org\/Thing"><span itemprop="name">Quantum computing<\/span><\/span> · 2 cards · self-paced/);
+	});
+});
+
+describe('service — Service', () => {
+	const details = {
+		serviceType: 'Managed cloud hosting', provider: 'Northwind Group', areaServed: 'Denmark',
+		catalog: { name: 'Hosting plans', period: 'month', items: [{ name: 'Managed Kubernetes', price: 450, currency: 'EUR' }] },
+		channel: { languages: ['English', 'Danish'], processingTime: 'PT1H', url: '#', urlText: 'Request a quote', telephone: '+45 70 80 90 00', contactType: 'technical support' }
+	};
+	const card = () => render({ schemaType: 'service', headline: 'Hosting', details });
+
+	/* OfferCatalog is an ItemList, so itemListElement is the nesting property */
+	test('the catalogue nests OfferCatalog → itemListElement → Offer → itemOffered', () => {
+		const html = card();
+		assert.match(html, /<div itemprop="hasOfferCatalog" itemscope itemtype="https:\/\/schema\.org\/OfferCatalog"><meta itemprop="name" content="Hosting plans">/);
+		assert.match(html, /<li itemprop="itemListElement" itemscope itemtype="https:\/\/schema\.org\/Offer">/);
+		assert.match(html, /<span itemprop="itemOffered" itemscope itemtype="https:\/\/schema\.org\/Service"><span itemprop="name">Managed Kubernetes<\/span><\/span> — <data itemprop="price" value="450">€450<\/data>\/month/);
+	});
+
+	/* servicePhone expects a ContactPoint, NOT a phone string */
+	test('servicePhone is a ContactPoint scope carrying telephone', () => {
+		const html = card();
+		assert.match(html, /<span itemprop="servicePhone" itemscope itemtype="https:\/\/schema\.org\/ContactPoint"><meta itemprop="contactType" content="technical support"><a class="ui-button" itemprop="telephone" href="tel:\+4570809000">/);
+		assert.match(html, /<a class="ui-button" data-variant="accent" itemprop="serviceUrl" href="#">/);
+		assert.equal(count(html, '<meta itemprop="availableLanguage"'), 2);
+	});
+
+	test('Service is an Intangible — tags carry no keywords', () => {
+		const html = render({ schemaType: 'service', headline: 'S', tags: ['Hosting'] });
+		assert.match(html, /<ui-chip>Hosting<\/ui-chip>/);
+		assert.ok(!html.includes('keywords'));
+	});
+});
+
+describe('realestate — RealEstateListing', () => {
+	const property = { type: 'Apartment', name: 'Top-floor apartment', floorLevel: '5', petsAllowed: true, floorSize: 118, bedrooms: 3, bathrooms: 2, rooms: 5, yearBuilt: 2018, address: { addressLocality: 'Copenhagen', addressCountry: 'DK' }, amenities: ['Lift'] };
+	const card = (extra = {}) => render({ schemaType: 'realestate', headline: 'Flat', details: { price: { amount: 7250000, currency: 'DKK' }, property, ...extra } });
+
+	/* THE trap the reference markup encodes: a strictly-numeric property carries its
+	   machine value in <meta content>, with the unit words in a separate text node.
+	   <data value="3">3 bedrooms</data> reads as the STRING "3 bedrooms" to a
+	   text-reading validator, and is rejected. */
+	test('strictly-numeric properties use <meta content>, never <data value>', () => {
+		const html = card();
+		for (const [prop, value] of [['numberOfBedrooms', 3], ['numberOfBathroomsTotal', 2], ['numberOfRooms', 5], ['yearBuilt', 2018]]) {
+			assert.match(html, new RegExp(`<meta itemprop="${prop}" content="${value}">`), prop);
+			assert.ok(!new RegExp(`<data[^>]*${prop}`).test(html), `${prop} must not ride a <data>`);
+		}
+		assert.match(html, /<meta itemprop="numberOfBedrooms" content="3">3 bedrooms/, 'the unit words are a separate text node');
+		/* a year is not a quantity — num() would print "2,018" */
+		assert.match(html, /built 2018/);
+		assert.ok(!html.includes('2,018'));
+	});
+
+	/* offers' domain does not include Accommodation/Place/Residence — the price must
+	   ride the LISTING (a CreativeWork), OUTSIDE the mainEntity scope */
+	test('offers rides the listing, not the residence', () => {
+		const html = card();
+		const offerAt = html.indexOf('itemprop="offers"');
+		const homeAt = html.indexOf('itemprop="mainEntity"');
+		assert.ok(offerAt > -1 && homeAt > -1);
+		assert.ok(offerAt < homeAt, 'the offer must precede — and so sit outside — the mainEntity scope');
+		assert.ok(!html.slice(homeAt).includes('itemprop="offers"'), 'and nothing re-opens one inside it');
+		assert.match(html, /<data itemprop="price" value="7250000">DKK 7,250,000<\/data>/);
+	});
+
+	/* Residence and ApartmentComplex are Place, not Accommodation: yearBuilt's domain
+	   is Accommodation alone, so neither could carry this property block */
+	test('mainEntity resolves through the Accommodation allowlist only', () => {
+		for (const type of ['Apartment', 'House', 'SingleFamilyResidence', 'Suite', 'Room', 'Accommodation'])
+			assert.match(card({ property: { ...property, type } }), new RegExp(`itemprop="mainEntity" itemscope itemtype="https://schema\\.org/${type}"`), type);
+		for (const type of ['Residence', 'ApartmentComplex', 'Place', 'Evil"><script>', undefined])
+			assert.match(card({ property: { ...property, type } }), /itemprop="mainEntity" itemscope itemtype="https:\/\/schema\.org\/Accommodation"/, String(type));
+		assert.ok(!card({ property: { ...property, type: 'Evil"><script>' } }).includes('<script>'));
+	});
+
+	test('amenityFeature rows are LocationFeatureSpecification with a boolean value', () => {
+		assert.match(card(), /<li itemprop="amenityFeature" itemscope itemtype="https:\/\/schema\.org\/LocationFeatureSpecification"><meta itemprop="value" content="true"><span itemprop="name">Lift<\/span><\/li>/);
+	});
+});
+
+/* Intl separates an ALPHABETIC currency code from its amount with U+00A0, so the code
+   cannot wrap away from the number. The difference is invisible in a browser and a
+   whitespace-normalising comparator cannot see it, so it is pinned in the two DKK
+   assertions below and in the real-estate offer test above. */
+describe('menu — Menu', () => {
+	const sections = [{ name: 'Mains', items: [{ name: 'Curry', price: 145, currency: 'DKK', label: 'Gluten free', description: 'Mild.', diets: ['GlutenFreeDiet', 'PaleoDiet'], nutrition: { calories: '620 calories', proteinContent: '42 g', servingSize: '1 bowl' } }] }];
+	const card = () => render({ schemaType: 'menu', headline: 'Kitchen', details: { sections } });
+
+	/* Menu/MenuSection are CreativeWorks; MenuItem is an Intangible — which is why
+	   only the ITEM gets offers/nutrition/suitableForDiet */
+	test('sections nest MenuSection → MenuItem, and only the item carries the offer', () => {
+		const html = card();
+		assert.match(html, /itemprop="hasMenuSection" itemscope itemtype="https:\/\/schema\.org\/MenuSection"/);
+		assert.match(html, /<li itemprop="hasMenuItem" itemscope itemtype="https:\/\/schema\.org\/MenuItem">/);
+		assert.match(html, /<span itemprop="offers" itemscope itemtype="https:\/\/schema\.org\/Offer"><meta itemprop="priceCurrency" content="DKK"><data itemprop="price" value="145">DKK 145<\/data><\/span>/);
+		assert.match(html, /<span itemprop="nutrition" itemscope itemtype="https:\/\/schema\.org\/NutritionInformation" hidden><meta itemprop="calories" content="620 calories"><meta itemprop="proteinContent" content="42 g"><meta itemprop="servingSize" content="1 bowl"><\/span>/);
+	});
+
+	test('suitableForDiet takes RestrictedDiet members only', () => {
+		const html = card();
+		assert.match(html, /<meta itemprop="suitableForDiet" content="https:\/\/schema\.org\/GlutenFreeDiet">/);
+		assert.ok(!html.includes('PaleoDiet'), 'PaleoDiet is not a RestrictedDiet member');
+		assert.equal(count(html, 'itemprop="suitableForDiet"'), 1);
+	});
+});
+
+describe('tvseries / tvepisode', () => {
+	const series = { numberOfSeasons: 3, numberOfEpisodes: 24, startDate: '2023-09-14', contentRating: '15', rating: { value: 4.4, count: 12904 }, director: { name: 'Freja Nyholm', label: 'Created and directed by' }, actors: ['Ingrid Solberg', 'Mattias Vogel'], seasons: [{ seasonNumber: 1, numberOfEpisodes: 8, name: 'First Light', display: '8 episodes, 2023' }] };
+
+	test('seasons ride containsSeason → TVSeason', () => {
+		const html = render({ schemaType: 'tvseries', headline: 'Nordlight', details: series });
+		assert.match(html, /itemtype="https:\/\/schema\.org\/TVSeries"/);
+		assert.match(html, /<li itemprop="containsSeason" itemscope itemtype="https:\/\/schema\.org\/TVSeason"><meta itemprop="seasonNumber" content="1"><meta itemprop="numberOfEpisodes" content="8"><span itemprop="name">First Light<\/span> — 8 episodes, 2023<\/li>/);
+		assert.match(html, /<p data-part="meta">3 seasons · 24 episodes · since 2023 · rated 15<\/p>/);
+		/* superseded spellings must never appear */
+		for (const dead of ['itemprop="actors"', 'itemprop="episodes"', 'itemprop="seasons"']) assert.ok(!html.includes(dead), dead);
+	});
+
+	test('the season list is ordered, and the switch is data', () => {
+		assert.match(render({ schemaType: 'tvseries', headline: 'N', details: series }), /<ol data-part="list"><li itemprop="containsSeason"/);
+		assert.match(render({ schemaType: 'tvseries', headline: 'N', details: { ...series, ordered: false } }), /<ul data-part="list"><li itemprop="containsSeason"/);
+	});
+
+	/* episodeNumber/partOfSeason/partOfSeries/duration are inherited from Episode */
+	test('an episode declares its series and season as hidden scopes', () => {
+		const html = render({ schemaType: 'tvepisode', headline: 'The Long Dark Between', details: { episodeNumber: 4, duration: 'PT58M', datePublished: '2026-03-05', datePublishedDisplay: 'Mar 5, 2026', seriesName: 'Nordlight', season: { seasonNumber: 3, name: 'Terminus' }, director: { name: 'Freja Nyholm', label: 'Directed by' } } });
+		assert.match(html, /itemtype="https:\/\/schema\.org\/TVEpisode"/);
+		assert.match(html, /<meta itemprop="episodeNumber" content="4">/);
+		assert.match(html, /<div itemprop="partOfSeries" itemscope itemtype="https:\/\/schema\.org\/TVSeries" hidden><meta itemprop="name" content="Nordlight"><\/div>/);
+		assert.match(html, /<div itemprop="partOfSeason" itemscope itemtype="https:\/\/schema\.org\/TVSeason" hidden><meta itemprop="seasonNumber" content="3"><meta itemprop="name" content="Terminus"><\/div>/);
+		assert.match(html, /<p data-part="meta">Season 3, episode 4 · 58 min · Mar 5, 2026<\/p>/);
+		assert.match(html, /<p data-part="meta" itemprop="director" itemscope itemtype="https:\/\/schema\.org\/Person">Directed by <span itemprop="name">Freja Nyholm<\/span><\/p>/);
+	});
+
+	/* the shared credits helper must not have moved movie's wording */
+	test('a film still says "Director:"', () => {
+		assert.match(render({ schemaType: 'movie', headline: 'M', details: { director: { name: 'Sofia Lindqvist' } } }),
+			/itemprop="director" itemscope itemtype="https:\/\/schema\.org\/Person">Director: <span itemprop="name">Sofia Lindqvist</);
+	});
+});
+
+describe('medical — MedicalWebPage', () => {
+	const details = {
+		specialty: 'PrimaryCare', lastReviewed: '2026-05-02', lastReviewedDisplay: 'May 2, 2026',
+		audience: { type: 'Patient', name: 'Adults with sleep problems' },
+		about: { type: 'MedicalCondition', name: 'Chronic insomnia', aspects: [{ type: 'signOrSymptom', text: 'Trouble sleeping' }, { type: 'riskFactor', text: 'Shift work' }, { type: 'possibleTreatment', text: 'CBT-I' }, { type: 'cure', text: 'nope' }] },
+		reviewedBy: { name: 'Dr Astrid Hovgaard', role: 'Consultant in sleep medicine' },
+		disclaimer: 'General information only.'
+	};
+	const card = (extra = {}) => render({ schemaType: 'medical', headline: 'Insomnia', details: { ...details, ...extra } });
+
+	/* specialty/reviewedBy/lastReviewed are WebPage properties MedicalWebPage inherits */
+	test('specialty takes MedicalSpecialty members only', () => {
+		assert.match(card(), /<meta itemprop="specialty" content="https:\/\/schema\.org\/PrimaryCare">/);
+		const bad = card({ specialty: 'Chiropractic' });
+		assert.ok(!bad.includes('Chiropractic'), 'a non-member never reaches an enumeration URL');
+		assert.ok(!bad.includes('itemprop="specialty"'));
+	});
+
+	test('condition aspects resolve through the property → type map', () => {
+		const html = card();
+		assert.match(html, /<li itemprop="signOrSymptom" itemscope itemtype="https:\/\/schema\.org\/MedicalSignOrSymptom">/);
+		assert.match(html, /<li itemprop="riskFactor" itemscope itemtype="https:\/\/schema\.org\/MedicalRiskFactor">/);
+		assert.match(html, /<li itemprop="possibleTreatment" itemscope itemtype="https:\/\/schema\.org\/MedicalTherapy">/);
+		assert.ok(!html.includes('itemprop="cure"'), 'an unmapped aspect is dropped, not guessed');
+		assert.ok(!html.includes('>nope<'));
+	});
+
+	/* medicalAudience takes the TYPE MedicalAudience — not the similarly named
+	   MedicalAudienceType enumeration (Clinician / MedicalResearcher) */
+	test('medicalAudience falls back to the type, never the enumeration', () => {
+		assert.match(card(), /itemprop="medicalAudience" itemscope itemtype="https:\/\/schema\.org\/Patient"/);
+		assert.match(card({ audience: { type: 'Clinician', name: 'X' } }), /itemprop="medicalAudience" itemscope itemtype="https:\/\/schema\.org\/MedicalAudience"/);
+	});
+
+	/* the E-E-A-T signal: a signal a reader cannot see is not one */
+	test('reviewedBy is a visible byline, never a hidden meta', () => {
+		const html = card();
+		assert.match(html, /<address data-part="byline" itemprop="reviewedBy" itemscope itemtype="https:\/\/schema\.org\/Person">/);
+		assert.match(html, /<span itemprop="name">Dr Astrid Hovgaard<\/span><span itemprop="jobTitle">Consultant in sleep medicine<\/span>/);
+		assert.ok(!/<meta itemprop="reviewedBy"/.test(html));
+		assert.match(html, /<small data-part="dateline"><span>Medically reviewed<\/span><time datetime="2026-05-02">May 2, 2026<\/time><\/small>/);
+	});
+});
+
+describe('music — MusicAlbum', () => {
+	const tracks = [{ name: 'Slow Weather', duration: 'PT4M12S', durationDisplay: '4:12' }, { name: 'Kastellet', duration: 'PT3M48S', durationDisplay: '3:48' }];
+	const card = (extra = {}) => render({ schemaType: 'music', headline: 'Slow Weather', details: { artist: 'Halvmørke', productionType: 'StudioAlbum', releaseType: 'EPRelease', tracks, ...extra } });
+
+	test('byArtist takes the subheadline slot as a MusicGroup scope', () => {
+		assert.match(card(), /<p data-part="subheadline" itemprop="byArtist" itemscope itemtype="https:\/\/schema\.org\/MusicGroup"><span itemprop="name">Halvmørke<\/span><\/p>/);
+		/* the profile slot it shares must be untouched */
+		assert.match(render({ schemaType: 'profile', headline: 'P', details: { jobTitle: 'Designer' } }), /<p data-part="subheadline"><span itemprop="jobTitle">Designer<\/span><\/p>/);
+	});
+
+	/* a hand-kept count silently goes stale — it derives unless stated */
+	test('numTracks derives from the track list, and data still wins', () => {
+		assert.match(card(), /<meta itemprop="numTracks" content="2">/);
+		assert.match(card(), /<p data-part="meta">2 tracks<\/p>/);
+		assert.match(card({ numTracks: 9 }), /<meta itemprop="numTracks" content="9">/, 'a partial listing can still state the album total');
+		assert.ok(!render({ schemaType: 'music', headline: 'X', details: { artist: 'A' } }).includes('numTracks'), 'no tracks, no count');
+	});
+
+	test('the two album enumerations are allowlisted', () => {
+		assert.match(card(), /<meta itemprop="albumProductionType" content="https:\/\/schema\.org\/StudioAlbum">/);
+		assert.match(card(), /<meta itemprop="albumReleaseType" content="https:\/\/schema\.org\/EPRelease">/);
+		const bad = card({ productionType: 'BootlegAlbum', releaseType: 'CassetteRelease' });
+		assert.ok(!bad.includes('albumProductionType') && !bad.includes('albumReleaseType'));
+		assert.ok(!bad.includes('BootlegAlbum') && !bad.includes('CassetteRelease'));
+	});
+
+	test('tracks are MusicRecording rows in an ordered list', () => {
+		assert.match(card(), /<ol data-part="list"><li itemprop="track" itemscope itemtype="https:\/\/schema\.org\/MusicRecording"><meta itemprop="position" content="1"><meta itemprop="duration" content="PT4M12S"><span itemprop="name">Slow Weather<\/span> <small>4:12<\/small><\/li>/);
+		assert.ok(!card().includes('itemprop="tracks"'), 'the superseded spelling');
+	});
+});
+
+describe('glossary — DefinedTermSet', () => {
+	test('each term is a DefinedTerm with a termCode slug', () => {
+		const html = render({ schemaType: 'glossary', headline: 'Glossary', details: { about: 'Design systems', note: '40 terms', terms: [{ name: 'Design token', termCode: 'design-token', description: 'A named value.' }] } });
+		assert.match(html, /itemtype="https:\/\/schema\.org\/DefinedTermSet"/);
+		assert.match(html, /<div itemprop="about" itemscope itemtype="https:\/\/schema\.org\/Thing" hidden><meta itemprop="name" content="Design systems"><\/div>/);
+		assert.match(html, /<details name="glossary" itemprop="hasDefinedTerm" itemscope itemtype="https:\/\/schema\.org\/DefinedTerm">/);
+		assert.match(html, /<summary><span itemprop="name">Design token<\/span><meta itemprop="termCode" content="design-token">/);
+		assert.match(html, /<div><p itemprop="description">A named value\.<\/p><\/div>/);
+		assert.match(html, /<footer data-part="footer">40 terms<\/footer>/);
+	});
+});
+
+describe('podcastseries — PodcastSeries', () => {
+	const details = { startDate: '2022-01-11', cadence: 'Fortnightly', episodeCount: 42, feed: { url: 'https://calmmind.example/feed.xml', text: 'RSS feed' }, host: { name: 'Ida Månsson', role: 'Host' }, episodes: [{ episodeNumber: 42, duration: 'PT2M49S', durationDisplay: '2:49', name: 'Digital minimalism, revisited' }] };
+	const card = (extra = {}) => render({ schemaType: 'podcastseries', headline: 'The Calm Mind', details: { ...details, ...extra } });
+
+	/* numberOfEpisodes' domain is CreativeWorkSeason/RadioSeries/TVSeries/VideoGameSeries
+	   — PodcastSeries is NOT in it. The count is prose; hasPart is the machine answer. */
+	test('the episode count is prose, never a numberOfEpisodes property', () => {
+		const html = card();
+		assert.match(html, /itemtype="https:\/\/schema\.org\/PodcastSeries"/);
+		assert.ok(!html.includes('numberOfEpisodes'), 'PodcastSeries is not in that property’s domain');
+		assert.match(html, /Fortnightly · 42 episodes since 2022 · <a itemprop="webFeed" href="https:\/\/calmmind\.example\/feed\.xml">RSS feed<\/a>/);
+		assert.match(html, /<li itemprop="hasPart" itemscope itemtype="https:\/\/schema\.org\/PodcastEpisode">/);
+	});
+
+	/* episodes descend (newest first) — ordinal markers would lie */
+	test('the episode list is unordered by default, and the switch is data', () => {
+		assert.match(card(), /<ul data-part="list"><li itemprop="hasPart"/);
+		assert.match(card({ ordered: true }), /<ol data-part="list"><li itemprop="hasPart"/);
+	});
+
+	test('the host is a visible author byline', () => {
+		assert.match(card(), /<address data-part="byline" itemprop="author" itemscope itemtype="https:\/\/schema\.org\/Person">/);
+		assert.match(card(), /<span itemprop="name">Ida Månsson<\/span><span itemprop="jobTitle">Host<\/span>/);
+	});
+});
+
+describe('job — EmployerAggregateRating', () => {
+	const base = { company: 'Nordlys ApS', location: 'Copenhagen' };
+	const rated = { ...base, employerRating: { value: 4.3, count: 268, max: 5, organization: 'Nordlys ApS', sameAs: 'https://nordlys.example' } };
+	const card = (details) => render({ schemaType: 'job', headline: 'Senior Frontend Engineer', details });
+
+	/* itemscope with NO itemprop is what makes microdata read this as its OWN item:
+	   the rating is of the employer, and JobPosting has no aggregateRating at all */
+	test('the rating is a second TOP-LEVEL item, not a property of the posting', () => {
+		const html = card(rated);
+		assert.match(html, /<div data-part="rating" itemscope itemtype="https:\/\/schema\.org\/EmployerAggregateRating">/);
+		assert.ok(!/itemprop="[^"]*" itemscope itemtype="https:\/\/schema\.org\/EmployerAggregateRating"/.test(html), 'an itemprop would make it a property of the JobPosting');
+		assert.ok(!html.includes('itemprop="aggregateRating"'), 'JobPosting has no aggregateRating property');
+		assert.match(html, /<span itemprop="itemReviewed" itemscope itemtype="https:\/\/schema\.org\/Organization" hidden><meta itemprop="name" content="Nordlys ApS"><meta itemprop="sameAs" content="https:\/\/nordlys\.example"><\/span>/);
+		assert.match(html, /<meta itemprop="ratingValue" content="4.3">/);
+		assert.match(html, /<meta itemprop="ratingCount" content="268">/);
+	});
+
+	/* Google requires the rating be visible to the reader */
+	test('the rating renders a real star row with its own wording', () => {
+		const html = card(rated);
+		assert.match(html, /<input class="ui-rating" type="range" min="1" max="5" value="4.3" step="0.01" disabled aria-hidden="true">/);
+		assert.match(html, /<span data-sr>Nordlys ApS rated 4.3 out of 5 by 268 employees<\/span>/);
+		assert.match(html, /<span aria-hidden="true">4.3 \/ 5 employer rating \(268 reviews\)<\/span>/);
+	});
+
+	test('a job without an employer rating emits none', () => {
+		assert.ok(!card(base).includes('EmployerAggregateRating'));
+		assert.ok(!card(base).includes('data-part="rating"'));
+	});
+
+	/* the shared ratingPart must not have moved the ordinary aggregateRating shape */
+	test('an ordinary aggregate rating still carries its itemprop and default labels', () => {
+		const html = render({ schemaType: 'product', headline: 'X', details: { rating: { value: 4.5, count: 1247 } } });
+		assert.match(html, /<div data-part="rating" itemprop="aggregateRating" itemscope itemtype="https:\/\/schema\.org\/AggregateRating">/);
+		assert.match(html, /<span data-sr>Rated 4.5 out of 5 stars from 1,247 ratings<\/span>/);
+		assert.match(html, /<span aria-hidden="true">4.5 \/ 5 \(1,247 ratings\)<\/span>/);
+	});
+
+	test('a hostile employer name cannot break out of the label', () => {
+		const html = card({ ...base, employerRating: { value: 4, count: 2, organization: '"><img src=x onerror=alert(1)>' } });
+		assert.ok(!html.includes('<img'), 'attribute breakout must be escaped');
+		assert.match(html, /&quot;&gt;&lt;img src=x onerror=alert\(1\)&gt; rated 4 out of 5/, 'the name is present and escaped');
+	});
+});
+
+/* the new price/number sinks reach TEXT NODES through fmtPrice()/num() — the same
+   injection shape the formatter suite pins for the older types */
+describe('markup-first types — formatter sinks', () => {
+	const XSS = '<img src=x onerror=alert(1)>';
+	test('a hostile price is escaped in every new price row shape', () => {
+		const rows = [
+			['loyalty tier', { schemaType: 'loyalty', headline: 'X', details: { tiers: [{ name: 'T', requirementAmount: { currency: '', value: XSS } }] } }],
+			['service catalog', { schemaType: 'service', headline: 'X', details: { catalog: { items: [{ name: 'S', price: XSS, currency: '' }] } } }],
+			['realestate offer', { schemaType: 'realestate', headline: 'X', details: { price: { amount: XSS, currency: '' } } }],
+			['menu item', { schemaType: 'menu', headline: 'X', details: { sections: [{ name: 'S', items: [{ name: 'I', price: XSS, currency: '' }] }] } }]
+		];
+		for (const [where, fields] of rows) {
+			const html = render(fields);
+			assert.ok(!html.includes('<img'), `${where}: raw <img must never reach output`);
+			assert.match(html, /&lt;img src=x onerror=alert\(1\)&gt;/, `${where}: the price must still render, escaped`);
+			assert.ok(!html.includes('&amp;lt;'), `${where}: double-escaped output`);
+		}
+	});
+	test('a hostile number is escaped in every new num() row shape', () => {
+		const rows = [
+			['realestate facts', { schemaType: 'realestate', headline: 'X', details: { property: { bedrooms: XSS } } }],
+			['tv series', { schemaType: 'tvseries', headline: 'X', details: { numberOfSeasons: XSS } }],
+			['podcast series', { schemaType: 'podcastseries', headline: 'X', details: { episodeCount: XSS } }],
+			['album', { schemaType: 'music', headline: 'X', details: { numTracks: XSS } }]
+		];
+		for (const [where, fields] of rows) {
+			const html = render(fields);
+			assert.ok(!html.includes('<img'), `${where}: raw <img must never reach output`);
+			assert.match(html, /&lt;img src=x onerror=alert\(1\)&gt;/, `${where}: the number must still render, escaped`);
+			assert.ok(!html.includes('&amp;lt;'), `${where}: double-escaped output`);
+		}
+	});
+});

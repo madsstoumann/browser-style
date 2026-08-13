@@ -133,6 +133,10 @@
 		/* wid() — the cap rides the rows, not the column box */
 		& > * { margin: 0; max-inline-size: var(--ui-content-max, var(--width-prose, 65ch)); text-box: cap alphabetic; }
 
+		/* A bare microdata scope (mainEntity/about/hasOfferCatalog) is grouping, not a
+		   box — dissolve it so its rows join the column's flex gap. Docs: docs/schema.md */
+		& > div[itemscope]:not([data-part], [hidden]) { display: contents; }
+
 		/* theme= — a PLATE. NOT :where()-wrapped: it must out-specify ui-reveal.css */
 		&[theme] {
 			background: var(--_theme-bg, transparent);
