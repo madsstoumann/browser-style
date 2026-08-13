@@ -5,15 +5,11 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="Teaser cards linking to per-article pages — a cross-document view transition morphs the whole card into the full article. Fully static: pre-rendered by articles/build.js.">
-	<link rel="stylesheet" href="/ui/base/index.css">
-	<link rel="stylesheet" href="../../beacon/ui-beacon.css">
-	<link rel="stylesheet" href="../../chip/ui-chip.css">
-	<link rel="stylesheet" href="../../sticker/ui-sticker.css">
-	<link rel="stylesheet" href="../../icon/index.css">
-	<link rel="stylesheet" href="../../quote/ui-quote.css">
-	<link rel="stylesheet" href="../../avatar/ui-avatar.css">
-	<link rel="stylesheet" href="../../gradient-text/ui-gradient-text.css">
-	<link rel="stylesheet" href="../ui-card.css">
+	<link rel="stylesheet" href="/dist/demo.min.css">
+	<!-- srcset uses absolute v4.browser.style CDN URLs; the zone's Hotlink Protection
+	     403s any cross-origin Referer (pages.dev, localhost) — no-referrer passes -->
+	<meta name="referrer" content="no-referrer">
+	<link rel="preconnect" href="https://v4.browser.style">
 	<!-- Block first paint (and the incoming snapshot on Back) until the card
 	     grid is parsed, so every card/hero morph target exists when the browser
 	     captures this page. Without it the reverse morph races HTML parsing. -->
@@ -41,6 +37,17 @@
 		/* the card-covering link is data-part="cover" — styled by content.css,
 		   like every other part; no page-local classes */
 	</style>
+	<style>
+		:root {
+			--color-link: light-dark(hsl(221, 100%, 44%), hsl(221, 70%, 70%));
+			--color-accent: light-dark(hsl(211, 100%, 38%), hsl(211, 70%, 72%));
+			--color-success: light-dark(hsl(136, 45%, 30%), hsl(136, 25%, 60%));
+			--color-error: light-dark(hsl(360, 65%, 41%), hsl(360, 45%, 62%));
+			--color-text-muted: light-dark(hsl(0, 0%, 42%), hsl(0, 0%, 65%));
+		}
+		ui-content { --ui-content-muted: color-mix(in oklab, currentColor 85%, transparent); }
+		ui-chip[data-type] { --ui-chip-bg: hsl(0, 0%, 95%); --ui-chip-c: hsl(0, 0%, 13%); }
+	</style>
 </head>
 <body>
 	<h1>UI: Card — Article View Transition</h1>
@@ -52,18 +59,18 @@
 		<div class="grid grid-2" id="cards">
 			<ui-card data-view="card-article-1" variant="col" itemscope itemtype="https://schema.org/Article">
 		<cq-box>
-			<ui-media media="asr(16/9)"><img data-view="hero-article-1" src="/assets/images/quantum.png" alt="Stylised quantum processor" loading="lazy" itemprop="image"></ui-media>
+			<ui-media media="asr(16/9)"><img data-view="hero-article-1" src="/assets/images/quantum.png" alt="Stylised quantum processor" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/quantum.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/quantum.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/quantum.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/quantum.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/quantum.png 1200w" sizes="(min-width: 540px) min(50vw, 512px), 100vw" loading="eager" fetchpriority="high" decoding="async" itemprop="image"></ui-media>
 			<ui-content><small data-part="eyebrow" itemprop="articleSection">Science</small><h2 data-part="headline" itemprop="headline"><a data-part="cover" href="articles/article.html">Quantum computing reaches a <ui-gradient-text>practical milestone</ui-gradient-text></a></h2><p data-part="summary" itemprop="description">Researchers demonstrate error-corrected logical qubits running a chemistry simulation faster than any classical supercomputer.</p><meta itemprop="datePublished" content="2026-06-20T14:30:00Z"><meta itemprop="dateModified" content="2026-06-21T09:00:00Z"><address data-part="byline" itemprop="author" itemscope itemtype="https://schema.org/Person">
-		<ui-avatar><img src="/assets/images/janesmith.png" alt=""></ui-avatar>
+		<ui-avatar><img src="/assets/images/janesmith.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=64,height=64/assets/images/janesmith.png 1x, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=128,height=128/assets/images/janesmith.png 2x" loading="lazy" decoding="async"></ui-avatar>
 		<span data-part="byline-who"><span itemprop="name">Jane Smith</span><span itemprop="jobTitle">Science Editor</span></span><small data-part="dateline"><time datetime="2026-06-20T14:30:00Z">Jun 20, 2026</time><span>5 min read</span></small>
 	</address><p data-part="meta"><small>Updated Jun 21, 2026</small></p><div itemprop="interactionStatistic" itemscope itemtype="https://schema.org/InteractionCounter" hidden><meta itemprop="interactionType" content="https://schema.org/LikeAction"><meta itemprop="userInteractionCount" content="892"></div><div itemprop="interactionStatistic" itemscope itemtype="https://schema.org/InteractionCounter" hidden><meta itemprop="interactionType" content="https://schema.org/ShareAction"><meta itemprop="userInteractionCount" content="245"></div><div itemprop="interactionStatistic" itemscope itemtype="https://schema.org/InteractionCounter" hidden><meta itemprop="interactionType" content="https://schema.org/CommentAction"><meta itemprop="userInteractionCount" content="45"></div><div itemprop="interactionStatistic" itemscope itemtype="https://schema.org/InteractionCounter" hidden><meta itemprop="interactionType" content="https://schema.org/WatchAction"><meta itemprop="userInteractionCount" content="15420"></div><footer data-part="footer">15,420 views · 892 likes · 245 shares · 45 comments</footer></ui-content>
 		</cq-box>
 	</ui-card>
 			<ui-card data-view="card-news-1" variant="col" itemscope itemtype="https://schema.org/NewsArticle">
 		<cq-box>
-			<ui-media media="asr(16/9) beacon(red) beacon(ldr)"><img data-view="hero-news-1" src="/assets/images/government.png" alt="Parliament building at dusk" loading="lazy" itemprop="image"><ui-beacon>Live</ui-beacon></ui-media>
+			<ui-media media="asr(16/9) beacon(red) beacon(ldr)"><img data-view="hero-news-1" src="/assets/images/government.png" alt="Parliament building at dusk" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/government.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/government.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/government.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/government.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/government.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-beacon>Live</ui-beacon></ui-media>
 			<ui-content><small data-part="eyebrow" itemprop="articleSection">Politics</small><h2 data-part="headline" itemprop="headline"><a data-part="cover" href="articles/news.html">Coalition agrees on sweeping climate package</a></h2><p data-part="summary" itemprop="description">The agreement includes a carbon border tariff and a national retrofit programme, ending months of negotiation.</p><meta itemprop="datePublished" content="2026-07-01T06:15:00Z"><meta itemprop="dateModified" content="2026-07-01T08:40:00Z"><address data-part="byline" itemprop="author" itemscope itemtype="https://schema.org/Person">
-		<ui-avatar><img src="https://assets.stoumann.dk/img/avatar2.webp" alt=""></ui-avatar>
+		<ui-avatar><img src="https://assets.stoumann.dk/img/avatar2.webp" alt="" loading="lazy" decoding="async"></ui-avatar>
 		<span data-part="byline-who"><span itemprop="name">Thomas Berg</span><span itemprop="jobTitle">Newsroom</span></span><small data-part="dateline"><time datetime="2026-07-01T06:15:00Z">Jul 1, 2026</time><span>3 min read</span></small>
 	</address></ui-content>
 		</cq-box>

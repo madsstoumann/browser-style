@@ -465,6 +465,7 @@
 			column-gap: var(--ui-content-hours-column-gap, var(--spacing-md));
 			display: grid;
 			font-size: var(--ui-content-hours-fs, var(--ui-content-address-fs, calc(var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))) * 0.9)));
+			font-variant-numeric: tabular-nums;
 			grid-template-columns: auto 1fr;
 			margin: 0;
 			row-gap: var(--ui-content-hours-row-gap, var(--spacing-xs));

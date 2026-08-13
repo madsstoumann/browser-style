@@ -113,18 +113,33 @@ ui-carousel-controls [data-dot] {
 	border-radius: var(--radius-circle, 50%);
 	flex: none;
 	inline-size: var(--ui-carousel-marker-size);
+	/* a11y ≥24px hit target: padding grows the hit box, the negative margin gives it
+	   back to layout, content-box clip keeps the painted dot at its visual size */
+	--_hit-b: max(0px, calc((24px - var(--ui-carousel-marker-size)) / 2));
+	--_hit-i: var(--_hit-b);
+	background-clip: content-box;
+	background-origin: content-box;
+	box-sizing: content-box;
+	margin: calc(-1 * var(--_hit-b)) calc(-1 * var(--_hit-i));
+	padding: var(--_hit-b) var(--_hit-i);
 }
 ui-carousel-controls [data-dot][aria-current] {
 	background: var(--ui-carousel-marker-active);
+	background-clip: content-box; /* the shorthand resets it — keep the paint on the visual box */
+	background-origin: content-box;
 }
 
 /* dot shape: pill — :target-current fill timer becomes [aria-current] */
 :where(ui-card, ui-reveal):where([media*="mrk(pll)"]) ui-media ui-carousel-controls [data-dot],
 ui-media:where([media*="mrk(pll)"]) > ui-carousel-controls [data-dot] {
 	background: var(--ui-carousel-pill-track);
+	background-clip: content-box; /* the shorthand resets it — keep the paint on the visual box */
+	background-origin: content-box;
 	block-size: var(--ui-carousel-pill-height);
 	border-radius: var(--radius-pill, 100px);
 	inline-size: var(--ui-carousel-pill-width);
+	--_hit-b: max(0px, calc((24px - var(--ui-carousel-pill-height)) / 2));
+	--_hit-i: max(0px, calc((24px - var(--ui-carousel-pill-width)) / 2));
 }
 @media (prefers-reduced-motion: no-preference) {
 	:where(ui-card, ui-reveal):where([media*="mrk(pll)"]) ui-media ui-carousel-controls [data-dot][aria-current],
@@ -132,6 +147,8 @@ ui-media:where([media*="mrk(pll)"]) > ui-carousel-controls [data-dot] {
 		animation: ui-carousel-pill-fill var(--ui-carousel-autoplay) linear forwards;
 		animation-play-state: var(--ui-carousel-play-state, running);
 		background: linear-gradient(var(--ui-carousel-pill-fill), var(--ui-carousel-pill-fill)) no-repeat 0 0 / 0% 100% var(--ui-carousel-pill-track);
+		background-clip: content-box; /* the shorthand resets it — keep the paint on the visual box */
+		background-origin: content-box;
 	}
 }
 @media (prefers-reduced-motion: reduce) {
@@ -153,8 +170,11 @@ ui-media:where([media*="mrk(hyb)"]) > ui-carousel-controls [data-dot] {
 :where(ui-card, ui-reveal):where([media*="mrk(hyb)"]) ui-media ui-carousel-controls [data-dot]:is([aria-current], :focus-visible),
 ui-media:where([media*="mrk(hyb)"]) > ui-carousel-controls [data-dot]:is([aria-current], :focus-visible) {
 	background: var(--ui-carousel-pill-track);
+	background-clip: content-box; /* the shorthand resets it — keep the paint on the visual box */
+	background-origin: content-box;
 	border-radius: var(--radius-pill, 100px);
 	inline-size: var(--ui-carousel-hyb-width, calc(var(--ui-carousel-pill-width) * 1.35));
+	--_hit-i: max(0px, calc((24px - var(--ui-carousel-hyb-width, calc(var(--ui-carousel-pill-width) * 1.35))) / 2));
 }
 @media (prefers-reduced-motion: no-preference) {
 	:where(ui-card, ui-reveal):where([media*="mrk(hyb)"]) ui-media ui-carousel-controls [data-dot][aria-current],
@@ -162,6 +182,8 @@ ui-media:where([media*="mrk(hyb)"]) > ui-carousel-controls [data-dot]:is([aria-c
 		animation: ui-carousel-pill-fill var(--ui-carousel-autoplay) linear forwards;
 		animation-play-state: var(--ui-carousel-play-state, running);
 		background: linear-gradient(var(--ui-carousel-pill-fill), var(--ui-carousel-pill-fill)) no-repeat 0 0 / 0% 100% var(--ui-carousel-pill-track);
+		background-clip: content-box; /* the shorthand resets it — keep the paint on the visual box */
+		background-origin: content-box;
 	}
 }
 @media (prefers-reduced-motion: reduce) {
@@ -175,9 +197,12 @@ ui-media:where([media*="mrk(hyb)"]) > ui-carousel-controls [data-dot]:is([aria-c
    (and --ui-carousel-thumb-ratio, if set) onto its dot's inline style */
 :where(ui-card, ui-reveal):where([media*="mrk(tmb)"]) ui-media ui-carousel-controls [data-dot],
 ui-media:where([media*="mrk(tmb)"]) > ui-carousel-controls [data-dot] {
+	--_hit-b: 0px; /* thumbs already clear 24px — no hit-area padding */
+	--_hit-i: 0px;
 	aspect-ratio: var(--ui-carousel-thumb-ratio, 4 / 3);
 	background: var(--ui-carousel-thumb-url) center / cover no-repeat var(--ui-carousel-thumb-bg, rgb(0 0 0 / 0.2));
 	block-size: var(--ui-carousel-thumb-size, 2.25rem);
+	box-sizing: border-box;
 	border: var(--ui-carousel-thumb-border, 2px solid #fff);
 	border-color: var(--ui-carousel-thumb-border-color, rgb(255 255 255 / 0.5));
 	border-radius: var(--ui-carousel-thumb-radius, var(--radius-sm, 0.25rem));
@@ -215,8 +240,11 @@ ui-carousel-controls[data-media*="mrk(tml)"] [data-dots] {
 	scrollbar-width: var(--ui-carousel-tml-group-scrollbar, none);
 }
 ui-carousel-controls[data-media*="mrk(tml)"] [data-dot] {
+	--_hit-b: 0px; /* text labels already clear 24px — no hit-area padding */
+	--_hit-i: 0px;
 	background: none;
 	block-size: auto;
+	box-sizing: border-box;
 	border-radius: var(--ui-carousel-tml-radius, 0);
 	color: var(--ui-carousel-tml-color, rgb(255 255 255 / 0.75));
 	flex: 0 0 var(--ui-carousel-tml-col, 7rem);
@@ -578,15 +606,18 @@ ui-carousel-controls[data-media*="arw(blw)"] [data-dots] {
    anchor-size(); here the layer already IS the scrollport, so a percentage of it
    is the same measurement. Declared last so its geometry wins. ---- */
 ui-carousel-controls[data-media*="mrk(bar)"] [data-dots] {
-	block-size: var(--ui-carousel-bar-hit, 0.875rem);
+	block-size: var(--ui-carousel-bar-hit, 1.5rem); /* ≥24px a11y target height; the painted line stays 1px */
 	gap: 0;
 	inline-size: calc((100% - 2 * var(--ui-carousel-bar-inset, 0px)) * var(--ui-carousel-bar-span, 1));
 	inset-inline: 0;
 	margin-inline: auto;
 }
 ui-carousel-controls[data-media*="mrk(bar)"] [data-dot] {
+	--_hit-b: 0px; /* the segment IS the hit area — [data-dots] block-size carries the 24px */
+	--_hit-i: 0px;
 	background: linear-gradient(var(--ui-carousel-marker-bg) 0 0) no-repeat center / 100% var(--ui-carousel-bar-track-size, 1px);
 	block-size: 100%;
+	box-sizing: border-box;
 	border: 0;
 	border-radius: 0;
 	flex: 1 1 0;

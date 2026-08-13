@@ -6,18 +6,37 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="color-scheme" content="light dark">
 	<meta name="description" content="The &lt;ui-content&gt; type system: the headline ramp hl(), the master step scl(), the relational size ladder, group sizes eb()/tx()/mt(), the per-part proportional scale, and the fnt() font-family token (container + heading split).">
-	<link rel="stylesheet" href="/ui/base/index.css">
-	<link rel="stylesheet" href="/layout/dist/layout.css">
-	<link rel="stylesheet" href="../../chip/ui-chip.css">
-	<link rel="stylesheet" href="../ui-card.css">
+	<!-- srcset uses absolute v4.browser.style CDN URLs; the zone's Hotlink Protection
+	     403s any cross-origin Referer (pages.dev, localhost) — no-referrer passes -->
+	<meta name="referrer" content="no-referrer">
+	<!-- srcset origin: handshake in parallel with the CSS download -->
+	<link rel="preconnect" href="https://v4.browser.style">
+	<link rel="stylesheet" href="/dist/demo.min.css">
 	<style>
-		body > lay-out { margin-block-end: var(--spacing-2xl); }
+		main > lay-out { margin-block-end: var(--spacing-2xl); }
 		.stack { display: grid; gap: var(--spacing-lg); margin-block-end: var(--spacing-2xl); }
 		.note { color: var(--color-text-secondary, #666); max-inline-size: 70ch; }
 		code { font-size: 0.9em; }
 	</style>
+	<style>
+		/* Page-scoped WCAG AA contrast overrides — pending a token retune in ui/base/tokens.css.
+		   Unlayered on purpose: beats the bs-core layer. Same block as demo/schema.html. */
+		:root {
+			--color-link: light-dark(hsl(221, 100%, 44%), hsl(221, 70%, 70%));
+			--color-accent: light-dark(hsl(211, 100%, 38%), hsl(211, 70%, 72%));
+			--color-success: light-dark(hsl(136, 45%, 30%), hsl(136, 25%, 60%));
+			--color-error: light-dark(hsl(360, 65%, 41%), hsl(360, 45%, 62%));
+			--color-text-muted: light-dark(hsl(0, 0%, 42%), hsl(0, 0%, 65%));
+		}
+		ui-content {
+			/* 85%: double-application (byline > dateline) still clears 4.5:1 */
+			--ui-content-muted: color-mix(in oklab, currentColor 85%, transparent);
+		}
+		ui-chip[data-type] { --ui-chip-bg: hsl(0, 0%, 95%); --ui-chip-c: hsl(0, 0%, 13%); }
+	</style>
 </head>
 <body>
+<main>
 	<h1>UI: Card — <code>&lt;ui-content&gt;</code> · Typography</h1>
 	<p class="note">The <code>&lt;ui-content&gt;</code> type system in one place: the independent <strong>headline ramp</strong> (<code>hl()</code>), the <strong>body ramp</strong> (<code>scl()</code>), the <strong>per-part proportional scale</strong>, and the <strong>font families</strong> (<code>fnt()</code>). Every example is a bare <code>&lt;ui-content&gt;</code> in normal page flow — no card, no grid.</p>
 	<p class="note">Back to <a href="content.html">content.html</a> (the full <code>content=</code> token reference).</p>
@@ -222,5 +241,6 @@
 			<address data-part="byline"><span>By Jane Smith · Jul 14, 2026</span></address>
 		</ui-content>
 	</div>
+</main>
 </body>
 </html>

@@ -4,7 +4,7 @@
     --color-accent: light-dark(hsl(211, 100%, 50%), hsl(211, 60%, 50%));
     --color-accent-dark: light-dark(hsl(211, 80%, 30%), hsl(211, 30%, 20%));
     --color-accent-text: hsl(211, 100%, 95%);
-    --color-border: light-dark(hsl(0, 0%, 80%), hsl(0, 0%, 20%));
+    --color-border: light-dark(hsl(0, 0%, 80%), hsl(0, 0%, 35%));
     --color-button: light-dark(hsl(0, 0%, 90%), hsl(0, 0%, 40%));
     --color-button-text: light-dark(hsl(0, 0%, 40%), hsl(0, 0%, 60%));
     --color-surface: light-dark(hsl(0, 0%, 100%), hsl(0, 0%, 0%));
@@ -698,7 +698,7 @@
     --icon: var(--input-check-icon);
     --input-border-width: calc(1em * (4/3) / 13.333333);
     appearance: none;
-    background: var(--input-check-bg, var(--color-surface));
+    background: var(--input-check-bg, light-dark(var(--color-surface), var(--color-surface-alt)));
     border-color: var(--input-check-bdc, var(--color-border));
     border-radius: var(--input-check-bdrs, .2em);
     font-size: 1em;
@@ -3108,6 +3108,7 @@
     }
     &:where([media*="mrk(tml)"]) {
       --ui-carousel-band: var(--ui-carousel-tml-band, 4.25rem);
+      --ui-carousel-below-gap: 1rem;
       --ui-carousel-marker-inset: var(--ui-carousel-tml-inset, var(--ui-carousel-overlay-gap));
       &:where([media*="mrk(sm)"]) {
         --ui-carousel-tml-col: 5.5rem;
@@ -3131,7 +3132,7 @@
         --ui-carousel-tml-line-width: var(--border-width-heavy, 3px);
       }
     }
-    &:where([media*="mrk(tml)"]:is([media*="mrk(blw)"], [media*="mrk(abv)"], [media*="nav(blw)"], [media*="nav(abv)"])) {
+    &:where([media*="mrk(tml)"]:is([media*="mrk(blw)"], [media*="mrk(abv)"], [media*="nav(blw)"], [media*="nav(abv)"], [media*="mrk(rail)"])) {
       --ui-carousel-tml-color: color-mix(in oklab, CanvasText 65%, transparent);
       --ui-carousel-tml-color-current: CanvasText;
       --ui-carousel-tml-dot: color-mix(in oklab, CanvasText 45%, transparent);
@@ -3667,11 +3668,23 @@
       content: none;
     }
     :where(ui-card, ui-reveal, ui-media, lay-out[overflow]) {
+      &:where([media*="mrk(blw)"]) {
+        --ui-carousel-arrow-top: calc(anchor(center) - (var(--ui-carousel-below-gap, 0.5rem) + var(--ui-carousel-band, 2.75rem)) / 2 - var(--ui-carousel-arrow-size) / 2);
+      }
+      &:where([media*="mrk(abv)"]) {
+        --ui-carousel-arrow-top: calc(anchor(center) + (var(--ui-carousel-above-gap, 0.5rem) + var(--ui-carousel-band, 2.75rem)) / 2 - var(--ui-carousel-arrow-size) / 2);
+      }
       &:where([media*="arw(ts)"], [media*="arw(tc)"], [media*="arw(te)"]) {
         --ui-carousel-arrow-top: calc(anchor(top) + var(--ui-carousel-overlay-gap));
       }
       &:where([media*="arw(bs)"], [media*="arw(bc)"], [media*="arw(be)"]) {
         --ui-carousel-arrow-top: calc(anchor(bottom) - var(--ui-carousel-overlay-gap) - var(--ui-carousel-arrow-size));
+      }
+      &:where([media*="mrk(abv)"]):where([media*="arw(ts)"], [media*="arw(tc)"], [media*="arw(te)"]) {
+        --ui-carousel-arrow-top: calc(anchor(top) + var(--ui-carousel-above-gap, 0.5rem) + var(--ui-carousel-band, 2.75rem) + var(--ui-carousel-overlay-gap));
+      }
+      &:where([media*="mrk(blw)"]):where([media*="arw(bs)"], [media*="arw(bc)"], [media*="arw(be)"]) {
+        --ui-carousel-arrow-top: calc(anchor(bottom) - var(--ui-carousel-below-gap, 0.5rem) - var(--ui-carousel-band, 2.75rem) - var(--ui-carousel-overlay-gap) - var(--ui-carousel-arrow-size));
       }
     }
     :where(ui-card, ui-reveal):where([media*="arw(set)"]) :where(ui-media)::scroll-button(inline-start),
@@ -3751,12 +3764,6 @@
       }
     }
     :where(ui-card, ui-reveal, ui-media, lay-out[overflow]) {
-      &:where([media*="mrk(blw)"]) {
-        --ui-carousel-arrow-top: calc(anchor(center) - (var(--ui-carousel-below-gap, 0.5rem) + var(--ui-carousel-band, 2.75rem)) / 2 - var(--ui-carousel-arrow-size) / 2);
-      }
-      &:where([media*="mrk(abv)"]) {
-        --ui-carousel-arrow-top: calc(anchor(center) + (var(--ui-carousel-above-gap, 0.5rem) + var(--ui-carousel-band, 2.75rem)) / 2 - var(--ui-carousel-arrow-size) / 2);
-      }
       &:where([media*="nav(blw)"], [media*="arw(blw)"]) {
         --ui-carousel-arrow-top: calc(anchor(bottom) - var(--ui-carousel-band) / 2 - var(--ui-carousel-arrow-size) / 2);
       }
@@ -3901,9 +3908,6 @@
     }
     :where(ui-card, ui-reveal):where([media*="axis(y)"][media*="mrk(rail)"]) :where(ui-media),
     :where(ui-media, lay-out[overflow]):where([media*="axis(y)"][media*="mrk(rail)"]) {
-      &::scroll-button(*) {
-        content: none;
-      }
       &::scroll-marker-group {
         align-items: center;
         align-self: auto;
@@ -3926,6 +3930,53 @@
     :where(ui-media, lay-out[overflow]):where([media*="axis(y)"][media*="mrk(rail)"]) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker {
       flex: 0 1 auto;
       min-block-size: var(--ui-carousel-thumb-min, 2.5rem);
+    }
+    :where(ui-card, ui-reveal):where([media*="axis(y)"][media*="mrk(tml)"][media*="mrk(rail)"]) :where(ui-media)::scroll-marker-group,
+    :where(ui-media, lay-out[overflow]):where([media*="axis(y)"][media*="mrk(tml)"][media*="mrk(rail)"])::scroll-marker-group {
+      align-items: stretch;
+      gap: 0;
+      inline-size: auto;
+      scrollbar-width: var(--ui-carousel-tml-group-scrollbar, none);
+    }
+    :where(ui-card, ui-reveal):where([media*="axis(y)"][media*="mrk(tml)"][media*="mrk(rail)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker,
+    :where(ui-media, lay-out[overflow]):where([media*="axis(y)"][media*="mrk(tml)"][media*="mrk(rail)"]) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker {
+      align-content: center;
+      background:
+        radial-gradient(
+          circle at var(--_dir-s, left) var(--_tml-c) top 50%,
+          var(--ui-carousel-tml-dot-bg, #0000) 0 calc(var(--_tml-r) - 0.25px),
+          var(--ui-carousel-tml-dot, rgb(255 255 255 / 0.6)) calc(var(--_tml-r) + 0.25px) calc(var(--_tml-c) - 0.25px),
+          #0000 calc(var(--_tml-c) + 0.25px)) no-repeat,
+        var(--_tml-rail-img) no-repeat var(--_dir-s, left) var(--_tml-rail-y) top 0 / var(--ui-carousel-tml-line-width, 2px) calc(100% + 1px);
+      flex: 0 0 var(--ui-carousel-tml-row, calc(var(--ui-carousel-tml-col, 7rem) / 2));
+      min-block-size: 0;
+      padding-block: 0;
+      padding-inline: calc(var(--ui-carousel-tml-dot-size, 0.7rem) + var(--ui-carousel-tml-gap, 0.5rem)) var(--ui-carousel-tml-padding-inline, 0.25rem);
+      text-align: start;
+    }
+    :where(ui-card, ui-reveal):where([media*="axis(y)"][media*="mrk(tml)"][media*="mrk(rail)"]) :where(ui-media) > :first-child::scroll-marker,
+    :where(ui-media, lay-out[overflow]):where([media*="axis(y)"][media*="mrk(tml)"][media*="mrk(rail)"]) > :first-child::scroll-marker {
+      --_tml-rail-img: linear-gradient(#0000 50%, var(--ui-carousel-tml-rail, rgb(255 255 255 / 0.35)) 50%);
+    }
+    :where(ui-card, ui-reveal):where([media*="axis(y)"][media*="mrk(tml)"][media*="mrk(rail)"]) :where(ui-media) > :last-child::scroll-marker,
+    :where(ui-media, lay-out[overflow]):where([media*="axis(y)"][media*="mrk(tml)"][media*="mrk(rail)"]) > :last-child::scroll-marker {
+      --_tml-rail-img: linear-gradient(var(--ui-carousel-tml-rail, rgb(255 255 255 / 0.35)) 50%, #0000 50%);
+    }
+    :where(ui-card, ui-reveal):where([media*="axis(y)"][media*="mrk(tml)"][media*="mrk(rail)"]) :where(ui-media) > :only-child::scroll-marker,
+    :where(ui-media, lay-out[overflow]):where([media*="axis(y)"][media*="mrk(tml)"][media*="mrk(rail)"]) > :only-child::scroll-marker {
+      --_tml-rail-img: none;
+    }
+    :where(ui-card, ui-reveal):where([media*="axis(y)"][media*="mrk(tml)"][media*="mrk(rail)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
+    :where(ui-media, lay-out[overflow]):where([media*="axis(y)"][media*="mrk(tml)"][media*="mrk(rail)"]) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
+      background:
+        radial-gradient(
+          circle at var(--_dir-s, left) var(--_tml-c) top 50%,
+          var(--ui-carousel-tml-dot-current, #fff) 0 calc(var(--_tml-c) - 0.25px),
+          #0000 calc(var(--_tml-c) + 0.25px)) no-repeat,
+        var(--_tml-rail-img) no-repeat var(--_dir-s, left) var(--_tml-rail-y) top 0 / var(--ui-carousel-tml-line-width, 2px) calc(100% + 1px);
+      padding-block: 0;
+      padding-inline: calc(var(--ui-carousel-tml-dot-size, 0.7rem) + var(--ui-carousel-tml-gap, 0.5rem)) var(--ui-carousel-tml-padding-inline, 0.25rem);
+      text-align: start;
     }
     :where(ui-card, ui-reveal):where([media*="mrk(ts)"]) :where(ui-media)::scroll-marker-group,
     :where(ui-media, lay-out[overflow]):where([media*="mrk(ts)"])::scroll-marker-group,
@@ -4075,6 +4126,16 @@
       top: anchor(center);
       bottom: auto;
       transform: translateY(-50%);
+    }
+    :where(ui-card, ui-reveal):where(:is([media*="mrk(lbl)"], [media*="mrk(tml)"]):is([media*="mrk(blw)"], [media*="nav(blw)"])) :where(ui-media)::scroll-marker-group,
+    :where(ui-media, lay-out[overflow]):where(:is([media*="mrk(lbl)"], [media*="mrk(tml)"]):is([media*="mrk(blw)"], [media*="nav(blw)"]))::scroll-marker-group {
+      top: calc(anchor(bottom) - var(--ui-carousel-band, 2.75rem));
+      bottom: auto;
+    }
+    :where(ui-card, ui-reveal):where(:is([media*="mrk(lbl)"], [media*="mrk(tml)"]):is([media*="mrk(abv)"], [media*="nav(abv)"])) :where(ui-media)::scroll-marker-group,
+    :where(ui-media, lay-out[overflow]):where(:is([media*="mrk(lbl)"], [media*="mrk(tml)"]):is([media*="mrk(abv)"], [media*="nav(abv)"]))::scroll-marker-group {
+      top: anchor(top);
+      bottom: auto;
     }
     :where(ui-card, ui-reveal):where([media*="mrk(bar)"]) :where(ui-media)::scroll-marker-group,
     :where(ui-media, lay-out[overflow]):where([media*="mrk(bar)"])::scroll-marker-group {
@@ -7959,7 +8020,7 @@
       }
       > :where(:not(summary))[theme] {
         background: var(--_theme-bg, transparent);
-        color: var(--_theme-c, var(--color-text));
+        color: var(--_theme-c, var(--_theme-ink, var(--color-text)));
         min-block-size: 100%;
       }
       > ui-content:not([content]) {
@@ -8024,7 +8085,7 @@
     }
     &[theme] {
       --ui-reveal-bg: var(--_theme-bg, var(--color-surface));
-      color: var(--_theme-c, var(--color-text));
+      color: var(--_theme-c, var(--_theme-ink, var(--color-text)));
     }
     &[theme~=glass] {
       --ui-reveal-bdf: var(--_theme-bdf);
@@ -9897,11 +9958,14 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
       &::before {
         inset-block-start: 0;
       }
+      &:not([data-theme], [data-fill])::before {
+        background: var(--ui-timeline-dot-bg, transparent);
+      }
       &:not(:last-child)::after {
         block-size: var(--ui-timeline-line-width);
         inline-size: auto;
         inset-block: var(--_rail) auto;
-        inset-inline: calc(var(--ui-timeline-dot-size) / 2) calc(-1 * (var(--ui-timeline-gap) + var(--ui-timeline-dot-size) / 2));
+        inset-inline: var(--ui-timeline-dot-size) calc(-1 * var(--ui-timeline-gap));
       }
     }
   }
@@ -9959,8 +10023,8 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
 /* ui/highlight/ui-highlight.css */
 @layer bs-component {
   :where(high-light) {
-    --_fill: #82ffad;
-    --_fill: attr(fill type(<color>), #82ffad);
+    --_fill: light-dark(#82ffad, #34a05e);
+    --_fill: attr(fill type(<color>), light-dark(#82ffad, #34a05e));
     --_ink-auto: currentColor;
     --_ink: currentColor;
     --_ink: attr(ink type(<color>), var(--_ink-auto));
@@ -9983,7 +10047,7 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
         color-mix(in oklab, var(--_fill), transparent 100%) 1%,
         color-mix(in oklab, var(--_fill), transparent 0%) 3%,
         color-mix(in oklab, var(--_fill), transparent 45%) 6%,
-        color-mix(in oklab, var(--_fill), transparent 88%) 92%,
+        color-mix(in oklab, var(--_fill), transparent 35%) 92%,
         color-mix(in oklab, var(--_fill), transparent 25%) 96%,
         color-mix(in oklab, var(--_fill), transparent 100%) 99%),
       linear-gradient(
@@ -9996,38 +10060,39 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
     background-size: var(--_bg-size);
     text-shadow: var(--_shadow-x) var(--_shadow-y) var(--_shadow-blur) color-mix(in oklab, var(--_fill), transparent 45%);
     &[fill=green] {
-      --_fill: #82ffad;
+      --_fill: light-dark(#82ffad, #34a05e);
     }
     &[fill=yellow] {
-      --_fill: #fdfa8c;
+      --_fill: light-dark(#fdfa8c, #c2ad24);
     }
     &[fill=orange] {
-      --_fill: #ffbe7b;
+      --_fill: light-dark(#ffbe7b, #c8762a);
     }
     &[fill=pink] {
-      --_fill: #ff9dc9;
+      --_fill: light-dark(#ff9dc9, #c74d84);
     }
     @supports not (background-color: attr(x type(<color>), red)) {
       & {
-        --_fill: #82ffad;
+        --_fill: light-dark(#82ffad, #34a05e);
         --_ink: var(--_ink-auto);
       }
       &[fill=green] {
-        --_fill: #82ffad;
+        --_fill: light-dark(#82ffad, #34a05e);
       }
       &[fill=yellow] {
-        --_fill: #fdfa8c;
+        --_fill: light-dark(#fdfa8c, #c2ad24);
       }
       &[fill=orange] {
-        --_fill: #ffbe7b;
+        --_fill: light-dark(#ffbe7b, #c8762a);
       }
       &[fill=pink] {
-        --_fill: #ff9dc9;
+        --_fill: light-dark(#ff9dc9, #c74d84);
       }
     }
     &[variant~=underline] {
       --_bg-size: 100% 0.42em;
       --_bg-pos: 0 92%;
+      --_ink-auto: currentColor;
       --_radius: 0.2em;
       padding-block: 0;
       text-shadow: none;
@@ -10035,6 +10100,7 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
     &[variant~=strike] {
       --_bg-size: 100% 0.34em;
       --_bg-pos: 0 55%;
+      --_ink-auto: currentColor;
       --_radius: 0.2em;
       padding-block: 0;
       text-shadow: none;
@@ -11055,6 +11121,10 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
     padding-inline-start: calc(var(--ui-carousel-rail) + 2 * var(--ui-carousel-overlay-gap, 0.75rem));
     scroll-padding-inline-start: calc(var(--ui-carousel-rail) + 2 * var(--ui-carousel-overlay-gap, 0.75rem));
   }
+  ui-media:where([media*="axis(y)"][media*="mrk(rail)"][media*="mrk(tml)"], :is(ui-card, ui-reveal)[media*="axis(y)"][media*="mrk(rail)"][media*="mrk(tml)"] *) {
+    --ui-carousel-rail: var(--ui-carousel-tml-rail-size, 4rem);
+    box-sizing: content-box;
+  }
   @supports (scroll-marker-group: after) {
     ui-media:where(:is([media*=nav]:not([media*="nav("]), [media*="nav(mrk)"], [media*="nav(arw)"], [media*="nav(blw)"], [media*="nav(abv)"]), :is(ui-card, ui-reveal):is([media*=nav]:not([media*="nav("]), [media*="nav(mrk)"], [media*="nav(arw)"], [media*="nav(blw)"], [media*="nav(abv)"]) *) {
       scrollbar-width: none;
@@ -11909,6 +11979,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       column-gap: var(--ui-content-hours-column-gap, var(--spacing-md));
       display: grid;
       font-size: var(--ui-content-hours-fs, var(--ui-content-address-fs, calc(var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))) * 0.9)));
+      font-variant-numeric: tabular-nums;
       grid-template-columns: auto 1fr;
       margin: 0;
       row-gap: var(--ui-content-hours-row-gap, var(--spacing-xs));
@@ -12847,7 +12918,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
   }
   :where(ui-card[theme]) {
     --ui-card-bg: var(--_theme-bg, light-dark(var(--color-surface), var(--ui-card-dark-bg, #1f2937)));
-    color: var(--_theme-c, var(--color-text));
+    color: var(--_theme-c, var(--_theme-ink, var(--color-text)));
   }
   @container bs-card (inline-size >= 25rem) {
     :where([variant~="md:col"]) :is(cq-box, summary),

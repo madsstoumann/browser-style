@@ -69,7 +69,7 @@
 			/* theme= — panel side: the back element paints itself and fills the panel */
 			> :where(:not(summary))[theme] {
 				background: var(--_theme-bg, transparent);
-				color: var(--_theme-c, var(--color-text));
+				color: var(--_theme-c, var(--_theme-ink, var(--color-text)));
 				min-block-size: 100%;
 			}
 
@@ -137,7 +137,7 @@
 		/* theme= — card side: re-publish the resolved pair into --ui-reveal-bg */
 		&[theme] {
 			--ui-reveal-bg: var(--_theme-bg, var(--color-surface));
-			color: var(--_theme-c, var(--color-text));
+			color: var(--_theme-c, var(--_theme-ink, var(--color-text)));
 		}
 		/* theme="… glass" — re-publish the material; the host must not blur a square */
 		&[theme~="glass"] {

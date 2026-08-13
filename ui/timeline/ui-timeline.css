@@ -157,11 +157,13 @@
 
 			--_centre: calc(var(--ui-timeline-dot-size) / 2);
 			&::before { inset-block-start: 0; }
+			/* plain dots are open rings, so the rail stops at the dot edges (not centre-to-centre) */
+			&:not([data-theme], [data-fill])::before { background: var(--ui-timeline-dot-bg, transparent); }
 			&:not(:last-child)::after {
 				block-size: var(--ui-timeline-line-width);
 				inline-size: auto;
 				inset-block: var(--_rail) auto;
-				inset-inline: calc(var(--ui-timeline-dot-size) / 2) calc(-1 * (var(--ui-timeline-gap) + var(--ui-timeline-dot-size) / 2));
+				inset-inline: var(--ui-timeline-dot-size) calc(-1 * var(--ui-timeline-gap));
 			}
 		}
 	}

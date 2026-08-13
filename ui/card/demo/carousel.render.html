@@ -6,21 +6,33 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="color-scheme" content="light dark">
 	<meta name="description" content="carousel.html recreated by render.js from UCF data — every card is data + a preset from presets.demo.carousel.json.">
-	<link rel="stylesheet" href="/ui/base/index.css">
-	<link rel="stylesheet" href="/ui/carousel/index.css">
-	<link rel="stylesheet" href="/layout/dist/layout.css">
-	<link rel="stylesheet" href="../../chip/ui-chip.css">
-	<link rel="stylesheet" href="../../sticker/ui-sticker.css">
-	<link rel="stylesheet" href="../../play/ui-play.css">
-	<link rel="stylesheet" href="../../icon/index.css">
-	<link rel="stylesheet" href="../ui-card.css">
-	<link rel="stylesheet" href="../../reveal/ui-reveal.css">
-	<link rel="stylesheet" href="../../accordion/ui-accordion.css">
+	<!-- srcset uses absolute v4.browser.style CDN URLs; the zone's Hotlink Protection
+	     403s any cross-origin Referer (pages.dev, localhost) — no-referrer passes -->
+	<meta name="referrer" content="no-referrer">
+	<!-- srcset origin: handshake in parallel with the CSS download -->
+	<link rel="preconnect" href="https://v4.browser.style">
+	<link rel="stylesheet" href="/dist/demo.min.css">
 	<style>
 		.note { color: var(--color-text-secondary, #666); max-inline-size: 70ch; }
 		code { font-size: 0.9em; }
 		.cell { align-content: start; display: grid; gap: var(--spacing-xs, 0.5rem); }
 		.cell > code { color: var(--color-text-secondary, #666); font-size: 0.8em; }
+	</style>
+	<style>
+		/* Page-scoped WCAG AA contrast overrides — pending a token retune in ui/base/tokens.css.
+		   Unlayered on purpose: beats the bs-core layer. Same block as demo/schema.html. */
+		:root {
+			--color-link: light-dark(hsl(221, 100%, 44%), hsl(221, 70%, 70%));
+			--color-accent: light-dark(hsl(211, 100%, 38%), hsl(211, 70%, 72%));
+			--color-success: light-dark(hsl(136, 45%, 30%), hsl(136, 25%, 60%));
+			--color-error: light-dark(hsl(360, 65%, 41%), hsl(360, 45%, 62%));
+			--color-text-muted: light-dark(hsl(0, 0%, 42%), hsl(0, 0%, 65%));
+		}
+		ui-content {
+			/* 85%: double-application (byline > dateline) still clears 4.5:1 */
+			--ui-content-muted: color-mix(in oklab, currentColor 85%, transparent);
+		}
+		ui-chip[data-type] { --ui-chip-bg: hsl(0, 0%, 95%); --ui-chip-c: hsl(0, 0%, 13%); }
 	</style>
 </head>
 <body>
@@ -29,14 +41,23 @@
 
 	<main data-layout-root data-page-gap="2"></main>
 
-	<script type="module" src="../carousel.js"></script>
+	<script type="module" src="../carousel.min.js"></script>
 	<script type="module">
 		import { renderCard as renderCardHtml, loadPresets } from '../render.js';
+		import { generateSrcsets, calculateSizes } from '/layout/src/srcsets.js';
+		import { srcsetMap, srcsetConfig } from '/layout/layouts-map.js';
+
+		/* Cloudflare srcset pipeline — absolute base (transforms 404 off-zone); every
+		   grid on this page is md="columns(2)", so one sizes list covers all frames */
+		const images = {
+			cdnBase: 'https://v4.browser.style',
+			sizes: calculateSizes(generateSrcsets({ md: 'columns(2)' }, srcsetMap, srcsetConfig), 0)
+		};
 
 		/* render.js returns an HTML string (SSR engine — all data escaped at
 		   interpolation); parse it into a fragment for the DOM append sites below */
 		const frag = (html) => document.createRange().createContextualFragment(html);
-		const renderCard = (...args) => frag(renderCardHtml(...args));
+		const renderCard = (ucf, presetMap, cardMap) => frag(renderCardHtml(ucf, presetMap, cardMap, { images }));
 
 		const presets = {
 			...(await loadPresets('../data/card.presets.json')),

@@ -186,6 +186,16 @@
       },
       "headingTag": "h2"
     },
+    "testimonial": {
+      "name": "Testimonial Preset",
+      "description": "Media-less review card \u2014 stars, quote, byline. Warm star tint via --ui-rating-c; pair with schemaType review + details.reviewedType Organization/Service.",
+      "element": "ui-card",
+      "variant": "col",
+      "styles": {
+        "--ui-rating-c": "#e75d26"
+      },
+      "headingTag": "h2"
+    },
     "carousel": {
       "name": "Carousel Preset",
       "description": "Column card whose media items scroll-snap with dot navigation — galleries",

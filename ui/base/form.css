@@ -64,7 +64,8 @@
 		--icon: var(--input-check-icon);
 		--input-border-width: calc(1em * (4/3) / 13.333333);
 		appearance: none;
-		background: var(--input-check-bg, var(--color-surface));
+		/* dark arm: --color-surface is pure black — too harsh a well; alt is the soft shade */
+		background: var(--input-check-bg, light-dark(var(--color-surface), var(--color-surface-alt)));
 		border-color: var(--input-check-bdc, var(--color-border));
 		border-radius: var(--input-check-bdrs, .2em);
 		font-size: 1em;

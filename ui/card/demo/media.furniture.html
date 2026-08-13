@@ -6,19 +6,31 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="color-scheme" content="light dark">
 	<meta name="description" content="Overlay furniture inside &lt;ui-media&gt;: beacon (live status), chip (pill label), play, save (bookmark toggle) and sticker (disc / burst) — positioned via the 9-code grid and themed via the media= token.">
-	<link rel="stylesheet" href="/ui/base/index.css">
-	<link rel="stylesheet" href="/layout/dist/layout.css">
+	<!-- srcset uses absolute v4.browser.style CDN URLs; the zone's Hotlink Protection
+	     403s any cross-origin Referer (pages.dev, localhost) — no-referrer passes -->
+	<meta name="referrer" content="no-referrer">
+	<!-- srcset origin: handshake in parallel with the CSS download -->
+	<link rel="preconnect" href="https://v4.browser.style">
+	<link rel="stylesheet" href="/dist/demo.min.css">
 	<!-- Package entry points — play/save pull in <ui-icon> themselves. -->
-	<link rel="stylesheet" href="../../beacon/index.css">
-	<link rel="stylesheet" href="../../chip/index.css">
-	<link rel="stylesheet" href="../../play/index.css">
-	<link rel="stylesheet" href="../../save/index.css">
-	<link rel="stylesheet" href="../../sticker/index.css">
-	<link rel="stylesheet" href="../../marquee/index.css">
-	<link rel="stylesheet" href="../../gradient-text/ui-gradient-text.css">
-	<link rel="stylesheet" href="../ui-card.css">
 	<style>
 		code { font-size: 0.9em; }
+	</style>
+	<style>
+		/* Page-scoped WCAG AA contrast overrides — pending a token retune in ui/base/tokens.css.
+		   Unlayered on purpose: beats the bs-core layer. Same block as demo/schema.html. */
+		:root {
+			--color-link: light-dark(hsl(221, 100%, 44%), hsl(221, 70%, 70%));
+			--color-accent: light-dark(hsl(211, 100%, 38%), hsl(211, 70%, 72%));
+			--color-success: light-dark(hsl(136, 45%, 30%), hsl(136, 25%, 60%));
+			--color-error: light-dark(hsl(360, 65%, 41%), hsl(360, 45%, 62%));
+			--color-text-muted: light-dark(hsl(0, 0%, 42%), hsl(0, 0%, 65%));
+		}
+		ui-content {
+			/* 85%: double-application (byline > dateline) still clears 4.5:1 */
+			--ui-content-muted: color-mix(in oklab, currentColor 85%, transparent);
+		}
+		ui-chip[data-type] { --ui-chip-bg: hsl(0, 0%, 95%); --ui-chip-c: hsl(0, 0%, 13%); }
 	</style>
 </head>
 <body data-layout-root data-page-gap="2">
@@ -26,17 +38,18 @@
 		<h1>UI: Card — Media furniture</h1>
 		<p>Overlay elements inside <code>&lt;ui-media&gt;</code>: <code>&lt;ui-beacon&gt;</code>, <code>&lt;ui-chip&gt;</code>, <code>&lt;ui-marquee&gt;</code>, <code>&lt;ui-play&gt;</code>, <code>&lt;ui-save&gt;</code>, <code>&lt;ui-sticker&gt;</code>. All configured from the parent <code>media=</code> token as <code>&lt;el&gt;(&lt;value&gt;)</code> — position on the 9-code grid (<code>ts tc te · cs cc ce · bs bc be</code>), plus hue, size etc.:</p>
 	</header>
+<main data-layout-root data-page-gap="2">
 
 	<lay-out md="columns(2)" lg="columns(3)">
-		<ui-card variant="vis(media)" media="asr(1/1) sticker(ts) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>PLACE</small><strong>TS</strong></ui-sticker></ui-media></cq-box></ui-card>
-		<ui-card variant="vis(media)" media="asr(1/1) sticker(tc) sticker(orange)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>PLACE</small><strong>TC</strong></ui-sticker></ui-media></cq-box></ui-card>
-		<ui-card variant="vis(media)" media="asr(1/1) sticker(te) sticker(green)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>PLACE</small><strong>TE</strong></ui-sticker></ui-media></cq-box></ui-card>
-		<ui-card variant="vis(media)" media="asr(1/1) sticker(cs) sticker(blue)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>PLACE</small><strong>CS</strong></ui-sticker></ui-media></cq-box></ui-card>
-		<ui-card variant="vis(media)" media="asr(1/1) sticker(cc) sticker(accent)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>PLACE</small><strong>CC</strong></ui-sticker></ui-media></cq-box></ui-card>
-		<ui-card variant="vis(media)" media="asr(1/1) sticker(ce) sticker(white)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>PLACE</small><strong>CE</strong></ui-sticker></ui-media></cq-box></ui-card>
-		<ui-card variant="vis(media)" media="asr(1/1) sticker(bs) sticker(slate)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>PLACE</small><strong>BS</strong></ui-sticker></ui-media></cq-box></ui-card>
-		<ui-card variant="vis(media)" media="asr(1/1) sticker(bc) sticker(gray)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>PLACE</small><strong>BC</strong></ui-sticker></ui-media></cq-box></ui-card>
-		<ui-card variant="vis(media)" media="asr(1/1) sticker(be) sticker(black)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>PLACE</small><strong>BE</strong></ui-sticker></ui-media></cq-box></ui-card>
+		<ui-card variant="vis(media)" media="asr(1/1) sticker(ts) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/ergochair.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/ergochair.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/ergochair.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/ergochair.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/ergochair.png 1200w" sizes="(min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="eager" fetchpriority="high" decoding="async"><ui-sticker><small>PLACE</small><strong>TS</strong></ui-sticker></ui-media></cq-box></ui-card>
+		<ui-card variant="vis(media)" media="asr(1/1) sticker(tc) sticker(orange)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/ergochair.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/ergochair.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/ergochair.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/ergochair.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/ergochair.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-sticker><small>PLACE</small><strong>TC</strong></ui-sticker></ui-media></cq-box></ui-card>
+		<ui-card variant="vis(media)" media="asr(1/1) sticker(te) sticker(green)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/ergochair.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/ergochair.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/ergochair.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/ergochair.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/ergochair.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-sticker><small>PLACE</small><strong>TE</strong></ui-sticker></ui-media></cq-box></ui-card>
+		<ui-card variant="vis(media)" media="asr(1/1) sticker(cs) sticker(blue)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/ergochair.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/ergochair.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/ergochair.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/ergochair.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/ergochair.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-sticker><small>PLACE</small><strong>CS</strong></ui-sticker></ui-media></cq-box></ui-card>
+		<ui-card variant="vis(media)" media="asr(1/1) sticker(cc) sticker(accent)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/ergochair.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/ergochair.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/ergochair.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/ergochair.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/ergochair.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-sticker><small>PLACE</small><strong>CC</strong></ui-sticker></ui-media></cq-box></ui-card>
+		<ui-card variant="vis(media)" media="asr(1/1) sticker(ce) sticker(white)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/ergochair.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/ergochair.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/ergochair.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/ergochair.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/ergochair.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-sticker><small>PLACE</small><strong>CE</strong></ui-sticker></ui-media></cq-box></ui-card>
+		<ui-card variant="vis(media)" media="asr(1/1) sticker(bs) sticker(slate)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/ergochair.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/ergochair.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/ergochair.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/ergochair.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/ergochair.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-sticker><small>PLACE</small><strong>BS</strong></ui-sticker></ui-media></cq-box></ui-card>
+		<ui-card variant="vis(media)" media="asr(1/1) sticker(bc) sticker(gray)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/ergochair.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/ergochair.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/ergochair.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/ergochair.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/ergochair.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-sticker><small>PLACE</small><strong>BC</strong></ui-sticker></ui-media></cq-box></ui-card>
+		<ui-card variant="vis(media)" media="asr(1/1) sticker(be) sticker(black)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/ergochair.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/ergochair.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/ergochair.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/ergochair.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/ergochair.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-sticker><small>PLACE</small><strong>BE</strong></ui-sticker></ui-media></cq-box></ui-card>
 	</lay-out>
 
 	<section>
@@ -49,43 +62,43 @@
 	<lay-out md="columns(2)" lg="columns(3)">
 		<ui-card variant="col" media="asr(4/3) beacon(sld) beacon(red) beacon(bln)">
 			<cq-box>
-				<ui-media><img src="/assets/images/aurasoundpro.png" alt=""><ui-beacon>LIVE</ui-beacon></ui-media>
+				<ui-media><img src="/assets/images/aurasoundpro.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/aurasoundpro.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/aurasoundpro.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/aurasoundpro.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/aurasoundpro.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/aurasoundpro.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-beacon>LIVE</ui-beacon></ui-media>
 				<ui-content><small data-part="eyebrow">Audio</small><h2 data-part="headline">beacon(sld) beacon(red) beacon(bln)</h2></ui-content>
 			</cq-box>
 		</ui-card>
 		<ui-card variant="col" media="asr(4/3) beacon(pll) beacon(green) beacon(pls) chip(te) chip(gray)">
 			<cq-box>
-				<ui-media><img src="/assets/images/ergochair.png" alt=""><ui-beacon>In stock</ui-beacon><ui-chip>Bestseller</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/ergochair.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/ergochair.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/ergochair.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/ergochair.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/ergochair.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/ergochair.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-beacon>In stock</ui-beacon><ui-chip>Bestseller</ui-chip></ui-media>
 				<ui-content><small data-part="eyebrow">Furniture</small><h2 data-part="headline">beacon(pll) beacon(green) beacon(pls) + chip(te) chip(gray)</h2></ui-content>
 			</cq-box>
 		</ui-card>
 		<ui-card variant="col" media="asr(4/3) beacon(sm) beacon(pll) beacon(blue) beacon(brt)">
 			<cq-box>
-				<ui-media><img src="/assets/images/aurasoundpro.png" alt=""><ui-beacon>Restocking</ui-beacon></ui-media>
+				<ui-media><img src="/assets/images/aurasoundpro.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/aurasoundpro.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/aurasoundpro.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/aurasoundpro.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/aurasoundpro.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/aurasoundpro.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-beacon>Restocking</ui-beacon></ui-media>
 				<ui-content><small data-part="eyebrow">Audio</small><h2 data-part="headline">beacon(sm) beacon(pll) beacon(blue) beacon(brt)</h2></ui-content>
 			</cq-box>
 		</ui-card>
 		<ui-card variant="col" media="asr(4/3) beacon(red) beacon(tck)">
 			<cq-box>
-				<ui-media><img src="/assets/images/government.png" alt=""><ui-beacon>Live</ui-beacon></ui-media>
+				<ui-media><img src="/assets/images/government.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/government.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/government.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/government.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/government.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/government.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-beacon>Live</ui-beacon></ui-media>
 				<ui-content><small data-part="eyebrow">Audio</small><h2 data-part="headline">beacon(red) beacon(tck)</h2></ui-content>
 			</cq-box>
 		</ui-card>
 		<ui-card variant="col" media="asr(4/3) beacon(red) beacon(ldr)">
 			<cq-box>
-				<ui-media><img src="/assets/images/government.png" alt=""><ui-beacon>Live</ui-beacon></ui-media>
+				<ui-media><img src="/assets/images/government.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/government.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/government.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/government.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/government.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/government.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-beacon>Live</ui-beacon></ui-media>
 				<ui-content><small data-part="eyebrow">Audio</small><h2 data-part="headline">beacon(red) beacon(ldr) — ticker minus the slide</h2></ui-content>
 			</cq-box>
 		</ui-card>
 		<ui-card variant="col" media="asr(4/3) beacon(be) beacon(sld) beacon(orange) beacon(pls) beacon(xs)">
 			<cq-box>
-				<ui-media><img src="/assets/images/ergochair.png" alt=""><ui-beacon>FEW IN STOCK</ui-beacon></ui-media>
+				<ui-media><img src="/assets/images/ergochair.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/ergochair.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/ergochair.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/ergochair.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/ergochair.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/ergochair.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-beacon>FEW IN STOCK</ui-beacon></ui-media>
 				<ui-content><small data-part="eyebrow">Furniture</small><h2 data-part="headline">beacon(be) beacon(sld) beacon(orange) beacon(pls) beacon(xs)</h2></ui-content>
 			</cq-box>
 		</ui-card>
 		<ui-card variant="col" media="asr(4/3) beacon(te) beacon(sld) beacon(red) beacon(bln)">
 			<cq-box>
-				<ui-media><img src="/assets/images/brewandbean.png" alt=""><ui-beacon paused>LIVE</ui-beacon></ui-media>
+				<ui-media><img src="/assets/images/brewandbean.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/brewandbean.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/brewandbean.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/brewandbean.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/brewandbean.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/brewandbean.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-beacon paused>LIVE</ui-beacon></ui-media>
 				<ui-content><small data-part="eyebrow">Café</small><h2 data-part="headline">beacon(te) beacon(sld) beacon(red) beacon(bln) + paused</h2></ui-content>
 			</cq-box>
 		</ui-card>
@@ -109,19 +122,19 @@
 	<lay-out md="columns(2)" lg="columns(3)">
 		<ui-card variant="col" media="asr(4/3) chip(ts) chip(green)">
 			<cq-box>
-				<ui-media><img src="/assets/images/aurasoundpro.png" alt=""><ui-chip>New</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/aurasoundpro.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/aurasoundpro.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/aurasoundpro.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/aurasoundpro.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/aurasoundpro.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/aurasoundpro.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip>New</ui-chip></ui-media>
 				<ui-content><small data-part="eyebrow">Audio</small><h2 data-part="headline">chip(ts) chip(green)</h2></ui-content>
 			</cq-box>
 		</ui-card>
 		<ui-card variant="col" media="asr(4/3) chip(te) chip(red)">
 			<cq-box>
-				<ui-media><img src="/assets/images/ergochair.png" alt=""><ui-chip>Sale</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/ergochair.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/ergochair.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/ergochair.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/ergochair.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/ergochair.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/ergochair.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip>Sale</ui-chip></ui-media>
 				<ui-content><small data-part="eyebrow">Furniture</small><h2 data-part="headline">chip(te) chip(red)</h2></ui-content>
 			</cq-box>
 		</ui-card>
 		<ui-card variant="col" media="asr(4/3) chip(be) chip(accent) chip(pale)">
 			<cq-box>
-				<ui-media><img src="/assets/images/brewandbean.png" alt=""><ui-chip>Editor's pick</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/brewandbean.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/brewandbean.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/brewandbean.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/brewandbean.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/brewandbean.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/brewandbean.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip>Editor's pick</ui-chip></ui-media>
 				<ui-content><small data-part="eyebrow">Café</small><h2 data-part="headline">chip(be) chip(accent) chip(pale)</h2></ui-content>
 			</cq-box>
 		</ui-card>
@@ -139,7 +152,7 @@
 		<ui-card variant="col" media="asr(4/3) marquee(rpt) marquee(red) marquee(sm)">
 			<cq-box>
 				<ui-media>
-					<img src="/assets/images/government.png" alt="">
+					<img src="/assets/images/government.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/government.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/government.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/government.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/government.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/government.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
 					<ui-marquee aria-label="BREAKING NEWS • BREAKING NEWS • BREAKING NEWS • BREAKING NEWS • BREAKING NEWS • BREAKING NEWS • "></ui-marquee>
 				</ui-media>
 				<ui-content><small data-part="eyebrow">Politics</small><h2 data-part="headline">Parliament passes budget after late-night vote</h2><p data-part="summary">Red headline band pinned to the top, text supplied by <code>aria-label</code>: <code>marquee(top) marquee(red) marquee(sm)</code>.</p></ui-content>
@@ -148,7 +161,7 @@
 		<ui-card variant="col" media="asr(4/3) beacon(red) beacon(tck) marquee(bot) marquee(rpt) marquee(red) marquee(sm)">
 			<cq-box>
 				<ui-media>
-					<img src="/assets/images/government.png" alt="">
+					<img src="/assets/images/government.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/government.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/government.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/government.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/government.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/government.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
 					<ui-beacon>Live</ui-beacon>
 					<ui-marquee aria-label="BREAKING NEWS • BREAKING NEWS • BREAKING NEWS • BREAKING NEWS • BREAKING NEWS • BREAKING NEWS • "></ui-marquee>
 				</ui-media>
@@ -158,7 +171,7 @@
 		<ui-card variant="col" media="asr(4/3) sticker(te) sticker(sh:burst) sticker(orange) sticker(xl) marquee(bot) marquee(rpt) marquee(green) marquee(pale) marquee(sm) marquee(fade)">
 			<cq-box>
 				<ui-media>
-					<img src="/assets/images/aurasoundpro.png" alt="">
+					<img src="/assets/images/aurasoundpro.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/aurasoundpro.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/aurasoundpro.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/aurasoundpro.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/aurasoundpro.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/aurasoundpro.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
 					<ui-sticker><small>SAVE</small><strong>40%</strong></ui-sticker>
 					<ui-marquee aria-label="LIMITED TIME OFFER • LIMITED TIME OFFER • LIMITED TIME OFFER • LIMITED TIME OFFER • LIMITED TIME OFFER • "></ui-marquee>
 				</ui-media>
@@ -191,7 +204,7 @@
 		<ui-card variant="col" media="asr(16/9)">
 			<cq-box>
 				<ui-media>
-					<img src="/assets/images/river.png" alt="">
+					<img src="/assets/images/river.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/river.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/river.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/river.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/river.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/river.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
 					<ui-play><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 				</ui-media>
 				<ui-content><small data-part="eyebrow">always visible</small><h2 data-part="headline">Play (center)</h2></ui-content>
@@ -200,7 +213,7 @@
 		<ui-card variant="col" media="asr(16/9)">
 			<cq-box>
 				<ui-media>
-					<img src="/assets/images/destinations.png" alt="">
+					<img src="/assets/images/destinations.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/destinations.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/destinations.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/destinations.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/destinations.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/destinations.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
 					<ui-play variant="reveal"><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 				</ui-media>
 				<ui-content><small data-part="eyebrow">variant="reveal"</small><h2 data-part="headline">Hover to reveal</h2></ui-content>
@@ -209,7 +222,7 @@
 		<ui-card variant="col" media="asr(16/9)">
 			<cq-box>
 				<ui-media>
-					<img src="/assets/images/gastronomy.png" alt="">
+					<img src="/assets/images/gastronomy.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/gastronomy.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/gastronomy.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/gastronomy.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/gastronomy.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/gastronomy.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
 					<ui-play theme="red" size="sm"><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 				</ui-media>
 				<ui-content><small data-part="eyebrow">theme="red" size="sm"</small><h2 data-part="headline">Themed, small</h2></ui-content>
@@ -239,7 +252,7 @@
 		<ui-card id="card-heart" variant="col" media="asr(4/3) save(be)">
 			<cq-box>
 				<ui-media>
-					<img src="/assets/images/aurasoundpro.png" alt="">
+					<img src="/assets/images/aurasoundpro.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/aurasoundpro.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/aurasoundpro.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/aurasoundpro.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/aurasoundpro.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/aurasoundpro.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
 					<ui-save>
 						<button type="button" command="--save" commandfor="card-heart" aria-label="Add AuraSound Pro to favorites">
 							<ui-icon type="shape" shape="heart" variant="outline"></ui-icon>
@@ -252,7 +265,7 @@
 		<ui-card id="card-book" variant="col" media="asr(4/3) save(te) save(non)">
 			<cq-box>
 				<ui-media>
-					<img src="/assets/images/ergochair.png" alt="">
+					<img src="/assets/images/ergochair.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/ergochair.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/ergochair.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/ergochair.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/ergochair.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/ergochair.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
 					<ui-save>
 						<button type="button" command="--save" commandfor="card-book" aria-label="Bookmark ErgoChair" aria-pressed="true">
 							<ui-icon type="shape" shape="bookmark" variant="outline"></ui-icon>
@@ -265,7 +278,7 @@
 		<ui-card id="card-star" variant="col" media="asr(4/3) save(ts) save(orange)">
 			<cq-box>
 				<ui-media>
-					<img src="/assets/images/brewandbean.png" alt="">
+					<img src="/assets/images/brewandbean.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/brewandbean.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/brewandbean.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/brewandbean.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/brewandbean.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/brewandbean.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
 					<ui-save>
 						<button type="button" command="--save" commandfor="card-star" aria-label="Add Brew &amp; Bean to wishlist" aria-pressed="true">
 							<ui-icon type="shape" shape="star" variant="outline"></ui-icon>
@@ -277,19 +290,19 @@
 		</ui-card>
 
 		<ui-card variant="vis(media)" id="crc-1" media="asr(1/1) save(te) save(sm)">
-			<cq-box><ui-media><img src="/assets/images/destinations.png" alt="">
+			<cq-box><ui-media><img src="/assets/images/destinations.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/destinations.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/destinations.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/destinations.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/destinations.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/destinations.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
 				<ui-save><button type="button" command="--save" commandfor="crc-1" aria-label="Save">
 					<ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
 			</ui-media></cq-box>
 		</ui-card>
 		<ui-card variant="vis(media)" id="crc-2" media="asr(1/1) save(te) save(red)">
-			<cq-box><ui-media><img src="/assets/images/destinations.png" alt="">
+			<cq-box><ui-media><img src="/assets/images/destinations.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/destinations.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/destinations.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/destinations.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/destinations.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/destinations.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
 				<ui-save><button type="button" command="--save" commandfor="crc-2" aria-label="Saved" aria-pressed="true">
 					<ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
 			</ui-media></cq-box>
 		</ui-card>
 		<ui-card variant="vis(media)" id="crc-3" media="asr(1/1) save(te) save(accent) save(xl)">
-			<cq-box><ui-media><img src="/assets/images/destinations.png" alt="">
+			<cq-box><ui-media><img src="/assets/images/destinations.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/destinations.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/destinations.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/destinations.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/destinations.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/destinations.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
 				<ui-save><button type="button" command="--save" commandfor="crc-3" aria-label="Saved" aria-pressed="true">
 					<ui-icon type="shape" shape="bookmark" variant="outline"></ui-icon></button></ui-save>
 			</ui-media></cq-box>
@@ -317,7 +330,7 @@
 		<ui-card variant="col" media="asr(4/3) sticker(ts) sticker(red) chip(be) chip(green)">
 			<cq-box>
 				<ui-media>
-					<img src="/assets/images/aurasoundpro.png" alt="">
+					<img src="/assets/images/aurasoundpro.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/aurasoundpro.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/aurasoundpro.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/aurasoundpro.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/aurasoundpro.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/aurasoundpro.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
 					<ui-sticker>Featured</ui-sticker>
 					<ui-chip>New</ui-chip>
 				</ui-media>
@@ -327,7 +340,7 @@
 		<ui-card variant="col" media="asr(4/3) sticker(te) sticker(red)">
 			<cq-box>
 				<ui-media>
-					<img src="/assets/images/ergochair.png" alt="">
+					<img src="/assets/images/ergochair.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/ergochair.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/ergochair.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/ergochair.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/ergochair.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/ergochair.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
 					<ui-sticker variant="sh:burst">-28%</ui-sticker>
 				</ui-media>
 				<ui-content><small data-part="eyebrow">Furniture</small><h2 data-part="headline">Starburst sticker</h2></ui-content>
@@ -336,7 +349,7 @@
 		<ui-card variant="col" media="asr(4/3) chip(bs) chip(accent) sticker(te) sticker(orange)">
 			<cq-box>
 				<ui-media>
-					<img src="/assets/images/brewandbean.png" alt="">
+					<img src="/assets/images/brewandbean.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/brewandbean.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/brewandbean.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/brewandbean.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/brewandbean.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/brewandbean.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
 					<ui-chip>Editor's pick</ui-chip>
 					<ui-sticker>Sale</ui-sticker>
 				</ui-media>
@@ -352,17 +365,17 @@
 		<code>&lt;ui-sticker&gt;</code> needs no <code>variant</code> attribute. Combine with
 		<code>sticker(&lt;hue&gt;)</code> and <code>sticker(&lt;pos&gt;)</code>.</p>
 	<lay-out md="columns(2)" lg="columns(3)">
-		<ui-card variant="col" media="asr(4/3) sticker(ts) sticker(sh:burst) sticker(green)"><cq-box><ui-media><img src="/assets/images/aurasoundpro.png" alt=""><ui-sticker><small>SAVE</small><strong>20%</strong></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Audio</small><h2 data-part="headline">sticker(sh:burst)</h2></ui-content></cq-box></ui-card>
-		<ui-card variant="col" media="asr(4/3) sticker(ts) sticker(sh:heart) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>XMAS</small><strong>$50</strong></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Furniture</small><h2 data-part="headline">sticker(sh:heart)</h2></ui-content></cq-box></ui-card>
-		<ui-card variant="col" media="asr(4/3) sticker(ts) sticker(spl) sticker(blue)"><cq-box><ui-media><img src="/assets/images/brewandbean.png" alt=""><ui-sticker><small>NEW</small><strong>SALE</strong></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Café</small><h2 data-part="headline">sticker(spl)</h2></ui-content></cq-box></ui-card>
+		<ui-card variant="col" media="asr(4/3) sticker(ts) sticker(sh:burst) sticker(green)"><cq-box><ui-media><img src="/assets/images/aurasoundpro.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/aurasoundpro.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/aurasoundpro.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/aurasoundpro.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/aurasoundpro.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/aurasoundpro.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-sticker><small>SAVE</small><strong>20%</strong></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Audio</small><h2 data-part="headline">sticker(sh:burst)</h2></ui-content></cq-box></ui-card>
+		<ui-card variant="col" media="asr(4/3) sticker(ts) sticker(sh:heart) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/ergochair.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/ergochair.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/ergochair.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/ergochair.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/ergochair.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-sticker><small>XMAS</small><strong>$50</strong></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Furniture</small><h2 data-part="headline">sticker(sh:heart)</h2></ui-content></cq-box></ui-card>
+		<ui-card variant="col" media="asr(4/3) sticker(ts) sticker(spl) sticker(blue)"><cq-box><ui-media><img src="/assets/images/brewandbean.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/brewandbean.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/brewandbean.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/brewandbean.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/brewandbean.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/brewandbean.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-sticker><small>NEW</small><strong>SALE</strong></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Café</small><h2 data-part="headline">sticker(spl)</h2></ui-content></cq-box></ui-card>
 	</lay-out>
 
 	<p><code>sticker(fit)</code> uses native <code>text-fit</code> to grow every line to the box width — no fixed
 		font-size needed (progressive enhancement, Chrome 150+).</p>
 	<lay-out md="columns(2)" lg="columns(3)">
-		<ui-card variant="col" media="asr(4/3) sticker(te) sticker(fit) sticker(lg) sticker(blue)"><cq-box><ui-media><img src="/assets/images/aurasoundpro.png" alt=""><ui-sticker><small>UP TO</small><strong>40%</strong><span>OFF</span></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Audio</small><h2 data-part="headline">sticker(fit)</h2></ui-content></cq-box></ui-card>
-		<ui-card variant="col" media="asr(4/3) sticker(te) sticker(fit) sticker(lg) sticker(sh:burst) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>MEGA</small><strong>SALE</strong></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Furniture</small><h2 data-part="headline">sticker(fit) + burst</h2></ui-content></cq-box></ui-card>
-		<ui-card variant="col" media="asr(4/3) sticker(te) sticker(fit) sticker(lg) sticker(green)"><cq-box><ui-media><img src="/assets/images/brewandbean.png" alt=""><ui-sticker><strong>NEW</strong></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Café</small><h2 data-part="headline">sticker(fit) single line</h2></ui-content></cq-box></ui-card>
+		<ui-card variant="col" media="asr(4/3) sticker(te) sticker(fit) sticker(lg) sticker(blue)"><cq-box><ui-media><img src="/assets/images/aurasoundpro.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/aurasoundpro.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/aurasoundpro.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/aurasoundpro.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/aurasoundpro.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/aurasoundpro.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-sticker><small>UP TO</small><strong>40%</strong><span>OFF</span></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Audio</small><h2 data-part="headline">sticker(fit)</h2></ui-content></cq-box></ui-card>
+		<ui-card variant="col" media="asr(4/3) sticker(te) sticker(fit) sticker(lg) sticker(sh:burst) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/ergochair.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/ergochair.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/ergochair.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/ergochair.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/ergochair.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-sticker><small>MEGA</small><strong>SALE</strong></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Furniture</small><h2 data-part="headline">sticker(fit) + burst</h2></ui-content></cq-box></ui-card>
+		<ui-card variant="col" media="asr(4/3) sticker(te) sticker(fit) sticker(lg) sticker(green)"><cq-box><ui-media><img src="/assets/images/brewandbean.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/brewandbean.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/brewandbean.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/brewandbean.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/brewandbean.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/brewandbean.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-sticker><strong>NEW</strong></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Café</small><h2 data-part="headline">sticker(fit) single line</h2></ui-content></cq-box></ui-card>
 	</lay-out>
 	</section>
 
@@ -370,5 +383,6 @@
 	     supported; each component's own @supports block already covers the no-JS
 	     case, this restores per-element attribute values on top. -->
 	<script type="module" src="/ui/base/polyfills/attr-fallback.js"></script>
+</main>
 </body>
 </html>

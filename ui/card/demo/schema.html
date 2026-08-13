@@ -8,6 +8,8 @@
 	<!-- srcset uses absolute v4.browser.style CDN URLs; the zone's Hotlink Protection
 	     403s any cross-origin Referer (pages.dev, localhost) — no-referrer passes -->
 	<meta name="referrer" content="no-referrer">
+	<!-- iOS data detectors read the book card's ISBN as a phone number; explicit tel: links keep working -->
+	<meta name="format-detection" content="telephone=no">
 	<!-- srcset origin: handshake in parallel with the CSS download (~3 RTTs off the
 	     eager LCP image on pages.dev/localhost; same-origin no-op on v4.browser.style) -->
 	<link rel="preconnect" href="https://v4.browser.style">
@@ -32,6 +34,15 @@
 		}
 		/* type chips keep one look on themed cards too (the theme relay's #666 plate is 4.06:1) */
 		ui-chip[data-type] { --ui-chip-bg: hsl(0, 0%, 95%); --ui-chip-c: hsl(0, 0%, 13%); }
+		/* media-less card (testimonial): pin the type chip to the card's top end, chip(te)-style.
+		   relative: the containing block is otherwise the lay-out (contain: layout) */
+		ui-card:not(:has(ui-media)) { position: relative; }
+		ui-card:not(:has(ui-media)) > ui-chip[data-type] {
+			position: absolute;
+			inset-block-start: var(--ui-media-overlay-gap, 0.75rem);
+			inset-inline-end: var(--ui-media-overlay-gap, 0.75rem);
+			z-index: 2;
+		}
 	</style>
 	<!-- Block first paint (and the incoming snapshot on Back) until the morphing
 	     article card is parsed. Docs: docs/card.md § Article pattern -->
@@ -259,6 +270,30 @@
 					<div itemprop="itemReviewed" itemscope itemtype="https://schema.org/Product" hidden>
 						<meta itemprop="name" content="SoundWave Mini">
 					<span itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating"><meta itemprop="ratingValue" content="4.6"><meta itemprop="ratingCount" content="1847"><meta itemprop="bestRating" content="5"><meta itemprop="worstRating" content="1"></span><span itemprop="offers" itemscope itemtype="https://schema.org/Offer"><meta itemprop="priceCurrency" content="USD"><meta itemprop="price" content="279"><meta itemprop="availability" content="https://schema.org/InStock"></span></div>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		<!-- Testimonial = Review of an Organization/Service (no Testimonial type in schema.org) — docs/schema.md § Review -->
+		<ui-card variant="col" style="--ui-rating-c: #e75d26" itemscope itemtype="https://schema.org/Review">
+			<ui-chip data-type>Review</ui-chip>
+			<cq-box>
+				<ui-content>
+					<small data-part="eyebrow">Testimonial</small>
+					<div data-part="rating" itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
+						<meta itemprop="ratingValue" content="5">
+						<meta itemprop="bestRating" content="5">
+						<meta itemprop="worstRating" content="1">
+						<input class="ui-rating" type="range" min="1" max="5" value="5" step="0.01" disabled aria-hidden="true">
+						<span data-sr>Rated 5 out of 5 stars</span>
+					</div>
+					<ui-quote data-part="quote"><blockquote itemprop="reviewBody"><q>Our conversion rates increased by 15% after switching to this UI system.</q></blockquote></ui-quote>
+					<address data-part="byline" itemprop="author" itemscope itemtype="https://schema.org/Person">
+						<ui-avatar><img src="https://assets.stoumann.dk/img/avatar5.webp" alt=""></ui-avatar>
+						<span data-part="byline-who"><span itemprop="name">David Smith</span><span itemprop="jobTitle">Marketing Lead</span></span>
+					</address>
+					<div itemprop="itemReviewed" itemscope itemtype="https://schema.org/Organization" hidden>
+						<meta itemprop="name" content="browser.style UI system">
+					</div>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -665,17 +700,17 @@
 					<ul data-part="options">
 						<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
 							<meta itemprop="position" content="1">
-							<img src="/assets/images/quickboil.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=48,height=48/assets/images/quickboil.png 1x, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=96,height=96/assets/images/quickboil.png 2x" decoding="async" itemprop="image" loading="lazy" width="48" height="48"><label><span itemprop="name">SoundWave Mini</span> — USD 79</label>
+							<img src="/assets/images/speakers-1.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=48,height=48/assets/images/speakers-1.png 1x, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=96,height=96/assets/images/speakers-1.png 2x" decoding="async" itemprop="image" loading="lazy" width="48" height="48"><label><span itemprop="name">SoundWave Mini</span> — USD 79</label>
 							<progress max="100" value="92"></progress> <span>9.2</span>
 						</li>
 						<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
 							<meta itemprop="position" content="2">
-							<img src="/assets/images/soundwavemini.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=48,height=48/assets/images/soundwavemini.png 1x, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=96,height=96/assets/images/soundwavemini.png 2x" decoding="async" itemprop="image" loading="lazy" width="48" height="48"><label><span itemprop="name">AuraSound Go</span> — USD 99</label>
+							<img src="/assets/images/speakers-2.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=48,height=48/assets/images/speakers-2.png 1x, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=96,height=96/assets/images/speakers-2.png 2x" decoding="async" itemprop="image" loading="lazy" width="48" height="48"><label><span itemprop="name">AuraSound Go</span> — USD 99</label>
 							<progress max="100" value="85"></progress> <span>8.5</span>
 						</li>
 						<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
 							<meta itemprop="position" content="3">
-							<img src="/assets/images/slimfold.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=48,height=48/assets/images/slimfold.png 1x, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=96,height=96/assets/images/slimfold.png 2x" decoding="async" itemprop="image" loading="lazy" width="48" height="48"><label><span itemprop="name">QuickBoom 2</span> — USD 69</label>
+							<img src="/assets/images/speakers-3.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=48,height=48/assets/images/speakers-3.png 1x, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=96,height=96/assets/images/speakers-3.png 2x" decoding="async" itemprop="image" loading="lazy" width="48" height="48"><label><span itemprop="name">QuickBoom 2</span> — USD 69</label>
 							<progress max="100" value="78"></progress> <span>7.8</span>
 						</li>
 					</ul>
@@ -745,7 +780,8 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card variant="col" media="asr(16/9) chip(te)" theme="muted gray" itemscope itemtype="https://schema.org/Offer">
+		<!-- plain gray: `muted` washes ink 50% too — unreadable at card scale in dark mode -->
+		<ui-card variant="col" media="asr(16/9) chip(te)" theme="gray" itemscope itemtype="https://schema.org/Offer">
 			<cq-box>
 				<ui-media><img src="/assets/images/fittrackpro.png" alt="Fitness tracker on a wrist" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/fittrackpro.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/fittrackpro.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/fittrackpro.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/fittrackpro.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/fittrackpro.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>Offer</ui-chip></ui-media>
 				<ui-content>
@@ -1075,7 +1111,7 @@
 						<ui-avatar><img src="https://assets.stoumann.dk/img/avatar4.webp" alt=""></ui-avatar>
 						<span data-part="byline-who"><span itemprop="name">Mette Holm</span></span>
 					</address>
-					<p data-part="meta">312 pages · Hardcover · ISBN 978-87-12345-67-8</p>
+					<p data-part="meta">312 pages · Hardcover · ISBN 978-&#8288;87-&#8288;12345-&#8288;67-&#8288;8</p>
 					<div data-part="rating" itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
 						<meta itemprop="ratingValue" content="4.6">
 						<meta itemprop="ratingCount" content="923">
@@ -1106,7 +1142,7 @@
 					<small data-part="eyebrow">Open data</small>
 					<h2 data-part="headline" itemprop="name">Exoplanet transit observations 2019–2025</h2>
 					<p data-part="summary" itemprop="description">Light-curve measurements for 1,142 confirmed exoplanet transits, cleaned and de-trended.</p>
-					<p data-part="meta">2019-01/2025-12 · Kepler field · CC BY 4.0</p>
+					<p data-part="meta">Jan 2019 – Dec 2025 · Kepler field · CC BY 4.0</p>
 					<ul data-part="list">
 						<li>Transit depth</li>
 						<li>Orbital period</li>

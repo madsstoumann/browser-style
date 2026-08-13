@@ -6,12 +6,31 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="color-scheme" content="light dark">
 	<meta name="description" content="hov() — &lt;ui-media&gt; hover effects: zoom, pan, rot-r/rot-l, fixed 3D tilt-out/tilt-in, filters (gray/blur/bright/dim/sat), hov(shape) morph, and cursor-driven track/drift/tilt.">
-	<link rel="stylesheet" href="/ui/base/index.css">
-	<link rel="stylesheet" href="/layout/dist/layout.css">
-	<link rel="stylesheet" href="../ui-card.css">
+	<!-- srcset uses absolute v4.browser.style CDN URLs; the zone's Hotlink Protection
+	     403s any cross-origin Referer (pages.dev, localhost) — no-referrer passes -->
+	<meta name="referrer" content="no-referrer">
+	<!-- srcset origin: handshake in parallel with the CSS download -->
+	<link rel="preconnect" href="https://v4.browser.style">
+	<link rel="stylesheet" href="/dist/demo.min.css">
 	<link rel="stylesheet" href="../media.shapes.css">
 	<style>
 		code { font-size: 0.9em; }
+	</style>
+	<style>
+		/* Page-scoped WCAG AA contrast overrides — pending a token retune in ui/base/tokens.css.
+		   Unlayered on purpose: beats the bs-core layer. Same block as demo/schema.html. */
+		:root {
+			--color-link: light-dark(hsl(221, 100%, 44%), hsl(221, 70%, 70%));
+			--color-accent: light-dark(hsl(211, 100%, 38%), hsl(211, 70%, 72%));
+			--color-success: light-dark(hsl(136, 45%, 30%), hsl(136, 25%, 60%));
+			--color-error: light-dark(hsl(360, 65%, 41%), hsl(360, 45%, 62%));
+			--color-text-muted: light-dark(hsl(0, 0%, 42%), hsl(0, 0%, 65%));
+		}
+		ui-content {
+			/* 85%: double-application (byline > dateline) still clears 4.5:1 */
+			--ui-content-muted: color-mix(in oklab, currentColor 85%, transparent);
+		}
+		ui-chip[data-type] { --ui-chip-bg: hsl(0, 0%, 95%); --ui-chip-c: hsl(0, 0%, 13%); }
 	</style>
 </head>
 <body data-layout-root data-page-gap="2">
@@ -20,76 +39,77 @@
 	<p>Hover a card. The <strong>transform</strong> family moves the <em>image</em> inside a fixed frame (<code>zoom</code> / <code>pan</code> / <code>rot-r</code> / <code>rot-l</code> / fixed 3D <code>tilt-out</code> / <code>tilt-in</code>, plus cursor-driven <code>track</code> / <code>drift</code> / <code>tilt</code>); the <strong>filter</strong> family transitions CSS filters (<code>gray</code> / <code>blur</code> / <code>bright</code> / <code>dim</code> / <code>sat</code>); and <code>shape</code> morphs a <code>shp()</code> clip. All animated props share one transition list, so effects <strong>compose</strong> (e.g. <code>hov(shape) hov(zoom)</code>). Tune with <code>--ui-media-hv-*</code> / <code>--ui-media-hover-duration</code>; all respect <code>prefers-reduced-motion</code>. Effects live in <a href="../media.hover.css">media.hover.css</a>. The three cursor-driven effects (<code>track</code> / <code>drift</code> / <code>tilt</code>) need a tiny pointer handler and are shown <strong>last</strong>.</p>
 	<p>See also: <a href="media.html">media.html</a> (the full <code>&lt;ui-media&gt;</code> reference).</p>
 	</header>
+<main data-layout-root data-page-gap="2">
 	<lay-out md="columns(2)" lg="columns(3)">
 		<ui-card variant="col" tabindex="0" media="asr(16/9) hov(zoom)">
 			<cq-box>
-				<ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media>
+				<ui-media><img src="/assets/images/mindfulness.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/mindfulness.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/mindfulness.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/mindfulness.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/mindfulness.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/mindfulness.png 1200w" sizes="(min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="eager" fetchpriority="high" decoding="async"></ui-media>
 				<ui-content><small data-part="eyebrow">transform · CSS</small><h2 data-part="headline">hov(zoom)</h2><p data-part="summary">The image scales up inside the frame.</p></ui-content>
 			</cq-box>
 		</ui-card>
 		<ui-card variant="col" tabindex="0" media="asr(16/9) hov(pan)">
 			<cq-box>
-				<ui-media><img src="/assets/images/hubble.png" alt=""></ui-media>
+				<ui-media><img src="/assets/images/hubble.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/hubble.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/hubble.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/hubble.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/hubble.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/hubble.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"></ui-media>
 				<ui-content><small data-part="eyebrow">transform · CSS</small><h2 data-part="headline">hov(pan)</h2><p data-part="summary">Zooms and drifts in a fixed direction.</p></ui-content>
 			</cq-box>
 		</ui-card>
 		<ui-card variant="col" tabindex="0" media="asr(16/9) hov(rot-r)">
 			<cq-box>
-				<ui-media><img src="/assets/images/river.png" alt=""></ui-media>
+				<ui-media><img src="/assets/images/river.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/river.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/river.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/river.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/river.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/river.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"></ui-media>
 				<ui-content><small data-part="eyebrow">transform · CSS</small><h2 data-part="headline">hov(rot-r)</h2><p data-part="summary">A subtle clockwise spin (<code>rotate:</code> longhand, composes with <code>flp()</code>).</p></ui-content>
 			</cq-box>
 		</ui-card>
 		<ui-card variant="col" tabindex="0" media="asr(16/9) hov(rot-l)">
 			<cq-box>
-				<ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media>
+				<ui-media><img src="/assets/images/mindfulness.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/mindfulness.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/mindfulness.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/mindfulness.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/mindfulness.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/mindfulness.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"></ui-media>
 				<ui-content><small data-part="eyebrow">transform · CSS</small><h2 data-part="headline">hov(rot-l)</h2><p data-part="summary">The counter-clockwise mirror of <code>rot-r</code>.</p></ui-content>
 			</cq-box>
 		</ui-card>
 		<ui-card variant="col" tabindex="0" media="asr(16/9) hov(tilt-out)">
 			<cq-box>
-				<ui-media><img src="/assets/images/river.png" alt=""></ui-media>
+				<ui-media><img src="/assets/images/river.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/river.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/river.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/river.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/river.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/river.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"></ui-media>
 				<ui-content><small data-part="eyebrow">transform · CSS</small><h2 data-part="headline">hov(tilt-out)</h2><p data-part="summary">Scales slightly and tilts the <strong>top toward you</strong> (fixed 3D, no JS). Tune <code>--ui-media-hv-tilt-fixed</code>.</p></ui-content>
 			</cq-box>
 		</ui-card>
 		<ui-card variant="col" tabindex="0" media="asr(16/9) hov(tilt-in)">
 			<cq-box>
-				<ui-media><img src="/assets/images/hubble.png" alt=""></ui-media>
+				<ui-media><img src="/assets/images/hubble.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/hubble.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/hubble.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/hubble.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/hubble.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/hubble.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"></ui-media>
 				<ui-content><small data-part="eyebrow">transform · CSS</small><h2 data-part="headline">hov(tilt-in)</h2><p data-part="summary">Scales slightly and tilts the <strong>top away</strong> (inward). The mirror of <code>tilt-out</code>.</p></ui-content>
 			</cq-box>
 		</ui-card>
 		<ui-card variant="col" tabindex="0" media="asr(16/9) hov(shape) shp(cut-r)">
 			<cq-box>
-				<ui-media><img src="/assets/images/quantum.png" alt=""></ui-media>
+				<ui-media><img src="/assets/images/quantum.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/quantum.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/quantum.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/quantum.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/quantum.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/quantum.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"></ui-media>
 				<ui-content><small data-part="eyebrow">clip · CSS</small><h2 data-part="headline">hov(shape)</h2><p data-part="summary">Morphs a <code>shp()</code> clip to its full-frame target (see <a href="media.shape.html">media.shape.html</a>).</p></ui-content>
 			</cq-box>
 		</ui-card>
 		<ui-card variant="col" tabindex="0" media="asr(16/9) hov(gray)">
 			<cq-box>
-				<ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media>
+				<ui-media><img src="/assets/images/gastronomy.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/gastronomy.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/gastronomy.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/gastronomy.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/gastronomy.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/gastronomy.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"></ui-media>
 				<ui-content><small data-part="eyebrow">filter · CSS</small><h2 data-part="headline">hov(gray)</h2><p data-part="summary">Rest grayscale, hover restores colour.</p></ui-content>
 			</cq-box>
 		</ui-card>
 		<ui-card variant="col" tabindex="0" media="asr(16/9) hov(blur)">
 			<cq-box>
-				<ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media>
+				<ui-media><img src="/assets/images/mindfulness.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/mindfulness.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/mindfulness.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/mindfulness.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/mindfulness.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/mindfulness.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"></ui-media>
 				<ui-content><small data-part="eyebrow">filter · CSS</small><h2 data-part="headline">hov(blur)</h2><p data-part="summary">Rest blurred, hover sharpens. Tune <code>--ui-media-hv-blur</code>.</p></ui-content>
 			</cq-box>
 		</ui-card>
 		<ui-card variant="col" tabindex="0" media="asr(16/9) hov(bright)">
 			<cq-box>
-				<ui-media><img src="/assets/images/river.png" alt=""></ui-media>
+				<ui-media><img src="/assets/images/river.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/river.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/river.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/river.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/river.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/river.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"></ui-media>
 				<ui-content><small data-part="eyebrow">filter · CSS</small><h2 data-part="headline">hov(bright)</h2><p data-part="summary">Rest dimmed, hover restores full brightness. Tune <code>--ui-media-hv-bright-rest</code>.</p></ui-content>
 			</cq-box>
 		</ui-card>
 		<ui-card variant="col" tabindex="0" media="asr(16/9) hov(dim)">
 			<cq-box>
-				<ui-media><img src="/assets/images/hubble.png" alt=""></ui-media>
+				<ui-media><img src="/assets/images/hubble.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/hubble.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/hubble.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/hubble.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/hubble.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/hubble.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"></ui-media>
 				<ui-content><small data-part="eyebrow">filter · CSS</small><h2 data-part="headline">hov(dim)</h2><p data-part="summary">Darkens on hover (pairs with overlaid text). Tune <code>--ui-media-hv-dim</code>.</p></ui-content>
 			</cq-box>
 		</ui-card>
 		<ui-card variant="col" tabindex="0" media="asr(16/9) hov(gray) hov(blur)">
 			<cq-box>
-				<ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media>
+				<ui-media><img src="/assets/images/gastronomy.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/gastronomy.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/gastronomy.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/gastronomy.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/gastronomy.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/gastronomy.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"></ui-media>
 				<ui-content><small data-part="eyebrow">filter · composes</small><h2 data-part="headline">hov(gray) hov(blur)</h2><p data-part="summary">Filters stack — one shared <code>filter</code> declaration built from per-effect vars.</p></ui-content>
 			</cq-box>
 		</ui-card>
@@ -101,25 +121,26 @@
 	<lay-out md="columns(2)" lg="columns(3)">
 		<ui-card variant="col" tabindex="0" media="asr(16/9) hov(track)">
 			<cq-box>
-				<ui-media><img src="/assets/images/quantum.png" alt=""></ui-media>
+				<ui-media><img src="/assets/images/quantum.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/quantum.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/quantum.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/quantum.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/quantum.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/quantum.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"></ui-media>
 				<ui-content><small data-part="eyebrow">transform · JS</small><h2 data-part="headline">hov(track)</h2><p data-part="summary">The image follows the cursor.</p></ui-content>
 			</cq-box>
 		</ui-card>
 		<ui-card variant="col" tabindex="0" media="asr(16/9) hov(drift)">
 			<cq-box>
-				<ui-media><img src="/assets/images/hubble.png" alt=""></ui-media>
+				<ui-media><img src="/assets/images/hubble.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/hubble.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/hubble.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/hubble.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/hubble.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/hubble.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"></ui-media>
 				<ui-content><small data-part="eyebrow">transform · JS</small><h2 data-part="headline">hov(drift)</h2><p data-part="summary">Oversized image shrinks slightly and drifts <em>opposite</em> the cursor.</p></ui-content>
 			</cq-box>
 		</ui-card>
 		<ui-card variant="col" tabindex="0" media="asr(16/9) hov(tilt)">
 			<cq-box>
-				<ui-media><img src="/assets/images/river.png" alt=""></ui-media>
+				<ui-media><img src="/assets/images/river.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/river.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/river.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/river.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/river.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/river.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"></ui-media>
 				<ui-content><small data-part="eyebrow">transform · JS</small><h2 data-part="headline">hov(tilt)</h2><p data-part="summary">3D rotate toward the cursor (perspective on the frame; keeps <code>flp()</code>).</p></ui-content>
 			</cq-box>
 		</ui-card>
 	</lay-out>
 	</section>
 
-	<script type="module" src="../hover.js"></script>
+	<script type="module" src="../hover.min.js"></script>
+</main>
 </body>
 </html>

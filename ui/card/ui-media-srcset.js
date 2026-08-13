@@ -101,9 +101,9 @@ export default class UiMedia extends HTMLElement {
 
 	#eligible(src) {
 		if (!src) return false;
-		if (src.startsWith('data:') || src.startsWith('blob:')) return false;
-		if (/^https?:\/\//i.test(src)) return false; // external/absolute — leave alone
-		return true;
+		/* ROOT-relative only (KEEP IN SYNC with render.js cdnEligible) — a page-relative
+		   src transforms into the wrong zone path: 404 with no src fallback */
+		return src.startsWith('/') && !src.startsWith('//');
 	}
 
 	/** Merge config: attribute -> globalThis.uiMedia -> built-in default. */

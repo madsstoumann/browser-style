@@ -144,7 +144,7 @@
 	/* surface + ink come from the resolved --_theme-* pair (base/theme.css) */
 	:where(ui-card[theme]) {
 		--ui-card-bg: var(--_theme-bg, light-dark(var(--color-surface), var(--ui-card-dark-bg, #1f2937)));
-		color: var(--_theme-c, var(--color-text));
+		color: var(--_theme-c, var(--_theme-ink, var(--color-text))); /* themed plate brings its own ink (chip precedent) */
 	}
 
 	/* === RESPONSIVE — md:/lg:, two arms per token; the container NAME is load-bearing.

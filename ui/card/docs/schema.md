@@ -67,7 +67,9 @@ Ingredients as proposed part `list`; instructions as a nested `<ui-accordion>` w
 
 ### Review — `Review`
 
-Summary emits `reviewBody`; rating → `Rating`, reviewer → `Person`, reviewed item → `Product`.
+Summary emits `reviewBody`; rating → `Rating`, reviewer → `Person` (`reviewer.title` → `jobTitle`), reviewed item → `Product` by default. `details.reviewedType` sharpens `itemReviewed` to `Organization` or `Service` (allowlisted, never verbatim data — same pattern as `businessType`); no offer is emitted for `Organization`, which has no `offers` property.
+
+**Testimonial** — schema.org has no `Testimonial` type; a testimonial is a `Review` of your organization or service: `reviewedType: "Organization"`, a 5-star rating, quote and byline, usually media-less (the `testimonial` preset, which also tints the stars via `--ui-rating-c`). Note Google excludes "self-serving" reviews — testimonials about your own org on your own site stay valid microdata but get no star rich results.
 
 ### Job — `JobPosting`
 
@@ -95,7 +97,7 @@ The type that moves *out* of `<ui-content>` parts: a nested `<ui-accordion>`, ea
 
 ### Timeline — `EventSeries`
 
-Part `timeline` — styled by `@browser.style/timeline`: a dot per entry on a continuous rail. Each entry is `subEvent` → `Event`. Add `variant="horizontal"` for the inline rail (second card). Colour a single entry with `data-theme="accent"` (the `theme=` palette names) or an arbitrary `data-fill="#c9b8ff"` — `data-` prefixed, because a bare attribute is invalid on a built-in `<li>`. A coloured dot is filled; in `variant="minimal"` the bullets default to the rail grey.
+Part `timeline` — styled by `@browser.style/timeline`: a dot per entry on a continuous rail. Each entry is `subEvent` → `Event`. Add `variant="horizontal"` for the inline rail (second card). Colour a single entry with `data-theme="accent"` (the `theme=` palette names) or an arbitrary `data-fill="#c9b8ff"` — `data-` prefixed, because a bare attribute is invalid on a built-in `<li>`. A coloured dot is filled; in `variant="minimal"` the bullets default to the rail grey; in `variant="horizontal"` plain dots are open rings (transparent centre, rail stops at the dot edge) — only a `data-theme`/`data-fill` entry fills.
 
 ### Gallery — `ImageGallery`
 
@@ -115,7 +117,7 @@ Dark theme; priority as a hue-mapped `<ui-chip>` (low=gray · medium=orange · h
 
 ### Business — `LocalBusiness` (subtype `CafeOrCoffeeShop`)
 
-Part `address` (`PostalAddress` scope), geo metas, opening hours (flat `openingHours` + structured `OpeningHoursSpecification`), rating, price range and a map CTA. `details.businessType` sharpens the itemtype to an allowlisted `LocalBusiness` subtype.
+Part `address` (`PostalAddress` scope), geo metas, opening hours (flat `openingHours` + structured `OpeningHoursSpecification`), rating, price range and a map CTA. `details.businessType` sharpens the itemtype to an allowlisted `LocalBusiness` subtype. The hours `<dl>` renders with `tabular-nums` so times align column-wise, and day/time ranges use en dashes (`Mon–Fri`, `9:00–17:00`) — both derived from the machine string by `hoursRow()`.
 
 ### Comparison — `ItemList`
 
@@ -169,9 +171,11 @@ Director and cast as `Person` scopes, `contentRating`, release date and an `Aggr
 
 Author byline leads (photo via `<ui-avatar>`); then facts, rating, `Offer` — publisher is the colophon. `isbn`, pages, allowlisted `bookFormat` (schema.org `BookFormatType`).
 
+The *visible* ISBN carries a WORD JOINER (U+2060) after each hyphen: iOS Safari's data detectors otherwise read the digit run as a phone number and link it `tel:`. The joiner breaks the pattern's contiguity, is invisible, and stops the ISBN wrapping mid-number; the machine value in `<meta itemprop="isbn">` stays raw. The renderer emits this from `book()`; hand-authored pages use the `&#8288;` entity (see demo/schema.html) and can add `<meta name="format-detection" content="telephone=no">` as a page-level belt — explicit `tel:` anchors keep working either way.
+
 ### Dataset — `Dataset`
 
-License, temporal/spatial coverage and `variableMeasured` metas; each download is `distribution` → `DataDownload` with `encodingFormat` + `contentUrl` on the button.
+License, temporal/spatial coverage and `variableMeasured` metas; each download is `distribution` → `DataDownload` with `encodingFormat` + `contentUrl` on the button. `temporalCoverageDisplay` carries the human range ("Jan 2019 – Dec 2025", en dash) — the machine meta keeps the ISO 8601 slash interval.
 
 ### Fact check — `ClaimReview`
 

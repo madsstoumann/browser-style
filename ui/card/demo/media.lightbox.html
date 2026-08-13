@@ -6,21 +6,35 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="color-scheme" content="light dark">
 	<meta name="description" content="Popover lightbox playground — a ui-lightbox furniture button lifts the EXISTING ui-media carousel or collage into the top layer as a fullscreen gallery. Same DOM, token DSL only; open/close needs zero JS.">
-	<link rel="stylesheet" href="/ui/base/index.css">
-	<link rel="stylesheet" href="/ui/carousel/index.css">
-	<link rel="stylesheet" href="/layout/dist/layout.css">
+	<!-- srcset uses absolute v4.browser.style CDN URLs; the zone's Hotlink Protection
+	     403s any cross-origin Referer (pages.dev, localhost) — no-referrer passes -->
+	<meta name="referrer" content="no-referrer">
+	<!-- srcset origin: handshake in parallel with the CSS download -->
+	<link rel="preconnect" href="https://v4.browser.style">
+	<link rel="stylesheet" href="/dist/demo.min.css">
 	<link rel="stylesheet" href="../../icon/ui-icon.css"><!-- <ui-icon> glyphs (save/play/lightbox) — raw sheets below don't import it -->
-	<link rel="stylesheet" href="../../chip/ui-chip.css">
-	<link rel="stylesheet" href="../../sticker/ui-sticker.css">
-	<link rel="stylesheet" href="../../save/ui-save.css">
-	<link rel="stylesheet" href="../../play/ui-play.css">
-	<link rel="stylesheet" href="../../lightbox/ui-lightbox.css">
-	<link rel="stylesheet" href="../ui-card.css">
 	<link rel="stylesheet" href="../demo.layout.css">
 	<!-- typed attr() fallback for Safari/Firefox (layout gaps/spacing attributes) -->
 	<script type="module" src="/layout/polyfills/attr-fallback.js"></script>
+	<style>
+		/* Page-scoped WCAG AA contrast overrides — pending a token retune in ui/base/tokens.css.
+		   Unlayered on purpose: beats the bs-core layer. Same block as demo/schema.html. */
+		:root {
+			--color-link: light-dark(hsl(221, 100%, 44%), hsl(221, 70%, 70%));
+			--color-accent: light-dark(hsl(211, 100%, 38%), hsl(211, 70%, 72%));
+			--color-success: light-dark(hsl(136, 45%, 30%), hsl(136, 25%, 60%));
+			--color-error: light-dark(hsl(360, 65%, 41%), hsl(360, 45%, 62%));
+			--color-text-muted: light-dark(hsl(0, 0%, 42%), hsl(0, 0%, 65%));
+		}
+		ui-content {
+			/* 85%: double-application (byline > dateline) still clears 4.5:1 */
+			--ui-content-muted: color-mix(in oklab, currentColor 85%, transparent);
+		}
+		ui-chip[data-type] { --ui-chip-bg: hsl(0, 0%, 95%); --ui-chip-c: hsl(0, 0%, 13%); }
+	</style>
 </head>
 <body>
+<main>
 	<h1>UI: Media — Lightbox</h1>
 	<p>A <code>&lt;ui-lightbox&gt;</code> furniture button (default area <strong>bottom-start</strong>) lifts the
 		<em>existing</em> <code>&lt;ui-media&gt;</code> into the <strong>top layer</strong> as a fullscreen gallery.
@@ -70,10 +84,10 @@
 							</ui-icon>
 						</button>
 					</ui-lightbox>
-					<img src="/assets/images/finance.png" alt="City skyline at dusk" decoding="async" fetchpriority="high">
-					<img src="/assets/images/river.png" alt="River winding through a valley" loading="lazy">
-					<img src="/assets/images/mindfulness.png" alt="Calm lakeside at dawn" loading="lazy">
-					<img src="/assets/images/gastronomy.png" alt="Plated dish in a restaurant" loading="lazy">
+					<img src="/assets/images/finance.png" alt="City skyline at dusk" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/finance.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/finance.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/finance.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/finance.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/finance.png 1200w" sizes="(min-width: 540px) min(50vw, 512px), 100vw" loading="eager" fetchpriority="high" decoding="async">
+					<img src="/assets/images/river.png" alt="River winding through a valley" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/river.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/river.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/river.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/river.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/river.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
+					<img src="/assets/images/mindfulness.png" alt="Calm lakeside at dawn" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/mindfulness.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/mindfulness.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/mindfulness.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/mindfulness.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/mindfulness.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
+					<img src="/assets/images/gastronomy.png" alt="Plated dish in a restaurant" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/gastronomy.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/gastronomy.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/gastronomy.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/gastronomy.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/gastronomy.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
 				</ui-media>
 				<ui-content>
 					<small data-part="eyebrow">Travel</small>
@@ -96,12 +110,12 @@
 							</ui-icon>
 						</button>
 					</ui-lightbox>
-					<img src="/assets/images/finance.png" alt="City skyline at dusk" loading="lazy">
-					<img src="/assets/images/river.png" alt="River winding through a valley" loading="lazy">
-					<img src="/assets/images/mindfulness.png" alt="Calm lakeside at dawn" loading="lazy">
-					<img src="/assets/images/gastronomy.png" alt="Plated dish in a restaurant" loading="lazy">
-					<img src="/assets/images/finance.png" alt="City skyline at dusk — alternate crop" loading="lazy">
-					<img src="/assets/images/river.png" alt="River — alternate crop" loading="lazy">
+					<img src="/assets/images/finance.png" alt="City skyline at dusk" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/finance.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/finance.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/finance.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/finance.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/finance.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
+					<img src="/assets/images/river.png" alt="River winding through a valley" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/river.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/river.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/river.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/river.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/river.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
+					<img src="/assets/images/mindfulness.png" alt="Calm lakeside at dawn" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/mindfulness.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/mindfulness.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/mindfulness.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/mindfulness.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/mindfulness.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
+					<img src="/assets/images/gastronomy.png" alt="Plated dish in a restaurant" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/gastronomy.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/gastronomy.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/gastronomy.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/gastronomy.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/gastronomy.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
+					<img src="/assets/images/finance.png" alt="City skyline at dusk — alternate crop" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/finance.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/finance.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/finance.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/finance.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/finance.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
+					<img src="/assets/images/river.png" alt="River — alternate crop" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/river.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/river.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/river.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/river.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/river.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
 				</ui-media>
 				<ui-content>
 					<small data-part="eyebrow">Travel</small>
@@ -135,10 +149,10 @@
 							<ui-icon><svg viewBox="0 0 24 24"><path d="M7 5.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666" /><path d="M4.012 7.26a2.005 2.005 0 0 0 -1.012 1.737v10c0 1.1 .9 2 2 2h10c.75 0 1.158 -.385 1.5 -1" /><path d="M17 7h.01" /><path d="M7 13l3.644 -3.644a1.21 1.21 0 0 1 1.712 0l3.644 3.644" /><path d="M15 12l1.644 -1.644a1.21 1.21 0 0 1 1.712 0l2.644 2.644" /></svg></ui-icon>
 						</button>
 					</ui-lightbox>
-					<img src="/assets/images/finance.png" alt="City skyline at dusk" loading="lazy">
-					<img src="/assets/images/river.png" alt="River winding through a valley" loading="lazy">
-					<img src="/assets/images/mindfulness.png" alt="Calm lakeside at dawn" loading="lazy">
-					<img src="/assets/images/gastronomy.png" alt="Plated dish in a restaurant" loading="lazy">
+					<img src="/assets/images/finance.png" alt="City skyline at dusk" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/finance.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/finance.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/finance.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/finance.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/finance.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
+					<img src="/assets/images/river.png" alt="River winding through a valley" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/river.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/river.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/river.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/river.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/river.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
+					<img src="/assets/images/mindfulness.png" alt="Calm lakeside at dawn" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/mindfulness.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/mindfulness.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/mindfulness.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/mindfulness.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/mindfulness.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
+					<img src="/assets/images/gastronomy.png" alt="Plated dish in a restaurant" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/gastronomy.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/gastronomy.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/gastronomy.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/gastronomy.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/gastronomy.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
 				</ui-media>
 				<ui-content>
 					<h3 data-part="headline">Dots → thumbnail rail</h3>
@@ -154,10 +168,10 @@
 							<ui-icon><svg viewBox="0 0 24 24"><path d="M7 5.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666" /><path d="M4.012 7.26a2.005 2.005 0 0 0 -1.012 1.737v10c0 1.1 .9 2 2 2h10c.75 0 1.158 -.385 1.5 -1" /><path d="M17 7h.01" /><path d="M7 13l3.644 -3.644a1.21 1.21 0 0 1 1.712 0l3.644 3.644" /><path d="M15 12l1.644 -1.644a1.21 1.21 0 0 1 1.712 0l2.644 2.644" /></svg></ui-icon>
 						</button>
 					</ui-lightbox>
-					<img src="/assets/images/finance.png" alt="City skyline at dusk" loading="lazy">
-					<img src="/assets/images/river.png" alt="River winding through a valley" loading="lazy">
-					<img src="/assets/images/mindfulness.png" alt="Calm lakeside at dawn" loading="lazy">
-					<img src="/assets/images/gastronomy.png" alt="Plated dish in a restaurant" loading="lazy">
+					<img src="/assets/images/finance.png" alt="City skyline at dusk" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/finance.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/finance.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/finance.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/finance.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/finance.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
+					<img src="/assets/images/river.png" alt="River winding through a valley" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/river.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/river.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/river.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/river.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/river.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
+					<img src="/assets/images/mindfulness.png" alt="Calm lakeside at dawn" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/mindfulness.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/mindfulness.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/mindfulness.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/mindfulness.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/mindfulness.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
+					<img src="/assets/images/gastronomy.png" alt="Plated dish in a restaurant" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/gastronomy.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/gastronomy.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/gastronomy.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/gastronomy.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/gastronomy.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
 				</ui-media>
 				<ui-content>
 					<h3 data-part="headline">Arrows-only → dots + arrows</h3>
@@ -189,9 +203,9 @@
 					<ui-chip>Deal</ui-chip>
 					<ui-sticker size="lg"><small>Save</small><strong>10%</strong></ui-sticker>
 					<lay-out xs="cg(xs) rg(xs) p(xs)" md="columns(3)" lg="grid(3c)" theme="gray">
-						<ui-media media="hov(zoom)"><img src="/assets/images/goose-1.png" alt="Goose bucket bag — product shot"></ui-media>
-						<ui-media media="hov(zoom)"><img src="/assets/images/goose-2.png" alt="Model carrying the goose bucket bag"></ui-media>
-						<ui-media media="hov(zoom) flp(h)"><img src="/assets/images/goose-1.png" alt="Goose drawstring bag — detail"></ui-media>
+						<ui-media media="hov(zoom)"><img src="/assets/images/goose-1.png" alt="Goose bucket bag — product shot" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/goose-1.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/goose-1.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/goose-1.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/goose-1.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/goose-1.png 1200w" sizes="auto, (min-width: 720px) min(66.67vw, 683px), (min-width: 540px) min(33.33vw, 341px), 100vw" loading="lazy" decoding="async"></ui-media>
+						<ui-media media="hov(zoom)"><img src="/assets/images/goose-2.png" alt="Model carrying the goose bucket bag" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/goose-2.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/goose-2.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/goose-2.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/goose-2.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/goose-2.png 1200w" sizes="auto, (min-width: 720px) min(66.67vw, 683px), (min-width: 540px) min(33.33vw, 341px), 100vw" loading="lazy" decoding="async"></ui-media>
+						<ui-media media="hov(zoom) flp(h)"><img src="/assets/images/goose-1.png" alt="Goose drawstring bag — detail" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/goose-1.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/goose-1.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/goose-1.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/goose-1.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/goose-1.png 1200w" sizes="auto, (min-width: 720px) min(66.67vw, 683px), (min-width: 540px) min(33.33vw, 341px), 100vw" loading="lazy" decoding="async"></ui-media>
 					</lay-out>
 				</ui-media>
 				<ui-content>
@@ -223,9 +237,9 @@
 					</ui-lightbox>
 					<ui-chip>3 photos</ui-chip>
 					<ui-sticker><small>New</small></ui-sticker>
-					<img src="/assets/images/finance.png" alt="City skyline at dusk" loading="lazy">
-					<img src="/assets/images/river.png" alt="River winding through a valley" loading="lazy">
-					<img src="/assets/images/mindfulness.png" alt="Calm lakeside at dawn" loading="lazy">
+					<img src="/assets/images/finance.png" alt="City skyline at dusk" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/finance.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/finance.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/finance.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/finance.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/finance.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
+					<img src="/assets/images/river.png" alt="River winding through a valley" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/river.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/river.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/river.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/river.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/river.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
+					<img src="/assets/images/mindfulness.png" alt="Calm lakeside at dawn" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/mindfulness.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/mindfulness.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/mindfulness.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/mindfulness.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/mindfulness.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
 					<ui-save><button type="button" command="--save" commandfor="lb-furn-off" aria-label="Save to favorites"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
 				</ui-media>
 				<ui-content>
@@ -246,9 +260,9 @@
 					</ui-lightbox>
 					<ui-chip>3 photos</ui-chip>
 					<ui-sticker><small>New</small></ui-sticker>
-					<img src="/assets/images/finance.png" alt="City skyline at dusk" loading="lazy">
-					<img src="/assets/images/river.png" alt="River winding through a valley" loading="lazy">
-					<img src="/assets/images/mindfulness.png" alt="Calm lakeside at dawn" loading="lazy">
+					<img src="/assets/images/finance.png" alt="City skyline at dusk" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/finance.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/finance.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/finance.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/finance.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/finance.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
+					<img src="/assets/images/river.png" alt="River winding through a valley" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/river.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/river.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/river.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/river.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/river.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
+					<img src="/assets/images/mindfulness.png" alt="Calm lakeside at dawn" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/mindfulness.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/mindfulness.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/mindfulness.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/mindfulness.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/mindfulness.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
 					<ui-save><button type="button" command="--save" commandfor="lb-furn-on" aria-label="Save to favorites"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
 				</ui-media>
 				<ui-content>
@@ -281,10 +295,10 @@
 							<ui-icon type="kebab"></ui-icon>
 						</button>
 					</ui-lightbox>
-					<img src="/assets/images/finance.png" alt="City skyline at dusk" loading="lazy">
-					<img src="/assets/images/river.png" alt="River winding through a valley" loading="lazy">
-					<img src="/assets/images/mindfulness.png" alt="Calm lakeside at dawn" loading="lazy">
-					<img src="/assets/images/gastronomy.png" alt="Plated dish in a restaurant" loading="lazy">
+					<img src="/assets/images/finance.png" alt="City skyline at dusk" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/finance.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/finance.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/finance.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/finance.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/finance.png 1200w" sizes="auto, 100vw" loading="lazy" decoding="async">
+					<img src="/assets/images/river.png" alt="River winding through a valley" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/river.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/river.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/river.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/river.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/river.png 1200w" sizes="auto, 100vw" loading="lazy" decoding="async">
+					<img src="/assets/images/mindfulness.png" alt="Calm lakeside at dawn" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/mindfulness.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/mindfulness.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/mindfulness.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/mindfulness.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/mindfulness.png 1200w" sizes="auto, 100vw" loading="lazy" decoding="async">
+					<img src="/assets/images/gastronomy.png" alt="Plated dish in a restaurant" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/gastronomy.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/gastronomy.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/gastronomy.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/gastronomy.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/gastronomy.png 1200w" sizes="auto, 100vw" loading="lazy" decoding="async">
 				</ui-media>
 				<ui-content>
 					<small data-part="eyebrow">Travel</small>
@@ -315,8 +329,8 @@
 							</ui-icon>
 						</button>
 					</ui-lightbox>
-					<video id="lb-video-1" preload="metadata" src="/assets/video/city.mp4" poster="/assets/images/finance.png" muted loop playsinline aria-label="City timelapse"></video>
-					<img src="/assets/images/river.png" alt="River winding through a valley" loading="lazy">
+					<video id="lb-video-1" preload="metadata" src="/assets/video/city.mp4" poster="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/finance.png" muted loop playsinline aria-label="City timelapse"></video>
+					<img src="/assets/images/river.png" alt="River winding through a valley" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/river.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/river.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/river.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/river.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/river.png 1200w" sizes="auto, 100vw" loading="lazy" decoding="async">
 					<ui-play><button type="button" command="--play-pause" commandfor="lb-video-1" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 				</ui-media>
 				<ui-content>
@@ -330,7 +344,7 @@
 
 	<!-- section 5's layout toggle + [open]/aria-expanded reflection + the
 	     toggle-popover click fallback for browsers without command= invokers -->
-	<script type="module" src="../lightbox.js"></script>
+	<script type="module" src="../lightbox.min.js"></script>
 	<!-- Demo glue (same as ui/save/index.html): fill the heart on click by
 	     toggling aria-pressed — the attribute ui-save.css keys its active state
 	     on. Production code wires this to real persistence via the --save
@@ -344,10 +358,11 @@
 		});
 	</script>
 	<!-- section 6's play-pause media-command polyfill -->
-	<script type="module" src="../video.js"></script>
+	<script type="module" src="../video.min.js"></script>
 	<!-- Typed attr() polyfill — Safari/Firefox. No-op where typed attr() is
 	     supported; each component's own @supports block already covers the no-JS
 	     case, this restores per-element attribute values on top. -->
 	<script type="module" src="/ui/base/polyfills/attr-fallback.js"></script>
+</main>
 </body>
 </html>

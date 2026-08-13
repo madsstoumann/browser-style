@@ -15,11 +15,41 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { renderCard, SCHEMA_TYPES } from '../../render.js';
+import { generateSrcsets, calculateSizes } from '../../../../layout/src/srcsets.js';
+import { srcsetMap, srcsetConfig } from '../../../../layout/layouts-map.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const data = (file) => JSON.parse(readFileSync(join(here, '../../data', file), 'utf8'));
 
 const presets = data('card.presets.json').presets;
+
+/* Cloudflare srcset pipeline (docs/media.md § Responsive images) — absolute base:
+   /cdn-cgi/image/ only resolves on the zone, and a failed candidate never falls
+   back to src. Article pages are a single 65ch prose column; the grid page is
+   the .grid-2 two-up (matches layout's columns(2) sizes list). */
+const CDN_BASE = 'https://v4.browser.style';
+const PROSE_IMAGES = { cdnBase: CDN_BASE, sizes: '(min-width: 720px) 42rem, 100vw' };
+const GRID_IMAGES = { cdnBase: CDN_BASE, sizes: calculateSizes(generateSrcsets({ md: 'columns(2)' }, srcsetMap, srcsetConfig), 0) };
+
+/* shared head fragment: bundle CSS + hotlink-safe referrer + srcset-origin preconnect */
+const HEAD_COMMON = `<link rel="stylesheet" href="/dist/demo.min.css">
+	<!-- srcset uses absolute v4.browser.style CDN URLs; the zone's Hotlink Protection
+	     403s any cross-origin Referer (pages.dev, localhost) — no-referrer passes -->
+	<meta name="referrer" content="no-referrer">
+	<link rel="preconnect" href="https://v4.browser.style">`;
+
+/* page-scoped WCAG AA contrast overrides — same block as demo/schema.html */
+const CONTRAST_STYLE = `<style>
+		:root {
+			--color-link: light-dark(hsl(221, 100%, 44%), hsl(221, 70%, 70%));
+			--color-accent: light-dark(hsl(211, 100%, 38%), hsl(211, 70%, 72%));
+			--color-success: light-dark(hsl(136, 45%, 30%), hsl(136, 25%, 60%));
+			--color-error: light-dark(hsl(360, 65%, 41%), hsl(360, 45%, 62%));
+			--color-text-muted: light-dark(hsl(0, 0%, 42%), hsl(0, 0%, 65%));
+		}
+		ui-content { --ui-content-muted: color-mix(in oklab, currentColor 85%, transparent); }
+		ui-chip[data-type] { --ui-chip-bg: hsl(0, 0%, 95%); --ui-chip-c: hsl(0, 0%, 13%); }
+	</style>`;
 
 const withPreset = (ucf, presetId) => ({
 	...ucf,
@@ -42,11 +72,12 @@ const page = (ucf, name) => {
 	   time this <img> is parsed, the wrapping <article data-view="card-…"> start
 	   tag already is too, so BOTH morph-named elements exist at snapshot.
 	   The hero is the page's LCP element and morph target — always eager. */
-	const hero = descope(renderCard(withPreset(ucf, 'media'), presets))
+	const hero = descope(renderCard(withPreset(ucf, 'media'), presets, undefined, { images: PROSE_IMAGES }))
 		.replace('<img', `<img id="hero" data-view="hero-${ucf.id}"`)
-		.replace(' loading="lazy"', ' loading="eager" fetchpriority="high"');
+		.replace(' loading="lazy"', ' loading="eager" fetchpriority="high"')
+		.replace('sizes="auto, ', 'sizes="'); /* `auto` is spec-invalid on eager images */
 	/* prose-article: text both (summary becomes the standfirst) + byline lede */
-	const prose = descope(renderCard(withPreset(ucf, 'prose-article'), presets));
+	const prose = descope(renderCard(withPreset(ucf, 'prose-article'), presets, undefined, { images: PROSE_IMAGES }));
 
 	return `<!DOCTYPE html>
 <html lang="en-US" dir="ltr">
@@ -55,16 +86,7 @@ const page = (ucf, name) => {
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="${esc(ucf.fields.summary || title)}">
-	<link rel="stylesheet" href="/ui/base/index.css">
-	<link rel="stylesheet" href="../../../beacon/ui-beacon.css">
-	<link rel="stylesheet" href="../../../chip/ui-chip.css">
-	<link rel="stylesheet" href="../../../sticker/ui-sticker.css">
-	<link rel="stylesheet" href="../../../icon/index.css">
-	<link rel="stylesheet" href="../../../quote/ui-quote.css">
-	<link rel="stylesheet" href="../../../avatar/ui-avatar.css">
-	<link rel="stylesheet" href="../../../gradient-text/ui-gradient-text.css">
-	<link rel="stylesheet" href="../../../highlight/ui-highlight.css">
-	<link rel="stylesheet" href="../../ui-card.css">
+	${HEAD_COMMON}
 	<!-- Block first paint (and the view-transition snapshot) until the hero is
 	     parsed, so the card/hero morph targets exist when the browser captures
 	     the incoming page. Without this the snapshot races HTML parsing and the
@@ -87,8 +109,10 @@ const page = (ucf, name) => {
 		}
 		.article-view > ui-media { margin-block-end: var(--spacing-lg); }
 	</style>
+	${CONTRAST_STYLE}
 </head>
 <body>
+	<main>
 	<article class="article-view" data-view="card-${ucf.id}" itemscope itemtype="https://schema.org/${itemtype}">
 		<link itemprop="mainEntityOfPage" href="${name}.html">
 		<div itemprop="publisher" itemscope itemtype="https://schema.org/Organization" hidden>
@@ -97,6 +121,7 @@ const page = (ucf, name) => {
 		${hero}
 		${prose}
 	</article>
+	</main>
 </body>
 </html>
 `;
@@ -104,7 +129,7 @@ const page = (ucf, name) => {
 
 /* teaser card for the grid page: data-view names + the cover link inside the
    headline, all applied string-side — the grid page ships with zero runtime JS */
-const teaser = (ucf, name) => renderCard(ucf, presets)
+const teaser = (ucf, name) => renderCard(ucf, presets, undefined, { images: GRID_IMAGES })
 	.replace('<ui-card', `<ui-card data-view="card-${ucf.id}"`)
 	.replace('<img', `<img data-view="hero-${ucf.id}"`)
 	.replace(/(<h[23] data-part="headline"[^>]*>)([\s\S]*?)(<\/h[23]>)/,
@@ -117,15 +142,7 @@ const gridPage = (cards) => `<!DOCTYPE html>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="Teaser cards linking to per-article pages — a cross-document view transition morphs the whole card into the full article. Fully static: pre-rendered by articles/build.js.">
-	<link rel="stylesheet" href="/ui/base/index.css">
-	<link rel="stylesheet" href="../../beacon/ui-beacon.css">
-	<link rel="stylesheet" href="../../chip/ui-chip.css">
-	<link rel="stylesheet" href="../../sticker/ui-sticker.css">
-	<link rel="stylesheet" href="../../icon/index.css">
-	<link rel="stylesheet" href="../../quote/ui-quote.css">
-	<link rel="stylesheet" href="../../avatar/ui-avatar.css">
-	<link rel="stylesheet" href="../../gradient-text/ui-gradient-text.css">
-	<link rel="stylesheet" href="../ui-card.css">
+	${HEAD_COMMON}
 	<!-- Block first paint (and the incoming snapshot on Back) until the card
 	     grid is parsed, so every card/hero morph target exists when the browser
 	     captures this page. Without it the reverse morph races HTML parsing. -->
@@ -153,6 +170,7 @@ const gridPage = (cards) => `<!DOCTYPE html>
 		/* the card-covering link is data-part="cover" — styled by content.css,
 		   like every other part; no page-local classes */
 	</style>
+	${CONTRAST_STYLE}
 </head>
 <body>
 	<h1>UI: Card — Article View Transition</h1>
@@ -176,5 +194,9 @@ for (const name of ['article', 'news']) {
 	teasers.push(teaser(ucf, name));
 	console.log(`articles/${name}.html ← data/${name}.json (${ucf.id})`);
 }
+/* grid page LCP: first teaser's image goes eager (and drops the lazy-only `auto` sizes entry) */
+teasers[0] = teasers[0]
+	.replace(' loading="lazy"', ' loading="eager" fetchpriority="high"')
+	.replace('sizes="auto, ', 'sizes="');
 writeFileSync(join(here, '../article.render.html'), gridPage(teasers));
 console.log('article.render.html ← grid (static)');

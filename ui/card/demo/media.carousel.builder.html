@@ -6,12 +6,12 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="color-scheme" content="light dark">
 	<meta name="description" content="Interactive carousel designer — compose the media= token string live: frame aspect asr() and corners rds() (incl. squircles), thumbnail ratio tmb(), marker types (dots/pill/hybrid/bar/thumbnails/labels/system bar), 9-grid and band positions, arrow shapes/sets, tones, autoplay and loop.">
-	<link rel="stylesheet" href="/ui/base/index.css">
-	<link rel="stylesheet" href="/ui/carousel/index.css">
-	<link rel="stylesheet" href="/layout/dist/layout.css">
-	<link rel="stylesheet" href="../../play/ui-play.css">
-	<link rel="stylesheet" href="../../icon/index.css">
-	<link rel="stylesheet" href="../ui-card.css">
+	<!-- srcset uses absolute v4.browser.style CDN URLs; the zone's Hotlink Protection
+	     403s any cross-origin Referer (pages.dev, localhost) — no-referrer passes -->
+	<meta name="referrer" content="no-referrer">
+	<!-- srcset origin: handshake in parallel with the CSS download -->
+	<link rel="preconnect" href="https://v4.browser.style">
+	<link rel="stylesheet" href="/dist/demo.min.css">
 	<style>
 		/* Builder chrome — controls left, stage right; stacks on narrow viewports */
 		.builder { display: grid; gap: var(--spacing-xl); align-items: start; }
@@ -47,6 +47,22 @@
 		.builder-out b { color: var(--color-accent, CanvasText); font-weight: var(--font-weight-bold); }
 		.builder-note { color: color-mix(in oklab, CanvasText 65%, transparent); font-size: 0.8125rem; margin: 0; }
 	</style>
+	<style>
+		/* Page-scoped WCAG AA contrast overrides — pending a token retune in ui/base/tokens.css.
+		   Unlayered on purpose: beats the bs-core layer. Same block as demo/schema.html. */
+		:root {
+			--color-link: light-dark(hsl(221, 100%, 44%), hsl(221, 70%, 70%));
+			--color-accent: light-dark(hsl(211, 100%, 38%), hsl(211, 70%, 72%));
+			--color-success: light-dark(hsl(136, 45%, 30%), hsl(136, 25%, 60%));
+			--color-error: light-dark(hsl(360, 65%, 41%), hsl(360, 45%, 62%));
+			--color-text-muted: light-dark(hsl(0, 0%, 42%), hsl(0, 0%, 65%));
+		}
+		ui-content {
+			/* 85%: double-application (byline > dateline) still clears 4.5:1 */
+			--ui-content-muted: color-mix(in oklab, currentColor 85%, transparent);
+		}
+		ui-chip[data-type] { --ui-chip-bg: hsl(0, 0%, 95%); --ui-chip-c: hsl(0, 0%, 13%); }
+	</style>
 </head>
 <body data-layout-root data-page-gap="2">
 	<header>
@@ -54,6 +70,7 @@
 	<p>Design a carousel by composing its <code>media=</code> token string live. Six slides — five images and one video — each carrying a <code>--ui-carousel-thumb-url</code> (for <code>mrk(tmb)</code>) and an <code>aria-label</code> (for <code>mrk(lbl)</code>), so every marker type has the data it needs. The generated attribute is shown below the stage; the whole line is select-to-copy.</p>
 	<p>Reference demos: <a href="media.carousel.html">carousel</a> · token tables: <a href="../docs/carousel.md">carousel.md</a>. Vertical (<code>axis(y)</code> + <code>mrk(rail)</code>) and multi-card <code>lay-out[overflow]</code> scrollers are out of scope here — see the main demo page.</p>
 	</header>
+<main data-layout-root data-page-gap="2">
 
 	<section class="builder">
 		<div class="builder-controls">
@@ -246,16 +263,16 @@
 	     [data-clone] slides and carousel.js's data-ui-carousel init flag are
 	     never carried over into the next configuration. -->
 	<template id="slides">
-		<img src="/assets/images/river.png" alt="River bend at dusk" aria-label="River Walk" style="--ui-carousel-thumb-url: url('/assets/images/river.png')">
-		<img src="/assets/images/mindfulness.png" alt="Morning meditation" aria-label="Mindful Living" style="--ui-carousel-thumb-url: url('/assets/images/mindfulness.png')">
-		<img src="/assets/images/gastronomy.png" alt="Plated tasting course" aria-label="Fine Dining" style="--ui-carousel-thumb-url: url('/assets/images/gastronomy.png')">
-		<img src="/assets/images/world.png" alt="Globe at night" aria-label="World Report" style="--ui-carousel-thumb-url: url('/assets/images/world.png')">
-		<img src="/assets/images/finance.png" alt="Market charts" aria-label="Market Watch" style="--ui-carousel-thumb-url: url('/assets/images/finance.png')">
-		<video src="/assets/video/city.mp4" poster="/assets/images/city.png" aria-label="City Lights" muted loop playsinline style="--ui-carousel-thumb-url: url('/assets/images/city.png')"></video>
+		<img src="/assets/images/river.png" alt="River bend at dusk" aria-label="River Walk" style="--ui-carousel-thumb-url: url('https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=160/assets/images/river.png')" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/river.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/river.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/river.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/river.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/river.png 1200w" sizes="100vw" loading="eager" fetchpriority="high" decoding="async">
+		<img src="/assets/images/mindfulness.png" alt="Morning meditation" aria-label="Mindful Living" style="--ui-carousel-thumb-url: url('https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=160/assets/images/mindfulness.png')" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/mindfulness.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/mindfulness.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/mindfulness.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/mindfulness.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/mindfulness.png 1200w" sizes="auto, 100vw" loading="lazy" decoding="async">
+		<img src="/assets/images/gastronomy.png" alt="Plated tasting course" aria-label="Fine Dining" style="--ui-carousel-thumb-url: url('https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=160/assets/images/gastronomy.png')" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/gastronomy.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/gastronomy.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/gastronomy.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/gastronomy.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/gastronomy.png 1200w" sizes="auto, 100vw" loading="lazy" decoding="async">
+		<img src="/assets/images/world.png" alt="Globe at night" aria-label="World Report" style="--ui-carousel-thumb-url: url('https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=160/assets/images/world.png')" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/world.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/world.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/world.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/world.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/world.png 1200w" sizes="auto, 100vw" loading="lazy" decoding="async">
+		<img src="/assets/images/finance.png" alt="Market charts" aria-label="Market Watch" style="--ui-carousel-thumb-url: url('https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=160/assets/images/finance.png')" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/finance.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/finance.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/finance.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/finance.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/finance.png 1200w" sizes="auto, 100vw" loading="lazy" decoding="async">
+		<video src="/assets/video/city.mp4" poster="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/city.png" aria-label="City Lights" muted loop playsinline style="--ui-carousel-thumb-url: url('https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=160/assets/images/city.png')"></video>
 	</template>
 
 	<script type="module">
-		import { scanCarousels } from '../carousel.js';
+		import { scanCarousels } from '../carousel.min.js';
 
 		const $ = (id) => document.getElementById(id);
 		const stage = $('stage'), out = $('out'), note = $('note');
@@ -369,5 +386,6 @@
 	<!-- Typed attr() polyfill — Safari/Firefox. No-op where typed attr() is
 	     supported. See ui/base/polyfills/readme.md. -->
 	<script type="module" src="/ui/base/polyfills/attr-fallback.js"></script>
+</main>
 </body>
 </html>

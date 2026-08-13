@@ -86,6 +86,9 @@ const ATTENDANCE_MODES = new Set(['Offline', 'Online', 'Mixed']);
 /* schema.org BookFormatType members — bookFormat emits only for these */
 const BOOK_FORMATS = new Set(['Hardcover', 'Paperback', 'EBook', 'AudiobookFormat', 'GraphicNovel']);
 
+/* review itemReviewed types — Organization/Service make the review a testimonial */
+const REVIEWED_TYPES = new Set(['Product', 'Organization', 'Service']);
+
 /* Fallback when a card references no preset (or an unknown one).
    Real presets live in data/card.presets.json — instances of the
    card-preset model (cms/baseline/models/card-preset.schema.json). */
@@ -138,8 +141,9 @@ const setImages = (images) => {
 /* demo affordance (options.typeChip): a <ui-chip data-type> naming the card's resolved
    schema.org type on each frame — top end unless other furniture already claims te */
 let TYPE_CHIP = false;
-/* same eligibility as ui-media-srcset.js #eligible(): local paths only */
-const cdnEligible = (src) => !!(IMG && src && !/^https?:\/\//i.test(src) && !src.startsWith('data:') && !src.startsWith('blob:'));
+/* same eligibility as ui-media-srcset.js #eligible(): ROOT-relative local paths only —
+   a page-relative src would transform into the wrong zone path (404, no src fallback) */
+const cdnEligible = (src) => !!(IMG && src && src.startsWith('/') && !src.startsWith('//'));
 /* fixed-size images (thumbs, avatars): square 1x/2x pair instead of a width ladder */
 const fixedSrcset = (src, size) => {
 	if (!cdnEligible(src)) return null;
@@ -896,7 +900,7 @@ const DETAILS = {
 			html += quotePart(fields.summary, { itemprop: 'reviewBody', variant: parts.quote || null });
 		}
 		if (d.reviewer?.name) {
-			html += `<address data-part="byline"${scope('author', 'Person')}>${avatarPart(d.reviewer)}<span data-part="byline-who"><span itemprop="name">${esc(d.reviewer.name)}</span>${d.reviewer.verified ? '<span>✓ Verified purchase</span>' : ''}</span>${d.reviewDate ? `<small data-part="dateline"><time datetime="${esc(d.reviewDate)}">${esc(d.reviewDateDisplay || d.reviewDate)}</time></small>` : ''}</address>`;
+			html += `<address data-part="byline"${scope('author', 'Person')}>${avatarPart(d.reviewer)}<span data-part="byline-who"><span itemprop="name">${esc(d.reviewer.name)}</span>${d.reviewer.title ? `<span itemprop="jobTitle">${esc(d.reviewer.title)}</span>` : ''}${d.reviewer.verified ? '<span>✓ Verified purchase</span>' : ''}</span>${d.reviewDate ? `<small data-part="dateline"><time datetime="${esc(d.reviewDate)}">${esc(d.reviewDateDisplay || d.reviewDate)}</time></small>` : ''}</address>`;
 			/* the visible time sits inside the Person scope, so the machine-readable
 			   date rides a meta on the Review itself */
 			if (d.reviewDate) html += meta('datePublished', d.reviewDate);
@@ -905,7 +909,10 @@ const DETAILS = {
 			/* the reviewed thing owns its aggregate rating and offer — Google reads both
 			   from itemReviewed, not from the Review */
 			const agg = d.aggregateRating;
-			html += `<div${scope('itemReviewed', 'Product')} hidden>${meta('name', d.productReviewed)}${d.productImage ? meta('image', d.productImage) : ''}${agg ? `<span${scope('aggregateRating', 'AggregateRating')}>${meta('ratingValue', agg.value ?? agg.ratingValue)}${meta('ratingCount', agg.count ?? agg.ratingCount)}${meta('bestRating', agg.max ?? 5)}${meta('worstRating', 1)}</span>` : ''}${d.productPrice ? `<span${scope('offers', 'Offer')}>${meta('priceCurrency', d.productPrice.currency)}${meta('price', d.productPrice.amount ?? d.productPrice.current)}${meta('availability', SCHEMA + 'InStock')}</span>` : ''}</div>`;
+			const reviewedType = REVIEWED_TYPES.has(d.reviewedType) ? d.reviewedType : 'Product';
+			/* offers is not an Organization property — testimonials carry no price anyway */
+			const offer = d.productPrice && reviewedType !== 'Organization';
+			html += `<div${scope('itemReviewed', reviewedType)} hidden>${meta('name', d.productReviewed)}${d.productImage ? meta('image', d.productImage) : ''}${agg ? `<span${scope('aggregateRating', 'AggregateRating')}>${meta('ratingValue', agg.value ?? agg.ratingValue)}${meta('ratingCount', agg.count ?? agg.ratingCount)}${meta('bestRating', agg.max ?? 5)}${meta('worstRating', 1)}</span>` : ''}${offer ? `<span${scope('offers', 'Offer')}>${meta('priceCurrency', d.productPrice.currency)}${meta('price', d.productPrice.amount ?? d.productPrice.current)}${meta('availability', SCHEMA + 'InStock')}</span>` : ''}</div>`;
 		}
 		return html;
 	},
@@ -1233,7 +1240,8 @@ const DETAILS = {
 		/* author byline renders EARLY via BYLINE_EARLY — rating and price follow, publisher is the colophon */
 		let html = meta('isbn', d.isbn) + meta('numberOfPages', d.numberOfPages)
 			+ (BOOK_FORMATS.has(d.bookFormat) ? meta('bookFormat', SCHEMA + d.bookFormat) : '');
-		const bits = [d.numberOfPages ? `${num(d.numberOfPages)} pages` : null, d.bookFormatDisplay || d.bookFormat, d.isbn ? `ISBN ${d.isbn}` : null].filter(Boolean).join(' · ');
+		/* U+2060 word joiners defeat iOS tel data detectors — docs/schema.md § Book */
+		const bits = [d.numberOfPages ? `${num(d.numberOfPages)} pages` : null, d.bookFormatDisplay || d.bookFormat, d.isbn ? `ISBN ${d.isbn.replace(/-/g, '-\u2060')}` : null].filter(Boolean).join(' · ');
 		if (bits) html += `<p data-part="meta">${esc(bits)}</p>`;
 		html += ratingPart('aggregateRating', 'AggregateRating', d.rating);
 		if (d.price) {
@@ -1246,7 +1254,8 @@ const DETAILS = {
 	dataset(d) {
 		let html = meta('license', d.license) + meta('temporalCoverage', d.temporalCoverage) + meta('spatialCoverage', d.spatialCoverage)
 			+ (d.variableMeasured || []).map((variable) => meta('variableMeasured', variable)).join('');
-		const bits = [d.temporalCoverage, d.spatialCoverage, d.licenseDisplay].filter(Boolean).join(' · ');
+		/* display key wins — the machine ISO interval ("2019-01/2025-12") reads poorly */
+		const bits = [d.temporalCoverageDisplay || d.temporalCoverage, d.spatialCoverage, d.licenseDisplay].filter(Boolean).join(' · ');
 		if (bits) html += `<p data-part="meta">${esc(bits)}</p>`;
 		html += listPart(d.variableMeasured);
 		if (d.distribution?.length) {

@@ -9,26 +9,26 @@
 	     403s any cross-origin Referer (pages.dev, localhost) — no-referrer passes -->
 	<meta name="referrer" content="no-referrer">
 	<meta name="description" content="All 26 card types rendered client-side by render.js from UCF data files in data/ — same markup and microdata as the hand-authored schema.html.">
-	<link rel="stylesheet" href="/ui/base/index.css">
-	<link rel="stylesheet" href="/layout/dist/layout.css">
-	<link rel="stylesheet" href="../../chip/ui-chip.css">
-	<link rel="stylesheet" href="../../sticker/ui-sticker.css">
-	<link rel="stylesheet" href="../../play/ui-play.css">
-	<link rel="stylesheet" href="../../save/ui-save.css">
-	<link rel="stylesheet" href="../../beacon/ui-beacon.css">
-	<link rel="stylesheet" href="../../icon/index.css">
-	<link rel="stylesheet" href="../../reveal/ui-reveal.css">
-	<link rel="stylesheet" href="../../accordion/ui-accordion.css">
-	<link rel="stylesheet" href="../../quote/ui-quote.css">
-	<link rel="stylesheet" href="../../avatar/ui-avatar.css">
-	<link rel="stylesheet" href="../../progress/ui-progress.css">
-	<link rel="stylesheet" href="../../rating/ui-rating.css">
-	<link rel="stylesheet" href="../../timeline/ui-timeline.css">
-	<link rel="stylesheet" href="../../gradient-text/ui-gradient-text.css">
-	<link rel="stylesheet" href="../ui-card.css">
+	<link rel="stylesheet" href="/dist/demo.min.css">
 	<style>
 		.note { color: var(--color-text-secondary, #666); max-inline-size: 70ch; }
 		code { font-size: 0.9em; }
+	</style>
+	<style>
+		/* Page-scoped WCAG AA contrast overrides — pending a token retune in ui/base/tokens.css.
+		   Unlayered on purpose: beats the bs-core layer. Same block as demo/schema.html. */
+		:root {
+			--color-link: light-dark(hsl(221, 100%, 44%), hsl(221, 70%, 70%));
+			--color-accent: light-dark(hsl(211, 100%, 38%), hsl(211, 70%, 72%));
+			--color-success: light-dark(hsl(136, 45%, 30%), hsl(136, 25%, 60%));
+			--color-error: light-dark(hsl(360, 65%, 41%), hsl(360, 45%, 62%));
+			--color-text-muted: light-dark(hsl(0, 0%, 42%), hsl(0, 0%, 65%));
+		}
+		ui-content {
+			/* 85%: double-application (byline > dateline) still clears 4.5:1 */
+			--ui-content-muted: color-mix(in oklab, currentColor 85%, transparent);
+		}
+		ui-chip[data-type] { --ui-chip-bg: hsl(0, 0%, 95%); --ui-chip-c: hsl(0, 0%, 13%); }
 	</style>
 </head>
 <body>
@@ -39,7 +39,7 @@
 
 	<script type="module">
 		import { renderCard as renderCardHtml, loadPresets, SCHEMA_TYPES } from '../render.js';
-		import { scanVideo } from '../video.js';
+		import { scanVideo } from '../video.min.js';
 		import { generateSrcsets, calculateSizes } from '/layout/src/srcsets.js';
 		import { srcsetMap, srcsetConfig } from '/layout/layouts-map.js';
 
@@ -60,14 +60,15 @@
 		const presets = await loadPresets('../data/card.presets.json');
 		const manifest = await (await fetch('../data/index.json')).json();
 
-		/* load everything (renderable + shared reference targets) into an id-keyed map */
+		/* load everything (renderable + shared reference targets) into an id-keyed map —
+		   in parallel: a serial await-per-file loop was a 38-request waterfall */
 		const cards = {};
 		const docs = {};
-		for (const name of [...manifest.cards, ...manifest.shared]) {
+		await Promise.all([...manifest.cards, ...manifest.shared].map(async (name) => {
 			const ucf = await (await fetch(`../data/${name}.json`)).json();
 			cards[ucf.id] = ucf;
 			docs[name] = ucf;
-		}
+		}));
 
 		for (const name of manifest.cards) {
 			const ucf = docs[name];
@@ -87,9 +88,9 @@
 
 		/* preset parts= — sub-component variants (demo presets + demo data) */
 		const demoPresets = { ...presets, ...(await loadPresets('../data/card.presets.demo.json')) };
-		for (const name of ['parts-quote-01', 'parts-faq-01']) {
-			const ucf = await (await fetch(`../data/demo/${name}.json`)).json();
-
+		const partsDocs = await Promise.all(['parts-quote-01', 'parts-faq-01']
+			.map(async (name) => [name, await (await fetch(`../data/demo/${name}.json`)).json()]));
+		for (const [name, ucf] of partsDocs) {
 			const heading = document.createElement('h2');
 			const code = document.createElement('code');
 			const preset = demoPresets[(ucf.fields.preset?.$ref || '').split('/').pop()] || {};
