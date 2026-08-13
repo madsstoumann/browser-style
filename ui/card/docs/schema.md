@@ -49,6 +49,20 @@ specific than it could be. `details.subtype` sharpens it, with no new renderer c
 → `itemtype="https://schema.org/DiscussionForumPosting"`. The `<ui-chip data-type>` label
 follows the sharpened type too.
 
+**"Already valid" is a claim about validity, not about rich-result completeness.** Inheritance
+guarantees the base type's properties remain *legal* on the subtype; it does not guarantee they
+are the ones a consumer reads. `DiscussionForumPosting` is the first case to break the tie both
+ways: Google documents `headline` as its title property and says it "is not recommended for a
+`SocialMediaPosting`", and its supported `interactionType` list contains `ViewAction` but not
+`WatchAction` — so the base type's `name` and the renderer's old blanket `WatchAction` were
+valid and silently ignored.
+
+**The rule that follows:** when a subtype needs a *different* property than its base, resolve it
+from the **resolved itemtype** (`resolveItemtype(fields)`), not from the `schemaType` key — the
+key cannot distinguish a plain post from a forum posting. `HEADLINE_PROP_BY_ITEMTYPE` is that
+seam, consulted before the `schemaType`-keyed `HEADLINE_PROP`. Populate it only for subtypes
+with a documented difference; a subtype that inherits cleanly still needs no renderer code.
+
 **The value is allowlisted, never taken verbatim.** Two reasons, both load-bearing:
 
 1. **Security.** The resolved string is interpolated into `itemtype="https://schema.org/…"`.
@@ -204,8 +218,13 @@ Dark theme, `PriceSpecification`, features as check-`list` with the excluded one
 
 Byline + post text as `quote` part, hashtags as tags, engagement as three `InteractionCounter`s.
 The demo page carries the type twice: a plain post, and a forum thread sharpened to
-`DiscussionForumPosting` via [`details.subtype`](#subtypes) — same parts, an eyebrow for the
-board and reply/view counters instead of likes and shares.
+`DiscussionForumPosting` via [`details.subtype`](#subtypes) — same parts, plus **two**
+additions: an eyebrow for the board with reply/view counters instead of likes and shares, and a
+**headline**, which the plain post does not have. The headline is not cosmetic: Google documents
+`headline` as the title property for `DiscussionForumPosting` and states it "is not recommended
+for a `SocialMediaPosting`", so the forum spelling emits `itemprop="headline"` while the plain
+post keeps `itemprop="name"`. Its view counter is a `ViewAction` for the same reason — see
+[§ Subtypes](#subtypes).
 
 ### Software — `SoftwareApplication`
 

@@ -109,8 +109,17 @@ const REVIEWED_TYPES = new Set(['Product', 'Organization', 'Service']);
    card-preset model (cms/baseline/models/card-preset.schema.json). */
 const DEFAULT_PRESET = { element: 'ui-card', variant: 'col', media: 'asr(16/9)' };
 
+/* itemtypes whose viewCount is a WatchAction (moving content); all others get ViewAction */
+const WATCHABLE = new Set(['VideoObject', 'Movie', 'PodcastEpisode']);
+
 /* headline itemprop: job → title, article/news → headline, rest → name */
 const HEADLINE_PROP = { job: 'title', article: 'headline', news: 'headline' };
+/* …but a subtype can want a different property than its base: Google documents
+   `headline` for DiscussionForumPosting and says it "is not recommended for a
+   SocialMediaPosting", so social's plain spelling keeps `name`. Keyed by RESOLVED
+   itemtype, consulted first. Docs: docs/schema.md § Subtypes */
+const HEADLINE_PROP_BY_ITEMTYPE = new Map([['DiscussionForumPosting', 'headline']]);
+const headlineProp = (fields, type) => HEADLINE_PROP_BY_ITEMTYPE.get(resolveItemtype(fields)) || HEADLINE_PROP[type] || 'name';
 /* summary itemprop: review → reviewBody, quote/announcement/social → text, rest → description */
 const SUMMARY_PROP = { review: 'reviewBody', quote: 'text', announcement: 'text', social: 'text' };
 /* eyebrow itemprop (only where a sensible property exists) */
@@ -750,7 +759,7 @@ const buildContent = (fields, type, overlay, slots = {}, textMode = 'summary', p
 		html += `<small data-part="eyebrow"${EYEBROW_PROP[type] ? ` itemprop="${EYEBROW_PROP[type]}"` : ''}>${esc(fields.eyebrow)}</small>`;
 	}
 	if (fields.headline && type !== 'quote') {
-		html += `<${headlineTag} data-part="headline" itemprop="${HEADLINE_PROP[type] || 'name'}">${renderInline(fields.headline)}</${headlineTag}>`;
+		html += `<${headlineTag} data-part="headline" itemprop="${headlineProp(fields, type)}">${renderInline(fields.headline)}</${headlineTag}>`;
 	}
 	html += slots.subheadline || (fields.subheadline ? `<${textTag} data-part="subheadline">${esc(fields.subheadline)}</${textTag}>` : '');
 	if (fields.summary && showSummary && !DETAILS_OWNS_SUMMARY.has(type)) {
@@ -824,7 +833,11 @@ const buildTail = (fields, type) => {
 	}
 	const eng = fields.engagement;
 	if (eng && Object.keys(eng).length) {
-		const counters = [['likeCount', 'LikeAction'], ['shareCount', 'ShareAction'], ['commentCount', 'CommentAction'], ['viewCount', 'WatchAction']];
+		/* WatchAction is "dynamic/moving visual content" — only right for a video/audio
+		   root. Everything else (article, forum post) views STATIC content: ViewAction,
+		   which is also the only one of the two Google reads. Docs: docs/schema.md § Subtypes */
+		const viewAction = WATCHABLE.has(resolveItemtype(fields)) ? 'WatchAction' : 'ViewAction';
+		const counters = [['likeCount', 'LikeAction'], ['shareCount', 'ShareAction'], ['commentCount', 'CommentAction'], ['viewCount', viewAction]];
 		for (const [key, action] of counters) {
 			if (eng[key] == null) continue;
 			html += `<div${scope('interactionStatistic', 'InteractionCounter')} hidden>${meta('interactionType', SCHEMA + action)}${meta('userInteractionCount', eng[key])}</div>`;
@@ -1375,7 +1388,7 @@ const renderReveal = (fields, type, itemtype, tokens, preset, flipside, cardId =
 	const inner = `${withMedia(media?.html || '', mergeMediaTokens(preset.media, tokens.media))}
 		<ui-content${attrs({ content: preset.content || null })}>
 			${fields.eyebrow ? `<small data-part="eyebrow">${esc(fields.eyebrow)}</small>` : ''}
-			<strong data-part="headline" itemprop="${HEADLINE_PROP[type] || 'name'}">${renderInline(fields.headline)}</strong>
+			<strong data-part="headline" itemprop="${headlineProp(fields, type)}">${renderInline(fields.headline)}</strong>
 			${fields.details?.version ? `<span data-part="meta"><ui-chip theme="pale accent">v<span itemprop="softwareVersion">${esc(fields.details.version)}</span></ui-chip></span>` : ''}
 		</ui-content>`;
 	/* <ui-face> only where the animation transforms the front face; exp animates the host */

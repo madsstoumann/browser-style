@@ -35,6 +35,43 @@ describe('review', () => {
 	});
 });
 
+/* Properties that differ between a base type and its subtype. Validity is not the bar
+   here — the pre-fix markup was valid, it just wasn't what Google reads. */
+describe('subtype-aware properties', () => {
+	/* WatchAction is "dynamic/moving visual content"; a thread and an article are static.
+	   Google's DiscussionForumPosting interactionType list has ViewAction, not WatchAction. */
+	test('viewCount is a ViewAction unless the root is video/audio', () => {
+		const views = { engagement: { viewCount: 10 } };
+		for (const [schemaType, action] of [['video', 'WatchAction'], ['podcast', 'WatchAction'], ['movie', 'WatchAction'], ['article', 'ViewAction'], ['social', 'ViewAction'], ['content', 'ViewAction']])
+			assert.match(render({ schemaType, headline: 'X', ...views }),
+				new RegExp(`interactionType" content="https://schema\\.org/${action}"`), schemaType);
+	});
+	test('a video subtype still watches, a social subtype views', () => {
+		assert.match(render({ schemaType: 'social', headline: 'T', details: { subtype: 'DiscussionForumPosting' }, engagement: { viewCount: 10 } }),
+			/interactionType" content="https:\/\/schema\.org\/ViewAction"/);
+	});
+	/* the other three counters are type-independent — pin that the change didn't leak */
+	test('the non-view counters are unchanged by type', () => {
+		const html = render({ schemaType: 'video', headline: 'X', engagement: { likeCount: 1, shareCount: 2, commentCount: 3 } });
+		for (const a of ['LikeAction', 'ShareAction', 'CommentAction'])
+			assert.match(html, new RegExp(`interactionType" content="https://schema\\.org/${a}"`), a);
+	});
+
+	/* Google: headline is "not recommended for a SocialMediaPosting" but is the title
+	   property for DiscussionForumPosting — so base and subtype genuinely differ */
+	test('headline itemprop resolves from the subtype, not just the schemaType', () => {
+		assert.match(render({ schemaType: 'social', headline: 'Thread', details: { subtype: 'DiscussionForumPosting' } }),
+			/data-part="headline" itemprop="headline"/);
+		assert.match(render({ schemaType: 'social', headline: 'Post' }), /data-part="headline" itemprop="name"/);
+		/* a sibling social subtype is NOT swept along — only the forum spelling differs */
+		assert.match(render({ schemaType: 'social', headline: 'Post', details: { subtype: 'BlogPosting' } }),
+			/data-part="headline" itemprop="name"/);
+		/* the schemaType keying still applies where no subtype override exists */
+		assert.match(render({ schemaType: 'job', headline: 'Dev' }), /data-part="headline" itemprop="title"/);
+		assert.match(render({ schemaType: 'article', headline: 'A' }), /data-part="headline" itemprop="headline"/);
+	});
+});
+
 describe('subtype sharpening', () => {
 	test('legacy businessType still works', () => {
 		const html = render({ schemaType: 'business', headline: 'Brew', details: { businessType: 'CafeOrCoffeeShop' } });
