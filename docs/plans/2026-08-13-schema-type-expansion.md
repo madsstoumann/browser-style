@@ -672,7 +672,11 @@ Recorded here rather than fixed inline — each is real, each is outside the fil
 
    **Escalated after the Task 2 review fixes.** `resolveItemtype` is now **exported** and is the single itemtype authority for `render.js`, `demo/articles/build.js` and `demo/render.html`. It returns `undefined` for `constructor`/`toString` and `{}` for `__proto__`, so a bad record now yields `itemtype="https://schema.org/undefined"` on a generated article page — the failure is reachable through public API, not just internal. The same commit also left **three** identical copies of `SCHEMA_TYPES[fields.schemaType] ? … : 'content'` (`render.js:89`, `:1346`, `:1439`), so "fix once in `renderCard`" no longer suffices.
 
-   Fix: extract one `baseType(fields)` helper using `Object.hasOwn(SCHEMA_TYPES, …)`, route all three sites through it, and add a test per failure mode (garbage itemtype, TypeError, and the exported resolver never returning a non-string). Do this as a standalone hardening commit **before Task 4**, since Task 4 gates its renderer on the resolved itemtype and inherits this contract.
+   Fix: extract one `baseType(fields)` helper using `Object.hasOwn(SCHEMA_TYPES, …)`, route all three sites through it, and add a test per failure mode (garbage itemtype, TypeError, and the exported resolver never returning a non-string). Extend the existing resolver test rather than starting a new one, and correct its comment, which currently claims a contract the assertions do not pin.
+
+   **Route `resolveItemtype` itself through the helper, not only its call sites** — the resolver runs the same normalisation internally at `render.js:89`, one line above the copy at `:1439`, so fixing only the call sites leaves the duplication (and the hole) alive inside the function. Once done, `docs/card.md`'s `(fields) => string` typing becomes true absolutely rather than only for well-formed input.
+
+   Do this as a standalone hardening commit **before Task 4**, since Task 4 gates its renderer on the resolved itemtype and inherits this contract.
 
 ## Risks
 
