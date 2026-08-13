@@ -203,6 +203,9 @@ Dark theme, `PriceSpecification`, features as check-`list` with the excluded one
 ### Social — `SocialMediaPosting`
 
 Byline + post text as `quote` part, hashtags as tags, engagement as three `InteractionCounter`s.
+The demo page carries the type twice: a plain post, and a forum thread sharpened to
+`DiscussionForumPosting` via [`details.subtype`](#subtypes) — same parts, an eyebrow for the
+board and reply/view counters instead of likes and shares.
 
 ### Software — `SoftwareApplication`
 
