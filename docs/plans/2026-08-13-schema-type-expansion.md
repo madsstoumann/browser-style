@@ -658,6 +658,11 @@ Recorded here rather than fixed inline — each is real, each is outside the fil
 
 1. **Root `npm test` cannot reach the new suite** (found in Task 1). The root script is `npm run test --workspaces`, which aborts with `Missing script: "test"` across the editor workspaces; with `--if-present` it still fails, because at least one workspace carries npm's default `echo "Error: no test specified" && exit 1`. This was already broken before Task 1 — no package had a `test` script at all — but there is now something real to run and no top-level command that runs it. **Fix before Task 17**, which needs a single verification command.
 2. **`ui/card/dist/card.css` and `card.min.css` are stale relative to source** (found in Task 1). Running `npm run build` in `ui/card` produces uncommitted changes — `font-variant-numeric: tabular-nums` and a `--_theme-ink` fallback — both originating from earlier commits in this session, not from the plan's work. Rebuild and commit the `dist/` bundles as a standalone commit, separate from any task here.
+3. **Prototype keys reach plain-object lookups keyed by `schemaType`** (found in Task 2, reproduced by the controller). `SCHEMA_TYPES[fields.schemaType]` passes its truthiness guard for inherited `Object.prototype` keys, so `constructor`, `toString` and `__proto__` all slip through. There are **two distinct failure modes**:
+   - *Without* a `details.subtype` — emits a garbage itemtype, e.g. `itemtype="https://schema.org/function Object() { [native code] }"`. Pre-existing; Task 2 did not change it.
+   - *With* a `details.subtype` — throws `TypeError: SUBTYPES[type]?.has is not a function`. New in Task 2, because the resolver now indexes a second type-keyed map.
+
+   The garbage-output mode is the worse of the two (nonsense silently enters published markup); the crash at least fails closed, but a throw in an SSR path is still a denial-of-service on any page containing one bad record. The class predates this plan and spans `SCHEMA_TYPES`, `DETAILS` and `SUBTYPES`. Fix once at the single resolution point in `renderCard` — `const type = Object.hasOwn(SCHEMA_TYPES, fields.schemaType) ? fields.schemaType : 'content'` — which makes every downstream map lookup safe, and add a test per failure mode. Standalone hardening commit, not part of a type task.
 
 ## Risks
 
