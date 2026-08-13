@@ -1544,6 +1544,9 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       max-inline-size: var(--ui-content-max, var(--width-prose, 65ch));
       text-box: cap alphabetic;
     }
+    & > div[itemscope]:not([data-part], [hidden]) {
+      display: contents;
+    }
     &[theme] {
       background: var(--_theme-bg, transparent);
       color: var(--_theme-c, var(--color-text));
@@ -1857,6 +1860,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       column-gap: var(--ui-content-hours-column-gap, var(--spacing-md));
       display: grid;
       font-size: var(--ui-content-hours-fs, var(--ui-content-address-fs, calc(var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))) * 0.9)));
+      font-variant-numeric: tabular-nums;
       grid-template-columns: auto 1fr;
       margin: 0;
       row-gap: var(--ui-content-hours-row-gap, var(--spacing-xs));
@@ -2795,7 +2799,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
   }
   :where(ui-card[theme]) {
     --ui-card-bg: var(--_theme-bg, light-dark(var(--color-surface), var(--ui-card-dark-bg, #1f2937)));
-    color: var(--_theme-c, var(--color-text));
+    color: var(--_theme-c, var(--_theme-ink, var(--color-text)));
   }
   @container bs-card (inline-size >= 25rem) {
     :where([variant~="md:col"]) :is(cq-box, summary),
