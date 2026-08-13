@@ -346,7 +346,9 @@ grid.insertAdjacentHTML('beforeend', renderCard(ucf, presets));
 | `renderCard` | `(ucf, presets?, cards?) => string` | UCF instance (or bare fields) → HTML for `<ui-card>`/`<ui-reveal>`/bare primitive. `cards` = id→UCF map for resolving `flipside` references |
 | `renderCardFrom` | `(url, presets?, cards?) => Promise<string>` | fetch + render |
 | `loadPresets` | `(url) => Promise<object>` | fetch `card.presets.json` → id→preset map |
-| `SCHEMA_TYPES` | map | schemaType → schema.org type |
+| `SCHEMA_TYPES` | map | schemaType → base schema.org type |
+| `resolveItemtype` | `(fields) => string` | the itemtype a card actually gets — base type, sharpened by an allowlisted `details.subtype`. **Any code emitting an itemtype must call this**, not index `SCHEMA_TYPES`, or a sharpened card diverges between views |
+| `SUBTYPES` | map | schemaType → `Set` of allowlisted subtypes (kept in sync with [schema.md § Subtypes](schema.md#subtypes) by `tokens.lint.js`) |
 
 Pipeline: resolve preset → build `<ui-media>` (items; furniture emitted from the
 `furniture` object, its look from the preset's `media=` tokens plus any `style=`

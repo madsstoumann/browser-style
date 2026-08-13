@@ -38,7 +38,7 @@
 	<main data-layout-root data-page-gap="2"></main>
 
 	<script type="module">
-		import { renderCard as renderCardHtml, loadPresets, SCHEMA_TYPES } from '../render.js';
+		import { renderCard as renderCardHtml, loadPresets, resolveItemtype } from '../render.js';
 		import { scanVideo } from '../video.min.js';
 		import { generateSrcsets, calculateSizes } from '/layout/src/srcsets.js';
 		import { srcsetMap, srcsetConfig } from '/layout/layouts-map.js';
@@ -76,7 +76,7 @@
 			const heading = document.createElement('h2');
 			const code = document.createElement('code');
 			const presetId = (ucf.fields.preset?.$ref || '').split('/').pop() || 'default';
-			code.textContent = `${SCHEMA_TYPES[ucf.fields.schemaType] || 'CreativeWork'} · ${presetId}`;
+			code.textContent = `${resolveItemtype(ucf.fields)} · ${presetId}`;
 			heading.append(`${name} — `, code);
 
 			const grid = document.createElement('lay-out');

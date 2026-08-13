@@ -69,10 +69,9 @@ export const SCHEMA_TYPES = {
 	claim: 'ClaimReview'
 };
 
-/* itemtype sharpening — a card may narrow to an allowlisted SUBTYPE that inherits
-   every property its renderer emits, so no new renderer is needed. Allowlisted,
-   never verbatim data: this value lands in an itemtype. Docs: docs/schema.md § Subtypes */
-const SUBTYPES = {
+/* itemtype sharpening — narrows a card to an allowlisted subtype of its base type.
+   Never verbatim data: this value lands in an itemtype. Docs: docs/schema.md § Subtypes */
+export const SUBTYPES = {
 	article: new Set(['BlogPosting', 'TechArticle', 'APIReference', 'ScholarlyArticle', 'Report', 'SatiricalArticle', 'AdvertiserContentArticle']),
 	business: new Set(['Restaurant', 'CafeOrCoffeeShop', 'Bakery', 'BarOrPub', 'FastFoodRestaurant', 'IceCreamShop', 'Winery', 'Brewery', 'Distillery', 'Store', 'Hotel', 'Resort', 'BedAndBreakfast', 'Motel', 'Hostel', 'Campground', 'BeautySalon', 'DaySpa', 'HealthClub', 'AutoRepair', 'AutoDealer', 'AutoRental', 'GasStation', 'Dentist', 'MedicalClinic', 'Pharmacy', 'Physician', 'RealEstateAgent', 'TravelAgency', 'Library', 'GovernmentOffice']),
 	event: new Set(['SportsEvent', 'MusicEvent', 'TheaterEvent', 'ScreeningEvent', 'ComedyEvent', 'DanceEvent', 'ExhibitionEvent', 'FoodEvent', 'LiteraryEvent', 'BusinessEvent', 'EducationEvent', 'ChildrensEvent', 'SocialEvent', 'SaleEvent', 'Festival', 'Hackathon', 'PublicationEvent', 'CourseInstance']),
@@ -83,9 +82,11 @@ const SUBTYPES = {
 	social: new Set(['DiscussionForumPosting', 'BlogPosting', 'LiveBlogPosting'])
 };
 
-/* `details.subtype` is the general spelling; `details.businessType` is the legacy
-   business-only alias kept for existing content. Unknown values fall back to the base type. */
-const resolveItemtype = (type, fields) => {
+/* `subtype` beats `businessType` because the latter is only the pre-`subtype` business-only
+   spelling, kept resolving for existing content. Takes raw fields and normalises the base type
+   itself: every other itemtype producer (articles/build.js, demo/render.html) calls THIS. */
+export const resolveItemtype = (fields) => {
+	const type = SCHEMA_TYPES[fields.schemaType] ? fields.schemaType : 'content';
 	const wanted = fields.details?.subtype || (type === 'business' ? fields.details?.businessType : null);
 	return wanted && SUBTYPES[type]?.has(wanted) ? wanted : SCHEMA_TYPES[type];
 };
@@ -687,7 +688,7 @@ const buildMedia = (fields, type, tokens, preset = {}, frameAttrs = {}, cardId =
 		   te is taken when any furniture style names it (product's sticker) — chip default (ts) then */
 		const teTaken = Object.values(fields.furniture || {}).some((f) => ` ${f?.style || ''} `.includes(' te '));
 		if (!teTaken) tokens.media.push('chip(te)');
-		typeChip = `<ui-chip data-type>${esc(resolveItemtype(type, fields))}</ui-chip>`;
+		typeChip = `<ui-chip data-type>${esc(resolveItemtype(fields))}</ui-chip>`;
 	}
 	const html = `<ui-media${attrs({
 		id: mediaId,
@@ -864,7 +865,7 @@ const DETAILS = {
 
 	event(d) {
 		/* attendanceMode is data-driven through an ALLOWLIST — the same discipline as
-		   business.businessType; anything else falls back to the offline default */
+		   details.subtype; anything else falls back to the offline default */
 		const mode = ATTENDANCE_MODES.has(d.attendanceMode) ? d.attendanceMode : 'Offline';
 		let html = meta('eventStatus', d.status ? SCHEMA + 'Event' + d.status : null)
 			+ meta('eventAttendanceMode', `${SCHEMA}${mode}EventAttendanceMode`)
@@ -1436,7 +1437,7 @@ export function renderCard(ucf, presets = {}, cards = {}, options = null) {
 	const fields = ucf?.fields ?? ucf ?? {};
 	const cardId = ucf?.id || null;
 	const type = SCHEMA_TYPES[fields.schemaType] ? fields.schemaType : 'content';
-	const itemtype = SCHEMA + resolveItemtype(type, fields);
+	const itemtype = SCHEMA + resolveItemtype(fields);
 	const preset = resolvePreset(fields, presets);
 	const tokens = { media: [] };
 

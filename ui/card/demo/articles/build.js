@@ -14,7 +14,7 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { renderCard, SCHEMA_TYPES } from '../../render.js';
+import { renderCard, resolveItemtype } from '../../render.js';
 import { generateSrcsets, calculateSizes } from '../../../../layout/src/srcsets.js';
 import { srcsetMap, srcsetConfig } from '../../../../layout/layouts-map.js';
 
@@ -61,7 +61,9 @@ const esc = (value) => String(value)
 
 const page = (ucf, name) => {
 	const title = String(ucf.fields.headline).replace(/<[^>]+>/g, '');
-	const itemtype = SCHEMA_TYPES[ucf.fields.schemaType] || 'CreativeWork';
+	/* through the renderer's resolver, not SCHEMA_TYPES — otherwise a details.subtype
+	   card sharpens in the grid and stays generic here, from one UCF */
+	const itemtype = resolveItemtype(ucf.fields);
 	/* ONE microdata scope on the <article> root — the bare-primitive renders each
 	   carry their own itemscope, which would split the page into partial items */
 	const descope = (html) => html.replace(/ itemscope itemtype="https:\/\/schema\.org\/\w+"/, '');

@@ -75,9 +75,21 @@ the base type. Add to a list only after checking the same.
 | `product` | `Product` | ProductGroup, ProductModel, IndividualProduct, Vehicle, Car, Motorcycle, Drug, DietarySupplement |
 | `social` | `SocialMediaPosting` | DiscussionForumPosting, BlogPosting, LiveBlogPosting |
 
-`Campground` is deliberately on two lists — schema.org makes it both a `LodgingBusiness` and a
-`CivicStructure`, so either base type is a truthful parent. `Museum` is **only** a
-`CivicStructure`, so it sharpens `location`, not `business`.
+**Two values appear on two lists, and they are the complete set.** Both are deliberate —
+schema.org gives each of them two truthful parents — but they differ in what the choice costs:
+
+- **`Campground`** (`business` + `location`) is the easy one. Its parents are unrelated
+  branches, `LodgingBusiness` and `CivicStructure`, so the two spellings emit genuinely
+  different itemtypes. Pick by what the card *is*: a business that rents pitches, or a place.
+- **`BlogPosting`** (`article` + `social`) is the confusing one. `SocialMediaPosting` is itself
+  a descendant of `Article`, so **both spellings emit the same `itemtype`** — but from
+  different renderers, so the *properties* differ. `article` emits `headline` + `description`;
+  `social` emits `name` + `text`, plus the platform as `publisher` and the post `author`.
+  Neither is wrong, so nothing guards this. Choose `social` when the card has a platform, an
+  author handle or hashtags; `article` otherwise.
+
+Note the near miss: `Museum` is **only** a `CivicStructure`, never a `LocalBusiness`, so it
+sharpens `location` and is absent from `business`.
 
 `details.businessType` is the **legacy alias** — the business-only spelling that predates
 `subtype`, kept working for existing content. `subtype` is the general spelling; prefer it in

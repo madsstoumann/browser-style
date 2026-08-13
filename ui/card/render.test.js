@@ -2,7 +2,7 @@
  * Complements render.snapshot.js — the snapshot catches CHANGES, these assert CORRECTNESS. */
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
-import renderCard from './render.js';
+import renderCard, { resolveItemtype } from './render.js';
 
 /* Render a bare fields object with no preset — the DEFAULT_PRESET stack card. */
 export const render = (fields) => renderCard({ fields });
@@ -56,5 +56,13 @@ describe('subtype sharpening', () => {
 		const html = render({ schemaType: 'event', headline: 'X', details: { subtype: 'Evil"><script>' } });
 		assert.match(html, /itemtype="https:\/\/schema\.org\/Event"/);
 		assert.ok(!html.includes('<script>'));
+	});
+
+	/* the exported resolver is the seam every other itemtype producer calls
+	   (articles/build.js, demo/render.html) — it must never hand back undefined */
+	test('the exported resolver normalises an unknown schemaType', () => {
+		assert.equal(resolveItemtype({ schemaType: 'nonesuch', headline: 'X' }), 'CreativeWork');
+		assert.equal(resolveItemtype({ headline: 'X' }), 'CreativeWork');
+		assert.equal(resolveItemtype({ schemaType: 'social', details: { subtype: 'DiscussionForumPosting' } }), 'DiscussionForumPosting');
 	});
 });
