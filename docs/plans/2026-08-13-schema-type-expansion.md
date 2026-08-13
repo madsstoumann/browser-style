@@ -291,6 +291,10 @@ git commit -am "feat(card): generic itemtype subtype allowlist (was business-onl
 
 **Details shape:** `product.variants` = `{ variesBy: ['color','size'], productGroupID: 'AB123', items: [{ name, sku, color?, size?, price, currency, availability? }] }`
 
+⚠️ **Do not gate this block on `d.subtype`.** `ProductGroup` needs two independently-typo-able fields to agree — `details.subtype: "ProductGroup"` *and* `details.variants` — with nothing checking them. Forget the subtype and the card emits `itemtype="…/Product"` carrying `hasVariant`/`variesBy`/`productGroupID`, which are `ProductGroup`-only properties: **invalid markup, silently**. That is a worse failure class than anything reachable before this plan, where an unrecognised subtype could only ever lose specificity and never produce invalid output.
+
+Gate on the **resolved** itemtype instead, so the two can never disagree. `resolveItemtype()` is exported for this; pass the resolved type into the renderer (or resolve inside it) and emit the variants block only when it is actually `ProductGroup`. Apply the same rule to every later task whose renderer output depends on a subtype.
+
 **Renderer — append to the existing `product(d, fields)` before its `return`:**
 
 ```js
@@ -435,7 +439,9 @@ service(d) {
 
 **Entry:** `realestate: 'RealEstateListing',`
 
-`RealEstateListing` is a `WebPage` subtype, so the *property* lives on a nested `mainEntity` — the accommodation itself. Allowed accommodation types reuse the `location` allowlist from Task 2 via a local `Set`.
+`RealEstateListing` is a `WebPage` subtype, so the *property* lives on a nested `mainEntity` — the accommodation itself.
+
+The accommodation types are already `SUBTYPES.location` members. **Derive the subset from the exported `SUBTYPES` rather than hand-copying a local `Set`** — the plan's original sketch below transcribes six values that already exist in `render.js`, which would be a fourth copy of the same vocabulary in the same module that holds it. Task 2 exported `SUBTYPES` precisely so this does not happen; a copy here would also escape the drift lint added in Task 2.
 
 **Shape:** `{ listingType: 'sale'|'rent', accommodationType, price: { amount, currency, period? }, floorSize: { value, unit }, bedrooms, bathrooms, rooms, yearBuilt, address: {...}, geo: {...}, amenities: [], leaseLength, datePosted }`
 
