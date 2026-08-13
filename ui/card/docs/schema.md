@@ -302,6 +302,8 @@ Summary emits `reviewBody`; rating → `Rating`, reviewer → `Person` (`reviewe
 
 Headline emits `title`. Salary → `MonetaryAmount` → `QuantitativeValue`; requirements/benefits in a nested `<ui-accordion>`. The card also carries a **second top-level item** — see [Employer rating](#employer-rating--employeraggregaterating).
 
+**The eyebrow is display text here, deliberately unmarked.** `industry` is emitted once, from `details.industry`, as a hidden `<meta>`. The eyebrow used to carry `itemprop="industry"` as well, so a card whose eyebrow named the department ("Engineering") and whose data named the sector ("Software") published *both* values for one property and left the consumer to pick. A `details` field that owns a property wins: the visible kicker stays free to say whatever reads best on the card.
+
 ### Course — `Course`
 
 `timeRequired`/`educationalLevel` metas; the teacher is `CourseInstance.instructor` → `Person` (`Course.provider` is the *organisation*, so naming the instructor there misdeclares both), `courseWorkload` rides the same instance; offer uses part `price`.

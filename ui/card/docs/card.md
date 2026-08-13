@@ -62,7 +62,7 @@ lives in one `details` object discriminated by `schemaType`.
 | `internalName` | string | CMS editor label (required, invariant) |
 | `schemaType` | select | 46 values — drives itemtype + microdata mapping |
 | `preset` | reference → `card-preset` | The look & feel. Swap to restyle |
-| `eyebrow` | string | Kicker; → `articleSection`/`category`/`recipeCategory`/`about`/`industry` |
+| `eyebrow` | string | Kicker; → `articleSection`/`category`/`recipeCategory`/`about`/`genre` (unmarked on `job` — `details.industry` owns `industry`) |
 | `headline` | string | → `headline` (article/news), `title` (job), `name` (rest) |
 | `subheadline` | string | |
 | `summary` | text | → `description` — or `reviewBody` (review), `text` (quote/announcement/social) |

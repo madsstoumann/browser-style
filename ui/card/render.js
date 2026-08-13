@@ -172,8 +172,9 @@ const HEADLINE_PROP_BY_ITEMTYPE = new Map([['DiscussionForumPosting', 'headline'
 const headlineProp = (fields, type) => HEADLINE_PROP_BY_ITEMTYPE.get(resolveItemtype(fields)) || HEADLINE_PROP[type] || 'name';
 /* summary itemprop: review → reviewBody, quote/announcement/social → text, rest → description */
 const SUMMARY_PROP = { review: 'reviewBody', quote: 'text', announcement: 'text', social: 'text' };
-/* eyebrow itemprop (only where a sensible property exists) */
-const EYEBROW_PROP = { article: 'articleSection', news: 'articleSection', product: 'category', recipe: 'recipeCategory', course: 'about', job: 'industry', video: 'genre', movie: 'genre', book: 'genre', tvseries: 'genre', music: 'genre' };
+/* eyebrow itemprop — only where a sensible property exists AND no `details` field already
+   owns it: job's eyebrow is display text, `industry` is details.industry. Docs: schema.md § Job */
+const EYEBROW_PROP = { article: 'articleSection', news: 'articleSection', product: 'category', recipe: 'recipeCategory', course: 'about', video: 'genre', movie: 'genre', book: 'genre', tvseries: 'genre', music: 'genre' };
 /* published itemprop: JobPosting/SpecialAnnouncement use datePosted, VideoObject uploadDate */
 const PUBLISHED_PROP = { job: 'datePosted', announcement: 'datePosted', video: 'uploadDate' };
 /* preset headingTag allowlist — heading LEVEL is placement, so it lives on the preset */

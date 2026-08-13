@@ -859,6 +859,15 @@ describe('job — EmployerAggregateRating', () => {
 		assert.ok(!html.includes('<img'), 'attribute breakout must be escaped');
 		assert.match(html, /&quot;&gt;&lt;img src=x onerror=alert\(1\)&gt; rated 4 out of 5/, 'the name is present and escaped');
 	});
+
+	/* the eyebrow used to carry itemprop="industry" too, so a card published the
+	   department AND the sector for one property. details.industry owns it. */
+	test('industry is emitted exactly once, from details — never from the eyebrow', () => {
+		const html = render({ schemaType: 'job', eyebrow: 'Engineering', headline: 'Senior Frontend Engineer', details: { ...base, industry: 'Software' } });
+		assert.equal(html.match(/itemprop="industry"/g).length, 1, 'two values for one property is unreadable to a consumer');
+		assert.match(html, /<meta itemprop="industry" content="Software">/);
+		assert.match(html, /<small data-part="eyebrow">Engineering<\/small>/, 'the eyebrow stays display text');
+	});
 });
 
 /* the new price/number sinks reach TEXT NODES through fmtPrice()/num() — the same
