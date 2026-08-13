@@ -144,7 +144,7 @@ describe('review', () => {
 			details: { reviewer: { name: '"><img src=x onerror=alert(1)>' } }
 		});
 		assert.ok(!html.includes('<script>'), 'raw <script> must never reach output');
-		assert.ok(!html.includes('onerror=alert'), 'attribute breakout must be escaped');
+		assert.ok(!html.includes('<img'), 'attribute breakout must be escaped');
 	});
 });
 ```
@@ -155,6 +155,8 @@ describe('review', () => {
 node --test ui/card/render.test.js
 ```
 Expected: `# pass 2`. If the escaping test fails, stop and report — that is a live security bug, not a test problem.
+
+⚠️ **Probe the right substring.** Assert on the *tag opener* (`<img`, `<script>`), never on an inner fragment like `onerror=alert`. `esc()` escapes `& < > "` and nothing else, so an inner fragment survives verbatim inside correctly-escaped output — an assertion on it fails on perfect escaping and proves nothing. The same rule applies to every escaping test added by later tasks.
 
 **Step 3: Wire the npm script**
 
