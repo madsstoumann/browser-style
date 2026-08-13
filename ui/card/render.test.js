@@ -34,3 +34,27 @@ describe('review', () => {
 		assert.match(html, /&quot;&gt;&lt;img src=x onerror=alert\(1\)&gt;/, 'name present and escaped');
 	});
 });
+
+describe('subtype sharpening', () => {
+	test('legacy businessType still works', () => {
+		const html = render({ schemaType: 'business', headline: 'Brew', details: { businessType: 'CafeOrCoffeeShop' } });
+		assert.match(html, /itemtype="https:\/\/schema\.org\/CafeOrCoffeeShop"/);
+	});
+	test('generic subtype sharpens a social post to a forum posting', () => {
+		const html = render({ schemaType: 'social', headline: 'Thread', details: { subtype: 'DiscussionForumPosting' } });
+		assert.match(html, /itemtype="https:\/\/schema\.org\/DiscussionForumPosting"/);
+	});
+	test('generic subtype sharpens an event', () => {
+		const html = render({ schemaType: 'event', headline: 'Final', details: { subtype: 'SportsEvent' } });
+		assert.match(html, /itemtype="https:\/\/schema\.org\/SportsEvent"/);
+	});
+	test('a subtype from another type is refused', () => {
+		const html = render({ schemaType: 'event', headline: 'X', details: { subtype: 'BlogPosting' } });
+		assert.match(html, /itemtype="https:\/\/schema\.org\/Event"/);
+	});
+	test('an arbitrary string can never reach the itemtype', () => {
+		const html = render({ schemaType: 'event', headline: 'X', details: { subtype: 'Evil"><script>' } });
+		assert.match(html, /itemtype="https:\/\/schema\.org\/Event"/);
+		assert.ok(!html.includes('<script>'));
+	});
+});

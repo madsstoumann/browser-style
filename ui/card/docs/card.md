@@ -106,7 +106,7 @@ Documented in full in the model's `details` description. Examples:
 - **recipe** `{ prepTime, cookTime, servings, ingredients[], instructions[] }` (ISO 8601 durations)
 - **faq** `{ items:[{question,answer}] }` — rendered as a nested `<ui-accordion>`
 - **poll** `{ options:[{headline,votes}], totalVotes }` — percentages computed by the renderer
-- **business** `{ businessType?, address{…}, telephone, email, website, priceRange?, rating{…}?, sameAs[]?, foundingDate?, geo{…}, openingHours:[{schema,display}] }` — an allowlisted `businessType` (Restaurant, CafeOrCoffeeShop, …) sharpens the root itemtype; each parsable `openingHours.schema` string also emits a structured `OpeningHoursSpecification`
+- **business** `{ businessType?, address{…}, telephone, email, website, priceRange?, rating{…}?, sameAs[]?, foundingDate?, geo{…}, openingHours:[{schema,display}] }` — an allowlisted `subtype`/`businessType` (Restaurant, CafeOrCoffeeShop, …) sharpens the root itemtype; each parsable `openingHours.schema` string also emits a structured `OpeningHoursSpecification`
 - **organization** `{ foundingDate, numberOfEmployees, sameAs[], headquarters:{address{…}}, offices:[{name, address{…}, telephone, openingHours[]}] }` — the multi-office shape; every office emits `department` → `LocalBusiness`
 - **howto** `{ totalTime, estimatedCost:{value,currency}, difficulty, supplies[], tools[], steps:[{name,text}] }` — steps render as the recipe-style nested `<ui-accordion>`
 - **qa** `{ question, upvotes, answers:[{text,author,upvotes,accepted}] }` — `mainEntity` → `Question` with `acceptedAnswer`/`suggestedAnswer`
@@ -399,10 +399,11 @@ emission in [`content/card/dist/`](../../../content/card/dist)):
   `name` (rest); summary → `reviewBody` (review) / `text` (quote, announcement,
   social) / `description` (rest); published → `datePosted` (job, announcement) /
   `uploadDate` (video); eyebrow → `genre` (video, movie, book)
-- **Business subtype**: `details.businessType` sharpens the root itemtype from
-  `LocalBusiness` to an ALLOWLISTED subtype (`BUSINESS_SUBTYPES` in render.js —
-  never verbatim data, mirroring the old dynamic-schema pattern safely). Opening
-  hours emit both forms: the flat `openingHours` meta AND, for parsable
+- **Subtype**: `details.subtype` sharpens the root itemtype to an ALLOWLISTED
+  subtype of the base type (`SUBTYPES` in render.js — never verbatim data;
+  business, event, location, social and five more have lists). `businessType` is
+  the legacy business-only alias. See [schema.md § Subtypes](schema.md#subtypes).
+  Opening hours emit both forms: the flat `openingHours` meta AND, for parsable
   `"Mo-Fr 07:00-18:00"` strings, a hidden `OpeningHoursSpecification` scope with
   `dayOfWeek`/`opens`/`closes` (`hoursSpec()`)
 - **Organization offices**: each office emits `department` →

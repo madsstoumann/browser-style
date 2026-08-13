@@ -69,16 +69,26 @@ export const SCHEMA_TYPES = {
 	claim: 'ClaimReview'
 };
 
-/* business may sharpen LocalBusiness to a subtype — allowlisted, never verbatim data */
-const BUSINESS_SUBTYPES = new Set([
-	'Restaurant', 'CafeOrCoffeeShop', 'Bakery', 'BarOrPub', 'Store', 'Hotel',
-	'BeautySalon', 'HealthClub', 'AutoRepair', 'Dentist', 'MedicalClinic',
-	'RealEstateAgent', 'TravelAgency', 'Library', 'Museum'
-]);
-const resolveItemtype = (type, fields) =>
-	type === 'business' && BUSINESS_SUBTYPES.has(fields.details?.businessType)
-		? fields.details.businessType
-		: SCHEMA_TYPES[type];
+/* itemtype sharpening — a card may narrow to an allowlisted SUBTYPE that inherits
+   every property its renderer emits, so no new renderer is needed. Allowlisted,
+   never verbatim data: this value lands in an itemtype. Docs: docs/schema.md § Subtypes */
+const SUBTYPES = {
+	article: new Set(['BlogPosting', 'TechArticle', 'APIReference', 'ScholarlyArticle', 'Report', 'SatiricalArticle', 'AdvertiserContentArticle']),
+	business: new Set(['Restaurant', 'CafeOrCoffeeShop', 'Bakery', 'BarOrPub', 'FastFoodRestaurant', 'IceCreamShop', 'Winery', 'Brewery', 'Distillery', 'Store', 'Hotel', 'Resort', 'BedAndBreakfast', 'Motel', 'Hostel', 'Campground', 'BeautySalon', 'DaySpa', 'HealthClub', 'AutoRepair', 'AutoDealer', 'AutoRental', 'GasStation', 'Dentist', 'MedicalClinic', 'Pharmacy', 'Physician', 'RealEstateAgent', 'TravelAgency', 'Library', 'GovernmentOffice']),
+	event: new Set(['SportsEvent', 'MusicEvent', 'TheaterEvent', 'ScreeningEvent', 'ComedyEvent', 'DanceEvent', 'ExhibitionEvent', 'FoodEvent', 'LiteraryEvent', 'BusinessEvent', 'EducationEvent', 'ChildrensEvent', 'SocialEvent', 'SaleEvent', 'Festival', 'Hackathon', 'PublicationEvent', 'CourseInstance']),
+	location: new Set(['TouristAttraction', 'TouristDestination', 'LandmarksOrHistoricalBuildings', 'Accommodation', 'Apartment', 'House', 'SingleFamilyResidence', 'Room', 'Suite', 'Residence', 'ApartmentComplex', 'GatedResidenceCommunity', 'CivicStructure', 'Park', 'Beach', 'Campground', 'Church', 'Museum', 'Airport']),
+	news: new Set(['ReportageNewsArticle', 'OpinionNewsArticle', 'AnalysisNewsArticle', 'BackgroundNewsArticle', 'ReviewNewsArticle']),
+	organization: new Set(['NGO', 'Corporation', 'OnlineStore', 'OnlineBusiness', 'EducationalOrganization', 'School', 'CollegeOrUniversity', 'GovernmentOrganization', 'NewsMediaOrganization', 'MedicalOrganization', 'ResearchOrganization', 'PerformingGroup', 'MusicGroup', 'SportsOrganization', 'SportsTeam', 'Airline', 'LibrarySystem', 'WorkersUnion', 'PoliticalParty', 'FundingScheme', 'Consortium', 'Project']),
+	product: new Set(['ProductGroup', 'ProductModel', 'IndividualProduct', 'Vehicle', 'Car', 'Motorcycle', 'Drug', 'DietarySupplement']),
+	social: new Set(['DiscussionForumPosting', 'BlogPosting', 'LiveBlogPosting'])
+};
+
+/* `details.subtype` is the general spelling; `details.businessType` is the legacy
+   business-only alias kept for existing content. Unknown values fall back to the base type. */
+const resolveItemtype = (type, fields) => {
+	const wanted = fields.details?.subtype || (type === 'business' ? fields.details?.businessType : null);
+	return wanted && SUBTYPES[type]?.has(wanted) ? wanted : SCHEMA_TYPES[type];
+};
 
 /* schema.org EventAttendanceModeEnumeration stems */
 const ATTENDANCE_MODES = new Set(['Offline', 'Online', 'Mixed']);

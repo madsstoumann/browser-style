@@ -35,6 +35,54 @@ The eleven parts the typed cards add on top of the envelope. All are **styled** 
 | `options` | `<ul>` of `<label>` + `<progress>` | Poll answers / comparison rows with bars | poll, comparison |
 | `cover` | `<a>` inside the headline, `::after` covering the card | Clickable card — one link, no nested anchors; tag/action links stay above it | article, news (→ the [full-article pages](../demo/articles/article.html)) |
 
+## Subtypes
+
+A large share of schema.org is **subtypes that inherit every property of a type we already
+render**. A `SportsEvent` is an `Event`; a `DiscussionForumPosting` is a `SocialMediaPosting`.
+For those the existing renderer already emits valid markup — only the `itemtype` string is less
+specific than it could be. `details.subtype` sharpens it, with no new renderer code:
+
+```json
+{ "schemaType": "social", "headline": "Thread", "details": { "subtype": "DiscussionForumPosting" } }
+```
+
+→ `itemtype="https://schema.org/DiscussionForumPosting"`. The `<ui-chip data-type>` label
+follows the sharpened type too.
+
+**The value is allowlisted, never taken verbatim.** Two reasons, both load-bearing:
+
+1. **Security.** The resolved string is interpolated into `itemtype="https://schema.org/…"`.
+   Data must never reach an attribute value unfiltered — an allowlist is the only check that
+   holds regardless of what the input looks like. (`esc()` still runs on top; that is the
+   second layer, not the first.)
+2. **Correctness.** Sharpening is only valid when the subtype really inherits the properties
+   the renderer emits. Accepting an arbitrary name would emit markup asserting a type
+   relationship that does not exist — worse than staying on the base type. A value that is not
+   on its type's list is ignored and the base type is used; a value from *another* type's list
+   is refused for the same reason.
+
+Every entry below was verified against the schema.org vocabulary as a transitive subclass of
+the base type. Add to a list only after checking the same.
+
+| schemaType | Base itemtype | Allowed subtypes |
+|---|---|---|
+| `article` | `Article` | BlogPosting, TechArticle, APIReference, ScholarlyArticle, Report, SatiricalArticle, AdvertiserContentArticle |
+| `business` | `LocalBusiness` | Restaurant, CafeOrCoffeeShop, Bakery, BarOrPub, FastFoodRestaurant, IceCreamShop, Winery, Brewery, Distillery, Store, Hotel, Resort, BedAndBreakfast, Motel, Hostel, Campground, BeautySalon, DaySpa, HealthClub, AutoRepair, AutoDealer, AutoRental, GasStation, Dentist, MedicalClinic, Pharmacy, Physician, RealEstateAgent, TravelAgency, Library, GovernmentOffice |
+| `event` | `Event` | SportsEvent, MusicEvent, TheaterEvent, ScreeningEvent, ComedyEvent, DanceEvent, ExhibitionEvent, FoodEvent, LiteraryEvent, BusinessEvent, EducationEvent, ChildrensEvent, SocialEvent, SaleEvent, Festival, Hackathon, PublicationEvent, CourseInstance |
+| `location` | `Place` | TouristAttraction, TouristDestination, LandmarksOrHistoricalBuildings, Accommodation, Apartment, House, SingleFamilyResidence, Room, Suite, Residence, ApartmentComplex, GatedResidenceCommunity, CivicStructure, Park, Beach, Campground, Church, Museum, Airport |
+| `news` | `NewsArticle` | ReportageNewsArticle, OpinionNewsArticle, AnalysisNewsArticle, BackgroundNewsArticle, ReviewNewsArticle |
+| `organization` | `Organization` | NGO, Corporation, OnlineStore, OnlineBusiness, EducationalOrganization, School, CollegeOrUniversity, GovernmentOrganization, NewsMediaOrganization, MedicalOrganization, ResearchOrganization, PerformingGroup, MusicGroup, SportsOrganization, SportsTeam, Airline, LibrarySystem, WorkersUnion, PoliticalParty, FundingScheme, Consortium, Project |
+| `product` | `Product` | ProductGroup, ProductModel, IndividualProduct, Vehicle, Car, Motorcycle, Drug, DietarySupplement |
+| `social` | `SocialMediaPosting` | DiscussionForumPosting, BlogPosting, LiveBlogPosting |
+
+`Campground` is deliberately on two lists — schema.org makes it both a `LodgingBusiness` and a
+`CivicStructure`, so either base type is a truthful parent. `Museum` is **only** a
+`CivicStructure`, so it sharpens `location`, not `business`.
+
+`details.businessType` is the **legacy alias** — the business-only spelling that predates
+`subtype`, kept working for existing content. `subtype` is the general spelling; prefer it in
+new content. When both are present, `subtype` wins.
+
 ## The types
 
 ### Content — `CreativeWork` (fallback)
@@ -67,7 +115,7 @@ Ingredients as proposed part `list`; instructions as a nested `<ui-accordion>` w
 
 ### Review — `Review`
 
-Summary emits `reviewBody`; rating → `Rating`, reviewer → `Person` (`reviewer.title` → `jobTitle`), reviewed item → `Product` by default. `details.reviewedType` sharpens `itemReviewed` to `Organization` or `Service` (allowlisted, never verbatim data — same pattern as `businessType`); no offer is emitted for `Organization`, which has no `offers` property.
+Summary emits `reviewBody`; rating → `Rating`, reviewer → `Person` (`reviewer.title` → `jobTitle`), reviewed item → `Product` by default. `details.reviewedType` sharpens `itemReviewed` to `Organization` or `Service` (allowlisted, never verbatim data — same pattern as [`subtype`](#subtypes)); no offer is emitted for `Organization`, which has no `offers` property.
 
 **Testimonial** — schema.org has no `Testimonial` type; a testimonial is a `Review` of your organization or service: `reviewedType: "Organization"`, a 5-star rating, quote and byline, usually media-less (the `testimonial` preset, which also tints the stars via `--ui-rating-c`). Note Google excludes "self-serving" reviews — testimonials about your own org on your own site stay valid microdata but get no star rich results.
 
@@ -117,7 +165,7 @@ Dark theme; priority as a hue-mapped `<ui-chip>` (low=gray · medium=orange · h
 
 ### Business — `LocalBusiness` (subtype `CafeOrCoffeeShop`)
 
-Part `address` (`PostalAddress` scope), geo metas, opening hours (flat `openingHours` + structured `OpeningHoursSpecification`), rating, price range and a map CTA. `details.businessType` sharpens the itemtype to an allowlisted `LocalBusiness` subtype. The hours `<dl>` renders with `tabular-nums` so times align column-wise, and day/time ranges use en dashes (`Mon–Fri`, `9:00–17:00`) — both derived from the machine string by `hoursRow()`.
+Part `address` (`PostalAddress` scope), geo metas, opening hours (flat `openingHours` + structured `OpeningHoursSpecification`), rating, price range and a map CTA. `details.subtype` (or its legacy alias `details.businessType`) sharpens the itemtype to an allowlisted `LocalBusiness` subtype — see [Subtypes](#subtypes). The hours `<dl>` renders with `tabular-nums` so times align column-wise, and day/time ranges use en dashes (`Mon–Fri`, `9:00–17:00`) — both derived from the machine string by `hoursRow()`.
 
 ### Comparison — `ItemList`
 
