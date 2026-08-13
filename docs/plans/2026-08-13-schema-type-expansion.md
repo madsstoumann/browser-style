@@ -668,7 +668,11 @@ Recorded here rather than fixed inline — each is real, each is outside the fil
    - *Without* a `details.subtype` — emits a garbage itemtype, e.g. `itemtype="https://schema.org/function Object() { [native code] }"`. Pre-existing; Task 2 did not change it.
    - *With* a `details.subtype` — throws `TypeError: SUBTYPES[type]?.has is not a function`. New in Task 2, because the resolver now indexes a second type-keyed map.
 
-   The garbage-output mode is the worse of the two (nonsense silently enters published markup); the crash at least fails closed, but a throw in an SSR path is still a denial-of-service on any page containing one bad record. The class predates this plan and spans `SCHEMA_TYPES`, `DETAILS` and `SUBTYPES`. Fix once at the single resolution point in `renderCard` — `const type = Object.hasOwn(SCHEMA_TYPES, fields.schemaType) ? fields.schemaType : 'content'` — which makes every downstream map lookup safe, and add a test per failure mode. Standalone hardening commit, not part of a type task.
+   The garbage-output mode is the worse of the two (nonsense silently enters published markup); the crash at least fails closed, but a throw in an SSR path is still a denial-of-service on any page containing one bad record. The class predates this plan and spans `SCHEMA_TYPES`, `DETAILS` and `SUBTYPES`.
+
+   **Escalated after the Task 2 review fixes.** `resolveItemtype` is now **exported** and is the single itemtype authority for `render.js`, `demo/articles/build.js` and `demo/render.html`. It returns `undefined` for `constructor`/`toString` and `{}` for `__proto__`, so a bad record now yields `itemtype="https://schema.org/undefined"` on a generated article page — the failure is reachable through public API, not just internal. The same commit also left **three** identical copies of `SCHEMA_TYPES[fields.schemaType] ? … : 'content'` (`render.js:89`, `:1346`, `:1439`), so "fix once in `renderCard`" no longer suffices.
+
+   Fix: extract one `baseType(fields)` helper using `Object.hasOwn(SCHEMA_TYPES, …)`, route all three sites through it, and add a test per failure mode (garbage itemtype, TypeError, and the exported resolver never returning a non-string). Do this as a standalone hardening commit **before Task 4**, since Task 4 gates its renderer on the resolved itemtype and inherits this contract.
 
 ## Risks
 
