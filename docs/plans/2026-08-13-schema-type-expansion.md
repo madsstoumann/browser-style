@@ -686,6 +686,8 @@ Each is real, each was deliberately left out of the phase that found it because 
 
    **New, found by that invariant — two more live sites of the same class, deferred because their precedence direction differs per site:**
    - `SpecialAnnouncement.datePosted` — `PUBLISHED_PROP.announcement` emits it from `fields.published` (2026-07-01) *and* `DETAILS.announcement` emits it from `details.effectiveDate.start`. Conflicting values. `demo/schema.html` keeps the **envelope** value (and also carries a `datePublished` the renderer never emits — separate drift).
+
+     **No longer conflicting.** The JobPosting fix types `datePosted` as a Date and truncates the timestamp, so both sites now emit `2026-07-01` — identical, hence redundant rather than contradictory. It stays in the invariant's `KNOWN` set because the property is still emitted twice; only the disagreement is gone. Deduplicating it remains open, but nothing reads a wrong date in the meantime.
    - `VideoObject.uploadDate` — `PUBLISHED_PROP.video` emits it from `fields.published` *and* `rootVideoMetas()` emits it from `media[].uploadDate`. Identical values in `video.json`, so redundant rather than conflicting. `demo/schema.html` keeps the **media item's**, i.e. the opposite direction to the announcement.
 
    So "the envelope wins" is not the answer at both, and neither is fixable without moving snapshot output. Both are exempted **by name** in the invariant's `KNOWN` set so the check still bites on anything new.

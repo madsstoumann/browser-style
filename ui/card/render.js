@@ -182,6 +182,8 @@ const SUMMARY_PROP = { review: 'reviewBody', quote: 'text', announcement: 'text'
 export const EYEBROW_PROP = { article: 'articleSection', news: 'articleSection', product: 'category', recipe: 'recipeCategory', course: 'about', video: 'genre', movie: 'genre', book: 'genre', tvseries: 'genre', music: 'genre' };
 /* published itemprop: JobPosting/SpecialAnnouncement use datePosted, VideoObject uploadDate */
 const PUBLISHED_PROP = { job: 'datePosted', announcement: 'datePosted', video: 'uploadDate' };
+/* datePosted is typed Date, so a timestamp is out of range; uploadDate takes a DateTime */
+const dateOnly = (value) => (/^\d{4}-\d{2}-\d{2}T/.test(value) ? value.slice(0, 10) : value);
 /* preset headingTag allowlist — heading LEVEL is placement, so it lives on the preset */
 const HEADING_TAGS = new Set(['h2', 'h3', 'h4', 'h5']);
 
@@ -913,7 +915,10 @@ const buildContent = (fields, type, overlay, slots = {}, textMode = 'summary', p
 	/* the lede byline sits between the standfirst and the body (slots.byline) */
 	html += slots.byline || '';
 	html += body;
-	if (fields.published) html += meta(PUBLISHED_PROP[type] || 'datePublished', fields.published);
+	if (fields.published) {
+		const prop = PUBLISHED_PROP[type] || 'datePublished';
+		html += meta(prop, prop === 'datePosted' ? dateOnly(fields.published) : fields.published);
+	}
 	if (fields.modified) html += meta('dateModified', fields.modified);
 	return html;
 };
@@ -931,7 +936,9 @@ const datelinePart = (fields) => {
 
 const buildTail = (fields, type) => {
 	let html = '';
-	const dateline = datelinePart(fields);
+	/* a posting/upload date is machine metadata, not an editorial byline date, so the
+	   types that redirect `published` away from datePublished show no dateline */
+	const dateline = type in PUBLISHED_PROP ? '' : datelinePart(fields);
 	if (fields.authors?.length) html += byline(fields.authors, bylineProp(type), dateline);
 	else if (dateline) html += `<p data-part="meta">${dateline}</p>`;
 	if (fields.modifiedDisplay) html += `<p data-part="meta"><small>Updated ${esc(fields.modifiedDisplay)}</small></p>`;
