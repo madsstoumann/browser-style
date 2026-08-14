@@ -106,7 +106,7 @@ describe('product variants', () => {
 	test('a zero-priced variant still renders an offer', () => {
 		const html = group({ variants: { ...variants, items: [{ name: 'Free sample', sku: 'S0', color: 'Green', price: 0, currency: 'USD' }] } });
 		assert.equal(count(html, 'itemprop="offers" itemscope itemtype="https://schema.org/Offer"'), 1);
-		assert.match(html, /<data itemprop="price" value="0">\$0<\/data>/);
+		assert.match(html, /<meta itemprop="price" content="0">\$0/);
 	});
 
 	/* Google: "The site must have the ability to preselect each variant directly with a
@@ -138,7 +138,7 @@ describe('product variants', () => {
 	test('each variant offer carries currency, availability and a machine price', () => {
 		const html = group();
 		assert.equal(count(html, 'itemprop="offers" itemscope itemtype="https://schema.org/Offer"'), 2);
-		assert.match(html, /<data itemprop="price" value="39\.99">\$39\.99<\/data>/);
+		assert.match(html, /<meta itemprop="price" content="39\.99">\$39\.99/);
 		assert.match(html, /<meta itemprop="availability" content="https:\/\/schema\.org\/InStock">/);
 		assert.match(html, /<meta itemprop="availability" content="https:\/\/schema\.org\/OutOfStock">/);
 	});
@@ -197,8 +197,8 @@ describe('product variants', () => {
 		assert.match(html, /itemprop="name">&quot;&gt;&lt;img src=x onerror=alert\(1\)&gt;</, 'name present and escaped');
 		assert.match(html, /content="&lt;\/ul&gt;&lt;script&gt;x&lt;\/script&gt;"/, 'sku present and escaped');
 		assert.match(html, /content="&quot;&gt;&lt;script&gt;alert\(1\)&lt;\/script&gt;"/, 'productGroupID present and escaped');
-		/* the price TEXT NODE beside the escaped value= attribute */
-		assert.match(html, /<data itemprop="price" value="[^"]*">&lt;script&gt;alert\(2\)&lt;\/script&gt; &lt;img src=x onerror=alert\(1\)&gt;<\/data>/, 'price text node present and escaped');
+		/* the price TEXT NODE beside the escaped machine content= attribute */
+		assert.match(html, /<meta itemprop="price" content="[^"]*">&lt;script&gt;alert\(2\)&lt;\/script&gt; &lt;img src=x onerror=alert\(1\)&gt;/, 'price text node present and escaped');
 	});
 });
 
@@ -329,8 +329,8 @@ describe('price and number formatters', () => {
 
 	/* the guard must not swallow real currencies — pin the formatted output */
 	test('well-formed currencies still format through Intl', () => {
-		assert.match(render_({ schemaType: 'product', headline: 'X', details: { price: { current: 279, currency: 'USD' } } }), />\$279</);
-		assert.match(render_({ schemaType: 'product', headline: 'X', details: { price: { current: 279, currency: 'usd' } } }), />\$279</, 'lowercase is a valid code');
+		assert.match(render_({ schemaType: 'product', headline: 'X', details: { price: { current: 279, currency: 'USD' } } }), /content="279">\$279/);
+		assert.match(render_({ schemaType: 'product', headline: 'X', details: { price: { current: 279, currency: 'usd' } } }), /content="279">\$279/, 'lowercase is a valid code');
 		assert.match(render_({ schemaType: 'product', headline: 'X', details: { rating: { value: 4.5, count: 1247 } } }), /1,247 ratings/, 'thousands separator survives escaping');
 	});
 });
@@ -615,7 +615,7 @@ describe('service — Service', () => {
 		const html = card();
 		assert.match(html, /<div itemprop="hasOfferCatalog" itemscope itemtype="https:\/\/schema\.org\/OfferCatalog"><meta itemprop="name" content="Hosting plans">/);
 		assert.match(html, /<li itemprop="itemListElement" itemscope itemtype="https:\/\/schema\.org\/Offer">/);
-		assert.match(html, /<span itemprop="itemOffered" itemscope itemtype="https:\/\/schema\.org\/Service"><span itemprop="name">Managed Kubernetes<\/span><\/span> — <data itemprop="price" value="450">€450<\/data>\/month/);
+		assert.match(html, /<span itemprop="itemOffered" itemscope itemtype="https:\/\/schema\.org\/Service"><span itemprop="name">Managed Kubernetes<\/span><\/span> — <meta itemprop="price" content="450">€450\/month/);
 	});
 
 	/* servicePhone expects a ContactPoint, NOT a phone string */
@@ -662,7 +662,7 @@ describe('realestate — RealEstateListing', () => {
 		assert.ok(offerAt > -1 && homeAt > -1);
 		assert.ok(offerAt < homeAt, 'the offer must precede — and so sit outside — the mainEntity scope');
 		assert.ok(!html.slice(homeAt).includes('itemprop="offers"'), 'and nothing re-opens one inside it');
-		assert.match(html, /<data itemprop="price" value="7250000">DKK 7,250,000<\/data>/);
+		assert.match(html, /<meta itemprop="price" content="7250000">DKK 7,250,000/);
 	});
 
 	/* Residence and ApartmentComplex are Place, not Accommodation: yearBuilt's domain
@@ -694,7 +694,7 @@ describe('menu — Menu', () => {
 		const html = card();
 		assert.match(html, /itemprop="hasMenuSection" itemscope itemtype="https:\/\/schema\.org\/MenuSection"/);
 		assert.match(html, /<li itemprop="hasMenuItem" itemscope itemtype="https:\/\/schema\.org\/MenuItem">/);
-		assert.match(html, /<span itemprop="offers" itemscope itemtype="https:\/\/schema\.org\/Offer"><meta itemprop="priceCurrency" content="DKK"><data itemprop="price" value="145">DKK 145<\/data><\/span>/);
+		assert.match(html, /<span itemprop="offers" itemscope itemtype="https:\/\/schema\.org\/Offer"><meta itemprop="priceCurrency" content="DKK"><meta itemprop="price" content="145">DKK 145<\/span>/);
 		assert.match(html, /<span itemprop="nutrition" itemscope itemtype="https:\/\/schema\.org\/NutritionInformation" hidden><meta itemprop="calories" content="620 calories"><meta itemprop="proteinContent" content="42 g"><meta itemprop="servingSize" content="1 bowl"><\/span>/);
 	});
 
@@ -931,6 +931,52 @@ describe('job — EmployerAggregateRating', () => {
 		assert.equal(html.match(/itemprop="industry"/g).length, 1, 'two values for one property is unreadable to a consumer');
 		assert.match(html, /<meta itemprop="industry" content="Software">/);
 		assert.match(html, /<small data-part="eyebrow">Engineering<\/small>/, 'the eyebrow stays display text');
+	});
+});
+
+/* `Offer.price` accepts Text as well as Number, so `<data itemprop="price" value="279">$279</data>`
+   VALIDATES — it was surviving on that Text arm, not on being read correctly. Google's guidance
+   is explicit that the value carries no currency symbol and no thousands separator, and the
+   validator reads the TEXT node: the same asymmetry that failed `numberOfBedrooms` on
+   "3 bedrooms" while `yearBuilt` passed on "2018". Every priced row states the number ONCE,
+   on a <meta>, and the visible string stays human. */
+describe('price rows — the machine value never rides the visible text', () => {
+	const PRICED = [
+		['product', 'product', { price: { current: 279, currency: 'USD', original: 329, discountText: '-15%' } }],
+		['product variants', 'product', { subtype: 'ProductGroup', variants: VARIANTS }],
+		['event offers', 'event', { startDate: '2026-11-09', offers: [{ name: 'Early bird', price: 299, currency: 'EUR' }] }],
+		['course', 'course', { price: { current: 89, currency: 'USD', original: 129 } }],
+		['booking', 'booking', { venue: 'Studio', price: { hourlyRate: 45, currency: 'USD' } }],
+		['membership', 'membership', { price: { monthly: 29, yearly: 290, currency: 'USD' } }],
+		['software', 'software', { price: { current: 19, currency: 'USD' } }],
+		['book', 'book', { price: { current: 34, currency: 'EUR' } }],
+		['realestate', 'realestate', { price: { amount: 7250000, currency: 'DKK' }, property: { type: 'Apartment' } }],
+		['menu item', 'menu', { sections: [{ name: 'Mains', items: [{ name: 'Stew', price: 95, currency: 'DKK' }] }] }],
+		['service catalog', 'service', { catalog: { items: [{ name: 'Managed Kubernetes', price: 450, currency: 'EUR' }] } }],
+		['loyalty tier', 'loyalty', { tiers: [{ name: 'Gold', requirementAmount: { currency: 'USD', value: 500 } }] }]
+	];
+
+	for (const [where, schemaType, details] of PRICED) {
+		test(`${where} states its price once, on a <meta>`, () => {
+			const html = render({ schemaType, headline: 'X', details });
+			/* every element carrying the property — priceCurrency does not match */
+			const carriers = [...html.matchAll(/<([a-z-]+)[^>]*\bitemprop="(?:price|totalPrice|value)"[^>]*>/g)].map((m) => m[1]);
+			assert.ok(carriers.length > 0, 'the row must still declare a price');
+			for (const tag of carriers) assert.equal(tag, 'meta', `itemprop rode a <${tag}>, whose text node is the value a validator reads`);
+			assert.ok(!html.includes('<data'), 'a formatted price must never sit inside <data>');
+			/* `value` is polymorphic (a LocationFeatureSpecification's is a boolean) — the
+			   numeric contract is the price's */
+			for (const [, machine] of html.matchAll(/<meta itemprop="(?:price|totalPrice)" content="([^"]*)">/g)) {
+				assert.match(machine, /^\d+(\.\d+)?$/, 'no currency symbol, no thousands separator');
+			}
+		});
+	}
+
+	/* the human string is the point of the split — absence of <data> alone would pass
+	   if the price simply stopped rendering */
+	test('the visible string stays human, currency symbol and separators included', () => {
+		const html = render({ schemaType: 'realestate', headline: 'X', details: { price: { amount: 7250000, currency: 'DKK' }, property: { type: 'Apartment' } } });
+		assert.match(html, /content="7250000">DKK\s7,250,000/, 'formatted beside its machine value');
 	});
 });
 

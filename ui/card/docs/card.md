@@ -392,8 +392,12 @@ Followed throughout (`schema.html` is the reference; matched against the legacy
 emission in [`content/card/dist/`](../../../content/card/dist)):
 
 - Root: `itemscope itemtype="https://schema.org/{Type}"` on the host element
-- Hidden machine values: `<meta itemprop content>`; visible machine values:
-  `<data value>` / `<time datetime>` / `content` attribute
+- Hidden machine values: `<meta itemprop content>`; a visible value whose text is already
+  machine-readable carries the `itemprop` itself (`<time datetime>`, a `<span>` of digits)
+- **A formatted value splits**: `<meta itemprop content>` for the number, plain text for the
+  human string — never `<data itemprop value>`, whose two answers (spec reads `value=`,
+  real consumers read the text) disagree. See [schema.md § Price](schema.md#price) and
+  § Statistic. `<data>` survives only display-only, without an `itemprop`.
 - Nested scopes: author→`Person`, offers→`Offer`, rating→`AggregateRating`/`Rating`,
   address→`PostalAddress`, geo→`GeoCoordinates`, steps→`ItemList`+`HowToStep`,
   FAQ→`Question`+`acceptedAnswer`→`Answer`, engagement→`InteractionCounter`

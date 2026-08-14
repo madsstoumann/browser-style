@@ -270,7 +270,7 @@ const plain = (value) => {
    esc() their output again. Docs: ui/card/AGENTS.md § conventions */
 const num = (value) => esc(typeof value === 'number' ? value.toLocaleString('en-US') : value);
 
-/* display price via Intl — machine values stay raw in value=/content= attrs */
+/* display price via Intl — machine values stay raw in content= attrs */
 const CURRENCY_CODE = /^[A-Za-z]{3}$/;
 const fmtPrice = (currency, value) => {
 	if (value == null || value === '') return '';
@@ -280,6 +280,14 @@ const fmtPrice = (currency, value) => {
 	if (!CURRENCY_CODE.test(currency || '') || Number.isNaN(number)) return esc(`${currency || ''} ${value}`.trim());
 	return esc(new Intl.NumberFormat('en-US', { style: 'currency', currency, maximumFractionDigits: Number.isInteger(number) ? 0 : 2 }).format(number));
 };
+
+/* A priced row: the machine value on a <meta>, the human string as the text node.
+   Google's price must carry no currency symbol and no thousands separator, and the
+   validator reads the TEXT node — `<data itemprop="price" value="279">$279</data>`
+   survives only on price's Text arm. Same shape as loyalty's MonetaryAmount rows.
+   fmtPrice() is already escaped; do NOT esc() this. docs/schema.md § Price */
+const priceValue = (currency, value, prop = 'price') =>
+	value == null || value === '' ? '' : meta(prop, value) + fmtPrice(currency, value);
 
 /* "PT15M" → "15 min", "P6W" → "6 weeks", "P14D" → "14 days" */
 const duration = (iso) => {
@@ -946,7 +954,7 @@ const variantItem = (item) => {
 	const offer = item.price == null ? '' : `<span${scope('offers', 'Offer')}>`
 		+ meta('priceCurrency', item.currency)
 		+ meta('availability', availabilityUrl(item.availability || 'in stock'))
-		+ ` <data itemprop="price" value="${esc(item.price)}">${fmtPrice(item.currency, item.price)}</data></span>`;
+		+ ` ${priceValue(item.currency, item.price)}</span>`;
 	return `<li${scope('hasVariant', 'Product')}>`
 		+ (item.url ? `<a itemprop="url" href="${esc(item.url)}">${name}</a>` : name)
 		+ meta('sku', item.sku)
@@ -988,7 +996,7 @@ const scopedList = (rows, ordered) => rows.length
    chip is a separate label so the machine value and the reader's value agree.
    calories is an Energy and servingSize is Text — both unit-bearing strings. */
 const menuItem = (item) => {
-	const offer = item.price == null ? '' : `<span${scope('offers', 'Offer')}>${meta('priceCurrency', item.currency)}<data itemprop="price" value="${esc(item.price)}">${fmtPrice(item.currency, item.price)}</data></span>`;
+	const offer = item.price == null ? '' : `<span${scope('offers', 'Offer')}>${meta('priceCurrency', item.currency)}${priceValue(item.currency, item.price)}</span>`;
 	const nutrition = item.nutrition
 		? `<span${scope('nutrition', 'NutritionInformation')} hidden>${meta('calories', item.nutrition.calories)}${meta('proteinContent', item.nutrition.proteinContent)}${meta('servingSize', item.nutrition.servingSize)}</span>`
 		: '';
@@ -1007,7 +1015,7 @@ const DETAILS = {
 		if (d.price) {
 			html += `<p data-part="price"${scope('offers', 'Offer')}>
 				${meta('priceCurrency', d.price.currency)}${meta('availability', availabilityUrl(d.availability))}${meta('itemCondition', SCHEMA + 'NewCondition')}${d.validUntil ? meta('priceValidUntil', d.validUntil) : ''}
-				<data itemprop="price" value="${esc(d.price.current)}">${fmtPrice(d.price.currency, d.price.current)}</data>${d.price.original ? ` <del>${fmtPrice(d.price.currency, d.price.original)}</del>` : ''}${d.price.discountText ? ` <ui-chip theme="pale green">${esc(d.price.discountText)}</ui-chip>` : ''}
+				${priceValue(d.price.currency, d.price.current)}${d.price.original ? ` <del>${fmtPrice(d.price.currency, d.price.original)}</del>` : ''}${d.price.discountText ? ` <ui-chip theme="pale green">${esc(d.price.discountText)}</ui-chip>` : ''}
 			</p>`;
 			/* the validity belongs to the offer — directly under the price, not the stock row */
 			if (d.validUntilDisplay) html += `<p data-part="meta"><small>Valid until ${esc(d.validUntilDisplay)}</small></p>`;
@@ -1043,7 +1051,7 @@ const DETAILS = {
 		}
 		/* ticket tiers — one Offer scope each (Google reads these for event rich results) */
 		for (const offer of d.offers || []) {
-			html += `<p data-part="price"${scope('offers', 'Offer')}>${meta('priceCurrency', offer.currency)}${meta('availability', availabilityUrl(offer.availability || 'in stock'))}${offer.validThrough ? meta('validThrough', offer.validThrough) : ''}${offer.name ? `<span itemprop="name">${esc(offer.name)}</span> ` : ''}<data itemprop="price" value="${esc(offer.price)}">${fmtPrice(offer.currency, offer.price)}</data></p>`;
+			html += `<p data-part="price"${scope('offers', 'Offer')}>${meta('priceCurrency', offer.currency)}${meta('availability', availabilityUrl(offer.availability || 'in stock'))}${offer.validThrough ? meta('validThrough', offer.validThrough) : ''}${offer.name ? `<span itemprop="name">${esc(offer.name)}</span> ` : ''}${priceValue(offer.currency, offer.price)}</p>`;
 		}
 		return html;
 	},
@@ -1134,7 +1142,7 @@ const DETAILS = {
 		const facts = [d.duration ? duration(d.duration) : null, d.difficultyLevel, d.courseWorkload ? duration(d.courseWorkload) + ' of study' : null].filter(Boolean).join(' · ');
 		html += `<p data-part="meta">${esc(facts)}${d.instructor?.name ? ` · Instructor: ${esc(d.instructor.name)}${d.instructor.title ? `, ${esc(d.instructor.title)}` : ''}` : ''}</p>`;
 		if (d.price) {
-			html += `<p data-part="price"${scope('offers', 'Offer')}>${meta('priceCurrency', d.price.currency)}${meta('availability', SCHEMA + 'InStock')}<data itemprop="price" value="${esc(d.price.current)}">${fmtPrice(d.price.currency, d.price.current)}</data>${d.price.original ? ` <del>${fmtPrice(d.price.currency, d.price.original)}</del>` : ''}</p>`;
+			html += `<p data-part="price"${scope('offers', 'Offer')}>${meta('priceCurrency', d.price.currency)}${meta('availability', SCHEMA + 'InStock')}${priceValue(d.price.currency, d.price.current)}${d.price.original ? ` <del>${fmtPrice(d.price.currency, d.price.original)}</del>` : ''}</p>`;
 		}
 		html += listPart(d.learningOutcomes, { itemprop: 'teaches' });
 		html += listPart(d.prerequisites);
@@ -1146,7 +1154,7 @@ const DETAILS = {
 			+ (d.serviceName ? `<div${scope('reservationFor', 'Service')} hidden>${meta('name', d.serviceName)}</div>` : '');
 		html += `<p data-part="meta"><span${scope('provider', 'Organization')}><span itemprop="name">${esc(d.venue)}</span></span>${d.capacity ? ` · Capacity ${esc(d.capacity)}` : ''}${d.duration ? ` · ${esc(d.duration)}` : ''}${d.cancellationPolicy ? ` · ${esc(d.cancellationPolicy)}` : ''}</p>`;
 		if (d.price?.hourlyRate != null) {
-			html += `<p data-part="price"><data value="${esc(d.price.hourlyRate)}">${fmtPrice(d.price.currency, d.price.hourlyRate)}</data>/hour</p>`;
+			html += `<p data-part="price">${fmtPrice(d.price.currency, d.price.hourlyRate)}/hour</p>`;
 		}
 		html += listPart(d.amenities);
 		if (d.specialRequests) html += `<footer data-part="footer">${esc(d.specialRequests)}</footer>`;
@@ -1308,7 +1316,7 @@ const DETAILS = {
 		let html = eligibleDuration(d.trialPeriod);
 		if (d.isPopular) html += `<p data-part="meta"><ui-chip theme="pale accent">${esc(d.popularText || 'Most popular')}</ui-chip></p>`;
 		if (d.price) {
-			html += `<p data-part="price"${scope('priceSpecification', 'PriceSpecification')}>${meta('priceCurrency', d.price.currency)}<data itemprop="price" value="${esc(d.price.monthly)}">${fmtPrice(d.price.currency, d.price.monthly)}</data>/mo ${d.price.yearly ? `<small>or ${fmtPrice(d.price.currency, d.price.yearly)}/yr${d.price.savings ? ` — ${esc(d.price.savings)}` : ''}</small>` : ''}</p>`;
+			html += `<p data-part="price"${scope('priceSpecification', 'PriceSpecification')}>${meta('priceCurrency', d.price.currency)}${priceValue(d.price.currency, d.price.monthly)}/mo ${d.price.yearly ? `<small>or ${fmtPrice(d.price.currency, d.price.yearly)}/yr${d.price.savings ? ` — ${esc(d.price.savings)}` : ''}</small>` : ''}</p>`;
 		}
 		html += listPart(d.features, { itemprop: 'includesObject' });
 		html += listPart(d.limitations, { crossed: true });
@@ -1339,7 +1347,7 @@ const DETAILS = {
 			if (line) html += meta('softwareRequirements', line) + `<p data-part="meta">Requires ${esc(line)}</p>`;
 		}
 		if (d.price) {
-			html += `<p data-part="price"${scope('offers', 'Offer')}>${meta('priceCurrency', d.price.currency)}${meta('availability', SCHEMA + 'InStock')}<data itemprop="price" value="${esc(d.price.current)}">${fmtPrice(d.price.currency, d.price.current)}</data>${d.price.note ? ` <small>${esc(d.price.note)}</small>` : ''}</p>`;
+			html += `<p data-part="price"${scope('offers', 'Offer')}>${meta('priceCurrency', d.price.currency)}${meta('availability', SCHEMA + 'InStock')}${priceValue(d.price.currency, d.price.current)}${d.price.note ? ` <small>${esc(d.price.note)}</small>` : ''}</p>`;
 		}
 		return html;
 	},
@@ -1442,7 +1450,7 @@ const DETAILS = {
 		if (bits) html += `<p data-part="meta">${bits}</p>`;
 		html += ratingPart('aggregateRating', 'AggregateRating', d.rating);
 		if (d.price) {
-			html += `<p data-part="price"${scope('offers', 'Offer')}>${meta('priceCurrency', d.price.currency)}${meta('availability', SCHEMA + 'InStock')}<data itemprop="price" value="${esc(d.price.current)}">${fmtPrice(d.price.currency, d.price.current)}</data></p>`;
+			html += `<p data-part="price"${scope('offers', 'Offer')}>${meta('priceCurrency', d.price.currency)}${meta('availability', SCHEMA + 'InStock')}${priceValue(d.price.currency, d.price.current)}</p>`;
 		}
 		if (d.publisher) html += `<p data-part="meta"${scope('publisher', 'Organization')}>Publisher: <span itemprop="name">${esc(d.publisher)}</span></p>`;
 		return html;
@@ -1572,7 +1580,7 @@ const DETAILS = {
 		const catalog = d.catalog;
 		if (catalog?.items?.length) {
 			html += `<div${scope('hasOfferCatalog', 'OfferCatalog')}>${meta('name', catalog.name)}<ul data-part="list">${catalog.items.map((item) =>
-				`<li${scope('itemListElement', 'Offer')}>${meta('priceCurrency', item.currency)}<span${scope('itemOffered', 'Service')}><span itemprop="name">${esc(item.name)}</span></span> — <data itemprop="price" value="${esc(item.price)}">${fmtPrice(item.currency, item.price)}</data>${catalog.period ? `/${esc(catalog.period)}` : ''}</li>`
+				`<li${scope('itemListElement', 'Offer')}>${meta('priceCurrency', item.currency)}<span${scope('itemOffered', 'Service')}><span itemprop="name">${esc(item.name)}</span></span> — ${priceValue(item.currency, item.price)}${catalog.period ? `/${esc(catalog.period)}` : ''}</li>`
 			).join('')}</ul></div>`;
 		}
 		const channel = d.channel;
@@ -1593,7 +1601,7 @@ const DETAILS = {
 	realestate(d) {
 		let html = meta('datePosted', d.datePosted);
 		if (d.price) {
-			html += `<p data-part="price"${scope('offers', 'Offer')}>${meta('priceCurrency', d.price.currency)}${meta('availability', availabilityUrl(d.availability || 'in stock'))}<data itemprop="price" value="${esc(d.price.amount)}">${fmtPrice(d.price.currency, d.price.amount)}</data>${d.price.note ? ` <small>${esc(d.price.note)}</small>` : ''}</p>`;
+			html += `<p data-part="price"${scope('offers', 'Offer')}>${meta('priceCurrency', d.price.currency)}${meta('availability', availabilityUrl(d.availability || 'in stock'))}${priceValue(d.price.currency, d.price.amount)}${d.price.note ? ` <small>${esc(d.price.note)}</small>` : ''}</p>`;
 		}
 		const home = d.property;
 		if (home) {

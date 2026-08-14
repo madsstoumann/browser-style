@@ -72,7 +72,7 @@ The twelve parts the typed cards add on top of the envelope. All are **styled** 
 
 | data-part | Element | Purpose | Used by |
 |---|---|---|---|
-| `price` | `<p>` + `<data>`/`<del>`/`<ui-chip>` | Price row (Offer / MonetaryAmount microdata), currency-formatted | product, job, course, booking, membership, software, book, real estate |
+| `price` | `<p>` + `<meta itemprop="price">` + text/`<del>`/`<ui-chip>` | Price row (Offer / MonetaryAmount microdata), currency-formatted — see [Price](#price) | product, job, course, booking, membership, software, book, real estate |
 | `rating` | `<div>` + readonly `.ui-rating` + `[data-sr]` label + count | Star rating (AggregateRating / Rating / EmployerAggregateRating) | product, review, business, movie, book, job, TV series |
 | `list` | `<ul>` / `<ol>`; marker via `--ui-content-list-marker`, `data-variant="crossed"` for excluded items | Ingredients, qualifications, features, amenities, answers, tracks, seasons, episodes, menu items, terms | recipe, job, course, booking, location, membership, how-to, Q&A, dataset, menu, glossary, album, TV series, podcast series, real estate, service, loyalty, health |
 | `links` | `<ul>` of plain link rows | Related links — the envelope `links[]`, deliberately not buttons | any type |
@@ -84,6 +84,34 @@ The twelve parts the typed cards add on top of the envelope. All are **styled** 
 | `quote` | `<ui-quote>` + `<blockquote>` (+ `<cite>`) | Third-party voice: pull-quote, review body, post, answer, reviewed claim | quote, review, social, Q&A, fact check |
 | `options` | `<ul>` of `<label>` + `<progress>` | Poll answers / comparison rows with bars | poll, comparison |
 | `cover` | `<a>` inside the headline, `::after` covering the card | Clickable card — one link, no nested anchors; tag/action links stay above it | article, news (→ the [full-article pages](../demo/articles/article.html)) |
+
+## Price
+
+Every priced row states the number **once, on a `<meta itemprop="price">`**, with the
+currency-formatted string as the plain text node beside it (`priceValue()` in `render.js`):
+
+```html
+<p data-part="price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+  <meta itemprop="priceCurrency" content="USD">
+  <meta itemprop="price" content="279">$279 <del>$329</del>
+</p>
+```
+
+The old `<data itemprop="price" value="279">$279</data>` **validated** — `Offer.price` accepts
+Text as well as Number — but it was surviving on that Text arm, not on being read correctly:
+
+- Google's guidance is explicit that the price value carries **no currency symbol and no
+  thousands separator**. The currency already rides `priceCurrency` beside it, so `$` and the
+  commas in `DKK 7,250,000` are display, not data.
+- The consumers measured in this repo read the **text node**, not `<data value>`. That
+  asymmetry is why `numberOfBedrooms` failed on "3 bedrooms" while `yearBuilt` passed on
+  "2018" — and it makes a `<data>` answer two different numbers, one per reader.
+
+`<data>` is not salvageable for a formatted price for exactly that reason, and the `value=` it
+requires would only restate the `<meta>`. It survives in one place — part `stat`, where the
+`<data>` is display-only (no `itemprop`) and earns its keep as the big-number style hook.
+`priceCurrency`/`priceValidUntil`/`availability` and the crossed-out original price are
+unaffected; the original is display text in a `<del>` and never carried an `itemprop`.
 
 ## Subtypes
 
