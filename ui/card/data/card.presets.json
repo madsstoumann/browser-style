@@ -225,6 +225,22 @@
         "scroll": true
       }
     },
+    "flashcard": {
+      "name": "Flashcard Preset",
+      "description": "Reveal card for a single flashcard — the question over a full-bleed image, flip to the answer. A quiz with several cards wants a deck preset instead",
+      "element": "ui-reveal",
+      "variant": "ovr(bs)",
+      "media": "asr(4/3) obp(cc) scm",
+      "content": "scl(lg)",
+      "headingTag": "h2",
+      "reveal": {
+        "type": "flip",
+        "icon": "top right sm",
+        "iconClose": "dark",
+        "scroll": true,
+        "name": "quiz-flashcard"
+      }
+    },
     "hero-reveal": {
       "name": "Hero Reveal Preset",
       "description": "Full-width reveal hero — expand on small containers, scale on large; dark panel — from the ui/reveal hero demo",

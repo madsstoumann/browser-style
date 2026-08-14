@@ -153,6 +153,9 @@ const QUIZ_FORMATS = {
 	flashcard: { question: 'Flashcard', resource: 'Flashcard' },
 	'multiple-choice': { question: 'Multiple choice', resource: 'Practice problem' }
 };
+/* absent/unknown falls back to the flashcard shape — resolved in ONE place, so the
+   deck (DETAILS.quiz) and the flip card (REVEAL_FACES.quiz) cannot disagree */
+const quizFormat = (d) => Object.hasOwn(QUIZ_FORMATS, d?.format) ? d.format : 'flashcard';
 
 /* Fallback when a card references no preset (or an unknown one).
    Real presets live in data/card.presets.json — instances of the
@@ -627,6 +630,8 @@ const RVL_DIRECTED = new Set(Object.entries(TOKENS.attributes.variant.tokens)
 	.map(([stem]) => stem));
 /* animations that need the <ui-face> front-face wrapper (exp animates the host) */
 const RVL_FACED = new Set(['flp', 'sld', 'grw']);
+/* the toggle icon's corner when a preset names none */
+const RVL_ICON = 'top right sm';
 const ICON_STYLE = { dark: 'drk', semi: 'sem' };
 const ICON_CELLS = new Set(TOKENS.attributes.variant.tokens.ico.args.pos);
 /* icon words → ico()/icc() tokens: positional words fold into ONE corner token
@@ -825,8 +830,10 @@ const buildMedia = (fields, type, tokens, preset = {}, frameAttrs = {}, cardId =
 	let typeChip = '';
 	if (TYPE_CHIP && !fields.furniture?.chip) {
 		/* one chip family per frame: an existing furniture chip owns the tokens — skip.
-		   te is taken when any furniture style names it (product's sticker) — chip default (ts) then */
-		const teTaken = Object.values(fields.furniture || {}).some((f) => ` ${f?.style || ''} `.includes(' te '));
+		   te is taken when any furniture style names it (product's sticker), or when a
+		   reveal's toggle icon sits there (its default corner) — chip default (ts) then */
+		const teTaken = Object.values(fields.furniture || {}).some((f) => ` ${f?.style || ''} `.includes(' te '))
+			|| (preset.element === 'ui-reveal' && !preset.reveal?.trigger && iconTokens('ico', preset.reveal?.icon || RVL_ICON).includes('ico(te)'));
 		if (!teTaken) tokens.media.push('chip(te)');
 		typeChip = `<ui-chip data-type>${esc(resolveItemtype(fields))}</ui-chip>`;
 	}
@@ -1578,7 +1585,7 @@ const DETAILS = {
 	   Docs: docs/schema.md § Quiz */
 	quiz(d, fields, parts = {}) {
 		const cards = d.cards || [];
-		const format = Object.hasOwn(QUIZ_FORMATS, d.format) ? d.format : 'flashcard';
+		const format = quizFormat(d);
 		const words = QUIZ_FORMATS[format];
 		const graded = format === 'multiple-choice';
 		let html = meta('learningResourceType', words.resource)
@@ -1892,10 +1899,63 @@ const flipsideBack = (flipside, itemtype) => {
 	return contentColumn(fields, type, false, '', 'both', {}, 'tail', 'h3', itemtype);
 };
 
+/* ── per-type face composition ──
+   The generic reveal is one item shown twice: a teaser front, a fuller back, both in
+   the HOST's scope. Some types split along a property boundary that shape cannot
+   express — a flashcard's question is on the front and its acceptedAnswer on the back,
+   and both belong to a Question that is neither the host nor either face, so the scope
+   has to sit on the <details> that wraps them. An entry owns exactly the pieces
+   renderReveal cannot derive: `front` and `back` ({ attrs, html }) are required, the
+   `host` ({ attrs, html }) and `details` attribute contributions are optional.
+   renderReveal still composes the elements. Returning null declines — the generic derivedBack/flipsideBack path
+   runs — so an entry only has to answer for the records it can actually shape.
+   Keyed like DETAILS, by base type. Docs: docs/schema.md § Quiz */
+const REVEAL_FACES = {
+	/* Flashcard: <details> carries the Question scope because eduQuestionType is on the
+	   front and acceptedAnswer is the back, and both are Question properties. The Quiz's
+	   own properties stay machine metadata on the host — the visible headline is the
+	   QUESTION (itemprop="text"), so the Quiz name never reaches a face. */
+	quiz(fields, { preset }) {
+		const d = fields.details || {};
+		const cards = d.cards || [];
+		/* only the flashcard shape has two faces: a graded question needs its options
+		   visible WITH the question, which is one face, not two */
+		if (quizFormat(d) !== 'flashcard' || !cards.length) return null;
+		const words = QUIZ_FORMATS.flashcard;
+		const card = cards[0];
+		const tag = HEADING_TAGS.has(preset.headingTag) ? preset.headingTag : 'h3';
+		return {
+			/* content= rides the HOST here, not the front face: scl() has to reach the
+			   question and the answer, which are two different elements */
+			host: {
+				attrs: { content: preset.content || null },
+				html: meta('name', plain(fields.headline)) + meta('learningResourceType', words.resource)
+					+ (d.subject ? `<div${scope('about', 'Thing')} hidden>${meta('name', d.subject)}</div>`
+						+ `<div${scope('educationalAlignment', 'AlignmentObject')} hidden>${meta('alignmentType', 'educationalSubject')}${meta('targetName', d.subject)}</div>` : '')
+					/* a reveal has one front and one back, so the rest of a deck has nowhere
+					   to go — skipping is loud, as with product variants */
+					+ (cards.length > 1 ? `<!-- ${cards.length - 1} of ${cards.length} flashcards not rendered: a reveal shows one question — a deck needs a ui-card preset -->` : '')
+			},
+			details: { itemprop: 'hasPart', itemscope: true, itemtype: `${SCHEMA}Question` },
+			front: { attrs: {}, html: `${fields.eyebrow ? `<small data-part="eyebrow">${esc(fields.eyebrow)}</small>` : ''}
+					<${tag} data-part="headline" itemprop="text">${esc(card.question)}</${tag}>
+					${meta('eduQuestionType', words.question)}` },
+			/* the answer is authored PROSE (docs/schema.md § Quiz), and its panel reads as
+			   a second surface — the same call as the graded verdict chips' themes */
+			back: {
+				attrs: { itemprop: 'acceptedAnswer', itemscope: true, itemtype: `${SCHEMA}Answer`, theme: 'gray ink', content: 'pad(lg)' },
+				html: `<p data-part="summary" itemprop="text">${renderInline(card.answer)}</p>`
+			}
+		};
+	}
+};
+
 const renderReveal = (fields, type, schemaType, tokens, preset, flipside, cardId = null) => {
 	const itemtype = SCHEMA + schemaType;
 	const media = buildMedia(fields, type, tokens, preset, {}, cardId);
-	const back = flipside ? flipsideBack(flipside, schemaType) : derivedBack(fields, type, schemaType);
+	/* the type's own composition, if it has one and accepts this record */
+	const faces = REVEAL_FACES[type]?.(fields, { preset, type, schemaType, itemtype }) || null;
+	const back = faces ? faces.back.html : flipside ? flipsideBack(flipside, schemaType) : derivedBack(fields, type, schemaType);
 	const reveal = preset.reveal || {};
 	/* reveal config → variant tokens. The preset keeps friendly editor values
 	   ("slide", "left", "top right sm"); the emitted animation token carries its
@@ -1910,16 +1970,17 @@ const renderReveal = (fields, type, schemaType, tokens, preset, flipside, cardId
 		reveal.to ? 'pop' : null,
 		reveal.trigger ? 'trg(card)' : null,
 		reveal.scroll ? 'scr' : null,
-		...iconTokens('ico', reveal.icon || 'top right sm'),
+		...iconTokens('ico', reveal.icon || RVL_ICON),
 		...iconTokens('icc', reveal.iconClose),
 	].filter(Boolean);
 	/* media=/content= sit on the primitives they configure; variant=/theme= on the host */
-	const inner = `${withMedia(media?.html || '', mergeMediaTokens(preset.media, tokens.media))}
-		<ui-content${attrs({ content: preset.content || null })}>
+	const column = faces ? `<ui-content${attrs(faces.front.attrs)}>${faces.front.html}</ui-content>` : `<ui-content${attrs({ content: preset.content || null })}>
 			${fields.eyebrow ? `<small data-part="eyebrow">${esc(fields.eyebrow)}</small>` : ''}
 			<strong data-part="headline" itemprop="${headlineProp(fields, type)}">${renderInline(fields.headline)}</strong>
 			${fields.details?.version ? `<span data-part="meta"><ui-chip theme="pale accent">v<span itemprop="softwareVersion">${esc(fields.details.version)}</span></ui-chip></span>` : ''}
 		</ui-content>`;
+	const inner = `${withMedia(media?.html || '', mergeMediaTokens(preset.media, tokens.media))}
+		${column}`;
 	/* <ui-face> only where the animation transforms the front face; exp animates the host */
 	const front = RVL_FACED.has(anim) ? `<ui-face>${inner}</ui-face>` : inner;
 	/* trg(card) makes the whole summary the trigger — no toggle icon */
@@ -1927,13 +1988,14 @@ const renderReveal = (fields, type, schemaType, tokens, preset, flipside, cardId
 	return `<ui-reveal${attrs({
 		variant: [preset.variant, ...revealTokens].filter(Boolean).join(' '),
 		theme: preset.theme || null,
+		...(faces?.host?.attrs || {}),
 		style: styleAttr(preset.styles),
 		itemscope: true,
 		itemtype
-	})}>
-		<details${attrs({ name: reveal.name || null })}>
+	})}>${faces?.host?.html || ''}
+		<details${attrs({ name: reveal.name || null, ...(faces?.details || {}) })}>
 			<summary>${front}${icon}</summary>
-			<ui-content tabindex="0">${back}${media?.extras || ''}</ui-content>
+			<ui-content${attrs(faces?.back.attrs || { tabindex: '0' })}>${back}${media?.extras || ''}</ui-content>
 		</details>
 	</ui-reveal>`;
 };

@@ -603,6 +603,131 @@ describe('quiz — multiple choice', () => {
 	});
 });
 
+/* The THIRD Quiz shape: one flashcard as a <ui-reveal> flip card. The two faces are
+   two properties of ONE Question, so the Question scope sits on the <details> that
+   wraps them — the split renderReveal's generic front/back cannot express, and the
+   reason REVEAL_FACES exists. Docs: docs/schema.md § Quiz */
+describe('quiz — flip flashcard (REVEAL_FACES)', () => {
+	const cards = [{ question: 'What is a qubit?', answer: 'The quantum unit of <em>information</em>.' }];
+	const presets = {
+		flash: { element: 'ui-reveal', variant: 'ovr(bs)', content: 'scl(lg)', headingTag: 'h2', reveal: { type: 'flip', name: 'quiz-flashcard' } },
+		plain: { element: 'ui-reveal', variant: 'ovr(bs)', content: 'scl(lg)' }
+	};
+	const flip = (details, preset = 'flash') => renderCard(
+		{ fields: { schemaType: 'quiz', eyebrow: 'Flashcard', headline: 'Quantum computing — flashcard', details, preset: { $ref: `card-preset/${preset}` } } },
+		presets);
+	const deck = { format: 'flashcard', subject: 'Quantum computing', cards };
+
+	test('the Question scope wraps BOTH faces — it is on the <details>', () => {
+		const html = flip(deck);
+		assert.match(html, /<details name="quiz-flashcard" itemprop="hasPart" itemscope itemtype="https:\/\/schema\.org\/Question">/);
+		/* <summary> stays the first child: Question-level machine metadata goes INSIDE it */
+		assert.match(html, /<details[^>]*>\s*<summary>/);
+		assert.equal(count(html, 'itemprop="hasPart"'), 1);
+		/* one face each, and neither re-opens a scope the <details> already owns */
+		assert.equal(count(html, 'schema.org/Question'), 1);
+		/* the format resolves exactly as the deck's does — absent means flashcard */
+		assert.match(flip({ subject: 'Quantum computing', cards }), /<details name="quiz-flashcard" itemprop="hasPart"/);
+	});
+
+	test('the front headline is the QUESTION (itemprop="text"), never the Quiz name', () => {
+		const html = flip(deck);
+		assert.match(html, /<h2 data-part="headline" itemprop="text">What is a qubit\?<\/h2>/, 'preset headingTag, question text');
+		assert.ok(!/data-part="headline"[^>]*itemprop="name"/.test(html), 'headlineProp() must not claim the front face');
+		/* the Quiz name survives as machine metadata on the HOST, above the <details> */
+		assert.match(html, /<ui-reveal[^>]*><meta itemprop="name" content="Quantum computing — flashcard">/);
+		assert.equal(count(html, 'Quantum computing — flashcard'), 1, 'the name is emitted once, and not visibly');
+		/* eduQuestionType is a Question property and rides the front face, inside the summary */
+		assert.match(html, /<meta itemprop="eduQuestionType" content="Flashcard"><\/ui-content><\/ui-face>/);
+	});
+
+	test('the back panel is the acceptedAnswer and holds nothing else', () => {
+		const html = flip(deck);
+		assert.match(html, /<ui-content itemprop="acceptedAnswer" itemscope itemtype="https:\/\/schema\.org\/Answer" theme="gray ink" content="pad\(lg\)"><p data-part="summary" itemprop="text">The quantum unit of <em>information<\/em>\.<\/p><\/ui-content>/);
+		/* the derived back column is what a flashcard must NOT get */
+		assert.ok(!html.includes('data-part="meta"'), 'no derived meta row on a flashcard');
+		assert.ok(!html.includes('<ui-accordion'), 'no deck inside the flip card');
+		assert.ok(!html.includes('tabindex'), 'the answer panel is not the generic scroll column');
+	});
+
+	test('content= rides the HOST, because scl() has to reach both faces', () => {
+		const html = flip(deck);
+		assert.match(html, /<ui-reveal variant="ovr\(bs\) flp ico\(te\) ico\(sm\)" content="scl\(lg\)"/);
+		assert.match(html, /<ui-content><small data-part="eyebrow">Flashcard<\/small>/, 'the front column takes no content=');
+	});
+
+	test('the Quiz properties stay machine metadata on the host, in order', () => {
+		const html = flip(deck);
+		assert.match(html, /<meta itemprop="name"[^>]*><meta itemprop="learningResourceType" content="Flashcard"><div itemprop="about" itemscope itemtype="https:\/\/schema\.org\/Thing" hidden><meta itemprop="name" content="Quantum computing"><\/div><div itemprop="educationalAlignment"/);
+		assert.ok(!flip({ format: 'flashcard', cards }).includes('itemprop="about"'), 'no subject, no about scope');
+	});
+
+	/* a reveal has ONE front and ONE back — the rest of a deck has nowhere to go */
+	test('a multi-card deck through a reveal preset renders the first and says so', () => {
+		const html = flip({ ...deck, cards: [...cards, { question: 'Entanglement?', answer: 'Shared state.' }, { question: 'Why correct errors?', answer: 'Decoherence.' }] });
+		assert.match(html, /What is a qubit\?/);
+		assert.ok(!html.includes('Entanglement?'), 'the second card has no face to land on');
+		assert.ok(html.includes('<!-- 2 of 3 flashcards not rendered'), 'and skipping is loud');
+		assert.ok(!flip(deck).includes('not rendered'), 'a single card carries no diagnostic');
+	});
+
+	/* the hook DECLINES what it cannot shape, and the generic path takes over */
+	test('a graded quiz through a reveal preset falls back to the generic reveal', () => {
+		const html = flip({ format: 'multiple-choice', subject: 'Quantum computing', cards: [{ question: 'q', options: [{ text: 'a', correct: true }] }] });
+		assert.match(html, /<details name="quiz-flashcard">/, 'the generic <details> takes no scope attributes');
+		assert.match(html, /<strong data-part="headline" itemprop="name">/, 'the generic front face');
+		assert.match(html, /<ui-content tabindex="0">/, 'the generic scrollable back panel');
+		assert.match(html, /<fieldset itemprop="hasPart"/, 'and the graded questions render in it');
+	});
+
+	test('a cardless quiz declines too', () => {
+		const html = flip({ format: 'flashcard', subject: 'Quantum computing', cards: [] });
+		assert.match(html, /<details name="quiz-flashcard">/);
+		assert.match(html, /<ui-content tabindex="0">/);
+	});
+
+	/* the generic reveal path is untouched by the hook existing */
+	test('a non-quiz reveal renders exactly as before', () => {
+		const html = renderCard(
+			{ fields: { schemaType: 'article', eyebrow: 'News', headline: 'Hello', summary: 'Teaser.', preset: { $ref: 'card-preset/plain' } } },
+			presets);
+		assert.match(html, /<ui-reveal variant="ovr\(bs\) flp ico\(te\) ico\(sm\)" itemscope/, 'no host content=');
+		assert.match(html, /<ui-content content="scl\(lg\)">/, 'content= stays on the front column');
+		assert.match(html, /<strong data-part="headline" itemprop="headline">Hello<\/strong>/);
+		assert.match(html, /<details>\s*<summary>/, 'no scope on the <details>');
+		assert.match(html, /<ui-content tabindex="0">/);
+	});
+});
+
+/* The type chip is a demo-page affordance, and it must not stack on furniture that
+   already owns a corner — including a reveal's toggle icon, which defaults to te. */
+describe('type chip vs the reveal toggle icon', () => {
+	const chip = (reveal) => renderCard(
+		{ fields: { schemaType: 'article', headline: 'X', media: [{ mediaType: 'image', src: '/a.png', alt: 'a' }], preset: { $ref: 'card-preset/r' } } },
+		{ r: { element: 'ui-reveal', reveal } }, {}, { typeChip: true });
+
+	test('a te toggle icon (the default) pushes the chip back to its ts default', () => {
+		for (const reveal of [undefined, { type: 'flip' }, { type: 'flip', icon: 'top right sm' }]) {
+			const html = chip(reveal);
+			assert.match(html, /<ui-chip data-type>Article<\/ui-chip>/, 'the chip still renders');
+			assert.ok(!html.includes('chip(te)'), `${JSON.stringify(reveal)}: te belongs to the icon`);
+		}
+	});
+
+	test('an icon elsewhere, or no icon at all, leaves te free', () => {
+		assert.ok(chip({ type: 'flip', icon: 'top left sm' }).includes('chip(te)'), 'ts icon');
+		assert.ok(chip({ type: 'flip', icon: 'bottom right' }).includes('chip(te)'), 'be icon');
+		assert.ok(chip({ type: 'flip', trigger: 'card' }).includes('chip(te)'), 'trg(card) emits no icon');
+	});
+
+	test('a ui-card host is unaffected', () => {
+		const html = renderCard(
+			{ fields: { schemaType: 'article', headline: 'X', media: [{ mediaType: 'image', src: '/a.png', alt: 'a' }] } },
+			{}, {}, { typeChip: true });
+		assert.ok(html.includes('chip(te)'));
+	});
+});
+
 describe('service — Service', () => {
 	const details = {
 		serviceType: 'Managed cloud hosting', provider: 'Northwind Group', areaServed: 'Denmark',

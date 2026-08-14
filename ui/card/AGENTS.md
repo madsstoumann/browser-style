@@ -180,7 +180,7 @@ Variant guidance for card lists: all `columns(N)` and `grid(N…)` variants are 
 | `build.js` | `node build.js` → bundled+minified `*.min.js` per entry + gzip/brotli size table |
 | `ui-media-srcset.js` | registers `<ui-media>`; host-gated Cloudflare `srcset` + loading/decoding upgrades. **Transitional** — the SSR path exists (`renderCard` `options.images`, docs/media.md § Responsive images); load this only on pages whose markup wasn't SSR'd |
 | `srcset.js` | dependency-free Cloudflare Image Resizing URL builder (optional absolute `base` for hosts off the zone) |
-| `render.js` | Node-safe SSR: JSON (UCF) → HTML string. Published (in `package.json` `files`/`exports`) together with `data/`. Optional 4th arg `{ images }` arms the Cloudflare srcset pipeline (off = byte-identical legacy output) |
+| `render.js` | Node-safe SSR: JSON (UCF) → HTML string. Type-specific markup hangs off two per-type maps: `DETAILS` (the text column) and `REVEAL_FACES` (a `<ui-reveal>`'s two faces, for types whose split the generic front/back cannot express — docs/schema.md § Quiz). Published (in `package.json` `files`/`exports`) together with `data/`. Optional 4th arg `{ images }` arms the Cloudflare srcset pipeline (off = byte-identical legacy output) |
 | `schema.compare.js` | **transcription gate** — diffs `render.js` output against the hand-authored card in `demo/schema.html`, type by type (`node ui/card/schema.compare.js`). The markup-first types treat that page as the specification; this makes "reproduces it" checkable. Two page conventions are normalised on both sides (`media=` hoist, machine-meta hoist) — see the header |
 
 ## Conventions & pitfalls

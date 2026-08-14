@@ -74,10 +74,10 @@ renderers get "cleaned up" because a Google help page disappeared.
 
 Two riders. `HowTo` remains fully supported **inside** `Recipe` — `recipeInstructions` →
 `ItemList` of `HowToStep` — which is exactly how the recipe renderer uses it. And the graded
-multiple-choice [Quiz card](#quiz--quiz-two-cards-one-type-different-eligibility) is the same
+multiple-choice [Quiz card](#quiz--quiz-three-cards-one-type-different-eligibility) is the same
 story one step further on: Google's Practice Problems feature consumed that shape and was retired
 in January 2026, leaving valid markup with no live rich result. The eligibility split between the
-two Quiz cards — flashcards eligible, multiple choice not — is documented in that section.
+Quiz cards — flashcards eligible, multiple choice not — is documented in that section.
 
 ## Structured `data-part` vocabulary
 
@@ -585,7 +585,7 @@ renderer takes `tiers[].url` for that, and these three demo tiers simply have no
 tier's `@id`. When the programme is the card's own subject that link can only run the other way,
 so the card emits `hostingOrganization` → `Organization` instead.
 
-### Quiz — `Quiz` (two cards, one type, different eligibility)
+### Quiz — `Quiz` (three cards, one type, different eligibility)
 
 `Quiz` has *no properties of its own* — it is a `LearningResource`, and everything comes from
 there or from `CreativeWork`. ⚠️ **`eduQuestionType` is a property of `Question`, not of `Quiz`**
@@ -596,12 +596,17 @@ The thing that makes two cards out of one type: **`Question` accepts `suggestedA
 
 | shape | properties on the `Question` | interaction | card |
 |---|---|---|---|
-| Flashcard | one `acceptedAnswer` | reveal | Quiz — *flashcards* |
+| Flashcard | one `acceptedAnswer` | reveal | Quiz — *flashcards* (deck) and *flashcard* (flip card) |
 | Multiple choice | several `suggestedAnswer` **+** one `acceptedAnswer` | select, then check the key | Quiz — *check yourself* |
 | Poll | several `suggestedAnswer`, no accepted one | select, see results | the [`Question` card](#poll--question) |
 
-**Read the eligibility difference before copying either.** The two Quiz cards are markup siblings
-with *opposite* rich-result status, and nothing in the markup says so:
+The flashcard shape runs **two** cards, because the reveal it asks for can be a `<ui-card>`
+accordion deck (several questions, open one at a time) or a `<ui-reveal>` flip card (one question,
+question front / answer back). Same content, same properties — only the host differs, which is why
+the choice is a **preset** (`element: "ui-reveal"`) and never a field on the card.
+
+**Read the eligibility difference before copying either shape.** Flashcards and multiple choice are
+markup siblings with *opposite* rich-result status, and nothing in the markup says so:
 
 - **Flashcards are Google-eligible.** Education Q&A is live and still expanding by language.
   `eduQuestionType: "Flashcard"` is required — any other value makes the card ineligible. Google
@@ -622,6 +627,24 @@ is deliberately **explicit rather than inferred** from whether questions carry o
 `details` shape must not silently produce a flashcard when the author meant a graded question. An
 unrecognised format falls back to `flashcard`, and options under an ungraded deck are dropped with
 an HTML comment, the same loud-skip discipline as [`ProductGroup` variants](#product--product-subtype-productgroup).
+
+The **flip card** is the one place the generic reveal shape does not fit. A reveal normally shows one
+item twice — a teaser front, a fuller back, both in the host's scope — but a flashcard's question is
+on the front and its `acceptedAnswer` on the back, and both are properties of a `Question` that is
+neither the host nor either face. So the `Question` scope sits on the **`<details>`**, which is the
+one element wrapping both faces, and `eduQuestionType` rides the front face *inside* the `<summary>`
+(the `<summary>` has to stay the first child). The Quiz's own properties — `name`,
+`learningResourceType`, `about` → `Thing`, `educationalAlignment` → `AlignmentObject` — become
+machine metadata on the host, so the visible headline can be the **question** (`itemprop="text"`),
+not the quiz's name.
+
+`renderReveal` cannot derive that split, so it asks a per-type hook — **`REVEAL_FACES`**, keyed by
+base type exactly like `DETAILS` — for the host metadata, the `<details>` attributes and the two
+faces, and composes the elements itself. An entry returns `null` to decline, which is what a graded
+quiz does: its options have to be visible *with* the question, so it is one face, not two, and the
+generic `derivedBack` path renders it. A flashcard deck of several cards sent through a reveal preset
+renders the **first** card and drops the rest with an HTML comment — the same loud skip again, since
+a reveal has one front and one back and a deck wants a `<ui-card>` preset.
 
 The graded card marks the correct option with a visible **answer key** (a `pale green` chip) rather
 than hiding it behind a `<details>`. Two reasons: the cards are CSS-only with no JS to grade with,

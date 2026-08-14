@@ -54,6 +54,9 @@ const PAIRS = [
 	['Quiz', 'ui/card/data/quiz.json'],
 	/* the graded sibling — two Quiz cards on the page, so this one matches by id */
 	['Quiz#schema-quiz-mc', 'ui/card/data/quiz-mc.json'],
+	/* the third Quiz shape: one flashcard as a <ui-reveal> flip card, question front,
+	   answer back — the page's only reveal, so the host name is the disambiguator */
+	['ui-reveal:Quiz', 'ui/card/data/quiz-flashcard.json'],
 	['Service', 'ui/card/data/service.json'],
 	['RealEstateListing', 'ui/card/data/realestate.json'],
 	['Menu', 'ui/card/data/menu.json'],
@@ -178,15 +181,18 @@ const canon = (html) => {
 };
 
 /* pull one <ui-card …itemtype="…/{type}"> … </ui-card> block off the page.
-   `Type#id` disambiguates when the page carries more than one card of a type. */
+   `Type#id` disambiguates when the page carries more than one card of a type;
+   `host:Type` names a non-default host (`ui-reveal:Quiz` — the flip flashcard, which
+   shares its itemtype with two <ui-card> decks). */
 function referenceCard(spec) {
-	const [itemtype, id] = spec.split('#');
+	const [head, id] = spec.split('#');
+	const [host, itemtype] = head.includes(':') ? head.split(':') : ['ui-card', head];
 	const open = id
-		? `<ui-card[^>]*id="${id}"[^>]*itemtype="https://schema\\.org/${itemtype}"[^>]*>`
-		: `<ui-card(?![^>]*\\bid=)[^>]*itemtype="https://schema\\.org/${itemtype}"[^>]*>`;
+		? `<${host}[^>]*id="${id}"[^>]*itemtype="https://schema\\.org/${itemtype}"[^>]*>`
+		: `<${host}(?![^>]*\\bid=)[^>]*itemtype="https://schema\\.org/${itemtype}"[^>]*>`;
 	const m = new RegExp(open).exec(page);
 	if (!m) throw new Error(`no reference card for ${spec}`);
-	const tag = /<\/?ui-card\b[^>]*>/g;
+	const tag = new RegExp(`</?${host}\\b[^>]*>`, 'g');
 	tag.lastIndex = m.index;
 	let depth = 0, t;
 	while ((t = tag.exec(page)))
