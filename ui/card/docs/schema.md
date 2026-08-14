@@ -5,14 +5,23 @@
 > per-type notes and the structured-part vocabulary used to live inline on that page; they moved
 > here so the demo stays one card grid.
 
-**Three counts, three different quantities — do not conflate them.** The page carries **52
-cards** with **48 distinct root itemtypes**; the renderer knows **46 `schemaType` keys**.
+**Four counts, four different quantities — do not conflate them.** The page carries **52
+cards** with **48 distinct root itemtypes**; a structured-data validator reports **53 items**;
+the renderer knows **46 `schemaType` keys**.
 
 | Count | What it measures | Reproduce it |
 |---|---|---|
 | **52** | `<ui-card>` roots on the page — one per card | `grep -c '<ui-card[^>]*itemtype=' ui/card/demo/schema.html` |
+| **53** | top-level microdata items — **what schema.org's validator reports** | `grep -o '<[a-z-]*[^<>]*itemscope[^<>]*>' ui/card/demo/schema.html \| grep -v 'itemprop=' \| grep -c 'itemtype='` |
 | **48** | distinct root `itemtype` values | `grep -o '<ui-card[^>]*itemtype="[^"]*"' ui/card/demo/schema.html \| grep -o 'itemtype="[^"]*"' \| sort -u \| wc -l` |
 | **46** | `schemaType` keys `render.js` supports (`SCHEMA_TYPES`) | `node -e "import('./ui/card/render.js').then(m => console.log(Object.keys(m.SCHEMA_TYPES).length))"` |
+
+**Items ≠ cards.** A validator counts every *top-level* item — an `itemscope` with no `itemprop`
+of its own — so it sees the 52 cards plus the standalone `EmployerAggregateRating` on the job
+card: 53. Nested scopes (`author` → `Person`, `offers` → `Offer`, …) are properties of their
+parent, not items, and are not counted. The `grep -c 'itemtype='` on the end of that command is
+load-bearing: without it the page's own `<meta name="description">` is counted, because its text
+mentions "itemscope/itemtype" — that is how a naive scan reports 54.
 
 **Cards ≠ types.** Four types appear on two cards each — `Review`, `Observation`, `EventSeries`
 and `Quiz` — so 52 − 4 = 48. Note the second `grep` in that command: **reduce to the `itemtype=`
