@@ -12114,6 +12114,9 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       position: relative;
       z-index: 2;
     }
+    & ui-media :is(ui-chip, ui-sticker, ui-beacon):not(:has(a, button)) {
+      pointer-events: none;
+    }
   }
 }
 

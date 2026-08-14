@@ -1923,7 +1923,6 @@ const REVEAL_FACES = {
 		if (quizFormat(d) !== 'flashcard' || !cards.length) return null;
 		const words = QUIZ_FORMATS.flashcard;
 		const card = cards[0];
-		const tag = HEADING_TAGS.has(preset.headingTag) ? preset.headingTag : 'h3';
 		return {
 			/* content= rides the HOST here, not the front face: scl() has to reach the
 			   question and the answer, which are two different elements */
@@ -1937,8 +1936,10 @@ const REVEAL_FACES = {
 					+ (cards.length > 1 ? `<!-- ${cards.length - 1} of ${cards.length} flashcards not rendered: a reveal shows one question — a deck needs a ui-card preset -->` : '')
 			},
 			details: { itemprop: 'hasPart', itemscope: true, itemtype: `${SCHEMA}Question` },
+			/* the front face renders inside <summary>, which takes phrasing content —
+			   a heading tag there is invalid, so the headline part rides a <span> */
 			front: { attrs: {}, html: `${fields.eyebrow ? `<small data-part="eyebrow">${esc(fields.eyebrow)}</small>` : ''}
-					<${tag} data-part="headline" itemprop="text">${esc(card.question)}</${tag}>
+					<span data-part="headline" itemprop="text">${esc(card.question)}</span>
 					${meta('eduQuestionType', words.question)}` },
 			/* the answer is authored PROSE (docs/schema.md § Quiz), and its panel reads as
 			   a second surface — the same call as the graded verdict chips' themes */

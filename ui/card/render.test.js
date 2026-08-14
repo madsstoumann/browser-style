@@ -632,8 +632,11 @@ describe('quiz — flip flashcard (REVEAL_FACES)', () => {
 
 	test('the front headline is the QUESTION (itemprop="text"), never the Quiz name', () => {
 		const html = flip(deck);
-		assert.match(html, /<h2 data-part="headline" itemprop="text">What is a qubit\?<\/h2>/, 'preset headingTag, question text');
+		assert.match(html, /<span data-part="headline" itemprop="text">What is a qubit\?<\/span>/, 'question text on a phrasing tag');
 		assert.ok(!/data-part="headline"[^>]*itemprop="name"/.test(html), 'headlineProp() must not claim the front face');
+		/* <summary> takes phrasing content — a heading there is invalid HTML, so the front
+		   face ignores preset.headingTag rather than emitting h1-h6 */
+		assert.ok(!/<summary>[\s\S]*?<h[1-6][\s>]/.test(html), 'no heading tag may appear inside <summary>');
 		/* the Quiz name survives as machine metadata on the HOST, above the <details> */
 		assert.match(html, /<ui-reveal[^>]*><meta itemprop="name" content="Quantum computing — flashcard">/);
 		assert.equal(count(html, 'Quantum computing — flashcard'), 1, 'the name is emitted once, and not visibly');
