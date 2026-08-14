@@ -1189,3 +1189,76 @@ describe('one property, one value', () => {
 		assert.deepEqual(bad, [], 'a property repeated on one item without being multi-valued');
 	});
 });
+
+/* ── inline-markup allowlist ──
+   renderInline() escapes everything, then re-allows an exact list of tag spellings.
+   Every entry reaches output UNESCAPED, so each one is tested for the bare form
+   surviving AND the attributed form not. Docs: docs/content.md § Inline markup */
+describe('inline markup allowlist', () => {
+	const headline = (text) => /data-part="headline"[^>]*>([\s\S]*?)<\/h3>/.exec(render({ schemaType: 'content', headline: text }))[1];
+	/* the body only renders under a preset whose text mode is not the default "summary" */
+	const BODY_PRESET = { article: { element: 'ui-card', variant: 'col', text: 'body' } };
+	const body = (text) => renderCard({ fields: { schemaType: 'article', headline: 'H', body: text, preset: { $ref: 'card-preset/article' } } }, BODY_PRESET);
+
+	for (const tag of ['b', 'em', 'code']) {
+		test(`<${tag}> passes through bare and is escaped with an attribute`, () => {
+			assert.equal(headline(`say <${tag}>this</${tag}>`), `say <${tag}>this</${tag}>`);
+			const hostile = headline(`<${tag} onmouseover=alert(1)>x</${tag}>`);
+			assert.ok(!hostile.includes(`<${tag} `), 'an attributed tag must never reach output');
+			assert.match(hostile, new RegExp(`&lt;${tag} onmouseover=alert\\(1\\)&gt;`), 'it renders, escaped');
+			/* the closing half must not survive on its own once the opener was escaped */
+			assert.ok(!hostile.includes(`</${tag}>`), 'no orphaned closing tag');
+			assert.match(body(`<${tag}>marked</${tag}>`), new RegExp(`<${tag}>marked</${tag}>`), 'body uses the same list');
+			assert.ok(!body(`<${tag} class="x">y</${tag}>`).includes(`<${tag} class`), 'body rejects attributes too');
+		});
+	}
+
+	test('only the exact lowercase spelling is allowed', () => {
+		for (const spelling of ['<EM>x</EM>', '<em >x</em>', '< em>x</em>', '<em/>x']) {
+			assert.ok(!/<em/i.test(headline(spelling)), `${spelling} must stay escaped`);
+		}
+	});
+
+	test('an unclosed or reversed tag renders fully escaped', () => {
+		/* an unclosed formatting element joins the parser's active-formatting list and is
+		   reconstructed inside every following element — one missing </em> would italicise
+		   the rest of the page. Balance is checked, and unbalanced input loses the markup. */
+		assert.equal(headline('<em>unclosed'), '&lt;em&gt;unclosed');
+		assert.equal(headline('</em>backwards<em>'), '&lt;/em&gt;backwards&lt;em&gt;');
+		assert.equal(headline('<b>a</b> <em>b'), '&lt;b&gt;a&lt;/b&gt; &lt;em&gt;b', 'one bad tag escapes the whole string');
+		assert.match(headline('<em>a</em> and <em>b</em>'), /^<em>a<\/em> and <em>b<\/em>$/, 'repeated balanced pairs are fine');
+	});
+
+	test('crossed tags stay inside the element they were authored in', () => {
+		/* count-balanced but misnested: the parser's adoption agency re-nests it in place.
+		   No end tag can close an ancestor, so the microdata structure cannot move. */
+		assert.equal(headline('<b><em>x</b></em>'), '<b><em>x</b></em>');
+		assert.equal(headline('<em><code>x</code></em>'), '<em><code>x</code></em>');
+	});
+
+	/* the list applies to authored PROSE only. Everything else is a label or a machine
+	   value and stays plain — widening one of these would put raw markup in an itemprop
+	   whose value a consumer reads as text. */
+	test('fields that must stay plain do not honour the list', () => {
+		const plainFields = [
+			['summary', { schemaType: 'content', headline: 'H', summary: '<em>no</em>' }],
+			['eyebrow', { schemaType: 'article', headline: 'H', eyebrow: '<em>no</em>' }],
+			['subheadline', { schemaType: 'content', headline: 'H', subheadline: '<em>no</em>' }],
+			['tag', { schemaType: 'content', headline: 'H', tags: ['<em>no</em>'] }],
+			['quiz question', { schemaType: 'quiz', headline: 'H', details: { cards: [{ question: '<em>no</em>', answer: 'a' }] } }],
+			['glossary term name', { schemaType: 'glossary', headline: 'H', details: { terms: [{ name: '<em>no</em>', description: 'd' }] } }]
+		];
+		for (const [where, fields] of plainFields) {
+			const html = render(fields);
+			assert.ok(!html.includes('<em>'), `${where}: must not honour inline markup`);
+			assert.match(html, /&lt;em&gt;no&lt;\/em&gt;/, `${where}: still renders, escaped`);
+		}
+	});
+
+	test('the two prose fields the reference page marks up do honour it', () => {
+		assert.match(render({ schemaType: 'quiz', headline: 'H', details: { cards: [{ question: 'q', answer: 'one <em>logical</em> qubit' }] } }),
+			/itemprop="text">one <em>logical<\/em> qubit</);
+		assert.match(render({ schemaType: 'glossary', headline: 'H', details: { terms: [{ name: 'Cascade layer', description: 'no <code>!important</code>' }] } }),
+			/itemprop="description">no <code>!important<\/code></);
+	});
+});

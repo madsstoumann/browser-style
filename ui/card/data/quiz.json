@@ -40,7 +40,7 @@
         },
         {
           "question": "Why does a quantum computer need error correction?",
-          "answer": "Physical qubits decohere in microseconds. Many of them are combined into one logical qubit whose errors can be detected and corrected faster than they accumulate."
+          "answer": "Physical qubits decohere in microseconds. Many of them are combined into one <em>logical</em> qubit whose errors can be detected and corrected faster than they accumulate."
         }
       ]
     },

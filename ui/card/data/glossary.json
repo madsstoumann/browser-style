@@ -40,7 +40,7 @@
         {
           "name": "Cascade layer",
           "termCode": "cascade-layer",
-          "description": "An explicit priority band in the cascade. Rules in a later layer beat earlier ones regardless of specificity, which removes most reasons to write !important."
+          "description": "An explicit priority band in the cascade. Rules in a later layer beat earlier ones regardless of specificity, which removes most reasons to write <code>!important</code>."
         },
         {
           "name": "Light DOM component",

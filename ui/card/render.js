@@ -262,11 +262,12 @@ const meta = (prop, content) =>
 const scope = (prop, type) =>
 	` itemprop="${esc(prop)}" itemscope itemtype="${SCHEMA + type}"`;
 
-/* Inline-rich text (headline): plain string or UCF richtext object. Escapes
-   everything, then re-allows an ALLOWLIST: <b> (emphasis) and <ui-gradient-text>
+/* Inline-rich text: plain string or UCF richtext object. Escapes everything, then
+   re-allows an ALLOWLIST: <b>/<em>/<code> (attribute-free, so an escaped
+   `<em onmouseover=…>` can never match) and <ui-gradient-text>
    (@browser.style/gradient-text). The gradient element accepts only
    animate="slide|breathe" — never a free attribute string. Docs: docs/content.md */
-const INLINE_TAGS = /&lt;(\/?)(b)&gt;|&lt;(\/?)ui-gradient-text(?: animate=&quot;(slide|breathe)&quot;)?&gt;|&lt;(\/?)high-light((?: (?:fill|ink)=&quot;[#\w(),.%\s-]{1,32}&quot;| variant=&quot;(?:underline|strike)&quot;){0,3})&gt;/g;
+const INLINE_TAGS = /&lt;(\/?)(b|em|code)&gt;|&lt;(\/?)ui-gradient-text(?: animate=&quot;(slide|breathe)&quot;)?&gt;|&lt;(\/?)high-light((?: (?:fill|ink)=&quot;[#\w(),.%\s-]{1,32}&quot;| variant=&quot;(?:underline|strike)&quot;){0,3})&gt;/g;
 /* high-light's attribute payload is re-validated per pair — the group match above only
    bounds the shape, this rebuilds it from an allowlist so nothing else can ride along */
 const HL_ATTR = /(fill|ink|variant)=&quot;([#\w(),.%\s-]{1,32})&quot;/g;
@@ -278,13 +279,30 @@ const highLightAttrs = (raw) => {
 	}
 	return out;
 };
+/* An UNCLOSED allowlisted tag joins the parser's list of active formatting elements and
+   is reconstructed inside every element that follows, so one missing `</em>` italicises
+   the rest of the page. Unbalanced input therefore renders fully escaped: the phrase
+   loses its emphasis and nothing else moves. Docs: docs/content.md § Inline markup */
+const INLINE_PAIRS = /<(\/?)(b|em|code|ui-gradient-text|high-light)\b[^>]*>/g;
+const balancedInline = (html) => {
+	const open = new Map();
+	for (const [, close, tag] of html.matchAll(INLINE_PAIRS)) {
+		const depth = (open.get(tag) || 0) + (close ? -1 : 1);
+		if (depth < 0) return false;
+		open.set(tag, depth);
+	}
+	for (const depth of open.values()) if (depth !== 0) return false;
+	return true;
+};
 const renderInline = (value) => {
 	const text = typeof value === 'string' ? value : value?.$richtext ? value.content : value ?? '';
-	return esc(text).replace(INLINE_TAGS, (match, bSlash, bTag, gSlash, animate, hSlash, hAttrs) => {
-		if (bTag) return `<${bSlash}b>`;
+	const escaped = esc(text);
+	const rich = escaped.replace(INLINE_TAGS, (match, bSlash, bTag, gSlash, animate, hSlash, hAttrs) => {
+		if (bTag) return `<${bSlash}${bTag}>`;
 		if (hSlash !== undefined) return `<${hSlash}high-light${hSlash ? '' : highLightAttrs(hAttrs)}>`;
 		return `<${gSlash}ui-gradient-text${!gSlash && animate ? ` animate="${animate}"` : ''}>`;
 	});
+	return balancedInline(rich) ? rich : escaped;
 };
 
 /* plain text from a possibly-rich headline (for aria/meta contexts) */
@@ -1577,7 +1595,9 @@ const DETAILS = {
 			if (cards.some((card) => card.options?.length)) html += '<!-- options ignored: details.format is not multiple-choice -->';
 			return html + accordion('quiz-card', cards.map((card) => ({
 				summary: `<span itemprop="text">${esc(card.question)}</span>${meta('eduQuestionType', words.question)}`,
-				body: `<div${scope('acceptedAnswer', 'Answer')}><p itemprop="text">${esc(card.answer)}</p></div>`,
+				/* the answer is authored PROSE — the one field of this type the reference page
+				   marks up inline (<em>). Questions and options stay plain: they are labels. */
+				body: `<div${scope('acceptedAnswer', 'Answer')}><p itemprop="text">${renderInline(card.answer)}</p></div>`,
 				scopeAttrs: scope('hasPart', 'Question')
 			})), parts.accordion);
 		}
@@ -1771,7 +1791,9 @@ const DETAILS = {
 		if (d.terms?.length) {
 			html += accordion('glossary', d.terms.map((term) => ({
 				summary: `<span itemprop="name">${esc(term.name)}</span>${meta('termCode', term.termCode)}`,
-				body: `<div><p itemprop="description">${esc(term.description)}</p></div>`,
+				/* the definition is authored PROSE — inline markup allowed (<code>); the term
+				   NAME above stays plain, because it is the DefinedTerm's machine-read name */
+				body: `<div><p itemprop="description">${renderInline(term.description)}</p></div>`,
 				scopeAttrs: scope('hasDefinedTerm', 'DefinedTerm')
 			})), parts.accordion);
 		}

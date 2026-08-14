@@ -442,11 +442,31 @@ emission in [`content/card/dist/`](../../../content/card/dist)):
   `<div itemprop="articleBody">`. Teaser/full is a preset decision — the `text`
   field: cards show the `summary` only; a `text: "body"` preset (e.g. `prose`)
   shows the body *instead*, keeping the summary as a hidden `description` meta
-- **Gradient headline**: `headline` is short rich text (≤256 chars, model-enforced).
-  `renderInline()` escapes everything, then re-allows a two-tag ALLOWLIST: `<b>`
-  (emphasis) and `<ui-gradient-text>` (@browser.style/gradient-text — the gradient
-  treatment, optionally `animate="slide|breathe"`; no other attribute passes). All
-  other markup is escaped. The card owns no gradient CSS — `hl(grad)` was removed in v5
+- **Inline markup**: `renderInline()` escapes everything, then re-allows an
+  ALLOWLIST of exact tag spellings: `<b>`, `<em>` and `<code>` **attribute-free**,
+  `<ui-gradient-text>` (@browser.style/gradient-text — the gradient treatment,
+  optionally `animate="slide|breathe"`) and `<high-light>` (`fill`/`ink`/`variant`,
+  each re-validated per pair by `highLightAttrs()`). Everything else is escaped.
+  Escape-first-then-re-allow is what makes this safe: the pattern matches *escaped*
+  text, so `<em onmouseover=…>` never becomes a tag — the bare forms carry no
+  attribute at all, therefore no executable surface. Do not copy `high-light`'s
+  attribute handling onto a new entry without the same per-attribute allowlist.
+  Matching is case-sensitive and space-sensitive: `<EM>`, `<em >` and `< em>` all
+  stay escaped.
+  **Balance is required.** An unclosed formatting element joins the parser's list of
+  active formatting elements and is reconstructed inside every element that follows,
+  so one missing `</em>` would italicise the rest of the page. `balancedInline()`
+  tallies opens against closes per tag and, on any mismatch, returns the fully
+  escaped string — the phrase loses its emphasis and nothing else moves. That also
+  disposes of the orphan a rejected opening tag would otherwise leave behind
+  (`<em onmouseover=x>y</em>` → wholly escaped). Crossed-but-balanced input
+  (`<b><em>x</b></em>`) passes: the parser's adoption agency re-nests it in place,
+  and no end tag can close an ancestor, so microdata structure cannot move.
+  **Where it applies**: `headline` (short rich text, ≤256 chars, model-enforced) and
+  `body` — plus exactly two `details` prose fields the reference page marks up, the
+  flashcard `answer` and the glossary term `description`. Labels and machine values
+  (`summary`, `eyebrow`, `subheadline`, tags, quiz questions, term names) stay plain.
+  The card owns no gradient CSS — `hl(grad)` was removed in v5
 - **Quote**: quote parts compose with `@browser.style/quote` —
   `<ui-quote data-part="quote" variant="bigquote"><blockquote><q>…</q><cite>…</cite></blockquote></ui-quote>`
   (quote), plain wrapper (review, social); pages import
