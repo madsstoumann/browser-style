@@ -879,6 +879,15 @@ describe('statistic — Observation', () => {
 		assert.match(html, /<meta itemprop="value" content="1.4">/);
 		assert.match(html, /<data value="1.4">1\.4<\/data><small itemprop="unitText">s<\/small>/);
 	});
+
+	/* the three trend arrows. `down` had no demo card and no test until the second
+	   Observation card was removed as a near-duplicate — the card was its only cover */
+	test('each trend direction picks its own arrow', () => {
+		assert.match(card({ trend: 'up', trendPercentage: 12 }), /▲ 12%/);
+		assert.match(card({ trend: 'down', trendPercentage: 8 }), /▼ 8%/);
+		assert.match(card({ trend: 'flat', trendPercentage: 0 }), /► 0%/);
+		assert.doesNotMatch(card({ trend: undefined }), /[▲▼►]/, 'no trend, no arrow');
+	});
 });
 
 describe('job — EmployerAggregateRating', () => {
