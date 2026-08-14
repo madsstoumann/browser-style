@@ -13,7 +13,7 @@
 	<!-- srcset origin: handshake in parallel with the CSS download (~3 RTTs off the
 	     eager LCP image on pages.dev/localhost; same-origin no-op on v4.browser.style) -->
 	<link rel="preconnect" href="https://v4.browser.style">
-	<meta name="description" content="52 cards covering 48 distinct schema.org itemtypes on the card hosts (Quiz runs three cards, two more types run two each) — re-created with the modern &lt;ui-card&gt; engine: inline microdata (itemscope/itemtype/itemprop), no JSON-LD. The job card carries a 49th type as a second top-level item: EmployerAggregateRating. One optional script: video.js polyfills the media invoker commands behind the podcast play button.">
+	<meta name="description" content="53 cards covering 48 distinct schema.org itemtypes on the card hosts (Quiz runs three cards; Review, EventSeries and ProductGroup two each) — re-created with the modern &lt;ui-card&gt; engine: inline microdata (itemscope/itemtype/itemprop), no JSON-LD. The job card carries a 49th type as a second top-level item: EmployerAggregateRating. One optional script: video.js polyfills the media invoker commands behind the podcast play button.">
 	<!-- One bundle for every card-demo package (source list: ui/card/components.md).
 	     Build: npm run build:demo-css (entry demo.css, output /dist/demo.min.css) -->
 	<link rel="stylesheet" href="/dist/demo.min.css">
@@ -217,6 +217,76 @@
 					</ul>
 					<span data-part="tags"><ui-chip itemprop="keywords">Silk</ui-chip><ui-chip itemprop="keywords">Eveningwear</ui-chip></span>
 					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="#">Choose size</a></nav>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="chip(te)" itemscope itemtype="https://schema.org/ProductGroup">
+			<cq-box>
+				<ui-media>
+					<lay-out xs="cg(sm) rg(sm)" md="columns(2)">
+						<ui-card variant="ovr(be) rds(md)" media="asr(1/1) scm" content="pad(sm)" itemprop="hasVariant" itemscope itemtype="https://schema.org/Product">
+							<cq-box>
+								<ui-media><img src="/assets/images/dress-1.png" alt="Persistence Silk Gown in Ivory" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=240/assets/images/dress-1.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=320/assets/images/dress-1.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=480/assets/images/dress-1.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=720/assets/images/dress-1.png 720w" sizes="(min-width: 540px) 25vw, 50vw" loading="lazy" decoding="async" itemprop="image"></ui-media>
+								<ui-content>
+									<meta itemprop="name" content="Persistence Silk Gown — Ivory, S">
+									<meta itemprop="sku" content="PSG-IVO-S">
+									<meta itemprop="color" content="Ivory">
+									<meta itemprop="size" content="S">
+									<span itemprop="offers" itemscope itemtype="https://schema.org/Offer" hidden><meta itemprop="priceCurrency" content="USD"><meta itemprop="price" content="249"><meta itemprop="availability" content="https://schema.org/InStock"></span>
+									<nav data-part="actions"><a class="ui-button" data-variant="accent" itemprop="url" href="/products/persistence-silk-gown?color=ivory&size=s" aria-label="Select Persistence Silk Gown — Ivory, S">Select</a></nav>
+								</ui-content>
+							</cq-box>
+						</ui-card>
+						<ui-card variant="ovr(be) rds(md)" media="asr(1/1) scm" content="pad(sm)" itemprop="hasVariant" itemscope itemtype="https://schema.org/Product">
+							<cq-box>
+								<ui-media><img src="/assets/images/dress-1.png" alt="Persistence Silk Gown in Ivory" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=240/assets/images/dress-1.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=320/assets/images/dress-1.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=480/assets/images/dress-1.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=720/assets/images/dress-1.png 720w" sizes="(min-width: 540px) 25vw, 50vw" loading="lazy" decoding="async" itemprop="image"></ui-media>
+								<ui-content>
+									<meta itemprop="name" content="Persistence Silk Gown — Ivory, M">
+									<meta itemprop="sku" content="PSG-IVO-M">
+									<meta itemprop="color" content="Ivory">
+									<meta itemprop="size" content="M">
+									<span itemprop="offers" itemscope itemtype="https://schema.org/Offer" hidden><meta itemprop="priceCurrency" content="USD"><meta itemprop="price" content="249"><meta itemprop="availability" content="https://schema.org/InStock"></span>
+									<nav data-part="actions"><a class="ui-button" data-variant="accent" itemprop="url" href="/products/persistence-silk-gown?color=ivory&size=m" aria-label="Select Persistence Silk Gown — Ivory, M">Select</a></nav>
+								</ui-content>
+							</cq-box>
+						</ui-card>
+						<ui-card variant="ovr(be) rds(md)" media="asr(1/1) scm" content="pad(sm)" itemprop="hasVariant" itemscope itemtype="https://schema.org/Product">
+							<cq-box>
+								<ui-media><img src="/assets/images/dress-2.png" alt="Persistence Silk Gown in Midnight" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=240/assets/images/dress-2.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=320/assets/images/dress-2.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=480/assets/images/dress-2.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=720/assets/images/dress-2.png 720w" sizes="(min-width: 540px) 25vw, 50vw" loading="lazy" decoding="async" itemprop="image"></ui-media>
+								<ui-content>
+									<meta itemprop="name" content="Persistence Silk Gown — Midnight, M">
+									<meta itemprop="sku" content="PSG-MID-M">
+									<meta itemprop="color" content="Midnight">
+									<meta itemprop="size" content="M">
+									<span itemprop="offers" itemscope itemtype="https://schema.org/Offer" hidden><meta itemprop="priceCurrency" content="USD"><meta itemprop="price" content="269"><meta itemprop="availability" content="https://schema.org/InStock"></span>
+									<nav data-part="actions"><a class="ui-button" data-variant="accent" itemprop="url" href="/products/persistence-silk-gown?color=midnight&size=m" aria-label="Select Persistence Silk Gown — Midnight, M">Select</a></nav>
+								</ui-content>
+							</cq-box>
+						</ui-card>
+						<ui-card variant="ovr(be) rds(md)" media="asr(1/1) scm" content="pad(sm)" itemprop="hasVariant" itemscope itemtype="https://schema.org/Product">
+							<cq-box>
+								<ui-media><img src="/assets/images/dress-2.png" alt="Persistence Silk Gown in Midnight" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=240/assets/images/dress-2.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=320/assets/images/dress-2.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=480/assets/images/dress-2.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=720/assets/images/dress-2.png 720w" sizes="(min-width: 540px) 25vw, 50vw" loading="lazy" decoding="async" itemprop="image"></ui-media>
+								<ui-content>
+									<meta itemprop="name" content="Persistence Silk Gown — Midnight, L">
+									<meta itemprop="sku" content="PSG-MID-L">
+									<meta itemprop="color" content="Midnight">
+									<meta itemprop="size" content="L">
+									<span itemprop="offers" itemscope itemtype="https://schema.org/Offer" hidden><meta itemprop="priceCurrency" content="USD"><meta itemprop="price" content="269"><meta itemprop="availability" content="https://schema.org/InStock"></span>
+									<nav data-part="actions"><a class="ui-button" data-variant="accent" itemprop="url" href="/products/persistence-silk-gown?color=midnight&size=l" aria-label="Select Persistence Silk Gown — Midnight, L">Select</a></nav>
+								</ui-content>
+							</cq-box>
+						</ui-card>
+					</lay-out>
+					<ui-chip data-type>ProductGroup</ui-chip>
+				</ui-media>
+				<ui-content>
+					<meta itemprop="productGroupID" content="PSG-2026">
+					<meta itemprop="variesBy" content="https://schema.org/color">
+					<meta itemprop="variesBy" content="https://schema.org/size">
+					<small data-part="eyebrow">Dresses</small>
+					<h2 data-part="headline" itemprop="name">Persistence Silk Gown</h2>
+					<p data-part="summary" itemprop="description">Pick a colourway and size — every tile is its own variant, with its own URL.</p>
+					<p data-part="price"><meta itemprop="priceCurrency" content="USD">From $249</p>
 				</ui-content>
 			</cq-box>
 		</ui-card>

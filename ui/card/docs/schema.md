@@ -5,15 +5,15 @@
 > per-type notes and the structured-part vocabulary used to live inline on that page; they moved
 > here so the demo stays one card grid.
 
-**Four counts, four different quantities — do not conflate them.** The page carries **52
-cards** with **48 distinct root itemtypes**; a structured-data validator reports **53 items**;
+**Four counts, four different quantities — do not conflate them.** The page carries **53
+cards** with **48 distinct root itemtypes**; a structured-data validator reports **54 items**;
 the renderer knows **46 `schemaType` keys**.
 
 | Count | What it measures | Reproduce it |
 |---|---|---|
-| **52** | card hosts on the page — `<ui-card>` plus the one `<ui-reveal>` | `grep -cE '<ui-(card\|reveal)[^>]*itemtype=' ui/card/demo/schema.html` |
-| **53** | top-level microdata items — **what schema.org's validator reports** | `grep -o '<[a-z-]*[^<>]*itemscope[^<>]*>' ui/card/demo/schema.html \| grep -v 'itemprop=' \| grep -c 'itemtype='` |
-| **48** | distinct root `itemtype` values | `grep -oE '<ui-(card\|reveal)[^>]*itemtype="[^"]*"' ui/card/demo/schema.html \| grep -o 'itemtype="[^"]*"' \| sort -u \| wc -l` |
+| **53** | card hosts on the page — `<ui-card>` plus the one `<ui-reveal>` | `grep -oE '<ui-(card\|reveal)[^>]*itemtype="[^"]*"' ui/card/demo/schema.html \| grep -vc 'itemprop='` |
+| **54** | top-level microdata items — **what schema.org's validator reports** | `grep -o '<[a-z-]*[^<>]*itemscope[^<>]*>' ui/card/demo/schema.html \| grep -v 'itemprop=' \| grep -c 'itemtype='` |
+| **48** | distinct root `itemtype` values | `grep -oE '<ui-(card\|reveal)[^>]*itemtype="[^"]*"' ui/card/demo/schema.html \| grep -v 'itemprop=' \| grep -o 'itemtype="[^"]*"' \| sort -u \| wc -l` |
 | **46** | `schemaType` keys `render.js` supports (`SCHEMA_TYPES`) | `node -e "import('./ui/card/render.js').then(m => console.log(Object.keys(m.SCHEMA_TYPES).length))"` |
 
 The flashcard Quiz is the page's one **`<ui-reveal>`** host rather than a `<ui-card>` — a
@@ -21,14 +21,16 @@ question on the front face, its answer on the flipside, which is what a flashcar
 It counts identically in every column below; only the element differs.
 
 **Items ≠ cards.** A validator counts every *top-level* item — an `itemscope` with no `itemprop`
-of its own — so it sees the 52 cards plus the standalone `EmployerAggregateRating` on the job
-card: 53. Nested scopes (`author` → `Person`, `offers` → `Offer`, …) are properties of their
+of its own — so it sees the 53 cards plus the standalone `EmployerAggregateRating` on the job
+card: 54. Nested scopes (`author` → `Person`, `offers` → `Offer`, …) are properties of their
 parent, not items, and are not counted. The `grep -c 'itemtype='` on the end of that command is
 load-bearing: without it the page's own `<meta name="description">` is counted, because its text
 mentions "itemscope/itemtype" — that is how a naive scan reports 54.
 
-**Cards ≠ types.** `Quiz` runs three cards and two more types run two each — `Review` and
-`EventSeries` — so 52 − 2 − 2 = 48. Note the second `grep` in that command: **reduce to the `itemtype=`
+**Cards ≠ types.** `Quiz` runs three cards, and `Review`, `EventSeries` and `ProductGroup` run
+two each — so 53 − 2 − 3 = 48. The `grep -v itemprop=` in those commands is load-bearing: the
+collage `ProductGroup` nests a `<ui-card>` per variant, and a nested card is a **property** of
+its parent item, not a card of its own. Note the second `grep` in that command: **reduce to the `itemtype=`
 substring before `sort -u`**. Uniquing the whole `<ui-card …>` match counts one type twice
 whenever its two cards differ in any other attribute (an `id`, a `style`) — that is how this
 count once read 50.
