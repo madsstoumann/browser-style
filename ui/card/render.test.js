@@ -528,7 +528,46 @@ describe('quiz — multiple choice', () => {
 		assert.equal(count(html, 'itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"'), 1);
 		assert.equal(count(html, 'itemprop="suggestedAnswer" itemscope itemtype="https://schema.org/Answer"'), 2);
 		assert.match(html, /itemprop="acceptedAnswer"[^>]*><meta itemprop="position" content="2">/);
-		assert.match(html, /<span itemprop="text">A superposition<\/span><\/label> <ui-chip theme="pale green">Correct<\/ui-chip>/);
+	});
+
+	/* Grading is CSS-only, so the verdict is markup on EVERY option — hidden until a
+	   radio is checked (content.css § options). The author marks the correct option and
+	   nothing else: the wording, the colour and the hook are all derived. */
+	test('every option carries a verdict chip, derived from `correct`', () => {
+		const html = card();
+		const chips = html.match(/<ui-chip[^>]*>[^<]*<\/ui-chip>/g) || [];
+		assert.equal(chips.length, 3, 'one chip per option, not one for the answer key');
+		assert.equal(count(html, 'data-verdict="correct"'), 1);
+		assert.equal(count(html, 'data-verdict="wrong"'), 2);
+		/* the CSS hook is data-verdict, never the theme colour — a retheme must not regrade */
+		assert.match(html, /<span itemprop="text">A superposition<\/span><\/label> <ui-chip data-verdict="correct" theme="pale green">Correct<\/ui-chip>/);
+		assert.match(html, /<span itemprop="text">Two values at once<\/span><\/label> <ui-chip data-verdict="wrong" theme="pale red">Wrong<\/ui-chip>/);
+	});
+
+	/* the chips sit inside the <li> but outside any itemprop, so an Answer keeps exactly
+	   position + text — confirmed against a microdata parser, not by eye */
+	test('no verdict chip is a microdata property', () => {
+		for (const chip of card().match(/<ui-chip[^>]*>/g) || [])
+			assert.ok(!chip.includes('itemprop'), `a verdict chip must not be a property: ${chip}`);
+	});
+
+	/* the verdict appears without a DOM mutation, so the list is a polite live region;
+	   aria-live rides the <ul> because role="status" would replace the list role */
+	test('the options list announces the verdict politely', () => {
+		assert.match(card(), /<ul data-part="options" aria-live="polite">/);
+	});
+
+	/* the radios are a group and the question names it — without the fieldset/legend
+	   pair an option is announced with no programmatic link to what it answers. The
+	   legend must be the FIRST child, so eduQuestionType follows it. */
+	test('each question is a fieldset whose legend is the question', () => {
+		const html = card({ cards: [...cards, { question: 'Second?', options: [{ text: 'a', correct: true }] }] });
+		assert.equal(count(html, '<fieldset itemprop="hasPart" itemscope itemtype="https://schema.org/Question">'), 2);
+		assert.ok(!html.includes('<p data-part="meta"><strong itemprop="text">'), 'the question is a legend, not a paragraph');
+		assert.match(html, /<fieldset[^>]*>\s*<legend itemprop="text">What can a qubit hold[^<]*<\/legend><meta itemprop="eduQuestionType"/);
+		/* a legend IS the group label — <strong> inside it adds no semantics, only weight
+		   that belongs in CSS, and it would nest a second itemprop holder for nothing */
+		assert.doesNotMatch(html, /<legend[^>]*>\s*<strong/, 'no <strong> inside a legend');
 	});
 
 	/* CSS-only: one radio group per question, named off the deck so two graded decks

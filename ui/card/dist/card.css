@@ -1547,6 +1547,17 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     & > div[itemscope]:not([data-part], [hidden]) {
       display: contents;
     }
+    & > fieldset {
+      border: 0;
+      margin-block-start: var(--ui-content-fieldset-rhythm, 1em);
+      min-inline-size: 0;
+      padding: 0;
+      & > legend {
+        margin-block-end: var(--ui-content-legend-rhythm, 1em);
+        padding: 0;
+        white-space: normal;
+      }
+    }
     &[theme] {
       background: var(--_theme-bg, transparent);
       color: var(--_theme-c, var(--color-text));
@@ -1940,6 +1951,13 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       }
       & :is([type=radio], [type=checkbox]) {
         font-size: var(--ui-content-options-input-fs, 1.5em);
+      }
+      & ui-chip[data-verdict] {
+        display: none;
+      }
+      & > li:has(:checked) > ui-chip[data-verdict] {
+        display: inline-flex;
+        justify-self: start;
       }
     }
   }

@@ -1534,21 +1534,25 @@ const DETAILS = {
 			})), parts.accordion);
 		}
 		/* Graded: every option is an Answer — the correct one as acceptedAnswer, the
-		   rest as suggestedAnswer (the shape DETAILS.qa already uses). The radios are
-		   CSS-only, so the accepted option is marked with a visible answer KEY rather
-		   than a reveal: the flashcard deck already owns the reveal idiom, and a key
-		   is what reads as "graded". One radio group per question, named off the deck. */
+		   rest as suggestedAnswer (the shape DETAILS.qa already uses). Grading is
+		   CSS-only: EVERY option carries a verdict chip, hidden until its own radio is
+		   checked, so only the reader's pick is ever graded and the key stays unread
+		   (content.css § options). The chips sit outside any itemprop, so they add no
+		   properties to the Answer. aria-live rides the <ul> — role="status" would
+		   replace the list role. One radio group per question, named off the deck, in a
+		   <fieldset> whose <legend> IS the question, so every option is announced under
+		   it; the legend must come first, so eduQuestionType follows it. */
 		const group = `quiz-${slug(plain(fields.headline))}`;
 		cards.forEach((card, index) => {
 			const name = `${group}-q${index + 1}`;
 			const options = (card.options || []).map((option, position) =>
 				`<li${scope(option.correct ? 'acceptedAnswer' : 'suggestedAnswer', 'Answer')}>${meta('position', position + 1)}
-					<label><input type="radio" class="--check" name="${esc(name)}"> <span itemprop="text">${esc(option.text)}</span></label>${option.correct ? ' <ui-chip theme="pale green">Correct</ui-chip>' : ''}
+					<label><input type="radio" class="--check" name="${esc(name)}"> <span itemprop="text">${esc(option.text)}</span></label> ${option.correct ? '<ui-chip data-verdict="correct" theme="pale green">Correct</ui-chip>' : '<ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip>'}
 				</li>`).join('');
-			html += `<div${scope('hasPart', 'Question')}>${meta('eduQuestionType', words.question)}
-				<p data-part="meta"><strong itemprop="text">${esc(card.question)}</strong></p>
-				${options ? `<ul data-part="options">${options}</ul>` : ''}
-			</div>`;
+			html += `<fieldset${scope('hasPart', 'Question')}>
+				<legend itemprop="text">${esc(card.question)}</legend>${meta('eduQuestionType', words.question)}
+				${options ? `<ul data-part="options" aria-live="polite">${options}</ul>` : ''}
+			</fieldset>`;
 		});
 		return html;
 	},
