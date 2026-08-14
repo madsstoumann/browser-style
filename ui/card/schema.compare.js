@@ -65,6 +65,12 @@ const PAIRS = [
 	['PodcastSeries', 'ui/card/data/podcastseries.json'],
 	/* two Observation cards on the page; this is the first (no id) */
 	['Observation', 'ui/card/data/statistic.json'],
+	/* the four cards that had drifted from renderer output — pairing them is what
+	   keeps "the page is the markup render.js reproduces" true for them too */
+	['ContactPoint', 'ui/card/data/contact.json'],
+	['Course', 'ui/card/data/course.json'],
+	['Place', 'ui/card/data/location.json'],
+	['SocialMediaPosting', 'ui/card/data/social.json'],
 	/* the job card carries EmployerAggregateRating as a second top-level item; the
 	   three residual diffs on this pair are older data/renderer divergences (a full
 	   ISO datePosted, industry on the eyebrow, the published dateline row) */

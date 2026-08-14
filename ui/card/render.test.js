@@ -934,6 +934,56 @@ describe('job — EmployerAggregateRating', () => {
 	});
 });
 
+/* demo/schema.html is the markup render.js reproduces, and schema.compare.js now pairs these
+   four types too. Each had drifted by one itemprop; these pin the renderer side of the
+   contract the page transcribes. */
+describe('reference-page reconciliation — contact, course, place, social', () => {
+	test('a ContactPoint headline is its name', () => {
+		const html = render({ schemaType: 'contact', headline: 'Talk to a human', details: { contactType: 'customer support' } });
+		assert.match(html, /<h\d data-part="headline" itemprop="name">Talk to a human<\/h\d>/);
+	});
+
+	test('the department opens the contact meta row', () => {
+		const html = render({ schemaType: 'contact', headline: 'X', details: { department: 'Customer Success', availableHoursDisplay: 'Mon–Fri 9–17 CET', responseTime: 'within 2 hours' } });
+		assert.match(html, /<p data-part="meta">Customer Success · Mon–Fri 9–17 CET · Replies within 2 hours<\/p>/);
+	});
+
+	/* Course.provider is the ORGANISATION and Google requires it; the teacher is the
+	   CourseInstance's instructor. Naming one in the other's slot misdeclares both. */
+	test('Course.provider rides its own scope, beside the instance instructor', () => {
+		const html = render({ schemaType: 'course', headline: 'X', details: { provider: 'Calm Academy', instructor: { name: 'Calm Academy' } } });
+		assert.match(html, /<span itemprop="provider" itemscope itemtype="https:\/\/schema\.org\/Organization" hidden><meta itemprop="name" content="Calm Academy"><\/span>/);
+		assert.match(html, /<span itemprop="instructor" itemscope itemtype="https:\/\/schema\.org\/Person">/);
+	});
+
+	test('a Place telephone is a real tel: link, not a meta', () => {
+		const html = render({ schemaType: 'location', headline: 'X', details: { contact: '+45 56 48 24 01' } });
+		assert.match(html, /<a itemprop="telephone" href="tel:\+4556482401">\+45 56 48 24 01<\/a>/);
+	});
+
+	/* the byline `role` is a JOB TITLE — the demo card had been using it to carry a
+	   dateline, which emitted jobTitle="Jun 28" beside a real <time> */
+	test('a social byline with no role emits no jobTitle, and the date is a <time>', () => {
+		const html = render({ schemaType: 'social', headline: 'X', published: '2026-06-28T16:20:00Z', authors: [{ name: '@wildlifewatch' }], details: { platform: 'Chirper' } });
+		assert.ok(!html.includes('itemprop="jobTitle"'), 'no role, no jobTitle');
+		assert.match(html, /<small data-part="dateline"><time datetime="2026-06-28T16:20:00Z">/, 'the dateline is a <time>, not prose');
+		assert.equal(count(html, 'itemprop="author"'), 1, 'the byline is the author — a details author would make a second one');
+	});
+
+	test('a post body is a <q> inside its blockquote', () => {
+		const html = render({ schemaType: 'social', headline: 'X', summary: 'Worth every minute.', details: { platform: 'Chirper' } });
+		assert.match(html, /<blockquote itemprop="text"><q>Worth every minute\.<\/q><\/blockquote>/);
+	});
+
+	/* the counters are InteractionCounter values, so the footer says what they count:
+	   410 ShareActions are shares, and 3200 is 3,200 */
+	test('the engagement footer reads off the counters it emits', () => {
+		const html = render({ schemaType: 'social', headline: 'X', engagement: { likeCount: 3200, shareCount: 410, commentCount: 87 }, details: { platform: 'Chirper' } });
+		assert.match(html, /<footer data-part="footer">3,200 likes · 410 shares · 87 comments<\/footer>/);
+		assert.match(html, /<meta itemprop="interactionType" content="https:\/\/schema\.org\/ShareAction"><meta itemprop="userInteractionCount" content="410">/);
+	});
+});
+
 /* `Offer.price` accepts Text as well as Number, so `<data itemprop="price" value="279">$279</data>`
    VALIDATES — it was surviving on that Text arm, not on being read correctly. Google's guidance
    is explicit that the value carries no currency symbol and no thousands separator, and the
