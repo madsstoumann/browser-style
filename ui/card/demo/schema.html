@@ -13,7 +13,7 @@
 	<!-- srcset origin: handshake in parallel with the CSS download (~3 RTTs off the
 	     eager LCP image on pages.dev/localhost; same-origin no-op on v4.browser.style) -->
 	<link rel="preconnect" href="https://v4.browser.style">
-	<meta name="description" content="51 cards covering 48 distinct schema.org itemtypes on the &lt;ui-card&gt; roots (three types run two cards each) — re-created with the modern &lt;ui-card&gt; engine: inline microdata (itemscope/itemtype/itemprop), no JSON-LD. The job card carries a 49th type as a second top-level item: EmployerAggregateRating. One optional script: video.js polyfills the media invoker commands behind the podcast play button.">
+	<meta name="description" content="52 cards covering 48 distinct schema.org itemtypes on the card hosts (Quiz runs three cards, two more types run two each) — re-created with the modern &lt;ui-card&gt; engine: inline microdata (itemscope/itemtype/itemprop), no JSON-LD. The job card carries a 49th type as a second top-level item: EmployerAggregateRating. One optional script: video.js polyfills the media invoker commands behind the podcast play button.">
 	<!-- One bundle for every card-demo package (source list: ui/card/components.md).
 	     Build: npm run build:demo-css (entry demo.css, output /dist/demo.min.css) -->
 	<link rel="stylesheet" href="/dist/demo.min.css">
@@ -435,6 +435,43 @@
 			</cq-box>
 		</ui-card>
 		<!-- Google's Education Q&A feature is flashcards only: eduQuestionType lives on the QUESTION — docs/schema.md § Quiz -->
+		<ui-card variant="col" media="asr(16/9) chip(te)" itemscope itemtype="https://schema.org/Quiz">
+			<cq-box>
+				<ui-media><img src="/assets/images/quantum.png" alt="Stylised quantum processor" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/quantum.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/quantum.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/quantum.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/quantum.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/quantum.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>Quiz</ui-chip></ui-media>
+				<ui-content>
+					<meta itemprop="learningResourceType" content="Flashcard">
+					<div itemprop="educationalAlignment" itemscope itemtype="https://schema.org/AlignmentObject" hidden>
+						<meta itemprop="alignmentType" content="educationalSubject">
+						<meta itemprop="targetName" content="Quantum computing">
+					</div>
+					<small data-part="eyebrow">Flashcards</small>
+					<h2 data-part="headline" itemprop="name">Quantum computing — flashcards</h2>
+					<p data-part="summary" itemprop="description">Three cards on the vocabulary every explainer assumes you already know. Open a card to check yourself.</p>
+					<p data-part="meta">Subject: <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><span itemprop="name">Quantum computing</span></span> · 3 cards · self-paced</p>
+					<ui-accordion variant="bordered rounded divided" group="quiz-card"><cq-box>
+						<details name="quiz-card" itemprop="hasPart" itemscope itemtype="https://schema.org/Question">
+							<summary><span itemprop="text">What is a qubit?</span><meta itemprop="eduQuestionType" content="Flashcard"><ui-icon type="plus-minus"></ui-icon></summary>
+							<div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
+								<p itemprop="text">The quantum unit of information. Unlike a bit it can hold a superposition of 0 and 1, and only collapses to one of them when measured.</p>
+							</div>
+						</details>
+						<details name="quiz-card" itemprop="hasPart" itemscope itemtype="https://schema.org/Question">
+							<summary><span itemprop="text">What does quantum entanglement mean?</span><meta itemprop="eduQuestionType" content="Flashcard"><ui-icon type="plus-minus"></ui-icon></summary>
+							<div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
+								<p itemprop="text">Two or more qubits share a single state, so measuring one instantly fixes the outcome of the others — however far apart they are.</p>
+							</div>
+						</details>
+						<details name="quiz-card" itemprop="hasPart" itemscope itemtype="https://schema.org/Question">
+							<summary><span itemprop="text">Why does a quantum computer need error correction?</span><meta itemprop="eduQuestionType" content="Flashcard"><ui-icon type="plus-minus"></ui-icon></summary>
+							<div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
+								<p itemprop="text">Physical qubits decohere in microseconds. Many of them are combined into one <em>logical</em> qubit whose errors can be detected and corrected faster than they accumulate.</p>
+							</div>
+						</details>
+					</cq-box></ui-accordion>
+					<span data-part="tags"><ui-chip itemprop="keywords">Flashcards</ui-chip><ui-chip itemprop="keywords">Physics</ui-chip></span>
+				</ui-content>
+			</cq-box>
+		</ui-card>
 		<ui-reveal variant="ovr(bs) flp scr ico(te) ico(sm) icc(drk)" media="asr(4/3) obp(cc) scm" content="scl(lg)" itemscope itemtype="https://schema.org/Quiz">
 			<meta itemprop="name" content="Quantum computing — flashcard">
 			<meta itemprop="learningResourceType" content="Flashcard">
