@@ -384,6 +384,46 @@ The comment is a fixed string with no interpolated data, and it ships only in th
 case. It is the loudest signal available to a pure string function with no error channel: `render.js`
 degrades rather than throws, so raising here would be a new failure mode for one authoring slip.
 
+#### The collage presentation
+
+The same `hasVariant` set has a second shape: instead of a `<ul>` in the text column, each variant
+becomes a nested `<ui-card>` tile inside a `<lay-out>` grid that fills the **media** area. Every tile
+carries the variant's own image, chip label, machine metas, and a stretched `data-part="cover"` link —
+so the whole tile is the one hit target, which is what makes each variant "preselectable directly with
+a distinct URL".
+
+It is the third `variants.control` value, beside `list` and `buttons` — but the only one with a
+**data precondition**: the tiles *are* the images, so a collage renders only if every variant carries
+an `image.src`. Ask for one without them and the set falls back to the `<ul>` rather than rendering a
+ragged grid, the same loud-degrade discipline as an unknown axis. Both halves of that decision read
+the same `isCollage()` predicate — the text column (which suppresses its rows) and `buildMedia`
+(which emits the tiles) — so they cannot disagree.
+
+The **look** is the preset's: `variants.tile` (the per-tile `variant`/`media`/`content` strings) and
+`variants.layout` (the `<lay-out>` breakpoint attributes), both read in `buildMedia`, the one place
+holding the preset and the variant data together.
+
+```json
+"product-collage": {
+  "element": "ui-card", "variant": "col", "media": "chip(tc)", "headingTag": "h2",
+  "variants": {
+    "layout": { "xs": "cg(2xs) rg(2xs)", "md": "columns(2)" },
+    "tile": { "variant": "rds(non)", "media": "asr(1/1) chip(bs) chip(green) chip(pale)", "content": "pad(none)" }
+  }
+}
+```
+
+The group's own machine metas (`productGroupID`, `variesBy`) stay in the text column either way —
+that is where the `ProductGroup` scope lives. Data: `data/product-group-collage.json`.
+
+The page's collage card (`#schema-product-variants`) is deliberately **not** in `schema.compare`'s
+pairs. It carries two page-only things the renderer has no reason to emit: `data-view` names on the
+tiles, which drive the view-transition morph into the per-colour product pages, and plain local
+`src` + `width`/`height` instead of a CDN `srcset`, because the four crops are new assets that do not
+exist on the zone yet. The first is a page-authoring hook of the same class `H3` already drops; the
+second is a temporary deployment state, and encoding it in the comparator would outlast it. The
+collage renderer is covered by unit tests instead.
+
 ### Event — `Event`
 
 Standard column layout with a participate CTA. Location → `Place` → `PostalAddress`, organizer → `Organization`.

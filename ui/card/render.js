@@ -813,8 +813,12 @@ const buildLightbox = (furniture, tokens, mediaId) => {
  * Furniture style-override tokens are pushed onto tokens.media for the host's media= string.
  */
 const buildMedia = (fields, type, tokens, preset = {}, frameAttrs = {}, cardId = null) => {
-	if (!fields.media?.length) return null;
-	let frames = '';
+	/* a collage fills the frame with variant tiles instead of images, so it is a second
+	   reason for the frame to exist — hasVariant gates it, exactly as the text column does */
+	const variants = fields.details?.variants;
+	const collage = isCollage(variants) && resolveItemtype(fields) === 'ProductGroup' ? collagePart(variants, preset.variants || {}) : '';
+	if (!fields.media?.length && !collage) return null;
+	let frames = collage;
 	let embed = null;
 	let extras = '';
 	/* a <ui-play> commands the frame's FIRST native <video>/<audio> — id it for commandfor */
@@ -831,7 +835,7 @@ const buildMedia = (fields, type, tokens, preset = {}, frameAttrs = {}, cardId =
 	   to carry one per slide. Docs: docs/media.md § Thumbnails */
 	const thumbs = /mrk\(tmb\)/.test(preset.media || '');
 	let firstImg = true;
-	for (const item of fields.media) {
+	for (const item of fields.media || []) {
 		const src = item.asset?.$asset ? item.asset.$asset : item.src;
 		if (item.mediaType === 'youtube' || item.mediaType === 'vimeo') {
 			/* lite embed — provider/video attributes on the frame itself (index.js wires it) */
@@ -896,7 +900,13 @@ const buildMedia = (fields, type, tokens, preset = {}, frameAttrs = {}, cardId =
 		   reveal's toggle icon sits there (its default corner) — chip default (ts) then */
 		const teTaken = Object.values(fields.furniture || {}).some((f) => ` ${f?.style || ''} `.includes(' te '))
 			|| (preset.element === 'ui-reveal' && !preset.reveal?.trigger && iconTokens('ico', preset.reveal?.icon || RVL_ICON).includes('ico(te)'));
-		if (!teTaken) tokens.media.push('chip(te)');
+		/* an authored chip position outranks the default: pushing one here would make
+		   mergeMediaTokens strip the preset's own same-axis token and move the chip */
+		const chipPlaced = String(preset.media || '').split(/\s+/).some((token) => {
+			const match = FURNITURE_TOKEN.exec(token);
+			return match && match[1] === 'chip' && axisOf(match[2]) === 'pos';
+		});
+		if (!teTaken && !chipPlaced) tokens.media.push('chip(te)');
 		typeChip = `<ui-chip data-type>${esc(resolveItemtype(fields))}</ui-chip>`;
 	}
 	const html = `<ui-media${attrs({
@@ -1104,13 +1114,20 @@ const variantButton = (item, index, group) => {
 
 /* Nested hasVariant needs no inProductGroupWithID, and variesBy takes FULL schema.org
    URLs, not bare property names. `control` picks the shape the rows take — a link list
-   (default) or a picker; an unknown value falls back to the list, the same loud-skip
+   (default), a picker, or a collage that moves the rows out of the text column into the
+   MEDIA frame entirely; an unknown value falls back to the list, the same loud-skip
    discipline as an unknown axis. Docs: docs/schema.md § Product */
 /* the picker's look is ui/button-group's, not the card's — the segmented-control
    spelling from its own demo. Override per preset with parts.buttonGroup, which
    tokens.lint.js validates against that package's vocabulary. */
 const BUTTON_GROUP_VARIANT = 'inline rounded border';
-const VARIANT_CONTROLS = new Set(['list', 'buttons']);
+const VARIANT_CONTROLS = new Set(['list', 'buttons', 'collage']);
+/* a collage is the one control with a DATA precondition: every variant needs its own
+   image, because the tiles ARE the images. One missing image falls back to the list
+   rather than rendering a ragged grid — checked here and in buildMedia, so the two
+   halves of the decision can never disagree. */
+const isCollage = (variants) => variants?.control === 'collage'
+	&& !!variants.items?.length && variants.items.every((item) => item.image?.src);
 const variantsPart = (variants, fields, parts = {}) => {
 	const wanted = variants.variesBy || [];
 	const axes = wanted.filter((axis) => VARIANT_AXES.includes(axis));
@@ -1122,9 +1139,55 @@ const variantsPart = (variants, fields, parts = {}) => {
 		+ axes.map((axis) => meta('variesBy', SCHEMA + axis)).join('')
 		/* an unknown axis is dropped — say so, for the same reason the block-level skip does */
 		+ (axes.length < wanted.length ? `<!-- variesBy axes ignored: not one of ${VARIANT_AXES.join(', ')} -->` : '')
-		+ (control === 'buttons'
-			? `<fieldset class="ui-button-group fs-sm"${attrs({ 'data-variant': parts.buttonGroup || BUTTON_GROUP_VARIANT })}>${variants.items.map((item, index) => variantButton(item, index, group)).join('')}</fieldset>`
-			: `<ul data-part="list">${variants.items.map(variantItem).join('')}</ul>`);
+		+ (isCollage(variants) ? ''
+			: control === 'buttons'
+				? `<fieldset class="ui-button-group fs-sm"${attrs({ 'data-variant': parts.buttonGroup || BUTTON_GROUP_VARIANT })}>${variants.items.map((item, index) => variantButton(item, index, group)).join('')}</fieldset>`
+				: `<ul data-part="list">${variants.items.map(variantItem).join('')}</ul>`);
+};
+
+/* The collage presentation of the same hasVariant set: one nested <ui-card> per variant
+   inside a <lay-out> grid in the MEDIA area, each tile a whole-tile link.
+   The LOOK is the preset's (`variants.tile` / `variants.layout`, read in buildMedia,
+   the one place holding both the preset and the variant data).
+   Docs: docs/schema.md § Product */
+const COLLAGE_TILE = { variant: 'rds(non)', media: 'asr(1/1) chip(bs) chip(green) chip(pale)', content: 'pad(none)' };
+const COLLAGE_LAYOUT = { xs: 'cg(2xs) rg(2xs)', md: 'columns(2)' };
+
+/* the accessible name says which variant the tile selects — the axis value carries that
+   ("Indigo Floral"), where the chip is only a short label ("Indigo") */
+const variantAxisValue = (item) => VARIANT_AXES.map((axis) => item[axis]).find(Boolean) || item.name;
+
+const collageTile = (item, tile) => {
+	const offer = item.price == null ? '' : `<span${scope('offers', 'Offer')} hidden>`
+		+ meta('priceCurrency', item.currency)
+		+ meta('price', item.price)
+		+ meta('availability', availabilityUrl(item.availability || 'in stock'))
+		+ '</span>';
+	const img = `<img${attrs({
+		src: item.image.src,
+		alt: item.image.alt || '',
+		srcset: cdnEligible(item.image.src) ? buildSrcset(item.image.src, { ...IMG, ratio: 1 }) : null,
+		sizes: cdnEligible(item.image.src) ? sizesFor(false) : null,
+		loading: 'lazy',
+		decoding: IMG ? 'async' : null,
+		itemprop: 'image'
+	})}>`;
+	return `<ui-card${attrs({ variant: tile.variant, media: tile.media, content: tile.content })}${scope('hasVariant', 'Product')}>`
+		+ '<cq-box>'
+		+ `<ui-media>${img}${item.label ? `<ui-chip>${esc(item.label)}</ui-chip>` : ''}</ui-media>`
+		+ '<ui-content>'
+		+ meta('name', item.name)
+		+ meta('sku', item.sku)
+		+ VARIANT_AXES.map((axis) => meta(axis, item[axis])).join('')
+		+ offer
+		+ (item.url ? `<a data-part="cover" href="${esc(item.url)}" itemprop="url" aria-label="Select ${esc(variantAxisValue(item))}"></a>` : '')
+		+ '</ui-content></cq-box></ui-card>';
+};
+
+const collagePart = (variants, config = {}) => {
+	const tile = { ...COLLAGE_TILE, ...config.tile };
+	const layout = { ...COLLAGE_LAYOUT, ...config.layout };
+	return `<lay-out${attrs(layout)}>${variants.items.map((item) => collageTile(item, tile)).join('')}</lay-out>`;
 };
 
 /* leading year of an ISO date — "since 2023" in a series meta row */

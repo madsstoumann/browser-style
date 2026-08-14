@@ -71,6 +71,52 @@ describe('product variants', () => {
 		assert.match(html, /<meta itemprop="size" content="small">/);
 	});
 
+	/* the collage: same hasVariant set, rendered as linked tiles in the MEDIA area.
+	   The mode is data-derived — every variant needs its own image — so these tests
+	   pin the capacity rule, not a preset word. */
+	const withImages = (items) => ({
+		...VARIANTS,
+		control: 'collage',
+		items: items.map((item, i) => ({ ...item, label: `V${i}`, url: `/p?v=${i}`, image: { src: `/img/v${i}.png`, alt: `Variant ${i}` } }))
+	});
+
+	test('every variant carrying an image renders the collage, not the list', () => {
+		const html = group({ variants: withImages(VARIANTS.items) });
+		assert.match(html, /<lay-out[^>]*md="columns\(2\)"/, 'tiles sit in a lay-out grid');
+		assert.ok(!html.includes('<ul data-part="list">'), 'the list presentation is replaced, not duplicated');
+		assert.equal(count(html, 'itemprop="hasVariant"'), 2, 'one tile per variant');
+		/* the group's own machine metas stay in the text column, where its scope is */
+		assert.match(html, /<meta itemprop="productGroupID" content="AB123">/);
+		assert.equal(count(html, 'itemprop="variesBy"'), 2);
+	});
+
+	/* control: 'collage' ASKS for the collage; the images are what make it possible. When
+	   the precondition fails the request is not honoured half-way. */
+	test('one variant without an image falls back to the list, control notwithstanding', () => {
+		const asked = withImages(VARIANTS.items);
+		delete asked.items[1].image;
+		const html = group({ variants: asked });
+		assert.equal(asked.control, 'collage', 'the control still asks for a collage');
+		assert.match(html, /<ul data-part="list">/, 'a ragged grid is never rendered');
+		assert.ok(!html.includes('<lay-out'), 'no partial collage');
+	});
+
+	test('each tile is one whole-tile link carrying the variant URL', () => {
+		const html = group({ variants: withImages(VARIANTS.items) });
+		/* Google requires each variant be preselectable at a distinct URL, and only a
+		   crawlable <a> satisfies that — the tile chip is a label, not the link */
+		assert.match(html, /<a data-part="cover" href="\/p\?v=0" itemprop="url" aria-label="Select Green"><\/a>/);
+		assert.equal(count(html, 'data-part="cover"'), 2);
+		assert.match(html, /<ui-chip>V0<\/ui-chip>/);
+	});
+
+	test('tile images get srcset only when the CDN pipeline is armed', () => {
+		const fields = { schemaType: 'product', headline: 'Wool coat', details: { subtype: 'ProductGroup', variants: withImages(VARIANTS.items) } };
+		assert.ok(!renderCard({ fields }).includes('srcset='), 'off by default — byte-identical legacy output');
+		const armed = renderCard({ fields }, {}, {}, { images: { cdnBase: 'https://cdn.test' } });
+		assert.match(armed, /srcset="[^"]*cdn\.test[^"]*width=240,height=240[^"]*240w/, 'tiles are square, so the ratio is 1');
+	});
+
 	/* Google: variesBy references a property "through their full Schema.org URL" */
 	test('variesBy carries full schema.org URLs, never bare property names', () => {
 		const html = group();
@@ -715,6 +761,17 @@ describe('type chip vs the reveal toggle icon', () => {
 			assert.match(html, /<ui-chip data-type>Article<\/ui-chip>/, 'the chip still renders');
 			assert.ok(!html.includes('chip(te)'), `${JSON.stringify(reveal)}: te belongs to the icon`);
 		}
+	});
+
+	/* mergeMediaTokens drops the preset's same-axis token when an override is pushed, so
+	   pushing the te default would silently MOVE a chip the preset had already placed */
+	test('a chip position written on the preset outranks the te default', () => {
+		const placed = renderCard(
+			{ fields: { schemaType: 'article', headline: 'X', media: [{ mediaType: 'image', src: '/a.png', alt: 'a' }], preset: { $ref: 'card-preset/p' } } },
+			{ p: { element: 'ui-card', media: 'chip(tc)' } }, {}, { typeChip: true });
+		assert.match(placed, /media="chip\(tc\)"/, 'the authored position survives');
+		assert.ok(!placed.includes('chip(te)'), 'no default is pushed alongside it');
+		assert.match(placed, /<ui-chip data-type>Article<\/ui-chip>/);
 	});
 
 	test('an icon elsewhere, or no icon at all, leaves te free', () => {

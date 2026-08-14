@@ -162,7 +162,7 @@ function dropRootIdentity(tree) {
 const isMachine = (n) => n.tag && (n.tag === 'meta' || hasAttr(n, 'hidden'));
 const getAttr = (node, name) => node.attrs?.find(([k]) => k === name)?.[1] ?? '';
 /* a machine node's identity is what it asserts, never where it sits among its siblings */
-const machineKey = (n) => `${n.tag} ${getAttr(n, 'itemprop')} ${getAttr(n, 'content')}`;
+const machineKey = (n) => JSON.stringify([n.tag, getAttr(n, 'itemprop'), getAttr(n, 'content')]);
 function hoistMachineMetas(tree) {
 	walk(tree, (n) => {
 		if (n.tag !== 'ui-content') return;

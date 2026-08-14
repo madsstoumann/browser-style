@@ -326,6 +326,18 @@
       "media-open": "axis(y) nav(mrk) mrk(tmb) mrk(rail)",
       "content": "scl(lg)"
     },
+    "product-collage": {
+      "name": "Product collage",
+      "description": "ProductGroup whose variants fill the media frame as a grid of linked tiles.",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "chip(tc)",
+      "headingTag": "h2",
+      "variants": {
+        "layout": { "xs": "cg(2xs) rg(2xs)", "md": "columns(2)" },
+        "tile": { "variant": "rds(non)", "media": "asr(1/1) chip(bs) chip(green) chip(pale)", "content": "pad(none)" }
+      }
+    },
     "product-page": {
       "name": "Product Page",
       "description": "Full product view — square carousel with the axis(y) thumbnail rail beside it and a lightbox; media beside the text column from the lg tier",
