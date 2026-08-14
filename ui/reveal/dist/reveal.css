@@ -52,7 +52,7 @@
       }
       > :where(:not(summary))[theme] {
         background: var(--_theme-bg, transparent);
-        color: var(--_theme-c, var(--color-text));
+        color: var(--_theme-c, var(--_theme-ink, var(--color-text)));
         min-block-size: 100%;
       }
       > ui-content:not([content]) {
@@ -117,7 +117,7 @@
     }
     &[theme] {
       --ui-reveal-bg: var(--_theme-bg, var(--color-surface));
-      color: var(--_theme-c, var(--color-text));
+      color: var(--_theme-c, var(--_theme-ink, var(--color-text)));
     }
     &[theme~=glass] {
       --ui-reveal-bdf: var(--_theme-bdf);
@@ -317,10 +317,10 @@
     :where(ui-reveal) > details[open]::details-content {
       transform: var(--_persp) var(--_panel-open);
     }
-    :where(ui-reveal:is([variant~="ico(te)"], [variant~="icc(te)"])) > details[open]::details-content > * > :first-child {
+    :where(ui-reveal:is([variant~="ico(te)"], [variant~="icc(te)"])) > details[open] > :not(summary) > :first-child {
       padding-inline-end: var(--ui-reveal-icon-clear);
     }
-    :where(ui-reveal:is([variant~="ico(ts)"], [variant~="icc(ts)"])) > details[open]::details-content > * > :first-child {
+    :where(ui-reveal:is([variant~="ico(ts)"], [variant~="icc(ts)"])) > details[open] > :not(summary) > :first-child {
       padding-inline-start: var(--ui-reveal-icon-clear);
     }
   }

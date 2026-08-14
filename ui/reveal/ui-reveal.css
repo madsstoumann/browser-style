@@ -321,11 +321,13 @@
 		}
 		:where(ui-reveal) > details[open]::details-content { transform: var(--_persp) var(--_panel-open); }
 
-		/* icc() close-icon clearance — indent the panel's first child only */
-		:where(ui-reveal:is([variant~="ico(te)"], [variant~="icc(te)"])) > details[open]::details-content > * > :first-child {
+		/* icc() close-icon clearance — indent the panel's first child only.
+		   NOT via ::details-content: real elements do not match through that pseudo-element,
+		   so the clearance silently never applied. Exclude summary instead. Docs: readme.md */
+		:where(ui-reveal:is([variant~="ico(te)"], [variant~="icc(te)"])) > details[open] > :not(summary) > :first-child {
 			padding-inline-end: var(--ui-reveal-icon-clear);
 		}
-		:where(ui-reveal:is([variant~="ico(ts)"], [variant~="icc(ts)"])) > details[open]::details-content > * > :first-child {
+		:where(ui-reveal:is([variant~="ico(ts)"], [variant~="icc(ts)"])) > details[open] > :not(summary) > :first-child {
 			padding-inline-start: var(--ui-reveal-icon-clear);
 		}
 	}
