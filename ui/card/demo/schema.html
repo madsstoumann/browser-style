@@ -126,7 +126,7 @@
 					<h2 data-part="headline" itemprop="headline"><a data-part="cover" href="articles/news.html">Coalition agrees on sweeping climate package</a></h2>
 					<p data-part="summary" itemprop="description">The agreement includes a carbon border tariff and a national retrofit programme, ending months of negotiation.</p>
 					<address data-part="byline" itemprop="author" itemscope itemtype="https://schema.org/Person">
-						<ui-avatar><img src="https://assets.stoumann.dk/img/avatar2.webp" alt=""></ui-avatar>
+						<ui-avatar><img src="https://assets.stoumann.dk/img/avatar2.webp" alt="" loading="lazy" decoding="async"></ui-avatar>
 						<span data-part="byline-who"><span itemprop="name">Thomas Berg</span><span itemprop="jobTitle">Newsroom</span></span><small data-part="dateline"><time datetime="2026-07-01T06:15:00Z">Jul 1, 2026</time><span>3 min read</span></small>
 					</address>
 				</ui-content>
@@ -139,7 +139,7 @@
 					<small data-part="eyebrow">Quote of the day</small>
 					<ui-quote data-part="quote" variant="bigquote"><blockquote itemprop="text"><q>Simplicity is the ultimate sophistication — every element you remove makes the remaining ones stronger.</q><cite>Maria Lindgren</cite></blockquote></ui-quote>
 					<address data-part="byline" itemprop="creator" itemscope itemtype="https://schema.org/Person">
-						<ui-avatar><img src="https://assets.stoumann.dk/img/avatar4.webp" alt=""></ui-avatar>
+						<ui-avatar><img src="https://assets.stoumann.dk/img/avatar4.webp" alt="" loading="lazy" decoding="async"></ui-avatar>
 						<span data-part="byline-who"><cite itemprop="name">Maria Lindgren</cite><span itemprop="jobTitle">Design Director</span></span>
 					</address>
 				</ui-content>
@@ -302,7 +302,7 @@
 					</div>
 					<ui-quote data-part="quote"><blockquote itemprop="reviewBody"><q>Astonishing bass for a speaker this small. Battery easily lasts a weekend trip — the app is the only weak point.</q></blockquote></ui-quote>
 					<address data-part="byline" itemprop="author" itemscope itemtype="https://schema.org/Person">
-						<ui-avatar><img src="https://assets.stoumann.dk/img/avatar3.webp" alt=""></ui-avatar>
+						<ui-avatar><img src="https://assets.stoumann.dk/img/avatar3.webp" alt="" loading="lazy" decoding="async"></ui-avatar>
 						<span data-part="byline-who"><span itemprop="name">Alex Chen</span><span>✓ Verified purchase</span></span><small data-part="dateline"><time datetime="2026-05-14">May 14, 2026</time></small>
 					</address>
 					<meta itemprop="datePublished" content="2026-05-14">
@@ -327,7 +327,7 @@
 					</div>
 					<ui-quote data-part="quote"><blockquote itemprop="reviewBody"><q>Our conversion rates increased by 15% after switching to this UI system.</q></blockquote></ui-quote>
 					<address data-part="byline" itemprop="author" itemscope itemtype="https://schema.org/Person">
-						<ui-avatar><img src="https://assets.stoumann.dk/img/avatar5.webp" alt=""></ui-avatar>
+						<ui-avatar><img src="https://assets.stoumann.dk/img/avatar5.webp" alt="" loading="lazy" decoding="async"></ui-avatar>
 						<span data-part="byline-who"><span itemprop="name">David Smith</span><span itemprop="jobTitle">Marketing Lead</span></span>
 					</address>
 					<div itemprop="itemReviewed" itemscope itemtype="https://schema.org/Organization" hidden>
@@ -435,43 +435,28 @@
 			</cq-box>
 		</ui-card>
 		<!-- Google's Education Q&A feature is flashcards only: eduQuestionType lives on the QUESTION — docs/schema.md § Quiz -->
-		<ui-card variant="col" media="asr(16/9) chip(te)" itemscope itemtype="https://schema.org/Quiz">
-			<cq-box>
-				<ui-media><img src="/assets/images/quantum.png" alt="Stylised quantum processor" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/quantum.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/quantum.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/quantum.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/quantum.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/quantum.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>Quiz</ui-chip></ui-media>
-				<ui-content>
-					<meta itemprop="learningResourceType" content="Flashcard">
-					<div itemprop="educationalAlignment" itemscope itemtype="https://schema.org/AlignmentObject" hidden>
-						<meta itemprop="alignmentType" content="educationalSubject">
-						<meta itemprop="targetName" content="Quantum computing">
-					</div>
-					<small data-part="eyebrow">Flashcards</small>
-					<h2 data-part="headline" itemprop="name">Quantum computing — flashcards</h2>
-					<p data-part="summary" itemprop="description">Three cards on the vocabulary every explainer assumes you already know. Open a card to check yourself.</p>
-					<p data-part="meta">Subject: <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><span itemprop="name">Quantum computing</span></span> · 3 cards · self-paced</p>
-					<ui-accordion variant="bordered rounded divided" group="quiz-card"><cq-box>
-						<details name="quiz-card" itemprop="hasPart" itemscope itemtype="https://schema.org/Question">
-							<summary><span itemprop="text">What is a qubit?</span><meta itemprop="eduQuestionType" content="Flashcard"><ui-icon type="plus-minus"></ui-icon></summary>
-							<div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
-								<p itemprop="text">The quantum unit of information. Unlike a bit it can hold a superposition of 0 and 1, and only collapses to one of them when measured.</p>
-							</div>
-						</details>
-						<details name="quiz-card" itemprop="hasPart" itemscope itemtype="https://schema.org/Question">
-							<summary><span itemprop="text">What does quantum entanglement mean?</span><meta itemprop="eduQuestionType" content="Flashcard"><ui-icon type="plus-minus"></ui-icon></summary>
-							<div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
-								<p itemprop="text">Two or more qubits share a single state, so measuring one instantly fixes the outcome of the others — however far apart they are.</p>
-							</div>
-						</details>
-						<details name="quiz-card" itemprop="hasPart" itemscope itemtype="https://schema.org/Question">
-							<summary><span itemprop="text">Why does a quantum computer need error correction?</span><meta itemprop="eduQuestionType" content="Flashcard"><ui-icon type="plus-minus"></ui-icon></summary>
-							<div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
-								<p itemprop="text">Physical qubits decohere in microseconds. Many of them are combined into one <em>logical</em> qubit whose errors can be detected and corrected faster than they accumulate.</p>
-							</div>
-						</details>
-					</cq-box></ui-accordion>
-					<span data-part="tags"><ui-chip itemprop="keywords">Flashcards</ui-chip><ui-chip itemprop="keywords">Physics</ui-chip></span>
+		<ui-reveal variant="ovr(bs) flp scr ico(te) ico(sm) icc(drk)" media="asr(4/3) obp(cc) scm" content="scl(lg)" itemscope itemtype="https://schema.org/Quiz">
+			<meta itemprop="name" content="Quantum computing — flashcard">
+			<meta itemprop="learningResourceType" content="Flashcard">
+			<div itemprop="about" itemscope itemtype="https://schema.org/Thing" hidden><meta itemprop="name" content="Quantum computing"></div>
+			<div itemprop="educationalAlignment" itemscope itemtype="https://schema.org/AlignmentObject" hidden><meta itemprop="alignmentType" content="educationalSubject"><meta itemprop="targetName" content="Quantum computing"></div>
+			<details name="quiz-flashcard" itemprop="hasPart" itemscope itemtype="https://schema.org/Question">
+				<summary>
+					<ui-face>
+						<ui-media><img src="/assets/images/quantum.png" alt="A quantum processor in a cryostat, gold coils descending into blue light" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/quantum.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/quantum.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/quantum.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/quantum.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/quantum.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>Quiz</ui-chip></ui-media>
+						<ui-content>
+							<small data-part="eyebrow">Flashcard</small>
+							<h2 data-part="headline" itemprop="text">What is a qubit?</h2>
+							<meta itemprop="eduQuestionType" content="Flashcard">
+						</ui-content>
+					</ui-face>
+					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
+				</summary>
+				<ui-content itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer" theme="gray ink" content="pad(lg)">
+					<p data-part="summary" itemprop="text">The quantum unit of information. Unlike a bit it can hold a superposition of 0 and 1, and only collapses to one of them when measured.</p>
 				</ui-content>
-			</cq-box>
-		</ui-card>
+			</details>
+		</ui-reveal>
 		<!-- the graded sibling of the flashcard deck above: several suggestedAnswer plus the
 		     acceptedAnswer, which Question accepts together. Valid schema.org with no live rich
 		     result — Google retired Practice Problems in January 2026. docs/schema.md § Quiz -->
@@ -1574,7 +1559,7 @@
 					<h2 data-part="headline" itemprop="name">The Nordic Pantry</h2>
 					<p data-part="summary" itemprop="description">120 recipes built on what a northern larder actually holds — rye, root vegetables, brine and smoke.</p>
 					<address data-part="byline" itemprop="author" itemscope itemtype="https://schema.org/Person">
-						<ui-avatar><img src="https://assets.stoumann.dk/img/avatar4.webp" alt=""></ui-avatar>
+						<ui-avatar><img src="https://assets.stoumann.dk/img/avatar4.webp" alt="" loading="lazy" decoding="async"></ui-avatar>
 						<span data-part="byline-who"><span itemprop="name">Mette Holm</span></span>
 					</address>
 					<p data-part="meta">312 pages · Hardcover · ISBN 978-&#8288;87-&#8288;12345-&#8288;67-&#8288;8</p>

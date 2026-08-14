@@ -11,10 +11,14 @@ the renderer knows **46 `schemaType` keys**.
 
 | Count | What it measures | Reproduce it |
 |---|---|---|
-| **51** | `<ui-card>` roots on the page — one per card | `grep -c '<ui-card[^>]*itemtype=' ui/card/demo/schema.html` |
+| **51** | card hosts on the page — `<ui-card>` plus the one `<ui-reveal>` | `grep -cE '<ui-(card\|reveal)[^>]*itemtype=' ui/card/demo/schema.html` |
 | **52** | top-level microdata items — **what schema.org's validator reports** | `grep -o '<[a-z-]*[^<>]*itemscope[^<>]*>' ui/card/demo/schema.html \| grep -v 'itemprop=' \| grep -c 'itemtype='` |
-| **48** | distinct root `itemtype` values | `grep -o '<ui-card[^>]*itemtype="[^"]*"' ui/card/demo/schema.html \| grep -o 'itemtype="[^"]*"' \| sort -u \| wc -l` |
+| **48** | distinct root `itemtype` values | `grep -oE '<ui-(card\|reveal)[^>]*itemtype="[^"]*"' ui/card/demo/schema.html \| grep -o 'itemtype="[^"]*"' \| sort -u \| wc -l` |
 | **46** | `schemaType` keys `render.js` supports (`SCHEMA_TYPES`) | `node -e "import('./ui/card/render.js').then(m => console.log(Object.keys(m.SCHEMA_TYPES).length))"` |
+
+The flashcard Quiz is the page's one **`<ui-reveal>`** host rather than a `<ui-card>` — a
+question on the front face, its answer on the flipside, which is what a flashcard actually is.
+It counts identically in every column below; only the element differs.
 
 **Items ≠ cards.** A validator counts every *top-level* item — an `itemscope` with no `itemprop`
 of its own — so it sees the 51 cards plus the standalone `EmployerAggregateRating` on the job

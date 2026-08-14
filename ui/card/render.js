@@ -480,8 +480,10 @@ const initials = (name) => {
 	const parts = (name || '').trim().split(/\s+/).filter(Boolean);
 	return parts.length ? (parts[0][0] + (parts.length > 1 ? parts.at(-1)[0] : '')).toUpperCase() : '';
 };
+/* loading/decoding are unconditional — an avatar is always below the fold, and deferring it
+   has nothing to do with whether the srcset pipeline is armed. Only srcset is IMG-gated. */
 const avatarPart = ({ avatar, name }) => avatar
-	? `<ui-avatar><img src="${esc(avatar)}" alt=""${IMG ? attrs({ srcset: fixedSrcset(avatar, 64), loading: 'lazy', decoding: 'async' }) : ''}></ui-avatar>`
+	? `<ui-avatar><img src="${esc(avatar)}" alt=""${attrs({ srcset: IMG ? fixedSrcset(avatar, 64) : null, loading: 'lazy', decoding: 'async' })}></ui-avatar>`
 	: (name ? `<ui-avatar><abbr aria-hidden="true">${esc(initials(name))}</abbr></ui-avatar>` : '');
 
 /* byline rows from authors[] — the dateline rides the FIRST author as a second
