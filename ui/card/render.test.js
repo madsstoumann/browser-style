@@ -2,8 +2,8 @@
  * Complements render.snapshot.js — the snapshot catches CHANGES, these assert CORRECTNESS. */
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
-import renderCard, { resolveItemtype, SUBTYPES } from './render.js';
+import { readFileSync, readdirSync } from 'node:fs';
+import renderCard, { resolveItemtype, SUBTYPES, EYEBROW_PROP } from './render.js';
 
 /* Render a bare fields object with no preset — the DEFAULT_PRESET stack card. */
 export const render = (fields) => renderCard({ fields });
@@ -1072,5 +1072,120 @@ describe('markup-first types — formatter sinks', () => {
 			assert.match(html, /&lt;img src=x onerror=alert\(1\)&gt;/, `${where}: the number must still render, escaped`);
 			assert.ok(!html.includes('&amp;lt;'), `${where}: double-escaped output`);
 		}
+	});
+});
+
+/* ── one item, one value per property ──
+   Two emitters can reach the same root-scope itemprop: the envelope and the type's
+   DETAILS renderer. `industry` shipped twice on a job card that way, and `author` can
+   still do it on a social post. Docs: docs/schema.md § One property, one value */
+describe('one property, one value', () => {
+	test('details.author yields the author property to the envelope byline', () => {
+		const html = render({ schemaType: 'social', headline: 'Thread', details: { platform: 'Chirper', author: '@field' } });
+		assert.equal(count(html, 'itemprop="author"'), 1, 'details.author alone declares it once');
+		const both = render({
+			schemaType: 'social', headline: 'Thread',
+			authors: [{ name: '@wildlifewatch' }],
+			details: { platform: 'Chirper', author: '@field' }
+		});
+		assert.equal(count(both, 'itemprop="author"'), 1, 'the byline is the only author');
+		assert.match(both, /itemprop="name">@wildlifewatch</, 'the envelope author is the one kept');
+		assert.match(both, /data-part="meta">@field · Chirper/, 'the details name stays visible, without microdata');
+	});
+
+	test('re-adding an eyebrow itemprop that DETAILS also emits cannot duplicate it', () => {
+		/* the exact regression: EYEBROW_PROP.job = 'industry' beside DETAILS.job's meta */
+		const ucf = JSON.parse(readFileSync(new URL('./data/job.json', import.meta.url), 'utf8'));
+		assert.equal(count(renderCard(ucf), 'itemprop="industry"'), 1, 'baseline: once');
+		EYEBROW_PROP.job = 'industry';
+		try {
+			const html = renderCard(ucf);
+			assert.equal(count(html, 'itemprop="industry"'), 1, 'still once — DETAILS yielded');
+			assert.match(html, /data-part="eyebrow" itemprop="industry"/, 'the envelope is the one that kept it');
+		} finally {
+			delete EYEBROW_PROP.job;
+		}
+	});
+
+	test('DETAILS.job keeps its industry meta while no envelope property claims it', () => {
+		assert.match(render({ schemaType: 'job', headline: 'Dev', details: { industry: 'Software', company: 'C', location: 'L' } }),
+			/<meta itemprop="industry" content="Software">/);
+	});
+
+	/* Corpus invariant. Repeated properties are LEGAL — schema.org lets most take many
+	   values, and the corpus repeats 36 of them on purpose — so the check is an allowlist:
+	   any property repeating on one item that is not declared multi-value here is a
+	   collision between two emitters, which is what went wrong twice. */
+	const REPEATABLE = new Set([
+		'actor', 'amenityFeature', 'author', 'availableLanguage', 'containsSeason', 'dayOfWeek',
+		'department', 'distribution', 'hasDefinedTerm', 'hasMenuItem', 'hasMenuSection', 'hasPart',
+		'hasTierBenefit', 'hasTiers', 'hasVariant', 'image', 'interactionStatistic', 'itemListElement',
+		'keywords', 'knowsAbout', 'mainEntity', 'offers', 'openingHours', 'openingHoursSpecification',
+		'operatingSystem', 'recipeIngredient', 'sameAs', 'signOrSymptom', 'step', 'subEvent',
+		'suggestedAnswer', 'suitableForDiet', 'supply', 'track', 'variableMeasured', 'variesBy', 'video'
+	]);
+	/* Live collisions of the same class, found BY this check, deferred because their
+	   precedence runs the other way per site — demo/schema.html gives the envelope value
+	   for SpecialAnnouncement.datePosted and the media item's for VideoObject.uploadDate.
+	   docs/plans/2026-08-13-schema-type-expansion.md § Follow-ups */
+	const KNOWN = new Set(['SpecialAnnouncement·datePosted', 'VideoObject·uploadDate']);
+
+	/* attributes a property to the nearest enclosing itemscope — an element carrying both
+	   itemprop and itemscope declares the property on its PARENT item, then opens its own */
+	const VOID = new Set(['meta', 'img', 'input', 'br', 'hr', 'source', 'link', 'area', 'col', 'embed', 'param', 'track', 'wbr']);
+	const TAG = /<(\/?)([a-zA-Z][-a-zA-Z0-9]*)((?:\s+[^\s=/>]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]*))?)*)\s*(\/?)>/g;
+	const ATTR = /([^\s=/>]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]*)))?/g;
+	const repeatedProps = (html) => {
+		const open = [], items = [{ props: new Set(), type: '#top' }], found = [];
+		TAG.lastIndex = 0;
+		let m;
+		while ((m = TAG.exec(html))) {
+			const [, close, tag, raw, selfClose] = m;
+			const name = tag.toLowerCase();
+			if (close) {
+				for (let i = open.length - 1; i >= 0; i--) if (open[i].name === name) {
+					for (let j = open.length - 1; j >= i; j--) if (open[j].scope) items.pop();
+					open.length = i;
+					break;
+				}
+				continue;
+			}
+			const a = {};
+			ATTR.lastIndex = 0;
+			let at;
+			while ((at = ATTR.exec(raw || ''))) { if (!at[1]) break; a[at[1]] = at[2] ?? at[3] ?? at[4] ?? true; }
+			const item = items.at(-1);
+			for (const prop of String(a.itemprop === true ? '' : a.itemprop || '').split(/\s+/).filter(Boolean)) {
+				if (item.props.has(prop)) found.push(`${item.type}·${prop}`);
+				item.props.add(prop);
+			}
+			const isScope = a.itemscope !== undefined;
+			if (isScope) items.push({ props: new Set(), type: String(a.itemtype || '?').replace('https://schema.org/', '') });
+			if (!VOID.has(name) && !selfClose) open.push({ name, scope: isScope });
+			else if (isScope) items.pop();
+		}
+		return found;
+	};
+
+	test('no card in data/ declares a single-valued property twice on one item', () => {
+		const dir = new URL('./data/', import.meta.url);
+		const presets = {
+			...JSON.parse(readFileSync(new URL('card.presets.json', dir), 'utf8')).presets,
+			...JSON.parse(readFileSync(new URL('card.presets.demo.json', dir), 'utf8')).presets
+		};
+		const files = [
+			...readdirSync(dir).filter((f) => f.endsWith('.json') && !f.startsWith('card.presets') && f !== 'index.json' && f !== 'tokens.json').map((f) => new URL(f, dir)),
+			...readdirSync(new URL('demo/', dir)).filter((f) => f.endsWith('.json')).map((f) => new URL(`demo/${f}`, dir))
+		];
+		assert.ok(files.length > 100, `expected the whole corpus, got ${files.length}`);
+		const bad = [];
+		for (const file of files) {
+			const html = renderCard(JSON.parse(readFileSync(file, 'utf8')), presets);
+			for (const hit of repeatedProps(html)) {
+				if (REPEATABLE.has(hit.split('·')[1]) || KNOWN.has(hit)) continue;
+				bad.push(`${file.pathname.split('/').pop()}: ${hit}`);
+			}
+		}
+		assert.deepEqual(bad, [], 'a property repeated on one item without being multi-valued');
 	});
 });

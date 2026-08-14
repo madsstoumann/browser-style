@@ -173,8 +173,10 @@ const headlineProp = (fields, type) => HEADLINE_PROP_BY_ITEMTYPE.get(resolveItem
 /* summary itemprop: review → reviewBody, quote/announcement/social → text, rest → description */
 const SUMMARY_PROP = { review: 'reviewBody', quote: 'text', announcement: 'text', social: 'text' };
 /* eyebrow itemprop — only where a sensible property exists AND no `details` field already
-   owns it: job's eyebrow is display text, `industry` is details.industry. Docs: schema.md § Job */
-const EYEBROW_PROP = { article: 'articleSection', news: 'articleSection', product: 'category', recipe: 'recipeCategory', course: 'about', video: 'genre', movie: 'genre', book: 'genre', tvseries: 'genre', music: 'genre' };
+   owns it: job's eyebrow is display text, `industry` is details.industry. Docs: schema.md § Job.
+   Exported for render.test.js, which re-adds the removed `job: 'industry'` entry to prove the
+   duplicate-property guard below still holds when this map grows. */
+export const EYEBROW_PROP = { article: 'articleSection', news: 'articleSection', product: 'category', recipe: 'recipeCategory', course: 'about', video: 'genre', movie: 'genre', book: 'genre', tvseries: 'genre', music: 'genre' };
 /* published itemprop: JobPosting/SpecialAnnouncement use datePosted, VideoObject uploadDate */
 const PUBLISHED_PROP = { job: 'datePosted', announcement: 'datePosted', video: 'uploadDate' };
 /* preset headingTag allowlist — heading LEVEL is placement, so it lives on the preset */
@@ -190,6 +192,32 @@ const ROOT_VIDEO_TYPES = new Set(['video']);
    Reservation, ContactPoint, ItemList, Observation, MemberProgram, Service) have
    none either — null = visible chips only, no itemprop */
 const TAGS_PROP = { profile: 'knowsAbout', job: null, membership: null, booking: null, contact: null, comparison: null, statistic: null, loyalty: null, service: null };
+/* byline itemprop — a quote's people are its creators, everyone else's are authors */
+const bylineProp = (type) => type === 'quote' ? 'creator' : 'author';
+
+/* ── one item, one value per property ──
+   Two emitters reach the same root-scope itemprop: the ENVELOPE (eyebrow, headline,
+   summary, byline, tags, dates — driven by the maps above) and the type's own DETAILS
+   renderer. A record filling both fields declares one property twice with two values.
+   The envelope wins, and DETAILS asks first. Derived from the maps rather than a
+   hand-written pair list, so adding an envelope itemprop cannot silently resurrect a
+   collision. Docs: docs/schema.md § One property, one value */
+const envelopeProps = (fields, type, { eyebrow = true } = {}) => {
+	const props = new Set();
+	if (eyebrow && fields.eyebrow && EYEBROW_PROP[type]) props.add(EYEBROW_PROP[type]);
+	if (fields.headline && type !== 'quote') props.add(headlineProp(fields, type));
+	if (fields.summary) props.add(SUMMARY_PROP[type] || 'description');
+	if (fields.published) props.add(PUBLISHED_PROP[type] || 'datePublished');
+	if (fields.modified) props.add('dateModified');
+	if (fields.authors?.length) props.add(bylineProp(type));
+	if (fields.tags?.length) {
+		const tagProp = type in TAGS_PROP ? TAGS_PROP[type] : 'keywords';
+		if (tagProp) props.add(tagProp);
+	}
+	return props;
+};
+/* the default for a DETAILS renderer called without a claim set — claims nothing */
+const NO_PROPS = new Set();
 
 /* ── string helpers (all data flows through esc) ── */
 
@@ -877,7 +905,7 @@ const datelinePart = (fields) => {
 const buildTail = (fields, type) => {
 	let html = '';
 	const dateline = datelinePart(fields);
-	if (fields.authors?.length) html += byline(fields.authors, type === 'quote' ? 'creator' : 'author', dateline);
+	if (fields.authors?.length) html += byline(fields.authors, bylineProp(type), dateline);
 	else if (dateline) html += `<p data-part="meta">${dateline}</p>`;
 	if (fields.modifiedDisplay) html += `<p data-part="meta"><small>Updated ${esc(fields.modifiedDisplay)}</small></p>`;
 	if (fields.tags?.length) {
@@ -1100,8 +1128,10 @@ const DETAILS = {
 		return html;
 	},
 
-	job(d, fields, parts = {}) {
-		let html = meta('industry', d.industry) + meta('employmentType', d.employmentType) + meta('validThrough', d.applicationDeadline);
+	job(d, fields, parts = {}, itemtype = null, owned = NO_PROPS) {
+		/* `industry` was emitted twice for a while — here and on the eyebrow. The eyebrow
+		   entry is gone; the guard is what keeps it from coming back. § One property, one value */
+		let html = (owned.has('industry') ? '' : meta('industry', d.industry)) + meta('employmentType', d.employmentType) + meta('validThrough', d.applicationDeadline);
 		html += `<p data-part="meta"><span${scope('hiringOrganization', 'Organization')}><span itemprop="name">${esc(d.company)}</span></span> · <span${scope('jobLocation', 'Place')}><span itemprop="name">${esc(d.location)}</span></span>${d.employmentTypeDisplay ? ` · ${esc(d.employmentTypeDisplay)}` : ''}${d.applicationDeadlineDisplay ? ` · Apply by ${esc(d.applicationDeadlineDisplay)}` : ''}</p>`;
 		const salary = d.salaryRange;
 		if (salary) {
@@ -1324,10 +1354,16 @@ const DETAILS = {
 		return html;
 	},
 
-	social(d) {
+	social(d, fields, parts = {}, itemtype = null, owned = NO_PROPS) {
 		let html = d.platform ? `<div${scope('publisher', 'Organization')} hidden>${meta('name', d.platform)}</div>` : '';
 		if (d.author) {
-			html += `<p data-part="meta"><span${scope('author', 'Person')}><span itemprop="name">${esc(d.author)}</span></span>${d.platform ? ` · ${esc(d.platform)}` : ''}</p>`;
+			/* the envelope's authors[] already declares author on this item; a second scope
+			   would be a second Person. The name stays visible, the microdata does not
+			   repeat — details.author is the byline FALLBACK, not a second author. */
+			const name = owned.has('author')
+				? esc(d.author)
+				: `<span${scope('author', 'Person')}><span itemprop="name">${esc(d.author)}</span></span>`;
+			html += `<p data-part="meta">${name}${d.platform ? ` · ${esc(d.platform)}` : ''}</p>`;
 		}
 		return html;
 	},
@@ -1801,7 +1837,7 @@ const contentColumn = (fields, type, overlay, extras = '', textMode = 'summary',
 		if (!lede) slots.after = early;
 	}
 	let html = buildContent(fields, type, overlay, slots, textMode, parts, headingTag) + (slots.after || '');
-	if (DETAILS[type] && fields.details) html += DETAILS[type](fields.details, fields, parts, itemtype);
+	if (DETAILS[type] && fields.details) html += DETAILS[type](fields.details, fields, parts, itemtype, envelopeProps(fields, type));
 	html += buildTail(tailFields, type);
 	return html + extras;
 };
@@ -1815,7 +1851,9 @@ const derivedBack = (fields, type, itemtype) => {
 	html += `<h3 data-part="headline">${renderInline(fields.headline)}</h3>`;
 	if (fields.summary) html += `<p data-part="summary" itemprop="${SUMMARY_PROP[type] || 'description'}">${esc(fields.summary)}</p>`;
 	html += bodyHtml(fields, type);
-	if (DETAILS[type] && fields.details) html += DETAILS[type](fields.details, fields, {}, itemtype);
+	/* eyebrow: false — the back panel prints the eyebrow WITHOUT an itemprop (the front
+	   face and the back share the host's one itemscope), so it claims no property here */
+	if (DETAILS[type] && fields.details) html += DETAILS[type](fields.details, fields, {}, itemtype, envelopeProps(fields, type, { eyebrow: false }));
 	html += buildTail({ ...fields, published: null, readingTime: null }, type);
 	return html;
 };

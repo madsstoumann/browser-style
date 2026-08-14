@@ -113,6 +113,46 @@ requires would only restate the `<meta>`. It survives in one place — part `sta
 `priceCurrency`/`priceValidUntil`/`availability` and the crossed-out original price are
 unaffected; the original is display text in a `<del>` and never carried an `itemprop`.
 
+## One property, one value
+
+Two emitters can reach the same root-scope `itemprop` on one card: the **envelope** (eyebrow,
+headline, summary, byline, tags, dates — each driven by a per-type map in `render.js`) and the
+type's own **`DETAILS` renderer**. A record filling both fields declares one property twice with
+two *different* values, which is the failure the validator cannot see and the author never meant:
+`itemprop="industry"` shipped as both "Engineering" (eyebrow) and "Software" (`details.industry`)
+until the eyebrow entry was dropped.
+
+**The envelope wins.** Its field is the canonical one in `card.schema.json` and it renders for
+every type, so the `DETAILS` side is the one that yields. `envelopeProps(fields, type)` builds the
+set of properties the envelope will claim for this record — read off `EYEBROW_PROP`,
+`HEADLINE_PROP`, `SUMMARY_PROP`, `PUBLISHED_PROP`, `TAGS_PROP` and the byline, not from a
+hand-written list of known pairs — and each colliding `DETAILS` renderer takes it as a fifth
+argument and asks before emitting:
+
+```js
+job(d, fields, parts = {}, itemtype = null, owned = NO_PROPS) {
+	let html = (owned.has('industry') ? '' : meta('industry', d.industry)) + …
+```
+
+Because the claim set is *derived*, adding an envelope itemprop cannot silently resurrect a
+collision: re-add `EYEBROW_PROP.job = 'industry'` and `DETAILS.job` stops emitting its `<meta>`
+without being edited. `render.test.js` re-adds exactly that entry and asserts the property still
+appears once.
+
+Two sites are guarded today — `industry` (`DETAILS.job`) and `author` (`DETAILS.social`, where
+`details.author` is the byline *fallback*, so it keeps the name visible but drops the microdata
+once `authors[]` has declared one).
+
+**Repeating a property is not itself wrong.** Most schema.org properties are multi-valued, and
+the demo corpus repeats 36 of them deliberately (`keywords`, `hasPart`, `image`, `actor`,
+`author`, `dayOfWeek`, …). The corpus invariant in `render.test.js` is therefore an allowlist: it
+renders every `data/*.json`, attributes each `itemprop` to its nearest enclosing `itemscope`, and
+fails on any repeat of a property not declared multi-valued. That check is what found the two
+remaining live collisions — `SpecialAnnouncement.datePosted` and `VideoObject.uploadDate` — which
+are exempted by name pending a decision on their precedence direction (the reference page keeps
+the *envelope* value for the first and the *media item's* for the second, so "envelope wins" is
+not the answer at both).
+
 ## Subtypes
 
 A large share of schema.org is **subtypes that inherit every property of a type we already
