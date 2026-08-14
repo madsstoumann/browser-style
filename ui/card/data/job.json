@@ -48,6 +48,13 @@
         "period": "YEAR",
         "periodDisplay": "annually"
       },
+      "employerRating": {
+        "value": 4.3,
+        "count": 268,
+        "max": 5,
+        "organization": "Nordlys ApS",
+        "sameAs": "https://nordlys.example"
+      },
       "qualifications": [
         "5+ years building accessible web UI",
         "Deep modern CSS (container queries, layers, scroll-driven animation)",

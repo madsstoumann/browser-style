@@ -74,7 +74,7 @@ const PAIRS = [
 	/* the job card carries EmployerAggregateRating as a second top-level item; the
 	   three residual diffs on this pair are older data/renderer divergences (a full
 	   ISO datePosted, industry on the eyebrow, the published dateline row) */
-	['JobPosting', 'ui/card/data/job-employer.json']
+	['JobPosting', 'ui/card/data/job.json']
 ];
 
 /* ── minimal HTML tree parser ── */

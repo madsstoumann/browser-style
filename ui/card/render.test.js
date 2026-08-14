@@ -2,6 +2,7 @@
  * Complements render.snapshot.js — the snapshot catches CHANGES, these assert CORRECTNESS. */
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import renderCard, { resolveItemtype, SUBTYPES } from './render.js';
 
 /* Render a bare fields object with no preset — the DEFAULT_PRESET stack card. */
@@ -908,6 +909,16 @@ describe('job — EmployerAggregateRating', () => {
 	test('a job without an employer rating emits none', () => {
 		assert.ok(!card(base).includes('EmployerAggregateRating'));
 		assert.ok(!card(base).includes('data-part="rating"'));
+	});
+
+	/* Phase C parked the rating in a separate fixture to keep its snapshot delta additive.
+	   The canonical job demo carries it now — this is what keeps that true. */
+	test('the canonical job demo carries the employer rating', () => {
+		const ucf = JSON.parse(readFileSync(new URL('./data/job.json', import.meta.url), 'utf8'));
+		const html = renderCard(ucf);
+		assert.match(html, /itemscope itemtype="https:\/\/schema\.org\/EmployerAggregateRating"/);
+		assert.match(html, /<meta itemprop="ratingValue" content="4.3">/);
+		assert.match(html, /<meta itemprop="ratingCount" content="268">/);
 	});
 
 	/* the shared ratingPart must not have moved the ordinary aggregateRating shape */
