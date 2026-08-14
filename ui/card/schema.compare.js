@@ -63,6 +63,8 @@ const PAIRS = [
 	['MusicAlbum', 'ui/card/data/music.json'],
 	['DefinedTermSet', 'ui/card/data/glossary.json'],
 	['PodcastSeries', 'ui/card/data/podcastseries.json'],
+	/* two Observation cards on the page; this is the first (no id) */
+	['Observation', 'ui/card/data/statistic.json'],
 	/* the job card carries EmployerAggregateRating as a second top-level item; the
 	   three residual diffs on this pair are older data/renderer divergences (a full
 	   ISO datePosted, industry on the eyebrow, the published dateline row) */

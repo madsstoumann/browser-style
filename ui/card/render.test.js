@@ -855,6 +855,31 @@ describe('podcastseries — PodcastSeries', () => {
 	});
 });
 
+/* An abbreviated stat is NOT its number. `<data itemprop="value" value="2400000">2.4</data>`
+   answers 2,400,000 to the microdata spec and 2.4 to the text-reading consumers this branch
+   measured — wrong by 10^6. The machine value moves to <meta>, which has no text node. */
+describe('statistic — Observation', () => {
+	const card = (details = {}) => render({
+		schemaType: 'statistic',
+		headline: 'Monthly active users',
+		details: { metricName: 'Monthly active users', currentValue: 2400000, displayValue: '2.4M', trend: 'up', trendPercentage: 12, ...details }
+	});
+
+	test('the machine value rides a <meta>, never an itemprop on the abbreviated text', () => {
+		const html = card();
+		assert.match(html, /<meta itemprop="value" content="2400000">/, 'the number is stated once, unambiguously');
+		assert.ok(!/<data[^>]*itemprop/.test(html), 'the visible number must carry no itemprop');
+		assert.match(html, /<data value="2400000">2\.4M<\/data>/, 'the <data> pair stays truthful — value= matches its own contents');
+		assert.ok(!html.includes('>2.4<'), 'the 10^6-off display text must not stand alone as a value');
+	});
+
+	test('a real unit still rides unitText, beside a value it actually applies to', () => {
+		const html = card({ metricName: 'Median LCP', currentValue: 1.4, displayValue: undefined, unit: 's', trend: undefined });
+		assert.match(html, /<meta itemprop="value" content="1.4">/);
+		assert.match(html, /<data value="1.4">1\.4<\/data><small itemprop="unitText">s<\/small>/);
+	});
+});
+
 describe('job — EmployerAggregateRating', () => {
 	const base = { company: 'Nordlys ApS', location: 'Copenhagen' };
 	const rated = { ...base, employerRating: { value: 4.3, count: 268, max: 5, organization: 'Nordlys ApS', sameAs: 'https://nordlys.example' } };

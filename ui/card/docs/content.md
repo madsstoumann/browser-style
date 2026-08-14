@@ -384,7 +384,7 @@ only structural essentials — visuals stay token-driven.
 | `rating` | `<div>` + `<input class="ui-rating" disabled aria-hidden>` masked stars, `[data-sr]` full label, visible `<span aria-hidden>` count | `AggregateRating` / `Rating` | product, review, software |
 | `list` | `<ul>` check-list / `<ol>` ordered | — | recipe, job, course, booking, location, membership |
 | `address` | `<address>` block (no avatar — that's `byline`) | `PostalAddress` | business, location, event, contact |
-| `stat` | `<p>` + `<data>` number, `<small>` unit, trend `<span>` | `QuantitativeValue` | statistic |
+| `stat` | `<p>` + `<data>` display number (no itemprop — the value is a `<meta>`), `<small>` unit, trend `<span>` | `QuantitativeValue` | statistic |
 | `timeline` | `<ol>` of `<li>` with `<time>` + text | `subEvent` → `Event` | timeline |
 | `quote` | `<ui-quote variant>` wrapping `<blockquote>` + `<q>`/`<cite>` | — | quote (`bigquote`), review + social (plain) |
 | `options` | `<ul>` of `<li>` with `<label>` + `<progress>` (poll) or a verdict `<ui-chip>` (quiz) | `suggestedAnswer` / `acceptedAnswer` → `Answer` / `ListItem` | poll, comparison, quiz (multiple choice) |

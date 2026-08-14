@@ -1207,9 +1207,13 @@ const DETAILS = {
 	},
 
 	statistic(d) {
+		/* The machine value rides a <meta>: displayValue is abbreviated ("2.4M") and a
+		   text-reading consumer must never take it for the number. The <data> keeps its
+		   value= as the HTML machine pair for the text it wraps (and the stat style hook),
+		   never an itemprop. `unit` is a real unit — docs/schema.md § Statistic */
 		let html = `<p data-part="stat"${scope('value', 'QuantitativeValue')}>
-			${meta('name', d.metricName)}
-			<data itemprop="value" value="${esc(d.currentValue)}">${esc(d.displayValue ?? String(d.currentValue))}</data>${d.unit ? `<small itemprop="unitText">${esc(d.unit)}</small>` : ''}${d.trend ? `<span> ${d.trend === 'up' ? '▲' : d.trend === 'down' ? '▼' : '►'} ${esc(d.trendPercentage)}%</span>` : ''}
+			${meta('name', d.metricName)}${meta('value', d.currentValue)}
+			<data value="${esc(d.currentValue)}">${esc(d.displayValue ?? String(d.currentValue))}</data>${d.unit ? `<small itemprop="unitText">${esc(d.unit)}</small>` : ''}${d.trend ? `<span> ${d.trend === 'up' ? '▲' : d.trend === 'down' ? '▼' : '►'} ${esc(d.trendPercentage)}%</span>` : ''}
 		</p>`;
 		const foot = [d.comparisonPeriod ? `vs ${d.comparisonPeriod}` : null, d.note].filter(Boolean).join(' · ');
 		if (foot) html += `<p data-part="meta">${esc(foot)}</p>`;

@@ -79,7 +79,7 @@ The twelve parts the typed cards add on top of the envelope. All are **styled** 
 | `address` | `<address>` of stacked lines | Postal address (PostalAddress scope); a 2-letter country code stays machine-only | business, location, organization, real estate |
 | `hours` | two-column `<dl>` | Opening hours, one row per pattern (`openingHoursSpecification`; the flat string only where the type owns it) | business, location, organization offices |
 | `office` | `<div>` wrapping name + address + contacts + hours | One local branch (`department` → LocalBusiness) | organization |
-| `stat` | `<p>` + `<data>` value + unit + trend | Big-number display | statistic |
+| `stat` | `<p>` + `<meta itemprop="value">` + `<data>` display + unit + trend | Big-number display | statistic |
 | `timeline` | `<ol>` of `<time>` + text | Milestone list (`subEvent` scopes) | timeline |
 | `quote` | `<ui-quote>` + `<blockquote>` (+ `<cite>`) | Third-party voice: pull-quote, review body, post, answer, reviewed claim | quote, review, social, Q&A, fact check |
 | `options` | `<ul>` of `<label>` + `<progress>` | Poll answers / comparison rows with bars | poll, comparison |
@@ -334,7 +334,16 @@ Multiple media items become a carousel — `nav(mrk)` — each image carrying `i
 
 ### Statistic — `Observation`
 
-Proposed part `stat`: big number + unit + trend, value → `QuantitativeValue`.
+Part `stat`: big number + unit + trend, value → `QuantitativeValue` (`Observation` *is* a
+`QuantitativeValue`, so the nested node is a legal `StructuredValue` — it keeps the whole
+measurement in one part). **The machine value rides `<meta itemprop="value">`, never the
+visible text**: `displayValue` is a human abbreviation (`2.4M`) and the consumers this repo
+measured read the text node, so `<data itemprop="value" value="2400000">2.4</data>` answered
+2.4 — off by 10⁶. The `<data>` keeps a `value=` for the text it wraps (HTML's own machine
+pair, and the big-number style hook) but carries no `itemprop`. `unit` is a **real unit of
+measurement** (`s`, `ms`, `kg`) and becomes `unitText` beside the machine value; a magnitude
+abbreviation (`M`, `k`, `bn`) belongs in `displayValue`, because `unitText: "M"` on a value of
+2,400,000 claims 2.4 million *million*.
 
 ### Achievement — `EducationalOccupationalCredential`
 

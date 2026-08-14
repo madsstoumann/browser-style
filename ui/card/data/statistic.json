@@ -27,8 +27,7 @@
     "details": {
       "metricName": "Monthly active users",
       "currentValue": 2400000,
-      "displayValue": "2.4",
-      "unit": "M",
+      "displayValue": "2.4M",
       "trend": "up",
       "trendPercentage": 12,
       "note": "Monthly active accounts, rolling 30 days",
