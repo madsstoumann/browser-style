@@ -1,0 +1,39 @@
+{
+  "name": "@browser.style/button-group",
+  "version": "4.0.0",
+  "description": "CSS-first segmented control — a group of .ui-button labels in a fieldset",
+  "type": "module",
+  "style": "index.css",
+  "exports": {
+    ".": {
+      "style": "./index.css"
+    },
+    "./style": "./index.css",
+    "./index.css": "./index.css"
+  },
+  "files": [
+    "index.css",
+    "ui-button-group.css"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "browser.style",
+    "button-group",
+    "segmented-control",
+    "css-first"
+  ],
+  "author": "Mads Stoumann",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/button-group"
+  },
+  "homepage": "https://browser.style/ui/button-group",
+  "peerDependencies": {
+    "@browser.style/base": "^1.0.11"
+  }
+}

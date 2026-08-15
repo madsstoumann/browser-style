@@ -9679,9 +9679,9 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
 /* ui/button-group/ui-button-group.css */
 @layer bs-component {
   :where(.ui-button-group) {
-    --ui-button-group-bg: var(--AccentColor);
-    --ui-button-group-c: var(--AccentColorText);
-    --ui-button-group-bdw: calc(1em / 8);
+    --ui-button-group-bg: var(--color-accent);
+    --ui-button-group-c: var(--color-accent-text);
+    --ui-button-group-border-width: calc(1em / 8);
     all: unset;
     column-gap: .25em;
     display: grid;
@@ -9703,13 +9703,19 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
       }
     }
     & legend {
-      padding-block-end: var(--label-rg);
+      padding-block-end: var(--label-gap);
+    }
+    &[data-theme] {
+      --ui-button-group-bg: var(--_theme-bg);
+      --ui-button-group-c: var(--_theme-c, var(--_theme-ink));
+      background-color: transparent;
+      color: inherit;
     }
     &[data-variant~=border] {
       column-gap: 0;
       & label {
-        border: var(--ui-button-group-bdw) solid var(--ui-button-group-bg);
-        border-radius: var(--input-bdrs);
+        border: var(--ui-button-group-border-width) solid var(--ui-button-group-bg);
+        border-radius: var(--input-radius);
         &:not(:first-of-type) {
           border-start-start-radius: 0;
           border-end-start-radius: 0;
@@ -9727,7 +9733,7 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
     &[data-variant~=outline] {
       & label {
         &:not(:has(:checked)) {
-          border-color: var(--ButtonBorder);
+          border-color: var(--color-border);
         }
         &:has(:checked) {
           background-color: transparent;
@@ -9736,14 +9742,14 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
             background: transparent;
           }
           & + label {
-            border-inline-start: var(--ui-button-group-bdw) solid var(--ui-button-group-bg);
+            border-inline-start: var(--ui-button-group-border-width) solid var(--ui-button-group-bg);
           }
         }
       }
     }
     &[data-variant~=rounded] {
       & label {
-        border-radius: var(--ui-button-group-bdrs, 3em);
+        border-radius: var(--ui-button-group-radius, 3em);
       }
     }
   }

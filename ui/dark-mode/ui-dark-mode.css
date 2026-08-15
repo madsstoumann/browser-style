@@ -6,10 +6,10 @@
 		color-scheme: light;
 	}
 
-	/* ui-button-group overrides */
+	/* ui-button-group overrides — the component's own tokens, not the legacy aliases */
 	:is(.ui-button-group.ui-dark-mode) {
-		--AccentColor: var(--CanvasText);
-		--AccentColorText: var(--Canvas);
+		--ui-button-group-bg: var(--color-text);
+		--ui-button-group-c: var(--color-surface);
 	}
 
 	/* checkbox */

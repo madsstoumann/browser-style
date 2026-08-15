@@ -37,7 +37,7 @@ grouped by role. Paths are relative to `ui/`, matching how the demos link them
 |---|---|---|
 | `ui/accordion` | `<ui-accordion>` — faq / recipe / job presets | `accordion/ui-accordion.css` |
 | `ui/avatar` | `<ui-avatar>` — byline images + initials | `avatar/ui-avatar.css` |
-| `ui/button-group` | `.ui-button-group` — the product-page size picker (`details.variants.control: "buttons"`) | `button-group/ui-button-group.css` |
+| `ui/button-group` | `.ui-button-group` — the product-page size picker (`details.variants.control: "buttons"`); `data-variant=`/`data-theme=` because the host is a `<fieldset>` | `button-group/index.css` |
 | `ui/gradient-text` | `<ui-gradient-text>` | `gradient-text/ui-gradient-text.css` |
 | `ui/highlight` | `<high-light>` — pen-marker highlight on inline text | `highlight/ui-highlight.css` |
 | `ui/icon` | `<ui-icon>` — reveal + accordion toggles | `icon/index.css` |

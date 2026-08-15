@@ -104,6 +104,7 @@
     "@browser.style/avatar": "^4.0.0",
     "@browser.style/badge": "^4.0.0",
     "@browser.style/beacon": "^5.0.0",
+    "@browser.style/button-group": "^4.0.0",
     "@browser.style/chip": "^4.0.0",
     "@browser.style/gradient-text": "^1.0.0",
     "@browser.style/icon": "^4.0.0",
@@ -134,6 +135,9 @@
       "optional": true
     },
     "@browser.style/beacon": {
+      "optional": true
+    },
+    "@browser.style/button-group": {
       "optional": true
     },
     "@browser.style/chip": {

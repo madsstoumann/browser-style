@@ -104,7 +104,7 @@
 	<br>
 	<p>
 		With <code>data-variant="inline rounded border"</code> and <code>fs-sm</code>.<br>
-		<strong>Note,</strong> that the border-width is based on <code>font-size</code>, but can be overwritten using <code>--ui-button-group-bdw</code>.
+		<strong>Note,</strong> that the border-width is based on <code>font-size</code>, but can be overwritten using <code>--ui-button-group-border-width</code>.
 	</p>
 	<fieldset class="ui-button-group fs-sm" data-variant="inline rounded border">
 		<label class="ui-button">
@@ -172,6 +172,60 @@
 		<label class="ui-button">
 			<input type="radio" name="button-group-rtl" data-sr value="3">
 			Auto
+		</label>
+	</fieldset>
+
+	<br>
+	<h2>Themed — the shared hue axis</h2>
+	<p>
+		<code>data-theme="red"</code> · <code>data-theme="green pale"</code> · <code>data-theme="blue muted"</code><br>
+		<strong>Note</strong> the <code>data-</code> prefix: a bare <code>theme</code> attribute is invalid on a
+		<code>&lt;fieldset&gt;</code>. The hue paints the <em>checked segment</em>, not the group's own box, so
+		the group opts out of the resolver's universal paint. All nine hues work, and so do the
+		<code>pale</code> / <code>muted</code> modifiers — see <a href="../base/theme.md">base/theme.md</a>.
+	</p>
+	<fieldset class="ui-button-group fs-sm" data-variant="inline rounded border" data-theme="red">
+		<label class="ui-button">
+			<input type="radio" name="button-group-theme-red" value="1" data-sr checked>
+			Small
+		</label>
+		<label class="ui-button">
+			<input type="radio" name="button-group-theme-red" data-sr value="2">
+			Medium
+		</label>
+		<label class="ui-button">
+			<input type="radio" name="button-group-theme-red" data-sr value="3">
+			Large
+		</label>
+	</fieldset>
+	<br>
+	<fieldset class="ui-button-group fs-sm" data-variant="inline rounded border" data-theme="green pale">
+		<label class="ui-button">
+			<input type="radio" name="button-group-theme-green" value="1" data-sr checked>
+			Small
+		</label>
+		<label class="ui-button">
+			<input type="radio" name="button-group-theme-green" data-sr value="2">
+			Medium
+		</label>
+		<label class="ui-button">
+			<input type="radio" name="button-group-theme-green" data-sr value="3">
+			Large
+		</label>
+	</fieldset>
+	<br>
+	<fieldset class="ui-button-group fs-sm" data-variant="inline rounded border" data-theme="blue muted">
+		<label class="ui-button">
+			<input type="radio" name="button-group-theme-blue" value="1" data-sr checked>
+			Small
+		</label>
+		<label class="ui-button">
+			<input type="radio" name="button-group-theme-blue" data-sr value="2">
+			Medium
+		</label>
+		<label class="ui-button">
+			<input type="radio" name="button-group-theme-blue" data-sr value="3">
+			Large
 		</label>
 	</fieldset>
 </body>

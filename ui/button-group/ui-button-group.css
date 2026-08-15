@@ -1,8 +1,14 @@
+/**
+ * ui-button-group — segmented control: .ui-button labels in a fieldset. Docs: readme.md
+ * @version 4.0.0
+ * @date 2026-08-15
+ * @author Mads Stoumann
+ */
 @layer bs-component {
 	:where(.ui-button-group) {
-		--ui-button-group-bg: var(--AccentColor);
-		--ui-button-group-c: var(--AccentColorText);
-		--ui-button-group-bdw: calc(1em / 8);
+		--ui-button-group-bg: var(--color-accent);
+		--ui-button-group-c: var(--color-accent-text);
+		--ui-button-group-border-width: calc(1em / 8);
 		all: unset;
 		column-gap: .25em;
 		display: grid;
@@ -23,12 +29,23 @@
 				--button-hover-mix: Canvas 90%;
 			}
 		}
-		& legend { padding-block-end: var(--label-rg); }
+		& legend { padding-block-end: var(--label-gap); }
+
+		/* data-theme=, not theme=: a bare attribute is invalid on <fieldset>. The hue paints
+		   the CHECKED segment, so opt out of the resolver's universal paint (it excludes by
+		   element name, which a fieldset cannot join). Docs: readme.md · ../base/theme.md */
+		&[data-theme] {
+			--ui-button-group-bg: var(--_theme-bg);
+			--ui-button-group-c: var(--_theme-c, var(--_theme-ink));
+			background-color: transparent;
+			color: inherit;
+		}
+
 		&[data-variant~="border"] {
 			column-gap: 0;
 			& label {
-				border: var(--ui-button-group-bdw) solid var(--ui-button-group-bg);
-				border-radius: var(--input-bdrs);
+				border: var(--ui-button-group-border-width) solid var(--ui-button-group-bg);
+				border-radius: var(--input-radius);
 				&:not(:first-of-type) {
 					border-start-start-radius: 0;
 					border-end-start-radius: 0;
@@ -43,19 +60,19 @@
 		&[data-variant~="inline"] { display: inline-grid; }
 		&[data-variant~="outline"] {
 			& label {
-				&:not(:has(:checked)) { border-color: var(--ButtonBorder); }
+				&:not(:has(:checked)) { border-color: var(--color-border); }
 				&:has(:checked) {
 					background-color: transparent;
 					color: inherit;
 					&:hover { background: transparent; }
 					& + label {
-						border-inline-start: var(--ui-button-group-bdw) solid var(--ui-button-group-bg);
+						border-inline-start: var(--ui-button-group-border-width) solid var(--ui-button-group-bg);
 					}
 				}
 			}
 		}
 		&[data-variant~="rounded"] {
-			& label { border-radius: var(--ui-button-group-bdrs, 3em); }
+			& label { border-radius: var(--ui-button-group-radius, 3em); }
 		}
 	}
 }

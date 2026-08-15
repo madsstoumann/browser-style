@@ -1,4 +1,4 @@
-@import url('../button-group/ui-button-group.css');
+/* no @import of @browser.style/button-group here — packages are peers, linked by the page */
 @import url('../product-card/ui-product-card.css');
 
 @layer bs-component {
