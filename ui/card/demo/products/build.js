@@ -28,10 +28,10 @@ const presets = { ...data('card.presets.json').presets, ...data('card.presets.de
 
 /* the media half of a lg:row card is ~half of the 64rem shell */
 const IMAGES = { cdnBase: CDN_BASE, sizes: '(min-width: 720px) 30rem, 100vw' };
-/* The colourway crops are new assets that do not exist on the zone yet, and cdn-cgi
-   resolves against the DEPLOYED site — so a CDN srcset here 404s in local preview.
-   Plain local <img src> until they ship; flip to true in the merge commit. */
-const USE_CDN = false;
+/* cdn-cgi resolves against the DEPLOYED site, so these URLs only resolve once the
+   branch ships — the assets and the HTML deploy together. Set false to preview the
+   pages locally against plain <img src>. */
+const USE_CDN = true;
 
 /* the parent group the four colourways vary from — the collage card on schema.html */
 const GROUP = { id: 'PSG-2026', name: 'Persistence Silk Gown' };
