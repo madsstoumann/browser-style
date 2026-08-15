@@ -137,6 +137,11 @@
 		   box — dissolve it so its rows join the column's flex gap. Docs: docs/schema.md */
 		& > div[itemscope]:not([data-part], [hidden]) { display: contents; }
 
+		/* the variant picker: LOOK is ui/button-group's, PLACEMENT is ours. `inline`
+		   blockifies on a flex item, so the shrink-to-fit comes from align-self.
+		   Docs: docs/content.md § Variant picker */
+		& > fieldset.ui-button-group:where([data-variant~="inline"]) { align-self: start; }
+
 		/* quiz question group — a real box, NOT dissolved: the fieldset/legend pair is the
 		   grouping the radios need. UA chrome off. Docs: docs/content.md § Options
 		   .ui-button-group opts OUT — its own `all: unset` is :where()-wrapped (specificity

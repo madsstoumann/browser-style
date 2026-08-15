@@ -453,9 +453,19 @@ The product pages' size picker (`details.variants.control: "buttons"`, [schema.m
 | quiz question group | `<fieldset>` + `<legend>` | **content.css** — the bordered box above |
 | variant picker | `<fieldset class="ui-button-group">` | **`ui/button-group`** — its own package |
 
-The picker is *not* content furniture: `ui/button-group` already owns the look, `render.js` writes the class, and `demo/demo.css` bundles the sheet ([components.md](../components.md)). What it needed was for the card system to stop claiming it — the quiz rule's bare `& > fieldset` was re-plating the picker with a border, radius and padding, because `.ui-button-group`'s own `all: unset` is **`:where()`-wrapped and therefore specificity 0**, while `& > fieldset` is 0,0,1. The rule now reads `& > fieldset:where(:not(.ui-button-group))` — `:where()`-wrapped in turn, so the quiz box keeps its 0,0,1 and nothing else in the cascade moves.
+**The split is look vs. placement.** `ui/button-group` owns the look — `render.js` writes the class, `demo/demo.css` bundles the sheet ([components.md](../components.md)) — and the card owns where it sits in the column. Recreating the look here would fork the component; two rules are all the card needs.
 
-The general lesson for any packaged component rendered into `<ui-content>`: **a zero-specificity component sheet cannot defend itself against a card-side element selector.** Where the card system styles a bare tag (`fieldset`, and it is the only one), that rule has to name the exception rather than the component raising its own specificity to fight back.
+**Look — stop claiming it.** The quiz rule's bare `& > fieldset` was re-plating the picker with a border, radius and padding, because `.ui-button-group`'s own `all: unset` is **`:where()`-wrapped and therefore specificity 0**, while `& > fieldset` is 0,0,1. It now reads `& > fieldset:where(:not(.ui-button-group))` — `:where()`-wrapped in turn, so the quiz box keeps its 0,0,1 and nothing else in the cascade moves.
+
+**Placement — `inline` cannot work by itself.** `<ui-content>` is a flex column, and a flex item's `display` is **blockified**: `data-variant="inline"`'s `inline-grid` computes to `grid`, so the group stretches the full column instead of shrinking to its options. The shrink-to-fit comes from the card side instead:
+
+```css
+& > fieldset.ui-button-group:where([data-variant~="inline"]) { align-self: start; }
+```
+
+The variant words come from the preset through the same seam as `parts.quote` / `parts.accordion` — **`parts.buttonGroup`**, default `inline rounded border` (the segmented control), validated by `tokens.lint.js` against `ui/button-group`'s vocabulary (`inline` · `rounded` · `border` · `outline`). `fs-sm` rides the class list: the picker is a control, not a row of body-sized buttons.
+
+The general lesson for any packaged component rendered into `<ui-content>`: **a zero-specificity component sheet cannot defend itself against a card-side element selector**, and **any `display` the component sets is subject to the column's flex blockification.** Where the card system styles a bare tag (`fieldset`, and it is the only one), that rule has to name the exception rather than the component raising its own specificity to fight back.
 
 ### Tags — plain links or `<ui-chip>`
 

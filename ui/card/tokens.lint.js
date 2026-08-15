@@ -211,10 +211,12 @@ export const lintTokens = () => {
 const PRESET_FILES = ['data/card.presets.json', 'data/card.presets.demo.json'];
 /* stems whose args are free-form numbers/ratios the manifest lists as placeholders */
 const OPEN_STEMS = /^(?:md:|lg:)?(?:asr|spl|auto|tmb)\([\d/.:a-z%]+\)$/;
-/* preset parts= vocabularies — KEEP IN SYNC with ui/quote/ui-quote.css and ui/accordion/ui-accordion.css */
+/* preset parts= vocabularies — KEEP IN SYNC with ui/quote/ui-quote.css,
+   ui/accordion/ui-accordion.css and ui/button-group/ui-button-group.css */
 const PART_VARIANTS = {
 	quote: new Set(['bigquote', 'breaker', 'code']),
-	accordion: new Set(['bordered', 'divided', 'rounded', 'pill', 'separate', 'filled'])
+	accordion: new Set(['bordered', 'divided', 'rounded', 'pill', 'separate', 'filled']),
+	buttonGroup: new Set(['inline', 'rounded', 'border', 'outline'])
 };
 const lintPresets = (manifest, errors) => {
 	const valid = {};

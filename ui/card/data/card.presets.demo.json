@@ -334,7 +334,10 @@
       "media": "asr(1/1) rds(lg) clip axis(y) nav(mrk) mrk(tmb) mrk(rail) mrk(lg) tmb(1/1) lightbox(bs)",
       "media-open": "nav(mrk) mrk(tmb) mrk(blw) mrk(lg)",
       "content": "scl(lg)",
-      "headingTag": "h2"
+      "headingTag": "h2",
+      "parts": {
+        "buttonGroup": "inline rounded border"
+      }
     },
     "carousel-row": {
       "name": "Carousel Row",

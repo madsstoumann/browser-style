@@ -1099,11 +1099,21 @@ describe('product page — variant picker + carousel thumbnails', () => {
 		details: { subtype: 'ProductGroup', variants: { control: 'buttons', variesBy: ['size'], productGroupID: 'PSG-IND', items: SIZES, ...extra } }
 	});
 
-	test('control:"buttons" renders the rounded group, one label per variant', () => {
+	test('control:"buttons" renders the segmented group, one label per variant', () => {
 		const html = picker();
-		assert.match(html, /<fieldset class="ui-button-group" data-variant="rounded">/);
+		assert.match(html, /<fieldset class="ui-button-group fs-sm" data-variant="inline rounded border">/);
 		assert.equal(count(html, '<label class="ui-button" itemprop="hasVariant" itemscope itemtype="https://schema.org/Product">'), 3);
 		assert.ok(!html.includes('<ul data-part="list">'), 'the picker REPLACES the list — one emitter, not two');
+	});
+
+	/* the LOOK is ui/button-group's, reached through the same preset seam as
+	   parts.quote / parts.accordion — tokens.lint.js validates the words */
+	test('parts.buttonGroup overrides the variant words', () => {
+		const html = renderCard(
+			{ fields: { schemaType: 'product', headline: 'X', preset: { $ref: 'card-preset/p' }, details: { subtype: 'ProductGroup', variants: { control: 'buttons', variesBy: ['size'], items: SIZES } } } },
+			{ p: { element: 'ui-card', parts: { buttonGroup: 'outline' } } }
+		);
+		assert.match(html, /<fieldset class="ui-button-group fs-sm" data-variant="outline">/);
 	});
 
 	test('every size keeps its full microdata', () => {

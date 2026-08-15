@@ -1106,8 +1106,12 @@ const variantButton = (item, index, group) => {
    URLs, not bare property names. `control` picks the shape the rows take — a link list
    (default) or a picker; an unknown value falls back to the list, the same loud-skip
    discipline as an unknown axis. Docs: docs/schema.md § Product */
+/* the picker's look is ui/button-group's, not the card's — the segmented-control
+   spelling from its own demo. Override per preset with parts.buttonGroup, which
+   tokens.lint.js validates against that package's vocabulary. */
+const BUTTON_GROUP_VARIANT = 'inline rounded border';
 const VARIANT_CONTROLS = new Set(['list', 'buttons']);
-const variantsPart = (variants, fields) => {
+const variantsPart = (variants, fields, parts = {}) => {
 	const wanted = variants.variesBy || [];
 	const axes = wanted.filter((axis) => VARIANT_AXES.includes(axis));
 	const control = VARIANT_CONTROLS.has(variants.control) ? variants.control : 'list';
@@ -1119,7 +1123,7 @@ const variantsPart = (variants, fields) => {
 		/* an unknown axis is dropped — say so, for the same reason the block-level skip does */
 		+ (axes.length < wanted.length ? `<!-- variesBy axes ignored: not one of ${VARIANT_AXES.join(', ')} -->` : '')
 		+ (control === 'buttons'
-			? `<fieldset class="ui-button-group" data-variant="rounded">${variants.items.map((item, index) => variantButton(item, index, group)).join('')}</fieldset>`
+			? `<fieldset class="ui-button-group fs-sm"${attrs({ 'data-variant': parts.buttonGroup || BUTTON_GROUP_VARIANT })}>${variants.items.map((item, index) => variantButton(item, index, group)).join('')}</fieldset>`
 			: `<ul data-part="list">${variants.items.map(variantItem).join('')}</ul>`);
 };
 
@@ -1177,7 +1181,7 @@ const DETAILS = {
 		   HOST's itemscope. Skipping stays visible. Docs: docs/schema.md § Product */
 		if (d.variants?.items?.length) {
 			html += itemtype === 'ProductGroup'
-				? variantsPart(d.variants, fields)
+				? variantsPart(d.variants, fields, parts)
 				: '<!-- variants ignored: itemtype did not resolve to ProductGroup -->';
 		}
 		return html;

@@ -332,10 +332,12 @@ needed a signal rather than silence.)
 `item.price` is tested with `== null`, not truthiness: a free variant prices at **0**.
 
 **`variants.control` picks the shape the rows take.** `"list"` (default) is the `<ul data-part="list">`
-above; `"buttons"` renders the rounded [`ui/button-group`](../components.md) picker the product
-pages use — one `<label class="ui-button">` per variant, each carrying that variant's `hasVariant`
-scope and metas. The picker **replaces** the list rather than accompanying it, so a size is
-declared once. An unrecognised value falls back to `"list"`.
+above; `"buttons"` renders the [`ui/button-group`](../components.md) picker the product pages use —
+one `<label class="ui-button">` per variant, each carrying that variant's `hasVariant` scope and
+metas. The picker **replaces** the list rather than accompanying it, so a size is declared once.
+An unrecognised value falls back to `"list"`. The look is that package's segmented control
+(`data-variant="inline rounded border"` + `fs-sm`), overridable per preset via
+[`parts.buttonGroup`](content.md#variant-picker--who-owns-the-look).
 
 Two differences from the list form, both deliberate. The radio `name` is **minted** from the
 headline through `slug()` — never author data, and per-headline so two pickers on a page cannot
