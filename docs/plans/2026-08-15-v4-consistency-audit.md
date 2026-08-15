@@ -1,6 +1,9 @@
 # v4 consistency audit — `/layout`, `ui/card`, `ui/base` + the `components.md` satellites
 
-> **Report only. Nothing in this audit changed any code.** Every finding carries a
+> **Report only — one deliberate exception.** No code changed. The single edit outside this
+> file is `docs/plans/open-items.md` item 7, which asserted a repo-wide finding that is
+> false; it is rewritten with a dated correction note, and the reasoning is [F5](#f5--open-itemsmd-item-7-was-wrong--fixed).
+> Every finding carries a
 > `file:line` and a one-command check. Scope is the v4 surface: `/layout`, `ui/card`,
 > `ui/base`, and the packages listed in [`ui/card/components.md`](../../ui/card/components.md).
 > Out of scope by instruction: every non-v4 folder.
@@ -362,17 +365,24 @@ source is not currently checkable.
 **Fix:** either drop line numbers from `sources` (file-level refs do not rot), or add a
 range check to `tokens.lint.js` — it already parses these files.
 
-### F5 — `open-items.md` item 7 is wrong, and it is mine
+### F5 — `open-items.md` item 7 was wrong — **fixed**
 
-The entry I added in `1007936` frames `data-variant=` as v3 version drift. **It is not.** A
-bare `variant=` is invalid HTML on a built-in element, so `data-variant` on `<fieldset>`,
-`<progress>`, `<ol>`, `<li>` and bare `variant` on `<ui-*>` is a **conformance rule** — one
-the repo already follows everywhere, and which `ui/card/docs/schema.md` already documents
-for `ui/timeline`'s `data-theme` on `<li>`.
+The entry added in `1007936` framed `data-variant=` as v3 version drift and listed three
+version generations. **It is not drift.** A bare `variant=` is invalid HTML on a built-in
+element, so `data-variant` on `<fieldset>`/`<ol>`/`<ul>`/`<blockquote>` and bare `variant`
+on `<ui-*>` is a **conformance rule**. The repo follows it everywhere and already documents
+it twice — `ui/timeline/ui-timeline.css:3` ("*data-variant on native lists*") and
+`docs/schema.md` for `data-theme` on an `<li>` — and `ui/quote/ui-quote.css:8,30` pairs both
+spellings in one selector because it styles both element kinds.
 
-What survives from that entry: the v4-word (`variant="loop seam fade"`) vs v4-token
-(`variant="col lg:row lg:spl(1/1)"`) difference, and the fact that `render.js` hard-codes
-which attribute each `parts` key writes.
+It also named `ui/progress` as a `data-variant` user; that file reads **zero**.
+
+Consequently `render.js` writing `variant=` for `parts.quote`/`parts.accordion` and
+`data-variant=` for `parts.buttonGroup` is correct by construction, not a defect.
+
+**Rewritten** as *"Variant GRAMMAR — flat words vs. parameterised tokens"*, which is the
+part that genuinely was open and is orthogonal to the attribute spelling. It is the one
+change this audit made outside itself; it carries a dated correction note.
 
 ---
 
