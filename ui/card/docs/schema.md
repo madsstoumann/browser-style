@@ -6,13 +6,13 @@
 > here so the demo stays one card grid.
 
 **Four counts, four different quantities — do not conflate them.** The page carries **53
-cards** with **48 distinct root itemtypes**; a structured-data validator reports **54 items**;
+cards** with **48 distinct root itemtypes**; a structured-data validator reports **55 items**;
 the renderer knows **46 `schemaType` keys**.
 
 | Count | What it measures | Reproduce it |
 |---|---|---|
 | **53** | card hosts on the page — `<ui-card>` plus the one `<ui-reveal>` | `grep -oE '<ui-(card\|reveal)[^>]*itemtype="[^"]*"' ui/card/demo/schema.html \| grep -vc 'itemprop='` |
-| **54** | top-level microdata items — **what schema.org's validator reports** | `grep -o '<[a-z-]*[^<>]*itemscope[^<>]*>' ui/card/demo/schema.html \| grep -v 'itemprop=' \| grep -c 'itemtype='` |
+| **55** | top-level microdata items — **what schema.org's validator reports** | `grep -o '<[a-z-]*[^<>]*itemscope[^<>]*>' ui/card/demo/schema.html \| grep -v 'itemprop=' \| grep -c 'itemtype='` |
 | **48** | distinct root `itemtype` values | `grep -oE '<ui-(card\|reveal)[^>]*itemtype="[^"]*"' ui/card/demo/schema.html \| grep -v 'itemprop=' \| grep -o 'itemtype="[^"]*"' \| sort -u \| wc -l` |
 | **46** | `schemaType` keys `render.js` supports (`SCHEMA_TYPES`) | `node -e "import('./ui/card/render.js').then(m => console.log(Object.keys(m.SCHEMA_TYPES).length))"` |
 
@@ -21,8 +21,9 @@ question on the front face, its answer on the flipside, which is what a flashcar
 It counts identically in every column below; only the element differs.
 
 **Items ≠ cards.** A validator counts every *top-level* item — an `itemscope` with no `itemprop`
-of its own — so it sees the 53 cards plus the standalone `EmployerAggregateRating` on the job
-card: 54. Nested scopes (`author` → `Person`, `offers` → `Offer`, …) are properties of their
+of its own — so it sees the 53 cards plus **two items that are not cards**: the standalone
+`EmployerAggregateRating` on the job card, and the page-level `WebSite` (site identity plus the
+sitelinks-searchbox `potentialAction`, which describes the *site*, not any card on it) — 55. Nested scopes (`author` → `Person`, `offers` → `Offer`, …) are properties of their
 parent, not items, and are not counted. The `grep -c 'itemtype='` on the end of that command is
 load-bearing: without it the page's own `<meta name="description">` is counted, because its text
 mentions "itemscope/itemtype" — that is how a naive scan reports 53.
@@ -38,8 +39,10 @@ count once read 50.
 **Types ≠ renderer keys.** The 48 is the 46 base itemtypes, minus `LocalBusiness` (never shown
 plain — the business card is always sharpened), plus the three sharpened [subtypes](#subtypes)
 `ProductGroup`, `CafeOrCoffeeShop` and `DiscussionForumPosting`, which `details.subtype` produces
-with no key of their own. A 49th type, `EmployerAggregateRating`, appears on the job card as a
-**second top-level item** (`itemscope`, no `itemprop`) rather than a card of its own.
+with no key of their own. Two further types appear as **top-level items that are not cards**
+(`itemscope`, no `itemprop`) and so are outside all three card counts: `EmployerAggregateRating`
+on the job card, and the page-level `WebSite`. Neither has a renderer key — `WebSite` is authored
+markup only, because it describes the page's site rather than any content instance.
 
 Every card type from the legacy `content/card` package — plus the nine types added in model
 v1.3 (organization, video, howto, qa, podcast, movie, book, dataset, claim), plus the eleven

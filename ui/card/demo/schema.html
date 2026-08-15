@@ -67,6 +67,27 @@
 
 </head>
 <body data-layout-root data-page-gap="2">
+	<!-- PAGE-LEVEL, not a card: WebSite describes the site this page belongs to, so it is
+	     one top-level item alongside the card grid rather than an item in it. That is why
+	     the page's card count and its validator item count differ (docs/schema.md).
+	     potentialAction is the sitelinks searchbox: the template variable is named by
+	     query-input's valueName, not by any form field — a consumer substitutes the user's
+	     term into urlTemplate. Google only honours it on a site's homepage; here it is the
+	     markup shape that is being demonstrated. -->
+	<div itemscope itemtype="https://schema.org/WebSite" hidden>
+		<meta itemprop="name" content="Browser.style">
+		<meta itemprop="alternateName" content="browser.style">
+		<link itemprop="url" href="https://browser.style/">
+		<div itemprop="potentialAction" itemscope itemtype="https://schema.org/SearchAction">
+			<div itemprop="target" itemscope itemtype="https://schema.org/EntryPoint">
+				<meta itemprop="urlTemplate" content="https://browser.style/search?q={search_term_string}">
+			</div>
+			<div itemprop="query-input" itemscope itemtype="https://schema.org/PropertyValueSpecification">
+				<link itemprop="valueRequired" href="https://schema.org/True">
+				<meta itemprop="valueName" content="search_term_string">
+			</div>
+		</div>
+	</div>
 	<header>
 	<h1>UI: Card — Schema.org</h1>
 	<p class="note">The matching CMS content model is <a href="../../../cms/baseline/models/card.schema.json"><code>cms/baseline/models/card.schema.json</code></a>: a structured envelope + <code>schemaType</code> discriminator + one <code>details</code> object per type. Type-by-type notes: <a href="../docs/schema.md"><code>docs/schema.md</code></a>. See also: <a href="cards.html">cards.html</a> · <a href="media.html">media.html</a> · <a href="content.html">content.html</a>.</p>
@@ -1727,7 +1748,7 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-	</lay-out>
+</lay-out>
 	</main>
 	<!-- optional: media invoker-command polyfill for the podcast <ui-play> button.
 	     The bundled build — the source's shared.js import adds a sequential request chain -->
