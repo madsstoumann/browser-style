@@ -400,6 +400,47 @@ const mapUrl = (geo) => geo?.url || (geo?.latitude != null && geo?.longitude != 
 	? `geo:${geo.latitude},${geo.longitude}`
 	: null);
 
+/* map EMBED src — the frame's iframe, not the "Open in Maps" href above.
+   Coordinates are validated as NUMBERS before they reach a URL; esc() is the second
+   layer, never the first. Docs: docs/media.md § Map */
+const MAP_ZOOM = { min: 1, max: 20, default: 16 };
+const mapCoords = (geo, item = {}) => {
+	const lat = Number(item.latitude ?? geo?.latitude);
+	const lon = Number(item.longitude ?? geo?.longitude);
+	if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
+	if (Math.abs(lat) > 90 || Math.abs(lon) > 180) return null;
+	const zoom = Math.round(Number(item.zoom));
+	return { lat, lon, zoom: Number.isFinite(zoom) ? Math.min(Math.max(zoom, MAP_ZOOM.min), MAP_ZOOM.max) : MAP_ZOOM.default };
+};
+
+/* bbox is (west, south, east, north); the latitude cosine keeps the box square on the
+   ground rather than in degrees, which otherwise flattens it towards the poles */
+const osmEmbed = ({ lat, lon, zoom }) => {
+	const lonHalf = 180 / 2 ** zoom;
+	const latHalf = lonHalf * Math.cos(lat * Math.PI / 180);
+	const box = [lon - lonHalf, lat - latHalf, lon + lonHalf, lat + latHalf].map((n) => n.toFixed(6));
+	return `https://www.openstreetmap.org/export/embed.html?bbox=${box.join(',')}&layer=mapnik&marker=${lat},${lon}`;
+};
+
+/* google needs an API key, apple a MapKit JWT — neither can be built from coordinates
+   alone, so an unkeyed provider falls back to OSM rather than emitting a dead frame */
+const googleEmbed = ({ lat, lon, zoom }, key) =>
+	key ? `https://www.google.com/maps/embed/v1/place?key=${encodeURIComponent(key)}&q=${lat},${lon}&zoom=${zoom}` : null;
+
+const MAP_PROVIDERS = { osm: (c) => osmEmbed(c), google: (c, options) => googleEmbed(c, options.key) };
+
+/* hasMap is a Place property — emit it only where the resolved itemtype descends from
+   Place. Other types still get the frame, just unmarked. Docs: docs/schema.md § Map */
+const HAS_MAP_TYPES = new Set(['business', 'location']);
+
+const mapFrame = (item, fields, type) => {
+	const coords = mapCoords(fields.details?.geo, item);
+	const src = item.src || (coords && (MAP_PROVIDERS[item.provider]?.(coords, fields.details?.map || {}) || osmEmbed(coords)));
+	if (!src) return '';
+	const title = item.alt || `Map of ${plain(fields.headline) || 'this location'}`;
+	return `<iframe${attrs({ src, title, loading: 'lazy', itemprop: HAS_MAP_TYPES.has(type) ? 'hasMap' : null })}></iframe>`;
+};
+
 /* eligibleDuration is QuantitativeValue-typed — expand ISO P<n><unit>, not Duration text */
 const DURATION_UNIT = { D: 'DAY', W: 'WEE', M: 'MON', Y: 'ANN' };
 const eligibleDuration = (iso) => {
@@ -801,6 +842,12 @@ const buildMedia = (fields, type, tokens, preset = {}, frameAttrs = {}, cardId =
 				preload: item.autoplay ? 'auto' : 'metadata',
 				'aria-label': item.alt || null
 			})}${rootVideo || NO_IMAGE_PROP.has(type) ? '' : scope('video', 'VideoObject')}>${rootVideo ? rootVideoMetas(item, src) : NO_IMAGE_PROP.has(type) ? '' : videoMetas(item, src)}</video>`;
+			continue;
+		}
+		if (item.mediaType === 'map') {
+			/* the frame IS the map — coordinates come from details.geo, the same object
+			   geoPart() emits, so the two can never disagree. Docs: docs/media.md § Map */
+			frames += mapFrame(item, fields, type);
 			continue;
 		}
 		if (item.mediaType === 'audio') {

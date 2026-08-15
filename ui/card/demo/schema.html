@@ -13,7 +13,7 @@
 	<!-- srcset origin: handshake in parallel with the CSS download (~3 RTTs off the
 	     eager LCP image on pages.dev/localhost; same-origin no-op on v4.browser.style) -->
 	<link rel="preconnect" href="https://v4.browser.style">
-	<meta name="description" content="53 cards covering 48 distinct schema.org itemtypes on the card hosts (Quiz runs three cards; Review, EventSeries and ProductGroup two each) — re-created with the modern &lt;ui-card&gt; engine: inline microdata (itemscope/itemtype/itemprop), no JSON-LD. The job card carries a 49th type as a second top-level item: EmployerAggregateRating. One optional script: video.js polyfills the media invoker commands behind the podcast play button.">
+	<meta name="description" content="54 cards covering 48 distinct schema.org itemtypes on the card hosts (Quiz runs three cards; Review, EventSeries, ProductGroup and Place two each) — re-created with the modern &lt;ui-card&gt; engine: inline microdata (itemscope/itemtype/itemprop), no JSON-LD. The job card carries a 49th type as a second top-level item: EmployerAggregateRating. One optional script: video.js polyfills the media invoker commands behind the podcast play button.">
 	<!-- One bundle for every card-demo package (source list: ui/card/components.md).
 	     Build: npm run build:demo-css (entry demo.css, output /dist/demo.min.css) -->
 	<link rel="stylesheet" href="/dist/demo.min.css">
@@ -1082,6 +1082,42 @@
 					<p data-part="meta"><a itemprop="telephone" href="tel:+4556482401">+45 56 48 24 01</a></p>
 					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="https://www.google.com/maps/search/?api=1&amp;query=55.0603,14.7009" target="_blank" rel="noopener">Open in Maps</a></nav>
 					<span data-part="tags"><ui-chip itemprop="keywords">Bornholm</ui-chip><ui-chip itemprop="keywords">Landmark</ui-chip></span>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		<!-- The map card: the media frame IS the map. An <iframe> needs no new element —
+		     media.css already sizes iframe like img/video, so the embed inherits asr(),
+		     the radius, the furniture and the carousel. Coordinates come from the same
+		     GeoCoordinates the card already carries — docs/media.md § Map -->
+		<ui-card id="schema-map" variant="col" media="asr(16/9) chip(te)" itemscope itemtype="https://schema.org/Place">
+			<cq-box>
+				<ui-media><iframe src="https://www.openstreetmap.org/export/embed.html?bbox=12.596553,55.706053,12.602047,55.709147&amp;layer=mapnik&amp;marker=55.7076,12.5993" title="Map of Nordhavn Studio, Sundkaj 9, Copenhagen" loading="lazy" itemprop="hasMap"></iframe><ui-chip data-type>Place</ui-chip></ui-media>
+				<ui-content>
+					<div itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates" hidden>
+						<meta itemprop="latitude" content="55.7076">
+						<meta itemprop="longitude" content="12.5993">
+					</div>
+					<small data-part="eyebrow">Find us</small>
+					<h2 data-part="headline" itemprop="name">Nordhavn Studio</h2>
+					<p data-part="summary" itemprop="description">The media frame is the map: an OpenStreetMap embed drawn from the same coordinates the GeoCoordinates scope carries.</p>
+					<address data-part="address" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
+						<span><span itemprop="streetAddress">Sundkaj 9</span></span>
+						<span><span itemprop="postalCode">2150</span> <span itemprop="addressLocality">Copenhagen</span></span>
+						<meta itemprop="addressCountry" content="DK">
+					</address>
+					<dl data-part="hours">
+						<dt>Mon–Fri</dt>
+						<dd>
+							<span itemprop="openingHoursSpecification" itemscope itemtype="https://schema.org/OpeningHoursSpecification" hidden>
+								<meta itemprop="dayOfWeek" content="https://schema.org/Monday"><meta itemprop="dayOfWeek" content="https://schema.org/Tuesday"><meta itemprop="dayOfWeek" content="https://schema.org/Wednesday"><meta itemprop="dayOfWeek" content="https://schema.org/Thursday"><meta itemprop="dayOfWeek" content="https://schema.org/Friday">
+								<meta itemprop="opens" content="09:00"><meta itemprop="closes" content="17:00">
+							</span>
+							9:00–17:00
+						</dd>
+					</dl>
+					<p data-part="meta"><a itemprop="telephone" href="tel:+4535551290">+45 35 55 12 90</a></p>
+					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="https://www.google.com/maps/search/?api=1&amp;query=55.7076,12.5993" target="_blank" rel="noopener">Open in Maps</a></nav>
+					<span data-part="tags"><ui-chip itemprop="keywords">Copenhagen</ui-chip><ui-chip itemprop="keywords">Studio</ui-chip></span>
 				</ui-content>
 			</cq-box>
 		</ui-card>

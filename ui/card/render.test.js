@@ -1085,6 +1085,84 @@ describe('job — EmployerAggregateRating', () => {
 /* demo/schema.html is the markup render.js reproduces, and schema.compare.js now pairs these
    four types too. Each had drifted by one itemprop; these pin the renderer side of the
    contract the page transcribes. */
+/* The map frame: a mediaType the renderer builds a URL for rather than passing through,
+   so every assert here is about what may reach that URL. Docs: docs/media.md § Map */
+describe('map — the frame as an embedded map', () => {
+	const MAP = [{ mediaType: 'map', alt: 'Map of X' }];
+	const place = (geo, media = MAP, extra = {}) =>
+		render({ schemaType: 'location', headline: 'Nordhavn Studio', media, details: { geo, ...extra } });
+
+	test('details.geo builds the OSM bbox + marker', () => {
+		const html = place({ latitude: 55.7076, longitude: 12.5993 });
+		/* zoom 16 → lonHalf 180/2**16 = 0.002747; latHalf scaled by cos(55.7076°) */
+		assert.match(html, /src="https:\/\/www\.openstreetmap\.org\/export\/embed\.html\?bbox=12\.596553,55\.706053,12\.602047,55\.709147&amp;layer=mapnik&amp;marker=55\.7076,12\.5993"/);
+		assert.match(html, /<iframe [^>]*loading="lazy"/);
+	});
+
+	test('zoom widens the box and is clamped to 1–20', () => {
+		assert.match(place({ latitude: 0, longitude: 0 }, [{ mediaType: 'map', zoom: 14 }]), /bbox=-0\.010986,-0\.010986,0\.010986,0\.010986/);
+		/* 99 clamps to 20, not to a box of zero width */
+		assert.match(place({ latitude: 0, longitude: 0 }, [{ mediaType: 'map', zoom: 99 }]), /bbox=-0\.000172,-0\.000172,0\.000172,0\.000172/);
+	});
+
+	test('the title falls back to the headline when alt is absent', () => {
+		assert.match(place({ latitude: 55.7, longitude: 12.6 }, [{ mediaType: 'map' }]), /<iframe [^>]*title="Map of Nordhavn Studio"/);
+	});
+
+	/* hasMap is a Place property — a card whose itemtype is not a Place still gets the
+	   map, but must not claim the property. */
+	test('itemprop="hasMap" is gated to Place-descended types', () => {
+		assert.match(place({ latitude: 55.7, longitude: 12.6 }), /<iframe [^>]*itemprop="hasMap"/);
+		assert.match(
+			render({ schemaType: 'business', headline: 'X', media: MAP, details: { geo: { latitude: 55.7, longitude: 12.6 } } }),
+			/<iframe [^>]*itemprop="hasMap"/
+		);
+		const article = render({ schemaType: 'article', headline: 'X', media: MAP, details: { geo: { latitude: 55.7, longitude: 12.6 } } });
+		assert.match(article, /<iframe /, 'the frame still renders');
+		assert.ok(!article.includes('hasMap'), 'but never claims hasMap on a non-Place');
+	});
+
+	/* hasMap is single-valued here: the "Open in Maps" action deliberately stays
+	   unmarked, so a map card declares the property exactly once. */
+	test('hasMap is emitted once, not also on the map action link', () => {
+		const html = place({ latitude: 55.7, longitude: 12.6, url: 'https://maps.example/x' });
+		assert.equal(html.match(/hasMap/g).length, 1);
+	});
+
+	test('unusable coordinates render no frame at all', () => {
+		for (const geo of [undefined, {}, { latitude: 55.7 }, { latitude: 'north', longitude: 12.6 }, { latitude: NaN, longitude: 12.6 }, { latitude: 91, longitude: 12.6 }, { latitude: 55.7, longitude: 181 }]) {
+			assert.ok(!place(geo).includes('<iframe'), `expected no frame for ${JSON.stringify(geo)}`);
+		}
+	});
+
+	test('an item may override details.geo with its own point', () => {
+		assert.match(place({ latitude: 0, longitude: 0 }, [{ mediaType: 'map', latitude: 55.7076, longitude: 12.5993 }]), /marker=55\.7076,12\.5993/);
+	});
+
+	/* google/apple cannot be built from coordinates alone — an unkeyed provider must
+	   degrade to OSM rather than emit a dead frame. */
+	test('an unknown or unkeyed provider falls back to OSM', () => {
+		assert.match(place({ latitude: 55.7, longitude: 12.6 }, [{ mediaType: 'map', provider: 'apple' }]), /openstreetmap\.org/);
+		assert.match(place({ latitude: 55.7, longitude: 12.6 }, [{ mediaType: 'map', provider: 'google' }]), /openstreetmap\.org/);
+	});
+
+	test('google builds its embed once details.map.key is set', () => {
+		const html = place({ latitude: 55.7, longitude: 12.6 }, [{ mediaType: 'map', provider: 'google' }], { map: { key: 'AI za&1' } });
+		assert.match(html, /src="https:\/\/www\.google\.com\/maps\/embed\/v1\/place\?key=AI%20za%261&amp;q=55\.7,12\.6&amp;zoom=16"/);
+	});
+
+	test('hostile input cannot break out of the iframe attributes', () => {
+		const html = place({ latitude: 55.7, longitude: 12.6 }, [{
+			mediaType: 'map',
+			alt: '"><script>alert(1)</script>',
+			src: '"><script>alert(2)</script>'
+		}]);
+		assert.ok(!html.includes('<script>'), 'raw <script> must never reach output');
+		assert.match(html, /title="&quot;&gt;&lt;script&gt;alert\(1\)&lt;\/script&gt;"/);
+		assert.match(html, /src="&quot;&gt;&lt;script&gt;alert\(2\)&lt;\/script&gt;"/);
+	});
+});
+
 describe('reference-page reconciliation — contact, course, place, social', () => {
 	test('a ContactPoint headline is its name', () => {
 		const html = render({ schemaType: 'contact', headline: 'Talk to a human', details: { contactType: 'customer support' } });

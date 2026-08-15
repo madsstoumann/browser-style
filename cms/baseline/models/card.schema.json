@@ -210,13 +210,40 @@
               { "value": "video", "label": "Video" },
               { "value": "youtube", "label": "YouTube" },
               { "value": "vimeo", "label": "Vimeo" },
-              { "value": "audio", "label": "Audio" }
+              { "value": "audio", "label": "Audio" },
+              { "value": "map", "label": "Map" }
             ]
           },
           "src": {
             "type": "url",
             "title": "External Source",
-            "description": "External URL or provider video id — used when no asset is set (e.g. YouTube/Vimeo id)"
+            "description": "External URL or provider video id — used when no asset is set (e.g. YouTube/Vimeo id). Map only: an explicit embed URL, bypassing the provider builder"
+          },
+          "provider": {
+            "type": "select",
+            "title": "Map Provider",
+            "localized": false,
+            "default": "osm",
+            "description": "Map only — google needs details.map.key; anything unbuildable falls back to OpenStreetMap",
+            "options": [
+              { "value": "osm", "label": "OpenStreetMap" },
+              { "value": "google", "label": "Google Maps" }
+            ]
+          },
+          "zoom": {
+            "type": "number",
+            "title": "Map Zoom",
+            "description": "Map only — 1–20, default 16"
+          },
+          "latitude": {
+            "type": "number",
+            "title": "Map Latitude",
+            "description": "Map only — overrides details.geo.latitude when the map must show a different point"
+          },
+          "longitude": {
+            "type": "number",
+            "title": "Map Longitude",
+            "description": "Map only — overrides details.geo.longitude when the map must show a different point"
           },
           "alt": {
             "type": "string",

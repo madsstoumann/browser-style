@@ -622,6 +622,65 @@ Demo: [`media.collage.html`](../demo/media.collage.html).
 
 ---
 
+## Map — the frame as an embedded map
+
+A card with coordinates can make the **map** its media, instead of a photo of the place. There is **no `<ui-map>` element and no new token**: the frame already styles `iframe` exactly like `img` / `video` —
+
+```css
+:where(ui-media) & :is(iframe, img, picture, video) { inset: 0; position: absolute; block-size: 100%; inline-size: 100%; border: 0; }
+```
+
+— so an embed inherits `asr()`, `rds()`, the `shp()` clip, the overlay furniture, the carousel and the lightbox with nothing added. Registering an element for it would re-earn all of that and buy nothing; the difference between providers is a **URL**, not a DOM, so the seam lives in `render.js`.
+
+**CSS-only** (the reference markup on [`schema.html`](../demo/schema.html)):
+
+```html
+<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/Place">
+  <cq-box>
+    <ui-media><iframe src="https://www.openstreetmap.org/export/embed.html?bbox=…&amp;layer=mapnik&amp;marker=55.7076,12.5993"
+      title="Map of Nordhavn Studio" loading="lazy" itemprop="hasMap"></iframe></ui-media>
+    …
+```
+
+**From content**, one media item with no URL in it at all — the coordinates come from `details.geo`, the same object that emits the card's `GeoCoordinates` scope, so the map and the microdata can never drift apart:
+
+```json
+"media": [{ "mediaType": "map", "alt": "Map of Nordhavn Studio" }],
+"details": { "geo": { "latitude": 55.7076, "longitude": 12.5993 } }
+```
+
+| Field | Default | Notes |
+|---|---|---|
+| `provider` | `osm` | `osm` · `google`. An unknown or unbuildable provider falls back to OSM |
+| `zoom` | `16` | clamped to 1–20 |
+| `latitude` / `longitude` | `details.geo` | per-item override, for a map that must point somewhere else (a parking entrance) |
+| `alt` | `Map of {headline}` | becomes the iframe `title` — an iframe needs one |
+| `src` | — | an explicit embed URL, bypassing the builder entirely |
+
+### Providers — only one is keyless
+
+| Provider | Ships | Why |
+|---|---|---|
+| **OpenStreetMap** | ✅ the default | `openstreetmap.org/export/embed.html` needs no key |
+| **Google Maps** | builder present, arms on `details.map.key` | the Maps Embed API requires an API key |
+| **Apple Maps** | ✖ deferred | the Maps Embed API requires a MapKit JWT bound to a Team ID, a Maps ID and registered domains — not derivable from coordinates |
+
+For anything keyed, `src` on the item is the escape hatch.
+
+### Coordinates are validated as numbers, never as text
+
+`mapCoords()` runs `Number.isFinite` and a range check (lat ±90, lon ±180) **before** anything reaches a URL; `esc()` is the second layer, not the first — the same discipline as the `SUBTYPES` allowlist ([schema.md § Subtypes](./schema.md#subtypes)). A record that fails renders **no frame**, rather than a broken one.
+
+The OSM bbox is `(west, south, east, north)`, and its latitude half-span is scaled by `cos(latitude)` so the box stays square **on the ground** — in raw degrees it would flatten towards the poles.
+
+### `hasMap` is the property, and it is emitted once
+
+`itemprop="hasMap"` rides the `<iframe>` — HTML takes a frame's microdata value from its `src`, so no companion `<link>` is needed. It is gated to types whose itemtype descends from `Place` (`business`, `location`); other types still get the frame, unmarked. The `Open in Maps` action link in `DETAILS.location` deliberately stays **unmarked**, so a map card declares the property exactly once — see [schema.md § One property, one value](./schema.md#one-property-one-value).
+
+Outside a card, `ui/map` carries a standalone `.ui-map` class for the same embed on a bare page.
+
+---
+
 ## Lightbox — the popover fullscreen gallery
 
 Any frame — a `nav` carousel, a [collage](#collage--a-lay-out-grid-inside-the-frame), or a plain image — can open **fullscreen as a lightbox**, with the **same DOM in both states**: no re-render, no attribute churn. Three ingredients:

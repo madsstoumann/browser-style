@@ -712,7 +712,7 @@ navigation; `prefers-reduced-motion` keeps default timing.
 
 | Page | Shows |
 |------|-------|
-| [`schema.html`](../demo/schema.html) | Hand-authored reference — 53 cards, 48 distinct itemtypes, with microdata ([counting rule](schema.md)) |
+| [`schema.html`](../demo/schema.html) | Hand-authored reference — 54 cards, 48 distinct itemtypes, with microdata ([counting rule](schema.md)) |
 | [`render.html`](../demo/render.html) | The 52 cards of [`data/index.json`](../data/index.json) rendered by `render.js` from UCF data + presets |
 | [`carousel.render.html`](../demo/carousel.render.html) · [`video.render.html`](../demo/video.render.html) | The original demo pages recreated data-driven: presets from [`data/card.presets.demo.json`](../data/card.presets.demo.json) (129 presets extracted from the originals) + UCF instances in [`data/demo/`](../data/demo). Each page lists its not-expressible demos in a bottom note. The `media` and `reveal` twins were dropped — [`media.html`](../demo/media.html) and [`../reveal/index.html`](../../reveal/index.html) are the better pages |
 | [`article.render.html`](../demo/article.render.html) + [`articles/`](../demo/articles/) | The article pattern above, live and **fully static** (pre-rendered by `articles/build.js`): teaser cards with stretched-link headlines → cross-document view transition morphs the whole card into the per-article page and back (`card-{id}` + nested `hero-{id}` names via `data-view` + CSS `attr()`), body-instead-of-summary via the `prose` preset, plain `<a>` navigation, zero runtime JS |
