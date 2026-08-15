@@ -138,8 +138,10 @@
 		& > div[itemscope]:not([data-part], [hidden]) { display: contents; }
 
 		/* quiz question group — a real box, NOT dissolved: the fieldset/legend pair is the
-		   grouping the radios need. UA chrome off. Docs: docs/content.md § Options */
-		& > fieldset {
+		   grouping the radios need. UA chrome off. Docs: docs/content.md § Options
+		   .ui-button-group opts OUT — its own `all: unset` is :where()-wrapped (specificity
+		   0) and this rule would re-plate it. Docs: docs/content.md § Variant picker */
+		& > fieldset:where(:not(.ui-button-group)) {
 			/* boxed like ui/accordion's `bordered rounded` — the two Quiz cards sit together */
 			border: var(--ui-content-fieldset-border-width, var(--input-border-width, var(--border-width))) solid var(--ui-content-fieldset-border-color, var(--color-border));
 			border-radius: var(--ui-content-fieldset-radius, 1ch);

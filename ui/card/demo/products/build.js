@@ -19,7 +19,6 @@ import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { renderCard } from '../../render.js';
-import { buildCfUrl } from '../../srcset.js';
 import { CDN_BASE, CONTRAST_STYLE, HEAD_COMMON, VT_HEAD, esc, withPreset } from '../build.shared.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -41,13 +40,16 @@ const COLORS = [
 ];
 
 const file = (slug) => `silk-gown-${slug}.html`;
-const swatch = (slug) => buildCfUrl(`/assets/images/silkgown-${slug}.png`, { format: 'auto', quality: 80, fit: 'cover', width: 112, height: 112 }, CDN_BASE);
 
 /* the other three colourways — cross-page navigation, so no itemprop: these are not
-   properties of this page's item, and isVariantOf below already ties the family together */
+   properties of this page's item, and isVariantOf below already ties the family together.
+   Each swatch is that colourway's REAL photo, served from the local file with NO cdn
+   srcset: a failed candidate never falls back to src, so a CDN srcset leaves the swatches
+   blank off the zone. The four 509px originals are already in cache — schema.html's
+   collage, the page you arrive from, loads exactly these. */
 const siblings = (current) => `<nav class="variant-swatches" aria-label="Other colourways">
 					${COLORS.filter((c) => c.slug !== current).map((c) => `<a href="${file(c.slug)}">
-						<img src="/assets/images/silkgown-${c.slug}.png" alt="" srcset="${esc(swatch(c.slug))} 1x, ${esc(buildCfUrl(`/assets/images/silkgown-${c.slug}.png`, { format: 'auto', quality: 80, fit: 'cover', width: 224, height: 224 }, CDN_BASE))} 2x" width="56" height="56" loading="lazy" decoding="async">
+						<img src="/assets/images/silkgown-${c.slug}.png" alt="" width="509" height="509" loading="lazy" decoding="async">
 						<span>${esc(c.name)}</span>
 					</a>`).join('\n\t\t\t\t\t')}
 				</nav>`;
@@ -94,7 +96,9 @@ const page = (ucf, color) => {
 		   here, deliberately: see the header comment in products/build.js */
 		body { margin-inline: auto; max-inline-size: 64rem; }
 		.product-view { margin-block-end: var(--spacing-2xl); }
-		/* the colourway switcher — cross-page navigation, not a content part */
+		/* the colourway switcher — cross-page navigation, not a content part.
+		   Caption UNDER the swatch: the row reads as a set of choices, and each
+		   label sits with the photo it names instead of between two of them. */
 		.variant-swatches {
 			display: flex;
 			flex-wrap: wrap;
@@ -103,14 +107,17 @@ const page = (ucf, color) => {
 				align-items: center;
 				color: inherit;
 				display: flex;
+				flex-direction: column;
 				font-size: var(--ui-content-fs-sm, 0.875rem);
-				gap: var(--spacing-xs);
+				gap: var(--spacing-2xs, 0.25rem);
+				inline-size: 5rem;
+				text-align: center;
 				text-decoration: none;
 			}
 			& img {
+				aspect-ratio: 1;
 				border-radius: var(--radius-md, 0.5rem);
-				block-size: 3.5rem;
-				inline-size: 3.5rem;
+				inline-size: 100%;
 				object-fit: cover;
 			}
 			& a:hover span { text-decoration: underline; }

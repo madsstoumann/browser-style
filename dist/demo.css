@@ -11748,7 +11748,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     & > div[itemscope]:not([data-part], [hidden]) {
       display: contents;
     }
-    & > fieldset {
+    & > fieldset:where(:not(.ui-button-group)) {
       border: var(--ui-content-fieldset-border-width, var(--input-border-width, var(--border-width))) solid var(--ui-content-fieldset-border-color, var(--color-border));
       border-radius: var(--ui-content-fieldset-radius, 1ch);
       min-inline-size: 0;
