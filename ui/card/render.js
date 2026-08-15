@@ -77,7 +77,13 @@ export const SCHEMA_TYPES = {
 	medical: 'MedicalWebPage',
 	music: 'MusicAlbum',
 	glossary: 'DefinedTermSet',
-	podcastseries: 'PodcastSeries'
+	podcastseries: 'PodcastSeries',
+	comicseries: 'ComicSeries',
+	/* schema.org has no Artist TYPE — `artist` is a PROPERTY (domain ComicIssue /
+	   ComicStory / VisualArtwork, range Person). So an artist card is a Person, the
+	   same itemtype `profile` resolves to; the key names the editorial shape, and the
+	   `artist` property itself is what a ComicIssue uses to point back here. */
+	artist: 'Person'
 };
 
 /* itemtype sharpening — narrows a card to an allowlisted subtype of its base type.
@@ -179,7 +185,7 @@ const SUMMARY_PROP = { review: 'reviewBody', quote: 'text', announcement: 'text'
    owns it: job's eyebrow is display text, `industry` is details.industry. Docs: schema.md § Job.
    Exported for render.test.js, which re-adds the removed `job: 'industry'` entry to prove the
    duplicate-property guard below still holds when this map grows. */
-export const EYEBROW_PROP = { article: 'articleSection', news: 'articleSection', product: 'category', recipe: 'recipeCategory', course: 'about', video: 'genre', movie: 'genre', book: 'genre', tvseries: 'genre', music: 'genre' };
+export const EYEBROW_PROP = { article: 'articleSection', news: 'articleSection', product: 'category', recipe: 'recipeCategory', course: 'about', video: 'genre', movie: 'genre', book: 'genre', tvseries: 'genre', music: 'genre', comicseries: 'genre' };
 /* published itemprop: JobPosting/SpecialAnnouncement use datePosted, VideoObject uploadDate */
 const PUBLISHED_PROP = { job: 'datePosted', announcement: 'datePosted', video: 'uploadDate' };
 /* datePosted is typed Date, so a timestamp is out of range; uploadDate takes a DateTime */
@@ -196,7 +202,7 @@ const ROOT_VIDEO_TYPES = new Set(['video']);
 /* Person has no keywords property. Intangible-rooted types (JobPosting, Offer,
    Reservation, ContactPoint, ItemList, Observation, MemberProgram, Service) have
    none either — null = visible chips only, no itemprop */
-const TAGS_PROP = { profile: 'knowsAbout', job: null, membership: null, booking: null, contact: null, comparison: null, statistic: null, loyalty: null, service: null };
+const TAGS_PROP = { profile: 'knowsAbout', artist: 'knowsAbout', job: null, membership: null, booking: null, contact: null, comparison: null, statistic: null, loyalty: null, service: null };
 /* byline itemprop — a quote's people are its creators, everyone else's are authors */
 const bylineProp = (type) => type === 'quote' ? 'creator' : 'author';
 
@@ -555,6 +561,17 @@ const byline = (authors, prop = 'author', dateline = '') =>
 const creditsPart = (d) =>
 	(d.director?.name ? `<p data-part="meta"${scope('director', 'Person')}>${esc(d.director.label || 'Director:')} <span itemprop="name">${esc(d.director.name)}</span></p>` : '')
 	+ (d.actors?.length ? `<p data-part="meta">Starring: ${d.actors.map((name) => `<span${scope('actor', 'Person')}><span itemprop="name">${esc(name)}</span></span>`).join(', ')}</p>` : '');
+
+/* comic credits — one Person scope per filled role. All five are ComicIssue's OWN
+   properties: a ComicSeries has none of them, which is why they ride the hasPart rows
+   rather than the card root. Order is the masthead order, not alphabetical.
+   Docs: docs/schema.md § Comic series */
+const COMIC_ROLES = [['artist', 'Art'], ['penciler', 'Pencils'], ['inker', 'Inks'], ['letterer', 'Letters'], ['colorist', 'Colours']];
+const comicCredits = (issue) => {
+	const rows = COMIC_ROLES.filter(([key]) => issue[key])
+		.map(([key, label]) => `${label} <span${scope(key, 'Person')}><span itemprop="name">${esc(issue[key])}</span></span>`);
+	return rows.length ? ` <small>${rows.join(' · ')}</small>` : '';
+};
 
 /* quote part via @browser.style/quote — variant on the <ui-quote> wrapper styles it, data-part stays the card hook */
 const quotePart = (text, { itemprop = 'text', variant = null, cite = null } = {}) =>
@@ -1997,15 +2014,72 @@ const DETAILS = {
 		), d.ordered ?? false);
 		if (d.note) html += `<footer data-part="footer">${esc(d.note)}</footer>`;
 		return html;
+	},
+
+	/* ComicSeries ⊂ Periodical ⊂ CreativeWorkSeries ⊂ (Series, CreativeWork), so the
+	   series' own vocabulary is thin and entirely inherited: `issn`, `startDate` and
+	   `endDate` all arrive from CreativeWorkSeries — NOT from Periodical, which adds
+	   nothing this card uses — on top of the CreativeWork properties.
+	   Docs: docs/schema.md § Comic series */
+	comicseries(d) {
+		let html = meta('issn', d.issn) + meta('startDate', d.startDate) + meta('endDate', d.endDate);
+		const year = startYear(d.startDate);
+		/* No U+2060 word joiners here, unlike the book card's ISBN: an 8-digit ISSN is far
+		   less phone-shaped than a 13-digit ISBN, the page-level
+		   <meta name="format-detection" content="telephone=no"> already covers it, and the
+		   joiners would put invisible characters in hand-authored reference markup that
+		   schema.compare.js compares byte for byte. */
+		const bits = [
+			d.cadence ? esc(d.cadence) : null,
+			d.issueCount != null ? `${num(d.issueCount)} issue${d.issueCount === 1 ? '' : 's'}${year ? ` since ${esc(year)}` : ''}` : null,
+			d.issn ? `ISSN ${esc(d.issn)}` : null
+		].filter(Boolean).join(' · ');
+		if (bits) html += `<p data-part="meta">${bits}</p>`;
+		if (d.publisher) html += `<p data-part="meta"${scope('publisher', 'Organization')}>Published by <span itemprop="name">${esc(d.publisher)}</span></p>`;
+		/* hasPart → ComicIssue is a SAMPLE, not the run: the card lists the current issue,
+		   because the five comic credits are ComicIssue's own properties and a ComicSeries
+		   carries none of them — one row is what gives them somewhere to live, and gives
+		   the artist card something to be pointed at. hasPart makes no completeness claim,
+		   so listing 1 of 12 is honest; it just means cardinality is NOT the issue count.
+		   Ordered by default: issues ascend, so an ordinal marker is true (a podcast feed
+		   descends, hence its `<ul>`). Docs: docs/schema.md § Comic series */
+		return html + scopedList((d.issues || []).map((issue) =>
+			`<li${scope('hasPart', 'ComicIssue')}>${meta('issueNumber', issue.issueNumber)}${meta('datePublished', issue.datePublished)}${meta('image', issue.image)}<span itemprop="name">${esc(issue.name)}</span>${comicCredits(issue)}</li>`
+		), d.ordered ?? true);
+	},
+
+	/* A Person who makes things. The jobTitle · worksFor row is profile's, shared through
+	   SUBHEADLINE_SLOT; what this adds is the craft — hasOccupation and award.
+	   ⚠️ `artist` has NO INVERSE: a Person cannot point at the work they drew, so the tie
+	   to the series is made from the ComicIssue, and the card's own link to it is a plain
+	   <a href> with no itemprop. Docs: docs/schema.md § Artist */
+	artist(d) {
+		let html = '';
+		if (d.location) html += `<p data-part="meta" itemprop="address">${esc(d.location)}</p>`;
+		if (d.occupation?.name) {
+			html += `<p data-part="meta"${scope('hasOccupation', 'Occupation')}>`
+				+ meta('occupationalCategory', d.occupation.category)
+				+ `<span itemprop="name">${esc(d.occupation.name)}</span>${d.occupation.since ? ` · working since ${esc(d.occupation.since)}` : ''}</p>`;
+		}
+		/* award is a repeatable Text, so each one is its OWN span — an itemprop on the
+		   wrapper would collapse the list into a single concatenated value */
+		if (d.awards?.length) {
+			html += `<p data-part="meta">${d.awards.map((award) => `<span itemprop="award">${esc(award)}</span>`).join(' · ')}</p>`;
+		}
+		for (const url of d.sameAs || []) html += meta('sameAs', url);
+		return html;
 	}
 };
 
 /* types whose subheadline row is a schema SCOPE rather than plain envelope text:
    profile's jobTitle/organization, music's byArtist → MusicGroup */
+const personSubheadline = (d, textTag) => d?.jobTitle
+	? `<${textTag} data-part="subheadline"><span itemprop="jobTitle">${esc(d.jobTitle)}</span>${d.organization ? ` · <span${scope('worksFor', 'Organization')}><span itemprop="name">${esc(d.organization)}</span></span>` : ''}</${textTag}>`
+	: '';
 const SUBHEADLINE_SLOT = {
-	profile: (d, textTag) => d?.jobTitle
-		? `<${textTag} data-part="subheadline"><span itemprop="jobTitle">${esc(d.jobTitle)}</span>${d.organization ? ` · <span${scope('worksFor', 'Organization')}><span itemprop="name">${esc(d.organization)}</span></span>` : ''}</${textTag}>`
-		: '',
+	profile: personSubheadline,
+	/* an artist card IS a Person — the same row, shared rather than copied */
+	artist: personSubheadline,
 	music: (d, textTag) => d?.artist
 		? `<${textTag} data-part="subheadline"${scope('byArtist', 'MusicGroup')}><span itemprop="name">${esc(d.artist)}</span></${textTag}>`
 		: ''

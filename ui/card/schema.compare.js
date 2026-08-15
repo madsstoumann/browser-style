@@ -70,6 +70,12 @@ const PAIRS = [
 	['MusicAlbum', 'ui/card/data/music.json'],
 	['DefinedTermSet', 'ui/card/data/glossary.json'],
 	['PodcastSeries', 'ui/card/data/podcastseries.json'],
+	/* only one ComicSeries on the page, but it still matches by id: the bare form requires
+	   a card with NO id=, and this one's id is the artist card's link target */
+	['ComicSeries#schema-comicseries', 'ui/card/data/comicseries.json'],
+	/* the second Person card — `profile` is the first and is matched bare below, so the
+	   artist has to be matched by id, same as the map's second Place */
+	['Person#schema-artist', 'ui/card/data/artist.json'],
 	/* two Observation cards on the page; this is the first (no id) */
 	['Observation', 'ui/card/data/statistic.json'],
 	/* the four cards that had drifted from renderer output — pairing them is what

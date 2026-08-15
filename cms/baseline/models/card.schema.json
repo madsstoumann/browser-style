@@ -2,11 +2,11 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "id": "card",
   "title": "🃏 Card",
-  "description": "A universal, schema.org-driven card. One structured envelope (headline, summary, media, authors, actions, engagement…) shared by every card, a `schemaType` discriminator covering 46 schema.org types, and a single `details` object for type-specific data. Presentation (variant/media/content tokens for <ui-card>/<ui-reveal>) deliberately lives OUTSIDE this model — in a referenced card-preset — so the same card can render as hero, grid item, overlay or flip by swapping one reference.",
+  "description": "A universal, schema.org-driven card. One structured envelope (headline, summary, media, authors, actions, engagement…) shared by every card, a `schemaType` discriminator covering 48 schema.org types (47 distinct itemtypes — `profile` and `artist` both resolve to Person), and a single `details` object for type-specific data. Presentation (variant/media/content tokens for <ui-card>/<ui-reveal>) deliberately lives OUTSIDE this model — in a referenced card-preset — so the same card can render as hero, grid item, overlay or flip by swapping one reference.",
   "metadata": {
     "localized": true,
-    "version": "1.4.0",
-    "lastModified": "2026-07-06",
+    "version": "1.5.0",
+    "lastModified": "2026-08-15",
     "displayField": "internalName"
   },
   "structure": {
@@ -129,7 +129,9 @@
         { "value": "medical", "label": "Health article (MedicalWebPage)" },
         { "value": "music", "label": "Album (MusicAlbum)" },
         { "value": "glossary", "label": "Glossary (DefinedTermSet)" },
-        { "value": "podcastseries", "label": "Podcast series (PodcastSeries)" }
+        { "value": "podcastseries", "label": "Podcast series (PodcastSeries)" },
+        { "value": "comicseries", "label": "Comic series (ComicSeries)" },
+        { "value": "artist", "label": "Artist (Person)" }
       ]
     },
     "eyebrow": {

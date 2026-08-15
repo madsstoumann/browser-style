@@ -1,0 +1,54 @@
+{
+  "$schema": "../../../cms/baseline/models/card.schema.json",
+  "id": "comicseries-1",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-08-15T12:00:00Z",
+    "updatedAt": "2026-08-15T12:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Media"
+  },
+  "fields": {
+    "internalName": "Demo — Comic series",
+    "schemaType": "comicseries",
+    "preset": { "$ref": "card-preset/comic-covers" },
+    "eyebrow": "Superhero",
+    "headline": "CSS Man",
+    "summary": "Faster than a keystroke, more powerful than preprocessors, able to stylize a world — with a utility belt and the power of separation of concerns.",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/cssman-cover-1.png",
+        "alt": "CSS Man #1 — the hero shields his eyes on a rooftop while Jayess watches from a water tower"
+      },
+      {
+        "mediaType": "image",
+        "src": "/assets/images/cssman-cover-2.png",
+        "alt": "CSS Man #2 — a night rooftop under the brace signal, Jayess looming over the skyline"
+      }
+    ],
+    "details": {
+      "issn": "2634-0011",
+      "startDate": "2026-08-01",
+      "publisher": "Web Comics Group",
+      "cadence": "Monthly",
+      "issueCount": 12,
+      "ordered": true,
+      "issues": [
+        {
+          "issueNumber": 1,
+          "name": "A New Hero for a New Age of the Web",
+          "image": "/assets/images/cssman-cover-1.png",
+          "datePublished": "2026-08-01",
+          "artist": "Milton Stanley",
+          "penciler": "Milton Stanley",
+          "inker": "Rosa Vega",
+          "letterer": "Artie Kemp",
+          "colorist": "Dot Halliday"
+        }
+      ]
+    },
+    "tags": ["Silver Age", "Dark Mode", "Web comics"]
+  }
+}
