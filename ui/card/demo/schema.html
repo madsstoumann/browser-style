@@ -27,6 +27,11 @@
 			--color-success: light-dark(hsl(136, 45%, 30%), hsl(136, 25%, 60%));
 			--color-error: light-dark(hsl(360, 65%, 41%), hsl(360, 45%, 62%));
 			--color-text-muted: light-dark(hsl(0, 0%, 42%), hsl(0, 0%, 65%));
+			/* blue: the pale chip's ink IS this hue on a 20% tint of it, so the stock
+			   210 60%/46% only reached 3.67:1 (light) and 3.74:1 (dark) on the collage
+			   tiles. Moved AWAY from the surface in each scheme — darker on light,
+			   lighter on dark — rather than darker in both. */
+			--color-info: light-dark(hsl(210, 65%, 36%), hsl(210, 40%, 62%));
 		}
 		ui-content {
 			/* 85%: double-application (byline > dateline) still clears 4.5:1, gray theme included */
