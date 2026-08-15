@@ -104,7 +104,7 @@
 	<br>
 	<p>
 		With <code>data-variant="inline rounded border"</code> and <code>fs-sm</code>.<br>
-		<strong>Note,</strong> that the border-width is based on <code>font-size</code>, but can be overwritten using <code>--ui-button-group-border-width</code>.
+		<strong>Note,</strong> that the border-width is <code>0.125em</code> — every metric here is <code>em</code> <em>by design</em>, so one <code>size=</code> (or one <code>font-size</code>) sizes the whole control. Don't "fix" it into <code>--border-width-thick</code>, which is absolute. Overwrite with <code>--ui-button-group-border-width</code>.
 	</p>
 	<fieldset class="ui-button-group fs-sm" data-variant="inline rounded border">
 		<label class="ui-button">
@@ -120,6 +120,102 @@
 			Auto
 		</label>
 	</fieldset>
+
+	<br>
+	<h2>The <code>&lt;ui-button-group&gt;</code> host</h2>
+	<p>
+		Wrap the <code>&lt;fieldset&gt;</code> in <code>&lt;ui-button-group&gt;</code> to write the <em>bare</em> attributes —
+		<code>variant</code>, <code>theme</code>, <code>size</code> — the way every other component in the set does. The element
+		<strong>wraps</strong> the fieldset rather than replacing it (the same shape as <code>&lt;ui-accordion&gt;</code> around its
+		<code>&lt;details&gt;</code>), so native radio grouping, <code>&lt;legend&gt;</code> labelling and
+		<code>fieldset[disabled]</code> propagation all survive. It is <code>display: contents</code>, so it adds no box and
+		renders identically to the class form.
+	</p>
+	<ui-button-group variant="inline rounded border" theme="red" size="sm">
+		<fieldset>
+			<legend>Wrapped in <code>&lt;ui-button-group&gt;</code></legend>
+			<label class="ui-button">
+				<input type="radio" name="button-group-host" value="1" data-sr checked>
+				Light mode
+			</label>
+			<label class="ui-button">
+				<input type="radio" name="button-group-host" data-sr value="2">
+				Dark mode
+			</label>
+			<label class="ui-button">
+				<input type="radio" name="button-group-host" data-sr value="3">
+				Auto
+			</label>
+		</fieldset>
+	</ui-button-group>
+	<p>The same control as a <code>&lt;fieldset&gt;</code>, for comparison — pixel for pixel identical:</p>
+	<fieldset class="ui-button-group" data-variant="inline rounded border" data-theme="red" data-size="sm">
+		<legend>Plain <code>&lt;fieldset&gt;</code></legend>
+		<label class="ui-button">
+			<input type="radio" name="button-group-host-fs" value="1" data-sr checked>
+			Light mode
+		</label>
+		<label class="ui-button">
+			<input type="radio" name="button-group-host-fs" data-sr value="2">
+			Dark mode
+		</label>
+		<label class="ui-button">
+			<input type="radio" name="button-group-host-fs" data-sr value="3">
+			Auto
+		</label>
+	</fieldset>
+
+	<br>
+	<h2>Sizes</h2>
+	<p>
+		<code>size="xs sm md lg xl 2xl"</code> — the same <code>em</code> ladder as <a href="/ui/chip/">Chip</a> and
+		<a href="/ui/beacon/">Beacon</a>, defaulting to <code>1em</code> (a control is a hit target sized to its context,
+		where a chip sits smaller than its surroundings). Because the value is <code>em</code>, the ladder
+		<strong>composes</strong>: a <code>size="sm"</code> group is 0.625&times; whatever text surrounds it.
+		<br>
+		<strong>Note,</strong> base's <code>fs-*</code> utilities still work and still win, but they are CSS
+		<em>absolute-size keywords</em> — an <code>fs-sm</code> group measures 13px whatever it sits inside. Pick one axis.
+	</p>
+	<div style="display:grid;gap:.75em;justify-items:start">
+		<fieldset class="ui-button-group" data-variant="inline rounded border" data-size="xs">
+			<label class="ui-button"><input type="radio" name="bg-size-xs" data-sr checked>Small</label>
+			<label class="ui-button"><input type="radio" name="bg-size-xs" data-sr>Medium</label>
+			<label class="ui-button"><input type="radio" name="bg-size-xs" data-sr>Large</label>
+		</fieldset>
+		<fieldset class="ui-button-group" data-variant="inline rounded border" data-size="sm">
+			<label class="ui-button"><input type="radio" name="bg-size-sm" data-sr checked>Small</label>
+			<label class="ui-button"><input type="radio" name="bg-size-sm" data-sr>Medium</label>
+			<label class="ui-button"><input type="radio" name="bg-size-sm" data-sr>Large</label>
+		</fieldset>
+		<fieldset class="ui-button-group" data-variant="inline rounded border" data-size="md">
+			<label class="ui-button"><input type="radio" name="bg-size-md" data-sr checked>Small</label>
+			<label class="ui-button"><input type="radio" name="bg-size-md" data-sr>Medium</label>
+			<label class="ui-button"><input type="radio" name="bg-size-md" data-sr>Large</label>
+		</fieldset>
+		<fieldset class="ui-button-group" data-variant="inline rounded border" data-size="lg">
+			<label class="ui-button"><input type="radio" name="bg-size-lg" data-sr checked>Small</label>
+			<label class="ui-button"><input type="radio" name="bg-size-lg" data-sr>Medium</label>
+			<label class="ui-button"><input type="radio" name="bg-size-lg" data-sr>Large</label>
+		</fieldset>
+		<fieldset class="ui-button-group" data-variant="inline rounded border" data-size="xl">
+			<label class="ui-button"><input type="radio" name="bg-size-xl" data-sr checked>Small</label>
+			<label class="ui-button"><input type="radio" name="bg-size-xl" data-sr>Medium</label>
+			<label class="ui-button"><input type="radio" name="bg-size-xl" data-sr>Large</label>
+		</fieldset>
+		<fieldset class="ui-button-group" data-variant="inline rounded border" data-size="2xl">
+			<label class="ui-button"><input type="radio" name="bg-size-2xl" data-sr checked>Small</label>
+			<label class="ui-button"><input type="radio" name="bg-size-2xl" data-sr>Medium</label>
+			<label class="ui-button"><input type="radio" name="bg-size-2xl" data-sr>Large</label>
+		</fieldset>
+	</div>
+	<p>The same <code>size="sm"</code> group in a <code>2em</code> context — it tracks, where <code>fs-sm</code> would not:</p>
+	<div style="font-size:2em">
+		<fieldset class="ui-button-group" data-variant="inline rounded border" data-size="sm">
+			<label class="ui-button"><input type="radio" name="bg-size-ctx" data-sr checked>Small</label>
+			<label class="ui-button"><input type="radio" name="bg-size-ctx" data-sr>Medium</label>
+			<label class="ui-button"><input type="radio" name="bg-size-ctx" data-sr>Large</label>
+		</fieldset>
+	</div>
 
 	<br>
 	<h2>With opposite color-scheme</h2>
@@ -180,7 +276,8 @@
 	<p>
 		<code>data-theme="red"</code> · <code>data-theme="green pale"</code> · <code>data-theme="blue muted"</code><br>
 		<strong>Note</strong> the <code>data-</code> prefix: a bare <code>theme</code> attribute is invalid on a
-		<code>&lt;fieldset&gt;</code>. The hue paints the <em>checked segment</em>, not the group's own box, so
+		<code>&lt;fieldset&gt;</code> — on the <code>&lt;ui-button-group&gt;</code> host above it is simply <code>theme</code>.
+		The hue paints the <em>checked segment</em>, not the group's own box, so
 		the group opts out of the resolver's universal paint. All nine hues work, and so do the
 		<code>pale</code> / <code>muted</code> modifiers — see <a href="../base/theme.md">base/theme.md</a>.
 	</p>

@@ -111,20 +111,24 @@ neighbours `lintSlideLists` and `lintSubtypes` *parse* their counterpart files. 
 
 ## B. Wiring gaps
 
-### B1 — two packages in `components.md` are not packages
+### B1 — two packages in `components.md` are not packages *(half resolved)*
 
-`ui/highlight/` and `ui/button-group/` contain **no `package.json`**. Both are listed under
-a column headed **Package** in `ui/card/components.md`; both are emitted by the renderer
-(`render.js:283` emits `<high-light>`, `:1126` emits `.ui-button-group`).
+> **Update — `ui/button-group` is resolved.** It ships a manifest, is a workspace member and
+> is a declared optional peer of `ui/card`; `4.1.0` also added the `<ui-button-group>` host
+> and a `size=` ladder. **`ui/highlight` is still open.**
 
-With no manifest they are in no npm workspace (root `package.json` globs `ui/*` and npm
-skips manifest-less directories), so they are never versioned by `version-all`, never
-published, and cannot appear in `ui/card`'s `peerDependencies` — where every other emitted
-sub-component does appear.
+`ui/highlight/` contains **no `package.json`**. It is listed under a column headed
+**Package** in `ui/card/components.md` and is emitted by the renderer (`render.js:283`
+emits `<high-light>`).
+
+With no manifest it is in no npm workspace (root `package.json` globs `ui/*` and npm skips
+manifest-less directories), so it is never versioned by `version-all`, never published, and
+cannot appear in `ui/card`'s `peerDependencies` — where every other emitted sub-component
+does appear.
 
 ```sh
-ls ui/highlight ui/button-group          # index.html, readme.md, *.css — no package.json
-grep -c "highlight\|button-group" ui/card/package.json   # 0
+ls ui/highlight                                # index.html, readme.md, *.css — no package.json
+grep -c "highlight" ui/card/package.json       # 0
 ```
 
 ### B2 — `<ui-badge>` is emitted, peer-declared, and styled nowhere
@@ -307,8 +311,9 @@ explicit rationale. Nothing else follows that.
 ### E4 — PascalCase referenced in live code, and one dangling name
 
 The rule says the PascalCase aliases exist for backward compatibility and are *"never used
-in new code."* They are referenced from `ui/base/utility.css` (~19 sites),
-`ui/base/webcomponents.css`, and `ui/button-group`.
+in new code."* They are referenced from `ui/base/utility.css` (~19 sites) and
+`ui/base/webcomponents.css`. (`ui/button-group` was the third site; its v4 conversion
+cleared it.)
 
 Worse, `ui/gradient-text/ui-gradient-text.css:27` and `:63` read **`--GradientText`, which
 is defined nowhere in the repo**:
