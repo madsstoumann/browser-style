@@ -352,7 +352,7 @@
       "element": "ui-card",
       "variant": "col lg:row lg:spl(1/1) shd(non)",
       "media": "asr(3/4) rds(lg) clip axis(y) nav(mrk) mrk(tmb) mrk(rail) mrk(lg) tmb(3/4) lightbox(bs)",
-      "media-open": "nav(mrk) mrk(tmb) mrk(blw) mrk(lg)",
+      "media-open": "nav mrk(tmb) mrk(blw) mrk(lg)",
       "content": "scl(lg)",
       "headingTag": "h2",
       "parts": {
