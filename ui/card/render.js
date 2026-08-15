@@ -562,17 +562,6 @@ const creditsPart = (d) =>
 	(d.director?.name ? `<p data-part="meta"${scope('director', 'Person')}>${esc(d.director.label || 'Director:')} <span itemprop="name">${esc(d.director.name)}</span></p>` : '')
 	+ (d.actors?.length ? `<p data-part="meta">Starring: ${d.actors.map((name) => `<span${scope('actor', 'Person')}><span itemprop="name">${esc(name)}</span></span>`).join(', ')}</p>` : '');
 
-/* comic credits — one Person scope per filled role. All five are ComicIssue's OWN
-   properties: a ComicSeries has none of them, which is why they ride the hasPart rows
-   rather than the card root. Order is the masthead order, not alphabetical.
-   Docs: docs/schema.md § Comic series */
-const COMIC_ROLES = [['artist', 'Art'], ['penciler', 'Pencils'], ['inker', 'Inks'], ['letterer', 'Letters'], ['colorist', 'Colours']];
-const comicCredits = (issue) => {
-	const rows = COMIC_ROLES.filter(([key]) => issue[key])
-		.map(([key, label]) => `${label} <span${scope(key, 'Person')}><span itemprop="name">${esc(issue[key])}</span></span>`);
-	return rows.length ? ` <small>${rows.join(' · ')}</small>` : '';
-};
-
 /* quote part via @browser.style/quote — variant on the <ui-quote> wrapper styles it, data-part stays the card hook */
 const quotePart = (text, { itemprop = 'text', variant = null, cite = null } = {}) =>
 	`<ui-quote data-part="quote"${attrs({ variant })}><blockquote itemprop="${esc(itemprop)}"><q>${esc(text)}</q>${cite ? `<cite>${esc(cite)}</cite>` : ''}</blockquote></ui-quote>`;
@@ -2019,8 +2008,7 @@ const DETAILS = {
 	/* ComicSeries ⊂ Periodical ⊂ CreativeWorkSeries ⊂ (Series, CreativeWork), so the
 	   series' own vocabulary is thin and entirely inherited: `issn`, `startDate` and
 	   `endDate` all arrive from CreativeWorkSeries — NOT from Periodical, which adds
-	   nothing this card uses — on top of the CreativeWork properties. The five comic
-	   credits belong to ComicIssue and ride the hasPart rows — see comicCredits().
+	   nothing this card uses — on top of the CreativeWork properties.
 	   Docs: docs/schema.md § Comic series */
 	comicseries(d) {
 		let html = meta('issn', d.issn) + meta('startDate', d.startDate) + meta('endDate', d.endDate);
@@ -2037,12 +2025,14 @@ const DETAILS = {
 		].filter(Boolean).join(' · ');
 		if (bits) html += `<p data-part="meta">${bits}</p>`;
 		if (d.publisher) html += `<p data-part="meta"${scope('publisher', 'Organization')}>Published by <span itemprop="name">${esc(d.publisher)}</span></p>`;
-		/* issues ASCEND, so ordinal markers are true — the opposite of a podcast feed.
-		   Each row carries its OWN cover as image: the media area shows the same covers
-		   as images of the series, which is valid but says nothing about which is which. */
-		return html + scopedList((d.issues || []).map((issue) =>
-			`<li${scope('hasPart', 'ComicIssue')}>${meta('issueNumber', issue.issueNumber)}${meta('datePublished', issue.datePublished)}${meta('image', issue.image)}<span itemprop="name">${esc(issue.name)}</span>${comicCredits(issue)}</li>`
-		), d.ordered ?? true);
+		/* Deliberately NO hasPart → ComicIssue list: the covers in the media frame are the
+		   card's inventory of issues, and a numbered list under them only restated it. The
+		   cost is real and worth knowing — with no hasPart, the issue count has no machine
+		   answer at all (there is no count property either), and the comic-specific credits
+		   `artist`/`penciler`/`inker`/`letterer`/`colorist` have nowhere to live, since all
+		   five are ComicIssue's and none is a ComicSeries property.
+		   Docs: docs/schema.md § Comic series */
+		return html;
 	},
 
 	/* A Person who makes things. The jobTitle · worksFor row is profile's, shared through

@@ -14,13 +14,13 @@
     "schemaType": "artist",
     "preset": { "$ref": "card-preset/stack-portrait" },
     "eyebrow": "Comic artist",
-    "headline": "M. Stanley",
+    "headline": "Milton Stanley",
     "summary": "Pencils and inks every issue of CSS Man at the same drawing board he started on. Keeps a sign above it reading “Comics are the poetry of the people!”",
     "media": [
       {
         "mediaType": "image",
         "src": "/assets/images/mstanley.png",
-        "alt": "M. Stanley at his drawing board, inking a CSS Man page under an angled desk lamp"
+        "alt": "Milton Stanley at his drawing board, inking a CSS Man page under an angled desk lamp"
       }
     ],
     "actions": [

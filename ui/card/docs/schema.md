@@ -852,27 +852,31 @@ parts, and the machine-readable answer is the `hasPart` cardinality. `startDate`
 own vocabulary is thin and entirely inherited: `issn`, `startDate` and `endDate` all arrive from
 **`CreativeWorkSeries`** — `issn`'s domain is `Dataset, WebSite, CreativeWorkSeries, Blog`, so
 `Periodical` is merely on the path and contributes nothing this card uses — plus
-`genre` / `publisher` / `hasPart` / `keywords` from `CreativeWork`. Issues are `hasPart` → `ComicIssue`
-in an `<ol>` — issues **ascend**, so ordinal markers are true here, the opposite of the podcast
-feed above. The switch is data (`details.ordered`), not type.
+`genre` / `publisher` / `keywords` from `CreativeWork`.
 
-⚠️ **There is no issue-count property** — the same trap as `PodcastSeries`. `numberOfEpisodes`
-is scoped to `CreativeWorkSeason`, `RadioSeries`, `TVSeries` and `VideoGameSeries`; neither
-`ComicSeries` nor `Periodical` is in its domain, and no `numberOfIssues` exists at all. "12
-issues since 2026" is prose in the `meta` part; the `hasPart` cardinality is the machine answer.
+**The card deliberately does not enumerate its issues.** The covers in the media frame are the
+inventory; a numbered `hasPart` → `ComicIssue` list under them only restated it. That choice has
+two costs, both worth stating rather than discovering:
 
-**The five credits belong to the issue, not the series.** `artist`, `penciler`, `inker`,
-`letterer` and `colorist` are `ComicIssue`'s own properties (shared with `ComicStory`), so they
-ride the `hasPart` rows — one `Person` scope per filled role, and an unfilled role emits nothing
-rather than an empty scope. A `ComicSeries` cannot carry them, which is exactly why the card
-puts a credit line under each issue instead of a masthead under the headline.
+⚠️ **The issue count has no machine counterpart at all.** `numberOfEpisodes` is scoped to
+`CreativeWorkSeason`, `RadioSeries`, `TVSeries` and `VideoGameSeries` — neither `ComicSeries`
+nor any of its ancestors is in its domain — and no `numberOfIssues` exists. `PodcastSeries` hits
+the same wall but answers it with `hasPart` cardinality; without a `hasPart` list, "12 issues
+since 2026" is prose in the `meta` part and nothing more.
+
+⚠️ **The five comic credits have nowhere to live.** `artist`, `penciler`, `inker`, `letterer` and
+`colorist` are `ComicIssue`'s own properties (shared with `ComicStory`); a `ComicSeries` carries
+none of them. With no issue scope on the card, none of the five is emitted. If you want them
+back, the issue rows are the only vocabulary-correct home — `ComicSeries` has no masthead-style
+credit property to hang them on. The nearest series-level substitute is `creator` (domain
+`CreativeWork`, range `Person`/`Organization`), which is a weaker claim: it names a maker of the
+series, not who inked which issue.
 
 **Both covers are the series' `image`.** The media area is a carousel (`nav(mrk) nav(arw)`, the
 `comic-covers` preset) and each `<img>` carries `itemprop="image"` — repeatable on
-`CreativeWork`, and the same convention the [gallery card](#gallery--imagegallery) uses. That
-says nothing about *which* cover belongs to which issue, so each `hasPart` row additionally
-carries its own `<meta itemprop="image">`. Different scopes, so this is not a duplicate
-property.
+`CreativeWork`, and the same convention the [gallery card](#gallery--imagegallery) uses. It says
+nothing about which cover is which issue, and with the issue rows gone there is nowhere that
+could.
 
 ⚠️ **No U+2060 word joiners on the ISSN**, unlike the book card's ISBN. An 8-digit ISSN is far
 less phone-shaped than a 13-digit ISBN, the page-level `<meta name="format-detection"
@@ -887,6 +891,13 @@ range `Person`). So an artist card is a `Person` — the second one on the page,
 [profile](#profile--person) — and the `artist` *property* is what a `ComicIssue` uses to point
 at it. The `artist` `schemaType` key names the editorial shape, not an itemtype.
 
+⚠️ **Nothing on the page actually makes that link.** `artist`'s only domains are `ComicIssue`,
+`ComicStory` and `VisualArtwork`, and the [comic series card](#comic-series--comicseries) emits
+no issue scopes — so the two cards are related editorially and by a plain
+`<a href="#schema-comicseries">`, not by any property a consumer can follow. Restoring the tie
+means giving the series card `hasPart` → `ComicIssue` rows back, or settling for `creator` on
+the series.
+
 What it shares with `profile`: the `jobTitle` · `worksFor` subheadline (the same function,
 shared through `SUBHEADLINE_SLOT`, not copied), `address`, and `knowsAbout` for the tags —
 `Person` has no `keywords`. What it adds: `hasOccupation` → `Occupation` (with
@@ -896,10 +907,10 @@ shared through `SUBHEADLINE_SLOT`, not copied), `address`, and `knowsAbout` for 
 `itemprop` on a wrapping list would make the whole list one value — the concatenated string —
 which is the trap `listPart`'s list-level `itemprop` would have walked into.
 
-⚠️ **`artist` has no inverse.** A `Person` cannot point at the work they drew: there is no
-"creatorOf". The machine-readable tie is made *from* the `ComicIssue`, and the card's own link
-to the series is a plain `<a href="#schema-comicseries">` with no `itemprop` — an honest link
-rather than an invented property.
+⚠️ **`artist` has no inverse either.** A `Person` cannot point at the work they drew: there is no
+"creatorOf". So even with issue rows present the tie only ever runs one way, and the card's own
+link to the series stays a plain `<a href="#schema-comicseries">` with no `itemprop` — an honest
+link rather than an invented property.
 
 ### Employer rating — `EmployerAggregateRating`
 

@@ -33,33 +33,8 @@
       "startDate": "2026-08-01",
       "publisher": "Web Comics Group",
       "cadence": "Monthly",
-      "issueCount": 12,
-      "ordered": true,
-      "issues": [
-        {
-          "issueNumber": 1,
-          "name": "A New Hero for a New Age of the Web",
-          "image": "/assets/images/cssman-cover-1.png",
-          "datePublished": "2026-08-01",
-          "artist": "M. Stanley",
-          "penciler": "M. Stanley",
-          "inker": "Rosa Vega",
-          "letterer": "Artie Kemp",
-          "colorist": "Dot Halliday"
-        },
-        {
-          "issueNumber": 2,
-          "name": "The Cascade Never Sleeps",
-          "image": "/assets/images/cssman-cover-2.png",
-          "datePublished": "2026-09-01",
-          "artist": "M. Stanley",
-          "penciler": "M. Stanley",
-          "inker": "Rosa Vega",
-          "letterer": "Artie Kemp",
-          "colorist": "Dot Halliday"
-        }
-      ]
+      "issueCount": 12
     },
-    "tags": ["Silver Age", "Web comics"]
+    "tags": ["Silver Age", "Dark Mode", "Web comics"]
   }
 }
