@@ -183,8 +183,12 @@
 				--_name: ui-marquee-seamless;
 				& > * {
 					--_n: var(--ui-marquee-visible, 4);
+					/* the path REPLACES flex positioning, so the item's own gap has to be
+					   part of the step — without it items travel exactly their own width
+					   apart and touch, however large --ui-marquee-gap is */
+					--_step: calc(max(100cqi / var(--_n), var(--ui-marquee-item-size)) + var(--ui-marquee-gap));
 					offset: shape(from calc(var(--ui-marquee-item-size) / -2) 50%,
-						hline by calc(sibling-count() * max(100cqi / var(--_n), var(--ui-marquee-item-size))));
+						hline by calc(sibling-count() * var(--_step)));
 					animation-delay: calc(-1 * sibling-index() * var(--ui-marquee-duration) / sibling-count());
 				}
 			}
