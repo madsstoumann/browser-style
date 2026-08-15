@@ -41,12 +41,12 @@ never had.
 
 | File | Role |
 |------|------|
-| [`cms/baseline/models/card.schema.json`](../../../cms/baseline/models/card.schema.json) | **Content model** (UCM). Structured envelope + `schemaType` select (35 values) + `preset` reference + one `details` object per type |
+| [`cms/baseline/models/card.schema.json`](../../../cms/baseline/models/card.schema.json) | **Content model** (UCM). Structured envelope + `schemaType` select (46 values) + `preset` reference + one `details` object per type |
 | [`cms/baseline/models/card-preset.schema.json`](../../../cms/baseline/models/card-preset.schema.json) | **Preset model** (UCM). The attributes on the host element itself |
 | [`data/card.presets.json`](../data/card.presets.json) | Preset instances — **25** named looks |
 | [`data/*.json`](../data) | 37 UCF card instances (one per schemaType + two presentation-only blocks) + [`index.json`](../data/index.json) manifest |
 | [`render.js`](../render.js) | Rendering engine: UCF + presets → DOM with microdata |
-| [`render.html`](../demo/render.html) | Live demo — all 35 typed cards rendered from data |
+| [`render.html`](../demo/render.html) | Live demo — the 52 cards of `data/index.json` rendered from data |
 | [`schema.html`](../demo/schema.html) | Hand-authored reference markup for every type (the spec render.js follows) |
 | [`content.css`](../content.css) | `<ui-content>` parts — all parts styled (incl. the 8 once-proposed structured parts) |
 
@@ -60,9 +60,9 @@ lives in one `details` object discriminated by `schemaType`.
 | Field | Type | Notes |
 |-------|------|-------|
 | `internalName` | string | CMS editor label (required, invariant) |
-| `schemaType` | select | 35 values — drives itemtype + microdata mapping |
+| `schemaType` | select | 46 values — drives itemtype + microdata mapping |
 | `preset` | reference → `card-preset` | The look & feel. Swap to restyle |
-| `eyebrow` | string | Kicker; → `articleSection`/`category`/`recipeCategory`/`about`/`industry` |
+| `eyebrow` | string | Kicker; → `articleSection`/`category`/`recipeCategory`/`about`/`genre` (unmarked on `job` — `details.industry` owns `industry`) |
 | `headline` | string | → `headline` (article/news), `title` (job), `name` (rest) |
 | `subheadline` | string | |
 | `summary` | text | → `description` — or `reviewBody` (review), `text` (quote/announcement/social) |
@@ -106,7 +106,7 @@ Documented in full in the model's `details` description. Examples:
 - **recipe** `{ prepTime, cookTime, servings, ingredients[], instructions[] }` (ISO 8601 durations)
 - **faq** `{ items:[{question,answer}] }` — rendered as a nested `<ui-accordion>`
 - **poll** `{ options:[{headline,votes}], totalVotes }` — percentages computed by the renderer
-- **business** `{ businessType?, address{…}, telephone, email, website, priceRange?, rating{…}?, sameAs[]?, foundingDate?, geo{…}, openingHours:[{schema,display}] }` — an allowlisted `businessType` (Restaurant, CafeOrCoffeeShop, …) sharpens the root itemtype; each parsable `openingHours.schema` string also emits a structured `OpeningHoursSpecification`
+- **business** `{ businessType?, address{…}, telephone, email, website, priceRange?, rating{…}?, sameAs[]?, foundingDate?, geo{…}, openingHours:[{schema,display}] }` — an allowlisted `subtype`/`businessType` (Restaurant, CafeOrCoffeeShop, …) sharpens the root itemtype; each parsable `openingHours.schema` string also emits a structured `OpeningHoursSpecification`
 - **organization** `{ foundingDate, numberOfEmployees, sameAs[], headquarters:{address{…}}, offices:[{name, address{…}, telephone, openingHours[]}] }` — the multi-office shape; every office emits `department` → `LocalBusiness`
 - **howto** `{ totalTime, estimatedCost:{value,currency}, difficulty, supplies[], tools[], steps:[{name,text}] }` — steps render as the recipe-style nested `<ui-accordion>`
 - **qa** `{ question, upvotes, answers:[{text,author,upvotes,accepted}] }` — `mainEntity` → `Question` with `acceptedAnswer`/`suggestedAnswer`
@@ -308,6 +308,7 @@ content and belong in the card's `media[]` items. Bare booleans like `clip`, `au
 | `prose` | ui-content | bare text column · `text: body` | prose-block |
 | `prose-article` | ui-content | full-article column · `scl(lg)` · `text: body` · `byline: lede` · larger avatar | the `articles/` full views |
 | `flip` | ui-reveal | flip · `ovr(bs) rds(lg-sq)` · `scroll` | software |
+| `flashcard` | ui-reveal | flip · `ovr(bs)` · 4:3 · scrim · question front / answer back | quiz-flashcard |
 | `hero-reveal` | ui-reveal | expand → scale at lg · 21:9 · dark panel via `styles` | — (from the ui/reveal hero demo) |
 
 Restyling any card = changing its reference:
@@ -346,7 +347,9 @@ grid.insertAdjacentHTML('beforeend', renderCard(ucf, presets));
 | `renderCard` | `(ucf, presets?, cards?) => string` | UCF instance (or bare fields) → HTML for `<ui-card>`/`<ui-reveal>`/bare primitive. `cards` = id→UCF map for resolving `flipside` references |
 | `renderCardFrom` | `(url, presets?, cards?) => Promise<string>` | fetch + render |
 | `loadPresets` | `(url) => Promise<object>` | fetch `card.presets.json` → id→preset map |
-| `SCHEMA_TYPES` | map | schemaType → schema.org type |
+| `SCHEMA_TYPES` | map | schemaType → base schema.org type |
+| `resolveItemtype` | `(fields) => string` | the itemtype a card actually gets — base type, sharpened by an allowlisted `details.subtype`. Total: any `fields` yields a plain schema.org type name, unknown and inherited-`Object.prototype` `schemaType`s alike falling back to `CreativeWork`. **Any code emitting an itemtype must call this**, not index `SCHEMA_TYPES`, or a sharpened card diverges between views |
+| `SUBTYPES` | map | schemaType → `Set` of allowlisted subtypes (kept in sync with [schema.md § Subtypes](schema.md#subtypes) by `tokens.lint.js`) |
 
 Pipeline: resolve preset → build `<ui-media>` (items; furniture emitted from the
 `furniture` object, its look from the preset's `media=` tokens plus any `style=`
@@ -390,8 +393,12 @@ Followed throughout (`schema.html` is the reference; matched against the legacy
 emission in [`content/card/dist/`](../../../content/card/dist)):
 
 - Root: `itemscope itemtype="https://schema.org/{Type}"` on the host element
-- Hidden machine values: `<meta itemprop content>`; visible machine values:
-  `<data value>` / `<time datetime>` / `content` attribute
+- Hidden machine values: `<meta itemprop content>`; a visible value whose text is already
+  machine-readable carries the `itemprop` itself (`<time datetime>`, a `<span>` of digits)
+- **A formatted value splits**: `<meta itemprop content>` for the number, plain text for the
+  human string — never `<data itemprop value>`, whose two answers (spec reads `value=`,
+  real consumers read the text) disagree. See [schema.md § Price](schema.md#price) and
+  § Statistic. `<data>` survives only display-only, without an `itemprop`.
 - Nested scopes: author→`Person`, offers→`Offer`, rating→`AggregateRating`/`Rating`,
   address→`PostalAddress`, geo→`GeoCoordinates`, steps→`ItemList`+`HowToStep`,
   FAQ→`Question`+`acceptedAnswer`→`Answer`, engagement→`InteractionCounter`
@@ -399,10 +406,11 @@ emission in [`content/card/dist/`](../../../content/card/dist)):
   `name` (rest); summary → `reviewBody` (review) / `text` (quote, announcement,
   social) / `description` (rest); published → `datePosted` (job, announcement) /
   `uploadDate` (video); eyebrow → `genre` (video, movie, book)
-- **Business subtype**: `details.businessType` sharpens the root itemtype from
-  `LocalBusiness` to an ALLOWLISTED subtype (`BUSINESS_SUBTYPES` in render.js —
-  never verbatim data, mirroring the old dynamic-schema pattern safely). Opening
-  hours emit both forms: the flat `openingHours` meta AND, for parsable
+- **Subtype**: `details.subtype` sharpens the root itemtype to an ALLOWLISTED
+  subtype of the base type (`SUBTYPES` in render.js — never verbatim data;
+  business, event, location, social and five more have lists). `businessType` is
+  the legacy business-only alias. See [schema.md § Subtypes](schema.md#subtypes).
+  Opening hours emit both forms: the flat `openingHours` meta AND, for parsable
   `"Mo-Fr 07:00-18:00"` strings, a hidden `OpeningHoursSpecification` scope with
   `dayOfWeek`/`opens`/`closes` (`hoursSpec()`)
 - **Organization offices**: each office emits `department` →
@@ -435,11 +443,31 @@ emission in [`content/card/dist/`](../../../content/card/dist)):
   `<div itemprop="articleBody">`. Teaser/full is a preset decision — the `text`
   field: cards show the `summary` only; a `text: "body"` preset (e.g. `prose`)
   shows the body *instead*, keeping the summary as a hidden `description` meta
-- **Gradient headline**: `headline` is short rich text (≤256 chars, model-enforced).
-  `renderInline()` escapes everything, then re-allows a two-tag ALLOWLIST: `<b>`
-  (emphasis) and `<ui-gradient-text>` (@browser.style/gradient-text — the gradient
-  treatment, optionally `animate="slide|breathe"`; no other attribute passes). All
-  other markup is escaped. The card owns no gradient CSS — `hl(grad)` was removed in v5
+- **Inline markup**: `renderInline()` escapes everything, then re-allows an
+  ALLOWLIST of exact tag spellings: `<b>`, `<em>` and `<code>` **attribute-free**,
+  `<ui-gradient-text>` (@browser.style/gradient-text — the gradient treatment,
+  optionally `animate="slide|breathe"`) and `<high-light>` (`fill`/`ink`/`variant`,
+  each re-validated per pair by `highLightAttrs()`). Everything else is escaped.
+  Escape-first-then-re-allow is what makes this safe: the pattern matches *escaped*
+  text, so `<em onmouseover=…>` never becomes a tag — the bare forms carry no
+  attribute at all, therefore no executable surface. Do not copy `high-light`'s
+  attribute handling onto a new entry without the same per-attribute allowlist.
+  Matching is case-sensitive and space-sensitive: `<EM>`, `<em >` and `< em>` all
+  stay escaped.
+  **Balance is required.** An unclosed formatting element joins the parser's list of
+  active formatting elements and is reconstructed inside every element that follows,
+  so one missing `</em>` would italicise the rest of the page. `balancedInline()`
+  tallies opens against closes per tag and, on any mismatch, returns the fully
+  escaped string — the phrase loses its emphasis and nothing else moves. That also
+  disposes of the orphan a rejected opening tag would otherwise leave behind
+  (`<em onmouseover=x>y</em>` → wholly escaped). Crossed-but-balanced input
+  (`<b><em>x</b></em>`) passes: the parser's adoption agency re-nests it in place,
+  and no end tag can close an ancestor, so microdata structure cannot move.
+  **Where it applies**: `headline` (short rich text, ≤256 chars, model-enforced) and
+  `body` — plus exactly two `details` prose fields the reference page marks up, the
+  flashcard `answer` and the glossary term `description`. Labels and machine values
+  (`summary`, `eyebrow`, `subheadline`, tags, quiz questions, term names) stay plain.
+  The card owns no gradient CSS — `hl(grad)` was removed in v5
 - **Quote**: quote parts compose with `@browser.style/quote` —
   `<ui-quote data-part="quote" variant="bigquote"><blockquote><q>…</q><cite>…</cite></blockquote></ui-quote>`
   (quote), plain wrapper (review, social); pages import
@@ -628,6 +656,14 @@ rest ([`article.render.html`](../demo/article.render.html) is the working demo):
   `demo/articles/{article,news}.html` (the full views), and the Article + News
   sections of `demo/schema.html`, which share the same `card-{id}`/`hero-{id}`
   names and cover links so the reference page morphs into the same articles.
+  `demo/products/` runs the same pattern on `schema.html`'s ProductGroup collage
+  (`card-variant-{color}`/`hero-variant-{color}`) and adds the **negative** case:
+  page→page carries *no* shared name, which is what makes switching colourway a
+  fade. Naming is the only lever that separates the two — the incoming document's
+  CSS drives a cross-document transition, so a page-scoped rule forcing the fade
+  would take the morph with it. `schema.html`'s `<link rel="expect">` anchors on
+  `#schema-product-variants` (the collage, further down the page than the article
+  card) so every morph target on it exists at snapshot in both directions.
 - **Static markup + render-blocking — this is what makes the morph reliable.**
   [`articles/build.js`](../demo/articles/build.js) (`node ui/card/articles/build.js`)
   pre-renders the grid page *and* every article page through `render.js` — the
@@ -684,10 +720,11 @@ navigation; `prefers-reduced-motion` keeps default timing.
 
 | Page | Shows |
 |------|-------|
-| [`schema.html`](../demo/schema.html) | Hand-authored reference — all 35 types with microdata |
-| [`render.html`](../demo/render.html) | All 35 typed cards rendered by `render.js` from UCF data + presets |
+| [`schema.html`](../demo/schema.html) | Hand-authored reference — 54 cards, 48 distinct itemtypes, with microdata ([counting rule](schema.md)) |
+| [`render.html`](../demo/render.html) | The 52 cards of [`data/index.json`](../data/index.json) rendered by `render.js` from UCF data + presets |
 | [`carousel.render.html`](../demo/carousel.render.html) · [`video.render.html`](../demo/video.render.html) | The original demo pages recreated data-driven: presets from [`data/card.presets.demo.json`](../data/card.presets.demo.json) (129 presets extracted from the originals) + UCF instances in [`data/demo/`](../data/demo). Each page lists its not-expressible demos in a bottom note. The `media` and `reveal` twins were dropped — [`media.html`](../demo/media.html) and [`../reveal/index.html`](../../reveal/index.html) are the better pages |
 | [`article.render.html`](../demo/article.render.html) + [`articles/`](../demo/articles/) | The article pattern above, live and **fully static** (pre-rendered by `articles/build.js`): teaser cards with stretched-link headlines → cross-document view transition morphs the whole card into the per-article page and back (`card-{id}` + nested `hero-{id}` names via `data-view` + CSS `attr()`), body-instead-of-summary via the `prose` preset, plain `<a>` navigation, zero runtime JS |
+| [`products/`](../demo/products/) | The same pattern for commerce, pre-rendered by `products/build.js`: `schema.html`'s ProductGroup collage links to one page per colourway, each a `mrk(rail)` thumbnail carousel + lightbox with the rounded size picker (`variants.control: "buttons"`). The transition behaviour is **pure name matching** — a page carries only its own colourway's `data-view` names, so collage→page pairs (morph) while page→page does not (fade). Deliberately no page-scoped view-transition CSS: the incoming document drives a cross-document transition, so a blanket fade rule would kill the morph too |
 | [`index.html`](../index.html) · [`media.html`](../demo/media.html) · [`content.html`](../demo/content.html) · [`carousel.html`](../demo/media.carousel.html) · [`video.html`](../demo/media.video.html) | The card engine itself (hand-authored originals) |
 | [`../reveal/index.html`](../../reveal/index.html) | Reveal types incl. the hero (source of `hero-reveal` preset) |
 

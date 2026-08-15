@@ -1,8 +1,8 @@
 /**
- * ui-marquee — CSS-only scrolling strip; modes fade (default) · loop · seam.
+ * ui-marquee — CSS-only scrolling strip; modes fade (default) · loop · seam · cards.
  * Content is direct children OR aria-label (zero markup). Animation is var-driven:
  * the host sets --_name + --_dir, every item reads them. Docs: readme.md
- * @version 5.0.0 · @author Mads Stoumann
+ * @version 5.1.0 · @author Mads Stoumann
  */
 @layer bs-component {
 	:where(ui-marquee) {
@@ -30,15 +30,38 @@
 
 		/* B. Items — direct children, or ::before/::after from aria-label */
 		& > *, &::before, &::after {
-			align-items: center;
 			animation: var(--_name, ui-marquee-x) var(--ui-marquee-duration) linear infinite;
 			animation-direction: var(--_dir, normal);
-			display: flex;
 			flex: 0 0 auto;
 			gap: var(--ui-marquee-gap);
+		}
+		/* B1. Text runs (the default item shape) — one nowrap line sized by its content */
+		&:where(:not([variant~="cards"])) > *,
+		&:where(:not([variant~="cards"]))::before,
+		&:where(:not([variant~="cards"]))::after {
+			align-items: center;
+			display: flex;
 			inline-size: max-content;
 			white-space: nowrap;
 		}
+		/* B2. Card items — a fixed track cell. Sets NO display: the child keeps its own
+		   (a <ui-card> is a grid), so this can never fight a component sheet. Docs: readme.md */
+		&:where([variant~="cards"]) {
+			--ui-marquee-font-weight: inherit;
+			--ui-marquee-item-size: 20rem;
+			/* room for the cards' own box-shadow on BOTH axes — `contain: paint` clips to
+			   the padding box, so with none the shadow is shaved off the strip's edges */
+			--ui-marquee-padding-block: var(--spacing-md, 1rem);
+			--ui-marquee-padding-inline: var(--spacing-md, 1rem);
+			/* cards need more air between them than text runs do */
+			--ui-marquee-gap: var(--spacing-xl, 2rem);
+			align-items: stretch;
+			/* block children escape `overflow` and push the PAGE sideways under
+			   reduced motion (where the strip becomes a scroller). Docs: readme.md § Cards */
+			contain: paint;
+			user-select: auto;
+		}
+		&:where([variant~="cards"]) > * { inline-size: var(--ui-marquee-item-size); white-space: normal; }
 		/* aria-label = zero-markup text content, only when there are no children.
 		   ::after supplies the 2nd copy loop needs. */
 		&[aria-label]:empty::before { content: attr(aria-label); }
@@ -160,8 +183,12 @@
 				--_name: ui-marquee-seamless;
 				& > * {
 					--_n: var(--ui-marquee-visible, 4);
+					/* the path REPLACES flex positioning, so the item's own gap has to be
+					   part of the step — without it items travel exactly their own width
+					   apart and touch, however large --ui-marquee-gap is */
+					--_step: calc(max(100cqi / var(--_n), var(--ui-marquee-item-size)) + var(--ui-marquee-gap));
 					offset: shape(from calc(var(--ui-marquee-item-size) / -2) 50%,
-						hline by calc(sibling-count() * max(100cqi / var(--_n), var(--ui-marquee-item-size))));
+						hline by calc(sibling-count() * var(--_step)));
 					animation-delay: calc(-1 * sibling-index() * var(--ui-marquee-duration) / sibling-count());
 				}
 			}

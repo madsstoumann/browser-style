@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/marquee",
-  "version": "5.0.0",
+  "version": "5.1.0",
   "description": "CSS-first scrolling content strip: text, logos or images with fade-before-repeat (all browsers) or seamless (Chrome) modes, four directions, edge-fade and hover slow-down. Zero JavaScript.",
   "type": "module",
   "style": "index.css",

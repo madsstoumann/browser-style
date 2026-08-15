@@ -29,11 +29,15 @@
       "sticker": {
         "lines": [
           {
+            "role": "label",
+            "text": "SAVE"
+          },
+          {
             "role": "lead",
-            "text": "-20%"
+            "text": "20%"
           }
         ],
-        "style": "te red xl sh:burst"
+        "style": "te red 2xl sh:burst"
       },
       "save": {
         "shape": "heart",

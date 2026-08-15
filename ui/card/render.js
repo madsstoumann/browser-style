@@ -66,19 +66,45 @@ export const SCHEMA_TYPES = {
 	movie: 'Movie',
 	book: 'Book',
 	dataset: 'Dataset',
-	claim: 'ClaimReview'
+	claim: 'ClaimReview',
+	loyalty: 'MemberProgram',
+	quiz: 'Quiz',
+	service: 'Service',
+	realestate: 'RealEstateListing',
+	menu: 'Menu',
+	tvseries: 'TVSeries',
+	tvepisode: 'TVEpisode',
+	medical: 'MedicalWebPage',
+	music: 'MusicAlbum',
+	glossary: 'DefinedTermSet',
+	podcastseries: 'PodcastSeries'
 };
 
-/* business may sharpen LocalBusiness to a subtype — allowlisted, never verbatim data */
-const BUSINESS_SUBTYPES = new Set([
-	'Restaurant', 'CafeOrCoffeeShop', 'Bakery', 'BarOrPub', 'Store', 'Hotel',
-	'BeautySalon', 'HealthClub', 'AutoRepair', 'Dentist', 'MedicalClinic',
-	'RealEstateAgent', 'TravelAgency', 'Library', 'Museum'
-]);
-const resolveItemtype = (type, fields) =>
-	type === 'business' && BUSINESS_SUBTYPES.has(fields.details?.businessType)
-		? fields.details.businessType
-		: SCHEMA_TYPES[type];
+/* itemtype sharpening — narrows a card to an allowlisted subtype of its base type.
+   Never verbatim data: this value lands in an itemtype. Docs: docs/schema.md § Subtypes */
+export const SUBTYPES = {
+	article: new Set(['BlogPosting', 'TechArticle', 'APIReference', 'ScholarlyArticle', 'Report', 'SatiricalArticle', 'AdvertiserContentArticle']),
+	business: new Set(['Restaurant', 'CafeOrCoffeeShop', 'Bakery', 'BarOrPub', 'FastFoodRestaurant', 'IceCreamShop', 'Winery', 'Brewery', 'Distillery', 'Store', 'Hotel', 'Resort', 'BedAndBreakfast', 'Motel', 'Hostel', 'Campground', 'BeautySalon', 'DaySpa', 'HealthClub', 'AutoRepair', 'AutoDealer', 'AutoRental', 'GasStation', 'Dentist', 'MedicalClinic', 'Pharmacy', 'Physician', 'RealEstateAgent', 'TravelAgency', 'Library', 'GovernmentOffice']),
+	event: new Set(['SportsEvent', 'MusicEvent', 'TheaterEvent', 'ScreeningEvent', 'ComedyEvent', 'DanceEvent', 'ExhibitionEvent', 'FoodEvent', 'LiteraryEvent', 'BusinessEvent', 'EducationEvent', 'ChildrensEvent', 'SocialEvent', 'SaleEvent', 'Festival', 'Hackathon', 'PublicationEvent', 'CourseInstance']),
+	location: new Set(['TouristAttraction', 'TouristDestination', 'LandmarksOrHistoricalBuildings', 'Accommodation', 'Apartment', 'House', 'SingleFamilyResidence', 'Room', 'Suite', 'Residence', 'ApartmentComplex', 'GatedResidenceCommunity', 'CivicStructure', 'Park', 'Beach', 'Campground', 'Church', 'Museum', 'Airport']),
+	news: new Set(['ReportageNewsArticle', 'OpinionNewsArticle', 'AnalysisNewsArticle', 'BackgroundNewsArticle', 'ReviewNewsArticle']),
+	organization: new Set(['NGO', 'Corporation', 'OnlineStore', 'OnlineBusiness', 'EducationalOrganization', 'School', 'CollegeOrUniversity', 'GovernmentOrganization', 'NewsMediaOrganization', 'MedicalOrganization', 'ResearchOrganization', 'PerformingGroup', 'MusicGroup', 'SportsOrganization', 'SportsTeam', 'Airline', 'LibrarySystem', 'WorkersUnion', 'PoliticalParty', 'FundingScheme', 'Consortium', 'Project']),
+	product: new Set(['ProductGroup', 'ProductModel', 'IndividualProduct', 'Vehicle', 'Car', 'Motorcycle', 'Drug', 'DietarySupplement']),
+	social: new Set(['DiscussionForumPosting', 'BlogPosting', 'LiveBlogPosting'])
+};
+
+/* Own-key test, not truthiness: a bare `SCHEMA_TYPES[x]` lets inherited Object.prototype
+   keys ("constructor", "toString", "__proto__") through. Docs: docs/schema.md § Subtypes */
+const baseType = (fields) => Object.hasOwn(SCHEMA_TYPES, fields?.schemaType) ? fields.schemaType : 'content';
+
+/* `subtype` beats `businessType` because the latter is only the pre-`subtype` business-only
+   spelling, kept resolving for existing content. Takes raw fields and normalises the base type
+   itself: every other itemtype producer (articles/build.js, demo/render.html) calls THIS. */
+export const resolveItemtype = (fields) => {
+	const type = baseType(fields);
+	const wanted = fields.details?.subtype || (type === 'business' ? fields.details?.businessType : null);
+	return wanted && SUBTYPES[type]?.has(wanted) ? wanted : SCHEMA_TYPES[type];
+};
 
 /* schema.org EventAttendanceModeEnumeration stems */
 const ATTENDANCE_MODES = new Set(['Offline', 'Online', 'Mixed']);
@@ -89,19 +115,75 @@ const BOOK_FORMATS = new Set(['Hardcover', 'Paperback', 'EBook', 'AudiobookForma
 /* review itemReviewed types — Organization/Service make the review a testimonial */
 const REVIEWED_TYPES = new Set(['Product', 'Organization', 'Service']);
 
+/* ── enumeration / itemtype allowlists for the markup-first types.
+   Every one of these lands in a schema.org URL or an itemtype, so none may ever
+   be interpolated verbatim — same discipline as SUBTYPES/BOOK_FORMATS. ── */
+
+/* schema.org TierBenefitEnumeration — the complete set is these four. All four are
+   valid vocabulary; Google reads only Points and Price, so a tier whose ONLY benefits
+   are Returns/Shipping is ineligible. Docs: docs/schema.md § Loyalty programme */
+const TIER_BENEFITS = new Set(['TierBenefitLoyaltyPoints', 'TierBenefitLoyaltyPrice', 'TierBenefitLoyaltyReturns', 'TierBenefitLoyaltyShipping']);
+/* schema.org RestrictedDiet members — MenuItem.suitableForDiet takes these by URL */
+const RESTRICTED_DIETS = new Set(['DiabeticDiet', 'GlutenFreeDiet', 'HalalDiet', 'HinduDiet', 'KosherDiet', 'LowCalorieDiet', 'LowFatDiet', 'LowLactoseDiet', 'LowSaltDiet', 'VeganDiet', 'VegetarianDiet']);
+/* RealEstateListing.mainEntity — the ACCOMMODATION subtree only. Residence and
+   ApartmentComplex are Place, not Accommodation: the block emits yearBuilt, whose
+   domain is Accommodation alone, so neither could carry it. (ApartmentComplex is in
+   numberOfBedrooms' domain and nothing else here — not worth a per-property gate.) */
+const RESIDENCE_TYPES = new Set(['Accommodation', 'Apartment', 'House', 'SingleFamilyResidence', 'Suite', 'Room']);
+/* schema.org MusicAlbumProductionType / MusicAlbumReleaseType members */
+const ALBUM_PRODUCTION_TYPES = new Set(['CompilationAlbum', 'DJMixAlbum', 'DemoAlbum', 'LiveAlbum', 'MixtapeAlbum', 'RemixAlbum', 'SoundtrackAlbum', 'SpokenWordAlbum', 'StudioAlbum']);
+const ALBUM_RELEASE_TYPES = new Set(['AlbumRelease', 'BroadcastRelease', 'EPRelease', 'SingleRelease']);
+/* schema.org MedicalSpecialty members — WebPage.specialty takes a Specialty */
+const MEDICAL_SPECIALTIES = new Set(['Anesthesia', 'Cardiovascular', 'CommunityHealth', 'Dentistry', 'Dermatologic', 'DietNutrition', 'Emergency', 'Endocrine', 'Gastroenterologic', 'Genetic', 'Geriatric', 'Gynecologic', 'Hematologic', 'Infectious', 'LaboratoryScience', 'Midwifery', 'Musculoskeletal', 'Neurologic', 'Nursing', 'Obstetric', 'Oncologic', 'Optometric', 'Otolaryngologic', 'Pathology', 'Pediatric', 'PharmacySpecialty', 'Physiotherapy', 'PlasticSurgery', 'Podiatric', 'PrimaryCare', 'Psychiatric', 'PublicHealth', 'Pulmonary', 'Radiography', 'Renal', 'RespiratoryTherapy', 'Rheumatologic', 'SpeechPathology', 'Surgical', 'Toxicologic', 'Urologic']);
+/* the three MedicalEntity shapes a MedicalWebPage may be `about` */
+const MEDICAL_ABOUT_TYPES = new Set(['MedicalCondition', 'Drug', 'MedicalProcedure']);
+/* MedicalCondition aspect property → the type its value must carry */
+const MEDICAL_ASPECTS = { signOrSymptom: 'MedicalSignOrSymptom', riskFactor: 'MedicalRiskFactor', possibleTreatment: 'MedicalTherapy' };
+/* medicalAudience takes the TYPE MedicalAudience (subtype Patient) — NOT the
+   similarly named MedicalAudienceType enumeration (Clinician/MedicalResearcher) */
+const MEDICAL_AUDIENCES = new Set(['MedicalAudience', 'Patient']);
+
+/* Quiz question shapes. `Question` accepts suggestedAnswer AND acceptedAnswer at
+   once, so a Quiz can be a flashcard deck (one acceptedAnswer, revealed) or a graded
+   multiple-choice set (several suggestedAnswer + the acceptedAnswer). The format is
+   an EXPLICIT field, not inferred from the presence of options, and it picks both
+   itemprop values. schema.org documents exactly three eduQuestionType spellings —
+   "Multiple choice", "Open ended", "Flashcard". Docs: docs/schema.md § Quiz */
+const QUIZ_FORMATS = {
+	flashcard: { question: 'Flashcard', resource: 'Flashcard' },
+	'multiple-choice': { question: 'Multiple choice', resource: 'Practice problem' }
+};
+/* absent/unknown falls back to the flashcard shape — resolved in ONE place, so the
+   deck (DETAILS.quiz) and the flip card (REVEAL_FACES.quiz) cannot disagree */
+const quizFormat = (d) => Object.hasOwn(QUIZ_FORMATS, d?.format) ? d.format : 'flashcard';
+
 /* Fallback when a card references no preset (or an unknown one).
    Real presets live in data/card.presets.json — instances of the
    card-preset model (cms/baseline/models/card-preset.schema.json). */
 const DEFAULT_PRESET = { element: 'ui-card', variant: 'col', media: 'asr(16/9)' };
 
+/* itemtypes whose viewCount is a WatchAction (moving content); all others get ViewAction */
+const WATCHABLE = new Set(['VideoObject', 'Movie', 'PodcastEpisode']);
+
 /* headline itemprop: job → title, article/news → headline, rest → name */
 const HEADLINE_PROP = { job: 'title', article: 'headline', news: 'headline' };
+/* …but a subtype can want a different property than its base: Google documents
+   `headline` for DiscussionForumPosting and says it "is not recommended for a
+   SocialMediaPosting", so social's plain spelling keeps `name`. Keyed by RESOLVED
+   itemtype, consulted first. Docs: docs/schema.md § Subtypes */
+const HEADLINE_PROP_BY_ITEMTYPE = new Map([['DiscussionForumPosting', 'headline']]);
+const headlineProp = (fields, type) => HEADLINE_PROP_BY_ITEMTYPE.get(resolveItemtype(fields)) || HEADLINE_PROP[type] || 'name';
 /* summary itemprop: review → reviewBody, quote/announcement/social → text, rest → description */
 const SUMMARY_PROP = { review: 'reviewBody', quote: 'text', announcement: 'text', social: 'text' };
-/* eyebrow itemprop (only where a sensible property exists) */
-const EYEBROW_PROP = { article: 'articleSection', news: 'articleSection', product: 'category', recipe: 'recipeCategory', course: 'about', job: 'industry', video: 'genre', movie: 'genre', book: 'genre' };
+/* eyebrow itemprop — only where a sensible property exists AND no `details` field already
+   owns it: job's eyebrow is display text, `industry` is details.industry. Docs: schema.md § Job.
+   Exported for render.test.js, which re-adds the removed `job: 'industry'` entry to prove the
+   duplicate-property guard below still holds when this map grows. */
+export const EYEBROW_PROP = { article: 'articleSection', news: 'articleSection', product: 'category', recipe: 'recipeCategory', course: 'about', video: 'genre', movie: 'genre', book: 'genre', tvseries: 'genre', music: 'genre' };
 /* published itemprop: JobPosting/SpecialAnnouncement use datePosted, VideoObject uploadDate */
 const PUBLISHED_PROP = { job: 'datePosted', announcement: 'datePosted', video: 'uploadDate' };
+/* datePosted is typed Date, so a timestamp is out of range; uploadDate takes a DateTime */
+const dateOnly = (value) => (/^\d{4}-\d{2}-\d{2}T/.test(value) ? value.slice(0, 10) : value);
 /* preset headingTag allowlist — heading LEVEL is placement, so it lives on the preset */
 const HEADING_TAGS = new Set(['h2', 'h3', 'h4', 'h5']);
 
@@ -112,9 +194,35 @@ const NO_IMAGE_PROP = new Set(['review', 'contact']);
 /* types whose ROOT is the VideoObject — media props emit at root, never a nested scope */
 const ROOT_VIDEO_TYPES = new Set(['video']);
 /* Person has no keywords property. Intangible-rooted types (JobPosting, Offer,
-   Reservation, ContactPoint, ItemList, Observation) have none either —
-   null = visible chips only, no itemprop */
-const TAGS_PROP = { profile: 'knowsAbout', job: null, membership: null, booking: null, contact: null, comparison: null, statistic: null };
+   Reservation, ContactPoint, ItemList, Observation, MemberProgram, Service) have
+   none either — null = visible chips only, no itemprop */
+const TAGS_PROP = { profile: 'knowsAbout', job: null, membership: null, booking: null, contact: null, comparison: null, statistic: null, loyalty: null, service: null };
+/* byline itemprop — a quote's people are its creators, everyone else's are authors */
+const bylineProp = (type) => type === 'quote' ? 'creator' : 'author';
+
+/* ── one item, one value per property ──
+   Two emitters reach the same root-scope itemprop: the ENVELOPE (eyebrow, headline,
+   summary, byline, tags, dates — driven by the maps above) and the type's own DETAILS
+   renderer. A record filling both fields declares one property twice with two values.
+   The envelope wins, and DETAILS asks first. Derived from the maps rather than a
+   hand-written pair list, so adding an envelope itemprop cannot silently resurrect a
+   collision. Docs: docs/schema.md § One property, one value */
+const envelopeProps = (fields, type, { eyebrow = true } = {}) => {
+	const props = new Set();
+	if (eyebrow && fields.eyebrow && EYEBROW_PROP[type]) props.add(EYEBROW_PROP[type]);
+	if (fields.headline && type !== 'quote') props.add(headlineProp(fields, type));
+	if (fields.summary) props.add(SUMMARY_PROP[type] || 'description');
+	if (fields.published) props.add(PUBLISHED_PROP[type] || 'datePublished');
+	if (fields.modified) props.add('dateModified');
+	if (fields.authors?.length) props.add(bylineProp(type));
+	if (fields.tags?.length) {
+		const tagProp = type in TAGS_PROP ? TAGS_PROP[type] : 'keywords';
+		if (tagProp) props.add(tagProp);
+	}
+	return props;
+};
+/* the default for a DETAILS renderer called without a claim set — claims nothing */
+const NO_PROPS = new Set();
 
 /* ── string helpers (all data flows through esc) ── */
 
@@ -152,6 +260,14 @@ const fixedSrcset = (src, size) => {
 };
 /* sizes: `auto` is spec-invalid on eager images; Safari ignores it, so lazy gets the fallback list too */
 const sizesFor = (eager) => !IMG ? null : eager ? IMG.sizes || null : IMG.sizes ? `auto, ${IMG.sizes}` : 'auto';
+/* carousel thumbnail: ONE narrow URL (the marker is ~2-4rem), CDN when eligible else the
+   source itself — a ::scroll-marker background, so there is no srcset to hand it. The
+   result lands inside url('…') in an inline style, where esc() does not help: quotes,
+   parens and semicolons would end the value, so they are dropped rather than escaped. */
+const CSS_URL_UNSAFE = /['"();\\]/g;
+const thumbUrl = (src, width = 160) =>
+	String(cdnEligible(src) ? buildCfUrl(src, { format: IMG.format, quality: IMG.quality, width }, IMG.base) : src)
+		.replace(CSS_URL_UNSAFE, '');
 
 const meta = (prop, content) =>
 	content == null || content === '' ? '' : `<meta itemprop="${esc(prop)}" content="${esc(content)}">`;
@@ -159,11 +275,12 @@ const meta = (prop, content) =>
 const scope = (prop, type) =>
 	` itemprop="${esc(prop)}" itemscope itemtype="${SCHEMA + type}"`;
 
-/* Inline-rich text (headline): plain string or UCF richtext object. Escapes
-   everything, then re-allows an ALLOWLIST: <b> (emphasis) and <ui-gradient-text>
+/* Inline-rich text: plain string or UCF richtext object. Escapes everything, then
+   re-allows an ALLOWLIST: <b>/<em>/<code> (attribute-free, so an escaped
+   `<em onmouseover=…>` can never match) and <ui-gradient-text>
    (@browser.style/gradient-text). The gradient element accepts only
    animate="slide|breathe" — never a free attribute string. Docs: docs/content.md */
-const INLINE_TAGS = /&lt;(\/?)(b)&gt;|&lt;(\/?)ui-gradient-text(?: animate=&quot;(slide|breathe)&quot;)?&gt;|&lt;(\/?)high-light((?: (?:fill|ink)=&quot;[#\w(),.%\s-]{1,32}&quot;| variant=&quot;(?:underline|strike)&quot;){0,3})&gt;/g;
+const INLINE_TAGS = /&lt;(\/?)(b|em|code)&gt;|&lt;(\/?)ui-gradient-text(?: animate=&quot;(slide|breathe)&quot;)?&gt;|&lt;(\/?)high-light((?: (?:fill|ink)=&quot;[#\w(),.%\s-]{1,32}&quot;| variant=&quot;(?:underline|strike)&quot;){0,3})&gt;/g;
 /* high-light's attribute payload is re-validated per pair — the group match above only
    bounds the shape, this rebuilds it from an allowlist so nothing else can ride along */
 const HL_ATTR = /(fill|ink|variant)=&quot;([#\w(),.%\s-]{1,32})&quot;/g;
@@ -175,13 +292,30 @@ const highLightAttrs = (raw) => {
 	}
 	return out;
 };
+/* An UNCLOSED allowlisted tag joins the parser's list of active formatting elements and
+   is reconstructed inside every element that follows, so one missing `</em>` italicises
+   the rest of the page. Unbalanced input therefore renders fully escaped: the phrase
+   loses its emphasis and nothing else moves. Docs: docs/content.md § Inline markup */
+const INLINE_PAIRS = /<(\/?)(b|em|code|ui-gradient-text|high-light)\b[^>]*>/g;
+const balancedInline = (html) => {
+	const open = new Map();
+	for (const [, close, tag] of html.matchAll(INLINE_PAIRS)) {
+		const depth = (open.get(tag) || 0) + (close ? -1 : 1);
+		if (depth < 0) return false;
+		open.set(tag, depth);
+	}
+	for (const depth of open.values()) if (depth !== 0) return false;
+	return true;
+};
 const renderInline = (value) => {
 	const text = typeof value === 'string' ? value : value?.$richtext ? value.content : value ?? '';
-	return esc(text).replace(INLINE_TAGS, (match, bSlash, bTag, gSlash, animate, hSlash, hAttrs) => {
-		if (bTag) return `<${bSlash}b>`;
+	const escaped = esc(text);
+	const rich = escaped.replace(INLINE_TAGS, (match, bSlash, bTag, gSlash, animate, hSlash, hAttrs) => {
+		if (bTag) return `<${bSlash}${bTag}>`;
 		if (hSlash !== undefined) return `<${hSlash}high-light${hSlash ? '' : highLightAttrs(hAttrs)}>`;
 		return `<${gSlash}ui-gradient-text${!gSlash && animate ? ` animate="${animate}"` : ''}>`;
 	});
+	return balancedInline(rich) ? rich : escaped;
 };
 
 /* plain text from a possibly-rich headline (for aria/meta contexts) */
@@ -190,15 +324,29 @@ const plain = (value) => {
 	return String(text).replace(/<[^>]+>/g, '');
 };
 
-const num = (value) => (typeof value === 'number' ? value.toLocaleString('en-US') : value);
+/* Display formatters. Both fall through to raw author data, and every call site
+   interpolates them into a TEXT NODE, so they return HTML-safe strings — do NOT
+   esc() their output again. Docs: ui/card/AGENTS.md § conventions */
+const num = (value) => esc(typeof value === 'number' ? value.toLocaleString('en-US') : value);
 
-/* display price via Intl — machine values stay raw in value=/content= attrs */
+/* display price via Intl — machine values stay raw in content= attrs */
+const CURRENCY_CODE = /^[A-Za-z]{3}$/;
 const fmtPrice = (currency, value) => {
 	if (value == null || value === '') return '';
 	const number = Number(value);
-	if (!currency || Number.isNaN(number)) return `${currency || ''} ${value}`.trim();
-	return new Intl.NumberFormat('en-US', { style: 'currency', currency, maximumFractionDigits: Number.isInteger(number) ? 0 : 2 }).format(number);
+	/* Intl throws RangeError on any code that is not three ASCII letters — one typo'd
+	   currency must never crash a whole page render in an engine that degrades */
+	if (!CURRENCY_CODE.test(currency || '') || Number.isNaN(number)) return esc(`${currency || ''} ${value}`.trim());
+	return esc(new Intl.NumberFormat('en-US', { style: 'currency', currency, maximumFractionDigits: Number.isInteger(number) ? 0 : 2 }).format(number));
 };
+
+/* A priced row: the machine value on a <meta>, the human string as the text node.
+   Google's price must carry no currency symbol and no thousands separator, and the
+   validator reads the TEXT node — `<data itemprop="price" value="279">$279</data>`
+   survives only on price's Text arm. Same shape as loyalty's MonetaryAmount rows.
+   fmtPrice() is already escaped; do NOT esc() this. docs/schema.md § Price */
+const priceValue = (currency, value, prop = 'price') =>
+	value == null || value === '' ? '' : meta(prop, value) + fmtPrice(currency, value);
 
 /* "PT15M" → "15 min", "P6W" → "6 weeks", "P14D" → "14 days" */
 const duration = (iso) => {
@@ -219,21 +367,27 @@ const styleAttr = (styles) => {
 	return rules.length ? rules.join('; ') : null;
 };
 
-/* star rating row — part "rating" */
-const ratingPart = (prop, ratingType, rating) => {
+/* star rating row — part "rating". `prop: null` opens the scope with NO itemprop,
+   which is what makes microdata read it as a SECOND TOP-LEVEL ITEM rather than a
+   property of the enclosing card — the EmployerAggregateRating shape. `lead` is
+   markup placed inside the scope ahead of the metas (itemReviewed); the two label
+   options override the star-row wording. Docs: docs/schema.md § Employer rating */
+const ratingPart = (prop, ratingType, rating, { lead = '', srLabel = null, visibleLabel = null } = {}) => {
 	if (!rating?.value) return '';
 	const max = rating.max ?? 5;
-	const label = `Rated ${rating.value} out of ${max} stars${rating.count ? ` from ${num(rating.count)} ratings` : ''}`;
+	/* built from already-escaped pieces — num() escapes, so no outer esc() here */
+	const label = srLabel ?? `Rated ${esc(rating.value)} out of ${esc(max)} stars${rating.count ? ` from ${num(rating.count)} ratings` : ''}`;
+	const visible = visibleLabel ?? `${esc(rating.value)} / ${esc(max)}${rating.count ? ` (${num(rating.count)} ratings)` : ''}`;
 	/* @browser.style/rating — a disabled range input masked with stars. It is
 	   DECORATIVE (aria-hidden): a role="img" wrapper may not contain an input, so
 	   the <span> carries the accessible text and the metas carry the machine value */
-	return `<div data-part="rating"${scope(prop, ratingType)}>
-		${meta('ratingValue', rating.value)}
+	return `<div data-part="rating"${prop ? scope(prop, ratingType) : ` itemscope itemtype="${SCHEMA + ratingType}"`}>
+		${lead}${meta('ratingValue', rating.value)}
 		${rating.count != null ? meta('ratingCount', rating.count) : ''}
 		${meta('bestRating', max)}${meta('worstRating', 1)}
 		<input class="ui-rating" type="range" min="1" max="${esc(max)}" value="${esc(rating.value)}" step="0.01" disabled aria-hidden="true">
-		<span data-sr>${esc(label)}</span>
-		<span aria-hidden="true">${esc(rating.value)} / ${max}${rating.count ? ` (${num(rating.count)} ratings)` : ''}</span>
+		<span data-sr>${label}</span>
+		<span aria-hidden="true">${visible}</span>
 	</div>`;
 };
 
@@ -253,6 +407,47 @@ const contactLink = ({ type, value, label }, primary = false) => {
 const mapUrl = (geo) => geo?.url || (geo?.latitude != null && geo?.longitude != null
 	? `geo:${geo.latitude},${geo.longitude}`
 	: null);
+
+/* map EMBED src — the frame's iframe, not the "Open in Maps" href above.
+   Coordinates are validated as NUMBERS before they reach a URL; esc() is the second
+   layer, never the first. Docs: docs/media.md § Map */
+const MAP_ZOOM = { min: 1, max: 20, default: 16 };
+const mapCoords = (geo, item = {}) => {
+	const lat = Number(item.latitude ?? geo?.latitude);
+	const lon = Number(item.longitude ?? geo?.longitude);
+	if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
+	if (Math.abs(lat) > 90 || Math.abs(lon) > 180) return null;
+	const zoom = Math.round(Number(item.zoom));
+	return { lat, lon, zoom: Number.isFinite(zoom) ? Math.min(Math.max(zoom, MAP_ZOOM.min), MAP_ZOOM.max) : MAP_ZOOM.default };
+};
+
+/* bbox is (west, south, east, north); the latitude cosine keeps the box square on the
+   ground rather than in degrees, which otherwise flattens it towards the poles */
+const osmEmbed = ({ lat, lon, zoom }) => {
+	const lonHalf = 180 / 2 ** zoom;
+	const latHalf = lonHalf * Math.cos(lat * Math.PI / 180);
+	const box = [lon - lonHalf, lat - latHalf, lon + lonHalf, lat + latHalf].map((n) => n.toFixed(6));
+	return `https://www.openstreetmap.org/export/embed.html?bbox=${box.join(',')}&layer=mapnik&marker=${lat},${lon}`;
+};
+
+/* google needs an API key, apple a MapKit JWT — neither can be built from coordinates
+   alone, so an unkeyed provider falls back to OSM rather than emitting a dead frame */
+const googleEmbed = ({ lat, lon, zoom }, key) =>
+	key ? `https://www.google.com/maps/embed/v1/place?key=${encodeURIComponent(key)}&q=${lat},${lon}&zoom=${zoom}` : null;
+
+const MAP_PROVIDERS = { osm: (c) => osmEmbed(c), google: (c, options) => googleEmbed(c, options.key) };
+
+/* hasMap is a Place property — emit it only where the resolved itemtype descends from
+   Place. Other types still get the frame, just unmarked. Docs: docs/schema.md § Map */
+const HAS_MAP_TYPES = new Set(['business', 'location']);
+
+const mapFrame = (item, fields, type) => {
+	const coords = mapCoords(fields.details?.geo, item);
+	const src = item.src || (coords && (MAP_PROVIDERS[item.provider]?.(coords, fields.details?.map || {}) || osmEmbed(coords)));
+	if (!src) return '';
+	const title = item.alt || `Map of ${plain(fields.headline) || 'this location'}`;
+	return `<iframe${attrs({ src, title, loading: 'lazy', itemprop: HAS_MAP_TYPES.has(type) ? 'hasMap' : null })}></iframe>`;
+};
 
 /* eligibleDuration is QuantitativeValue-typed — expand ISO P<n><unit>, not Duration text */
 const DURATION_UNIT = { D: 'DAY', W: 'WEE', M: 'MON', Y: 'ANN' };
@@ -339,8 +534,10 @@ const initials = (name) => {
 	const parts = (name || '').trim().split(/\s+/).filter(Boolean);
 	return parts.length ? (parts[0][0] + (parts.length > 1 ? parts.at(-1)[0] : '')).toUpperCase() : '';
 };
+/* loading/decoding are unconditional — an avatar is always below the fold, and deferring it
+   has nothing to do with whether the srcset pipeline is armed. Only srcset is IMG-gated. */
 const avatarPart = ({ avatar, name }) => avatar
-	? `<ui-avatar><img src="${esc(avatar)}" alt=""${IMG ? attrs({ srcset: fixedSrcset(avatar, 64), loading: 'lazy', decoding: 'async' }) : ''}></ui-avatar>`
+	? `<ui-avatar><img src="${esc(avatar)}" alt=""${attrs({ srcset: IMG ? fixedSrcset(avatar, 64) : null, loading: 'lazy', decoding: 'async' })}></ui-avatar>`
 	: (name ? `<ui-avatar><abbr aria-hidden="true">${esc(initials(name))}</abbr></ui-avatar>` : '');
 
 /* byline rows from authors[] — the dateline rides the FIRST author as a second
@@ -350,6 +547,14 @@ const byline = (authors, prop = 'author', dateline = '') =>
 		${avatarPart(author)}
 		<span data-part="byline-who"><span itemprop="name">${esc(author.name)}</span>${author.role ? `<span itemprop="jobTitle">${esc(author.role)}</span>` : ''}</span>${index === 0 ? dateline : ''}
 	</address>`).join('');
+
+/* screen credits — director row + one actor scope per name. Shared by movie/
+   tvseries/tvepisode; the label carries its own punctuation because a series is
+   "Created and directed by" where a film is "Director:". `actor` accepts a Person
+   OR a PerformingGroup; Person is the safe default for a bare name. */
+const creditsPart = (d) =>
+	(d.director?.name ? `<p data-part="meta"${scope('director', 'Person')}>${esc(d.director.label || 'Director:')} <span itemprop="name">${esc(d.director.name)}</span></p>` : '')
+	+ (d.actors?.length ? `<p data-part="meta">Starring: ${d.actors.map((name) => `<span${scope('actor', 'Person')}><span itemprop="name">${esc(name)}</span></span>`).join(', ')}</p>` : '');
 
 /* quote part via @browser.style/quote — variant on the <ui-quote> wrapper styles it, data-part stays the card hook */
 const quotePart = (text, { itemprop = 'text', variant = null, cite = null } = {}) =>
@@ -476,6 +681,8 @@ const RVL_DIRECTED = new Set(Object.entries(TOKENS.attributes.variant.tokens)
 	.map(([stem]) => stem));
 /* animations that need the <ui-face> front-face wrapper (exp animates the host) */
 const RVL_FACED = new Set(['flp', 'sld', 'grw']);
+/* the toggle icon's corner when a preset names none */
+const RVL_ICON = 'top right sm';
 const ICON_STYLE = { dark: 'drk', semi: 'sem' };
 const ICON_CELLS = new Set(TOKENS.attributes.variant.tokens.ico.args.pos);
 /* icon words → ico()/icc() tokens: positional words fold into ONE corner token
@@ -606,8 +813,12 @@ const buildLightbox = (furniture, tokens, mediaId) => {
  * Furniture style-override tokens are pushed onto tokens.media for the host's media= string.
  */
 const buildMedia = (fields, type, tokens, preset = {}, frameAttrs = {}, cardId = null) => {
-	if (!fields.media?.length) return null;
-	let frames = '';
+	/* a collage fills the frame with variant tiles instead of images, so it is a second
+	   reason for the frame to exist — hasVariant gates it, exactly as the text column does */
+	const variants = fields.details?.variants;
+	const collage = isCollage(variants) && resolveItemtype(fields) === 'ProductGroup' ? collagePart(variants, preset.variants || {}) : '';
+	if (!fields.media?.length && !collage) return null;
+	let frames = collage;
 	let embed = null;
 	let extras = '';
 	/* a <ui-play> commands the frame's FIRST native <video>/<audio> — id it for commandfor */
@@ -619,8 +830,12 @@ const buildMedia = (fields, type, tokens, preset = {}, frameAttrs = {}, cardId =
 	const ratioMatch = IMG && /asr\((\d+)\/(\d+)\)/.exec(preset.media || '');
 	const ratio = ratioMatch ? +ratioMatch[1] / +ratioMatch[2] : null;
 	const eager = /load\(eager\)/.test(preset.media || '');
+	/* mrk(tmb) paints each ::scroll-marker from --ui-carousel-thumb-url (carousel.css);
+	   with no value the thumb is a bare placeholder, so an SSR'd thumbnail carousel has
+	   to carry one per slide. Docs: docs/media.md § Thumbnails */
+	const thumbs = /mrk\(tmb\)/.test(preset.media || '');
 	let firstImg = true;
-	for (const item of fields.media) {
+	for (const item of fields.media || []) {
 		const src = item.asset?.$asset ? item.asset.$asset : item.src;
 		if (item.mediaType === 'youtube' || item.mediaType === 'vimeo') {
 			/* lite embed — provider/video attributes on the frame itself (index.js wires it) */
@@ -645,6 +860,12 @@ const buildMedia = (fields, type, tokens, preset = {}, frameAttrs = {}, cardId =
 			})}${rootVideo || NO_IMAGE_PROP.has(type) ? '' : scope('video', 'VideoObject')}>${rootVideo ? rootVideoMetas(item, src) : NO_IMAGE_PROP.has(type) ? '' : videoMetas(item, src)}</video>`;
 			continue;
 		}
+		if (item.mediaType === 'map') {
+			/* the frame IS the map — coordinates come from details.geo, the same object
+			   geoPart() emits, so the two can never disagree. Docs: docs/media.md § Map */
+			frames += mapFrame(item, fields, type);
+			continue;
+		}
 		if (item.mediaType === 'audio') {
 			/* chromeless <audio> — renders nothing; the poster img stays the visual and
 			   <ui-play> drives playback via command="--play-pause" (video.js mirrors state) */
@@ -657,6 +878,7 @@ const buildMedia = (fields, type, tokens, preset = {}, frameAttrs = {}, cardId =
 		frames += `<img${attrs({
 			src,
 			alt: item.alt || '',
+			style: thumbs ? styleAttr({ '--ui-carousel-thumb-url': `url('${thumbUrl(src)}')` }) : null,
 			srcset: cdn ? buildSrcset(src, { ...IMG, ratio }) : null,
 			sizes: cdn ? sizesFor(eager) : null,
 			loading: eager ? 'eager' : 'lazy',
@@ -674,10 +896,18 @@ const buildMedia = (fields, type, tokens, preset = {}, frameAttrs = {}, cardId =
 	let typeChip = '';
 	if (TYPE_CHIP && !fields.furniture?.chip) {
 		/* one chip family per frame: an existing furniture chip owns the tokens — skip.
-		   te is taken when any furniture style names it (product's sticker) — chip default (ts) then */
-		const teTaken = Object.values(fields.furniture || {}).some((f) => ` ${f?.style || ''} `.includes(' te '));
-		if (!teTaken) tokens.media.push('chip(te)');
-		typeChip = `<ui-chip data-type>${esc(resolveItemtype(type, fields))}</ui-chip>`;
+		   te is taken when any furniture style names it (product's sticker), or when a
+		   reveal's toggle icon sits there (its default corner) — chip default (ts) then */
+		const teTaken = Object.values(fields.furniture || {}).some((f) => ` ${f?.style || ''} `.includes(' te '))
+			|| (preset.element === 'ui-reveal' && !preset.reveal?.trigger && iconTokens('ico', preset.reveal?.icon || RVL_ICON).includes('ico(te)'));
+		/* an authored chip position outranks the default: pushing one here would make
+		   mergeMediaTokens strip the preset's own same-axis token and move the chip */
+		const chipPlaced = String(preset.media || '').split(/\s+/).some((token) => {
+			const match = FURNITURE_TOKEN.exec(token);
+			return match && match[1] === 'chip' && axisOf(match[2]) === 'pos';
+		});
+		if (!teTaken && !chipPlaced) tokens.media.push('chip(te)');
+		typeChip = `<ui-chip data-type>${esc(resolveItemtype(fields))}</ui-chip>`;
 	}
 	const html = `<ui-media${attrs({
 		id: mediaId,
@@ -735,7 +965,7 @@ const buildContent = (fields, type, overlay, slots = {}, textMode = 'summary', p
 		html += `<small data-part="eyebrow"${EYEBROW_PROP[type] ? ` itemprop="${EYEBROW_PROP[type]}"` : ''}>${esc(fields.eyebrow)}</small>`;
 	}
 	if (fields.headline && type !== 'quote') {
-		html += `<${headlineTag} data-part="headline" itemprop="${HEADLINE_PROP[type] || 'name'}">${renderInline(fields.headline)}</${headlineTag}>`;
+		html += `<${headlineTag} data-part="headline" itemprop="${headlineProp(fields, type)}">${renderInline(fields.headline)}</${headlineTag}>`;
 	}
 	html += slots.subheadline || (fields.subheadline ? `<${textTag} data-part="subheadline">${esc(fields.subheadline)}</${textTag}>` : '');
 	if (fields.summary && showSummary && !DETAILS_OWNS_SUMMARY.has(type)) {
@@ -755,7 +985,10 @@ const buildContent = (fields, type, overlay, slots = {}, textMode = 'summary', p
 	/* the lede byline sits between the standfirst and the body (slots.byline) */
 	html += slots.byline || '';
 	html += body;
-	if (fields.published) html += meta(PUBLISHED_PROP[type] || 'datePublished', fields.published);
+	if (fields.published) {
+		const prop = PUBLISHED_PROP[type] || 'datePublished';
+		html += meta(prop, prop === 'datePosted' ? dateOnly(fields.published) : fields.published);
+	}
 	if (fields.modified) html += meta('dateModified', fields.modified);
 	return html;
 };
@@ -773,8 +1006,10 @@ const datelinePart = (fields) => {
 
 const buildTail = (fields, type) => {
 	let html = '';
-	const dateline = datelinePart(fields);
-	if (fields.authors?.length) html += byline(fields.authors, type === 'quote' ? 'creator' : 'author', dateline);
+	/* a posting/upload date is machine metadata, not an editorial byline date, so the
+	   types that redirect `published` away from datePublished show no dateline */
+	const dateline = type in PUBLISHED_PROP ? '' : datelinePart(fields);
+	if (fields.authors?.length) html += byline(fields.authors, bylineProp(type), dateline);
 	else if (dateline) html += `<p data-part="meta">${dateline}</p>`;
 	if (fields.modifiedDisplay) html += `<p data-part="meta"><small>Updated ${esc(fields.modifiedDisplay)}</small></p>`;
 	if (fields.tags?.length) {
@@ -809,7 +1044,11 @@ const buildTail = (fields, type) => {
 	}
 	const eng = fields.engagement;
 	if (eng && Object.keys(eng).length) {
-		const counters = [['likeCount', 'LikeAction'], ['shareCount', 'ShareAction'], ['commentCount', 'CommentAction'], ['viewCount', 'WatchAction']];
+		/* WatchAction is "dynamic/moving visual content" — only right for a video/audio
+		   root. Everything else (article, forum post) views STATIC content: ViewAction,
+		   which is also the only one of the two Google reads. Docs: docs/schema.md § Subtypes */
+		const viewAction = WATCHABLE.has(resolveItemtype(fields)) ? 'WatchAction' : 'ViewAction';
+		const counters = [['likeCount', 'LikeAction'], ['shareCount', 'ShareAction'], ['commentCount', 'CommentAction'], ['viewCount', viewAction]];
 		for (const [key, action] of counters) {
 			if (eng[key] == null) continue;
 			html += `<div${scope('interactionStatistic', 'InteractionCounter')} hidden>${meta('interactionType', SCHEMA + action)}${meta('userInteractionCount', eng[key])}</div>`;
@@ -834,14 +1073,172 @@ const availabilityHue = (availability) =>
 const availabilityUrl = (availability) =>
 	SCHEMA + (/(in)/i.test(availability || '') ? 'InStock' : /(low|limited)/i.test(availability || '') ? 'LimitedAvailability' : 'OutOfStock');
 
+/* ProductGroup variant axes. A variesBy value names a property Google reads FROM the
+   variants, so one allowlist drives both: what variesBy may say and what an item emits.
+   Allowlisted for the same two reasons as details.subtype — docs/schema.md § Subtypes. */
+const VARIANT_AXES = ['color', 'size', 'material', 'pattern'];
+
+/* One hasVariant row. `item.url` becomes a real anchor, not a meta: Google requires each
+   variant be "preselectable directly with a distinct URL", and only a link is crawlable.
+   `price == null` (not falsy) — a free variant prices at 0. Docs: docs/schema.md § Product */
+const variantItem = (item) => {
+	const name = `<span itemprop="name">${esc(item.name)}</span>`;
+	const offer = item.price == null ? '' : `<span${scope('offers', 'Offer')}>`
+		+ meta('priceCurrency', item.currency)
+		+ meta('availability', availabilityUrl(item.availability || 'in stock'))
+		+ ` ${priceValue(item.currency, item.price)}</span>`;
+	return `<li${scope('hasVariant', 'Product')}>`
+		+ (item.url ? `<a itemprop="url" href="${esc(item.url)}">${name}</a>` : name)
+		+ meta('sku', item.sku)
+		+ VARIANT_AXES.map((axis) => meta(axis, item[axis])).join('')
+		+ offer
+		+ '</li>';
+};
+
+/* One hasVariant row as a picker button. The <label> IS the variant row — the microdata
+   rides it, so the picker never restates a list rendered elsewhere. Unlike the list form
+   the url is a <meta>, NOT an anchor: an anchor inside a <label> is a second interactive
+   control fighting the radio for the same click. Docs: docs/schema.md § Product */
+const variantButton = (item, index, group) => {
+	const label = [item.size, item.color, item.material, item.pattern].find(Boolean) || item.name;
+	return `<label class="ui-button"${scope('hasVariant', 'Product')}>`
+		+ `<input type="radio" name="${group}" value="${esc(label)}" data-sr${index === 0 ? ' checked' : ''}>`
+		+ meta('name', item.name)
+		+ meta('url', item.url)
+		+ meta('sku', item.sku)
+		+ VARIANT_AXES.map((axis) => meta(axis, item[axis])).join('')
+		+ (item.price == null ? '' : `<span${scope('offers', 'Offer')} hidden>${meta('priceCurrency', item.currency)}${meta('price', item.price)}${meta('availability', availabilityUrl(item.availability || 'in stock'))}</span>`)
+		+ esc(label)
+		+ '</label>';
+};
+
+/* Nested hasVariant needs no inProductGroupWithID, and variesBy takes FULL schema.org
+   URLs, not bare property names. `control` picks the shape the rows take — a link list
+   (default), a picker, or a collage that moves the rows out of the text column into the
+   MEDIA frame entirely; an unknown value falls back to the list, the same loud-skip
+   discipline as an unknown axis. Docs: docs/schema.md § Product */
+/* the picker's look is ui/button-group's, not the card's — the segmented-control
+   spelling from its own demo. Override per preset with parts.buttonGroup, which
+   tokens.lint.js validates against that package's vocabulary. */
+const BUTTON_GROUP_VARIANT = 'inline rounded border';
+/* the control is sized by font-size and coloured by data-theme — its own documented API
+   (../button-group/readme.md), so the preset reaches both instead of a page stylesheet.
+   The size lands in a CLASS, so it is allowlisted rather than interpolated. */
+const BUTTON_GROUP_SIZES = new Set(['fs-xxs', 'fs-xs', 'fs-sm', 'fs-md', 'fs-lg']);
+const VARIANT_CONTROLS = new Set(['list', 'buttons', 'collage']);
+/* a collage is the one control with a DATA precondition: every variant needs its own
+   image, because the tiles ARE the images. One missing image falls back to the list
+   rather than rendering a ragged grid — checked here and in buildMedia, so the two
+   halves of the decision can never disagree. */
+const isCollage = (variants) => variants?.control === 'collage'
+	&& !!variants.items?.length && variants.items.every((item) => item.image?.src);
+const variantsPart = (variants, fields, parts = {}) => {
+	const wanted = variants.variesBy || [];
+	const axes = wanted.filter((axis) => VARIANT_AXES.includes(axis));
+	const control = VARIANT_CONTROLS.has(variants.control) ? variants.control : 'list';
+	/* the group name is MINTED, never author data — slug() is an attribute-safe
+	   allowlist, and per-headline so two pickers on a page can't share a group */
+	const group = `variant-${slug(plain(fields?.headline))}`;
+	return meta('productGroupID', variants.productGroupID)
+		+ axes.map((axis) => meta('variesBy', SCHEMA + axis)).join('')
+		/* an unknown axis is dropped — say so, for the same reason the block-level skip does */
+		+ (axes.length < wanted.length ? `<!-- variesBy axes ignored: not one of ${VARIANT_AXES.join(', ')} -->` : '')
+		+ (isCollage(variants) ? ''
+			: control === 'buttons'
+				? `<fieldset${attrs({
+					class: `ui-button-group ${BUTTON_GROUP_SIZES.has(parts.buttonGroupSize) ? parts.buttonGroupSize : 'fs-sm'}`,
+					'data-variant': parts.buttonGroup || BUTTON_GROUP_VARIANT,
+					'data-theme': parts.buttonGroupTheme || null
+				})}>${variants.items.map((item, index) => variantButton(item, index, group)).join('')}</fieldset>`
+				: `<ul data-part="list">${variants.items.map(variantItem).join('')}</ul>`);
+};
+
+/* The collage presentation of the same hasVariant set: one nested <ui-card> per variant
+   inside a <lay-out> grid in the MEDIA area, each tile a whole-tile link.
+   The LOOK is the preset's (`variants.tile` / `variants.layout`, read in buildMedia,
+   the one place holding both the preset and the variant data).
+   Docs: docs/schema.md § Product */
+const COLLAGE_TILE = { variant: 'rds(non)', media: 'asr(1/1) chip(bs) chip(blue) chip(pale) chip(sm)', content: 'pad(none)' };
+const COLLAGE_LAYOUT = { xs: 'cg(3xs) rg(3xs)', md: 'columns(2)' };
+
+/* the accessible name says which variant the tile selects — the axis value carries that
+   ("Indigo Floral"), where the chip is only a short label ("Indigo") */
+const variantAxisValue = (item) => VARIANT_AXES.map((axis) => item[axis]).find(Boolean) || item.name;
+
+const collageTile = (item, tile) => {
+	const offer = item.price == null ? '' : `<span${scope('offers', 'Offer')} hidden>`
+		+ meta('priceCurrency', item.currency)
+		+ meta('price', item.price)
+		+ meta('availability', availabilityUrl(item.availability || 'in stock'))
+		+ '</span>';
+	const img = `<img${attrs({
+		src: item.image.src,
+		alt: item.image.alt || '',
+		srcset: cdnEligible(item.image.src) ? buildSrcset(item.image.src, { ...IMG, ratio: 1 }) : null,
+		sizes: cdnEligible(item.image.src) ? sizesFor(false) : null,
+		loading: 'lazy',
+		decoding: IMG ? 'async' : null,
+		itemprop: 'image'
+	})}>`;
+	return `<ui-card${attrs({ variant: tile.variant, media: tile.media, content: tile.content })}${scope('hasVariant', 'Product')}>`
+		+ '<cq-box>'
+		+ `<ui-media>${img}${item.label ? `<ui-chip>${esc(item.label)}</ui-chip>` : ''}</ui-media>`
+		+ '<ui-content>'
+		+ meta('name', item.name)
+		+ meta('sku', item.sku)
+		+ VARIANT_AXES.map((axis) => meta(axis, item[axis])).join('')
+		+ offer
+		+ (item.url ? `<a data-part="cover" href="${esc(item.url)}" itemprop="url" aria-label="Select ${esc(variantAxisValue(item))}"></a>` : '')
+		+ '</ui-content></cq-box></ui-card>';
+};
+
+const collagePart = (variants, config = {}) => {
+	const tile = { ...COLLAGE_TILE, ...config.tile };
+	const layout = { ...COLLAGE_LAYOUT, ...config.layout };
+	return `<lay-out${attrs(layout)}>${variants.items.map((item) => collageTile(item, tile)).join('')}</lay-out>`;
+};
+
+/* leading year of an ISO date — "since 2023" in a series meta row */
+const startYear = (iso) => /^\d{4}/.exec(iso || '')?.[0] || null;
+
+/* text → an attribute-safe token, for grouping names the renderer mints itself
+   (radio groups). Strict allowlist, so it can never break out of the attribute. */
+const slug = (text) => String(text ?? '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40) || 'card';
+
+/* A list of ALREADY-BUILT scoped <li> rows (each carries its own itemscope, so
+   listPart's plain-string shape does not fit). Ordered vs unordered is DATA
+   (`details.ordered`), because the answer is per list, not per type: album tracks
+   and TV seasons ascend, so ordinal markers are true; podcast episodes descend,
+   so markers would lie. The per-type default is the direction that type usually
+   runs in — data always wins. */
+const scopedList = (rows, ordered) => rows.length
+	? `<${ordered ? 'ol' : 'ul'} data-part="list">${rows.join('')}</${ordered ? 'ol' : 'ul'}>`
+	: '';
+
+/* one MenuItem row. suitableForDiet takes RestrictedDiet members by URL; the visible
+   chip is a separate label so the machine value and the reader's value agree.
+   calories is an Energy and servingSize is Text — both unit-bearing strings. */
+const menuItem = (item) => {
+	const offer = item.price == null ? '' : `<span${scope('offers', 'Offer')}>${meta('priceCurrency', item.currency)}${priceValue(item.currency, item.price)}</span>`;
+	const nutrition = item.nutrition
+		? `<span${scope('nutrition', 'NutritionInformation')} hidden>${meta('calories', item.nutrition.calories)}${meta('proteinContent', item.nutrition.proteinContent)}${meta('servingSize', item.nutrition.servingSize)}</span>`
+		: '';
+	return `<li${scope('hasMenuItem', 'MenuItem')}>`
+		+ `<p><strong itemprop="name">${esc(item.name)}</strong>${offer ? ` · ${offer}` : ''}${item.label ? ` <ui-chip theme="pale green">${esc(item.label)}</ui-chip>` : ''}</p>`
+		+ (item.description ? `<span itemprop="description">${esc(item.description)}</span>` : '')
+		+ (item.diets || []).filter((diet) => RESTRICTED_DIETS.has(diet)).map((diet) => meta('suitableForDiet', SCHEMA + diet)).join('')
+		+ nutrition
+		+ '</li>';
+};
+
 const DETAILS = {
-	product(d) {
+	product(d, fields, parts, itemtype) {
 		/* PDP order: rating under the title, then price, then stock state */
 		let html = ratingPart('aggregateRating', 'AggregateRating', d.rating);
 		if (d.price) {
 			html += `<p data-part="price"${scope('offers', 'Offer')}>
 				${meta('priceCurrency', d.price.currency)}${meta('availability', availabilityUrl(d.availability))}${meta('itemCondition', SCHEMA + 'NewCondition')}${d.validUntil ? meta('priceValidUntil', d.validUntil) : ''}
-				<data itemprop="price" value="${esc(d.price.current)}">${fmtPrice(d.price.currency, d.price.current)}</data>${d.price.original ? ` <del>${fmtPrice(d.price.currency, d.price.original)}</del>` : ''}${d.price.discountText ? ` <ui-chip theme="pale green">${esc(d.price.discountText)}</ui-chip>` : ''}
+				${priceValue(d.price.currency, d.price.current)}${d.price.original ? ` <del>${fmtPrice(d.price.currency, d.price.original)}</del>` : ''}${d.price.discountText ? ` <ui-chip theme="pale green">${esc(d.price.discountText)}</ui-chip>` : ''}
 			</p>`;
 			/* the validity belongs to the offer — directly under the price, not the stock row */
 			if (d.validUntilDisplay) html += `<p data-part="meta"><small>Valid until ${esc(d.validUntilDisplay)}</small></p>`;
@@ -849,12 +1246,21 @@ const DETAILS = {
 		if (d.availability) html += `<p data-part="meta"><ui-chip theme="pale ${availabilityHue(d.availability)}">${esc(d.availability)}</ui-chip></p>`;
 		/* sku is machine-readable only — no visible number on the card */
 		if (d.sku) html += meta('sku', d.sku);
+		/* hasVariant/variesBy/productGroupID are ProductGroup-ONLY properties, so the gate is
+		   the itemtype WRITTEN on the enclosing scope — never d.subtype, and never a fresh
+		   resolveItemtype(fields) either: on the flipside path these details render into the
+		   HOST's itemscope. Skipping stays visible. Docs: docs/schema.md § Product */
+		if (d.variants?.items?.length) {
+			html += itemtype === 'ProductGroup'
+				? variantsPart(d.variants, fields, parts)
+				: '<!-- variants ignored: itemtype did not resolve to ProductGroup -->';
+		}
 		return html;
 	},
 
 	event(d) {
 		/* attendanceMode is data-driven through an ALLOWLIST — the same discipline as
-		   business.businessType; anything else falls back to the offline default */
+		   details.subtype; anything else falls back to the offline default */
 		const mode = ATTENDANCE_MODES.has(d.attendanceMode) ? d.attendanceMode : 'Offline';
 		let html = meta('eventStatus', d.status ? SCHEMA + 'Event' + d.status : null)
 			+ meta('eventAttendanceMode', `${SCHEMA}${mode}EventAttendanceMode`)
@@ -868,7 +1274,7 @@ const DETAILS = {
 		}
 		/* ticket tiers — one Offer scope each (Google reads these for event rich results) */
 		for (const offer of d.offers || []) {
-			html += `<p data-part="price"${scope('offers', 'Offer')}>${meta('priceCurrency', offer.currency)}${meta('availability', availabilityUrl(offer.availability || 'in stock'))}${offer.validThrough ? meta('validThrough', offer.validThrough) : ''}${offer.name ? `<span itemprop="name">${esc(offer.name)}</span> ` : ''}<data itemprop="price" value="${esc(offer.price)}">${fmtPrice(offer.currency, offer.price)}</data></p>`;
+			html += `<p data-part="price"${scope('offers', 'Offer')}>${meta('priceCurrency', offer.currency)}${meta('availability', availabilityUrl(offer.availability || 'in stock'))}${offer.validThrough ? meta('validThrough', offer.validThrough) : ''}${offer.name ? `<span itemprop="name">${esc(offer.name)}</span> ` : ''}${priceValue(offer.currency, offer.price)}</p>`;
 		}
 		return html;
 	},
@@ -917,8 +1323,10 @@ const DETAILS = {
 		return html;
 	},
 
-	job(d, fields, parts = {}) {
-		let html = meta('industry', d.industry) + meta('employmentType', d.employmentType) + meta('validThrough', d.applicationDeadline);
+	job(d, fields, parts = {}, itemtype = null, owned = NO_PROPS) {
+		/* `industry` was emitted twice for a while — here and on the eyebrow. The eyebrow
+		   entry is gone; the guard is what keeps it from coming back. § One property, one value */
+		let html = (owned.has('industry') ? '' : meta('industry', d.industry)) + meta('employmentType', d.employmentType) + meta('validThrough', d.applicationDeadline);
 		html += `<p data-part="meta"><span${scope('hiringOrganization', 'Organization')}><span itemprop="name">${esc(d.company)}</span></span> · <span${scope('jobLocation', 'Place')}><span itemprop="name">${esc(d.location)}</span></span>${d.employmentTypeDisplay ? ` · ${esc(d.employmentTypeDisplay)}` : ''}${d.applicationDeadlineDisplay ? ` · Apply by ${esc(d.applicationDeadlineDisplay)}` : ''}</p>`;
 		const salary = d.salaryRange;
 		if (salary) {
@@ -926,6 +1334,22 @@ const DETAILS = {
 				${meta('currency', salary.currency)}
 				<span${scope('value', 'QuantitativeValue')}>${meta('minValue', salary.min)}${meta('maxValue', salary.max)}${meta('unitText', salary.period || 'YEAR')}${esc(salary.currency)} ${num(salary.min)}–${num(salary.max)} <small>${esc(salary.periodDisplay || 'annually')}</small></span>
 			</p>`;
+		}
+		/* The employer rating is a SECOND TOP-LEVEL ITEM (itemscope, no itemprop): it
+		   rates the company, not the posting, and JobPosting has no aggregateRating —
+		   a nested one is simply ignored. Docs: docs/schema.md § Employer rating */
+		const employer = d.employerRating;
+		if (employer?.value) {
+			const org = employer.organization;
+			const max = employer.max ?? 5;
+			html += ratingPart(null, 'EmployerAggregateRating', employer, {
+				/* hidden: a machine-only scope is still a flex item and would otherwise
+				   eat a gap slot, indenting the star row against its siblings */
+				lead: org ? `<span${scope('itemReviewed', 'Organization')} hidden>${meta('name', org)}${meta('sameAs', employer.sameAs)}</span>` : '',
+				/* built from already-escaped pieces — num() escapes, so no outer esc() */
+				srLabel: `${esc(org || 'This employer')} rated ${esc(employer.value)} out of ${esc(max)}${employer.count != null ? ` by ${num(employer.count)} employees` : ''}`,
+				visibleLabel: `${esc(employer.value)} / ${esc(max)} employer rating${employer.count != null ? ` (${num(employer.count)} reviews)` : ''}`
+			});
 		}
 		const sections = [];
 		if (d.qualifications?.length) sections.push({ summary: 'Requirements', body: `<div>${listPart(d.qualifications, { itemprop: 'qualifications' })}</div>` });
@@ -943,7 +1367,7 @@ const DETAILS = {
 		const facts = [d.duration ? duration(d.duration) : null, d.difficultyLevel, d.courseWorkload ? duration(d.courseWorkload) + ' of study' : null].filter(Boolean).join(' · ');
 		html += `<p data-part="meta">${esc(facts)}${d.instructor?.name ? ` · Instructor: ${esc(d.instructor.name)}${d.instructor.title ? `, ${esc(d.instructor.title)}` : ''}` : ''}</p>`;
 		if (d.price) {
-			html += `<p data-part="price"${scope('offers', 'Offer')}>${meta('priceCurrency', d.price.currency)}${meta('availability', SCHEMA + 'InStock')}<data itemprop="price" value="${esc(d.price.current)}">${fmtPrice(d.price.currency, d.price.current)}</data>${d.price.original ? ` <del>${fmtPrice(d.price.currency, d.price.original)}</del>` : ''}</p>`;
+			html += `<p data-part="price"${scope('offers', 'Offer')}>${meta('priceCurrency', d.price.currency)}${meta('availability', SCHEMA + 'InStock')}${priceValue(d.price.currency, d.price.current)}${d.price.original ? ` <del>${fmtPrice(d.price.currency, d.price.original)}</del>` : ''}</p>`;
 		}
 		html += listPart(d.learningOutcomes, { itemprop: 'teaches' });
 		html += listPart(d.prerequisites);
@@ -955,7 +1379,7 @@ const DETAILS = {
 			+ (d.serviceName ? `<div${scope('reservationFor', 'Service')} hidden>${meta('name', d.serviceName)}</div>` : '');
 		html += `<p data-part="meta"><span${scope('provider', 'Organization')}><span itemprop="name">${esc(d.venue)}</span></span>${d.capacity ? ` · Capacity ${esc(d.capacity)}` : ''}${d.duration ? ` · ${esc(d.duration)}` : ''}${d.cancellationPolicy ? ` · ${esc(d.cancellationPolicy)}` : ''}</p>`;
 		if (d.price?.hourlyRate != null) {
-			html += `<p data-part="price"><data value="${esc(d.price.hourlyRate)}">${fmtPrice(d.price.currency, d.price.hourlyRate)}</data>/hour</p>`;
+			html += `<p data-part="price">${fmtPrice(d.price.currency, d.price.hourlyRate)}/hour</p>`;
 		}
 		html += listPart(d.amenities);
 		if (d.specialRequests) html += `<footer data-part="footer">${esc(d.specialRequests)}</footer>`;
@@ -1016,9 +1440,13 @@ const DETAILS = {
 	},
 
 	statistic(d) {
+		/* The machine value rides a <meta>: displayValue is abbreviated ("2.4M") and a
+		   text-reading consumer must never take it for the number. The <data> keeps its
+		   value= as the HTML machine pair for the text it wraps (and the stat style hook),
+		   never an itemprop. `unit` is a real unit — docs/schema.md § Statistic */
 		let html = `<p data-part="stat"${scope('value', 'QuantitativeValue')}>
-			${meta('name', d.metricName)}
-			<data itemprop="value" value="${esc(d.currentValue)}">${esc(d.displayValue ?? String(d.currentValue))}</data>${d.unit ? `<small itemprop="unitText">${esc(d.unit)}</small>` : ''}${d.trend ? `<span> ${d.trend === 'up' ? '▲' : d.trend === 'down' ? '▼' : '►'} ${esc(d.trendPercentage)}%</span>` : ''}
+			${meta('name', d.metricName)}${meta('value', d.currentValue)}
+			<data value="${esc(d.currentValue)}">${esc(d.displayValue ?? String(d.currentValue))}</data>${d.unit ? `<small itemprop="unitText">${esc(d.unit)}</small>` : ''}${d.trend ? `<span> ${d.trend === 'up' ? '▲' : d.trend === 'down' ? '▼' : '►'} ${esc(d.trendPercentage)}%</span>` : ''}
 		</p>`;
 		const foot = [d.comparisonPeriod ? `vs ${d.comparisonPeriod}` : null, d.note].filter(Boolean).join(' · ');
 		if (foot) html += `<p data-part="meta">${esc(foot)}</p>`;
@@ -1113,7 +1541,7 @@ const DETAILS = {
 		let html = eligibleDuration(d.trialPeriod);
 		if (d.isPopular) html += `<p data-part="meta"><ui-chip theme="pale accent">${esc(d.popularText || 'Most popular')}</ui-chip></p>`;
 		if (d.price) {
-			html += `<p data-part="price"${scope('priceSpecification', 'PriceSpecification')}>${meta('priceCurrency', d.price.currency)}<data itemprop="price" value="${esc(d.price.monthly)}">${fmtPrice(d.price.currency, d.price.monthly)}</data>/mo ${d.price.yearly ? `<small>or ${fmtPrice(d.price.currency, d.price.yearly)}/yr${d.price.savings ? ` — ${esc(d.price.savings)}` : ''}</small>` : ''}</p>`;
+			html += `<p data-part="price"${scope('priceSpecification', 'PriceSpecification')}>${meta('priceCurrency', d.price.currency)}${priceValue(d.price.currency, d.price.monthly)}/mo ${d.price.yearly ? `<small>or ${fmtPrice(d.price.currency, d.price.yearly)}/yr${d.price.savings ? ` — ${esc(d.price.savings)}` : ''}</small>` : ''}</p>`;
 		}
 		html += listPart(d.features, { itemprop: 'includesObject' });
 		html += listPart(d.limitations, { crossed: true });
@@ -1121,10 +1549,16 @@ const DETAILS = {
 		return html;
 	},
 
-	social(d) {
+	social(d, fields, parts = {}, itemtype = null, owned = NO_PROPS) {
 		let html = d.platform ? `<div${scope('publisher', 'Organization')} hidden>${meta('name', d.platform)}</div>` : '';
 		if (d.author) {
-			html += `<p data-part="meta"><span${scope('author', 'Person')}><span itemprop="name">${esc(d.author)}</span></span>${d.platform ? ` · ${esc(d.platform)}` : ''}</p>`;
+			/* the envelope's authors[] already declares author on this item; a second scope
+			   would be a second Person. The name stays visible, the microdata does not
+			   repeat — details.author is the byline FALLBACK, not a second author. */
+			const name = owned.has('author')
+				? esc(d.author)
+				: `<span${scope('author', 'Person')}><span itemprop="name">${esc(d.author)}</span></span>`;
+			html += `<p data-part="meta">${name}${d.platform ? ` · ${esc(d.platform)}` : ''}</p>`;
 		}
 		return html;
 	},
@@ -1144,7 +1578,7 @@ const DETAILS = {
 			if (line) html += meta('softwareRequirements', line) + `<p data-part="meta">Requires ${esc(line)}</p>`;
 		}
 		if (d.price) {
-			html += `<p data-part="price"${scope('offers', 'Offer')}>${meta('priceCurrency', d.price.currency)}${meta('availability', SCHEMA + 'InStock')}<data itemprop="price" value="${esc(d.price.current)}">${fmtPrice(d.price.currency, d.price.current)}</data>${d.price.note ? ` <small>${esc(d.price.note)}</small>` : ''}</p>`;
+			html += `<p data-part="price"${scope('offers', 'Offer')}>${meta('priceCurrency', d.price.currency)}${meta('availability', SCHEMA + 'InStock')}${priceValue(d.price.currency, d.price.current)}${d.price.note ? ` <small>${esc(d.price.note)}</small>` : ''}</p>`;
 		}
 		return html;
 	},
@@ -1153,8 +1587,9 @@ const DETAILS = {
 		let html = meta('foundingDate', d.foundingDate)
 			+ (d.sameAs || []).map((url) => meta('sameAs', url)).join('')
 			+ (d.numberOfEmployees != null ? `<span${scope('numberOfEmployees', 'QuantitativeValue')} hidden>${meta('value', d.numberOfEmployees)}</span>` : '');
-		const bits = [d.numberOfEmployees != null ? `${num(d.numberOfEmployees)} employees` : null, d.foundingDateDisplay ? `Founded ${d.foundingDateDisplay}` : null].filter(Boolean).join(' · ');
-		if (bits) html += `<p data-part="meta">${esc(bits)}</p>`;
+		/* escaped per component — num() already returns HTML-safe output */
+		const bits = [d.numberOfEmployees != null ? `${num(d.numberOfEmployees)} employees` : null, d.foundingDateDisplay ? `Founded ${esc(d.foundingDateDisplay)}` : null].filter(Boolean).join(' · ');
+		if (bits) html += `<p data-part="meta">${bits}</p>`;
 		html += geoViaPlace(d.headquarters?.geo) + addressPart(d.headquarters?.address);
 		if (d.email) html += `<p data-part="meta">${meta('email', d.email)}<a href="mailto:${esc(d.email)}">${esc(d.email)}</a></p>`;
 		/* each local office is a department → LocalBusiness (Google's multi-location pattern),
@@ -1185,8 +1620,9 @@ const DETAILS = {
 	howto(d, fields, parts = {}) {
 		let html = meta('totalTime', d.totalTime)
 			+ (d.estimatedCost ? `<span${scope('estimatedCost', 'MonetaryAmount')} hidden>${meta('currency', d.estimatedCost.currency)}${meta('value', d.estimatedCost.value)}</span>` : '');
-		const bits = [d.totalTime ? `Takes ${duration(d.totalTime)}` : null, d.estimatedCost ? `~${fmtPrice(d.estimatedCost.currency, d.estimatedCost.value)}` : null, d.difficulty].filter(Boolean).join(' · ');
-		if (bits) html += `<p data-part="meta">${esc(bits)}</p>`;
+		/* escaped per component — fmtPrice() already returns HTML-safe output */
+		const bits = [d.totalTime ? `Takes ${esc(duration(d.totalTime))}` : null, d.estimatedCost ? `~${fmtPrice(d.estimatedCost.currency, d.estimatedCost.value)}` : null, d.difficulty ? esc(d.difficulty) : null].filter(Boolean).join(' · ');
+		if (bits) html += `<p data-part="meta">${bits}</p>`;
 		if (d.supplies?.length || d.tools?.length) {
 			html += `<ul data-part="list">${(d.supplies || []).map((item) => `<li${scope('supply', 'HowToSupply')}><span itemprop="name">${esc(item)}</span></li>`).join('')}${(d.tools || []).map((item) => `<li${scope('tool', 'HowToTool')}><span itemprop="name">${esc(item)}</span></li>`).join('')}</ul>`;
 		}
@@ -1231,9 +1667,7 @@ const DETAILS = {
 		const bits = [d.dateReleasedDisplay, d.durationDisplay || (d.duration ? duration(d.duration) : null), d.contentRating].filter(Boolean).join(' · ');
 		if (bits) html += `<p data-part="meta">${esc(bits)}</p>`;
 		html += ratingPart('aggregateRating', 'AggregateRating', d.rating);
-		if (d.director?.name) html += `<p data-part="meta"${scope('director', 'Person')}>Director: <span itemprop="name">${esc(d.director.name)}</span></p>`;
-		if (d.actors?.length) html += `<p data-part="meta">Starring: ${d.actors.map((name) => `<span${scope('actor', 'Person')}><span itemprop="name">${esc(name)}</span></span>`).join(', ')}</p>`;
-		return html;
+		return html + creditsPart(d);
 	},
 
 	book(d) {
@@ -1241,11 +1675,13 @@ const DETAILS = {
 		let html = meta('isbn', d.isbn) + meta('numberOfPages', d.numberOfPages)
 			+ (BOOK_FORMATS.has(d.bookFormat) ? meta('bookFormat', SCHEMA + d.bookFormat) : '');
 		/* U+2060 word joiners defeat iOS tel data detectors — docs/schema.md § Book */
-		const bits = [d.numberOfPages ? `${num(d.numberOfPages)} pages` : null, d.bookFormatDisplay || d.bookFormat, d.isbn ? `ISBN ${d.isbn.replace(/-/g, '-\u2060')}` : null].filter(Boolean).join(' · ');
-		if (bits) html += `<p data-part="meta">${esc(bits)}</p>`;
+		/* escaped per component — num() already returns HTML-safe output */
+		const format = d.bookFormatDisplay || d.bookFormat;
+		const bits = [d.numberOfPages ? `${num(d.numberOfPages)} pages` : null, format ? esc(format) : null, d.isbn ? `ISBN ${esc(d.isbn.replace(/-/g, '-\u2060'))}` : null].filter(Boolean).join(' · ');
+		if (bits) html += `<p data-part="meta">${bits}</p>`;
 		html += ratingPart('aggregateRating', 'AggregateRating', d.rating);
 		if (d.price) {
-			html += `<p data-part="price"${scope('offers', 'Offer')}>${meta('priceCurrency', d.price.currency)}${meta('availability', SCHEMA + 'InStock')}<data itemprop="price" value="${esc(d.price.current)}">${fmtPrice(d.price.currency, d.price.current)}</data></p>`;
+			html += `<p data-part="price"${scope('offers', 'Offer')}>${meta('priceCurrency', d.price.currency)}${meta('availability', SCHEMA + 'InStock')}${priceValue(d.price.currency, d.price.current)}</p>`;
 		}
 		if (d.publisher) html += `<p data-part="meta"${scope('publisher', 'Organization')}>Publisher: <span itemprop="name">${esc(d.publisher)}</span></p>`;
 		return html;
@@ -1278,24 +1714,316 @@ const DETAILS = {
 		}
 		if (d.claim) html += quotePart(d.claim, { itemprop: 'claimReviewed', cite: d.claimant });
 		return html;
+	},
+
+	/* MemberProgram owns exactly two properties — hasTiers and hostingOrganization;
+	   everything visible is Thing. The join CTA carries the programme's own `url`, so
+	   it lives here rather than in the envelope actions. Docs: docs/schema.md § Loyalty */
+	loyalty(d, fields, parts = {}) {
+		let html = d.hostingOrganization
+			? `<p data-part="meta"${scope('hostingOrganization', 'Organization')}>Run by <span itemprop="name">${esc(d.hostingOrganization)}</span></p>`
+			: '';
+		if (d.tiers?.length) {
+			html += accordion('member-tier', d.tiers.map((tier) => {
+				/* hasTierRequirement is polymorphic — free text, or a MonetaryAmount scope */
+				const amount = tier.requirementAmount;
+				const requirement = amount
+					? `<span${scope('hasTierRequirement', 'MonetaryAmount')}>${meta('currency', amount.currency)}${meta('value', amount.value)}${fmtPrice(amount.currency, amount.value)}</span>`
+					: tier.requirement ? `<span itemprop="hasTierRequirement">${esc(tier.requirement)}</span>` : '';
+				const benefits = (tier.benefits || []).map((benefit) =>
+					`<li>${TIER_BENEFITS.has(benefit.type) ? meta('hasTierBenefit', SCHEMA + benefit.type) : ''}${esc(benefit.text)}</li>`).join('');
+				return {
+					/* the points value belongs to the TIER and rides the summary: <summary>
+					   must be the first child, so a <meta> cannot precede it. Google lists
+					   `url` as recommended on each TIER, not only on the programme. */
+					summary: `<span itemprop="name">${esc(tier.name)}</span>${meta('membershipPointsEarned', tier.pointsEarned)}${meta('url', tier.url)}`,
+					body: `<div>${requirement ? `<p data-part="meta">Joining: ${requirement}${tier.requirementNote ? ` ${esc(tier.requirementNote)}` : ''}</p>` : ''}${benefits ? `<ul data-part="list">${benefits}</ul>` : ''}</div>`,
+					scopeAttrs: scope('hasTiers', 'MemberProgramTier')
+				};
+			}), parts.accordion);
+		}
+		if (d.joinUrl) html += `<nav data-part="actions"><a class="ui-button" data-variant="accent" itemprop="url" href="${esc(d.joinUrl)}">${esc(d.joinText || 'Join')}</a></nav>`;
+		return html;
+	},
+
+	/* eduQuestionType is a QUESTION property — Quiz owns none of its own. Two shapes
+	   share this renderer and `details.format` chooses between them EXPLICITLY: a
+	   flashcard deck (Google Education Q&A, live) or a graded multiple-choice set
+	   (Google Practice Problems, retired January 2026 — still valid schema.org).
+	   Docs: docs/schema.md § Quiz */
+	quiz(d, fields, parts = {}) {
+		const cards = d.cards || [];
+		const format = quizFormat(d);
+		const words = QUIZ_FORMATS[format];
+		const graded = format === 'multiple-choice';
+		let html = meta('learningResourceType', words.resource)
+			+ (d.subject ? `<div${scope('educationalAlignment', 'AlignmentObject')} hidden>${meta('alignmentType', 'educationalSubject')}${meta('targetName', d.subject)}</div>` : '');
+		const noun = graded ? 'question' : 'card';
+		const bits = [
+			d.subject ? `Subject: <span${scope('about', 'Thing')}><span itemprop="name">${esc(d.subject)}</span></span>` : null,
+			cards.length ? `${cards.length} ${noun}${cards.length === 1 ? '' : 's'}` : null,
+			d.pace ? esc(d.pace) : null
+		].filter(Boolean).join(' · ');
+		if (bits) html += `<p data-part="meta">${bits}</p>`;
+		if (!cards.length) return html;
+		if (!graded) {
+			/* an ungraded deck that carries options means the author meant the graded
+			   shape and forgot to say so — skipping is loud, as with product variants */
+			if (cards.some((card) => card.options?.length)) html += '<!-- options ignored: details.format is not multiple-choice -->';
+			return html + accordion('quiz-card', cards.map((card) => ({
+				summary: `<span itemprop="text">${esc(card.question)}</span>${meta('eduQuestionType', words.question)}`,
+				/* the answer is authored PROSE — the one field of this type the reference page
+				   marks up inline (<em>). Questions and options stay plain: they are labels. */
+				body: `<div${scope('acceptedAnswer', 'Answer')}><p itemprop="text">${renderInline(card.answer)}</p></div>`,
+				scopeAttrs: scope('hasPart', 'Question')
+			})), parts.accordion);
+		}
+		/* Graded: every option is an Answer — the correct one as acceptedAnswer, the
+		   rest as suggestedAnswer (the shape DETAILS.qa already uses). Grading is
+		   CSS-only: EVERY option carries a verdict chip, hidden until its own radio is
+		   checked, so only the reader's pick is ever graded and the key stays unread
+		   (content.css § options). The chips sit outside any itemprop, so they add no
+		   properties to the Answer. aria-live rides the <ul> — role="status" would
+		   replace the list role. One radio group per question, named off the deck, in a
+		   <fieldset> whose <legend> IS the question, so every option is announced under
+		   it; the legend must come first, so eduQuestionType follows it. */
+		const group = `quiz-${slug(plain(fields.headline))}`;
+		cards.forEach((card, index) => {
+			const name = `${group}-q${index + 1}`;
+			const options = (card.options || []).map((option, position) =>
+				`<li${scope(option.correct ? 'acceptedAnswer' : 'suggestedAnswer', 'Answer')}>${meta('position', position + 1)}
+					<label><input type="radio" class="--check" name="${esc(name)}"> <span itemprop="text">${esc(option.text)}</span></label> ${option.correct ? '<ui-chip data-verdict="correct" theme="pale green">Correct</ui-chip>' : '<ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip>'}
+				</li>`).join('');
+			html += `<fieldset${scope('hasPart', 'Question')}>
+				<legend itemprop="text">${esc(card.question)}</legend>${meta('eduQuestionType', words.question)}
+				${options ? `<ul data-part="options" aria-live="polite">${options}</ul>` : ''}
+			</fieldset>`;
+		});
+		return html;
+	},
+
+	/* OfferCatalog is an ItemList, so itemListElement is the nesting property; the
+	   scope is a bare <div> because a <meta itemprop="name"> cannot be a child of <ul>.
+	   servicePhone expects a ContactPoint, not a phone string. Docs: schema.md § Service */
+	service(d) {
+		let html = meta('serviceType', d.serviceType);
+		const provider = d.provider ? `<span${scope('provider', 'Organization')}><span itemprop="name">${esc(d.provider)}</span></span>` : '';
+		const area = d.areaServed ? `<span${scope('areaServed', 'Place')}><span itemprop="name">${esc(d.areaServed)}</span></span>` : '';
+		if (provider || area) html += `<p data-part="meta">${provider}${provider && area ? ' · serving ' : ''}${area}</p>`;
+		const catalog = d.catalog;
+		if (catalog?.items?.length) {
+			html += `<div${scope('hasOfferCatalog', 'OfferCatalog')}>${meta('name', catalog.name)}<ul data-part="list">${catalog.items.map((item) =>
+				`<li${scope('itemListElement', 'Offer')}>${meta('priceCurrency', item.currency)}<span${scope('itemOffered', 'Service')}><span itemprop="name">${esc(item.name)}</span></span> — ${priceValue(item.currency, item.price)}${catalog.period ? `/${esc(catalog.period)}` : ''}</li>`
+			).join('')}</ul></div>`;
+		}
+		const channel = d.channel;
+		if (channel) {
+			const links = [
+				channel.url ? `<a class="ui-button" data-variant="accent" itemprop="serviceUrl" href="${esc(channel.url)}">${esc(channel.urlText || 'Get in touch')}</a>` : '',
+				channel.telephone ? `<span${scope('servicePhone', 'ContactPoint')}>${meta('contactType', channel.contactType)}<a class="ui-button" itemprop="telephone" href="tel:${esc(String(channel.telephone).replace(/\s/g, ''))}">${esc(channel.telephone)}</a></span>` : ''
+			].filter(Boolean);
+			html += `<div${scope('availableChannel', 'ServiceChannel')}>${(channel.languages || []).map((lang) => meta('availableLanguage', lang)).join('')}${meta('processingTime', channel.processingTime)}${links.length ? `<nav data-part="actions">${links.join(' ')}</nav>` : ''}</div>`;
+		}
+		return html;
+	},
+
+	/* RealEstateListing is a WebPage: the home hangs off mainEntity. `offers` is NOT
+	   valid on Accommodation/Place, so the price rides the LISTING, outside that scope.
+	   Every strictly-numeric property emits its machine value via <meta> with the unit
+	   words in a separate text node. Docs: docs/schema.md § Real estate */
+	realestate(d) {
+		let html = meta('datePosted', d.datePosted);
+		if (d.price) {
+			html += `<p data-part="price"${scope('offers', 'Offer')}>${meta('priceCurrency', d.price.currency)}${meta('availability', availabilityUrl(d.availability || 'in stock'))}${priceValue(d.price.currency, d.price.amount)}${d.price.note ? ` <small>${esc(d.price.note)}</small>` : ''}</p>`;
+		}
+		const home = d.property;
+		if (home) {
+			const numbered = (prop, value, text) => value == null || value === '' ? null : `${meta(prop, value)}${text}`;
+			const facts = [
+				home.floorSize != null
+					? `<span${scope('floorSize', 'QuantitativeValue')}>${meta('unitCode', home.floorSizeUnit || 'MTK')}${meta('value', home.floorSize)}${num(home.floorSize)} ${esc(home.floorSizeLabel || 'm²')}</span>`
+					: null,
+				numbered('numberOfBedrooms', home.bedrooms, `${num(home.bedrooms)} bedroom${home.bedrooms === 1 ? '' : 's'}`),
+				numbered('numberOfBathroomsTotal', home.bathrooms, `${num(home.bathrooms)} bathroom${home.bathrooms === 1 ? '' : 's'}`),
+				numbered('numberOfRooms', home.rooms, `${num(home.rooms)} room${home.rooms === 1 ? '' : 's'}`),
+				/* esc(), not num(): a year is not a quantity — num() would print "2,018" */
+				numbered('yearBuilt', home.yearBuilt, `built ${esc(home.yearBuilt)}`)
+			].filter(Boolean).join(' · ');
+			const amenities = home.amenities?.length
+				? `<ul data-part="list">${home.amenities.map((amenity) =>
+					`<li${scope('amenityFeature', 'LocationFeatureSpecification')}>${meta('value', 'true')}<span itemprop="name">${esc(amenity)}</span></li>`).join('')}</ul>`
+				: '';
+			html += `<div${scope('mainEntity', RESIDENCE_TYPES.has(home.type) ? home.type : 'Accommodation')}>`
+				+ meta('name', home.name) + meta('floorLevel', home.floorLevel) + meta('petsAllowed', home.petsAllowed)
+				+ (facts ? `<p data-part="meta">${facts}</p>` : '')
+				+ addressPart(home.address) + amenities + '</div>';
+		}
+		const bits = [d.datePostedDisplay ? `Listed ${esc(d.datePostedDisplay)}` : null, d.agent ? esc(d.agent) : null, d.viewings ? esc(d.viewings) : null].filter(Boolean).join(' · ');
+		if (bits) html += `<p data-part="meta">${bits}</p>`;
+		return html;
+	},
+
+	/* Menu and MenuSection are CreativeWorks; MenuItem is an Intangible — which is why
+	   only the ITEM gets offers/nutrition/suitableForDiet. Docs: docs/schema.md § Menu */
+	menu(d, fields, parts = {}) {
+		let html = '';
+		if (d.sections?.length) {
+			html += accordion('menu-section', d.sections.map((section) => ({
+				summary: `<span itemprop="name">${esc(section.name)}</span>`,
+				body: `<div><ul data-part="list">${(section.items || []).map(menuItem).join('')}</ul></div>`,
+				scopeAttrs: scope('hasMenuSection', 'MenuSection')
+			})), parts.accordion);
+		}
+		if (d.note) html += `<footer data-part="footer">${esc(d.note)}</footer>`;
+		return html;
+	},
+
+	tvseries(d) {
+		let html = meta('numberOfSeasons', d.numberOfSeasons) + meta('numberOfEpisodes', d.numberOfEpisodes)
+			+ meta('startDate', d.startDate) + meta('contentRating', d.contentRating);
+		const year = startYear(d.startDate);
+		const bits = [
+			d.numberOfSeasons != null ? `${num(d.numberOfSeasons)} season${d.numberOfSeasons === 1 ? '' : 's'}` : null,
+			d.numberOfEpisodes != null ? `${num(d.numberOfEpisodes)} episode${d.numberOfEpisodes === 1 ? '' : 's'}` : null,
+			year ? `since ${esc(year)}` : null,
+			d.contentRating ? `rated ${esc(d.contentRating)}` : null
+		].filter(Boolean).join(' · ');
+		if (bits) html += `<p data-part="meta">${bits}</p>`;
+		html += ratingPart('aggregateRating', 'AggregateRating', d.rating) + creditsPart(d);
+		/* containsSeason's range is CreativeWorkSeason, which TVSeason satisfies.
+		   The superseded actors/episodes/seasons spellings are never emitted. */
+		return html + scopedList((d.seasons || []).map((season) =>
+			`<li${scope('containsSeason', 'TVSeason')}>${meta('seasonNumber', season.seasonNumber)}${meta('numberOfEpisodes', season.numberOfEpisodes)}<span itemprop="name">${esc(season.name)}</span>${season.display ? ` — ${esc(season.display)}` : ''}</li>`
+		), d.ordered ?? true);
+	},
+
+	/* episodeNumber/partOfSeason/partOfSeries/duration are all inherited from Episode —
+	   a renderer that looks them up on TVEpisode will not find them documented there */
+	tvepisode(d) {
+		let html = meta('episodeNumber', d.episodeNumber) + meta('duration', d.duration) + meta('datePublished', d.datePublished)
+			+ (d.seriesName ? `<div${scope('partOfSeries', 'TVSeries')} hidden>${meta('name', d.seriesName)}</div>` : '')
+			+ (d.season ? `<div${scope('partOfSeason', 'TVSeason')} hidden>${meta('seasonNumber', d.season.seasonNumber)}${meta('name', d.season.name)}</div>` : '');
+		const bits = [
+			d.season?.seasonNumber != null && d.episodeNumber != null ? `Season ${num(d.season.seasonNumber)}, episode ${num(d.episodeNumber)}` : null,
+			d.durationDisplay ? esc(d.durationDisplay) : d.duration ? esc(duration(d.duration)) : null,
+			d.datePublishedDisplay ? esc(d.datePublishedDisplay) : null
+		].filter(Boolean).join(' · ');
+		if (bits) html += `<p data-part="meta">${bits}</p>`;
+		return html + creditsPart(d);
+	},
+
+	/* specialty/reviewedBy/lastReviewed are WebPage properties MedicalWebPage merely
+	   inherits; medicalAudience is its only own usable one. The reviewedBy byline is
+	   VISIBLE markup, never a hidden meta — a signal a reader cannot see is not an
+	   E-E-A-T signal. Docs: docs/schema.md § Health */
+	medical(d) {
+		let html = (MEDICAL_SPECIALTIES.has(d.specialty) ? meta('specialty', SCHEMA + d.specialty) : '')
+			+ meta('lastReviewed', d.lastReviewed);
+		if (d.audience?.name) {
+			html += `<div${scope('medicalAudience', MEDICAL_AUDIENCES.has(d.audience.type) ? d.audience.type : 'MedicalAudience')} hidden>${meta('name', d.audience.name)}</div>`;
+		}
+		if (d.about?.name) {
+			const aspects = (d.about.aspects || [])
+				.filter((aspect) => Object.hasOwn(MEDICAL_ASPECTS, aspect.type))
+				.map((aspect) => `<li${scope(aspect.type, MEDICAL_ASPECTS[aspect.type])}><span itemprop="name">${esc(aspect.text)}</span></li>`).join('');
+			html += `<div${scope('about', MEDICAL_ABOUT_TYPES.has(d.about.type) ? d.about.type : 'MedicalCondition')}>${meta('name', d.about.name)}${aspects ? `<ul data-part="list">${aspects}</ul>` : ''}</div>`;
+		}
+		if (d.reviewedBy?.name) {
+			const dateline = d.lastReviewed
+				? `<small data-part="dateline"><span>${esc(d.reviewedLabel || 'Medically reviewed')}</span><time datetime="${esc(d.lastReviewed)}">${esc(d.lastReviewedDisplay || d.lastReviewed)}</time></small>`
+				: '';
+			html += byline([d.reviewedBy], 'reviewedBy', dateline);
+		}
+		if (d.disclaimer) html += `<footer data-part="footer">${esc(d.disclaimer)}</footer>`;
+		return html;
+	},
+
+	/* numTracks and track come from MusicPlaylist, the album's parent (`tracks` is
+	   superseded). numTracks DERIVES from the track list unless stated: a hand-kept
+	   count silently goes stale, and the field survives only for partial listings.
+	   Docs: docs/schema.md § Album */
+	music(d) {
+		const tracks = d.tracks || [];
+		const numTracks = d.numTracks ?? (tracks.length || null);
+		let html = meta('numTracks', numTracks) + meta('datePublished', d.datePublished)
+			+ (ALBUM_PRODUCTION_TYPES.has(d.productionType) ? meta('albumProductionType', SCHEMA + d.productionType) : '')
+			+ (ALBUM_RELEASE_TYPES.has(d.releaseType) ? meta('albumReleaseType', SCHEMA + d.releaseType) : '');
+		const bits = [
+			numTracks != null ? `${num(numTracks)} track${numTracks === 1 ? '' : 's'}` : null,
+			d.durationDisplay ? esc(d.durationDisplay) : null,
+			d.datePublishedDisplay ? `released ${esc(d.datePublishedDisplay)}` : null
+		].filter(Boolean).join(' · ');
+		if (bits) html += `<p data-part="meta">${bits}</p>`;
+		html += scopedList(tracks.map((track, index) =>
+			`<li${scope('track', 'MusicRecording')}>${meta('position', track.position ?? index + 1)}${meta('duration', track.duration)}<span itemprop="name">${esc(track.name)}</span>${track.durationDisplay ? ` <small>${esc(track.durationDisplay)}</small>` : ''}</li>`
+		), d.ordered ?? true);
+		if (d.note) html += `<footer data-part="footer">${esc(d.note)}</footer>`;
+		return html;
+	},
+
+	/* DefinedTerm is an Intangible, DefinedTermSet a CreativeWork; both are still
+	   pending.schema.org. Docs: docs/schema.md § Glossary */
+	glossary(d, fields, parts = {}) {
+		let html = d.about ? `<div${scope('about', 'Thing')} hidden>${meta('name', d.about)}</div>` : '';
+		if (d.terms?.length) {
+			html += accordion('glossary', d.terms.map((term) => ({
+				summary: `<span itemprop="name">${esc(term.name)}</span>${meta('termCode', term.termCode)}`,
+				/* the definition is authored PROSE — inline markup allowed (<code>); the term
+				   NAME above stays plain, because it is the DefinedTerm's machine-read name */
+				body: `<div><p itemprop="description">${renderInline(term.description)}</p></div>`,
+				scopeAttrs: scope('hasDefinedTerm', 'DefinedTerm')
+			})), parts.accordion);
+		}
+		if (d.note) html += `<footer data-part="footer">${esc(d.note)}</footer>`;
+		return html;
+	},
+
+	/* There is NO episode-count property on PodcastSeries — the count is prose and the
+	   machine answer is the hasPart cardinality. webFeed rides a real <a href> so the
+	   feed is crawlable. Docs: docs/schema.md § Podcast series */
+	podcastseries(d) {
+		let html = meta('startDate', d.startDate);
+		const year = startYear(d.startDate);
+		const bits = [
+			d.cadence ? esc(d.cadence) : null,
+			d.episodeCount != null ? `${num(d.episodeCount)} episode${d.episodeCount === 1 ? '' : 's'}${year ? ` since ${esc(year)}` : ''}` : null,
+			d.feed?.url ? `<a itemprop="webFeed" href="${esc(d.feed.url)}">${esc(d.feed.text || 'RSS feed')}</a>` : null
+		].filter(Boolean).join(' · ');
+		if (bits) html += `<p data-part="meta">${bits}</p>`;
+		if (d.host?.name) html += byline([d.host], 'author');
+		/* newest first by convention — descending rows must NOT get ordinal markers */
+		html += scopedList((d.episodes || []).map((episode) =>
+			`<li${scope('hasPart', 'PodcastEpisode')}>${meta('episodeNumber', episode.episodeNumber)}${meta('duration', episode.duration)}<span itemprop="name">${esc(episode.name)}</span>${episode.durationDisplay ? ` <small>${esc(episode.durationDisplay)}</small>` : ''}</li>`
+		), d.ordered ?? false);
+		if (d.note) html += `<footer data-part="footer">${esc(d.note)}</footer>`;
+		return html;
 	}
 };
 
-/* profile: jobTitle/organization row takes the subheadline slot */
-const profileSubheadline = (d, textTag) =>
-	d?.jobTitle
+/* types whose subheadline row is a schema SCOPE rather than plain envelope text:
+   profile's jobTitle/organization, music's byArtist → MusicGroup */
+const SUBHEADLINE_SLOT = {
+	profile: (d, textTag) => d?.jobTitle
 		? `<${textTag} data-part="subheadline"><span itemprop="jobTitle">${esc(d.jobTitle)}</span>${d.organization ? ` · <span${scope('worksFor', 'Organization')}><span itemprop="name">${esc(d.organization)}</span></span>` : ''}</${textTag}>`
-		: '';
+		: '',
+	music: (d, textTag) => d?.artist
+		? `<${textTag} data-part="subheadline"${scope('byArtist', 'MusicGroup')}><span itemprop="name">${esc(d.artist)}</span></${textTag}>`
+		: ''
+};
 
 /* byline-early types: author identity precedes the commerce details (book).
    A preset's byline: "lede" opts any type in — the full-article shape. */
 const BYLINE_EARLY = new Set(['book']);
 
 /* full content column for a card (envelope + details + trailers) */
-const contentColumn = (fields, type, overlay, extras = '', textMode = 'summary', parts = {}, bylineMode = 'tail', headingTag = 'h3') => {
+/* `itemtype` is the bare schema.org name ACTUALLY WRITTEN on the enclosing scope —
+   threaded down so a DETAILS renderer can gate subtype-only properties on it. It is
+   not always resolveItemtype(fields): a flipside column renders into the HOST's
+   scope. Docs: docs/schema.md § Product */
+const contentColumn = (fields, type, overlay, extras = '', textMode = 'summary', parts = {}, bylineMode = 'tail', headingTag = 'h3', itemtype = null) => {
 	const slots = {};
-	if (type === 'profile' && fields.details) {
-		slots.subheadline = profileSubheadline(fields.details, overlay ? 'span' : 'p');
+	if (SUBHEADLINE_SLOT[type] && fields.details) {
+		slots.subheadline = SUBHEADLINE_SLOT[type](fields.details, overlay ? 'span' : 'p');
 	}
 	let tailFields = fields;
 	const lede = bylineMode === 'lede';
@@ -1308,7 +2036,7 @@ const contentColumn = (fields, type, overlay, extras = '', textMode = 'summary',
 		if (!lede) slots.after = early;
 	}
 	let html = buildContent(fields, type, overlay, slots, textMode, parts, headingTag) + (slots.after || '');
-	if (DETAILS[type] && fields.details) html += DETAILS[type](fields.details, fields, parts);
+	if (DETAILS[type] && fields.details) html += DETAILS[type](fields.details, fields, parts, itemtype, envelopeProps(fields, type));
 	html += buildTail(tailFields, type);
 	return html + extras;
 };
@@ -1316,13 +2044,15 @@ const contentColumn = (fields, type, overlay, extras = '', textMode = 'summary',
 /* ── reveal composition (<ui-reveal>) — used when preset.element is ui-reveal ── */
 
 /* Back panel derived from the host card's own envelope + details. */
-const derivedBack = (fields, type) => {
+const derivedBack = (fields, type, itemtype) => {
 	let html = fields.eyebrow ? `<small data-part="eyebrow">${esc(fields.eyebrow)}</small>` : '';
 	/* version rides the details chip, not the headline */
 	html += `<h3 data-part="headline">${renderInline(fields.headline)}</h3>`;
 	if (fields.summary) html += `<p data-part="summary" itemprop="${SUMMARY_PROP[type] || 'description'}">${esc(fields.summary)}</p>`;
 	html += bodyHtml(fields, type);
-	if (DETAILS[type] && fields.details) html += DETAILS[type](fields.details, fields);
+	/* eyebrow: false — the back panel prints the eyebrow WITHOUT an itemprop (the front
+	   face and the back share the host's one itemscope), so it claims no property here */
+	if (DETAILS[type] && fields.details) html += DETAILS[type](fields.details, fields, {}, itemtype, envelopeProps(fields, type, { eyebrow: false }));
 	html += buildTail({ ...fields, published: null, readingTime: null }, type);
 	return html;
 };
@@ -1330,15 +2060,71 @@ const derivedBack = (fields, type) => {
 /* Back panel from a referenced flipside card — a content column only, never
    another reveal, so flipside chains cannot recurse. Shares the host's itemscope.
    Backs are the "full" face: summary + body both render. */
-const flipsideBack = (flipside) => {
+const flipsideBack = (flipside, itemtype) => {
 	const fields = flipside?.fields ?? flipside ?? {};
-	const type = SCHEMA_TYPES[fields.schemaType] ? fields.schemaType : 'content';
-	return contentColumn(fields, type, false, '', 'both');
+	const type = baseType(fields);
+	/* itemtype is the HOST's — this column shares the host's itemscope */
+	return contentColumn(fields, type, false, '', 'both', {}, 'tail', 'h3', itemtype);
 };
 
-const renderReveal = (fields, type, itemtype, tokens, preset, flipside, cardId = null) => {
+/* ── per-type face composition ──
+   The generic reveal is one item shown twice: a teaser front, a fuller back, both in
+   the HOST's scope. Some types split along a property boundary that shape cannot
+   express — a flashcard's question is on the front and its acceptedAnswer on the back,
+   and both belong to a Question that is neither the host nor either face, so the scope
+   has to sit on the <details> that wraps them. An entry owns exactly the pieces
+   renderReveal cannot derive: `front` and `back` ({ attrs, html }) are required, the
+   `host` ({ attrs, html }) and `details` attribute contributions are optional.
+   renderReveal still composes the elements. Returning null declines — the generic derivedBack/flipsideBack path
+   runs — so an entry only has to answer for the records it can actually shape.
+   Keyed like DETAILS, by base type. Docs: docs/schema.md § Quiz */
+const REVEAL_FACES = {
+	/* Flashcard: <details> carries the Question scope because eduQuestionType is on the
+	   front and acceptedAnswer is the back, and both are Question properties. The Quiz's
+	   own properties stay machine metadata on the host — the visible headline is the
+	   QUESTION (itemprop="text"), so the Quiz name never reaches a face. */
+	quiz(fields, { preset }) {
+		const d = fields.details || {};
+		const cards = d.cards || [];
+		/* only the flashcard shape has two faces: a graded question needs its options
+		   visible WITH the question, which is one face, not two */
+		if (quizFormat(d) !== 'flashcard' || !cards.length) return null;
+		const words = QUIZ_FORMATS.flashcard;
+		const card = cards[0];
+		return {
+			/* content= rides the HOST here, not the front face: scl() has to reach the
+			   question and the answer, which are two different elements */
+			host: {
+				attrs: { content: preset.content || null },
+				html: meta('name', plain(fields.headline)) + meta('learningResourceType', words.resource)
+					+ (d.subject ? `<div${scope('about', 'Thing')} hidden>${meta('name', d.subject)}</div>`
+						+ `<div${scope('educationalAlignment', 'AlignmentObject')} hidden>${meta('alignmentType', 'educationalSubject')}${meta('targetName', d.subject)}</div>` : '')
+					/* a reveal has one front and one back, so the rest of a deck has nowhere
+					   to go — skipping is loud, as with product variants */
+					+ (cards.length > 1 ? `<!-- ${cards.length - 1} of ${cards.length} flashcards not rendered: a reveal shows one question — a deck needs a ui-card preset -->` : '')
+			},
+			details: { itemprop: 'hasPart', itemscope: true, itemtype: `${SCHEMA}Question` },
+			/* the front face renders inside <summary>, which takes phrasing content —
+			   a heading tag there is invalid, so the headline part rides a <span> */
+			front: { attrs: {}, html: `${fields.eyebrow ? `<small data-part="eyebrow">${esc(fields.eyebrow)}</small>` : ''}
+					<span data-part="headline" itemprop="text">${esc(card.question)}</span>
+					${meta('eduQuestionType', words.question)}` },
+			/* the answer is authored PROSE (docs/schema.md § Quiz), and its panel reads as
+			   a second surface — the same call as the graded verdict chips' themes */
+			back: {
+				attrs: { itemprop: 'acceptedAnswer', itemscope: true, itemtype: `${SCHEMA}Answer`, theme: 'gray ink', content: 'pad(lg)' },
+				html: `<p data-part="summary" itemprop="text">${renderInline(card.answer)}</p>`
+			}
+		};
+	}
+};
+
+const renderReveal = (fields, type, schemaType, tokens, preset, flipside, cardId = null) => {
+	const itemtype = SCHEMA + schemaType;
 	const media = buildMedia(fields, type, tokens, preset, {}, cardId);
-	const back = flipside ? flipsideBack(flipside) : derivedBack(fields, type);
+	/* the type's own composition, if it has one and accepts this record */
+	const faces = REVEAL_FACES[type]?.(fields, { preset, type, schemaType, itemtype }) || null;
+	const back = faces ? faces.back.html : flipside ? flipsideBack(flipside, schemaType) : derivedBack(fields, type, schemaType);
 	const reveal = preset.reveal || {};
 	/* reveal config → variant tokens. The preset keeps friendly editor values
 	   ("slide", "left", "top right sm"); the emitted animation token carries its
@@ -1353,16 +2139,17 @@ const renderReveal = (fields, type, itemtype, tokens, preset, flipside, cardId =
 		reveal.to ? 'pop' : null,
 		reveal.trigger ? 'trg(card)' : null,
 		reveal.scroll ? 'scr' : null,
-		...iconTokens('ico', reveal.icon || 'top right sm'),
+		...iconTokens('ico', reveal.icon || RVL_ICON),
 		...iconTokens('icc', reveal.iconClose),
 	].filter(Boolean);
 	/* media=/content= sit on the primitives they configure; variant=/theme= on the host */
-	const inner = `${withMedia(media?.html || '', mergeMediaTokens(preset.media, tokens.media))}
-		<ui-content${attrs({ content: preset.content || null })}>
+	const column = faces ? `<ui-content${attrs(faces.front.attrs)}>${faces.front.html}</ui-content>` : `<ui-content${attrs({ content: preset.content || null })}>
 			${fields.eyebrow ? `<small data-part="eyebrow">${esc(fields.eyebrow)}</small>` : ''}
-			<strong data-part="headline" itemprop="${HEADLINE_PROP[type] || 'name'}">${renderInline(fields.headline)}</strong>
+			<strong data-part="headline" itemprop="${headlineProp(fields, type)}">${renderInline(fields.headline)}</strong>
 			${fields.details?.version ? `<span data-part="meta"><ui-chip theme="pale accent">v<span itemprop="softwareVersion">${esc(fields.details.version)}</span></ui-chip></span>` : ''}
 		</ui-content>`;
+	const inner = `${withMedia(media?.html || '', mergeMediaTokens(preset.media, tokens.media))}
+		${column}`;
 	/* <ui-face> only where the animation transforms the front face; exp animates the host */
 	const front = RVL_FACED.has(anim) ? `<ui-face>${inner}</ui-face>` : inner;
 	/* trg(card) makes the whole summary the trigger — no toggle icon */
@@ -1370,13 +2157,14 @@ const renderReveal = (fields, type, itemtype, tokens, preset, flipside, cardId =
 	return `<ui-reveal${attrs({
 		variant: [preset.variant, ...revealTokens].filter(Boolean).join(' '),
 		theme: preset.theme || null,
+		...(faces?.host?.attrs || {}),
 		style: styleAttr(preset.styles),
 		itemscope: true,
 		itemtype
-	})}>
-		<details${attrs({ name: reveal.name || null })}>
+	})}>${faces?.host?.html || ''}
+		<details${attrs({ name: reveal.name || null, ...(faces?.details || {}) })}>
 			<summary>${front}${icon}</summary>
-			<ui-content tabindex="0">${back}${media?.extras || ''}</ui-content>
+			<ui-content${attrs(faces?.back.attrs || { tabindex: '0' })}>${back}${media?.extras || ''}</ui-content>
 		</details>
 	</ui-reveal>`;
 };
@@ -1425,13 +2213,15 @@ export function renderCard(ucf, presets = {}, cards = {}, options = null) {
 	TYPE_CHIP = !!options?.typeChip;
 	const fields = ucf?.fields ?? ucf ?? {};
 	const cardId = ucf?.id || null;
-	const type = SCHEMA_TYPES[fields.schemaType] ? fields.schemaType : 'content';
-	const itemtype = SCHEMA + resolveItemtype(type, fields);
+	const type = baseType(fields);
+	/* resolved ONCE: schemaType is what gets written, and what DETAILS renderers gate on */
+	const schemaType = resolveItemtype(fields);
+	const itemtype = SCHEMA + schemaType;
 	const preset = resolvePreset(fields, presets);
 	const tokens = { media: [] };
 
 	if (preset.element === 'ui-reveal') {
-		return renderReveal(fields, type, itemtype, tokens, preset, resolveCard(fields.flipside, cards), cardId);
+		return renderReveal(fields, type, schemaType, tokens, preset, resolveCard(fields.flipside, cards), cardId);
 	}
 
 	/* Bare <ui-media> — a standalone media frame, no card chrome. The media
@@ -1457,7 +2247,7 @@ export function renderCard(ucf, presets = {}, cards = {}, options = null) {
 			style: styleAttr(preset.styles),
 			itemscope: true,
 			itemtype
-		})}>${contentColumn(fields, type, false, '', preset.text || 'summary', preset.parts || {}, preset.byline || 'tail', preset.headingTag)}</ui-content>`;
+		})}>${contentColumn(fields, type, false, '', preset.text || 'summary', preset.parts || {}, preset.byline || 'tail', preset.headingTag, schemaType)}</ui-content>`;
 	}
 
 	const media = buildMedia(fields, type, tokens, preset, {}, cardId);
@@ -1472,7 +2262,7 @@ export function renderCard(ucf, presets = {}, cards = {}, options = null) {
 	})}>
 		<cq-box>
 			${withMedia(media?.html || '', mergeMediaTokens(preset.media, tokens.media))}
-			<ui-content${attrs({ content: preset.content || null })}>${contentColumn(fields, type, overlay, media?.extras || '', preset.text || 'summary', preset.parts || {}, preset.byline || 'tail', preset.headingTag)}</ui-content>
+			<ui-content${attrs({ content: preset.content || null })}>${contentColumn(fields, type, overlay, media?.extras || '', preset.text || 'summary', preset.parts || {}, preset.byline || 'tail', preset.headingTag, schemaType)}</ui-content>
 		</cq-box>
 	</ui-card>`;
 }

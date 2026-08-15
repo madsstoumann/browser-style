@@ -115,9 +115,14 @@ export function initControls(scroller, options = {}) {
 	if (!dots && !arrows) return;
 
 	const m = mediaStr(scroller);
-	const axisY = m.includes('axis(y)');
+	/* LIVE, not captured: media-open can flip the axis while the frame is open
+	   (a vertical thumbnail rail closed, a horizontal gallery open). A cached axis
+	   leaves every reader on the wrong one — scrollTop on a frame that now scrolls
+	   left, so pos() sticks at 0 and maxScroll() is 0, which disables both arrows
+	   and freezes the dots. mediaStr() re-reads the attribute lightbox.js rewrites. */
+	const axisY = () => mediaStr(scroller).includes('axis(y)');
 	const loop = hasToken(m, 'loop');
-	const rtl = !axisY && getComputedStyle(scroller).direction === 'rtl';
+	const rtl = () => !axisY() && getComputedStyle(scroller).direction === 'rtl';
 	const slides = slidesOf(scroller);
 	const count = slides.length;
 	if (count < 2) return;
@@ -188,22 +193,22 @@ export function initControls(scroller, options = {}) {
 		const s = slidesOf(scroller);
 		if (s.length > 1) {
 			const a = s[0].getBoundingClientRect(), b = s[1].getBoundingClientRect();
-			const d = axisY ? b.top - a.top : Math.abs(b.left - a.left);
+			const d = axisY() ? b.top - a.top : Math.abs(b.left - a.left);
 			if (d > 1) return d;
 		}
-		return axisY ? scroller.clientHeight : scroller.clientWidth;
+		return axisY() ? scroller.clientHeight : scroller.clientWidth;
 	};
-	const rawPos = () => axisY ? scroller.scrollTop : Math.abs(scroller.scrollLeft);
+	const rawPos = () => axisY() ? scroller.scrollTop : Math.abs(scroller.scrollLeft);
 	const pos = () => { const s = size(); return s ? Math.round(rawPos() / s) : 0; };
 	const scrollToPos = (p) => {
-		const target = p * size() * (rtl ? -1 : 1);
-		scroller.scrollTo({ [axisY ? 'top' : 'left']: target, behavior: reduce.matches ? 'instant' : 'smooth' });
+		const target = p * size() * (rtl() ? -1 : 1);
+		scroller.scrollTo({ [axisY() ? 'top' : 'left']: target, behavior: reduce.matches ? 'instant' : 'smooth' });
 	};
 
 	prev?.addEventListener('click', () => scrollToPos(pos() - 1));
 	next?.addEventListener('click', () => scrollToPos(pos() + 1));
 
-	const maxScroll = () => (axisY ? scroller.scrollHeight - scroller.clientHeight : scroller.scrollWidth - scroller.clientWidth);
+	const maxScroll = () => (axisY() ? scroller.scrollHeight - scroller.clientHeight : scroller.scrollWidth - scroller.clientWidth);
 	function sync() {
 		let i = pos() - lead();
 		if (loop) i = (i + count) % count;                    // clone positions → real twins

@@ -1,0 +1,43 @@
+{
+  "$schema": "../../../cms/baseline/models/card.schema.json",
+  "id": "tvseries-1",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-07-04T12:00:00Z",
+    "updatedAt": "2026-07-05T09:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Media"
+  },
+  "fields": {
+    "internalName": "Demo — TV series",
+    "schemaType": "tvseries",
+    "preset": { "$ref": "card-preset/stack" },
+    "eyebrow": "Science fiction",
+    "headline": "Nordlight",
+    "summary": "A Copenhagen research lab wakes something in the aurora — and the people who built it have to decide what the world gets told.",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/techpeople.png",
+        "alt": "Nordlight key art — the research team against a future skyline"
+      }
+    ],
+    "details": {
+      "numberOfSeasons": 3,
+      "numberOfEpisodes": 24,
+      "startDate": "2023-09-14",
+      "contentRating": "15",
+      "rating": { "value": 4.4, "count": 12904 },
+      "director": { "name": "Freja Nyholm", "label": "Created and directed by" },
+      "actors": ["Ingrid Solberg", "Mattias Vogel"],
+      "ordered": true,
+      "seasons": [
+        { "seasonNumber": 1, "numberOfEpisodes": 8, "name": "First Light", "display": "8 episodes, 2023" },
+        { "seasonNumber": 2, "numberOfEpisodes": 8, "name": "The Quiet Band", "display": "8 episodes, 2024" },
+        { "seasonNumber": 3, "numberOfEpisodes": 8, "name": "Terminus", "display": "8 episodes, 2026" }
+      ]
+    },
+    "tags": ["Nordic noir", "Sci-fi"]
+  }
+}

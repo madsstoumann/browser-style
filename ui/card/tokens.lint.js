@@ -5,12 +5,14 @@
  *   3. data/tokens.data.js is in sync with data/tokens.json, aliases resolve,
  *      deprecated entries name a canonical that exists
  *   4. the slide-exclusion list is the same list everywhere it is transcribed (R-01)
+ *   5. the itemtype SUBTYPES allowlist matches its docs/schema.md table (R-01, same reason)
  * Run: node tokens.lint.js  (or npm run lint:tokens) */
 
 import { readFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 import { readManifest } from './tokens.build.js';
 import DATA from './data/tokens.data.js';
+import { SCHEMA_TYPES, SUBTYPES } from './render.js';
 
 const root = new URL('../../', import.meta.url).pathname;
 
@@ -97,6 +99,40 @@ const lintSlideLists = (errors) => {
 	for (const tag of diff(css, shared)) errors.push(`ui/card/media.carousel.css: :not() excludes ${tag}, which is not in ui/card/shared.js NOT_SLIDE`);
 };
 
+/* ── itemtype subtype allowlist sync (R-01) ──
+   SUBTYPES in render.js decides what may land in an itemtype; the `## Subtypes` table in
+   docs/schema.md is what an author reads before writing `details.subtype`. A wrong table
+   fails no test — a subtype it lists but render.js rejects silently renders the base type.
+   Same call as R-01: the copy is deliberate, so drift is a build error. The lint imports
+   SUBTYPES (render.js is Node-safe) and only the markdown side needs parsing.
+   The table rows are `| \`key\` | \`BaseItemtype\` | Sub, Sub, … |`. */
+const SUBTYPE_DOC = 'ui/card/docs/schema.md';
+
+const docSubtypes = (errors) => {
+	const md = readFileSync(root + SUBTYPE_DOC, 'utf8');
+	const section = /\n## Subtypes\n([\s\S]*?)\n## /.exec(md);
+	if (!section) { errors.push(`${SUBTYPE_DOC}: no "## Subtypes" section — the sync check cannot run`); return null; }
+	const rows = [...section[1].matchAll(/^\|\s*`(\w+)`\s*\|\s*`(\w+)`\s*\|([^|]*)\|\s*$/gm)];
+	if (!rows.length) { errors.push(`${SUBTYPE_DOC}: "## Subtypes" has no table rows — the sync check cannot run`); return null; }
+	return new Map(rows.map(([, key, base, list]) =>
+		[key, { base, subtypes: new Set(list.split(',').map((name) => name.trim()).filter(Boolean)) }]));
+};
+
+const lintSubtypes = (errors) => {
+	const doc = docSubtypes(errors);
+	if (!doc) return;
+	for (const key of Object.keys(SUBTYPES))
+		if (!doc.has(key)) errors.push(`${SUBTYPE_DOC}: render.js SUBTYPES has a "${key}" list with no table row — the doc has drifted`);
+	for (const [key, row] of doc) {
+		const code = SUBTYPES[key];
+		if (!code) { errors.push(`${SUBTYPE_DOC}: table row "${key}" has no SUBTYPES list in render.js — the doc has drifted`); continue; }
+		if (row.base !== SCHEMA_TYPES[key]) errors.push(`${SUBTYPE_DOC}: row "${key}" names base itemtype ${row.base}, but SCHEMA_TYPES says ${SCHEMA_TYPES[key]}`);
+		const diff = (a, b) => [...a].filter((name) => !b.has(name)).sort();
+		for (const name of diff(code, row.subtypes)) errors.push(`${SUBTYPE_DOC}: render.js allows ${key}/${name}, missing from the "## Subtypes" table — the doc has drifted`);
+		for (const name of diff(row.subtypes, code)) errors.push(`${SUBTYPE_DOC}: the "## Subtypes" table lists ${key}/${name}, which render.js does NOT allow — it would silently render the base type`);
+	}
+};
+
 export const lintTokens = () => {
 	const manifest = readManifest();
 	const errors = [];
@@ -158,6 +194,9 @@ export const lintTokens = () => {
 	/* ── 4. slide-exclusion list sync ── */
 	lintSlideLists(errors);
 
+	/* ── 4b. itemtype subtype allowlist ↔ docs/schema.md table ── */
+	lintSubtypes(errors);
+
 	/* ── 5. preset data speaks the current dialect ──
 	   The preset collections are renderer INPUT — a token the manifest doesn't
 	   know is a silent no-op in the browser (it matches no CSS rule), which is
@@ -172,10 +211,16 @@ export const lintTokens = () => {
 const PRESET_FILES = ['data/card.presets.json', 'data/card.presets.demo.json'];
 /* stems whose args are free-form numbers/ratios the manifest lists as placeholders */
 const OPEN_STEMS = /^(?:md:|lg:)?(?:asr|spl|auto|tmb)\([\d/.:a-z%]+\)$/;
-/* preset parts= vocabularies — KEEP IN SYNC with ui/quote/ui-quote.css and ui/accordion/ui-accordion.css */
+/* preset parts= vocabularies — KEEP IN SYNC with ui/quote/ui-quote.css,
+   ui/accordion/ui-accordion.css and ui/button-group/ui-button-group.css */
 const PART_VARIANTS = {
 	quote: new Set(['bigquote', 'breaker', 'code']),
-	accordion: new Set(['bordered', 'divided', 'rounded', 'pill', 'separate', 'filled'])
+	accordion: new Set(['bordered', 'divided', 'rounded', 'pill', 'separate', 'filled']),
+	buttonGroup: new Set(['inline', 'rounded', 'border', 'outline']),
+	/* the control's other two axes are its own documented API, not card DSL: font-size
+	   utilities from base, and the shared nine-hue theme axis with pale/muted */
+	buttonGroupSize: new Set(['fs-xxs', 'fs-xs', 'fs-sm', 'fs-md', 'fs-lg']),
+	buttonGroupTheme: new Set(['red', 'orange', 'green', 'blue', 'accent', 'black', 'white', 'gray', 'slate', 'pale', 'muted'])
 };
 const lintPresets = (manifest, errors) => {
 	const valid = {};

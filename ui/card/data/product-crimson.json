@@ -1,0 +1,94 @@
+{
+  "$schema": "../../../cms/baseline/models/card.schema.json",
+  "id": "product-crimson",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-08-15T09:00:00Z",
+    "updatedAt": "2026-08-15T09:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Commerce"
+  },
+  "fields": {
+    "internalName": "Demo — Persistence Silk Gown, Crimson Paisley",
+    "schemaType": "product",
+    "preset": {
+      "$ref": "card-preset/product-page"
+    },
+    "eyebrow": "Dresses",
+    "headline": "Persistence Silk Gown — Crimson Paisley",
+    "summary": "The paisley colourway: crimson ground, gold and teal medallions, with a thigh-high slit.",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/silkgown-crimson-front.png",
+        "alt": "Persistence Silk Gown in Crimson Paisley, front view, full length"
+      },
+      {
+        "mediaType": "image",
+        "src": "/assets/images/silkgown-crimson-side.png",
+        "alt": "Persistence Silk Gown in Crimson Paisley, side view, showing the bias-cut drape and slit"
+      },
+      {
+        "mediaType": "image",
+        "src": "/assets/images/silkgown-crimson-back.png",
+        "alt": "Persistence Silk Gown in Crimson Paisley, back view, full length"
+      }
+    ],
+    "furniture": {
+      "lightbox": {
+        "label": "View the Crimson Paisley gallery"
+      }
+    },
+    "details": {
+      "subtype": "ProductGroup",
+      "price": {
+        "current": 249,
+        "currency": "USD"
+      },
+      "availability": "In stock",
+      "rating": {
+        "value": 4.7,
+        "count": 312,
+        "max": 5
+      },
+      "variants": {
+        "control": "buttons",
+        "variesBy": [
+          "size"
+        ],
+        "productGroupID": "PSG-CRI",
+        "items": [
+          {
+            "name": "Persistence Silk Gown — Crimson Paisley, S",
+            "sku": "PSG-CRI-S",
+            "size": "S",
+            "color": "Crimson Paisley",
+            "price": 249,
+            "currency": "USD"
+          },
+          {
+            "name": "Persistence Silk Gown — Crimson Paisley, M",
+            "sku": "PSG-CRI-M",
+            "size": "M",
+            "color": "Crimson Paisley",
+            "price": 249,
+            "currency": "USD"
+          },
+          {
+            "name": "Persistence Silk Gown — Crimson Paisley, L",
+            "sku": "PSG-CRI-L",
+            "size": "L",
+            "color": "Crimson Paisley",
+            "price": 249,
+            "currency": "USD"
+          }
+        ]
+      }
+    },
+    "tags": [
+      "Silk",
+      "Eveningwear"
+    ]
+  }
+}

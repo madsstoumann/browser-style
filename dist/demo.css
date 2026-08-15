@@ -4632,6 +4632,11 @@
     --layout-pbs: 4;
     --layout-pbe: 4;
   }
+  :is(lay-out, lay-out-group)[xs*="p(3xs)"] {
+    --layout-pi: 0.0625;
+    --layout-pbs: 0.0625;
+    --layout-pbe: 0.0625;
+  }
   :is(lay-out, lay-out-group)[xs*="p(2xs)"] {
     --layout-pi: 0.125;
     --layout-pbs: 0.125;
@@ -4670,6 +4675,9 @@
   :is(lay-out, lay-out-group)[xs*="pi(4)"] {
     --layout-pi: 4;
   }
+  :is(lay-out, lay-out-group)[xs*="pi(3xs)"] {
+    --layout-pi: 0.0625;
+  }
   :is(lay-out, lay-out-group)[xs*="pi(2xs)"] {
     --layout-pi: 0.125;
   }
@@ -4705,6 +4713,10 @@
     --layout-pbs: 4;
     --layout-pbe: 4;
   }
+  :is(lay-out, lay-out-group)[xs*="pb(3xs)"] {
+    --layout-pbs: 0.0625;
+    --layout-pbe: 0.0625;
+  }
   :is(lay-out, lay-out-group)[xs*="pb(2xs)"] {
     --layout-pbs: 0.125;
     --layout-pbe: 0.125;
@@ -4739,6 +4751,9 @@
   :is(lay-out, lay-out-group)[xs*="pbs(4)"] {
     --layout-pbs: 4;
   }
+  :is(lay-out, lay-out-group)[xs*="pbs(3xs)"] {
+    --layout-pbs: 0.0625;
+  }
   :is(lay-out, lay-out-group)[xs*="pbs(2xs)"] {
     --layout-pbs: 0.125;
   }
@@ -4768,6 +4783,9 @@
   }
   :is(lay-out, lay-out-group)[xs*="pbe(4)"] {
     --layout-pbe: 4;
+  }
+  :is(lay-out, lay-out-group)[xs*="pbe(3xs)"] {
+    --layout-pbe: 0.0625;
   }
   :is(lay-out, lay-out-group)[xs*="pbe(2xs)"] {
     --layout-pbe: 0.125;
@@ -4799,6 +4817,9 @@
   :is(lay-out, lay-out-group)[xs*="mbs(4)"] {
     --layout-mbs: 4;
   }
+  :is(lay-out, lay-out-group)[xs*="mbs(3xs)"] {
+    --layout-mbs: 0.0625;
+  }
   :is(lay-out, lay-out-group)[xs*="mbs(2xs)"] {
     --layout-mbs: 0.125;
   }
@@ -4828,6 +4849,9 @@
   }
   :is(lay-out, lay-out-group)[xs*="mbe(4)"] {
     --layout-mbe: 4;
+  }
+  :is(lay-out, lay-out-group)[xs*="mbe(3xs)"] {
+    --layout-mbe: 0.0625;
   }
   :is(lay-out, lay-out-group)[xs*="mbe(2xs)"] {
     --layout-mbe: 0.125;
@@ -4859,6 +4883,9 @@
   :is(lay-out, lay-out-group)[xs*="cg(4)"] {
     --layout-colmg: 4;
   }
+  :is(lay-out, lay-out-group)[xs*="cg(3xs)"] {
+    --layout-colmg: 0.0625;
+  }
   :is(lay-out, lay-out-group)[xs*="cg(2xs)"] {
     --layout-colmg: 0.125;
   }
@@ -4888,6 +4915,9 @@
   }
   :is(lay-out, lay-out-group)[xs*="rg(4)"] {
     --layout-rg: 4;
+  }
+  :is(lay-out, lay-out-group)[xs*="rg(3xs)"] {
+    --layout-rg: 0.0625;
   }
   :is(lay-out, lay-out-group)[xs*="rg(2xs)"] {
     --layout-rg: 0.125;
@@ -5476,6 +5506,11 @@
       --layout-pbs: 4;
       --layout-pbe: 4;
     }
+    :is(lay-out, lay-out-group)[lg*="p(3xs)"] {
+      --layout-pi: 0.0625;
+      --layout-pbs: 0.0625;
+      --layout-pbe: 0.0625;
+    }
     :is(lay-out, lay-out-group)[lg*="p(2xs)"] {
       --layout-pi: 0.125;
       --layout-pbs: 0.125;
@@ -5514,6 +5549,9 @@
     :is(lay-out, lay-out-group)[lg*="pi(4)"] {
       --layout-pi: 4;
     }
+    :is(lay-out, lay-out-group)[lg*="pi(3xs)"] {
+      --layout-pi: 0.0625;
+    }
     :is(lay-out, lay-out-group)[lg*="pi(2xs)"] {
       --layout-pi: 0.125;
     }
@@ -5549,6 +5587,10 @@
       --layout-pbs: 4;
       --layout-pbe: 4;
     }
+    :is(lay-out, lay-out-group)[lg*="pb(3xs)"] {
+      --layout-pbs: 0.0625;
+      --layout-pbe: 0.0625;
+    }
     :is(lay-out, lay-out-group)[lg*="pb(2xs)"] {
       --layout-pbs: 0.125;
       --layout-pbe: 0.125;
@@ -5583,6 +5625,9 @@
     :is(lay-out, lay-out-group)[lg*="pbs(4)"] {
       --layout-pbs: 4;
     }
+    :is(lay-out, lay-out-group)[lg*="pbs(3xs)"] {
+      --layout-pbs: 0.0625;
+    }
     :is(lay-out, lay-out-group)[lg*="pbs(2xs)"] {
       --layout-pbs: 0.125;
     }
@@ -5612,6 +5657,9 @@
     }
     :is(lay-out, lay-out-group)[lg*="pbe(4)"] {
       --layout-pbe: 4;
+    }
+    :is(lay-out, lay-out-group)[lg*="pbe(3xs)"] {
+      --layout-pbe: 0.0625;
     }
     :is(lay-out, lay-out-group)[lg*="pbe(2xs)"] {
       --layout-pbe: 0.125;
@@ -5643,6 +5691,9 @@
     :is(lay-out, lay-out-group)[lg*="mbs(4)"] {
       --layout-mbs: 4;
     }
+    :is(lay-out, lay-out-group)[lg*="mbs(3xs)"] {
+      --layout-mbs: 0.0625;
+    }
     :is(lay-out, lay-out-group)[lg*="mbs(2xs)"] {
       --layout-mbs: 0.125;
     }
@@ -5672,6 +5723,9 @@
     }
     :is(lay-out, lay-out-group)[lg*="mbe(4)"] {
       --layout-mbe: 4;
+    }
+    :is(lay-out, lay-out-group)[lg*="mbe(3xs)"] {
+      --layout-mbe: 0.0625;
     }
     :is(lay-out, lay-out-group)[lg*="mbe(2xs)"] {
       --layout-mbe: 0.125;
@@ -5703,6 +5757,9 @@
     :is(lay-out, lay-out-group)[lg*="cg(4)"] {
       --layout-colmg: 4;
     }
+    :is(lay-out, lay-out-group)[lg*="cg(3xs)"] {
+      --layout-colmg: 0.0625;
+    }
     :is(lay-out, lay-out-group)[lg*="cg(2xs)"] {
       --layout-colmg: 0.125;
     }
@@ -5732,6 +5789,9 @@
     }
     :is(lay-out, lay-out-group)[lg*="rg(4)"] {
       --layout-rg: 4;
+    }
+    :is(lay-out, lay-out-group)[lg*="rg(3xs)"] {
+      --layout-rg: 0.0625;
     }
     :is(lay-out, lay-out-group)[lg*="rg(2xs)"] {
       --layout-rg: 0.125;
@@ -7666,14 +7726,32 @@
     & > *,
     &::before,
     &::after {
-      align-items: center;
       animation: var(--_name, ui-marquee-x) var(--ui-marquee-duration) linear infinite;
       animation-direction: var(--_dir, normal);
-      display: flex;
       flex: 0 0 auto;
       gap: var(--ui-marquee-gap);
+    }
+    &:where(:not([variant~=cards])) > *,
+    &:where(:not([variant~=cards]))::before,
+    &:where(:not([variant~=cards]))::after {
+      align-items: center;
+      display: flex;
       inline-size: max-content;
       white-space: nowrap;
+    }
+    &:where([variant~=cards]) {
+      --ui-marquee-font-weight: inherit;
+      --ui-marquee-item-size: 20rem;
+      --ui-marquee-padding-block: var(--spacing-md, 1rem);
+      --ui-marquee-padding-inline: var(--spacing-md, 1rem);
+      --ui-marquee-gap: var(--spacing-xl, 2rem);
+      align-items: stretch;
+      contain: paint;
+      user-select: auto;
+    }
+    &:where([variant~=cards]) > * {
+      inline-size: var(--ui-marquee-item-size);
+      white-space: normal;
     }
     &[aria-label]:empty::before {
       content: attr(aria-label);
@@ -7909,7 +7987,8 @@
         --_name: ui-marquee-seamless;
         & > * {
           --_n: var(--ui-marquee-visible, 4);
-          offset: shape(from calc(var(--ui-marquee-item-size) / -2) 50%, hline by calc(sibling-count() * max(100cqi / var(--_n), var(--ui-marquee-item-size))));
+          --_step: calc(max(100cqi / var(--_n), var(--ui-marquee-item-size)) + var(--ui-marquee-gap));
+          offset: shape(from calc(var(--ui-marquee-item-size) / -2) 50%, hline by calc(sibling-count() * var(--_step)));
           animation-delay: calc(-1 * sibling-index() * var(--ui-marquee-duration) / sibling-count());
         }
       }
@@ -8285,10 +8364,10 @@
     :where(ui-reveal) > details[open]::details-content {
       transform: var(--_persp) var(--_panel-open);
     }
-    :where(ui-reveal:is([variant~="ico(te)"], [variant~="icc(te)"])) > details[open]::details-content > * > :first-child {
+    :where(ui-reveal:is([variant~="ico(te)"], [variant~="icc(te)"])) > details[open] > :not(summary) > :first-child {
       padding-inline-end: var(--ui-reveal-icon-clear);
     }
-    :where(ui-reveal:is([variant~="ico(ts)"], [variant~="icc(ts)"])) > details[open]::details-content > * > :first-child {
+    :where(ui-reveal:is([variant~="ico(ts)"], [variant~="icc(ts)"])) > details[open] > :not(summary) > :first-child {
       padding-inline-start: var(--ui-reveal-icon-clear);
     }
   }
@@ -9657,6 +9736,86 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
   }
   :where(ui-avatar:not([variant~=square]):not([variant~=squircle])) > ui-badge:not([host-shape]) {
     --ui-badge-inset: 14.6%;
+  }
+}
+
+/* ui/button-group/ui-button-group.css */
+@layer bs-component {
+  :where(.ui-button-group) {
+    --ui-button-group-bg: var(--color-accent);
+    --ui-button-group-c: var(--color-accent-text);
+    --ui-button-group-border-width: calc(1em / 8);
+    all: unset;
+    column-gap: .25em;
+    display: grid;
+    grid-auto-columns: 1fr;
+    grid-auto-flow: column;
+    & label {
+      --button-bg: transparent;
+      --input-fs: 1em;
+      align-content: center;
+      grid-template-columns: 1fr;
+      text-align: center;
+      &:has(input:checked) {
+        --button-bg: var(--ui-button-group-bg);
+        --button-c: var(--ui-button-group-c);
+      }
+      &:not(:has(:checked)):hover {
+        --button-bg: var(--ui-button-group-bg);
+        --button-hover-bxsh: none;
+        --button-hover-mix: Canvas 90%;
+      }
+    }
+    & legend {
+      padding-block-end: var(--label-gap);
+    }
+    &[data-theme] {
+      --ui-button-group-bg: var(--_theme-bg);
+      --ui-button-group-c: var(--_theme-c, var(--_theme-ink));
+      background-color: transparent;
+      color: inherit;
+    }
+    &[data-variant~=border] {
+      column-gap: 0;
+      & label {
+        border: var(--ui-button-group-border-width) solid var(--ui-button-group-bg);
+        border-radius: var(--input-radius);
+        &:not(:first-of-type) {
+          border-start-start-radius: 0;
+          border-end-start-radius: 0;
+        }
+        &:not(:last-of-type) {
+          border-inline-end: none;
+          border-start-end-radius: 0;
+          border-end-end-radius: 0;
+        }
+      }
+    }
+    &[data-variant~=inline] {
+      display: inline-grid;
+    }
+    &[data-variant~=outline] {
+      & label {
+        &:not(:has(:checked)) {
+          border-color: var(--color-border);
+        }
+        &:has(:checked) {
+          background-color: transparent;
+          color: inherit;
+          &:hover {
+            background: transparent;
+          }
+          & + label {
+            border-inline-start: var(--ui-button-group-border-width) solid var(--ui-button-group-bg);
+          }
+        }
+      }
+    }
+    &[data-variant~=rounded] {
+      & label {
+        border-radius: var(--ui-button-group-radius, 3em);
+      }
+    }
   }
 }
 
@@ -11672,6 +11831,27 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       max-inline-size: var(--ui-content-max, var(--width-prose, 65ch));
       text-box: cap alphabetic;
     }
+    & > div[itemscope]:not([data-part], [hidden]) {
+      display: contents;
+    }
+    & > fieldset.ui-button-group:where([data-variant~=inline]) {
+      align-self: start;
+    }
+    & > fieldset:where(:not(.ui-button-group)) {
+      border: var(--ui-content-fieldset-border-width, var(--input-border-width, var(--border-width))) solid var(--ui-content-fieldset-border-color, var(--color-border));
+      border-radius: var(--ui-content-fieldset-radius, 1ch);
+      min-inline-size: 0;
+      padding: var(--ui-content-fieldset-padding-block, 1.25ch) var(--ui-content-fieldset-padding-inline, 1.5ch);
+      & > legend {
+        float: inline-start;
+        font-size: var(--ui-content-legend-fs, var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))));
+        font-weight: var(--ui-content-legend-fw, var(--font-weight-semibold));
+        inline-size: 100%;
+        margin-block-end: var(--ui-content-legend-rhythm, 1em);
+        padding: 0;
+        white-space: normal;
+      }
+    }
     &[theme] {
       background: var(--_theme-bg, transparent);
       color: var(--_theme-c, var(--color-text));
@@ -12066,6 +12246,13 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       & :is([type=radio], [type=checkbox]) {
         font-size: var(--ui-content-options-input-fs, 1.5em);
       }
+      & ui-chip[data-verdict] {
+        display: none;
+      }
+      & > li:has(:checked) > ui-chip[data-verdict] {
+        display: inline-flex;
+        justify-self: start;
+      }
     }
   }
   :where(ui-content, ui-media) :is([data-part=meta], [data-part=caption]) {
@@ -12088,6 +12275,9 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     & :is([data-part=tags], [data-part=actions]) a {
       position: relative;
       z-index: 2;
+    }
+    & ui-media :is(ui-chip, ui-sticker, ui-beacon):not(:has(a, button)) {
+      pointer-events: none;
     }
   }
 }
@@ -12799,10 +12989,25 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
   :where([variant~="bdr(drk)"]) {
     --ui-card-border-color: color-mix(in srgb, var(--color-text) 30%, transparent);
   }
+  :where([variant~="shd(non)"]) {
+    --ui-card-shadow: none;
+  }
+  :where([variant~="shd(sm)"]) {
+    --ui-card-shadow: var(--shadow-sm);
+  }
+  :where([variant~="shd(md)"]) {
+    --ui-card-shadow: var(--shadow-md);
+  }
+  :where([variant~="shd(lg)"]) {
+    --ui-card-shadow: var(--shadow-lg);
+  }
+  :where([variant~="shd(xl)"]) {
+    --ui-card-shadow: var(--shadow-xl);
+  }
   :where([variant~=row], [variant~=row-r]) {
     --ui-card-cols: var(--ui-card-split, 1fr 1fr);
   }
-  :where([variant~=row], [variant~=row-r]) ui-media {
+  :where([variant~=row], [variant~=row-r]):where(:not([media*="mrk(rail)"])) ui-media:where(:not([media*="mrk(rail)"])) {
     block-size: 100%;
     inline-size: 100%;
     min-block-size: 0;
@@ -12935,8 +13140,8 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     :where([variant~="md:row-r"]) :is(cq-box, summary) {
       --ui-card-cols: var(--ui-card-split, 1fr 1fr);
     }
-    :where([variant~="md:row"]) :is(cq-box, summary) ui-media,
-    :where([variant~="md:row-r"]) :is(cq-box, summary) ui-media {
+    :where([variant~="md:row"]):where(:not([media*="mrk(rail)"])) :is(cq-box, summary) ui-media:where(:not([media*="mrk(rail)"])),
+    :where([variant~="md:row-r"]):where(:not([media*="mrk(rail)"])) :is(cq-box, summary) ui-media:where(:not([media*="mrk(rail)"])) {
       block-size: 100%;
       inline-size: 100%;
       min-block-size: 0;
@@ -13233,8 +13438,8 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     :where([variant~="lg:row-r"]) :is(cq-box, summary) {
       --ui-card-cols: var(--ui-card-split, 1fr 1fr);
     }
-    :where([variant~="lg:row"]) :is(cq-box, summary) ui-media,
-    :where([variant~="lg:row-r"]) :is(cq-box, summary) ui-media {
+    :where([variant~="lg:row"]):where(:not([media*="mrk(rail)"])) :is(cq-box, summary) ui-media:where(:not([media*="mrk(rail)"])),
+    :where([variant~="lg:row-r"]):where(:not([media*="mrk(rail)"])) :is(cq-box, summary) ui-media:where(:not([media*="mrk(rail)"])) {
       block-size: 100%;
       inline-size: 100%;
       min-block-size: 0;

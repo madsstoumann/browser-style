@@ -1,0 +1,48 @@
+{
+  "$schema": "../../../cms/baseline/models/card.schema.json",
+  "id": "podcastseries-1",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-07-04T12:00:00Z",
+    "updatedAt": "2026-07-05T09:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Media"
+  },
+  "fields": {
+    "internalName": "Demo — Podcast series",
+    "schemaType": "podcastseries",
+    "preset": { "$ref": "card-preset/stack-square" },
+    "eyebrow": "Podcast series",
+    "headline": "The Calm Mind",
+    "summary": "A fortnightly conversation about attention, rest, and the parts of modern life that quietly eat both.",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/podcast.png",
+        "alt": "The Calm Mind podcast cover art"
+      }
+    ],
+    "actions": [
+      { "link": { "url": "#", "text": "Subscribe" }, "style": "primary" }
+    ],
+    "details": {
+      "startDate": "2022-01-11",
+      "cadence": "Fortnightly",
+      "episodeCount": 42,
+      "feed": { "url": "https://calmmind.example/feed.xml", "text": "RSS feed" },
+      "host": {
+        "name": "Ida Månsson",
+        "role": "Host",
+        "avatar": "https://assets.stoumann.dk/img/avatar4.webp"
+      },
+      "note": "New episodes every other Thursday.",
+      "episodes": [
+        { "episodeNumber": 42, "duration": "PT2M49S", "durationDisplay": "2:49", "name": "Digital minimalism, revisited" },
+        { "episodeNumber": 41, "duration": "PT48M10S", "durationDisplay": "48:10", "name": "The four-day week, two years on" },
+        { "episodeNumber": 40, "duration": "PT39M2S", "durationDisplay": "39:02", "name": "What silence does to a room" }
+      ]
+    },
+    "tags": ["Wellbeing", "Attention"]
+  }
+}

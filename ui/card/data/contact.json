@@ -27,9 +27,10 @@
     ],
     "details": {
       "contactType": "customer support",
+      "department": "Customer Success",
       "availableHours": "Mo-Fr 09:00-17:00",
       "availableHoursDisplay": "Mon–Fri 9–17 CET",
-      "responseTime": "under 2 hours",
+      "responseTime": "within 2 hours",
       "languages": "English, Danish, German",
       "contactMethods": [
         {

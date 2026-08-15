@@ -121,6 +121,14 @@
       },
       "headingTag": "h2"
     },
+    "stack-square": {
+      "name": "Stack Square Preset",
+      "description": "Column card with a square media frame — album covers, podcast artwork, anything whose artwork is 1:1",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(1/1)",
+      "headingTag": "h2"
+    },
     "panel-subtle": {
       "name": "Panel Subtle Preset",
       "description": "Content-only, off-white surface, large type — quotes",
@@ -188,7 +196,7 @@
     },
     "testimonial": {
       "name": "Testimonial Preset",
-      "description": "Media-less review card \u2014 stars, quote, byline. Warm star tint via --ui-rating-c; pair with schemaType review + details.reviewedType Organization/Service.",
+      "description": "Media-less review card — stars, quote, byline. Warm star tint via --ui-rating-c; pair with schemaType review + details.reviewedType Organization/Service.",
       "element": "ui-card",
       "variant": "col",
       "styles": {
@@ -215,6 +223,22 @@
         "icon": "top right sm",
         "iconClose": "dark",
         "scroll": true
+      }
+    },
+    "flashcard": {
+      "name": "Flashcard Preset",
+      "description": "Reveal card for a single flashcard — the question over a full-bleed image, flip to the answer. A quiz with several cards wants a deck preset instead",
+      "element": "ui-reveal",
+      "variant": "ovr(bs)",
+      "media": "asr(4/3) obp(cc) scm",
+      "content": "scl(lg)",
+      "headingTag": "h2",
+      "reveal": {
+        "type": "flip",
+        "icon": "top right sm",
+        "iconClose": "dark",
+        "scroll": true,
+        "name": "quiz-flashcard"
       }
     },
     "hero-reveal": {

@@ -17,6 +17,12 @@
 	<p>
 		<code>Map</code> is an iframe with an embedded map from <a href="https://www.openstreetmap.org/" target="_blank" rel="noopener noreferrer">OpenStreetMap</a>.
 	</p>
+	<p>
+		This is the <strong>standalone</strong> form, for a bare page. Inside a card the frame does the work instead:
+		put the iframe in <code>&lt;ui-media&gt;</code> — or, from content, a <code>{ "mediaType": "map" }</code> media item
+		whose coordinates come from the card's own <code>details.geo</code>. See
+		<a href="../card/docs/media.md">ui/card/docs/media.md § Map</a>.
+	</p>
 	<p>Go to <a href="https://www.openstreetmap.org/" target="_blank" rel="noopener noreferrer">OpenStreetMap</a>, locate an address, click Share, and copy the <code>src</code> of the iframe.<br>Optionally, click "Add Marker", and drag it to the correct place.</p>
 	
 	<p>Next, use the <code>latituide</code> and <code>langitude</code> in the URL to create links for

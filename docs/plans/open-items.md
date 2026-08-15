@@ -3,7 +3,7 @@
 > What is **actually still open**, extracted from the implementation ledger in
 > [`2026-07-26-v4-card-system-architecture-analysis.md`](./2026-07-26-v4-card-system-architecture-analysis.md)
 > (now an archive — read it for the *why* behind any F-xx/R-xx, not for what to do next).
-> Six open items plus one closed decision on record. Each open one is waiting on a
+> Seven open items plus one closed decision on record. Each open one is waiting on a
 > decision or on coordination, not on typing.
 >
 > Everything else from that report is implemented and machine-verified: the v5 alias
@@ -248,7 +248,73 @@ needs a re-export shim or it is a breaking change on a 4.0.0 package; `ui/card/b
 `@browser.style/card` peer entirely, the runtime inversion goes away, and there is one
 copy of the slide vocabulary instead of two plus a linter to keep them equal.
 
-## 7. Closed — `<ui-content>` → `<ui-text>` rename (decided against, 2026-08-03)
+## 7. Variant GRAMMAR — flat words vs. parameterised tokens
+
+> **Corrected 2026-08-15.** An earlier version of this entry claimed `data-variant=` was
+> "v3 syntax" and listed three version generations. **That was wrong**, and it named
+> `ui/progress` as a `data-variant` user when it reads none. The attribute spelling is a
+> conformance rule, not drift — see the box below. What is genuinely open is only the
+> grammar.
+
+### Not open: which attribute — the element kind decides
+
+A bare `variant=` is **invalid HTML on a built-in element**; custom attributes on built-ins
+must be `data-`prefixed. So:
+
+| Element kind | Attribute | Examples in this repo |
+|---|---|---|
+| custom (`<ui-*>`) | `variant=` | `ui-card`, `ui-reveal`, `ui-marquee`, `ui-quote`, `ui-accordion`, `ui-chip`, `ui-sticker`, `ui-beacon`, `ui-save`, `ui-lightbox`, `ui-icon` |
+| built-in | `data-variant=` | `<fieldset class="ui-button-group">`, `<ol data-part="timeline">`, `<ul data-part="list">`, `<blockquote>` |
+
+**The repo already follows this everywhere, and already documents it twice.**
+`ui/timeline/ui-timeline.css:3` says it outright — *"horizontal with `variant="horizontal"`
+(**data-variant on native lists**)"* — and `ui/card/docs/schema.md` gives the same reason for
+`data-theme`/`data-fill` on a `<li>`.
+
+`ui/quote` is the proof case: one component that styles **both** element kinds, pairing the
+two spellings in a single selector.
+
+```css
+:where(ui-quote, ui-blockquote, blockquote[data-variant]) {          /* :8  */
+    &:is([variant~="bigquote"], [data-variant~="bigquote"]) { … }    /* :30 */
+```
+
+`render.js` writing `variant=` for `parts.quote`/`parts.accordion` and `data-variant=` for
+`parts.buttonGroup` is therefore **correct by construction**, not hard-coded knowledge it
+should be freed from. The renderer knows the element kind because it emits the element.
+
+### Open: the grammar, which is orthogonal to the spelling
+
+Two grammars are live, and they cut across both attribute spellings:
+
+| Grammar | Shape | Who |
+|---|---|---|
+| **flat words** | `variant="loop seam fade"` · `data-variant="inline rounded border"` | `ui/marquee`, `ui/quote`, `ui/accordion`, `ui/button-group`, `ui/timeline` |
+| **parameterised tokens** | `variant="col lg:row lg:spl(1/1)"` | `ui/card`, `ui/reveal` |
+
+The difference is real: tokens take arguments and carry container-query prefixes
+(`lg:spl(1/2)`); flat words do neither. Nothing about `data-variant` prevents a built-in
+from carrying tokens — verified, no component currently does, but the two axes vary
+independently.
+
+**The call to make:** whether the satellite packages should move to the parameterised
+grammar, or whether flat words are the right altitude for a component with four looks and
+no responsive behaviour. Decide it for the whole set rather than one package at a time —
+`tokens.lint.js`'s `PART_VARIANTS` and `card-preset.schema.json`'s `parts` description
+would both need to follow.
+
+**Not urgent, and not a bug:** every picker and sub-component renders correctly today.
+What it costs is one line of teachability — a reader of `card-preset.schema.json` cannot
+tell from `parts` alone which grammar a given part expects.
+
+**Related, and separately logged:** `ui/button-group` and `ui/highlight` have no
+`package.json` at all, so neither can be a declared peer of `ui/card` despite both being
+emitted by `render.js` — see the audit's § B1
+([`2026-08-15-v4-consistency-audit.md`](./2026-08-15-v4-consistency-audit.md)).
+
+---
+
+## 8. Closed — `<ui-content>` → `<ui-text>` rename (decided against, 2026-08-03)
 
 Recorded so it is not rediscovered as an open question. The proposal was to rename
 `<ui-content>` (the text area) to `<ui-text>`, recycle `<ui-content>` for the host, move

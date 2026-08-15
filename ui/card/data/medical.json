@@ -1,0 +1,50 @@
+{
+  "$schema": "../../../cms/baseline/models/card.schema.json",
+  "id": "medical-1",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-05-02T12:00:00Z",
+    "updatedAt": "2026-05-02T12:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Health"
+  },
+  "fields": {
+    "internalName": "Demo — Health article",
+    "schemaType": "medical",
+    "preset": { "$ref": "card-preset/stack" },
+    "eyebrow": "Health library",
+    "headline": "Chronic insomnia: what actually helps",
+    "summary": "Why sleeping tablets are no longer first-line treatment, and what a course of CBT-I involves week by week.",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/mindfulness.png",
+        "alt": "Person sitting quietly under a tree in a forest"
+      }
+    ],
+    "details": {
+      "specialty": "PrimaryCare",
+      "lastReviewed": "2026-05-02",
+      "lastReviewedDisplay": "May 2, 2026",
+      "reviewedLabel": "Medically reviewed",
+      "audience": { "type": "Patient", "name": "Adults with persistent sleep problems" },
+      "about": {
+        "type": "MedicalCondition",
+        "name": "Chronic insomnia",
+        "aspects": [
+          { "type": "signOrSymptom", "text": "Trouble falling asleep three or more nights a week, for three months or longer" },
+          { "type": "signOrSymptom", "text": "Waking in the early hours and being unable to get back to sleep" },
+          { "type": "riskFactor", "text": "Shift work, chronic pain, anxiety, late caffeine" },
+          { "type": "possibleTreatment", "text": "Cognitive behavioural therapy for insomnia (CBT-I), 6–8 weeks" }
+        ]
+      },
+      "reviewedBy": {
+        "name": "Dr Astrid Hovgaard",
+        "role": "Consultant in sleep medicine",
+        "avatar": "https://assets.stoumann.dk/img/avatar1.webp"
+      },
+      "disclaimer": "General information only — it does not replace advice from your own doctor."
+    }
+  }
+}

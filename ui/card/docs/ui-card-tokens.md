@@ -44,6 +44,7 @@ attribute and therefore the same table; they are explained under *Reveal tokens*
 | token | axis | args | aliases | bare | writes | md:/lg: | deprecated |
 |---|---|---|---|---|---|---|---|
 | `rds()` | corners | **size** non sm md lg xl 2xl full pill sm-sq md-sq lg-sq xl-sq | — | — | --ui-card-radius --ui-card-squircle-exp | — | — |
+| `shd()` | elevation | **size** non sm md lg xl | — | — | --ui-card-shadow | — | — |
 | `bdr()` | border | **size** sm md lg · **tone** lgt drk | — | yes | --ui-card-border-width --ui-card-border-color | — | — |
 | `spl()` | split | **ratio** 1/1 1/2 2/1 1/3 3/1 | — | — | --ui-card-split | md: lg: (ratio) | — |
 | `vis()` | visibility | **value** media content | — | — | — | md: lg: (value) | — |

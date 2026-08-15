@@ -1,0 +1,36 @@
+{
+  "$schema": "../../../cms/baseline/models/card.schema.json",
+  "id": "quiz-flashcard-1",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-07-04T12:00:00Z",
+    "updatedAt": "2026-07-05T09:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Education"
+  },
+  "fields": {
+    "internalName": "Demo — Quiz (flip flashcard)",
+    "schemaType": "quiz",
+    "preset": { "$ref": "card-preset/flashcard" },
+    "eyebrow": "Flashcard",
+    "headline": "Quantum computing — flashcard",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/quantum.png",
+        "alt": "A quantum processor in a cryostat, gold coils descending into blue light"
+      }
+    ],
+    "details": {
+      "format": "flashcard",
+      "subject": "Quantum computing",
+      "cards": [
+        {
+          "question": "What is a qubit?",
+          "answer": "The quantum unit of information. Unlike a bit it can hold a superposition of 0 and 1, and only collapses to one of them when measured."
+        }
+      ]
+    }
+  }
+}

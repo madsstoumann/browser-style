@@ -546,6 +546,15 @@ bottom of the scrollport — it covers the peek; the rotated up/down arrows sit 
 `mrk(tmb)` markers can move off the media into a **reserved band** — below/above
 (`mrk(blw)`/`mrk(abv)`, block axis) or **beside** (`mrk(rail)`, inline axis, `axis(y)` only).
 
+**Every thumbnail needs a picture.** The marker paints `--ui-carousel-thumb-url` per slide; with
+no value it is a bare `--ui-carousel-thumb-bg` placeholder. Hand-authored pages set it inline
+(`style="--ui-carousel-thumb-url: url('…')"`); **`render.js` emits it automatically** when the
+preset's `media=` contains `mrk(tmb)` — one narrow CDN transform (`width=160`) per slide when the
+srcset pipeline is armed, the raw `src` otherwise. The value lands inside `url('…')` in an inline
+style, where `esc()` cannot help, so quotes, parens, semicolons and backslashes are **dropped**
+rather than escaped. (The JS lightbox path is the exception: its DOM controls derive a missing
+thumb from the slide's own image.)
+
 - **Band auto-size.** `mrk(tmb)` bumps `--ui-carousel-band` to `thumb-size + spacing-sm` and
   aliases `--ui-carousel-marker-size` to `--ui-carousel-thumb-size` (same trick as `mrk(bar)`)
   so every existing band/corner centering calc sizes to the real thumb, not the 0.6rem dot.
@@ -577,6 +586,14 @@ bottom of the scrollport — it covers the peek; the rotated up/down arrows sit 
   un-generates the arrows (must be `content: none`, not `display: none`).
 - **Overflow:** thumbs `flex: 0 1 auto` with `min-block-size: --ui-carousel-thumb-min` shrink to
   fit the media height, then the group scrolls (`overflow: hidden auto`) — never slivers.
+- **`row`/`md:row`/`lg:row` frames opt OUT of the card's `inline-size: 100%`.** Those three
+  arrangement rules stretch the frame to its grid column, which is exactly the declaration the
+  reservation above needs to win — the frame kept the full column *and* added the rail's padding
+  outside it (content-box), sliding under the text column. The three `ui-card.css` rules now carry
+  `:where(:not([media*="mrk(rail)"]))` on **both** the host and the frame, since `media=` may sit
+  on either. Zero-specificity `:where()` wrapping is load-bearing: a bare `:not([media*=…])` would
+  raise those rules from 0,0,1 to 0,1,1 and reorder the cascade. Reference: the product pages
+  (`demo/products/`), the only place the two compose.
 
 ## Loop clones
 

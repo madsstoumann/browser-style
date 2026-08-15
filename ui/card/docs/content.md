@@ -366,7 +366,7 @@ Content parts are **semantic children** marked with `data-part`. They are auto-s
 | `timeline` | `<ol data-part="timeline">` | **Body group** — dated entries; muted `<time>` |
 | `quote` | `<ui-quote data-part="quote">` wrapping `<blockquote>` | **Body group** — indented; composes with `@browser.style/quote` via `variant` |
 | `rating` | `<div data-part="rating">` | **Meta group** — inline star row + count |
-| `options` | `<ul data-part="options">` | **Meta group** — poll / comparison rows with `<progress>` |
+| `options` | `<ul data-part="options">` | **Meta group** — poll / comparison rows with `<progress>`; quiz rows with a verdict `<ui-chip>` |
 
 Bare headings (`h2`–`h6`) are styled identically to `data-part="headline"` as a convenience, so plain semantic markup just works.
 
@@ -384,10 +384,10 @@ only structural essentials — visuals stay token-driven.
 | `rating` | `<div>` + `<input class="ui-rating" disabled aria-hidden>` masked stars, `[data-sr]` full label, visible `<span aria-hidden>` count | `AggregateRating` / `Rating` | product, review, software |
 | `list` | `<ul>` check-list / `<ol>` ordered | — | recipe, job, course, booking, location, membership |
 | `address` | `<address>` block (no avatar — that's `byline`) | `PostalAddress` | business, location, event, contact |
-| `stat` | `<p>` + `<data>` number, `<small>` unit, trend `<span>` | `QuantitativeValue` | statistic |
+| `stat` | `<p>` + `<data>` display number (no itemprop — the value is a `<meta>`), `<small>` unit, trend `<span>` | `QuantitativeValue` | statistic |
 | `timeline` | `<ol>` of `<li>` with `<time>` + text | `subEvent` → `Event` | timeline |
 | `quote` | `<ui-quote variant>` wrapping `<blockquote>` + `<q>`/`<cite>` | — | quote (`bigquote`), review + social (plain) |
-| `options` | `<ul>` of `<li>` with `<label>` + `<progress>` | `suggestedAnswer` → `Answer` / `ListItem` | poll, comparison |
+| `options` | `<ul>` of `<li>` with `<label>` + `<progress>` (poll) or a verdict `<ui-chip>` (quiz) | `suggestedAnswer` / `acceptedAnswer` → `Answer` / `ListItem` | poll, comparison, quiz (multiple choice) |
 
 `quote` composes with `@browser.style/quote`: `variant` on the `<ui-quote>` wrapper
 (`bigquote` / `breaker` / `code`) carries the visual style from `ui-quote.css`, and the
@@ -403,6 +403,69 @@ sets no avatar styling at all; size it with the component's own `size=` attribut
 part's bare `<progress>` is styled by `@browser.style/progress`. See card.md
 § Sub-components for the full mapping and the deliberate non-goals (`rating` stays
 hand-rolled until a v4 `ui-rating` display rewrite exists; `timeline` stays card-local).
+
+#### Options — quiz grading is CSS-only
+
+A graded multiple-choice quiz (`schemaType: "quiz"`, `details.format: "multiple-choice"`)
+puts a verdict chip on **every** option, not only the answer key:
+
+```html
+<ul data-part="options" aria-live="polite">
+  <li itemprop="suggestedAnswer" itemscope itemtype="https://schema.org/Answer">
+    <label><input type="radio" class="--check" name="quiz-q1"> <span itemprop="text">…</span></label>
+    <ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip>
+  </li>
+  <li itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
+    <label><input type="radio" class="--check" name="quiz-q1"> <span itemprop="text">…</span></label>
+    <ui-chip data-verdict="correct" theme="pale green">Correct</ui-chip>
+  </li>
+</ul>
+```
+
+Two rules in `content.css` do the grading — no JavaScript:
+
+| State | Selector | Result |
+|---|---|---|
+| untouched | `ui-chip[data-verdict]` | every chip `display: none` — no verdict is in the rendered text or the accessibility tree |
+| answered | `> li:has(:checked) > ui-chip[data-verdict]` | the chosen row — and only it — shows its own verdict |
+
+**Exactly one chip is ever visible**, the one for the option the reader picked. A wrong
+pick does not reveal the key: `display: none` is the whole mechanism, so the answer is
+absent from the rendered text, from `innerText` and from the accessibility tree until it
+is chosen. (The `acceptedAnswer` itemprop is still in the source, as microdata requires —
+this hides the answer from the reader, not from a parser.)
+
+The hook is `data-verdict`, **not** the theme colour, so a retheme cannot regrade. The
+chips sit inside the `<li>` but outside any `itemprop`, so the `Answer` keeps exactly
+`position` + `text`. The poll shape shares this part and carries no verdict chips, so
+both selectors above miss it.
+
+`aria-live="polite"` rides the `<ul>` — a verdict appears through a CSS `display` change
+rather than a DOM mutation, and a live region is what makes the browser expose it. It is
+**not** `role="status"`, which would replace the list role and cost the option count.
+
+#### Variant picker — who owns the look
+
+The product pages' size picker (`details.variants.control: "buttons"`, [schema.md § Product](schema.md#product--product-subtype-productgroup)) is a **second** `<fieldset>` in the text column, and the two must not be confused:
+
+| | element | who styles it |
+|---|---|---|
+| quiz question group | `<fieldset>` + `<legend>` | **content.css** — the bordered box above |
+| variant picker | `<fieldset class="ui-button-group">` | **`ui/button-group`** — its own package |
+
+**The split is look vs. placement.** `ui/button-group` owns the look — `render.js` writes the class, `demo/demo.css` bundles the sheet ([components.md](../components.md)) — and the card owns where it sits in the column. Recreating the look here would fork the component; two rules are all the card needs.
+
+**Look — stop claiming it.** The quiz rule's bare `& > fieldset` was re-plating the picker with a border, radius and padding, because `.ui-button-group`'s own `all: unset` is **`:where()`-wrapped and therefore specificity 0**, while `& > fieldset` is 0,0,1. It now reads `& > fieldset:where(:not(.ui-button-group))` — `:where()`-wrapped in turn, so the quiz box keeps its 0,0,1 and nothing else in the cascade moves.
+
+**Placement — `inline` cannot work by itself.** `<ui-content>` is a flex column, and a flex item's `display` is **blockified**: `data-variant="inline"`'s `inline-grid` computes to `grid`, so the group stretches the full column instead of shrinking to its options. The shrink-to-fit comes from the card side instead:
+
+```css
+& > fieldset.ui-button-group:where([data-variant~="inline"]) { align-self: start; }
+```
+
+The variant words come from the preset through the same seam as `parts.quote` / `parts.accordion` — **`parts.buttonGroup`**, default `inline rounded border` (the segmented control), validated by `tokens.lint.js` against `ui/button-group`'s vocabulary (`inline` · `rounded` · `border` · `outline`). `fs-sm` rides the class list: the picker is a control, not a row of body-sized buttons.
+
+The general lesson for any packaged component rendered into `<ui-content>`: **a zero-specificity component sheet cannot defend itself against a card-side element selector**, and **any `display` the component sets is subject to the column's flex blockification.** Where the card system styles a bare tag (`fieldset`, and it is the only one), that rule has to name the exception rather than the component raising its own specificity to fight back.
 
 ### Tags — plain links or `<ui-chip>`
 
@@ -831,6 +894,7 @@ Content **tone/weight** (`eb()`/`hl()`/`tx()`/`mt()` ink + weight), group **size
 - **Mind heading levels.** `data-part="headline"` styles `h2`–`h6` identically; choose the level that fits the document outline, not the visual size.
 - **Phrasing-only inside `<summary>`.** Flow elements are invalid there; use `<b>` / `<span>` / `<small>` with `data-part`. These carry no heading semantics, which is acceptable for a clickable trigger face — the real heading belongs in the revealed panel.
 - **Decorative byline avatars** should use empty `alt=""`.
+- **Quiz verdicts are announced, not just revealed.** The grading in `data-part="options"` is a CSS `display` change, which is not a DOM mutation; `aria-live="polite"` on the `<ul>` is what puts the revealed chip on the announcement queue. Keep it on the `<ul>` as an attribute — `role="status"` would replace the list role.
 
 ---
 

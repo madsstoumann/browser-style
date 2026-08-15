@@ -1,0 +1,76 @@
+{
+  "$schema": "../../../cms/baseline/models/card.schema.json",
+  "id": "menu-1",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-07-04T12:00:00Z",
+    "updatedAt": "2026-07-05T09:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Food"
+  },
+  "fields": {
+    "internalName": "Demo — Menu",
+    "schemaType": "menu",
+    "preset": { "$ref": "card-preset/stack-accordion" },
+    "eyebrow": "Dinner menu",
+    "headline": "Brew & Bean kitchen",
+    "summary": "Served 17:00–21:30, Wednesday to Sunday. Everything is cooked to order, so allow a little time.",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/spicycurry.png",
+        "alt": "Bowl of coconut chicken curry with mint and coriander"
+      }
+    ],
+    "details": {
+      "note": "Tell us about allergies when you order — the kitchen adapts most dishes.",
+      "sections": [
+        {
+          "name": "Small plates",
+          "items": [
+            {
+              "name": "Charred hispi cabbage",
+              "price": 85,
+              "currency": "DKK",
+              "label": "Vegetarian",
+              "description": "Brown butter, toasted hazelnut and aged pecorino.",
+              "diets": ["VegetarianDiet", "GlutenFreeDiet"],
+              "nutrition": { "calories": "310 calories", "servingSize": "1 plate" }
+            },
+            {
+              "name": "Cured trout, rye crisp",
+              "price": 95,
+              "currency": "DKK",
+              "description": "Beetroot, horseradish cream and dill oil.",
+              "nutrition": { "calories": "280 calories", "servingSize": "1 plate" }
+            }
+          ]
+        },
+        {
+          "name": "Mains",
+          "items": [
+            {
+              "name": "Coconut chicken curry",
+              "price": 145,
+              "currency": "DKK",
+              "label": "Gluten free",
+              "description": "Mild, with mint, coriander and steamed basmati.",
+              "diets": ["GlutenFreeDiet"],
+              "nutrition": { "calories": "620 calories", "proteinContent": "42 g", "servingSize": "1 bowl" }
+            },
+            {
+              "name": "Barley risotto, wild mushroom",
+              "price": 135,
+              "currency": "DKK",
+              "label": "Vegan",
+              "description": "Pearl barley, chanterelle, thyme and a hazelnut crumb.",
+              "diets": ["VeganDiet", "VegetarianDiet"],
+              "nutrition": { "calories": "540 calories", "servingSize": "1 bowl" }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

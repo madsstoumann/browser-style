@@ -1544,6 +1544,27 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       max-inline-size: var(--ui-content-max, var(--width-prose, 65ch));
       text-box: cap alphabetic;
     }
+    & > div[itemscope]:not([data-part], [hidden]) {
+      display: contents;
+    }
+    & > fieldset.ui-button-group:where([data-variant~=inline]) {
+      align-self: start;
+    }
+    & > fieldset:where(:not(.ui-button-group)) {
+      border: var(--ui-content-fieldset-border-width, var(--input-border-width, var(--border-width))) solid var(--ui-content-fieldset-border-color, var(--color-border));
+      border-radius: var(--ui-content-fieldset-radius, 1ch);
+      min-inline-size: 0;
+      padding: var(--ui-content-fieldset-padding-block, 1.25ch) var(--ui-content-fieldset-padding-inline, 1.5ch);
+      & > legend {
+        float: inline-start;
+        font-size: var(--ui-content-legend-fs, var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))));
+        font-weight: var(--ui-content-legend-fw, var(--font-weight-semibold));
+        inline-size: 100%;
+        margin-block-end: var(--ui-content-legend-rhythm, 1em);
+        padding: 0;
+        white-space: normal;
+      }
+    }
     &[theme] {
       background: var(--_theme-bg, transparent);
       color: var(--_theme-c, var(--color-text));
@@ -1857,6 +1878,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       column-gap: var(--ui-content-hours-column-gap, var(--spacing-md));
       display: grid;
       font-size: var(--ui-content-hours-fs, var(--ui-content-address-fs, calc(var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))) * 0.9)));
+      font-variant-numeric: tabular-nums;
       grid-template-columns: auto 1fr;
       margin: 0;
       row-gap: var(--ui-content-hours-row-gap, var(--spacing-xs));
@@ -1937,6 +1959,13 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       & :is([type=radio], [type=checkbox]) {
         font-size: var(--ui-content-options-input-fs, 1.5em);
       }
+      & ui-chip[data-verdict] {
+        display: none;
+      }
+      & > li:has(:checked) > ui-chip[data-verdict] {
+        display: inline-flex;
+        justify-self: start;
+      }
     }
   }
   :where(ui-content, ui-media) :is([data-part=meta], [data-part=caption]) {
@@ -1959,6 +1988,9 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     & :is([data-part=tags], [data-part=actions]) a {
       position: relative;
       z-index: 2;
+    }
+    & ui-media :is(ui-chip, ui-sticker, ui-beacon):not(:has(a, button)) {
+      pointer-events: none;
     }
   }
 }
@@ -2670,10 +2702,25 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
   :where([variant~="bdr(drk)"]) {
     --ui-card-border-color: color-mix(in srgb, var(--color-text) 30%, transparent);
   }
+  :where([variant~="shd(non)"]) {
+    --ui-card-shadow: none;
+  }
+  :where([variant~="shd(sm)"]) {
+    --ui-card-shadow: var(--shadow-sm);
+  }
+  :where([variant~="shd(md)"]) {
+    --ui-card-shadow: var(--shadow-md);
+  }
+  :where([variant~="shd(lg)"]) {
+    --ui-card-shadow: var(--shadow-lg);
+  }
+  :where([variant~="shd(xl)"]) {
+    --ui-card-shadow: var(--shadow-xl);
+  }
   :where([variant~=row], [variant~=row-r]) {
     --ui-card-cols: var(--ui-card-split, 1fr 1fr);
   }
-  :where([variant~=row], [variant~=row-r]) ui-media {
+  :where([variant~=row], [variant~=row-r]):where(:not([media*="mrk(rail)"])) ui-media:where(:not([media*="mrk(rail)"])) {
     block-size: 100%;
     inline-size: 100%;
     min-block-size: 0;
@@ -2795,7 +2842,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
   }
   :where(ui-card[theme]) {
     --ui-card-bg: var(--_theme-bg, light-dark(var(--color-surface), var(--ui-card-dark-bg, #1f2937)));
-    color: var(--_theme-c, var(--color-text));
+    color: var(--_theme-c, var(--_theme-ink, var(--color-text)));
   }
   @container bs-card (inline-size >= 25rem) {
     :where([variant~="md:col"]) :is(cq-box, summary),
@@ -2806,8 +2853,8 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     :where([variant~="md:row-r"]) :is(cq-box, summary) {
       --ui-card-cols: var(--ui-card-split, 1fr 1fr);
     }
-    :where([variant~="md:row"]) :is(cq-box, summary) ui-media,
-    :where([variant~="md:row-r"]) :is(cq-box, summary) ui-media {
+    :where([variant~="md:row"]):where(:not([media*="mrk(rail)"])) :is(cq-box, summary) ui-media:where(:not([media*="mrk(rail)"])),
+    :where([variant~="md:row-r"]):where(:not([media*="mrk(rail)"])) :is(cq-box, summary) ui-media:where(:not([media*="mrk(rail)"])) {
       block-size: 100%;
       inline-size: 100%;
       min-block-size: 0;
@@ -3104,8 +3151,8 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     :where([variant~="lg:row-r"]) :is(cq-box, summary) {
       --ui-card-cols: var(--ui-card-split, 1fr 1fr);
     }
-    :where([variant~="lg:row"]) :is(cq-box, summary) ui-media,
-    :where([variant~="lg:row-r"]) :is(cq-box, summary) ui-media {
+    :where([variant~="lg:row"]):where(:not([media*="mrk(rail)"])) :is(cq-box, summary) ui-media:where(:not([media*="mrk(rail)"])),
+    :where([variant~="lg:row-r"]):where(:not([media*="mrk(rail)"])) :is(cq-box, summary) ui-media:where(:not([media*="mrk(rail)"])) {
       block-size: 100%;
       inline-size: 100%;
       min-block-size: 0;

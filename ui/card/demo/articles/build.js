@@ -14,9 +14,10 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { renderCard, SCHEMA_TYPES } from '../../render.js';
+import { renderCard, resolveItemtype } from '../../render.js';
 import { generateSrcsets, calculateSizes } from '../../../../layout/src/srcsets.js';
 import { srcsetMap, srcsetConfig } from '../../../../layout/layouts-map.js';
+import { CDN_BASE, CONTRAST_STYLE, HEAD_COMMON, descope, esc, withPreset } from '../build.shared.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const data = (file) => JSON.parse(readFileSync(join(here, '../../data', file), 'utf8'));
@@ -27,44 +28,14 @@ const presets = data('card.presets.json').presets;
    /cdn-cgi/image/ only resolves on the zone, and a failed candidate never falls
    back to src. Article pages are a single 65ch prose column; the grid page is
    the .grid-2 two-up (matches layout's columns(2) sizes list). */
-const CDN_BASE = 'https://v4.browser.style';
 const PROSE_IMAGES = { cdnBase: CDN_BASE, sizes: '(min-width: 720px) 42rem, 100vw' };
 const GRID_IMAGES = { cdnBase: CDN_BASE, sizes: calculateSizes(generateSrcsets({ md: 'columns(2)' }, srcsetMap, srcsetConfig), 0) };
 
-/* shared head fragment: bundle CSS + hotlink-safe referrer + srcset-origin preconnect */
-const HEAD_COMMON = `<link rel="stylesheet" href="/dist/demo.min.css">
-	<!-- srcset uses absolute v4.browser.style CDN URLs; the zone's Hotlink Protection
-	     403s any cross-origin Referer (pages.dev, localhost) — no-referrer passes -->
-	<meta name="referrer" content="no-referrer">
-	<link rel="preconnect" href="https://v4.browser.style">`;
-
-/* page-scoped WCAG AA contrast overrides — same block as demo/schema.html */
-const CONTRAST_STYLE = `<style>
-		:root {
-			--color-link: light-dark(hsl(221, 100%, 44%), hsl(221, 70%, 70%));
-			--color-accent: light-dark(hsl(211, 100%, 38%), hsl(211, 70%, 72%));
-			--color-success: light-dark(hsl(136, 45%, 30%), hsl(136, 25%, 60%));
-			--color-error: light-dark(hsl(360, 65%, 41%), hsl(360, 45%, 62%));
-			--color-text-muted: light-dark(hsl(0, 0%, 42%), hsl(0, 0%, 65%));
-		}
-		ui-content { --ui-content-muted: color-mix(in oklab, currentColor 85%, transparent); }
-		ui-chip[data-type] { --ui-chip-bg: hsl(0, 0%, 95%); --ui-chip-c: hsl(0, 0%, 13%); }
-	</style>`;
-
-const withPreset = (ucf, presetId) => ({
-	...ucf,
-	fields: { ...ucf.fields, preset: { $ref: `card-preset/${presetId}` } }
-});
-
-const esc = (value) => String(value)
-	.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-
 const page = (ucf, name) => {
 	const title = String(ucf.fields.headline).replace(/<[^>]+>/g, '');
-	const itemtype = SCHEMA_TYPES[ucf.fields.schemaType] || 'CreativeWork';
-	/* ONE microdata scope on the <article> root — the bare-primitive renders each
-	   carry their own itemscope, which would split the page into partial items */
-	const descope = (html) => html.replace(/ itemscope itemtype="https:\/\/schema\.org\/\w+"/, '');
+	/* through the renderer's resolver, not SCHEMA_TYPES — otherwise a details.subtype
+	   card sharpens in the grid and stays generic here, from one UCF */
+	const itemtype = resolveItemtype(ucf.fields);
 	/* hero frame — tag the image with its view-transition-name via data-view
 	   (first <img> only). CSS advanced attr() turns it into the name — no
 	   inline style attribute, so a strict CSP (no unsafe-inline styles) holds.

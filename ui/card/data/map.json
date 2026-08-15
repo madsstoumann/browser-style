@@ -1,0 +1,51 @@
+{
+  "$schema": "../../../cms/baseline/models/card.schema.json",
+  "id": "map-1",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-08-14T10:00:00Z",
+    "updatedAt": "2026-08-14T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Places"
+  },
+  "fields": {
+    "internalName": "Demo — Map",
+    "schemaType": "location",
+    "preset": {
+      "$ref": "card-preset/map"
+    },
+    "eyebrow": "Find us",
+    "headline": "Nordhavn Studio",
+    "summary": "The media frame is the map: an OpenStreetMap embed drawn from the same coordinates the GeoCoordinates scope carries.",
+    "media": [
+      {
+        "mediaType": "map",
+        "alt": "Map of Nordhavn Studio, Sundkaj 9, Copenhagen"
+      }
+    ],
+    "details": {
+      "address": {
+        "streetAddress": "Sundkaj 9",
+        "postalCode": "2150",
+        "addressLocality": "Copenhagen",
+        "addressCountry": "DK"
+      },
+      "geo": {
+        "latitude": 55.7076,
+        "longitude": 12.5993,
+        "url": "https://www.google.com/maps/search/?api=1&query=55.7076,12.5993"
+      },
+      "openingHours": [
+        {
+          "schema": "Mo-Fr 09:00-17:00"
+        }
+      ],
+      "contact": "+45 35 55 12 90"
+    },
+    "tags": [
+      "Copenhagen",
+      "Studio"
+    ]
+  }
+}

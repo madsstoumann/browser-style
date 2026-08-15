@@ -133,6 +133,40 @@
 		/* wid() — the cap rides the rows, not the column box */
 		& > * { margin: 0; max-inline-size: var(--ui-content-max, var(--width-prose, 65ch)); text-box: cap alphabetic; }
 
+		/* A bare microdata scope (mainEntity/about/hasOfferCatalog) is grouping, not a
+		   box — dissolve it so its rows join the column's flex gap. Docs: docs/schema.md */
+		& > div[itemscope]:not([data-part], [hidden]) { display: contents; }
+
+		/* the variant picker: LOOK is ui/button-group's, PLACEMENT is ours. `inline`
+		   blockifies on a flex item, so the shrink-to-fit comes from align-self.
+		   Docs: docs/content.md § Variant picker */
+		& > fieldset.ui-button-group:where([data-variant~="inline"]) { align-self: start; }
+
+		/* quiz question group — a real box, NOT dissolved: the fieldset/legend pair is the
+		   grouping the radios need. UA chrome off. Docs: docs/content.md § Options
+		   .ui-button-group opts OUT — its own `all: unset` is :where()-wrapped (specificity
+		   0) and this rule would re-plate it. Docs: docs/content.md § Variant picker */
+		& > fieldset:where(:not(.ui-button-group)) {
+			/* boxed like ui/accordion's `bordered rounded` — the two Quiz cards sit together */
+			border: var(--ui-content-fieldset-border-width, var(--input-border-width, var(--border-width))) solid var(--ui-content-fieldset-border-color, var(--color-border));
+			border-radius: var(--ui-content-fieldset-radius, 1ch);
+			min-inline-size: 0;
+			padding: var(--ui-content-fieldset-padding-block, 1.25ch) var(--ui-content-fieldset-padding-inline, 1.5ch);
+
+			/* the question. float + inline-size keeps the border unbroken: an in-flow legend
+			   is painted INTO the top border, and at full width it would erase it entirely.
+			   inline-size is also what makes it wrap — a legend shrink-wraps otherwise */
+			& > legend {
+				float: inline-start;
+				font-size: var(--ui-content-legend-fs, var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))));
+				font-weight: var(--ui-content-legend-fw, var(--font-weight-semibold));
+				inline-size: 100%;
+				margin-block-end: var(--ui-content-legend-rhythm, 1em);
+				padding: 0;
+				white-space: normal;
+			}
+		}
+
 		/* theme= — a PLATE. NOT :where()-wrapped: it must out-specify ui-reveal.css */
 		&[theme] {
 			background: var(--_theme-bg, transparent);
@@ -551,6 +585,13 @@
 			& :is([type="radio"], [type="checkbox"]) {
 				font-size: var(--ui-content-options-input-fs, 1.5em);
 			}
+
+			/* quiz grading — verdicts hide until a pick, then only the chosen row shows its own. Docs: docs/content.md § Options */
+			& ui-chip[data-verdict] { display: none; }
+			& > li:has(:checked) > ui-chip[data-verdict] {
+				display: inline-flex;
+				justify-self: start;
+			}
 		}
 	}
 
@@ -575,6 +616,11 @@
 		& :is([data-part="tags"], [data-part="actions"]) a {
 			position: relative;
 			z-index: 2;
+		}
+
+		/* marker furniture is decorative — it must not punch a hole in the cover */
+		& ui-media :is(ui-chip, ui-sticker, ui-beacon):not(:has(a, button)) {
+			pointer-events: none;
 		}
 	}
 
