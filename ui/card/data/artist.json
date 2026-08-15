@@ -1,0 +1,43 @@
+{
+  "$schema": "../../../cms/baseline/models/card.schema.json",
+  "id": "artist-1",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-08-15T12:00:00Z",
+    "updatedAt": "2026-08-15T12:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/People"
+  },
+  "fields": {
+    "internalName": "Demo — Artist",
+    "schemaType": "artist",
+    "preset": { "$ref": "card-preset/stack-portrait" },
+    "eyebrow": "Comic artist",
+    "headline": "M. Stanley",
+    "summary": "Pencils and inks every issue of CSS Man at the same drawing board he started on. Keeps a sign above it reading “Comics are the poetry of the people!”",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/mstanley.png",
+        "alt": "M. Stanley at his drawing board, inking a CSS Man page under an angled desk lamp"
+      }
+    ],
+    "actions": [
+      { "link": { "url": "#schema-comicseries", "text": "See the series" }, "style": "primary" }
+    ],
+    "details": {
+      "jobTitle": "Comic Artist",
+      "organization": "Web Comics Group",
+      "location": "New York, NY",
+      "occupation": {
+        "name": "Comic book artist",
+        "category": "27-1013.00",
+        "since": "1958"
+      },
+      "awards": ["Eisner nominee — Best Cover Artist, 2026"],
+      "sameAs": ["https://webcomicsgroup.example/artists/m-stanley"]
+    },
+    "tags": ["Pencils", "Inking", "Lettering"]
+  }
+}

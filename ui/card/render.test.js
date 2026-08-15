@@ -1041,6 +1041,90 @@ describe('podcastseries — PodcastSeries', () => {
 	});
 });
 
+describe('comicseries — ComicSeries', () => {
+	const details = {
+		issn: '2634-0011', startDate: '2026-08-01', publisher: 'Web Comics Group', cadence: 'Monthly', issueCount: 12,
+		issues: [{ issueNumber: 1, name: 'A New Hero', image: '/assets/images/cssman-1.png', datePublished: '2026-08-01', artist: 'M. Stanley', inker: 'Rosa Vega' }]
+	};
+	const card = (extra = {}) => render({ schemaType: 'comicseries', headline: 'CSS Man', details: { ...details, ...extra } });
+
+	/* Same trap as PodcastSeries: numberOfEpisodes' domain is CreativeWorkSeason /
+	   RadioSeries / TVSeries / VideoGameSeries, and ComicSeries is in none of them. */
+	test('the issue count is prose, never a numberOfEpisodes property', () => {
+		const html = card();
+		assert.match(html, /itemtype="https:\/\/schema\.org\/ComicSeries"/);
+		assert.ok(!html.includes('numberOfEpisodes'), 'ComicSeries is not in that property’s domain');
+		assert.ok(!html.includes('numberOfIssues'), 'and no such property exists at all');
+		assert.match(html, /<p data-part="meta">Monthly · 12 issues since 2026 · ISSN 2634-0011<\/p>/);
+	});
+
+	/* issn rides Periodical, startDate rides CreativeWorkSeries — both are inherited,
+	   so a reader looking them up on ComicSeries itself will not find them documented */
+	test('issn and startDate are machine metas on the series root', () => {
+		assert.match(card(), /<meta itemprop="issn" content="2634-0011">/);
+		assert.match(card(), /<meta itemprop="startDate" content="2026-08-01">/);
+		assert.match(card(), /<p data-part="meta" itemprop="publisher" itemscope itemtype="https:\/\/schema\.org\/Organization">Published by <span itemprop="name">Web Comics Group<\/span><\/p>/);
+	});
+
+	/* the five credits are ComicIssue's own properties — a series has none of them */
+	test('the credits ride the hasPart rows, one Person scope per filled role', () => {
+		const html = card();
+		assert.match(html, /<li itemprop="hasPart" itemscope itemtype="https:\/\/schema\.org\/ComicIssue">/);
+		assert.match(html, /<span itemprop="artist" itemscope itemtype="https:\/\/schema\.org\/Person"><span itemprop="name">M\. Stanley<\/span><\/span>/);
+		assert.match(html, /<span itemprop="inker" itemscope itemtype="https:\/\/schema\.org\/Person"><span itemprop="name">Rosa Vega<\/span><\/span>/);
+		/* absent roles emit nothing at all */
+		assert.ok(!html.includes('itemprop="letterer"'), 'an unfilled role must not emit an empty scope');
+	});
+
+	/* each issue carries its OWN cover: the media area shows both as images of the
+	   series, which is valid but says nothing about which cover belongs to which issue */
+	test('each issue carries its own image', () => {
+		assert.match(card(), /<meta itemprop="image" content="\/assets\/images\/cssman-1\.png">/);
+	});
+
+	/* issues ASCEND, so ordinal markers are true — the opposite of a podcast feed */
+	test('the issue list is ordered by default, and the switch is data', () => {
+		assert.match(card(), /<ol data-part="list"><li itemprop="hasPart"/);
+		assert.match(card({ ordered: false }), /<ul data-part="list"><li itemprop="hasPart"/);
+	});
+});
+
+describe('artist — Person', () => {
+	const details = {
+		jobTitle: 'Comic Artist', organization: 'Web Comics Group', location: 'New York, NY',
+		occupation: { name: 'Comic book artist', category: '27-1013.00', since: '1958' },
+		awards: ['Eisner nominee', 'Inkpot'], sameAs: ['https://webcomicsgroup.example/artists/m-stanley']
+	};
+	const card = (extra = {}) => render({ schemaType: 'artist', headline: 'M. Stanley', tags: ['Inking'], details: { ...details, ...extra } });
+
+	/* schema.org has no Artist TYPE — `artist` is a property whose RANGE is Person */
+	test('an artist card is a Person, like a profile', () => {
+		assert.match(card(), /itemtype="https:\/\/schema\.org\/Person"/);
+		assert.ok(!card().includes('schema.org/Artist'), 'there is no such itemtype');
+	});
+
+	/* the jobTitle · worksFor row is profile's, shared rather than copied */
+	test('the subheadline is the shared profile row', () => {
+		assert.match(card(), /<p data-part="subheadline"><span itemprop="jobTitle">Comic Artist<\/span> · <span itemprop="worksFor" itemscope itemtype="https:\/\/schema\.org\/Organization"><span itemprop="name">Web Comics Group<\/span><\/span><\/p>/);
+	});
+
+	/* Person has no keywords property, so tags become knowsAbout — same as profile */
+	test('tags become knowsAbout, never keywords', () => {
+		assert.match(card(), /<ui-chip itemprop="knowsAbout">Inking<\/ui-chip>/);
+		assert.ok(!card().includes('itemprop="keywords"'), 'keywords is not a Person property');
+	});
+
+	/* award is a repeatable Text: one itemprop per value, or the list collapses into
+	   a single concatenated string */
+	test('each award is its own span', () => {
+		assert.match(card(), /<span itemprop="award">Eisner nominee<\/span> · <span itemprop="award">Inkpot<\/span>/);
+	});
+
+	test('hasOccupation is a real Occupation scope', () => {
+		assert.match(card(), /<p data-part="meta" itemprop="hasOccupation" itemscope itemtype="https:\/\/schema\.org\/Occupation"><meta itemprop="occupationalCategory" content="27-1013\.00"><span itemprop="name">Comic book artist<\/span> · working since 1958<\/p>/);
+	});
+});
+
 /* An abbreviated stat is NOT its number. `<data itemprop="value" value="2400000">2.4</data>`
    answers 2,400,000 to the microdata spec and 2.4 to the text-reading consumers this branch
    measured — wrong by 10^6. The machine value moves to <meta>, which has no text node. */
@@ -1455,7 +1539,8 @@ describe('markup-first types — formatter sinks', () => {
 			['realestate facts', { schemaType: 'realestate', headline: 'X', details: { property: { bedrooms: XSS } } }],
 			['tv series', { schemaType: 'tvseries', headline: 'X', details: { numberOfSeasons: XSS } }],
 			['podcast series', { schemaType: 'podcastseries', headline: 'X', details: { episodeCount: XSS } }],
-			['album', { schemaType: 'music', headline: 'X', details: { numTracks: XSS } }]
+			['album', { schemaType: 'music', headline: 'X', details: { numTracks: XSS } }],
+			['comic series', { schemaType: 'comicseries', headline: 'X', details: { issueCount: XSS } }]
 		];
 		for (const [where, fields] of rows) {
 			const html = render(fields);

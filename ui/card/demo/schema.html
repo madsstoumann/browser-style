@@ -13,7 +13,11 @@
 	<!-- srcset origin: handshake in parallel with the CSS download (~3 RTTs off the
 	     eager LCP image on pages.dev/localhost; same-origin no-op on v4.browser.style) -->
 	<link rel="preconnect" href="https://v4.browser.style">
-	<meta name="description" content="54 cards covering 48 distinct schema.org itemtypes on the card hosts (Quiz runs three cards; Review, EventSeries, ProductGroup and Place two each) — re-created with the modern &lt;ui-card&gt; engine: inline microdata (itemscope/itemtype/itemprop), no JSON-LD. The job card carries a 49th type as a second top-level item: EmployerAggregateRating. One optional script: video.js polyfills the media invoker commands behind the podcast play button.">
+	<!-- Counting rule: a "card" is a TOP-LEVEL <ui-card>/<ui-reveal> carrying an itemtype.
+	     The 4 nested <ui-card> Product tiles inside the ProductGroup collage's <ui-media>
+	     are not cards, and nested property scopes (AggregateRating, byline Person,
+	     Organization, ComicIssue, Occupation…) are not itemtypes "on the card hosts". -->
+	<meta name="description" content="55 cards covering 49 distinct schema.org itemtypes on the card hosts (Quiz runs three cards; Review, EventSeries, Place and Person two each) — re-created with the modern &lt;ui-card&gt; engine: inline microdata (itemscope/itemtype/itemprop), no JSON-LD. The job card carries a 50th type as a second top-level item: EmployerAggregateRating. One optional script: video.js polyfills the media invoker commands behind the podcast play button.">
 	<!-- One bundle for every card-demo package (source list: ui/card/components.md).
 	     Build: npm run build:demo-css (entry demo.css, output /dist/demo.min.css) -->
 	<link rel="stylesheet" href="/dist/demo.min.css">
@@ -1745,6 +1749,45 @@
 						<ui-chip theme="pale red"><span itemprop="alternateName">Mostly false</span></ui-chip>
 					</p>
 					<ui-quote data-part="quote"><blockquote itemprop="claimReviewed"><q>The new harbour bridge cost twice its approved budget.</q><cite>Social media posts</cite></blockquote></ui-quote>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card id="schema-comicseries" variant="col" media="asr(2/3) nav(mrk) nav(arw) chip(te)" itemscope itemtype="https://schema.org/ComicSeries">
+			<cq-box>
+				<ui-media>
+					<img src="/assets/images/cssman-1.png" alt="CSS Man #1 — the hero shields his eyes on a rooftop while Jayess watches from a water tower" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=360/assets/images/cssman-1.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=480/assets/images/cssman-1.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=720/assets/images/cssman-1.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=1080/assets/images/cssman-1.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=1800/assets/images/cssman-1.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image">
+					<img src="/assets/images/cssman-2.png" alt="CSS Man #2 — a night rooftop under the brace signal, Jayess looming over the skyline" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=360/assets/images/cssman-2.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=480/assets/images/cssman-2.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=720/assets/images/cssman-2.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=1080/assets/images/cssman-2.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=1800/assets/images/cssman-2.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image">
+				<ui-chip data-type>ComicSeries</ui-chip></ui-media>
+				<ui-content>
+					<meta itemprop="issn" content="2634-0011">
+					<meta itemprop="startDate" content="2026-08-01">
+					<small data-part="eyebrow" itemprop="genre">Superhero</small>
+					<h2 data-part="headline" itemprop="name">CSS Man</h2>
+					<p data-part="summary" itemprop="description">Faster than a keystroke, more powerful than preprocessors, able to stylize a world — with a utility belt and the power of separation of concerns.</p>
+					<p data-part="meta">Monthly · 12 issues since 2026 · ISSN 2634-0011</p>
+					<p data-part="meta" itemprop="publisher" itemscope itemtype="https://schema.org/Organization">Published by <span itemprop="name">Web Comics Group</span></p>
+					<ol data-part="list">
+						<li itemprop="hasPart" itemscope itemtype="https://schema.org/ComicIssue"><meta itemprop="issueNumber" content="1"><meta itemprop="datePublished" content="2026-08-01"><meta itemprop="image" content="/assets/images/cssman-1.png"><span itemprop="name">A New Hero for a New Age of the Web</span> <small>Art <span itemprop="artist" itemscope itemtype="https://schema.org/Person"><span itemprop="name">M. Stanley</span></span> · Pencils <span itemprop="penciler" itemscope itemtype="https://schema.org/Person"><span itemprop="name">M. Stanley</span></span> · Inks <span itemprop="inker" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Rosa Vega</span></span> · Letters <span itemprop="letterer" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Artie Kemp</span></span> · Colours <span itemprop="colorist" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Dot Halliday</span></span></small></li>
+						<li itemprop="hasPart" itemscope itemtype="https://schema.org/ComicIssue"><meta itemprop="issueNumber" content="2"><meta itemprop="datePublished" content="2026-09-01"><meta itemprop="image" content="/assets/images/cssman-2.png"><span itemprop="name">The Cascade Never Sleeps</span> <small>Art <span itemprop="artist" itemscope itemtype="https://schema.org/Person"><span itemprop="name">M. Stanley</span></span> · Pencils <span itemprop="penciler" itemscope itemtype="https://schema.org/Person"><span itemprop="name">M. Stanley</span></span> · Inks <span itemprop="inker" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Rosa Vega</span></span> · Letters <span itemprop="letterer" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Artie Kemp</span></span> · Colours <span itemprop="colorist" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Dot Halliday</span></span></small></li>
+					</ol>
+					<span data-part="tags"><ui-chip itemprop="keywords">Silver Age</ui-chip><ui-chip itemprop="keywords">Web comics</ui-chip></span>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card id="schema-artist" variant="col" media="asr(2/3) chip(te)" itemscope itemtype="https://schema.org/Person">
+			<cq-box>
+				<ui-media><img src="/assets/images/mstanley.png" alt="M. Stanley at his drawing board, inking a CSS Man page under an angled desk lamp" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=360/assets/images/mstanley.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=480/assets/images/mstanley.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=720/assets/images/mstanley.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=1080/assets/images/mstanley.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=1800/assets/images/mstanley.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>Person</ui-chip></ui-media>
+				<ui-content>
+					<small data-part="eyebrow">Comic artist</small>
+					<h2 data-part="headline" itemprop="name">M. Stanley</h2>
+					<p data-part="subheadline"><span itemprop="jobTitle">Comic Artist</span> · <span itemprop="worksFor" itemscope itemtype="https://schema.org/Organization"><span itemprop="name">Web Comics Group</span></span></p>
+					<p data-part="summary" itemprop="description">Pencils and inks every issue of CSS Man at the same drawing board he started on. Keeps a sign above it reading “Comics are the poetry of the people!”</p>
+					<p data-part="meta" itemprop="address">New York, NY</p>
+					<p data-part="meta" itemprop="hasOccupation" itemscope itemtype="https://schema.org/Occupation"><meta itemprop="occupationalCategory" content="27-1013.00"><span itemprop="name">Comic book artist</span> · working since 1958</p>
+					<p data-part="meta"><span itemprop="award">Eisner nominee — Best Cover Artist, 2026</span></p>
+					<meta itemprop="sameAs" content="https://webcomicsgroup.example/artists/m-stanley">
+					<span data-part="tags"><ui-chip itemprop="knowsAbout">Pencils</ui-chip><ui-chip itemprop="knowsAbout">Inking</ui-chip><ui-chip itemprop="knowsAbout">Lettering</ui-chip></span>
+					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="#schema-comicseries">See the series</a></nav>
 				</ui-content>
 			</cq-box>
 		</ui-card>

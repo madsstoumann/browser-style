@@ -578,22 +578,33 @@ The verdict chip leads — it is the answer (`reviewRating` → `Rating`, `alter
 
 ## Types authored markup-first
 
-The eleven types below — plus `EmployerAggregateRating` on the job card — were authored **markup
+The thirteen types below — plus `EmployerAggregateRating` on the job card — were authored **markup
 first**: `demo/schema.html` was the specification and `render.js` was written to reproduce it, not
 the other way round. They now have a `schemaType` key, a `DETAILS` renderer and an instance in
-`data/`, and the transcription was verified by a mechanical comparator rather than by eye — eleven
-of the twelve reproduce their reference card exactly. Every `itemprop` below was checked
-mechanically against the schema.org vocabulary dump (`domainIncludes` walked up the
-`rdfs:subClassOf` chain).
+`data/`, and the transcription was verified by a mechanical comparator rather than by eye.
+
+**Vocabulary checking is not uniform, and the difference matters.** Every `itemprop` from
+`MemberProgram` through `PodcastSeries` was checked mechanically against the schema.org
+vocabulary dump (`domainIncludes` walked up the `rdfs:subClassOf` chain). ⚠️ **`ComicSeries` and
+`Artist` were not** — they were authored in an environment whose egress proxy blocks both
+`schema.org` and `validator.schema.org`, so their properties rest on the hierarchy reasoning
+written up in each section rather than on a lookup. Re-check them the moment a machine with
+egress is to hand; where a property turns out to be out of domain, **drop it** rather than keep
+it because it renders.
 
 **Two page conventions the renderer does not reproduce**, both pre-dating these types and visible
 on every card: the page hoists `media=` onto `<ui-card>` where the renderer emits it on
 `<ui-media>`, and it places the machine `<meta>` block *above* the eyebrow where the renderer emits
 it after the summary (`DETAILS` runs after the envelope and has no hook to reorder). The comparator
 normalises both on both sides; nothing else is allowed to differ.
-Run it with `node ui/card/schema.compare.js` ([`schema.compare.js`](../schema.compare.js)); eleven
-of the twelve are an exact match, and the job card's three residual lines are older data/renderer
-divergences it shares with `job.json`, not anything the employer rating introduced.
+Run it with `node ui/card/schema.compare.js` ([`schema.compare.js`](../schema.compare.js)); all
+22 mapped cards are an exact match.
+
+**A card with an `id=` must be keyed by it.** The comparator's bare form is
+`<ui-card(?![^>]*\bid=)…>` — it deliberately matches only cards *without* an id, so that a bare
+key can never accidentally grab the id'd sibling it was meant to be distinguished from. That is
+why `ComicSeries#schema-comicseries` carries its id even though it is the only ComicSeries on
+the page: the id is the artist card's link target, so the bare key would find nothing.
 
 **Where a scope needs several rows** (`mainEntity`, `hasOfferCatalog`, `about`) it wraps them in a
 bare `<div itemscope>`. That div is grouping, not a box: `content.css` gives
@@ -829,6 +840,59 @@ crawlable, `author` → `Person` is the visible host byline, and episodes are `h
 in its domain. The count ("42 episodes since 2022") is therefore prose in the `meta` and `footer`
 parts, and the machine-readable answer is the `hasPart` cardinality. `startDate` comes from
 `CreativeWorkSeries`.
+
+### Comic series — `ComicSeries`
+
+`ComicSeries` ⊂ `Periodical` ⊂ `CreativeWorkSeries`, so the series' own vocabulary is thin and
+mostly inherited: `issn` from `Periodical`, `startDate` / `endDate` from `CreativeWorkSeries`,
+and `genre` / `publisher` / `hasPart` from `CreativeWork`. Issues are `hasPart` → `ComicIssue`
+in an `<ol>` — issues **ascend**, so ordinal markers are true here, the opposite of the podcast
+feed above. The switch is data (`details.ordered`), not type.
+
+⚠️ **There is no issue-count property** — the same trap as `PodcastSeries`. `numberOfEpisodes`
+is scoped to `CreativeWorkSeason`, `RadioSeries`, `TVSeries` and `VideoGameSeries`; neither
+`ComicSeries` nor `Periodical` is in its domain, and no `numberOfIssues` exists at all. "12
+issues since 2026" is prose in the `meta` part; the `hasPart` cardinality is the machine answer.
+
+**The five credits belong to the issue, not the series.** `artist`, `penciler`, `inker`,
+`letterer` and `colorist` are `ComicIssue`'s own properties (shared with `ComicStory`), so they
+ride the `hasPart` rows — one `Person` scope per filled role, and an unfilled role emits nothing
+rather than an empty scope. A `ComicSeries` cannot carry them, which is exactly why the card
+puts a credit line under each issue instead of a masthead under the headline.
+
+**Both covers are the series' `image`.** The media area is a carousel (`nav(mrk) nav(arw)`, the
+`comic-covers` preset) and each `<img>` carries `itemprop="image"` — repeatable on
+`CreativeWork`, and the same convention the [gallery card](#gallery--imagegallery) uses. That
+says nothing about *which* cover belongs to which issue, so each `hasPart` row additionally
+carries its own `<meta itemprop="image">`. Different scopes, so this is not a duplicate
+property.
+
+⚠️ **No U+2060 word joiners on the ISSN**, unlike the book card's ISBN. An 8-digit ISSN is far
+less phone-shaped than a 13-digit ISBN, the page-level `<meta name="format-detection"
+content="telephone=no">` already covers it, and the joiners would put invisible characters into
+reference markup that `schema.compare.js` compares byte for byte.
+
+### Artist — `Person`
+
+⚠️ **There is no `Artist` type.** schema.org spells types in CamelCase and properties in
+lowercase; `artist` is a **property** (domain `ComicIssue` / `ComicStory` / `VisualArtwork`,
+range `Person`). So an artist card is a `Person` — the second one on the page, alongside
+[profile](#profile--person) — and the `artist` *property* is what a `ComicIssue` uses to point
+at it. The `artist` `schemaType` key names the editorial shape, not an itemtype.
+
+What it shares with `profile`: the `jobTitle` · `worksFor` subheadline (the same function,
+shared through `SUBHEADLINE_SLOT`, not copied), `address`, and `knowsAbout` for the tags —
+`Person` has no `keywords`. What it adds: `hasOccupation` → `Occupation` (with
+`occupationalCategory` as an O*NET-SOC code) and `award`.
+
+`award` is a repeatable `Text`, so **each award is its own `<span itemprop="award">`**. An
+`itemprop` on a wrapping list would make the whole list one value — the concatenated string —
+which is the trap `listPart`'s list-level `itemprop` would have walked into.
+
+⚠️ **`artist` has no inverse.** A `Person` cannot point at the work they drew: there is no
+"creatorOf". The machine-readable tie is made *from* the `ComicIssue`, and the card's own link
+to the series is a plain `<a href="#schema-comicseries">` with no `itemprop` — an honest link
+rather than an invented property.
 
 ### Employer rating — `EmployerAggregateRating`
 

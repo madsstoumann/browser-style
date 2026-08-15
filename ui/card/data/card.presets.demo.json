@@ -334,6 +334,22 @@
       "media": "asr(16/9) chip(ts)",
       "headingTag": "h2"
     },
+    "comic-covers": {
+      "name": "Comic covers",
+      "description": "Portrait carousel — one slide per cover, dots and arrows. 2:3 is the comic-book trim, which the 16:9 and 4:3 presets would crop to a ribbon.",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(2/3) nav(mrk) nav(arw)",
+      "headingTag": "h2"
+    },
+    "stack-portrait": {
+      "name": "Stack Portrait",
+      "description": "Column card with a 2:3 portrait frame — book jackets, cover art, standing portraits.",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(2/3)",
+      "headingTag": "h2"
+    },
     "product-collage": {
       "name": "Product collage",
       "description": "ProductGroup whose variants fill the media frame as a grid of linked tiles.",
