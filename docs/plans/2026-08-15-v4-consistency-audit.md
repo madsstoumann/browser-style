@@ -23,9 +23,15 @@ Findings are ranked by what they cost you, not by how many there are:
 | [A](#a-bugs) | **Bugs** | 4 | Behaviour is wrong today |
 | [B](#b-wiring-gaps) | **Wiring gaps** | 3 | Consumed but not declared |
 | [C](#c-two-owners-one-value) | **Duplicated ownership** | 2 | Two sources of truth for one value |
-| [D](#d-mode-asymmetry) | **Mode asymmetry** | 4 | Standalone and furniture disagree |
+| [D](#d-mode-asymmetry) | **Mode asymmetry** | 5 | Standalone and furniture disagree |
 | [E](#e-naming) | **Naming** | 4 | Convention stated, not followed |
 | [F](#f-docs-that-are-wrong-about-the-code) | **Docs wrong about code** | 5 | Including two auto-loaded into every session |
+| [G](#g-v5--a-version-that-does-not-exist) | **A version that doesn't exist** | 109 sites | System prose calls v4 "v5" |
+| [H](#h-registered-elements--the-claim-needs-a-scope) | **Over-broad claim** | 1 | "Only `<ui-media>` is registered" needs a scope |
+| [I](#i-the-version-header-convention-is-followed-by-a-minority) | **Convention noise** | 5 wrong, 22 absent | `@version` headers |
+| [J](#j-cascade-layers--the-documented-order-is-enforced-by-nothing) | **Unenforced invariant** | 3 | Layer order is `<link>` order |
+| [K](#k-the-two-dsls--one-documented-equivalence-that-is-false) | **Cross-system traps** | 4 | Layout DSL vs card DSL |
+| [L](#l-more-docsreality-drift) | **Docs wrong about code** | 8 | Counts, paths, vocabularies |
 
 **Two claims were dropped in verification** rather than reported: a supposed `--_g`
 collision between `ui/card/media.css` and `ui/beacon` (`media.css` contains no `--_g`), and
@@ -404,6 +410,243 @@ ready to apply; it is a mechanical pass plus one `tokens.build.js` run.
 
 ---
 
+## H. Registered elements — the claim needs a scope
+
+Four places state the same thing:
+
+- `ui/card/AGENTS.md:81` — "`<ui-media>` … **yes** — the ONLY registered element"
+- `ui/card/AGENTS.md:90` — "Everything except `<ui-media>` is an **unregistered custom element**"
+- `ui/card/AGENTS.md:191` — "only `<ui-media>` needs JS"
+- `ui/card/components.md:60` — "**Only `<ui-media>` is a registered custom element** … Everything
+  else here is an unregistered element styled purely by CSS attribute selectors"
+
+Across the packages `components.md` lists there are **13** `customElements.define` calls:
+
+| Package | Registers |
+|---|---|
+| `ui/card` | `ui-media` |
+| `ui/accordion` | `ui-accordion`, `ui-accordion-item` |
+| `ui/avatar` | `ui-avatar`, `ui-avatar-group` |
+| `ui/quote` | `ui-quote`, `ui-blockquote` |
+| `ui/chip` · `ui/badge` · `ui/save` · `ui/sticker` · `ui/play` · `ui/lightbox` | one each |
+
+**But the claim is not simply false, and the distinction matters.** No card demo loads any of
+them — the only scripts any `demo/*.html` pulls are `ui/base` + `layout` `attr-fallback.js`
+and `ui/card`'s own `video`/`hover`/`carousel`/`lightbox`/`index.min.js`. And several
+registrations are ceremonial: `ui/chip/index.js` in full is
+`class UiChip extends HTMLElement {}` + `customElements.define(…)`.
+
+So the accurate statement is: ***`ui/card` registers only `<ui-media>`, and the card demos
+load no other registration.*** As written, the four claims are about the *packages*, and
+eight of them ship a registration a consumer may load — `ui/accordion` and `ui/avatar`
+non-trivially. `AGENTS.md:88` already half-concedes this ("accordion/avatar optional JS in
+their packages"), contradicting `:81` and `:90` two lines above, and `AGENTS.md:86` lists
+`<ui-lightbox>` in a "Registered? → **no**" column when `ui/lightbox/index.js:19` registers it.
+
+```sh
+grep -rn "customElements.define" ui/{card,accordion,avatar,quote,chip,badge,save,sticker,play,lightbox}/*.js
+grep -rhoE '<script[^>]*src="[^"]*"' ui/card/demo/*.html | sort -u   # none of the above
+```
+
+**Fix:** scope the sentence. One clause, and it stops being wrong.
+
+## I. The `@version` header convention is followed by a minority
+
+Only **9** CSS files in `/layout` + `ui/card` + `ui/base` carry a `@version` header. **Four
+match their package, five do not:**
+
+| File | Header | `package.json` |
+|---|---|---|
+| `ui/card/ui-card.css` · `content.css` · `content.typography.css` · `media.video.css` | 4.0.0 | 4.0.0 ✅ |
+| **`ui/card/media.css`** | **1.0.0** | 4.0.0 ❌ |
+| **`ui/card/media.hover.css`** | **1.0.0** | 4.0.0 ❌ |
+| **`ui/card/media.shapes.css`** | **1.0.0** | 4.0.0 ❌ |
+| **`ui/card/media.tint.css`** | **1.1.0** | 4.0.0 ❌ |
+| **`ui/base/scroll.css`** | **2.0.0** | 1.0.11 ❌ (*ahead* of its package) |
+
+**22 files have no header at all** — 4 of 13 in `ui/card`, **15 of 16** in `ui/base` (the lone
+outlier, `scroll.css`, is one of the wrong ones), and **all** of `/layout/core/`.
+
+`media.css` is the sheet this matters most on: it is the largest in the package and holds the
+flag registry and host boundary.
+
+**Fix:** either generate the header at build time (`tokens.build.js` already writes generated
+headers) or drop the convention. A rule followed by 4 files out of 31 is noise.
+
+## J. Cascade layers — the documented order is enforced by nothing
+
+### J1 — no `@layer` order statement exists in `ui/base` or `ui/card`
+
+`layout` declares its order in the build output:
+
+```
+@layer layout.base, layout.reset, layout.animations, layout.xs, layout.sm, layout.md, layout.lg, layout.xl, layout.xxl;
+```
+
+Neither `ui/base/index.css`, `ui/base/dist/base.css`, `ui/card/index.css` nor
+`ui/card/dist/card.css` contains one. **Layer order is therefore pure first-appearance, i.e.
+`<link>` order.** `ui/card/dist/card.css` declares only `bs-component`; a page linking
+`card.css` before `base.css` sorts `bs-component` first, and every `bs-core` rule in base
+then outranks the card engine.
+
+`ui/card/AGENTS.md:41-48` mandates the load order in prose. A one-line
+`@layer bs-core, bs-component;` at the top of `ui/base/index.css` and of the card bundle
+would make it order-independent — which is what layout already does.
+
+### J2 — `layout.demo` is missing from layout's own order statement
+
+The statement lists 9 layers; `layout/demo.css:1` declares a 10th, `layout.demo`, which is
+therefore ordered by appearance and outranks every `layout.*` layer purely because demo pages
+link it last. Also worth a comment: **`layout.reset` sorts above `layout.base`**, which
+inverts the usual reading of those two names.
+
+### J3 — the disjoint-layers claim needs a caveat
+
+`ui/card/AGENTS.md:154` says layout and card "don't collide … the CSS lives in disjoint
+cascade layers (`layout.*` vs `bs-component`)". `ui/card` ships **ten unlayered rules** plus an
+entirely unlayered `demo.layout.css`, and `ui/card/media.carousel.css:221` exists *precisely*
+because it must beat `@layer layout.base` — its comment says so. The claim is true of the
+layered rules only.
+
+Unlayered rules with no justifying comment: `ui/base/theme.css:5-17` (13 `@property`),
+`ui/base/tint.css:36-46`, `ui/card/media.lightbox.css:194` (`@keyframes`),
+`ui/reveal/ui-reveal.css:10`. And `ui/card/media.lightbox.css:198` is a justification
+**truncated mid-sentence**: `/* … UNLAYERED: the polyfill sheet is */`.
+
+## K. The two DSLs — one documented equivalence that is false
+
+### K1 — `docs/content.md:168` is factually wrong
+
+> "The stems match the layout package's spacing vocabulary **exactly** (`pb pbs pbe pi pis pie`)"
+
+Layout's real stems (`layout/src/builder.js:244-253`) are **`p pi pb pbs pbe mbs mbe cg rg`**.
+There is **no `pis` and no `pie`** in layout. The card's are `pad pb pi pbs pbe pis pie gap`.
+
+| | layout only | shared | card only |
+|---|---|---|---|
+| | `p` `mbs` `mbe` `cg` `rg` | `pb` `pbs` `pbe` `pi` | `pad` `pis` `pie` `gap` |
+
+Four of the six stems the sentence names as proof are shared; two do not exist on the layout
+side. It is a one-line fix and it is in the doc an author reads before writing spacing tokens.
+
+### K2 — the ladders agree only at the default unit
+
+At the shipped default the two spacing ladders coincide exactly (`sm` = 0.5rem both sides,
+`md` = 1rem, …). Layout's are **multipliers of `--layout-space-unit`**; the card's are the
+fixed `--spacing-*` steps. Set `--layout-space-unit` to anything but `1rem` and
+`lay-out lg="pi(md)"` and `ui-content content="pi(md)"` silently stop agreeing.
+`layout/AGENTS.md:141` reinforces the false equivalence by calling layout's words "the
+content-DSL ladder".
+
+`2xs` compounds it: layout defines it (0.125); there is no `--spacing-2xs` in base and no
+`pad(2xs)` in the card.
+
+### K3 — three spellings of zero, and `xxl` vs `2xl` inside one config
+
+`p(0)` (layout numeric), `pad(none)` / `gap(none)` (card), `rds(non)` (card) — and `rds(none)`
+was *deliberately* removed in favour of `non` while `pad(none)` in the same attribute kept
+`none`. `content="pad(non)"` and `content="rds(none)"` both silently no-op.
+
+`layout/layout.config.json` names its breakpoints `xs sm md lg xl **xxl**` and its spacing
+steps `… xl **2xl**` — two spellings of "2× large" in one file.
+
+### K4 — same spelling, different meaning across the two systems
+
+| Spelling | Layout | Card |
+|---|---|---|
+| `md` / `lg` | viewport `@media` **attribute names** (540 / 720px) | container-query **token prefixes** (400 / 704px vs `bs-card`) |
+| `media=` | valid on `<lay-out overflow>` | valid on `<ui-media>` — overlapping but unequal token sets |
+| `pages` | math paging on a `<lay-out overflow>` | wrapper-dissolve-below-md on a `<ui-media>` scroller |
+| `stagger` | a bare **attribute** on a host | a bare **token** inside `media=` |
+| `col` vs `columns(N)` | `columns(2)` = two grid columns | `variant="col"` = `flex-direction: column`, i.e. *one* |
+
+`flp()` is the same trap **inside** the card: `media="flp(h|v|hv)"` is an image mirror,
+`variant="flp(top|btm|lft|rgt)"` is the reveal flip animation. Disjoint vocabularies, one
+spelling — the exact pattern `docs/tokens.md` says `scl()` was *removed* for.
+
+## L. More docs↔reality drift
+
+### L1 — `arw(ce)` is documented and implemented nowhere
+
+`layout/core/base.md:128` publishes `arw(…|cs|cc|**ce**|bs|…)`. `ui/carousel/carousel.css`
+implements `ts tc te cs cc bs bc be` — **no `ce`** — and the card manifest agrees (8 cells).
+Authoring `arw(ce)` silently does nothing.
+
+The two layout docs also disagree with each other: `layout/AGENTS.md:263` omits `ce`
+(correct) but adds `rev`, which `base.md:128` omits. Both are hand-maintained copies of a
+vocabulary the manifest owns, and `tokens.lint.js` has no visibility into `layout/**/*.md` —
+which is why `node ui/card/tokens.lint.js` passes.
+
+### L2 — `docs/card.md:7` understates the type count by 11
+
+Claims "model v1.3, **35** `schemaType` values". The actual count is **46**:
+
+```sh
+node -e "import('./ui/card/render.js').then(m => console.log(Object.keys(m.SCHEMA_TYPES).length))"   # 46
+```
+
+By contrast **all four counts in `docs/schema.md` verify exactly** against their own published
+`grep` reproductions (54 cards, 55 items, 48 itemtypes, 46 keys). That table is the house
+style the rest should copy.
+
+### L3 — `AGENTS.md` contradicts itself about the reveal import
+
+`ui/card/AGENTS.md:135` says `<ui-reveal>` "**`@import`s `../card/ui-card.css`**".
+`AGENTS.md:51-55` in the same file says that import **was removed** and is what the bundle
+gate exists to prevent. The code agrees with `:51` — `ui/reveal/ui-reveal.css:3` reads
+`NO @import here`. `:135` is a leftover from before the bundle split.
+
+### L4 — a broken path, and it is the only one
+
+`ui/card/AGENTS.md:156` — "Demo include pattern (see `demo/index.html`)". That file does not
+exist (`ui/card/demo/` has 20 HTML files, none named `index.html`). Every other markdown link
+across `ui/card/*.md`, all 13 `ui/card/docs/*.md`, `layout/*.md` and `docs/*.md` resolves.
+
+### L5 — the container-query table lists 8 components; 32 files use `container-type`
+
+`docs/design-system-agent.md:227-234` lists `accordion, carousel, product-list-grid,
+testimonial, bento, cinema, gallery, slideshow`. `grep -rl "container-type" ui/*/*.css`
+returns **32 files**, and **`ui/card` — the flagship container-query component — is not in the
+table**. It also files `carousel` as "Needs conversion" when `ui/carousel` is a published
+package at 1.0.0 with its own `dist/`.
+
+### L6 — "148+ components" matches nothing
+
+`docs/design-system-agent.md:9`, `:15`, `:293`. Actual: **187** directories under `ui/`, of
+which **44** have a `package.json`. Neither is 148, and the doc never says what it counts —
+which is the problem, given `docs/schema.md` shows how a countable claim should be written.
+
+### L7 — `layout`'s `xs` breakpoint is not a breakpoint
+
+`layout/AGENTS.md:61`, `layout/readme.md:248` and `ui/card/AGENTS.md:151` all publish
+"`xs` — 240px" as a viewport breakpoint. In `layout/layout.config.json` the `xs` entry has
+**no `min`** — only `"srcsetMin": "240px"`, a srcset hint. The build confirms it:
+
+```sh
+grep -o "min-width: *[0-9]*px" layout/dist/layout.css | sort -u   # 380 540 720 920 1140 — no 240
+```
+
+`xs` is the unconditional mobile-first base, which `layout/AGENTS.md:141` states correctly —
+contradicting `:61` in the same file.
+
+### L8 — the stale manifest citations point at real but wrong lines
+
+§F4 showed 20+ references beyond end-of-file. The in-range ones are no better — spot-checking
+three:
+
+| Citation | Points at | Actually at |
+|---|---|---|
+| `ui-card.css:80` (`corner-shape: superellipse`) | `block-size: 100%;` | `ui-card.css:59` |
+| `ui-beacon.css:130` (`pll` = `variant="pill"`) | the `breathe` animation arm | `ui-beacon.css:103` |
+| `ui-sticker.css:231` (generic `sh:` rule) | a closing brace | `ui-sticker.css:200` |
+
+Since these live in `tokens.json` `notes` and are copied verbatim into `tokens.data.js` **and**
+`docs/tokens.md`, each wrong line is published three times. `tokens.build.js` already generates
+`<sub>file:line</sub>` footers for some entries — extending that to the prose notes would end
+the class.
+
+---
+
 ## Recommended order
 
 1. **[A1](#a1--_theme-bs-is-the-one-theme-variable-that-leaks)** — one line, fixes a real
@@ -416,8 +659,32 @@ ready to apply; it is a mechanical pass plus one `tokens.build.js` run.
    cheap, and they are wrong in the file every session reads first.
 5. **[B1](#b1--two-packages-in-componentsmd-are-not-packages)** /
    **[B2](#b2--ui-badge-is-emitted-peer-declared-and-styled-nowhere)** — packaging truth.
-6. **[G](#g-v5--a-version-that-does-not-exist)** — mechanical, but do it in one pass from
+6. **[H](#h-registered-elements--the-claim-needs-a-scope)** /
+   **[K1](#k1--docscontentmd168-is-factually-wrong)** /
+   **[L2](#l2--docscardmd7-understates-the-type-count-by-11)–[L4](#l4--a-broken-path-and-it-is-the-only-one)** —
+   one clause or one number each, in the four files a new contributor reads first.
+7. **[J1](#j1--no-layer-order-statement-exists-in-uibase-or-uicard)** — a one-line
+   `@layer bs-core, bs-component;` in `ui/base/index.css` and the card bundle turns the
+   documented load order into an enforced one. Highest value-per-character in the report.
+8. **[G](#g-v5--a-version-that-does-not-exist)** — mechanical, but do it in one pass from
    `tokens.json`, not file by file.
-7. **[C](#c-two-owners-one-value)/[D](#d-mode-asymmetry)/[E](#e-naming)** — each needs a
-   decision (which spelling wins), so they are worth batching into one deliberate
-   vocabulary pass rather than fixing piecemeal.
+9. **[I](#i-the-version-header-convention-is-followed-by-a-minority)** — decide: generate
+   the header or drop it. Followed by 4 files out of 31, it currently misinforms.
+10. **[C](#c-two-owners-one-value)/[D](#d-mode-asymmetry)/[E](#e-naming)/[K2](#k2--the-ladders-agree-only-at-the-default-unit)–[K4](#k4--same-spelling-different-meaning-across-the-two-systems)** —
+    each needs a decision (which spelling wins), so they are worth batching into one
+    deliberate vocabulary pass rather than fixing piecemeal.
+
+---
+
+## Appendix — claims dropped in verification
+
+Reported by a sweep, checked, and **excluded** because they do not hold. Recorded so nobody
+re-derives them:
+
+| Claim | Why it was dropped |
+|---|---|
+| `--_g` collides between `ui/card/media.css:128` and `ui/beacon` | `media.css` contains no `--_g` at all. The beacon-internal reuse is one meaning (a dot gradient) in two rules — not a collision. |
+| The icon package is parsed twice in `dist/demo.css` | esbuild dedupes the `@import`; the built bundle is clean. The **architectural** violation behind it is real and is [B3](#b3). |
+| "Only `<ui-media>` is registered" is simply false | True as scoped to what `ui/card` registers and what the demos load — see [H](#h-registered-elements--the-claim-needs-a-scope). The defect is the missing scope, not the substance. |
+| chip and beacon size ladders diverge | They agree exactly on `sm/lg/xl/2xl`; beacon merely adds `xs` and `md`. Marquee is the outlier — see [D5](#d5--size-ladders-diverge-between-families). |
+| `sticker(sh:<custom>)` has no implementing rule | Covered by the prefix rule at `ui/sticker/ui-sticker.css:200`. |
