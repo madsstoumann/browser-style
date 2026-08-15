@@ -3478,6 +3478,10 @@
         color var(--duration-fast, 100ms) var(--ease-default, ease);
       white-space: nowrap;
     }
+    :where(ui-card, ui-reveal):where([media*="mrk(lbl)"]) :where(ui-media) > img:not([aria-label])::scroll-marker,
+    :where(ui-media, lay-out[overflow]):where([media*="mrk(lbl)"]) > img:not([aria-label])::scroll-marker {
+      content: attr(alt);
+    }
     :where(ui-card, ui-reveal):where([media*="mrk(lbl)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
     :where(ui-media, lay-out[overflow]):where([media*="mrk(lbl)"]) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
       align-items: center;
