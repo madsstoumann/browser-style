@@ -3,7 +3,7 @@
 > What is **actually still open**, extracted from the implementation ledger in
 > [`2026-07-26-v4-card-system-architecture-analysis.md`](./2026-07-26-v4-card-system-architecture-analysis.md)
 > (now an archive — read it for the *why* behind any F-xx/R-xx, not for what to do next).
-> Six open items plus one closed decision on record. Each open one is waiting on a
+> Seven open items plus one closed decision on record. Each open one is waiting on a
 > decision or on coordination, not on typing.
 >
 > Everything else from that report is implemented and machine-verified: the v5 alias
@@ -248,7 +248,41 @@ needs a re-export shim or it is a breaking change on a 4.0.0 package; `ui/card/b
 `@browser.style/card` peer entirely, the runtime inversion goes away, and there is one
 copy of the slide vocabulary instead of two plus a linter to keep them equal.
 
-## 7. Closed — `<ui-content>` → `<ui-text>` rename (decided against, 2026-08-03)
+## 7. DSL drift — `ui/button-group` is still on the v3 variant syntax
+
+**Where:** `ui/button-group/ui-button-group.css`, surfaced by the product-page size
+picker (`details.variants.control: "buttons"`, `ui/card/docs/content.md` § Variant picker).
+
+Three spellings of "variant" are live in the repo at once, and the picker put two of them
+in one card:
+
+| Generation | Spelling | Who |
+|---|---|---|
+| v3 | `data-variant="inline rounded border"` | `ui/button-group`, `ui/progress`, the `data-part` sub-components |
+| v4 | `variant="loop seam fade"` — bare words on a real attribute | `ui/marquee`, `ui/quote`, `ui/accordion` |
+| v5 | `variant="col lg:row lg:spl(1/1)"` — the parameterised token DSL | `ui/card`, `ui/reveal` |
+
+They are not merely cosmetic differences. **v5 tokens are parameterised and
+container-query prefixable** (`lg:spl(1/2)`); v4 words are flat; v3 `data-variant` is on a
+different attribute entirely, so a component cannot participate in the card system's
+`parts` seam without the renderer knowing which attribute to write. `render.js` currently
+hard-codes that knowledge: `parts.quote`/`parts.accordion` → `variant=`,
+`parts.buttonGroup` → `data-variant=`.
+
+**The call to make.** Moving `ui/button-group` to `variant=` is a one-line CSS change plus
+every consumer's markup, and it would let one `attrs({ variant })` line serve all three
+parts. It costs a breaking change to a published package for a component whose look is
+otherwise fine, and it does not by itself close the v4/v5 gap (bare words vs. tokens).
+Decide the *whole* ladder at once — which generation every satellite package should land
+on — rather than migrating one component and leaving three spellings as two.
+
+**Not urgent, and not a bug:** the picker renders correctly today. What it costs is
+teachability — a reader of `card-preset.schema.json` cannot tell from `parts` alone which
+attribute a given part writes.
+
+---
+
+## 8. Closed — `<ui-content>` → `<ui-text>` rename (decided against, 2026-08-03)
 
 Recorded so it is not rediscovered as an open question. The proposal was to rename
 `<ui-content>` (the text area) to `<ui-text>`, recycle `<ui-content>` for the host, move

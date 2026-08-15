@@ -8,6 +8,12 @@
 	<meta name="description" content="CSS-first scrolling content strip — text, logos or images, four directions, fade or seamless.">
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/ui/base/index.css">
+	<!-- the testimonial-card strip below; ui-card.css pulls media/content itself.
+	     Loaded BEFORE ui-marquee.css on purpose — see the note in that section. -->
+	<link rel="stylesheet" href="../card/ui-card.css">
+	<link rel="stylesheet" href="../quote/ui-quote.css">
+	<link rel="stylesheet" href="../avatar/ui-avatar.css">
+	<link rel="stylesheet" href="../rating/ui-rating.css">
 	<link rel="stylesheet" href="ui-marquee.css">
 	<style>
 		body { padding-block-end: 4rem; }
@@ -82,6 +88,155 @@
 		<span class="demo-logo">UMBRELLA</span>
 		<span class="demo-logo">STARK</span>
 		<span class="demo-logo">WAYNE</span>
+	</ui-marquee>
+
+	<h2>Seamless testimonial cards</h2>
+	<p><code>variant="cards seam fade" style="--ui-marquee-item-size:22rem;--ui-marquee-visible:3"</code></p>
+	<p>
+		<code>cards</code> switches the item shape: instead of a <code>max-content</code> nowrap text run,
+		each direct child becomes a <strong>fixed track cell</strong> that wraps normally. It deliberately
+		sets <strong>no <code>display</code></strong> — the child keeps its own, so a <code>&lt;ui-card&gt;</code>
+		stays a grid no matter which sheet loads last. Combine it with any mode; <code>seam</code> gives the
+		gap-free loop and <code>fade</code> the edge mask.
+	</p>
+	<p>
+		The cards are the <a href="../card/demo/schema.html">Testimonial</a> shape — a
+		<code>Review</code> of an <code>Organization</code>, which is what a testimonial is in schema.org
+		(there is no <code>Testimonial</code> type). Full microdata, no type chip, no per-card style.
+	</p>
+	<ui-marquee variant="cards seam fade" speed="slow" style="--ui-marquee-item-size:22rem;--ui-marquee-visible:3;">
+		<ui-card variant="col" itemscope itemtype="https://schema.org/Review">
+			<cq-box>
+				<ui-content>
+					<small data-part="eyebrow">Testimonial</small>
+					<div data-part="rating" itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
+						<meta itemprop="ratingValue" content="5">
+						<meta itemprop="bestRating" content="5">
+						<meta itemprop="worstRating" content="1">
+						<input class="ui-rating" type="range" min="1" max="5" value="5" step="0.01" disabled aria-hidden="true">
+						<span data-sr>Rated 5 out of 5 stars</span>
+					</div>
+					<ui-quote data-part="quote"><blockquote itemprop="reviewBody"><q>Our conversion rates increased by 15% after switching to this UI system.</q></blockquote></ui-quote>
+					<address data-part="byline" itemprop="author" itemscope itemtype="https://schema.org/Person">
+						<ui-avatar><img src="https://assets.stoumann.dk/img/avatar5.webp" alt="" loading="lazy" decoding="async"></ui-avatar>
+						<span data-part="byline-who"><span itemprop="name">David Smith</span><span itemprop="jobTitle">Marketing Lead</span></span>
+					</address>
+					<div itemprop="itemReviewed" itemscope itemtype="https://schema.org/Organization" hidden>
+						<meta itemprop="name" content="browser.style UI system">
+					</div>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" itemscope itemtype="https://schema.org/Review">
+			<cq-box>
+				<ui-content>
+					<small data-part="eyebrow">Testimonial</small>
+					<div data-part="rating" itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
+						<meta itemprop="ratingValue" content="5">
+						<meta itemprop="bestRating" content="5">
+						<meta itemprop="worstRating" content="1">
+						<input class="ui-rating" type="range" min="1" max="5" value="5" step="0.01" disabled aria-hidden="true">
+						<span data-sr>Rated 5 out of 5 stars</span>
+					</div>
+					<ui-quote data-part="quote"><blockquote itemprop="reviewBody"><q>We shipped the redesign in three weeks instead of three months. The CSS did the work.</q></blockquote></ui-quote>
+					<address data-part="byline" itemprop="author" itemscope itemtype="https://schema.org/Person">
+						<ui-avatar>PL</ui-avatar>
+						<span data-part="byline-who"><span itemprop="name">Priya Lakshmi</span><span itemprop="jobTitle">Head of Design</span></span>
+					</address>
+					<div itemprop="itemReviewed" itemscope itemtype="https://schema.org/Organization" hidden>
+						<meta itemprop="name" content="browser.style UI system">
+					</div>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" itemscope itemtype="https://schema.org/Review">
+			<cq-box>
+				<ui-content>
+					<small data-part="eyebrow">Testimonial</small>
+					<div data-part="rating" itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
+						<meta itemprop="ratingValue" content="5">
+						<meta itemprop="bestRating" content="5">
+						<meta itemprop="worstRating" content="1">
+						<input class="ui-rating" type="range" min="1" max="5" value="5" step="0.01" disabled aria-hidden="true">
+						<span data-sr>Rated 5 out of 5 stars</span>
+					</div>
+					<ui-quote data-part="quote"><blockquote itemprop="reviewBody"><q>Our Lighthouse score went up on a redesign. I have never been able to say that before.</q></blockquote></ui-quote>
+					<address data-part="byline" itemprop="author" itemscope itemtype="https://schema.org/Person">
+						<ui-avatar>MO</ui-avatar>
+						<span data-part="byline-who"><span itemprop="name">Mateo Ortiz</span><span itemprop="jobTitle">Frontend Lead</span></span>
+					</address>
+					<div itemprop="itemReviewed" itemscope itemtype="https://schema.org/Organization" hidden>
+						<meta itemprop="name" content="browser.style UI system">
+					</div>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" itemscope itemtype="https://schema.org/Review">
+			<cq-box>
+				<ui-content>
+					<small data-part="eyebrow">Testimonial</small>
+					<div data-part="rating" itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
+						<meta itemprop="ratingValue" content="5">
+						<meta itemprop="bestRating" content="5">
+						<meta itemprop="worstRating" content="1">
+						<input class="ui-rating" type="range" min="1" max="5" value="5" step="0.01" disabled aria-hidden="true">
+						<span data-sr>Rated 5 out of 5 stars</span>
+					</div>
+					<ui-quote data-part="quote"><blockquote itemprop="reviewBody"><q>One design system, no build step, and it still works with JavaScript switched off.</q></blockquote></ui-quote>
+					<address data-part="byline" itemprop="author" itemscope itemtype="https://schema.org/Person">
+						<ui-avatar>AN</ui-avatar>
+						<span data-part="byline-who"><span itemprop="name">Anja Nilsen</span><span itemprop="jobTitle">Platform Engineer</span></span>
+					</address>
+					<div itemprop="itemReviewed" itemscope itemtype="https://schema.org/Organization" hidden>
+						<meta itemprop="name" content="browser.style UI system">
+					</div>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" itemscope itemtype="https://schema.org/Review">
+			<cq-box>
+				<ui-content>
+					<small data-part="eyebrow">Testimonial</small>
+					<div data-part="rating" itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
+						<meta itemprop="ratingValue" content="5">
+						<meta itemprop="bestRating" content="5">
+						<meta itemprop="worstRating" content="1">
+						<input class="ui-rating" type="range" min="1" max="5" value="5" step="0.01" disabled aria-hidden="true">
+						<span data-sr>Rated 5 out of 5 stars</span>
+					</div>
+					<ui-quote data-part="quote"><blockquote itemprop="reviewBody"><q>The container queries meant our cards just worked in the sidebar. Nothing to configure.</q></blockquote></ui-quote>
+					<address data-part="byline" itemprop="author" itemscope itemtype="https://schema.org/Person">
+						<ui-avatar>TK</ui-avatar>
+						<span data-part="byline-who"><span itemprop="name">Tomas Kral</span><span itemprop="jobTitle">Product Manager</span></span>
+					</address>
+					<div itemprop="itemReviewed" itemscope itemtype="https://schema.org/Organization" hidden>
+						<meta itemprop="name" content="browser.style UI system">
+					</div>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" itemscope itemtype="https://schema.org/Review">
+			<cq-box>
+				<ui-content>
+					<small data-part="eyebrow">Testimonial</small>
+					<div data-part="rating" itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
+						<meta itemprop="ratingValue" content="5">
+						<meta itemprop="bestRating" content="5">
+						<meta itemprop="worstRating" content="1">
+						<input class="ui-rating" type="range" min="1" max="5" value="5" step="0.01" disabled aria-hidden="true">
+						<span data-sr>Rated 5 out of 5 stars</span>
+					</div>
+					<ui-quote data-part="quote"><blockquote itemprop="reviewBody"><q>We deleted about four thousand lines of component CSS and nothing broke.</q></blockquote></ui-quote>
+					<address data-part="byline" itemprop="author" itemscope itemtype="https://schema.org/Person">
+						<ui-avatar>RH</ui-avatar>
+						<span data-part="byline-who"><span itemprop="name">Rachel Hart</span><span itemprop="jobTitle">Staff Engineer</span></span>
+					</address>
+					<div itemprop="itemReviewed" itemscope itemtype="https://schema.org/Organization" hidden>
+						<meta itemprop="name" content="browser.style UI system">
+					</div>
+				</ui-content>
+			</cq-box>
+		</ui-card>
 	</ui-marquee>
 
 	<h2>Loop — never-ending text (all browsers)</h2>

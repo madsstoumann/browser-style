@@ -7666,14 +7666,30 @@
     & > *,
     &::before,
     &::after {
-      align-items: center;
       animation: var(--_name, ui-marquee-x) var(--ui-marquee-duration) linear infinite;
       animation-direction: var(--_dir, normal);
-      display: flex;
       flex: 0 0 auto;
       gap: var(--ui-marquee-gap);
+    }
+    &:where(:not([variant~=cards])) > *,
+    &:where(:not([variant~=cards]))::before,
+    &:where(:not([variant~=cards]))::after {
+      align-items: center;
+      display: flex;
       inline-size: max-content;
       white-space: nowrap;
+    }
+    &:where([variant~=cards]) {
+      --ui-marquee-font-weight: inherit;
+      --ui-marquee-item-size: 20rem;
+      --ui-marquee-padding-block: var(--spacing-sm, 0.5rem);
+      align-items: stretch;
+      contain: paint;
+      user-select: auto;
+    }
+    &:where([variant~=cards]) > * {
+      inline-size: var(--ui-marquee-item-size);
+      white-space: normal;
     }
     &[aria-label]:empty::before {
       content: attr(aria-label);

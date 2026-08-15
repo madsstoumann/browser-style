@@ -169,6 +169,42 @@ Tune it with `--ui-marquee-item-size` (nominal item size) and
 > uses the fade animation instead — no broken layout. Vertical seamless is not
 > supported and also falls back to fade.
 
+### Cards — `variant="cards"`
+
+The other modes size an item as a **text run**: `inline-size: max-content` on one
+`white-space: nowrap` line. `cards` switches the item shape to a **fixed track cell**
+that wraps normally — for testimonials, product tiles, anything with a box of its own.
+It composes with every mode; pair it with `seam` for the gap-free loop and `fade` for
+the edge mask.
+
+```html
+<ui-marquee variant="cards seam fade" style="--ui-marquee-item-size: 22rem; --ui-marquee-visible: 3;">
+  <ui-card variant="col" itemscope itemtype="https://schema.org/Review">…</ui-card>
+  …
+</ui-marquee>
+```
+
+**It sets no `display`.** That is the whole point: the child keeps its own, so a
+`<ui-card>` stays a grid no matter which sheet the page loads last. A mode that forced
+`display: block` here would be a component fighting another component's sheet — the exact
+bug class the card system hit with `ui/button-group` (`ui/card/docs/content.md` §
+Variant picker).
+
+The mode also relaxes three host defaults that only make sense for a text strip:
+`font-weight` returns to `inherit`, `user-select` to `auto` (a testimonial is content —
+a reader must be able to select it), and `--ui-marquee-padding-block` opens up so the
+cards' own `box-shadow` is not clipped by `overflow: hidden`.
+
+> **`contain: paint` is load-bearing.** Block children escape the host's `overflow` and
+> push the **page** sideways under `prefers-reduced-motion: reduce`, where the strip
+> becomes a real scroller (`overflow: auto`). Measured in Chromium: 869px of page scroll
+> on a six-card strip, and `overflow: hidden` on the host does **not** stop it — only
+> paint containment does. Text and logo strips are unaffected, which is why the
+> declaration sits in this mode rather than on the host.
+
+Under reduced motion the strip is a hand-scrollable row of cards, which is the right
+fallback: the content is still all there, it simply does not move on its own.
+
 ---
 
 ## Directions
@@ -268,7 +304,7 @@ scroll container, so the mask is static rather than scroll-driven).
 
 | Attribute | Type | Description |
 |---|---|---|
-| `variant` | `loop \| seam \| fade` | `loop` = never-ending text (all browsers); `seam` = gap-free (seamless) item loop (Chrome); `fade` = edge-fade mask |
+| `variant` | `loop \| seam \| fade \| cards` | `loop` = never-ending text (all browsers); `seam` = gap-free (seamless) item loop (Chrome); `fade` = edge-fade mask; `cards` = item shape is a fixed track cell, not a text run (attribute-only — no `marquee(cards)` card token, see below) |
 | `direction` | `left \| right \| up \| down` | Scroll direction (default `left`; flips under `dir="rtl"`) |
 | `theme` | `red \| orange \| green \| blue \| accent \| gray \| slate \| black \| white` + `pale \| muted \| light \| dark` | Shared hue axis |
 | `fill` | `<color>` | Arbitrary plate colour; overrides `theme` |
@@ -343,6 +379,13 @@ works from the parent `media=` string:
 > positioning inside `<ui-media>`, below the other furniture) is a separate
 > follow-up. As furniture the marquee is intended to sit *below* chips / stickers
 > / beacons — a background banner, not a foreground badge.
+
+**`cards` is attribute-only**, like `font=`. The default item shape is selected with
+`:where(:not([variant~="cards"]))` **on the marquee itself**, and the card-token form
+(`marquee(cards)`) lives on an *ancestor* — a `:not()` cannot see it, so the two spellings
+cannot both drive one `:not()`-gated rule. A `marquee(cards)` token would need the flag +
+`@container style()` shape the position args use (R-14). Not worth it until a card
+actually wants a strip of cards inside its own media frame.
 
 ---
 
