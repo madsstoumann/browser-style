@@ -140,8 +140,7 @@ Pill-shaped segments. Resolves to `--radius-pill`, the same token base's own
 ## Sizes
 
 One attribute sets one em value, and every other metric derives from it — the same ladder
-and the same mechanism as [`ui/chip`](../chip/readme.md) and
-[`ui/beacon`](../beacon/readme.md):
+as [`ui/chip`](../chip/readme.md) and [`ui/beacon`](../beacon/readme.md):
 
 | `size=` | font-size |
 | --- | --- |
@@ -163,6 +162,13 @@ context, where a chip is a label that sits smaller than its surroundings.
 
 Because the value is `em`, the ladder **composes** — a `size="sm"` group is 0.625× whatever
 text surrounds it, in a 16px context and a 32px one alike.
+
+> **The attribute is the only entry point.** Chip's and beacon's ladders carry a second arm
+> (`media="chip(sm)"`) because those are *media furniture*, overlaid on `<ui-media>` and
+> driven by the `media=` DSL. This is a **text-area sub-component** — it lives inside
+> `<ui-content>`, and `ui/card` reaches it through the preset `parts` seam
+> (`parts.buttonGroup`, `parts.buttonGroupSize`, `parts.buttonGroupTheme`), which writes
+> plain attributes. There is no `buttonGroup()` media token.
 
 > **`size=` or `fs-*`, not both.** Base's `fs-*` utilities still work and still win, but
 > they are CSS *absolute-size keywords* (`.fs-sm { font-size: small }`), so an `fs-sm` group

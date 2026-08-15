@@ -35,7 +35,15 @@
 		   its context, where a chip sits smaller than its surroundings. Base's fs-*
 		   utilities still work and still win (they carry class specificity), but they are
 		   absolute-size KEYWORDS — `small` is 13px in a 16px, a 24px and a 32px context
-		   alike — so they do not compose. Pick one axis, not both. */
+		   alike — so they do not compose. Pick one axis, not both.
+
+		   ONE entry point, unlike chip/beacon. Their ladders carry a second arm —
+		   `:where([media*="chip(sm)"]) &` — because they are MEDIA FURNITURE, overlaid on
+		   <ui-media> and driven by the media= DSL. This is a text-area sub-component: it
+		   lives inside <ui-content> and the card reaches it through the preset `parts`
+		   seam (parts.buttonGroup / .buttonGroupSize / .buttonGroupTheme, validated by
+		   ui/card/tokens.lint.js), which writes plain attributes. There is deliberately no
+		   buttonGroup() media token, and no reason to mint one. */
 		&:is([size~="xs"],  [data-size~="xs"])  { --ui-button-group-font-size: 0.5em; }
 		&:is([size~="sm"],  [data-size~="sm"])  { --ui-button-group-font-size: 0.625em; }
 		&:is([size~="md"],  [data-size~="md"])  { --ui-button-group-font-size: 0.875em; }

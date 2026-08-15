@@ -357,6 +357,12 @@ visibly changes shipped output**: `sm` would render 11px (0.625 × 17.6) where i
 13px today. Which rung the preset should name is a design call, not a mechanical rename, so
 it wants its own sign-off. `fs-*` keeps working either way.
 
+**The seam stays `parts`, not `media=`.** When it moves, `parts.buttonGroupSize` should emit
+`data-size="sm"` in place of `class="fs-sm"` — nothing more. `ui/button-group` is a
+text-area sub-component inside `<ui-content>`, not media furniture overlaid on `<ui-media>`,
+so it takes no `media=` token: there is no `buttonGroup()` stem to mint, and the second
+`:where([media*="chip(sm)"]) &` arm that chip and beacon carry has no analogue here.
+
 ---
 
 ## 10. Closed — `<ui-content>` → `<ui-text>` rename (decided against, 2026-08-03)
