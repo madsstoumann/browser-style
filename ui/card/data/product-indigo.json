@@ -21,18 +21,18 @@
     "media": [
       {
         "mediaType": "image",
-        "src": "/assets/images/silkgown-indigo.png",
-        "alt": "Persistence Silk Gown in Indigo Floral, full length"
+        "src": "/assets/images/silkgown-indigo-front.png",
+        "alt": "Persistence Silk Gown in Indigo Floral, front view, full length"
       },
       {
         "mediaType": "image",
-        "src": "/assets/images/silkgown-indigo-2.png",
-        "alt": "Persistence Silk Gown in Indigo Floral, bodice and neckline"
+        "src": "/assets/images/silkgown-indigo-side.png",
+        "alt": "Persistence Silk Gown in Indigo Floral, side view, showing the bias-cut drape and slit"
       },
       {
         "mediaType": "image",
-        "src": "/assets/images/silkgown-indigo-3.png",
-        "alt": "Persistence Silk Gown in Indigo Floral, hem and train"
+        "src": "/assets/images/silkgown-indigo-back.png",
+        "alt": "Persistence Silk Gown in Indigo Floral, back view, full length"
       }
     ],
     "furniture": {

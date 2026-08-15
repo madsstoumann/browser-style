@@ -4632,6 +4632,11 @@
     --layout-pbs: 4;
     --layout-pbe: 4;
   }
+  :is(lay-out, lay-out-group)[xs*="p(3xs)"] {
+    --layout-pi: 0.0625;
+    --layout-pbs: 0.0625;
+    --layout-pbe: 0.0625;
+  }
   :is(lay-out, lay-out-group)[xs*="p(2xs)"] {
     --layout-pi: 0.125;
     --layout-pbs: 0.125;
@@ -4670,6 +4675,9 @@
   :is(lay-out, lay-out-group)[xs*="pi(4)"] {
     --layout-pi: 4;
   }
+  :is(lay-out, lay-out-group)[xs*="pi(3xs)"] {
+    --layout-pi: 0.0625;
+  }
   :is(lay-out, lay-out-group)[xs*="pi(2xs)"] {
     --layout-pi: 0.125;
   }
@@ -4705,6 +4713,10 @@
     --layout-pbs: 4;
     --layout-pbe: 4;
   }
+  :is(lay-out, lay-out-group)[xs*="pb(3xs)"] {
+    --layout-pbs: 0.0625;
+    --layout-pbe: 0.0625;
+  }
   :is(lay-out, lay-out-group)[xs*="pb(2xs)"] {
     --layout-pbs: 0.125;
     --layout-pbe: 0.125;
@@ -4739,6 +4751,9 @@
   :is(lay-out, lay-out-group)[xs*="pbs(4)"] {
     --layout-pbs: 4;
   }
+  :is(lay-out, lay-out-group)[xs*="pbs(3xs)"] {
+    --layout-pbs: 0.0625;
+  }
   :is(lay-out, lay-out-group)[xs*="pbs(2xs)"] {
     --layout-pbs: 0.125;
   }
@@ -4768,6 +4783,9 @@
   }
   :is(lay-out, lay-out-group)[xs*="pbe(4)"] {
     --layout-pbe: 4;
+  }
+  :is(lay-out, lay-out-group)[xs*="pbe(3xs)"] {
+    --layout-pbe: 0.0625;
   }
   :is(lay-out, lay-out-group)[xs*="pbe(2xs)"] {
     --layout-pbe: 0.125;
@@ -4799,6 +4817,9 @@
   :is(lay-out, lay-out-group)[xs*="mbs(4)"] {
     --layout-mbs: 4;
   }
+  :is(lay-out, lay-out-group)[xs*="mbs(3xs)"] {
+    --layout-mbs: 0.0625;
+  }
   :is(lay-out, lay-out-group)[xs*="mbs(2xs)"] {
     --layout-mbs: 0.125;
   }
@@ -4828,6 +4849,9 @@
   }
   :is(lay-out, lay-out-group)[xs*="mbe(4)"] {
     --layout-mbe: 4;
+  }
+  :is(lay-out, lay-out-group)[xs*="mbe(3xs)"] {
+    --layout-mbe: 0.0625;
   }
   :is(lay-out, lay-out-group)[xs*="mbe(2xs)"] {
     --layout-mbe: 0.125;
@@ -4859,6 +4883,9 @@
   :is(lay-out, lay-out-group)[xs*="cg(4)"] {
     --layout-colmg: 4;
   }
+  :is(lay-out, lay-out-group)[xs*="cg(3xs)"] {
+    --layout-colmg: 0.0625;
+  }
   :is(lay-out, lay-out-group)[xs*="cg(2xs)"] {
     --layout-colmg: 0.125;
   }
@@ -4888,6 +4915,9 @@
   }
   :is(lay-out, lay-out-group)[xs*="rg(4)"] {
     --layout-rg: 4;
+  }
+  :is(lay-out, lay-out-group)[xs*="rg(3xs)"] {
+    --layout-rg: 0.0625;
   }
   :is(lay-out, lay-out-group)[xs*="rg(2xs)"] {
     --layout-rg: 0.125;
@@ -5476,6 +5506,11 @@
       --layout-pbs: 4;
       --layout-pbe: 4;
     }
+    :is(lay-out, lay-out-group)[lg*="p(3xs)"] {
+      --layout-pi: 0.0625;
+      --layout-pbs: 0.0625;
+      --layout-pbe: 0.0625;
+    }
     :is(lay-out, lay-out-group)[lg*="p(2xs)"] {
       --layout-pi: 0.125;
       --layout-pbs: 0.125;
@@ -5514,6 +5549,9 @@
     :is(lay-out, lay-out-group)[lg*="pi(4)"] {
       --layout-pi: 4;
     }
+    :is(lay-out, lay-out-group)[lg*="pi(3xs)"] {
+      --layout-pi: 0.0625;
+    }
     :is(lay-out, lay-out-group)[lg*="pi(2xs)"] {
       --layout-pi: 0.125;
     }
@@ -5549,6 +5587,10 @@
       --layout-pbs: 4;
       --layout-pbe: 4;
     }
+    :is(lay-out, lay-out-group)[lg*="pb(3xs)"] {
+      --layout-pbs: 0.0625;
+      --layout-pbe: 0.0625;
+    }
     :is(lay-out, lay-out-group)[lg*="pb(2xs)"] {
       --layout-pbs: 0.125;
       --layout-pbe: 0.125;
@@ -5583,6 +5625,9 @@
     :is(lay-out, lay-out-group)[lg*="pbs(4)"] {
       --layout-pbs: 4;
     }
+    :is(lay-out, lay-out-group)[lg*="pbs(3xs)"] {
+      --layout-pbs: 0.0625;
+    }
     :is(lay-out, lay-out-group)[lg*="pbs(2xs)"] {
       --layout-pbs: 0.125;
     }
@@ -5612,6 +5657,9 @@
     }
     :is(lay-out, lay-out-group)[lg*="pbe(4)"] {
       --layout-pbe: 4;
+    }
+    :is(lay-out, lay-out-group)[lg*="pbe(3xs)"] {
+      --layout-pbe: 0.0625;
     }
     :is(lay-out, lay-out-group)[lg*="pbe(2xs)"] {
       --layout-pbe: 0.125;
@@ -5643,6 +5691,9 @@
     :is(lay-out, lay-out-group)[lg*="mbs(4)"] {
       --layout-mbs: 4;
     }
+    :is(lay-out, lay-out-group)[lg*="mbs(3xs)"] {
+      --layout-mbs: 0.0625;
+    }
     :is(lay-out, lay-out-group)[lg*="mbs(2xs)"] {
       --layout-mbs: 0.125;
     }
@@ -5672,6 +5723,9 @@
     }
     :is(lay-out, lay-out-group)[lg*="mbe(4)"] {
       --layout-mbe: 4;
+    }
+    :is(lay-out, lay-out-group)[lg*="mbe(3xs)"] {
+      --layout-mbe: 0.0625;
     }
     :is(lay-out, lay-out-group)[lg*="mbe(2xs)"] {
       --layout-mbe: 0.125;
@@ -5703,6 +5757,9 @@
     :is(lay-out, lay-out-group)[lg*="cg(4)"] {
       --layout-colmg: 4;
     }
+    :is(lay-out, lay-out-group)[lg*="cg(3xs)"] {
+      --layout-colmg: 0.0625;
+    }
     :is(lay-out, lay-out-group)[lg*="cg(2xs)"] {
       --layout-colmg: 0.125;
     }
@@ -5732,6 +5789,9 @@
     }
     :is(lay-out, lay-out-group)[lg*="rg(4)"] {
       --layout-rg: 4;
+    }
+    :is(lay-out, lay-out-group)[lg*="rg(3xs)"] {
+      --layout-rg: 0.0625;
     }
     :is(lay-out, lay-out-group)[lg*="rg(2xs)"] {
       --layout-rg: 0.125;

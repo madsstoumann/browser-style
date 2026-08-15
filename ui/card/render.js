@@ -1159,7 +1159,7 @@ const variantsPart = (variants, fields, parts = {}) => {
    the one place holding both the preset and the variant data).
    Docs: docs/schema.md § Product */
 const COLLAGE_TILE = { variant: 'rds(non)', media: 'asr(1/1) chip(bs) chip(blue) chip(pale) chip(sm)', content: 'pad(none)' };
-const COLLAGE_LAYOUT = { xs: 'cg(2xs) rg(2xs)', md: 'columns(2)' };
+const COLLAGE_LAYOUT = { xs: 'cg(3xs) rg(3xs)', md: 'columns(2)' };
 
 /* the accessible name says which variant the tile selects — the axis value carries that
    ("Indigo Floral"), where the chip is only a short label ("Indigo") */

@@ -342,7 +342,7 @@
       "media": "chip(tc)",
       "headingTag": "h2",
       "variants": {
-        "layout": { "xs": "cg(2xs) rg(2xs)", "md": "columns(2)" },
+        "layout": { "xs": "cg(3xs) rg(3xs)", "md": "columns(2)" },
         "tile": { "variant": "rds(non)", "media": "asr(1/1) chip(bs) chip(blue) chip(pale) chip(sm)", "content": "pad(none)" }
       }
     },
@@ -351,7 +351,7 @@
       "description": "Full product view — square carousel with the axis(y) thumbnail rail beside it and a lightbox; media beside the text column from the lg tier",
       "element": "ui-card",
       "variant": "col lg:row lg:spl(1/1) shd(non)",
-      "media": "asr(1/1) rds(lg) clip axis(y) nav(mrk) mrk(tmb) mrk(rail) mrk(lg) tmb(1/1) lightbox(bs)",
+      "media": "asr(3/4) rds(lg) clip axis(y) nav(mrk) mrk(tmb) mrk(rail) mrk(lg) tmb(3/4) lightbox(bs)",
       "media-open": "nav(mrk) mrk(tmb) mrk(blw) mrk(lg)",
       "content": "scl(lg)",
       "headingTag": "h2",

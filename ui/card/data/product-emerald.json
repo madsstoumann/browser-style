@@ -21,18 +21,18 @@
     "media": [
       {
         "mediaType": "image",
-        "src": "/assets/images/silkgown-emerald.png",
-        "alt": "Persistence Silk Gown in Emerald Palm, full length"
+        "src": "/assets/images/silkgown-emerald-front.png",
+        "alt": "Persistence Silk Gown in Emerald Palm, front view, full length"
       },
       {
         "mediaType": "image",
-        "src": "/assets/images/silkgown-emerald-2.png",
-        "alt": "Persistence Silk Gown in Emerald Palm, bodice and neckline"
+        "src": "/assets/images/silkgown-emerald-side.png",
+        "alt": "Persistence Silk Gown in Emerald Palm, side view, showing the bias-cut drape and slit"
       },
       {
         "mediaType": "image",
-        "src": "/assets/images/silkgown-emerald-3.png",
-        "alt": "Persistence Silk Gown in Emerald Palm, hem and train"
+        "src": "/assets/images/silkgown-emerald-back.png",
+        "alt": "Persistence Silk Gown in Emerald Palm, back view, full length"
       }
     ],
     "furniture": {

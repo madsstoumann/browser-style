@@ -14,17 +14,60 @@
 		"animations"
 	],
 	"spacing": {
-		"steps": [0, 1, 2, 3, 4,
-			{"label": "2xs", "value": 0.125},
-			{"label": "xs", "value": 0.25},
-			{"label": "sm", "value": 0.5},
-			{"label": "md", "value": 1},
-			{"label": "lg", "value": 1.5},
-			{"label": "xl", "value": 2},
-			{"label": "2xl", "value": 3}
+		"steps": [
+			0,
+			1,
+			2,
+			3,
+			4,
+			{
+				"label": "3xs",
+				"value": 0.0625
+			},
+			{
+				"label": "2xs",
+				"value": 0.125
+			},
+			{
+				"label": "xs",
+				"value": 0.25
+			},
+			{
+				"label": "sm",
+				"value": 0.5
+			},
+			{
+				"label": "md",
+				"value": 1
+			},
+			{
+				"label": "lg",
+				"value": 1.5
+			},
+			{
+				"label": "xl",
+				"value": 2
+			},
+			{
+				"label": "2xl",
+				"value": 3
+			}
 		],
-		"tokens": ["p", "pi", "pb", "pbs", "pbe", "mbs", "mbe", "cg", "rg"],
-		"breakpoints": ["xs", "lg"]
+		"tokens": [
+			"p",
+			"pi",
+			"pb",
+			"pbs",
+			"pbe",
+			"mbs",
+			"mbe",
+			"cg",
+			"rg"
+		],
+		"breakpoints": [
+			"xs",
+			"lg"
+		]
 	},
 	"breakpoints": {
 		"xs": {

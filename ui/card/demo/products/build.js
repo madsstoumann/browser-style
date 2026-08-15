@@ -28,6 +28,10 @@ const presets = { ...data('card.presets.json').presets, ...data('card.presets.de
 
 /* the media half of a lg:row card is ~half of the 64rem shell */
 const IMAGES = { cdnBase: CDN_BASE, sizes: '(min-width: 720px) 30rem, 100vw' };
+/* The colourway crops are new assets that do not exist on the zone yet, and cdn-cgi
+   resolves against the DEPLOYED site — so a CDN srcset here 404s in local preview.
+   Plain local <img src> until they ship; flip to true in the merge commit. */
+const USE_CDN = false;
 
 /* the parent group the four colourways vary from — the collage card on schema.html */
 const GROUP = { id: 'PSG-2026', name: 'Persistence Silk Gown' };
@@ -66,7 +70,7 @@ const page = (ucf, color) => {
 	const title = String(ucf.fields.headline).replace(/<[^>]+>/g, '');
 	/* the card IS the page root — the product-page preset's lg:row arrangement is the
 	   layout, so unlike the article pages there is nothing to descope into an <article> */
-	const card = renderCard(withPreset(ucf, 'product-page'), presets, undefined, { images: IMAGES })
+	const card = renderCard(withPreset(ucf, 'product-page'), presets, undefined, USE_CDN ? { images: IMAGES } : {})
 		.replace('<ui-card', `<ui-card class="product-view" data-view="card-variant-${color.slug}"`)
 		/* first slide only: the LCP element and the morph target — always eager */
 		.replace('<img', `<img id="hero" data-view="hero-variant-${color.slug}"`)

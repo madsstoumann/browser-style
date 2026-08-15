@@ -21,18 +21,18 @@
     "media": [
       {
         "mediaType": "image",
-        "src": "/assets/images/silkgown-crimson.png",
-        "alt": "Persistence Silk Gown in Crimson Paisley, full length"
+        "src": "/assets/images/silkgown-crimson-front.png",
+        "alt": "Persistence Silk Gown in Crimson Paisley, front view, full length"
       },
       {
         "mediaType": "image",
-        "src": "/assets/images/silkgown-crimson-2.png",
-        "alt": "Persistence Silk Gown in Crimson Paisley, bodice and neckline"
+        "src": "/assets/images/silkgown-crimson-side.png",
+        "alt": "Persistence Silk Gown in Crimson Paisley, side view, showing the bias-cut drape and slit"
       },
       {
         "mediaType": "image",
-        "src": "/assets/images/silkgown-crimson-3.png",
-        "alt": "Persistence Silk Gown in Crimson Paisley, hem and train"
+        "src": "/assets/images/silkgown-crimson-back.png",
+        "alt": "Persistence Silk Gown in Crimson Paisley, back view, full length"
       }
     ],
     "furniture": {
