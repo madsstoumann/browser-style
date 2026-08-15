@@ -1044,7 +1044,7 @@ describe('podcastseries — PodcastSeries', () => {
 describe('comicseries — ComicSeries', () => {
 	const details = {
 		issn: '2634-0011', startDate: '2026-08-01', publisher: 'Web Comics Group', cadence: 'Monthly', issueCount: 12,
-		issues: [{ issueNumber: 1, name: 'A New Hero', image: '/assets/images/cssman-1.png', datePublished: '2026-08-01', artist: 'M. Stanley', inker: 'Rosa Vega' }]
+		issues: [{ issueNumber: 1, name: 'A New Hero', image: '/assets/images/cssman-cover-1.png', datePublished: '2026-08-01', artist: 'M. Stanley', inker: 'Rosa Vega' }]
 	};
 	const card = (extra = {}) => render({ schemaType: 'comicseries', headline: 'CSS Man', details: { ...details, ...extra } });
 
@@ -1079,7 +1079,7 @@ describe('comicseries — ComicSeries', () => {
 	/* each issue carries its OWN cover: the media area shows both as images of the
 	   series, which is valid but says nothing about which cover belongs to which issue */
 	test('each issue carries its own image', () => {
-		assert.match(card(), /<meta itemprop="image" content="\/assets\/images\/cssman-1\.png">/);
+		assert.match(card(), /<meta itemprop="image" content="\/assets\/images\/cssman-cover-1\.png">/);
 	});
 
 	/* issues ASCEND, so ordinal markers are true — the opposite of a podcast feed */

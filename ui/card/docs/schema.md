@@ -583,14 +583,19 @@ first**: `demo/schema.html` was the specification and `render.js` was written to
 the other way round. They now have a `schemaType` key, a `DETAILS` renderer and an instance in
 `data/`, and the transcription was verified by a mechanical comparator rather than by eye.
 
-**Vocabulary checking is not uniform, and the difference matters.** Every `itemprop` from
-`MemberProgram` through `PodcastSeries` was checked mechanically against the schema.org
-vocabulary dump (`domainIncludes` walked up the `rdfs:subClassOf` chain). ⚠️ **`ComicSeries` and
-`Artist` were not** — they were authored in an environment whose egress proxy blocks both
-`schema.org` and `validator.schema.org`, so their properties rest on the hierarchy reasoning
-written up in each section rather than on a lookup. Re-check them the moment a machine with
-egress is to hand; where a property turns out to be out of domain, **drop it** rather than keep
-it because it renders.
+**Every `itemprop` below was checked mechanically** against the schema.org vocabulary dump —
+`domainIncludes` walked up the `rdfs:subClassOf` chain, so a property counts as available only
+if the type or one of its ancestors is in its domain.
+
+> **Where the dump comes from when `schema.org` is unreachable.** Some sandboxes block
+> `schema.org` and `validator.schema.org` outright. The official release dump is also published
+> in the vocabulary's own repository, which is usually reachable:
+> `raw.githubusercontent.com/schemaorg/schemaorg/main/data/releases/<version>/schemaorg-current-https.jsonld`
+> (current version from `.../main/versions.json`; `ComicSeries` and `Artist` were verified
+> against **30.0**). Walk `schema:domainIncludes` against the transitive closure of
+> `rdfs:subClassOf` — that check is what caught `issn` being a `CreativeWorkSeries` property
+> rather than a `Periodical` one. Where a property turns out to be out of domain, **drop it**
+> rather than keep it because it renders.
 
 **Two page conventions the renderer does not reproduce**, both pre-dating these types and visible
 on every card: the page hoists `media=` onto `<ui-card>` where the renderer emits it on
@@ -843,9 +848,11 @@ parts, and the machine-readable answer is the `hasPart` cardinality. `startDate`
 
 ### Comic series — `ComicSeries`
 
-`ComicSeries` ⊂ `Periodical` ⊂ `CreativeWorkSeries`, so the series' own vocabulary is thin and
-mostly inherited: `issn` from `Periodical`, `startDate` / `endDate` from `CreativeWorkSeries`,
-and `genre` / `publisher` / `hasPart` from `CreativeWork`. Issues are `hasPart` → `ComicIssue`
+`ComicSeries` ⊂ `Periodical` ⊂ `CreativeWorkSeries` ⊂ (`Series`, `CreativeWork`), so the series'
+own vocabulary is thin and entirely inherited: `issn`, `startDate` and `endDate` all arrive from
+**`CreativeWorkSeries`** — `issn`'s domain is `Dataset, WebSite, CreativeWorkSeries, Blog`, so
+`Periodical` is merely on the path and contributes nothing this card uses — plus
+`genre` / `publisher` / `hasPart` / `keywords` from `CreativeWork`. Issues are `hasPart` → `ComicIssue`
 in an `<ol>` — issues **ascend**, so ordinal markers are true here, the opposite of the podcast
 feed above. The switch is data (`details.ordered`), not type.
 

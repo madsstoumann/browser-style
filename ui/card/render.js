@@ -2016,10 +2016,12 @@ const DETAILS = {
 		return html;
 	},
 
-	/* ComicSeries ⊂ Periodical ⊂ CreativeWorkSeries, so the series' own vocabulary is
-	   `issn` (Periodical) plus `startDate`/`endDate` (CreativeWorkSeries) on top of the
-	   CreativeWork properties. The five comic credits belong to ComicIssue and ride the
-	   hasPart rows — see comicCredits(). Docs: docs/schema.md § Comic series */
+	/* ComicSeries ⊂ Periodical ⊂ CreativeWorkSeries ⊂ (Series, CreativeWork), so the
+	   series' own vocabulary is thin and entirely inherited: `issn`, `startDate` and
+	   `endDate` all arrive from CreativeWorkSeries — NOT from Periodical, which adds
+	   nothing this card uses — on top of the CreativeWork properties. The five comic
+	   credits belong to ComicIssue and ride the hasPart rows — see comicCredits().
+	   Docs: docs/schema.md § Comic series */
 	comicseries(d) {
 		let html = meta('issn', d.issn) + meta('startDate', d.startDate) + meta('endDate', d.endDate);
 		const year = startYear(d.startDate);

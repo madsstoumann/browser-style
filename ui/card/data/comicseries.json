@@ -19,12 +19,12 @@
     "media": [
       {
         "mediaType": "image",
-        "src": "/assets/images/cssman-1.png",
+        "src": "/assets/images/cssman-cover-1.png",
         "alt": "CSS Man #1 — the hero shields his eyes on a rooftop while Jayess watches from a water tower"
       },
       {
         "mediaType": "image",
-        "src": "/assets/images/cssman-2.png",
+        "src": "/assets/images/cssman-cover-2.png",
         "alt": "CSS Man #2 — a night rooftop under the brace signal, Jayess looming over the skyline"
       }
     ],
@@ -39,7 +39,7 @@
         {
           "issueNumber": 1,
           "name": "A New Hero for a New Age of the Web",
-          "image": "/assets/images/cssman-1.png",
+          "image": "/assets/images/cssman-cover-1.png",
           "datePublished": "2026-08-01",
           "artist": "M. Stanley",
           "penciler": "M. Stanley",
@@ -50,7 +50,7 @@
         {
           "issueNumber": 2,
           "name": "The Cascade Never Sleeps",
-          "image": "/assets/images/cssman-2.png",
+          "image": "/assets/images/cssman-cover-2.png",
           "datePublished": "2026-09-01",
           "artist": "M. Stanley",
           "penciler": "M. Stanley",
