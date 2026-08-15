@@ -331,6 +331,21 @@ needed a signal rather than silence.)
 
 `item.price` is tested with `== null`, not truthiness: a free variant prices at **0**.
 
+**`variants.control` picks the shape the rows take.** `"list"` (default) is the `<ul data-part="list">`
+above; `"buttons"` renders the rounded [`ui/button-group`](../components.md) picker the product
+pages use — one `<label class="ui-button">` per variant, each carrying that variant's `hasVariant`
+scope and metas. The picker **replaces** the list rather than accompanying it, so a size is
+declared once. An unrecognised value falls back to `"list"`.
+
+Two differences from the list form, both deliberate. The radio `name` is **minted** from the
+headline through `slug()` — never author data, and per-headline so two pickers on a page cannot
+capture each other's clicks (the same guard the graded quiz's options use). And `item.url` becomes
+a `<meta>`, not an anchor: an `<a>` inside a `<label>` is a second interactive control fighting the
+radio for one click. Where crawlable per-variant URLs matter, the axis belongs on the *list* form
+or on separate pages — which is what [`demo/products/`](../demo/products/) does for the colour
+axis: four pages, one per colourway, each a `ProductGroup` varying by size and pointing back at the
+parent group with `isVariantOf`. They are what the collage card's four covers link to.
+
 **The gate is the WRITTEN itemtype, never `details.subtype`.** `hasVariant`, `variesBy` and
 `productGroupID` are `ProductGroup`-**only** properties. `details.subtype` and `details.variants`
 are two independently typo-able fields that must agree, so nothing checks them against each other —

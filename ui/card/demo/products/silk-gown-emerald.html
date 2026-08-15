@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Persistence Silk Gown — Emerald Palm</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Emerald palm fronds on a bias-cut column — the most fluid drape of the four.">
+	<link rel="stylesheet" href="/dist/demo.min.css">
+	<!-- srcset uses absolute v4.browser.style CDN URLs; the zone's Hotlink Protection
+	     403s any cross-origin Referer (pages.dev, localhost) — no-referrer passes -->
+	<meta name="referrer" content="no-referrer">
+	<link rel="preconnect" href="https://v4.browser.style">
+	<!-- Block first paint (and the view-transition snapshot) until the hero is parsed,
+	     so the card/hero morph targets exist when the browser captures the incoming
+	     page. Without this the snapshot races HTML parsing and the morph degrades to a
+	     plain cross-fade on repeat/bfcache navigations. -->
+	<link rel="expect" href="#hero" blocking="render">
+	<!-- Names the morph targets where typed attr() is unsupported (Safari). MUST be
+	     render-blocking in <head>: the incoming page is snapshotted at first paint,
+	     so a deferred script names the targets too late and the forward morph
+	     degrades to a cross-fade. Docs: ui/base/polyfills/readme.md -->
+	<script type="module" src="/ui/base/polyfills/attr-fallback.js" blocking="render"></script>
+	<style>
+		/* cross-document view transitions (@view-transition, the [data-view] attr()
+		   naming rule and group timing) come from ui-card.css — nothing page-scoped
+		   here, deliberately: see the header comment in products/build.js */
+		body { margin-inline: auto; max-inline-size: 64rem; }
+		.product-view { margin-block-end: var(--spacing-2xl); }
+		/* the colourway switcher — cross-page navigation, not a content part */
+		.variant-swatches {
+			display: flex;
+			flex-wrap: wrap;
+			gap: var(--spacing-md);
+			& a {
+				align-items: center;
+				color: inherit;
+				display: flex;
+				font-size: var(--ui-content-fs-sm, 0.875rem);
+				gap: var(--spacing-xs);
+				text-decoration: none;
+			}
+			& img {
+				border-radius: var(--radius-md, 0.5rem);
+				block-size: 3.5rem;
+				inline-size: 3.5rem;
+				object-fit: cover;
+			}
+			& a:hover span { text-decoration: underline; }
+		}
+	</style>
+	<style>
+		:root {
+			--color-link: light-dark(hsl(221, 100%, 44%), hsl(221, 70%, 70%));
+			--color-accent: light-dark(hsl(211, 100%, 38%), hsl(211, 70%, 72%));
+			--color-success: light-dark(hsl(136, 45%, 30%), hsl(136, 25%, 60%));
+			--color-error: light-dark(hsl(360, 65%, 41%), hsl(360, 45%, 62%));
+			--color-text-muted: light-dark(hsl(0, 0%, 42%), hsl(0, 0%, 65%));
+		}
+		ui-content { --ui-content-muted: color-mix(in oklab, currentColor 85%, transparent); }
+		ui-chip[data-type] { --ui-chip-bg: hsl(0, 0%, 95%); --ui-chip-c: hsl(0, 0%, 13%); }
+	</style>
+</head>
+<body>
+	<main>
+		<ui-card class="product-view" data-view="card-variant-emerald" variant="col lg:row lg:spl(1/1)" itemscope itemtype="https://schema.org/ProductGroup">
+		<cq-box>
+			<ui-media media="asr(1/1) rds(lg) clip axis(y) nav(mrk) mrk(tmb) mrk(rail) mrk(lg) tmb(1/1) lightbox(bs)" id="product-emerald-media" popover media-open="nav(mrk) mrk(tmb) mrk(blw) mrk(lg)"><ui-lightbox><button type="button" command="toggle-popover" commandfor="product-emerald-media" aria-label="View the Emerald Palm gallery"><ui-icon><svg viewBox="0 0 24 24"><path d="M7 5.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666"/><path d="M4.012 7.26a2.005 2.005 0 0 0 -1.012 1.737v10c0 1.1 .9 2 2 2h10c.75 0 1.158 -.385 1.5 -1"/><path d="M17 7h.01"/><path d="M7 13l3.644 -3.644a1.21 1.21 0 0 1 1.712 0l3.644 3.644"/><path d="M15 12l1.644 -1.644a1.21 1.21 0 0 1 1.712 0l2.644 2.644"/></svg></ui-icon></button></ui-lightbox><img id="hero" data-view="hero-variant-emerald" src="/assets/images/silkgown-emerald.png" alt="Persistence Silk Gown in Emerald Palm, full length" style="--ui-carousel-thumb-url: url('https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=160/assets/images/silkgown-emerald.png')" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=240/assets/images/silkgown-emerald.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=320/assets/images/silkgown-emerald.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=480/assets/images/silkgown-emerald.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=720/assets/images/silkgown-emerald.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=1200/assets/images/silkgown-emerald.png 1200w" sizes="(min-width: 720px) 30rem, 100vw" loading="eager" fetchpriority="high" decoding="async" itemprop="image"><img src="/assets/images/silkgown-emerald-2.png" alt="Persistence Silk Gown in Emerald Palm, bodice and neckline" style="--ui-carousel-thumb-url: url('https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=160/assets/images/silkgown-emerald-2.png')" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=240/assets/images/silkgown-emerald-2.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=320/assets/images/silkgown-emerald-2.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=480/assets/images/silkgown-emerald-2.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=720/assets/images/silkgown-emerald-2.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=1200/assets/images/silkgown-emerald-2.png 1200w" sizes="auto, (min-width: 720px) 30rem, 100vw" loading="lazy" decoding="async" itemprop="image"><img src="/assets/images/silkgown-emerald-3.png" alt="Persistence Silk Gown in Emerald Palm, hem and train" style="--ui-carousel-thumb-url: url('https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=160/assets/images/silkgown-emerald-3.png')" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=240/assets/images/silkgown-emerald-3.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=320/assets/images/silkgown-emerald-3.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=480/assets/images/silkgown-emerald-3.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=720/assets/images/silkgown-emerald-3.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=1200/assets/images/silkgown-emerald-3.png 1200w" sizes="auto, (min-width: 720px) 30rem, 100vw" loading="lazy" decoding="async" itemprop="image"></ui-media>
+			<ui-content content="scl(lg)">
+					<link itemprop="mainEntityOfPage" href="silk-gown-emerald.html">
+					<div itemprop="isVariantOf" itemscope itemtype="https://schema.org/ProductGroup" hidden>
+						<meta itemprop="name" content="Persistence Silk Gown">
+						<meta itemprop="productGroupID" content="PSG-2026">
+					</div>
+					<small data-part="eyebrow" itemprop="category">Dresses</small><h2 data-part="headline" itemprop="name">Persistence Silk Gown — Emerald Palm</h2><p data-part="summary" itemprop="description">Emerald palm fronds on a bias-cut column — the most fluid drape of the four.</p><div data-part="rating" itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
+		<meta itemprop="ratingValue" content="4.7">
+		<meta itemprop="ratingCount" content="312">
+		<meta itemprop="bestRating" content="5"><meta itemprop="worstRating" content="1">
+		<input class="ui-rating" type="range" min="1" max="5" value="4.7" step="0.01" disabled aria-hidden="true">
+		<span data-sr>Rated 4.7 out of 5 stars from 312 ratings</span>
+		<span aria-hidden="true">4.7 / 5 (312 ratings)</span>
+	</div><p data-part="price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+				<meta itemprop="priceCurrency" content="USD"><meta itemprop="availability" content="https://schema.org/InStock"><meta itemprop="itemCondition" content="https://schema.org/NewCondition">
+				<meta itemprop="price" content="249">$249
+			</p><p data-part="meta"><ui-chip theme="pale green">In stock</ui-chip></p><meta itemprop="productGroupID" content="PSG-EME"><meta itemprop="variesBy" content="https://schema.org/size"><fieldset class="ui-button-group" data-variant="rounded"><label class="ui-button" itemprop="hasVariant" itemscope itemtype="https://schema.org/Product"><input type="radio" name="variant-persistence-silk-gown-emerald-palm" value="S" data-sr checked><meta itemprop="name" content="Persistence Silk Gown — Emerald Palm, S"><meta itemprop="sku" content="PSG-EME-S"><meta itemprop="color" content="Emerald Palm"><meta itemprop="size" content="S"><span itemprop="offers" itemscope itemtype="https://schema.org/Offer" hidden><meta itemprop="priceCurrency" content="USD"><meta itemprop="price" content="249"><meta itemprop="availability" content="https://schema.org/InStock"></span>S</label><label class="ui-button" itemprop="hasVariant" itemscope itemtype="https://schema.org/Product"><input type="radio" name="variant-persistence-silk-gown-emerald-palm" value="M" data-sr><meta itemprop="name" content="Persistence Silk Gown — Emerald Palm, M"><meta itemprop="sku" content="PSG-EME-M"><meta itemprop="color" content="Emerald Palm"><meta itemprop="size" content="M"><span itemprop="offers" itemscope itemtype="https://schema.org/Offer" hidden><meta itemprop="priceCurrency" content="USD"><meta itemprop="price" content="249"><meta itemprop="availability" content="https://schema.org/InStock"></span>M</label><label class="ui-button" itemprop="hasVariant" itemscope itemtype="https://schema.org/Product"><input type="radio" name="variant-persistence-silk-gown-emerald-palm" value="L" data-sr><meta itemprop="name" content="Persistence Silk Gown — Emerald Palm, L"><meta itemprop="sku" content="PSG-EME-L"><meta itemprop="color" content="Emerald Palm"><meta itemprop="size" content="L"><span itemprop="offers" itemscope itemtype="https://schema.org/Offer" hidden><meta itemprop="priceCurrency" content="USD"><meta itemprop="price" content="249"><meta itemprop="availability" content="https://schema.org/InStock"></span>L</label></fieldset><span data-part="tags"><ui-chip itemprop="keywords">Silk</ui-chip><ui-chip itemprop="keywords">Eveningwear</ui-chip></span><nav class="variant-swatches" aria-label="Other colourways">
+					<a href="silk-gown-indigo.html">
+						<img src="/assets/images/silkgown-indigo.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=112,height=112/assets/images/silkgown-indigo.png 1x, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=224,height=224/assets/images/silkgown-indigo.png 2x" width="56" height="56" loading="lazy" decoding="async">
+						<span>Indigo Floral</span>
+					</a>
+					<a href="silk-gown-crimson.html">
+						<img src="/assets/images/silkgown-crimson.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=112,height=112/assets/images/silkgown-crimson.png 1x, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=224,height=224/assets/images/silkgown-crimson.png 2x" width="56" height="56" loading="lazy" decoding="async">
+						<span>Crimson Paisley</span>
+					</a>
+					<a href="silk-gown-onyx.html">
+						<img src="/assets/images/silkgown-onyx.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=112,height=112/assets/images/silkgown-onyx.png 1x, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=224,height=224/assets/images/silkgown-onyx.png 2x" width="56" height="56" loading="lazy" decoding="async">
+						<span>Onyx Deco</span>
+					</a>
+				</nav>
+				</ui-content>
+		</cq-box>
+	</ui-card>
+	</main>
+	<!-- Native scroll-control pseudos do NOT follow a popover frame into the top layer
+	     (Chromium), so the open lightbox gets real DOM controls from this module. Non
+	     render-blocking: it must not delay the transition snapshot. Docs: docs/media.md -->
+	<script type="module" src="/ui/card/lightbox.min.js"></script>
+</body>
+</html>

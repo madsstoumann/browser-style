@@ -1085,6 +1085,115 @@ describe('job — EmployerAggregateRating', () => {
 /* demo/schema.html is the markup render.js reproduces, and schema.compare.js now pairs these
    four types too. Each had drifted by one itemprop; these pin the renderer side of the
    contract the page transcribes. */
+/* The product-page pair: a variant picker instead of a link list, and the per-slide
+   thumbnail URL an SSR'd mrk(tmb) carousel needs. Both are GATED — the asserts that
+   matter most are the ones proving nothing else changed. Docs: docs/media.md § Thumbnails */
+describe('product page — variant picker + carousel thumbnails', () => {
+	const SIZES = [
+		{ name: 'Gown, S', sku: 'PSG-IND-S', size: 'S', price: 249, currency: 'USD' },
+		{ name: 'Gown, M', sku: 'PSG-IND-M', size: 'M', price: 249, currency: 'USD' },
+		{ name: 'Gown, L', sku: 'PSG-IND-L', size: 'L', price: 249, currency: 'USD', availability: 'Out of stock' }
+	];
+	const picker = (extra = {}) => render({
+		schemaType: 'product', headline: 'Persistence Silk Gown — Indigo',
+		details: { subtype: 'ProductGroup', variants: { control: 'buttons', variesBy: ['size'], productGroupID: 'PSG-IND', items: SIZES, ...extra } }
+	});
+
+	test('control:"buttons" renders the rounded group, one label per variant', () => {
+		const html = picker();
+		assert.match(html, /<fieldset class="ui-button-group" data-variant="rounded">/);
+		assert.equal(count(html, '<label class="ui-button" itemprop="hasVariant" itemscope itemtype="https://schema.org/Product">'), 3);
+		assert.ok(!html.includes('<ul data-part="list">'), 'the picker REPLACES the list — one emitter, not two');
+	});
+
+	test('every size keeps its full microdata', () => {
+		const html = picker();
+		assert.match(html, /<meta itemprop="sku" content="PSG-IND-M">/);
+		assert.match(html, /<meta itemprop="size" content="M">/);
+		assert.equal(count(html, '<meta itemprop="price" content="249">'), 3);
+		assert.match(html, /<meta itemprop="availability" content="https:\/\/schema\.org\/OutOfStock">/);
+		assert.equal(count(html, '<meta itemprop="variesBy" content="https://schema.org/size">'), 1);
+	});
+
+	/* one shared radio group, minted from the headline so two pickers on one page
+	   cannot capture each other's clicks — same reason the graded quiz slugs its options */
+	test('the radio group is one minted name, first variant checked', () => {
+		const html = picker();
+		assert.equal(count(html, 'name="variant-persistence-silk-gown-indigo"'), 3);
+		assert.equal(count(html, ' checked>'), 1);
+		assert.match(html, /value="S" data-sr checked>/, 'the first variant is the checked one');
+	});
+
+	test('the group name can never carry author markup', () => {
+		const html = render({
+			schemaType: 'product', headline: '"><script>alert(1)</script>',
+			details: { subtype: 'ProductGroup', variants: { control: 'buttons', variesBy: ['size'], items: SIZES } }
+		});
+		assert.ok(!html.includes('<script>'), 'raw <script> must never reach output');
+		/* plain() strips the tags, slug() strips everything that is not [a-z0-9] */
+		assert.match(html, /name="variant-alert-1"/, 'slugged to an attribute-safe token');
+	});
+
+	/* an anchor inside a <label> is a second interactive control fighting the radio */
+	test('a variant url is a meta in the picker and an anchor in the list', () => {
+		const withUrl = [{ ...SIZES[0], url: '/gown?size=s' }];
+		const buttons = render({ schemaType: 'product', headline: 'X', details: { subtype: 'ProductGroup', variants: { control: 'buttons', variesBy: ['size'], items: withUrl } } });
+		assert.match(buttons, /<meta itemprop="url" content="\/gown\?size=s">/);
+		assert.ok(!/<a itemprop="url"/.test(buttons), 'no anchor inside the label');
+		const list = render({ schemaType: 'product', headline: 'X', details: { subtype: 'ProductGroup', variants: { variesBy: ['size'], items: withUrl } } });
+		assert.match(list, /<a itemprop="url" href="\/gown\?size=s">/, 'the list form keeps the crawlable anchor');
+	});
+
+	test('"list" and an unknown control both render the list', () => {
+		for (const control of [undefined, 'list', 'grid', '<script>']) {
+			const html = render({ schemaType: 'product', headline: 'X', details: { subtype: 'ProductGroup', variants: { control, variesBy: ['size'], items: SIZES } } });
+			assert.match(html, /<ul data-part="list">/, String(control));
+			assert.ok(!html.includes('ui-button-group'), String(control));
+		}
+	});
+
+	/* the ProductGroup gate still governs — a picker on a plain Product is invalid markup */
+	test('the picker is still gated on the resolved itemtype', () => {
+		const html = render({ schemaType: 'product', headline: 'X', details: { variants: { control: 'buttons', variesBy: ['size'], items: SIZES } } });
+		assert.ok(!html.includes('hasVariant'), 'hasVariant is not a Product property');
+		assert.match(html, /<!-- variants ignored: itemtype did not resolve to ProductGroup -->/);
+	});
+
+	const slides = (presetMedia, images, src = null) => renderCard(
+		{ fields: { schemaType: 'product', headline: 'X', preset: { $ref: 'card-preset/t' }, media: (src ? [{ mediaType: 'image', src }] : [{ mediaType: 'image', src: '/a.png' }, { mediaType: 'image', src: '/b.png' }]) } },
+		{ t: { element: 'ui-card', media: presetMedia } }, {}, images ? { images } : undefined
+	);
+
+	test('mrk(tmb) gives every slide its own thumbnail URL', () => {
+		const html = slides('asr(1/1) nav(mrk) mrk(tmb) mrk(rail)');
+		assert.equal(count(html, "--ui-carousel-thumb-url: url('/a.png')"), 1);
+		assert.equal(count(html, "--ui-carousel-thumb-url: url('/b.png')"), 1);
+	});
+
+	test('with the CDN armed the thumb is one narrow transform, not a srcset', () => {
+		const html = slides('asr(1/1) nav(mrk) mrk(tmb)', { cdnBase: 'https://cdn.example' });
+		assert.match(html, /--ui-carousel-thumb-url: url\('https:\/\/cdn\.example\/cdn-cgi\/image\/format=auto,quality=80,width=160\/a\.png'\)/);
+	});
+
+	/* THE gate: no shipped preset carries mrk(tmb) in media=, so existing output is
+	   byte-identical — the snapshot would catch a regression, this names it */
+	test('no mrk(tmb) means no thumb URL anywhere', () => {
+		for (const media of ['asr(1/1) nav', 'asr(4/3) nav(mrk) mrk(pll)', '']) {
+			assert.ok(!slides(media).includes('--ui-carousel-thumb-url'), media || '(no media)');
+		}
+	});
+
+	/* the value lands inside url('…') in an inline style, where esc() does not help */
+	test('a hostile src cannot break out of the CSS url()', () => {
+		const html = slides('nav(mrk) mrk(tmb)', null, "/a.png'); background: url(evil.png");
+		const inner = /--ui-carousel-thumb-url: url\('([^']*)'\)/.exec(/style="([^"]*)"/.exec(html)[1])[1];
+		/* quotes, parens and semicolons are DROPPED, not escaped — escaping does not
+		   help inside url(), where any of them would end the value */
+		assert.ok(!/['();\\]/.test(inner), `the url() value still holds a CSS terminator: ${inner}`);
+		assert.equal(inner, '/a.png background: urlevil.png');
+	});
+});
+
 /* The map frame: a mediaType the renderer builds a URL for rather than passing through,
    so every assert here is about what may reach that URL. Docs: docs/media.md § Map */
 describe('map — the frame as an embedded map', () => {

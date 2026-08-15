@@ -46,7 +46,7 @@
 	</style>
 	<!-- Block first paint (and the incoming snapshot on Back) until the morphing
 	     article card is parsed. Docs: docs/card.md § Article pattern -->
-	<link rel="expect" href="#schema-article" blocking="render">
+	<link rel="expect" href="#schema-product-variants" blocking="render">
 	<!-- Names the morph targets where typed attr() is unsupported (Safari). MUST be
 	     render-blocking in <head>: the incoming page is snapshotted at first paint,
 	     so a deferred script names the targets too late and the forward morph
@@ -220,55 +220,55 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card variant="col" media="chip(tc)" itemscope itemtype="https://schema.org/ProductGroup">
+		<ui-card id="schema-product-variants" variant="col" media="chip(tc)" itemscope itemtype="https://schema.org/ProductGroup">
 			<cq-box>
 				<ui-media>
 					<lay-out xs="cg(2xs) rg(2xs)" md="columns(2)">
-						<ui-card variant="rds(non)" media="asr(1/1) chip(bs) chip(green) chip(pale)" content="pad(none)" itemprop="hasVariant" itemscope itemtype="https://schema.org/Product">
+						<ui-card data-view="card-variant-indigo" variant="rds(non)" media="asr(1/1) chip(bs) chip(green) chip(pale)" content="pad(none)" itemprop="hasVariant" itemscope itemtype="https://schema.org/Product">
 							<cq-box>
-								<ui-media><img src="/assets/images/silkgown-indigo.png" alt="Persistence Silk Gown in Indigo Floral" width="509" height="509" loading="lazy" decoding="async" itemprop="image"><ui-chip>Indigo</ui-chip></ui-media>
+								<ui-media><img data-view="hero-variant-indigo" src="/assets/images/silkgown-indigo.png" alt="Persistence Silk Gown in Indigo Floral" width="509" height="509" loading="lazy" decoding="async" itemprop="image"><ui-chip>Indigo</ui-chip></ui-media>
 								<ui-content>
 									<meta itemprop="name" content="Persistence Silk Gown — Indigo Floral">
 									<meta itemprop="sku" content="PSG-IND">
 									<meta itemprop="color" content="Indigo Floral">
 									<span itemprop="offers" itemscope itemtype="https://schema.org/Offer" hidden><meta itemprop="priceCurrency" content="USD"><meta itemprop="price" content="249"><meta itemprop="availability" content="https://schema.org/InStock"></span>
-									<a data-part="cover" href="/products/persistence-silk-gown?color=indigo" itemprop="url" aria-label="Select Indigo Floral"></a>
+									<a data-part="cover" href="products/silk-gown-indigo.html" itemprop="url" aria-label="Select Indigo Floral"></a>
 								</ui-content>
 							</cq-box>
 						</ui-card>
-						<ui-card variant="rds(non)" media="asr(1/1) chip(bs) chip(green) chip(pale)" content="pad(none)" itemprop="hasVariant" itemscope itemtype="https://schema.org/Product">
+						<ui-card data-view="card-variant-crimson" variant="rds(non)" media="asr(1/1) chip(bs) chip(green) chip(pale)" content="pad(none)" itemprop="hasVariant" itemscope itemtype="https://schema.org/Product">
 							<cq-box>
-								<ui-media><img src="/assets/images/silkgown-crimson.png" alt="Persistence Silk Gown in Crimson Paisley" width="509" height="509" loading="lazy" decoding="async" itemprop="image"><ui-chip>Crimson</ui-chip></ui-media>
+								<ui-media><img data-view="hero-variant-crimson" src="/assets/images/silkgown-crimson.png" alt="Persistence Silk Gown in Crimson Paisley" width="509" height="509" loading="lazy" decoding="async" itemprop="image"><ui-chip>Crimson</ui-chip></ui-media>
 								<ui-content>
 									<meta itemprop="name" content="Persistence Silk Gown — Crimson Paisley">
 									<meta itemprop="sku" content="PSG-CRI">
 									<meta itemprop="color" content="Crimson Paisley">
 									<span itemprop="offers" itemscope itemtype="https://schema.org/Offer" hidden><meta itemprop="priceCurrency" content="USD"><meta itemprop="price" content="249"><meta itemprop="availability" content="https://schema.org/InStock"></span>
-									<a data-part="cover" href="/products/persistence-silk-gown?color=crimson" itemprop="url" aria-label="Select Crimson Paisley"></a>
+									<a data-part="cover" href="products/silk-gown-crimson.html" itemprop="url" aria-label="Select Crimson Paisley"></a>
 								</ui-content>
 							</cq-box>
 						</ui-card>
-						<ui-card variant="rds(non)" media="asr(1/1) chip(bs) chip(green) chip(pale)" content="pad(none)" itemprop="hasVariant" itemscope itemtype="https://schema.org/Product">
+						<ui-card data-view="card-variant-emerald" variant="rds(non)" media="asr(1/1) chip(bs) chip(green) chip(pale)" content="pad(none)" itemprop="hasVariant" itemscope itemtype="https://schema.org/Product">
 							<cq-box>
-								<ui-media><img src="/assets/images/silkgown-emerald.png" alt="Persistence Silk Gown in Emerald Palm" width="509" height="509" loading="lazy" decoding="async" itemprop="image"><ui-chip>Emerald</ui-chip></ui-media>
+								<ui-media><img data-view="hero-variant-emerald" src="/assets/images/silkgown-emerald.png" alt="Persistence Silk Gown in Emerald Palm" width="509" height="509" loading="lazy" decoding="async" itemprop="image"><ui-chip>Emerald</ui-chip></ui-media>
 								<ui-content>
 									<meta itemprop="name" content="Persistence Silk Gown — Emerald Palm">
 									<meta itemprop="sku" content="PSG-EME">
 									<meta itemprop="color" content="Emerald Palm">
 									<span itemprop="offers" itemscope itemtype="https://schema.org/Offer" hidden><meta itemprop="priceCurrency" content="USD"><meta itemprop="price" content="249"><meta itemprop="availability" content="https://schema.org/InStock"></span>
-									<a data-part="cover" href="/products/persistence-silk-gown?color=emerald" itemprop="url" aria-label="Select Emerald Palm"></a>
+									<a data-part="cover" href="products/silk-gown-emerald.html" itemprop="url" aria-label="Select Emerald Palm"></a>
 								</ui-content>
 							</cq-box>
 						</ui-card>
-						<ui-card variant="rds(non)" media="asr(1/1) chip(bs) chip(green) chip(pale)" content="pad(none)" itemprop="hasVariant" itemscope itemtype="https://schema.org/Product">
+						<ui-card data-view="card-variant-onyx" variant="rds(non)" media="asr(1/1) chip(bs) chip(green) chip(pale)" content="pad(none)" itemprop="hasVariant" itemscope itemtype="https://schema.org/Product">
 							<cq-box>
-								<ui-media><img src="/assets/images/silkgown-onyx.png" alt="Persistence Silk Gown in Onyx Deco" width="509" height="509" loading="lazy" decoding="async" itemprop="image"><ui-chip>Onyx</ui-chip></ui-media>
+								<ui-media><img data-view="hero-variant-onyx" src="/assets/images/silkgown-onyx.png" alt="Persistence Silk Gown in Onyx Deco" width="509" height="509" loading="lazy" decoding="async" itemprop="image"><ui-chip>Onyx</ui-chip></ui-media>
 								<ui-content>
 									<meta itemprop="name" content="Persistence Silk Gown — Onyx Deco">
 									<meta itemprop="sku" content="PSG-ONX">
 									<meta itemprop="color" content="Onyx Deco">
 									<span itemprop="offers" itemscope itemtype="https://schema.org/Offer" hidden><meta itemprop="priceCurrency" content="USD"><meta itemprop="price" content="249"><meta itemprop="availability" content="https://schema.org/InStock"></span>
-									<a data-part="cover" href="/products/persistence-silk-gown?color=onyx" itemprop="url" aria-label="Select Onyx Deco"></a>
+									<a data-part="cover" href="products/silk-gown-onyx.html" itemprop="url" aria-label="Select Onyx Deco"></a>
 								</ui-content>
 							</cq-box>
 						</ui-card>

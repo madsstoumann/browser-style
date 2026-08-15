@@ -656,6 +656,14 @@ rest ([`article.render.html`](../demo/article.render.html) is the working demo):
   `demo/articles/{article,news}.html` (the full views), and the Article + News
   sections of `demo/schema.html`, which share the same `card-{id}`/`hero-{id}`
   names and cover links so the reference page morphs into the same articles.
+  `demo/products/` runs the same pattern on `schema.html`'s ProductGroup collage
+  (`card-variant-{color}`/`hero-variant-{color}`) and adds the **negative** case:
+  page→page carries *no* shared name, which is what makes switching colourway a
+  fade. Naming is the only lever that separates the two — the incoming document's
+  CSS drives a cross-document transition, so a page-scoped rule forcing the fade
+  would take the morph with it. `schema.html`'s `<link rel="expect">` anchors on
+  `#schema-product-variants` (the collage, further down the page than the article
+  card) so every morph target on it exists at snapshot in both directions.
 - **Static markup + render-blocking — this is what makes the morph reliable.**
   [`articles/build.js`](../demo/articles/build.js) (`node ui/card/articles/build.js`)
   pre-renders the grid page *and* every article page through `render.js` — the
@@ -716,6 +724,7 @@ navigation; `prefers-reduced-motion` keeps default timing.
 | [`render.html`](../demo/render.html) | The 52 cards of [`data/index.json`](../data/index.json) rendered by `render.js` from UCF data + presets |
 | [`carousel.render.html`](../demo/carousel.render.html) · [`video.render.html`](../demo/video.render.html) | The original demo pages recreated data-driven: presets from [`data/card.presets.demo.json`](../data/card.presets.demo.json) (129 presets extracted from the originals) + UCF instances in [`data/demo/`](../data/demo). Each page lists its not-expressible demos in a bottom note. The `media` and `reveal` twins were dropped — [`media.html`](../demo/media.html) and [`../reveal/index.html`](../../reveal/index.html) are the better pages |
 | [`article.render.html`](../demo/article.render.html) + [`articles/`](../demo/articles/) | The article pattern above, live and **fully static** (pre-rendered by `articles/build.js`): teaser cards with stretched-link headlines → cross-document view transition morphs the whole card into the per-article page and back (`card-{id}` + nested `hero-{id}` names via `data-view` + CSS `attr()`), body-instead-of-summary via the `prose` preset, plain `<a>` navigation, zero runtime JS |
+| [`products/`](../demo/products/) | The same pattern for commerce, pre-rendered by `products/build.js`: `schema.html`'s ProductGroup collage links to one page per colourway, each a `mrk(rail)` thumbnail carousel + lightbox with the rounded size picker (`variants.control: "buttons"`). The transition behaviour is **pure name matching** — a page carries only its own colourway's `data-view` names, so collage→page pairs (morph) while page→page does not (fade). Deliberately no page-scoped view-transition CSS: the incoming document drives a cross-document transition, so a blanket fade rule would kill the morph too |
 | [`index.html`](../index.html) · [`media.html`](../demo/media.html) · [`content.html`](../demo/content.html) · [`carousel.html`](../demo/media.carousel.html) · [`video.html`](../demo/media.video.html) | The card engine itself (hand-authored originals) |
 | [`../reveal/index.html`](../../reveal/index.html) | Reveal types incl. the hero (source of `hero-reveal` preset) |
 

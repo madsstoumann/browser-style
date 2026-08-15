@@ -260,6 +260,14 @@ const fixedSrcset = (src, size) => {
 };
 /* sizes: `auto` is spec-invalid on eager images; Safari ignores it, so lazy gets the fallback list too */
 const sizesFor = (eager) => !IMG ? null : eager ? IMG.sizes || null : IMG.sizes ? `auto, ${IMG.sizes}` : 'auto';
+/* carousel thumbnail: ONE narrow URL (the marker is ~2-4rem), CDN when eligible else the
+   source itself — a ::scroll-marker background, so there is no srcset to hand it. The
+   result lands inside url('…') in an inline style, where esc() does not help: quotes,
+   parens and semicolons would end the value, so they are dropped rather than escaped. */
+const CSS_URL_UNSAFE = /['"();\\]/g;
+const thumbUrl = (src, width = 160) =>
+	String(cdnEligible(src) ? buildCfUrl(src, { format: IMG.format, quality: IMG.quality, width }, IMG.base) : src)
+		.replace(CSS_URL_UNSAFE, '');
 
 const meta = (prop, content) =>
 	content == null || content === '' ? '' : `<meta itemprop="${esc(prop)}" content="${esc(content)}">`;
@@ -818,6 +826,10 @@ const buildMedia = (fields, type, tokens, preset = {}, frameAttrs = {}, cardId =
 	const ratioMatch = IMG && /asr\((\d+)\/(\d+)\)/.exec(preset.media || '');
 	const ratio = ratioMatch ? +ratioMatch[1] / +ratioMatch[2] : null;
 	const eager = /load\(eager\)/.test(preset.media || '');
+	/* mrk(tmb) paints each ::scroll-marker from --ui-carousel-thumb-url (carousel.css);
+	   with no value the thumb is a bare placeholder, so an SSR'd thumbnail carousel has
+	   to carry one per slide. Docs: docs/media.md § Thumbnails */
+	const thumbs = /mrk\(tmb\)/.test(preset.media || '');
 	let firstImg = true;
 	for (const item of fields.media) {
 		const src = item.asset?.$asset ? item.asset.$asset : item.src;
@@ -862,6 +874,7 @@ const buildMedia = (fields, type, tokens, preset = {}, frameAttrs = {}, cardId =
 		frames += `<img${attrs({
 			src,
 			alt: item.alt || '',
+			style: thumbs ? styleAttr({ '--ui-carousel-thumb-url': `url('${thumbUrl(src)}')` }) : null,
 			srcset: cdn ? buildSrcset(src, { ...IMG, ratio }) : null,
 			sizes: cdn ? sizesFor(eager) : null,
 			loading: eager ? 'eager' : 'lazy',
@@ -1072,16 +1085,42 @@ const variantItem = (item) => {
 		+ '</li>';
 };
 
+/* One hasVariant row as a picker button. The <label> IS the variant row — the microdata
+   rides it, so the picker never restates a list rendered elsewhere. Unlike the list form
+   the url is a <meta>, NOT an anchor: an anchor inside a <label> is a second interactive
+   control fighting the radio for the same click. Docs: docs/schema.md § Product */
+const variantButton = (item, index, group) => {
+	const label = [item.size, item.color, item.material, item.pattern].find(Boolean) || item.name;
+	return `<label class="ui-button"${scope('hasVariant', 'Product')}>`
+		+ `<input type="radio" name="${group}" value="${esc(label)}" data-sr${index === 0 ? ' checked' : ''}>`
+		+ meta('name', item.name)
+		+ meta('url', item.url)
+		+ meta('sku', item.sku)
+		+ VARIANT_AXES.map((axis) => meta(axis, item[axis])).join('')
+		+ (item.price == null ? '' : `<span${scope('offers', 'Offer')} hidden>${meta('priceCurrency', item.currency)}${meta('price', item.price)}${meta('availability', availabilityUrl(item.availability || 'in stock'))}</span>`)
+		+ esc(label)
+		+ '</label>';
+};
+
 /* Nested hasVariant needs no inProductGroupWithID, and variesBy takes FULL schema.org
-   URLs, not bare property names. Docs: docs/schema.md § Product */
-const variantsPart = (variants) => {
+   URLs, not bare property names. `control` picks the shape the rows take — a link list
+   (default) or a picker; an unknown value falls back to the list, the same loud-skip
+   discipline as an unknown axis. Docs: docs/schema.md § Product */
+const VARIANT_CONTROLS = new Set(['list', 'buttons']);
+const variantsPart = (variants, fields) => {
 	const wanted = variants.variesBy || [];
 	const axes = wanted.filter((axis) => VARIANT_AXES.includes(axis));
+	const control = VARIANT_CONTROLS.has(variants.control) ? variants.control : 'list';
+	/* the group name is MINTED, never author data — slug() is an attribute-safe
+	   allowlist, and per-headline so two pickers on a page can't share a group */
+	const group = `variant-${slug(plain(fields?.headline))}`;
 	return meta('productGroupID', variants.productGroupID)
 		+ axes.map((axis) => meta('variesBy', SCHEMA + axis)).join('')
 		/* an unknown axis is dropped — say so, for the same reason the block-level skip does */
 		+ (axes.length < wanted.length ? `<!-- variesBy axes ignored: not one of ${VARIANT_AXES.join(', ')} -->` : '')
-		+ `<ul data-part="list">${variants.items.map(variantItem).join('')}</ul>`;
+		+ (control === 'buttons'
+			? `<fieldset class="ui-button-group" data-variant="rounded">${variants.items.map((item, index) => variantButton(item, index, group)).join('')}</fieldset>`
+			: `<ul data-part="list">${variants.items.map(variantItem).join('')}</ul>`);
 };
 
 /* leading year of an ISO date — "since 2023" in a series meta row */
@@ -1138,7 +1177,7 @@ const DETAILS = {
 		   HOST's itemscope. Skipping stays visible. Docs: docs/schema.md § Product */
 		if (d.variants?.items?.length) {
 			html += itemtype === 'ProductGroup'
-				? variantsPart(d.variants)
+				? variantsPart(d.variants, fields)
 				: '<!-- variants ignored: itemtype did not resolve to ProductGroup -->';
 		}
 		return html;

@@ -1,0 +1,94 @@
+{
+  "$schema": "../../../cms/baseline/models/card.schema.json",
+  "id": "product-onyx",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-08-15T09:00:00Z",
+    "updatedAt": "2026-08-15T09:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Commerce"
+  },
+  "fields": {
+    "internalName": "Demo — Persistence Silk Gown, Onyx Deco",
+    "schemaType": "product",
+    "preset": {
+      "$ref": "card-preset/product-page"
+    },
+    "eyebrow": "Dresses",
+    "headline": "Persistence Silk Gown — Onyx Deco",
+    "summary": "Art-deco fans in silver on black silk — the evening version of the Persistence cut.",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/silkgown-onyx.png",
+        "alt": "Persistence Silk Gown in Onyx Deco, full length"
+      },
+      {
+        "mediaType": "image",
+        "src": "/assets/images/silkgown-onyx-2.png",
+        "alt": "Persistence Silk Gown in Onyx Deco, bodice and neckline"
+      },
+      {
+        "mediaType": "image",
+        "src": "/assets/images/silkgown-onyx-3.png",
+        "alt": "Persistence Silk Gown in Onyx Deco, hem and train"
+      }
+    ],
+    "furniture": {
+      "lightbox": {
+        "label": "View the Onyx Deco gallery"
+      }
+    },
+    "details": {
+      "subtype": "ProductGroup",
+      "price": {
+        "current": 249,
+        "currency": "USD"
+      },
+      "availability": "In stock",
+      "rating": {
+        "value": 4.7,
+        "count": 312,
+        "max": 5
+      },
+      "variants": {
+        "control": "buttons",
+        "variesBy": [
+          "size"
+        ],
+        "productGroupID": "PSG-ONX",
+        "items": [
+          {
+            "name": "Persistence Silk Gown — Onyx Deco, S",
+            "sku": "PSG-ONX-S",
+            "size": "S",
+            "color": "Onyx Deco",
+            "price": 249,
+            "currency": "USD"
+          },
+          {
+            "name": "Persistence Silk Gown — Onyx Deco, M",
+            "sku": "PSG-ONX-M",
+            "size": "M",
+            "color": "Onyx Deco",
+            "price": 249,
+            "currency": "USD"
+          },
+          {
+            "name": "Persistence Silk Gown — Onyx Deco, L",
+            "sku": "PSG-ONX-L",
+            "size": "L",
+            "color": "Onyx Deco",
+            "price": 249,
+            "currency": "USD"
+          }
+        ]
+      }
+    },
+    "tags": [
+      "Silk",
+      "Eveningwear"
+    ]
+  }
+}

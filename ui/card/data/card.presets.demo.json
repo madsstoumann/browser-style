@@ -326,6 +326,16 @@
       "media-open": "axis(y) nav(mrk) mrk(tmb) mrk(rail)",
       "content": "scl(lg)"
     },
+    "product-page": {
+      "name": "Product Page",
+      "description": "Full product view — square carousel with the axis(y) thumbnail rail beside it and a lightbox; media beside the text column from the lg tier",
+      "element": "ui-card",
+      "variant": "col lg:row lg:spl(1/1)",
+      "media": "asr(1/1) rds(lg) clip axis(y) nav(mrk) mrk(tmb) mrk(rail) mrk(lg) tmb(1/1) lightbox(bs)",
+      "media-open": "nav(mrk) mrk(tmb) mrk(blw) mrk(lg)",
+      "content": "scl(lg)",
+      "headingTag": "h2"
+    },
     "carousel-row": {
       "name": "Carousel Row",
       "description": "Carousel as the media half of a row card",
