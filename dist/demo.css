@@ -7682,7 +7682,9 @@
     &:where([variant~=cards]) {
       --ui-marquee-font-weight: inherit;
       --ui-marquee-item-size: 20rem;
-      --ui-marquee-padding-block: var(--spacing-sm, 0.5rem);
+      --ui-marquee-padding-block: var(--spacing-md, 1rem);
+      --ui-marquee-padding-inline: var(--spacing-md, 1rem);
+      --ui-marquee-gap: var(--spacing-xl, 2rem);
       align-items: stretch;
       contain: paint;
       user-select: auto;
@@ -9689,6 +9691,7 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
     grid-auto-flow: column;
     & label {
       --button-bg: transparent;
+      --input-fs: 1em;
       align-content: center;
       grid-template-columns: 1fr;
       text-align: center;
@@ -12924,6 +12927,21 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
   }
   :where([variant~="bdr(drk)"]) {
     --ui-card-border-color: color-mix(in srgb, var(--color-text) 30%, transparent);
+  }
+  :where([variant~="shd(non)"]) {
+    --ui-card-shadow: none;
+  }
+  :where([variant~="shd(sm)"]) {
+    --ui-card-shadow: var(--shadow-sm);
+  }
+  :where([variant~="shd(md)"]) {
+    --ui-card-shadow: var(--shadow-md);
+  }
+  :where([variant~="shd(lg)"]) {
+    --ui-card-shadow: var(--shadow-lg);
+  }
+  :where([variant~="shd(xl)"]) {
+    --ui-card-shadow: var(--shadow-xl);
   }
   :where([variant~=row], [variant~=row-r]) {
     --ui-card-cols: var(--ui-card-split, 1fr 1fr);

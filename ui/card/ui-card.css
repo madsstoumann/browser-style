@@ -71,6 +71,14 @@
 	:where([variant~="bdr(lgt)"]) { --ui-card-border-color: color-mix(in srgb, var(--color-border), transparent 50%); }
 	:where([variant~="bdr(drk)"]) { --ui-card-border-color: color-mix(in srgb, var(--color-text) 30%, transparent); }
 
+	/* === ELEVATION — shd(); the no-token default is --shadow-xl. A card used as a PAGE
+	   surface (not a tile in a grid) wants shd(non) so it stops reading as a card. === */
+	:where([variant~="shd(non)"]) { --ui-card-shadow: none; }
+	:where([variant~="shd(sm)"])  { --ui-card-shadow: var(--shadow-sm); }
+	:where([variant~="shd(md)"])  { --ui-card-shadow: var(--shadow-md); }
+	:where([variant~="shd(lg)"])  { --ui-card-shadow: var(--shadow-lg); }
+	:where([variant~="shd(xl)"])  { --ui-card-shadow: var(--shadow-xl); }
+
 	/* === ARRANGEMENT — col (default) / row / col-r / row-r + spl() === */
 	:where([variant~="row"], [variant~="row-r"]) {
 		--ui-card-cols: var(--ui-card-split, 1fr 1fr);

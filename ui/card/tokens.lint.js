@@ -216,7 +216,11 @@ const OPEN_STEMS = /^(?:md:|lg:)?(?:asr|spl|auto|tmb)\([\d/.:a-z%]+\)$/;
 const PART_VARIANTS = {
 	quote: new Set(['bigquote', 'breaker', 'code']),
 	accordion: new Set(['bordered', 'divided', 'rounded', 'pill', 'separate', 'filled']),
-	buttonGroup: new Set(['inline', 'rounded', 'border', 'outline'])
+	buttonGroup: new Set(['inline', 'rounded', 'border', 'outline']),
+	/* the control's other two axes are its own documented API, not card DSL: font-size
+	   utilities from base, and the shared nine-hue theme axis with pale/muted */
+	buttonGroupSize: new Set(['fs-xxs', 'fs-xs', 'fs-sm', 'fs-md', 'fs-lg']),
+	buttonGroupTheme: new Set(['red', 'orange', 'green', 'blue', 'accent', 'black', 'white', 'gray', 'slate', 'pale', 'muted'])
 };
 const lintPresets = (manifest, errors) => {
 	const valid = {};

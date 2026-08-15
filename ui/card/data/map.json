@@ -13,7 +13,7 @@
     "internalName": "Demo — Map",
     "schemaType": "location",
     "preset": {
-      "$ref": "card-preset/stack"
+      "$ref": "card-preset/map"
     },
     "eyebrow": "Find us",
     "headline": "Nordhavn Studio",

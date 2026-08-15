@@ -49,8 +49,12 @@
 		&:where([variant~="cards"]) {
 			--ui-marquee-font-weight: inherit;
 			--ui-marquee-item-size: 20rem;
-			/* room for the cards' own box-shadow — overflow: hidden clips it otherwise */
-			--ui-marquee-padding-block: var(--spacing-sm, 0.5rem);
+			/* room for the cards' own box-shadow on BOTH axes — `contain: paint` clips to
+			   the padding box, so with none the shadow is shaved off the strip's edges */
+			--ui-marquee-padding-block: var(--spacing-md, 1rem);
+			--ui-marquee-padding-inline: var(--spacing-md, 1rem);
+			/* cards need more air between them than text runs do */
+			--ui-marquee-gap: var(--spacing-xl, 2rem);
 			align-items: stretch;
 			/* block children escape `overflow` and push the PAGE sideways under
 			   reduced motion (where the strip becomes a scroller). Docs: readme.md § Cards */

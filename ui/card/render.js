@@ -1121,6 +1121,10 @@ const variantButton = (item, index, group) => {
    spelling from its own demo. Override per preset with parts.buttonGroup, which
    tokens.lint.js validates against that package's vocabulary. */
 const BUTTON_GROUP_VARIANT = 'inline rounded border';
+/* the control is sized by font-size and coloured by data-theme — its own documented API
+   (../button-group/readme.md), so the preset reaches both instead of a page stylesheet.
+   The size lands in a CLASS, so it is allowlisted rather than interpolated. */
+const BUTTON_GROUP_SIZES = new Set(['fs-xxs', 'fs-xs', 'fs-sm', 'fs-md', 'fs-lg']);
 const VARIANT_CONTROLS = new Set(['list', 'buttons', 'collage']);
 /* a collage is the one control with a DATA precondition: every variant needs its own
    image, because the tiles ARE the images. One missing image falls back to the list
@@ -1141,7 +1145,11 @@ const variantsPart = (variants, fields, parts = {}) => {
 		+ (axes.length < wanted.length ? `<!-- variesBy axes ignored: not one of ${VARIANT_AXES.join(', ')} -->` : '')
 		+ (isCollage(variants) ? ''
 			: control === 'buttons'
-				? `<fieldset class="ui-button-group fs-sm"${attrs({ 'data-variant': parts.buttonGroup || BUTTON_GROUP_VARIANT })}>${variants.items.map((item, index) => variantButton(item, index, group)).join('')}</fieldset>`
+				? `<fieldset${attrs({
+					class: `ui-button-group ${BUTTON_GROUP_SIZES.has(parts.buttonGroupSize) ? parts.buttonGroupSize : 'fs-sm'}`,
+					'data-variant': parts.buttonGroup || BUTTON_GROUP_VARIANT,
+					'data-theme': parts.buttonGroupTheme || null
+				})}>${variants.items.map((item, index) => variantButton(item, index, group)).join('')}</fieldset>`
 				: `<ul data-part="list">${variants.items.map(variantItem).join('')}</ul>`);
 };
 
@@ -1150,7 +1158,7 @@ const variantsPart = (variants, fields, parts = {}) => {
    The LOOK is the preset's (`variants.tile` / `variants.layout`, read in buildMedia,
    the one place holding both the preset and the variant data).
    Docs: docs/schema.md § Product */
-const COLLAGE_TILE = { variant: 'rds(non)', media: 'asr(1/1) chip(bs) chip(green) chip(pale)', content: 'pad(none)' };
+const COLLAGE_TILE = { variant: 'rds(non)', media: 'asr(1/1) chip(bs) chip(blue) chip(pale) chip(sm)', content: 'pad(none)' };
 const COLLAGE_LAYOUT = { xs: 'cg(2xs) rg(2xs)', md: 'columns(2)' };
 
 /* the accessible name says which variant the tile selects — the axis value carries that

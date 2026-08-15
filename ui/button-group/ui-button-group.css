@@ -16,6 +16,11 @@
 		grid-auto-flow: column;
 		& label {
 			--button-bg: transparent;
+			/* base/button.css sizes every button from --input-fs, an ABSOLUTE 1rem, which
+			   cut the segments loose from the group: setting font-size on the fieldset
+			   moved the padding (em-based) but never the text. Relative here, so the
+			   documented "size the whole control with font-size" is actually true. */
+			--input-fs: 1em;
 			align-content: center;
 			grid-template-columns: 1fr;
 			text-align: center;

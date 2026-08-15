@@ -91,7 +91,7 @@
 	</ui-marquee>
 
 	<h2>Seamless testimonial cards</h2>
-	<p><code>variant="cards seam fade" style="--ui-marquee-item-size:22rem;--ui-marquee-visible:3"</code></p>
+	<p><code>variant="cards seam fade" direction="right" style="--ui-marquee-item-size:22rem;--ui-marquee-visible:3"</code></p>
 	<p>
 		<code>cards</code> switches the item shape: instead of a <code>max-content</code> nowrap text run,
 		each direct child becomes a <strong>fixed track cell</strong> that wraps normally. It deliberately
@@ -104,7 +104,7 @@
 		<code>Review</code> of an <code>Organization</code>, which is what a testimonial is in schema.org
 		(there is no <code>Testimonial</code> type). Full microdata, no type chip, no per-card style.
 	</p>
-	<ui-marquee variant="cards seam fade" speed="slow" style="--ui-marquee-item-size:22rem;--ui-marquee-visible:3;">
+	<ui-marquee variant="cards seam fade" direction="right" speed="slow" style="--ui-marquee-item-size:22rem;--ui-marquee-visible:3;">
 		<ui-card variant="col" itemscope itemtype="https://schema.org/Review">
 			<cq-box>
 				<ui-content>

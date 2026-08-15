@@ -147,11 +147,12 @@ sit on. Notes below each table carry the per-token caveats.
 
 ## `variant=`
 
-11 stems · 8 bare flags
+12 stems · 8 bare flags
 
 | token | axis | args | aliases | bare | writes | md:/lg: | hosts | requiresJs | deprecated |
 |---|---|---|---|---|---|---|---|---|---|
 | `rds()` | corners | **size** non sm md lg xl 2xl full pill sm-sq md-sq lg-sq xl-sq | — | — | --ui-card-radius --ui-card-squircle-exp | — | ui-card ui-reveal | — | — |
+| `shd()` | elevation | **size** non sm md lg xl | — | — | --ui-card-shadow | — | ui-card ui-reveal | — | — |
 | `bdr()` | border | **size** sm md lg · **tone** lgt drk | — | yes | --ui-card-border-width --ui-card-border-color | — | ui-card ui-reveal | — | — |
 | `spl()` | split | **ratio** 1/1 1/2 2/1 1/3 3/1 | — | — | --ui-card-split | md: lg: (ratio) | ui-card ui-reveal | — | — |
 | `vis()` | visibility | **value** media content | — | — | — | md: lg: (value) | ui-card ui-reveal | — | — |
@@ -175,6 +176,9 @@ sit on. Notes below each table carry the per-token caveats.
 
 **`rds`** *(whole-matched)* — Arg rules are whole-token (~=); the SHAPE application is a separate SUBSTRING rule `:where(ui-card[variant*="-sq)"]) { corner-shape: superellipse(var(--ui-card-squircle-exp,1.8)) }` (ui/card/ui-card.css:80), mirrored on `ui-reveal[variant*="-sq)"] > details` (ui/reveal/ui-reveal.css:253) and on the exp-pop placeholder (ui/reveal/ui-reveal.css:296) — that is the only real property this token sets. Radius/exponent VALUES (--radius-*, --radius-*-sq, --squircle-*) live in ui/base/tokens.css; these rules only route an arg to a namespace. --ui-card-radius is also consumed by <ui-reveal>'s `> details` border-radius (ui/reveal/ui-reveal.css:74). The same scale exists on media= and content=; the rds(none) alias was removed in v5 on all three attributes — `non` is the only spelling. variant= is host-only by design — it arranges the two children, so there is no self arm on <ui-media>/<ui-content>.
 <sub>ui/card/ui-card.css:64 · ui/card/ui-card.css:65-71 · ui/card/ui-card.css:76-79 · ui/card/ui-card.css:80 · ui/reveal/ui-reveal.css:74 · ui/reveal/ui-reveal.css:253-255 · ui/reveal/ui-reveal.css:292 · ui/reveal/ui-reveal.css:296</sub>
+
+**`shd`** *(whole-matched)* — Card elevation. The no-token default is --shadow-xl; shd(non) removes it, for a card used as a page surface rather than a tile in a grid.
+<sub>ui/card/ui-card.css:76-80</sub>
 
 **`bdr`** *(substring-matched)* — The ENABLING rule is substring-matched (`:where([variant*="bdr"])`) and sets the `border` shorthand, so any bdr(...) arg alone also switches the border on; the arg rules themselves are whole-token (~=). --ui-card-border-style has no token (author-only). NOTE on <ui-reveal>: the rule's subject is the element carrying variant=, i.e. the <ui-reveal> host, whose own box has no background or radius (those live on `> details`), so the hairline paints as a SQUARE box around the rounded card. variant= is host-only by design — it arranges the two children, so there is no self arm on <ui-media>/<ui-content>.
 <sub>ui/card/ui-card.css:88-90 · ui/card/ui-card.css:91-93 · ui/card/ui-card.css:94-95</sub>
