@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/button-group",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "description": "CSS-first segmented control — a group of .ui-button labels in a fieldset",
   "type": "module",
   "style": "index.css",

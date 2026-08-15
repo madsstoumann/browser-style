@@ -307,14 +307,59 @@ would both need to follow.
 What it costs is one line of teachability — a reader of `card-preset.schema.json` cannot
 tell from `parts` alone which grammar a given part expects.
 
-**Related, and separately logged:** `ui/button-group` and `ui/highlight` have no
-`package.json` at all, so neither can be a declared peer of `ui/card` despite both being
-emitted by `render.js` — see the audit's § B1
-([`2026-08-15-v4-consistency-audit.md`](./2026-08-15-v4-consistency-audit.md)).
+**Related, and separately logged:** `ui/highlight` has no `package.json` at all, so it
+cannot be a declared peer of `ui/card` despite being emitted by `render.js` — see the
+audit's § B1 ([`2026-08-15-v4-consistency-audit.md`](./2026-08-15-v4-consistency-audit.md)).
+`ui/button-group` was the other half of that item and is now resolved: it ships a manifest
+at `4.1.0` and is a declared optional peer.
 
 ---
 
-## 8. Closed — `<ui-content>` → `<ui-text>` rename (decided against, 2026-08-03)
+## 8. `ui/base/button.css` spells its hover tokens two ways
+
+`button.css` exposes four hover-related custom properties, under **two conventions**:
+
+| Convention | Tokens |
+|---|---|
+| `--button-{prop}--hover` | `--button-bg--hover`, `--button-bxsh--hover`, `--button-c--hover` |
+| `--button-hover-{prop}` | `--button-hover-mix` |
+
+**This has already cost one bug.** `ui/button-group` set `--button-hover-bxsh: none` — a
+plausible reading of the second convention, and a token that does not exist — so the accent
+glow ring stayed live on every unchecked segment. Measured before the fix:
+`color(srgb 0 0.483334 1 / 0.25) 0 0 0 2.56px` where `none` was intended. Fixed at the call
+site in `ui/button-group@4.1.0`; the naming split that produced it is untouched.
+
+**The call to make:** settle on one convention — most likely `--button-{prop}--hover`, since
+three of the four already use it — and alias `--button-hover-mix`. It is a `bs-core` change
+with seven in-repo consumers that write these tokens: `ui/button-group`, `ui/reaction`,
+`ui/select`, `ui/notification`, `ui/toolbar`, `ui/play`, `ui/price-card`, `ui/video-embed`.
+Deliberately left out of the button-group pass, which fixed only the call site.
+
+---
+
+## 9. The card's button-group size seam still rides `fs-*`
+
+`render.js` sizes the product-page variant picker with a **class** —
+`class="ui-button-group fs-sm"`, from the `BUTTON_GROUP_SIZES` allowlist, mirrored in
+`tokens.lint.js`'s `PART_VARIANTS.buttonGroupSize` and reached from a preset via
+`parts.buttonGroupSize`. Since `4.1.0` the component has its own `size=` / `data-size=`
+ladder, on the same em rungs as `ui/chip` and `ui/beacon`.
+
+**Why the seam should move.** `fs-*` are CSS *absolute-size keywords*
+(`.fs-sm { font-size: small }`), so they do not compose: an `fs-sm` group measures 13px
+inside a 16px, a 24px and a 32px container alike. On the product page the ambient text is
+17.6px and the picker is pinned to 13px regardless. `size=` is `em`, so it tracks.
+
+**Why it did not move yet.** Repointing it touches `render.js`, `tokens.lint.js`,
+`card-preset.schema.json`, `render.test.js` and the four generated product pages — **and it
+visibly changes shipped output**: `sm` would render 11px (0.625 × 17.6) where it renders
+13px today. Which rung the preset should name is a design call, not a mechanical rename, so
+it wants its own sign-off. `fs-*` keeps working either way.
+
+---
+
+## 10. Closed — `<ui-content>` → `<ui-text>` rename (decided against, 2026-08-03)
 
 Recorded so it is not rediscovered as an open question. The proposal was to rename
 `<ui-content>` (the text area) to `<ui-text>`, recycle `<ui-content>` for the host, move
