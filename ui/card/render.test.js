@@ -1042,19 +1042,23 @@ describe('podcastseries — PodcastSeries', () => {
 });
 
 describe('comicseries — ComicSeries', () => {
-	const details = { issn: '2634-0011', startDate: '2026-08-01', publisher: 'Web Comics Group', cadence: 'Monthly', issueCount: 12 };
+	const details = {
+		issn: '2634-0011', startDate: '2026-08-01', publisher: 'Web Comics Group', cadence: 'Monthly', issueCount: 12,
+		issues: [{ issueNumber: 1, name: 'A New Hero', image: '/assets/images/cssman-cover-1.png', datePublished: '2026-08-01', artist: 'Milton Stanley', inker: 'Rosa Vega' }]
+	};
 	const card = (extra = {}) => render({ schemaType: 'comicseries', headline: 'CSS Man', details: { ...details, ...extra } });
 
 	/* Same trap as PodcastSeries: numberOfEpisodes' domain is CreativeWorkSeason /
 	   RadioSeries / TVSeries / VideoGameSeries, and ComicSeries is in none of them.
-	   Unlike PodcastSeries this card also carries no hasPart list, so "12 issues" has
-	   NO machine counterpart — the prose is the only statement of it. Docs: docs/schema.md */
-	test('the issue count is prose, and has no machine counterpart at all', () => {
+	   And unlike PodcastSeries, hasPart here is a SAMPLE (1 row for a 12-issue run), so
+	   cardinality is not the count either — the prose is the only statement of it. */
+	test('the issue count is prose, and hasPart cardinality is not it', () => {
 		const html = card();
 		assert.match(html, /itemtype="https:\/\/schema\.org\/ComicSeries"/);
 		assert.ok(!html.includes('numberOfEpisodes'), 'ComicSeries is not in that property’s domain');
 		assert.ok(!html.includes('numberOfIssues'), 'and no such property exists at all');
 		assert.match(html, /<p data-part="meta">Monthly · 12 issues since 2026 · ISSN 2634-0011<\/p>/);
+		assert.equal((html.match(/itemprop="hasPart"/g) || []).length, 1, 'one sample row, not the whole run');
 	});
 
 	/* issn, startDate and endDate all arrive from CreativeWorkSeries — issn's domain is
@@ -1065,17 +1069,30 @@ describe('comicseries — ComicSeries', () => {
 		assert.match(card(), /<p data-part="meta" itemprop="publisher" itemscope itemtype="https:\/\/schema\.org\/Organization">Published by <span itemprop="name">Web Comics Group<\/span><\/p>/);
 	});
 
-	/* The card does not enumerate issues — the covers in the media frame are the
-	   inventory. With no ComicIssue scope, the five comic-specific credits have nowhere
-	   to live: all of artist/penciler/inker/letterer/colorist are ComicIssue's, and none
-	   is a ComicSeries property. This test pins that as a decision, not an omission. */
-	test('no hasPart list, and therefore no ComicIssue scope or credits', () => {
-		const html = card({ issues: [{ issueNumber: 1, name: 'A New Hero', artist: 'Milton Stanley' }] });
-		assert.ok(!html.includes('hasPart'), 'the issue list is deliberately not rendered');
-		assert.ok(!html.includes('ComicIssue'), 'so no ComicIssue scope is emitted');
-		for (const role of ['artist', 'penciler', 'inker', 'letterer', 'colorist']) {
-			assert.ok(!html.includes(`itemprop="${role}"`), `${role} is a ComicIssue property with nowhere to live here`);
+	/* The five credits are ComicIssue's own properties — a ComicSeries has none of them,
+	   so the sample row is the only place they can live, and the only thing that gives
+	   the artist card something to be pointed at. */
+	test('the credits ride the hasPart row, one Person scope per filled role', () => {
+		const html = card();
+		assert.match(html, /<li itemprop="hasPart" itemscope itemtype="https:\/\/schema\.org\/ComicIssue">/);
+		assert.match(html, /<span itemprop="artist" itemscope itemtype="https:\/\/schema\.org\/Person"><span itemprop="name">Milton Stanley<\/span><\/span>/);
+		assert.match(html, /<span itemprop="inker" itemscope itemtype="https:\/\/schema\.org\/Person"><span itemprop="name">Rosa Vega<\/span><\/span>/);
+		/* absent roles emit nothing at all — never an empty scope */
+		for (const role of ['penciler', 'letterer', 'colorist']) {
+			assert.ok(!html.includes(`itemprop="${role}"`), `an unfilled ${role} must not emit an empty scope`);
 		}
+	});
+
+	/* the sample row carries its own cover: the media frame shows both covers as images
+	   of the SERIES, which says nothing about which cover belongs to which issue */
+	test('the issue row carries its own image', () => {
+		assert.match(card(), /<meta itemprop="image" content="\/assets\/images\/cssman-cover-1\.png">/);
+	});
+
+	/* issues ASCEND, so an ordinal marker is true — the opposite of a podcast feed */
+	test('the issue list is ordered by default, and the switch is data', () => {
+		assert.match(card(), /<ol data-part="list"><li itemprop="hasPart"/);
+		assert.match(card({ ordered: false }), /<ul data-part="list"><li itemprop="hasPart"/);
 	});
 });
 

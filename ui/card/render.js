@@ -562,6 +562,17 @@ const creditsPart = (d) =>
 	(d.director?.name ? `<p data-part="meta"${scope('director', 'Person')}>${esc(d.director.label || 'Director:')} <span itemprop="name">${esc(d.director.name)}</span></p>` : '')
 	+ (d.actors?.length ? `<p data-part="meta">Starring: ${d.actors.map((name) => `<span${scope('actor', 'Person')}><span itemprop="name">${esc(name)}</span></span>`).join(', ')}</p>` : '');
 
+/* comic credits — one Person scope per filled role. All five are ComicIssue's OWN
+   properties: a ComicSeries has none of them, which is why they ride the hasPart rows
+   rather than the card root. Order is the masthead order, not alphabetical.
+   Docs: docs/schema.md § Comic series */
+const COMIC_ROLES = [['artist', 'Art'], ['penciler', 'Pencils'], ['inker', 'Inks'], ['letterer', 'Letters'], ['colorist', 'Colours']];
+const comicCredits = (issue) => {
+	const rows = COMIC_ROLES.filter(([key]) => issue[key])
+		.map(([key, label]) => `${label} <span${scope(key, 'Person')}><span itemprop="name">${esc(issue[key])}</span></span>`);
+	return rows.length ? ` <small>${rows.join(' · ')}</small>` : '';
+};
+
 /* quote part via @browser.style/quote — variant on the <ui-quote> wrapper styles it, data-part stays the card hook */
 const quotePart = (text, { itemprop = 'text', variant = null, cite = null } = {}) =>
 	`<ui-quote data-part="quote"${attrs({ variant })}><blockquote itemprop="${esc(itemprop)}"><q>${esc(text)}</q>${cite ? `<cite>${esc(cite)}</cite>` : ''}</blockquote></ui-quote>`;
@@ -2025,14 +2036,16 @@ const DETAILS = {
 		].filter(Boolean).join(' · ');
 		if (bits) html += `<p data-part="meta">${bits}</p>`;
 		if (d.publisher) html += `<p data-part="meta"${scope('publisher', 'Organization')}>Published by <span itemprop="name">${esc(d.publisher)}</span></p>`;
-		/* Deliberately NO hasPart → ComicIssue list: the covers in the media frame are the
-		   card's inventory of issues, and a numbered list under them only restated it. The
-		   cost is real and worth knowing — with no hasPart, the issue count has no machine
-		   answer at all (there is no count property either), and the comic-specific credits
-		   `artist`/`penciler`/`inker`/`letterer`/`colorist` have nowhere to live, since all
-		   five are ComicIssue's and none is a ComicSeries property.
-		   Docs: docs/schema.md § Comic series */
-		return html;
+		/* hasPart → ComicIssue is a SAMPLE, not the run: the card lists the current issue,
+		   because the five comic credits are ComicIssue's own properties and a ComicSeries
+		   carries none of them — one row is what gives them somewhere to live, and gives
+		   the artist card something to be pointed at. hasPart makes no completeness claim,
+		   so listing 1 of 12 is honest; it just means cardinality is NOT the issue count.
+		   Ordered by default: issues ascend, so an ordinal marker is true (a podcast feed
+		   descends, hence its `<ul>`). Docs: docs/schema.md § Comic series */
+		return html + scopedList((d.issues || []).map((issue) =>
+			`<li${scope('hasPart', 'ComicIssue')}>${meta('issueNumber', issue.issueNumber)}${meta('datePublished', issue.datePublished)}${meta('image', issue.image)}<span itemprop="name">${esc(issue.name)}</span>${comicCredits(issue)}</li>`
+		), d.ordered ?? true);
 	},
 
 	/* A Person who makes things. The jobTitle · worksFor row is profile's, shared through
