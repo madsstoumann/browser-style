@@ -998,8 +998,66 @@ describe('music — MusicAlbum', () => {
 	});
 
 	test('tracks are MusicRecording rows in an ordered list', () => {
-		assert.match(card(), /<ol data-part="list"><li itemprop="track" itemscope itemtype="https:\/\/schema\.org\/MusicRecording"><meta itemprop="position" content="1"><meta itemprop="duration" content="PT4M12S"><span itemprop="name">Slow Weather<\/span> <small>4:12<\/small><\/li>/);
+		assert.match(card(), /<ol data-part="list"><li itemprop="track" itemscope itemtype="https:\/\/schema\.org\/MusicRecording"><meta itemprop="position" content="1"><meta itemprop="duration" content="PT4M12S"><span itemprop="byArtist" itemscope itemtype="https:\/\/schema\.org\/MusicGroup" hidden><meta itemprop="name" content="Halvmørke"><\/span><span itemprop="name">Slow Weather<\/span> <small>4:12<\/small><\/li>/);
 		assert.ok(!card().includes('itemprop="tracks"'), 'the superseded spelling');
+	});
+
+	/* JSON-LD gives every track a byArtist by referencing the album's artist with `@id`;
+	   microdata has no reference-by-id for a property VALUE, so the group is restated. */
+	test('every track carries byArtist — the album artist, or its own', () => {
+		assert.equal(card().match(/itemprop="byArtist"/g).length, 3, 'the subheadline plus one per track');
+		const guest = card({ tracks: [{ name: 'Kastellet', artist: 'Ida Krogh & Kvartetten' }] });
+		assert.match(guest, /<span itemprop="byArtist" itemscope itemtype="https:\/\/schema\.org\/MusicGroup" hidden><meta itemprop="name" content="Ida Krogh &amp; Kvartetten"><\/span>/, 'a track artist overrides the album one, escaped');
+		assert.ok(!guest.includes('>Ida Krogh &amp; Kvartetten<'), 'machine-only — it is not written into the visible row');
+		assert.ok(!render({ schemaType: 'music', headline: 'X', details: { tracks: [{ name: 'T' }] } }).includes('byArtist'), 'no artist anywhere, no empty scope');
+	});
+
+	test('artistUrl links the album back to its band', () => {
+		assert.match(card({ artistUrl: '#schema-musicgroup' }), /itemprop="byArtist"[^>]*><a itemprop="url" href="#schema-musicgroup"><span itemprop="name">Halvmørke<\/span><\/a>/);
+		assert.ok(!card().includes('itemprop="url"'), 'no link without it');
+	});
+});
+
+/* MusicGroup ⊂ PerformingGroup ⊂ Organization — `album` and `genre` are its own, the
+   rest is inherited. Docs: docs/schema.md § Band */
+describe('musicgroup — MusicGroup', () => {
+	const band = (details = {}) => render({
+		schemaType: 'musicgroup', eyebrow: 'Dream pop', headline: 'Halvmørke',
+		details: {
+			genres: ['Shoegaze'], foundingDate: '2019', foundingLocation: 'Copenhagen',
+			members: [{ role: 'Vocals', name: 'Ida Krogh' }],
+			albums: [{ name: 'Slow Weather', datePublished: '2026-04-17', numTracks: 4, url: '#schema-music', display: 'EP · 2026' }],
+			sameAs: ['https://halvmorke.bandcamp.example'], ...details
+		}
+	});
+
+	test('emits MusicGroup with the founding pair and the extra genres', () => {
+		assert.match(band(), /itemtype="https:\/\/schema\.org\/MusicGroup"/);
+		assert.match(band(), /<small data-part="eyebrow" itemprop="genre">Dream pop<\/small>/, 'the primary genre is the eyebrow');
+		assert.match(band(), /<meta itemprop="genre" content="Shoegaze">/, 'the rest are machine-only — genre is multi-valued');
+		assert.match(band(), /<meta itemprop="foundingDate" content="2019">/);
+		assert.match(band(), /<span itemprop="foundingLocation" itemscope itemtype="https:\/\/schema\.org\/Place" hidden><meta itemprop="name" content="Copenhagen"><\/span>/);
+		assert.match(band(), /<p data-part="meta">Formed in Copenhagen, 2019<\/p>/);
+		assert.match(band(), /<meta itemprop="sameAs" content="https:\/\/halvmorke\.bandcamp\.example">/);
+	});
+
+	test('members use `member`, with the instrument outside the Person scope', () => {
+		assert.match(band(), /<p data-part="meta">Vocals <span itemprop="member" itemscope itemtype="https:\/\/schema\.org\/Person"><span itemprop="name">Ida Krogh<\/span><\/span><\/p>/);
+		assert.ok(!band().includes('musicGroupMember') && !band().includes('itemprop="members"'), 'both superseded spellings');
+		assert.ok(!band({ members: [{ role: 'Vocals' }] }).includes('itemprop="member"'), 'a nameless member is not a member');
+	});
+
+	test('the discography is descending, so unordered, and each album can link out', () => {
+		assert.match(band(), /<ul data-part="list"><li itemprop="album" itemscope itemtype="https:\/\/schema\.org\/MusicAlbum"><meta itemprop="datePublished" content="2026-04-17"><meta itemprop="numTracks" content="4"><a itemprop="url" href="#schema-music"><span itemprop="name">Slow Weather<\/span><\/a> <small>EP · 2026<\/small><\/li><\/ul>/);
+		assert.ok(!band().includes('itemprop="albums"'), 'the superseded spelling');
+		assert.match(band({ albums: [{ name: 'Nattevagt' }] }), /<li itemprop="album"[^>]*><span itemprop="name">Nattevagt<\/span><\/li>/, 'no url, no anchor');
+		assert.match(band({ ordered: true }), /<ol data-part="list"><li itemprop="album"/, 'an ascending discography opts in');
+	});
+
+	test('escapes hostile input', () => {
+		const html = band({ foundingLocation: '"><img src=x onerror=alert(1)>', members: [{ role: '<b>x</b>', name: '<script>alert(1)</script>' }] });
+		assert.ok(!html.includes('<script>') && !html.includes('<img') && !html.includes('<b>'), 'no raw markup reaches output');
+		assert.match(html, /&lt;script&gt;alert\(1\)&lt;\/script&gt;/, 'the name still renders, escaped');
 	});
 });
 
@@ -1650,10 +1708,10 @@ describe('one property, one value', () => {
 	   any property repeating on one item that is not declared multi-value here is a
 	   collision between two emitters, which is what went wrong twice. */
 	const REPEATABLE = new Set([
-		'actor', 'amenityFeature', 'author', 'availableLanguage', 'containsSeason', 'dayOfWeek',
-		'department', 'distribution', 'hasDefinedTerm', 'hasMenuItem', 'hasMenuSection', 'hasPart',
+		'actor', 'album', 'amenityFeature', 'author', 'availableLanguage', 'containsSeason', 'dayOfWeek',
+		'department', 'distribution', 'genre', 'hasDefinedTerm', 'hasMenuItem', 'hasMenuSection', 'hasPart',
 		'hasTierBenefit', 'hasTiers', 'hasVariant', 'image', 'interactionStatistic', 'itemListElement',
-		'keywords', 'knowsAbout', 'mainEntity', 'offers', 'openingHours', 'openingHoursSpecification',
+		'keywords', 'knowsAbout', 'mainEntity', 'member', 'offers', 'openingHours', 'openingHoursSpecification',
 		'operatingSystem', 'recipeIngredient', 'sameAs', 'signOrSymptom', 'step', 'subEvent',
 		'suggestedAnswer', 'suitableForDiet', 'supply', 'track', 'variableMeasured', 'variesBy', 'video'
 	]);

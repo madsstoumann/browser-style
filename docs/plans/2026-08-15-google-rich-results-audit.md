@@ -45,14 +45,14 @@ console.log(new Set(Object.values(SCHEMA_TYPES)).size)"   # → 48
 
 ## 1. The headline answer
 
-Of **48 distinct itemtypes** across 49 `schemaType` keys (`profile` and `artist` both resolve
+Of **49 distinct itemtypes** across 50 `schemaType` keys (`profile` and `artist` both resolve
 to `Person`):
 
 | Bucket | Count | Meaning |
 |---|---|---|
 | **Live** | ~18 | A Google feature exists today and this type is its subject |
 | **Withdrawn** | 7 | A feature existed and Google retired or narrowed it |
-| **None** | ~23 | Valid schema.org, no Google feature ever |
+| **None** | ~24 | Valid schema.org, no Google feature ever |
 
 The counts are approximate *because* of the ⚠ rows — several types sit on a Live/None boundary
 that only the live gallery can settle (`SoftwareApplication`, `Book`, `MusicAlbum`, `TVSeries`,
@@ -175,6 +175,7 @@ off the page without asking whether Google would have drawn a box around it.
 | `Menu` | `menu` | Feeds local-business context, not its own result | ⚠ |
 | `MedicalWebPage` | `medical` | — | ⚠ |
 | `MusicAlbum` | `music` | Music actions exist for approved partners; not a general result | ⚠ |
+| `MusicGroup` | `musicgroup` | Same as `MusicAlbum` — artist/band knowledge-panel data comes from approved music partners, not from page markup | ⚠ |
 | `PodcastEpisode` | `podcast` | — | ⚠ |
 | `PodcastSeries` | `podcastseries` | — | ⚠ |
 | `TVSeries` | `tvseries` | Watch actions exist for approved partners; not a general result | ⚠ |

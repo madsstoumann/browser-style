@@ -70,7 +70,10 @@ const PAIRS = [
 	['TVSeries', 'ui/card/data/tvseries.json'],
 	['TVEpisode', 'ui/card/data/tvepisode.json'],
 	['MedicalWebPage', 'ui/card/data/medical.json'],
-	['MusicAlbum', 'ui/card/data/music.json'],
+	/* the album is keyed by id, not bare: the bare form requires a card with NO id=, and
+	   this one's id is the band card's discography link target */
+	['MusicAlbum#schema-music', 'ui/card/data/music.json'],
+	['MusicGroup#schema-musicgroup', 'ui/card/data/musicgroup.json'],
 	['DefinedTermSet', 'ui/card/data/glossary.json'],
 	['PodcastSeries', 'ui/card/data/podcastseries.json'],
 	/* only one ComicSeries on the page, but it still matches by id: the bare form requires

@@ -76,6 +76,7 @@ export const SCHEMA_TYPES = {
 	tvepisode: 'TVEpisode',
 	medical: 'MedicalWebPage',
 	music: 'MusicAlbum',
+	musicgroup: 'MusicGroup',
 	glossary: 'DefinedTermSet',
 	podcastseries: 'PodcastSeries',
 	comicseries: 'ComicSeries',
@@ -186,7 +187,7 @@ const SUMMARY_PROP = { review: 'reviewBody', quote: 'text', announcement: 'text'
    owns it: job's eyebrow is display text, `industry` is details.industry. Docs: schema.md § Job.
    Exported for render.test.js, which re-adds the removed `job: 'industry'` entry to prove the
    duplicate-property guard below still holds when this map grows. */
-export const EYEBROW_PROP = { article: 'articleSection', news: 'articleSection', product: 'category', recipe: 'recipeCategory', course: 'about', video: 'genre', movie: 'genre', book: 'genre', tvseries: 'genre', music: 'genre', comicseries: 'genre', comicissue: 'genre' };
+export const EYEBROW_PROP = { article: 'articleSection', news: 'articleSection', product: 'category', recipe: 'recipeCategory', course: 'about', video: 'genre', movie: 'genre', book: 'genre', tvseries: 'genre', music: 'genre', musicgroup: 'genre', comicseries: 'genre', comicissue: 'genre' };
 /* published itemprop: JobPosting/SpecialAnnouncement use datePosted, VideoObject uploadDate */
 const PUBLISHED_PROP = { job: 'datePosted', announcement: 'datePosted', video: 'uploadDate' };
 /* datePosted is typed Date, so a timestamp is out of range; uploadDate takes a DateTime */
@@ -1976,9 +1977,50 @@ const DETAILS = {
 			d.datePublishedDisplay ? `released ${esc(d.datePublishedDisplay)}` : null
 		].filter(Boolean).join(' · ');
 		if (bits) html += `<p data-part="meta">${bits}</p>`;
-		html += scopedList(tracks.map((track, index) =>
-			`<li${scope('track', 'MusicRecording')}>${meta('position', track.position ?? index + 1)}${meta('duration', track.duration)}<span itemprop="name">${esc(track.name)}</span>${track.durationDisplay ? ` <small>${esc(track.durationDisplay)}</small>` : ''}</li>`
-		), d.ordered ?? true);
+		/* byArtist on EVERY track, so each MusicRecording is a complete node rather than one
+		   that only makes sense read together with its album. JSON-LD does this with an `@id`
+		   reference back to the album's artist; microdata has no reference-by-id for a property
+		   VALUE, so the group is restated per row — invisibly, as a name-only scope. `artist`
+		   on a track overrides the album's, which is what a compilation or a guest feature
+		   needs; it is machine-only, so put it in the track NAME if it should also be read. */
+		html += scopedList(tracks.map((track, index) => {
+			const artist = track.artist ?? d.artist;
+			return `<li${scope('track', 'MusicRecording')}>${meta('position', track.position ?? index + 1)}${meta('duration', track.duration)}`
+				+ (artist ? `<span${scope('byArtist', 'MusicGroup')} hidden>${meta('name', artist)}</span>` : '')
+				+ `<span itemprop="name">${esc(track.name)}</span>${track.durationDisplay ? ` <small>${esc(track.durationDisplay)}</small>` : ''}</li>`;
+		}), d.ordered ?? true);
+		if (d.note) html += `<footer data-part="footer">${esc(d.note)}</footer>`;
+		return html;
+	},
+
+	/* MusicGroup ⊂ PerformingGroup ⊂ Organization, so the band's OWN vocabulary is just
+	   `album`, `genre` and `track`; `foundingDate`, `foundingLocation` and `member` all
+	   arrive from Organization and `sameAs` from Thing. Three superseded spellings sit next
+	   to the live ones and are never emitted: `albums`, `members` and `musicGroupMember`.
+	   Docs: docs/schema.md § Band */
+	musicgroup(d) {
+		/* the eyebrow already carries the PRIMARY genre (EYEBROW_PROP); `genres` holds the
+		   rest, machine-only — `genre` is multi-valued, so the repetition is the point */
+		let html = meta('foundingDate', d.foundingDate)
+			+ (d.genres || []).map((genre) => meta('genre', genre)).join('')
+			+ (d.sameAs || []).map((url) => meta('sameAs', url)).join('');
+		if (d.foundingLocation) html += `<span${scope('foundingLocation', 'Place')} hidden>${meta('name', d.foundingLocation)}</span>`;
+		/* escaped per component — the join must not be re-escaped */
+		const year = d.foundingDateDisplay || startYear(d.foundingDate);
+		const formed = [d.foundingLocation ? `Formed in ${esc(d.foundingLocation)}` : null, year ? esc(year) : null].filter(Boolean).join(', ');
+		if (formed) html += `<p data-part="meta">${formed}</p>`;
+		/* one row of members, role label OUTSIDE the Person scope — the same shape
+		   comicCredits() uses, because the label is editorial and the name is the datum */
+		const members = (d.members || []).filter((member) => member?.name).map((member) =>
+			`${member.role ? `${esc(member.role)} ` : ''}<span${scope('member', 'Person')}><span itemprop="name">${esc(member.name)}</span></span>`);
+		if (members.length) html += `<p data-part="meta">${members.join(' · ')}</p>`;
+		/* discography, newest first — a descending list must NOT get ordinal markers */
+		html += scopedList((d.albums || []).map((album) => {
+			const name = `<span itemprop="name">${esc(album.name)}</span>`;
+			return `<li${scope('album', 'MusicAlbum')}>${meta('datePublished', album.datePublished)}${meta('numTracks', album.numTracks)}`
+				+ (album.url ? `<a itemprop="url" href="${esc(album.url)}">${name}</a>` : name)
+				+ `${album.display ? ` <small>${esc(album.display)}</small>` : ''}</li>`;
+		}), d.ordered ?? false);
 		if (d.note) html += `<footer data-part="footer">${esc(d.note)}</footer>`;
 		return html;
 	},
@@ -2122,8 +2164,12 @@ const SUBHEADLINE_SLOT = {
 	profile: personSubheadline,
 	/* an artist card IS a Person — the same row, shared rather than copied */
 	artist: personSubheadline,
+	/* `artistUrl` links the album to its band — the reciprocal of the MusicGroup card's
+	   `album` rows, and the closest microdata gets to JSON-LD's `@id` cross-reference */
 	music: (d, textTag) => d?.artist
-		? `<${textTag} data-part="subheadline"${scope('byArtist', 'MusicGroup')}><span itemprop="name">${esc(d.artist)}</span></${textTag}>`
+		? `<${textTag} data-part="subheadline"${scope('byArtist', 'MusicGroup')}>${d.artistUrl
+			? `<a itemprop="url" href="${esc(d.artistUrl)}"><span itemprop="name">${esc(d.artist)}</span></a>`
+			: `<span itemprop="name">${esc(d.artist)}</span>`}</${textTag}>`
 		: ''
 };
 

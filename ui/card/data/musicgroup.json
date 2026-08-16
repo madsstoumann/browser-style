@@ -1,0 +1,48 @@
+{
+  "$schema": "../../../cms/baseline/models/card.schema.json",
+  "id": "musicgroup-1",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-08-16T09:00:00Z",
+    "updatedAt": "2026-08-16T09:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Media"
+  },
+  "fields": {
+    "internalName": "Demo — Band",
+    "schemaType": "musicgroup",
+    "preset": { "$ref": "card-preset/stack-square" },
+    "eyebrow": "Dream pop",
+    "headline": "Halvmørke",
+    "summary": "Five players from the Copenhagen basement circuit, named for the hour when the light has gone but the dark has not arrived.",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/band_dreampop.png",
+        "alt": "Halvmørke — band portrait in violet light"
+      }
+    ],
+    "details": {
+      "genres": ["Shoegaze", "Ambient pop"],
+      "foundingDate": "2019",
+      "foundingLocation": "Copenhagen",
+      "members": [
+        { "role": "Vocals", "name": "Ida Krogh" },
+        { "role": "Guitar", "name": "Jonas Riis" },
+        { "role": "Guitar", "name": "Emil Damgaard" },
+        { "role": "Bass", "name": "Sanne Bech" },
+        { "role": "Drums", "name": "Villads Toft" }
+      ],
+      "albums": [
+        { "name": "Slow Weather", "datePublished": "2026-04-17", "numTracks": 4, "url": "#schema-music", "display": "EP · 2026" },
+        { "name": "Nattevagt", "datePublished": "2023-09-01", "numTracks": 9, "display": "LP · 2023" }
+      ],
+      "sameAs": [
+        "https://halvmorke.bandcamp.example",
+        "https://instagram.com/halvmorke"
+      ]
+    },
+    "tags": ["Dream pop", "Copenhagen"]
+  }
+}

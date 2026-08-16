@@ -5,39 +5,40 @@
 > per-type notes and the structured-part vocabulary used to live inline on that page; they moved
 > here so the demo stays one card grid.
 
-**Four counts, four different quantities — do not conflate them.** The page carries **53
-cards** with **48 distinct root itemtypes**; a structured-data validator reports **55 items**;
-the renderer knows **46 `schemaType` keys**.
+**Four counts, four different quantities — do not conflate them.** The page carries **57
+cards** with **51 distinct root itemtypes**; a structured-data validator reports **59 items**;
+the renderer knows **50 `schemaType` keys**.
 
 | Count | What it measures | Reproduce it |
 |---|---|---|
-| **53** | card hosts on the page — `<ui-card>` plus the one `<ui-reveal>` | `grep -oE '<ui-(card\|reveal)[^>]*itemtype="[^"]*"' ui/card/demo/schema.html \| grep -vc 'itemprop='` |
-| **55** | top-level microdata items — **what schema.org's validator reports** | `grep -o '<[a-z-]*[^<>]*itemscope[^<>]*>' ui/card/demo/schema.html \| grep -v 'itemprop=' \| grep -c 'itemtype='` |
-| **48** | distinct root `itemtype` values | `grep -oE '<ui-(card\|reveal)[^>]*itemtype="[^"]*"' ui/card/demo/schema.html \| grep -v 'itemprop=' \| grep -o 'itemtype="[^"]*"' \| sort -u \| wc -l` |
-| **46** | `schemaType` keys `render.js` supports (`SCHEMA_TYPES`) | `node -e "import('./ui/card/render.js').then(m => console.log(Object.keys(m.SCHEMA_TYPES).length))"` |
+| **57** | card hosts on the page — `<ui-card>` plus the one `<ui-reveal>` | `grep -oE '<ui-(card\|reveal)[^>]*itemtype="[^"]*"' ui/card/demo/schema.html \| grep -vc 'itemprop='` |
+| **59** | top-level microdata items — **what schema.org's validator reports** | `grep -o '<[a-z-]*[^<>]*itemscope[^<>]*>' ui/card/demo/schema.html \| grep -v 'itemprop=' \| grep -c 'itemtype='` |
+| **51** | distinct root `itemtype` values | `grep -oE '<ui-(card\|reveal)[^>]*itemtype="[^"]*"' ui/card/demo/schema.html \| grep -v 'itemprop=' \| grep -o 'itemtype="[^"]*"' \| sort -u \| wc -l` |
+| **50** | `schemaType` keys `render.js` supports (`SCHEMA_TYPES`) | `node -e "import('./ui/card/render.js').then(m => console.log(Object.keys(m.SCHEMA_TYPES).length))"` |
 
 The flashcard Quiz is the page's one **`<ui-reveal>`** host rather than a `<ui-card>` — a
 question on the front face, its answer on the flipside, which is what a flashcard actually is.
 It counts identically in every column below; only the element differs.
 
 **Items ≠ cards.** A validator counts every *top-level* item — an `itemscope` with no `itemprop`
-of its own — so it sees the 53 cards plus **two items that are not cards**: the standalone
+of its own — so it sees the 57 cards plus **two items that are not cards**: the standalone
 `EmployerAggregateRating` on the job card, and the page-level `WebSite` (site identity plus the
-sitelinks-searchbox `potentialAction`, which describes the *site*, not any card on it) — 55. Nested scopes (`author` → `Person`, `offers` → `Offer`, …) are properties of their
+sitelinks-searchbox `potentialAction`, which describes the *site*, not any card on it) — 59. Nested scopes (`author` → `Person`, `offers` → `Offer`, …) are properties of their
 parent, not items, and are not counted. The `grep -c 'itemtype='` on the end of that command is
 load-bearing: without it the page's own `<meta name="description">` is counted, because its text
-mentions "itemscope/itemtype" — that is how a naive scan reports 53.
+mentions "itemscope/itemtype" — that is how a naive scan reports 57.
 
-**Cards ≠ types.** `Quiz` runs three cards, and `Review`, `EventSeries` and `Place` run two
-each — so 53 − 2 − 3 = 48. The `grep -v itemprop=` in those commands is load-bearing: the
+**Cards ≠ types.** `Quiz` runs three cards, and `Review`, `EventSeries`, `Place` and `Person`
+run two each — so 57 − 2 − 4 = 51. The `grep -v itemprop=` in those commands is load-bearing: the
 collage `ProductGroup` nests a `<ui-card>` per variant, and a nested card is a **property** of
 its parent item, not a card of its own. Note the second `grep` in that command: **reduce to the `itemtype=`
 substring before `sort -u`**. Uniquing the whole `<ui-card …>` match counts one type twice
 whenever its two cards differ in any other attribute (an `id`, a `style`) — that is how this
 count once read 50.
 
-**Types ≠ renderer keys.** The 48 is the 46 base itemtypes, minus `LocalBusiness` (never shown
-plain — the business card is always sharpened), plus the three sharpened [subtypes](#subtypes)
+**Types ≠ renderer keys.** The 51 is the **49** distinct base itemtypes behind the 50
+`schemaType` keys (`profile` and `artist` both resolve to `Person`), minus `LocalBusiness` (never
+shown plain — the business card is always sharpened), plus the three sharpened [subtypes](#subtypes)
 `ProductGroup`, `CafeOrCoffeeShop` and `DiscussionForumPosting`, which `details.subtype` produces
 with no key of their own. Two further types appear as **top-level items that are not cards**
 (`itemscope`, no `itemprop`) and so are outside all three card counts: `EmployerAggregateRating`
@@ -834,6 +835,37 @@ its domain is `CreativeWork`, which `MusicRecording` is) and an ISO `duration`. 
 derives from the track list** unless `details.numTracks` states otherwise: a hand-kept count goes
 stale silently (this card once said nine over four rows), and the field survives only so a partial
 listing can still name the album total.
+
+**Every track carries its own `byArtist`.** JSON-LD gives each `MusicRecording` an artist by
+referencing the album's with `@id`; microdata has **no reference-by-id for a property value** —
+`itemref` pulls properties *into* an item, it does not name one as a value — so the group is
+restated per row as a name-only scope, invisibly. Without it a track node only makes sense read
+together with its album. `tracks[].artist` overrides the album's, which is what a compilation or
+a guest feature needs; it is machine-only, so put it in the track `name` if it should also be
+read. `details.artistUrl` wraps the subheadline artist in `<a itemprop="url">`, the reciprocal of
+the band card's `album` rows and the closest microdata gets to a cross-reference.
+
+### Band — `MusicGroup`
+
+`MusicGroup` ⊂ `PerformingGroup` ⊂ `Organization`, so the band's own vocabulary is thin: `album`,
+`genre` and `track`. `foundingDate`, `foundingLocation` and `member` all arrive from
+`Organization`, `sameAs` from `Thing`. **Three superseded spellings sit next to the live ones and
+are never emitted** — `albums` (→ `album`), `members` and `musicGroupMember` (both → `member`).
+
+The eyebrow carries the primary `genre` like every other creative type; `details.genres` holds the
+rest as machine-only metas, since `genre` is multi-valued and a card has one eyebrow. Members
+render as one `meta` row with the instrument as an editorial label **outside** the `Person` scope —
+the same shape [comic credits](#comic-issue--comicissue) use, because the label is presentation and
+the name is the datum. Schema.org's `Role` wrapper would attach the instrument itself; that is a
+heavier nesting than a card needs.
+
+The discography is `album` → `MusicAlbum` rows, newest first, so an `<ul>`: ordinal markers on a
+descending list would lie (`details.ordered: true` opts an ascending one back into `<ol>`). Each
+row can carry `url`, which renders a real crawlable `<a itemprop="url">` — on the demo page that
+points at the album card, whose `artistUrl` points back.
+
+⚠️ **No Google feature.** `MusicAlbum` and `MusicGroup` are both *vocabulary only* — see
+[the rich-results cross-map](../../../docs/plans/2026-08-15-google-rich-results-audit.md).
 
 ### Glossary — `DefinedTermSet`
 
