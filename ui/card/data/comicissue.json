@@ -1,0 +1,50 @@
+{
+  "$schema": "../../../cms/baseline/models/card.schema.json",
+  "id": "comicissue-1",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-08-15T12:00:00Z",
+    "updatedAt": "2026-08-15T12:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Media"
+  },
+  "fields": {
+    "internalName": "Demo — Comic issue",
+    "schemaType": "comicissue",
+    "preset": { "$ref": "card-preset/stack-portrait" },
+    "eyebrow": "Superhero",
+    "headline": "Dark Mode Rising",
+    "summary": "Jayess kills the stylesheet and the city goes dark. CSS Man has one cascade left — and the brace signal is still burning over the rooftops.",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/cssman-cover-2.png",
+        "alt": "CSS Man #2 — a night rooftop under the brace signal, Jayess looming over the skyline"
+      }
+    ],
+    "actions": [
+      { "link": { "text": "Buy now" }, "style": "primary" }
+    ],
+    "details": {
+      "issueNumber": 2,
+      "datePublished": "2026-09-01",
+      "datePublishedDisplay": "Sept 2026",
+      "pagination": "32",
+      "coverPrice": "10¢",
+      "variantCover": "Newsstand edition",
+      "price": { "current": 4.99, "currency": "USD", "availability": "in stock" },
+      "series": {
+        "name": "CSS Man",
+        "url": "#schema-comicseries",
+        "issn": "2634-0011"
+      },
+      "artist": "Milton Stanley",
+      "penciler": "Milton Stanley",
+      "inker": "Rosa Vega",
+      "letterer": "Artie Kemp",
+      "colorist": "Dot Halliday"
+    },
+    "tags": ["Silver Age", "Dark Mode"]
+  }
+}

@@ -1042,23 +1042,19 @@ describe('podcastseries — PodcastSeries', () => {
 });
 
 describe('comicseries — ComicSeries', () => {
-	const details = {
-		issn: '2634-0011', startDate: '2026-08-01', publisher: 'Web Comics Group', cadence: 'Monthly', issueCount: 12,
-		issues: [{ issueNumber: 1, name: 'A New Hero', image: '/assets/images/cssman-cover-1.png', datePublished: '2026-08-01', artist: 'Milton Stanley', inker: 'Rosa Vega' }]
-	};
+	const details = { issn: '2634-0011', startDate: '2026-08-01', publisher: 'Web Comics Group', cadence: 'Monthly', issueCount: 12 };
 	const card = (extra = {}) => render({ schemaType: 'comicseries', headline: 'CSS Man', details: { ...details, ...extra } });
 
 	/* Same trap as PodcastSeries: numberOfEpisodes' domain is CreativeWorkSeason /
 	   RadioSeries / TVSeries / VideoGameSeries, and ComicSeries is in none of them.
-	   And unlike PodcastSeries, hasPart here is a SAMPLE (1 row for a 12-issue run), so
-	   cardinality is not the count either — the prose is the only statement of it. */
-	test('the issue count is prose, and hasPart cardinality is not it', () => {
+	   This card enumerates no issues either, so "12 issues" has no machine counterpart
+	   at all — an individual issue is its own ComicIssue card. Docs: docs/schema.md */
+	test('the issue count is prose, with no machine counterpart', () => {
 		const html = card();
 		assert.match(html, /itemtype="https:\/\/schema\.org\/ComicSeries"/);
 		assert.ok(!html.includes('numberOfEpisodes'), 'ComicSeries is not in that property’s domain');
 		assert.ok(!html.includes('numberOfIssues'), 'and no such property exists at all');
 		assert.match(html, /<p data-part="meta">Monthly · 12 issues since 2026 · ISSN 2634-0011<\/p>/);
-		assert.equal((html.match(/itemprop="hasPart"/g) || []).length, 1, 'one sample row, not the whole run');
 	});
 
 	/* issn, startDate and endDate all arrive from CreativeWorkSeries — issn's domain is
@@ -1069,30 +1065,83 @@ describe('comicseries — ComicSeries', () => {
 		assert.match(card(), /<p data-part="meta" itemprop="publisher" itemscope itemtype="https:\/\/schema\.org\/Organization">Published by <span itemprop="name">Web Comics Group<\/span><\/p>/);
 	});
 
-	/* The five credits are ComicIssue's own properties — a ComicSeries has none of them,
-	   so the sample row is the only place they can live, and the only thing that gives
-	   the artist card something to be pointed at. */
-	test('the credits ride the hasPart row, one Person scope per filled role', () => {
+	/* The series card is an INTRODUCTION: no hasPart, and therefore none of the five
+	   comic credits, which are ComicIssue's own properties. The issue card carries them
+	   and points back with isPartOf — the only direction the vocabulary supports. */
+	test('no issue list and no credits — those belong to the issue card', () => {
+		const html = card({ issues: [{ issueNumber: 1, name: 'A New Hero', artist: 'Milton Stanley' }] });
+		assert.ok(!html.includes('hasPart'), 'the series does not enumerate its issues');
+		assert.ok(!html.includes('ComicIssue'), 'so no ComicIssue scope is emitted here');
+		for (const role of ['artist', 'penciler', 'inker', 'letterer', 'colorist']) {
+			assert.ok(!html.includes(`itemprop="${role}"`), `${role} is a ComicIssue property`);
+		}
+	});
+});
+
+describe('comicissue — ComicIssue', () => {
+	const details = {
+		issueNumber: 2, datePublished: '2026-09-01', datePublishedDisplay: 'Sept 2026', pagination: '32',
+		coverPrice: '10¢', variantCover: 'Newsstand edition',
+		price: { current: 4.99, currency: 'USD', availability: 'in stock' },
+		series: { name: 'CSS Man', url: '#schema-comicseries', issn: '2634-0011' },
+		artist: 'Milton Stanley', inker: 'Rosa Vega'
+	};
+	const card = (extra = {}) => render({ schemaType: 'comicissue', headline: 'Dark Mode Rising', details: { ...details, ...extra } });
+
+	/* issueNumber and pagination come from PublicationIssue; variantCover is ComicIssue's own */
+	test('emits ComicIssue with its PublicationIssue and own properties', () => {
 		const html = card();
-		assert.match(html, /<li itemprop="hasPart" itemscope itemtype="https:\/\/schema\.org\/ComicIssue">/);
+		assert.match(html, /itemtype="https:\/\/schema\.org\/ComicIssue"/);
+		assert.match(html, /<meta itemprop="issueNumber" content="2">/);
+		assert.match(html, /<meta itemprop="pagination" content="32">/);
+		assert.match(html, /<meta itemprop="variantCover" content="Newsstand edition">/);
+		assert.match(html, /<p data-part="meta">Issue 2 · Sept 2026 · 32 pages · cover price 10¢<\/p>/);
+	});
+
+	/* The five credits exist ONLY on ComicIssue/ComicStory — this card is the only place
+	   in the system where they can be emitted, and the tie to the artist card. */
+	test('the credits are one Person scope per filled role', () => {
+		const html = card();
 		assert.match(html, /<span itemprop="artist" itemscope itemtype="https:\/\/schema\.org\/Person"><span itemprop="name">Milton Stanley<\/span><\/span>/);
 		assert.match(html, /<span itemprop="inker" itemscope itemtype="https:\/\/schema\.org\/Person"><span itemprop="name">Rosa Vega<\/span><\/span>/);
-		/* absent roles emit nothing at all — never an empty scope */
 		for (const role of ['penciler', 'letterer', 'colorist']) {
 			assert.ok(!html.includes(`itemprop="${role}"`), `an unfilled ${role} must not emit an empty scope`);
 		}
 	});
 
-	/* the sample row carries its own cover: the media frame shows both covers as images
-	   of the SERIES, which says nothing about which cover belongs to which issue */
-	test('the issue row carries its own image', () => {
-		assert.match(card(), /<meta itemprop="image" content="\/assets\/images\/cssman-cover-1\.png">/);
+	/* isPartOf (range CreativeWork|URL) is the link UP to the series — a real anchor, not
+	   a hidden meta, because only a link is crawlable */
+	test('isPartOf points at the series through a real anchor', () => {
+		assert.match(card(), /<p data-part="meta" itemprop="isPartOf" itemscope itemtype="https:\/\/schema\.org\/ComicSeries"><meta itemprop="issn" content="2634-0011">Part of <a itemprop="url" href="#schema-comicseries"><span itemprop="name">CSS Man<\/span><\/a><\/p>/);
 	});
 
-	/* issues ASCEND, so an ordinal marker is true — the opposite of a podcast feed */
-	test('the issue list is ordered by default, and the switch is data', () => {
-		assert.match(card(), /<ol data-part="list"><li itemprop="hasPart"/);
-		assert.match(card({ ordered: false }), /<ul data-part="list"><li itemprop="hasPart"/);
+	/* Two prices, and only one of them is a claim. The COVER price is what is printed on
+	   the artwork — display text, labelled, no itemprop. The sellable price is an Offer
+	   (`offers` is a CreativeWork property, so it reaches ComicIssue). */
+	test('the cover price is labelled display text, never the Offer', () => {
+		const html = card();
+		assert.match(html, /32 pages · cover price 10¢/);
+		/* the only <meta itemprop="price"> is the Offer's 4.99, not the 10¢ */
+		assert.equal((html.match(/itemprop="price"/g) || []).length, 1);
+		assert.match(html, /<meta itemprop="price" content="4\.99">/);
+		assert.ok(!html.includes('content="10¢"'), 'the cover price is never a machine value');
+	});
+
+	test('the Offer carries currency and availability', () => {
+		assert.match(card(), /<p data-part="price" itemprop="offers" itemscope itemtype="https:\/\/schema\.org\/Offer"><meta itemprop="priceCurrency" content="USD"><meta itemprop="availability" content="https:\/\/schema\.org\/InStock"><meta itemprop="price" content="4\.99">\$4\.99<\/p>/);
+	});
+
+	/* no url ⇒ a real <button>. An <a href="#"> would be an anchor that goes nowhere, and
+	   an itemprop="url" on it would claim a checkout page that does not exist. */
+	test('Buy now is a button, not a dead link, and claims no offer url', () => {
+		const html = render({ schemaType: 'comicissue', headline: 'Dark Mode Rising', details, actions: [{ link: { text: 'Buy now' }, style: 'primary' }] });
+		assert.match(html, /<nav data-part="actions"><button class="ui-button" type="button" data-variant="accent">Buy now<\/button><\/nav>/);
+		/* scope the url check to the OFFER — the series link legitimately carries
+		   itemprop="url" on its own ComicSeries scope, which is a different claim */
+		const offer = /<p data-part="price"[\s\S]*?<\/p>/.exec(html)[0];
+		assert.ok(!offer.includes('itemprop="url"'), 'the Offer claims no url');
+		const actions = /<nav data-part="actions">[\s\S]*?<\/nav>/.exec(html)[0];
+		assert.ok(!actions.includes('itemprop'), 'and the button claims nothing at all');
 	});
 });
 
@@ -1547,7 +1596,8 @@ describe('markup-first types — formatter sinks', () => {
 			['tv series', { schemaType: 'tvseries', headline: 'X', details: { numberOfSeasons: XSS } }],
 			['podcast series', { schemaType: 'podcastseries', headline: 'X', details: { episodeCount: XSS } }],
 			['album', { schemaType: 'music', headline: 'X', details: { numTracks: XSS } }],
-			['comic series', { schemaType: 'comicseries', headline: 'X', details: { issueCount: XSS } }]
+			['comic series', { schemaType: 'comicseries', headline: 'X', details: { issueCount: XSS } }],
+			['comic issue', { schemaType: 'comicissue', headline: 'X', details: { issueNumber: XSS } }]
 		];
 		for (const [where, fields] of rows) {
 			const html = render(fields);
