@@ -573,7 +573,9 @@ Director and cast as `Person` scopes, `contentRating`, release date and an `Aggr
 
 Author byline leads (photo via `<ui-avatar>`); then facts, rating, `Offer` — publisher is the colophon. `isbn`, pages, allowlisted `bookFormat` (schema.org `BookFormatType`).
 
-The *visible* ISBN carries a WORD JOINER (U+2060) after each hyphen: iOS Safari's data detectors otherwise read the digit run as a phone number and link it `tel:`. The joiner breaks the pattern's contiguity, is invisible, and stops the ISBN wrapping mid-number; the machine value in `<meta itemprop="isbn">` stays raw. The renderer emits this from `book()`; hand-authored pages use the `&#8288;` entity (see demo/schema.html) and can add `<meta name="format-detection" content="telephone=no">` as a page-level belt — explicit `tel:` anchors keep working either way.
+⚠️ **A page showing a Book card should carry `<meta name="format-detection" content="telephone=no">`.** iOS Safari's data detectors read the hyphenated 13-digit ISBN as a phone number and link it `tel:`; the page-level meta is the mechanism that stops them, and explicit `tel:` anchors keep working alongside it. Both demo pages set it (`demo/schema.html`, `demo/render.html`), and consumers embedding this card elsewhere need to do the same.
+
+The visible ISBN itself is emitted **raw**, in the renderer and in reference markup alike. It used to interleave a WORD JOINER (U+2060) after each hyphen — a second, redundant defence that cost more than it bought: invisible characters in the output, an `&#8288;` entity to hand-transcribe, and a Book card that could not be checked by `schema.compare.js` because the two sides spelled the same string differently. The machine value in `<meta itemprop="isbn">` was always raw and is unchanged.
 
 ### Dataset — `Dataset`
 
@@ -874,10 +876,9 @@ nor any of its ancestors is in its domain — and no `numberOfIssues` exists. `P
 the same wall and answers it with `hasPart` cardinality; this card has no `hasPart` at all, so
 "12 issues since 2026" is prose in the `meta` part and nothing more.
 
-⚠️ **No U+2060 word joiners on the ISSN**, unlike the book card's ISBN. An 8-digit ISSN is far
-less phone-shaped than a 13-digit ISBN, the page-level `<meta name="format-detection"
-content="telephone=no">` already covers it, and the joiners would put invisible characters into
-reference markup that `schema.compare.js` compares byte for byte.
+The ISSN is emitted raw, same as the book card's ISBN — iOS data detectors are held off by the
+page-level `<meta name="format-detection" content="telephone=no">`, not by invisible characters
+in the text. See § Book.
 
 ### Comic issue — `ComicIssue`
 

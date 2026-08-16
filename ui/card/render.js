@@ -1692,10 +1692,14 @@ const DETAILS = {
 		/* author byline renders EARLY via BYLINE_EARLY — rating and price follow, publisher is the colophon */
 		let html = meta('isbn', d.isbn) + meta('numberOfPages', d.numberOfPages)
 			+ (BOOK_FORMATS.has(d.bookFormat) ? meta('bookFormat', SCHEMA + d.bookFormat) : '');
-		/* U+2060 word joiners defeat iOS tel data detectors — docs/schema.md § Book */
+		/* The visible ISBN is emitted RAW. iOS data detectors do read a hyphenated 13-digit run
+		   as a phone number, but the page-level <meta name="format-detection" content="telephone=no">
+		   is the fix for that — see docs/schema.md § Book. The U+2060 word joiners this used to
+		   interleave were a second, redundant mechanism that put invisible characters in the output
+		   and kept the card out of the schema.compare.js transcription gate. */
 		/* escaped per component — num() already returns HTML-safe output */
 		const format = d.bookFormatDisplay || d.bookFormat;
-		const bits = [d.numberOfPages ? `${num(d.numberOfPages)} pages` : null, format ? esc(format) : null, d.isbn ? `ISBN ${esc(d.isbn.replace(/-/g, '-\u2060'))}` : null].filter(Boolean).join(' · ');
+		const bits = [d.numberOfPages ? `${num(d.numberOfPages)} pages` : null, format ? esc(format) : null, d.isbn ? `ISBN ${esc(d.isbn)}` : null].filter(Boolean).join(' · ');
 		if (bits) html += `<p data-part="meta">${bits}</p>`;
 		html += ratingPart('aggregateRating', 'AggregateRating', d.rating);
 		if (d.price) {
@@ -2025,11 +2029,9 @@ const DETAILS = {
 	comicseries(d) {
 		let html = meta('issn', d.issn) + meta('startDate', d.startDate) + meta('endDate', d.endDate);
 		const year = startYear(d.startDate);
-		/* No U+2060 word joiners here, unlike the book card's ISBN: an 8-digit ISSN is far
-		   less phone-shaped than a 13-digit ISBN, the page-level
-		   <meta name="format-detection" content="telephone=no"> already covers it, and the
-		   joiners would put invisible characters in hand-authored reference markup that
-		   schema.compare.js compares byte for byte. */
+		/* The ISSN is emitted raw, same as the book card's ISBN: iOS data detectors are held
+		   off by the page-level <meta name="format-detection" content="telephone=no">, not by
+		   invisible characters in the text. */
 		const bits = [
 			d.cadence ? esc(d.cadence) : null,
 			d.issueCount != null ? `${num(d.issueCount)} issue${d.issueCount === 1 ? '' : 's'}${year ? ` since ${esc(year)}` : ''}` : null,

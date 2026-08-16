@@ -61,6 +61,9 @@ const PAIRS = [
 	/* the third Quiz shape: one flashcard as a <ui-reveal> flip card, question front,
 	   answer back — the page's only reveal, so the host name is the disambiguator */
 	['ui-reveal:Quiz', 'ui/card/data/quiz-flashcard.json'],
+	/* pairable since the visible ISBN dropped its U+2060 word joiners (docs/schema.md § Book):
+	   the two sides used to spell the same ISBN differently and could never match */
+	['Book', 'ui/card/data/book.json'],
 	['Service', 'ui/card/data/service.json'],
 	['RealEstateListing', 'ui/card/data/realestate.json'],
 	['Menu', 'ui/card/data/menu.json'],
