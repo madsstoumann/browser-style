@@ -2057,9 +2057,10 @@ const DETAILS = {
 			d.issueNumber != null ? `Issue ${num(d.issueNumber)}` : null,
 			d.datePublishedDisplay ? esc(d.datePublishedDisplay) : null,
 			d.pagination ? `${esc(d.pagination)} pages` : null,
-			/* the cover price is DISPLAY TEXT with no itemprop: a real price claim needs an
-			   Offer scope, and a 1960s cover price is not an offer anyone can accept */
-			d.coverPrice ? esc(d.coverPrice) : null
+			/* The COVER price is display text with no itemprop — it is what is printed on
+			   the artwork, not something anyone can buy at. The sellable price is the Offer
+			   below, and the two are labelled so a reader never has to guess which is which. */
+			d.coverPrice ? `cover price ${esc(d.coverPrice)}` : null
 		].filter(Boolean).join(' · ');
 		if (bits) html += `<p data-part="meta">${bits}</p>`;
 		/* a REAL anchor, not a hidden meta — the series is a page the reader can reach, and
@@ -2071,7 +2072,20 @@ const DETAILS = {
 					: `<span itemprop="name">${esc(d.series.name)}</span>`)
 				+ '</p>';
 		}
-		return html + comicCredits(d);
+		html += comicCredits(d);
+		/* `offers` is a CreativeWork property, so it reaches ComicIssue — same block the
+		   book card uses. The BUY button is a real <button> and not <a href="#">: the
+		   renderer emits one whenever an action has no url, which is the honest shape for a
+		   demo control that does nothing. No itemprop on it either — `url` on an Offer must
+		   be somewhere a buyer can actually go. */
+		if (d.price) {
+			html += `<p data-part="price"${scope('offers', 'Offer')}>`
+				+ meta('priceCurrency', d.price.currency)
+				+ meta('availability', availabilityUrl(d.price.availability || 'in stock'))
+				+ priceValue(d.price.currency, d.price.current)
+				+ '</p>';
+		}
+		return html;
 	},
 
 	/* A Person who makes things. The jobTitle · worksFor row is profile's, shared through

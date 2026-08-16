@@ -23,6 +23,9 @@
         "alt": "CSS Man #2 — a night rooftop under the brace signal, Jayess looming over the skyline"
       }
     ],
+    "actions": [
+      { "link": { "text": "Buy now" }, "style": "primary" }
+    ],
     "details": {
       "issueNumber": 2,
       "datePublished": "2026-09-01",
@@ -30,6 +33,7 @@
       "pagination": "32",
       "coverPrice": "10¢",
       "variantCover": "Newsstand edition",
+      "price": { "current": 4.99, "currency": "USD", "availability": "in stock" },
       "series": {
         "name": "CSS Man",
         "url": "#schema-comicseries",

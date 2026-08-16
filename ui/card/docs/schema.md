@@ -897,10 +897,22 @@ That makes the chain **issue → series** and **issue → artist**, with the
 [artist card](#artist--person) as the `Person` the `artist` property names. It is the only
 machine-readable tie between the three cards.
 
-⚠️ **The cover price is display text, not an `Offer`.** "10¢" renders in the `meta` row with no
-`itemprop`. A price *claim* needs an `Offer` scope with `priceCurrency` and `availability`, and
-a 1960s cover price is not an offer anyone can accept — so the card shows the number and claims
-nothing, rather than half-declaring an offer that would fail validation.
+**Two prices, and only one is a claim.** The card shows both, labelled so a reader never has to
+guess which is which:
+
+- **Cover price** — "cover price 10¢" in the `meta` row, **no `itemprop`**. It is what is
+  printed on the artwork, not something anyone can buy at. A bare number with no scope claims
+  nothing, which is the honest markup for it.
+- **The sellable price** — a real `<p data-part="price" itemprop="offers" itemscope
+  itemtype="…/Offer">` carrying `priceCurrency`, `availability` and `price`. `offers` is a
+  `CreativeWork` property, so it reaches `ComicIssue`; this is the same block the
+  [book card](#book--book) uses.
+
+⚠️ **The Buy button is a `<button>`, and claims no `url`.** The renderer emits a real
+`<button type="button">` whenever an action has no `url` — an `<a href="#">` would be an anchor
+that goes nowhere. It carries no `itemprop` either: `url` on an `Offer` must point somewhere a
+buyer can actually go, and a demo has no checkout. Claiming one would be the same class of
+mistake as marking the cover price up as the offer.
 
 ### Artist — `Person`
 

@@ -1082,6 +1082,7 @@ describe('comicissue — ComicIssue', () => {
 	const details = {
 		issueNumber: 2, datePublished: '2026-09-01', datePublishedDisplay: 'Sept 2026', pagination: '32',
 		coverPrice: '10¢', variantCover: 'Newsstand edition',
+		price: { current: 4.99, currency: 'USD', availability: 'in stock' },
 		series: { name: 'CSS Man', url: '#schema-comicseries', issn: '2634-0011' },
 		artist: 'Milton Stanley', inker: 'Rosa Vega'
 	};
@@ -1094,7 +1095,7 @@ describe('comicissue — ComicIssue', () => {
 		assert.match(html, /<meta itemprop="issueNumber" content="2">/);
 		assert.match(html, /<meta itemprop="pagination" content="32">/);
 		assert.match(html, /<meta itemprop="variantCover" content="Newsstand edition">/);
-		assert.match(html, /<p data-part="meta">Issue 2 · Sept 2026 · 32 pages · 10¢<\/p>/);
+		assert.match(html, /<p data-part="meta">Issue 2 · Sept 2026 · 32 pages · cover price 10¢<\/p>/);
 	});
 
 	/* The five credits exist ONLY on ComicIssue/ComicStory — this card is the only place
@@ -1114,12 +1115,33 @@ describe('comicissue — ComicIssue', () => {
 		assert.match(card(), /<p data-part="meta" itemprop="isPartOf" itemscope itemtype="https:\/\/schema\.org\/ComicSeries"><meta itemprop="issn" content="2634-0011">Part of <a itemprop="url" href="#schema-comicseries"><span itemprop="name">CSS Man<\/span><\/a><\/p>/);
 	});
 
-	/* the cover price is display text: a price CLAIM would need an Offer scope */
-	test('the cover price carries no itemprop', () => {
+	/* Two prices, and only one of them is a claim. The COVER price is what is printed on
+	   the artwork — display text, labelled, no itemprop. The sellable price is an Offer
+	   (`offers` is a CreativeWork property, so it reaches ComicIssue). */
+	test('the cover price is labelled display text, never the Offer', () => {
 		const html = card();
-		assert.ok(html.includes('10¢'), 'still rendered');
-		assert.ok(!html.includes('itemprop="price"'), 'but never claimed as a price');
-		assert.ok(!html.includes('Offer'), 'and no Offer scope is invented for it');
+		assert.match(html, /32 pages · cover price 10¢/);
+		/* the only <meta itemprop="price"> is the Offer's 4.99, not the 10¢ */
+		assert.equal((html.match(/itemprop="price"/g) || []).length, 1);
+		assert.match(html, /<meta itemprop="price" content="4\.99">/);
+		assert.ok(!html.includes('content="10¢"'), 'the cover price is never a machine value');
+	});
+
+	test('the Offer carries currency and availability', () => {
+		assert.match(card(), /<p data-part="price" itemprop="offers" itemscope itemtype="https:\/\/schema\.org\/Offer"><meta itemprop="priceCurrency" content="USD"><meta itemprop="availability" content="https:\/\/schema\.org\/InStock"><meta itemprop="price" content="4\.99">\$4\.99<\/p>/);
+	});
+
+	/* no url ⇒ a real <button>. An <a href="#"> would be an anchor that goes nowhere, and
+	   an itemprop="url" on it would claim a checkout page that does not exist. */
+	test('Buy now is a button, not a dead link, and claims no offer url', () => {
+		const html = render({ schemaType: 'comicissue', headline: 'Dark Mode Rising', details, actions: [{ link: { text: 'Buy now' }, style: 'primary' }] });
+		assert.match(html, /<nav data-part="actions"><button class="ui-button" type="button" data-variant="accent">Buy now<\/button><\/nav>/);
+		/* scope the url check to the OFFER — the series link legitimately carries
+		   itemprop="url" on its own ComicSeries scope, which is a different claim */
+		const offer = /<p data-part="price"[\s\S]*?<\/p>/.exec(html)[0];
+		assert.ok(!offer.includes('itemprop="url"'), 'the Offer claims no url');
+		const actions = /<nav data-part="actions">[\s\S]*?<\/nav>/.exec(html)[0];
+		assert.ok(!actions.includes('itemprop'), 'and the button claims nothing at all');
 	});
 });
 
