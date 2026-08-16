@@ -1795,3 +1795,52 @@ describe('inline markup allowlist', () => {
 			/itemprop="description">no <code>!important<\/code></);
 	});
 });
+
+/* ── clean data, and the meta that lets it stay clean ──
+   iOS Safari's data detectors read a hyphenated identifier (the Book ISBN, the ComicSeries
+   ISSN) as a phone number and link it `tel:`. The system's answer is the PAGE-LEVEL
+   <meta name="format-detection" content="telephone=no"> — never invisible characters spliced
+   into the text, which is what the ISBN used to do (U+2060 word joiners after each hyphen).
+   Two halves, so "rely on the meta" is enforced instead of remembered:
+   the renderer emits clean strings, and every page showing one declares the meta.
+   Docs: docs/schema.md § Book */
+describe('data detectors', () => {
+	/* U+00AD soft hyphen · U+200B-200D zero width · U+2060 word joiner · U+FEFF BOM */
+	const INVISIBLE = /[­​-‍⁠﻿]/;
+
+	test('no rendered card splices invisible characters into its text', () => {
+		const dir = new URL('./data/', import.meta.url);
+		const presets = {
+			...JSON.parse(readFileSync(new URL('card.presets.json', dir), 'utf8')).presets,
+			...JSON.parse(readFileSync(new URL('card.presets.demo.json', dir), 'utf8')).presets
+		};
+		const files = [
+			...readdirSync(dir).filter((f) => f.endsWith('.json') && !f.startsWith('card.presets') && f !== 'index.json' && f !== 'tokens.json').map((f) => new URL(f, dir)),
+			...readdirSync(new URL('demo/', dir)).filter((f) => f.endsWith('.json')).map((f) => new URL(`demo/${f}`, dir))
+		];
+		assert.ok(files.length > 100, `expected the whole corpus, got ${files.length}`);
+		const bad = files.filter((file) => INVISIBLE.test(renderCard(JSON.parse(readFileSync(file, 'utf8')), presets)))
+			.map((file) => file.pathname.split('/').pop());
+		assert.deepEqual(bad, [], 'formatting must not be smuggled in as invisible characters — use the page meta');
+	});
+
+	/* The other half: a clean ISBN is only safe on a page that declares the meta. Keyed on the
+	   visible LABEL rather than a digit-shape heuristic, so dates and prices don't false-fail. */
+	test('every demo page showing an ISBN or ISSN declares format-detection', () => {
+		const root = new URL('./demo/', import.meta.url);
+		const pages = readdirSync(root, { recursive: true, withFileTypes: true })
+			.filter((e) => e.isFile() && e.name.endsWith('.html'))
+			.map((e) => new URL(`${e.parentPath.slice(root.pathname.length)}/${e.name}`.replace(/^\//, ''), root));
+		assert.ok(pages.length > 20, `expected the demo corpus, got ${pages.length}`);
+		const bad = [];
+		for (const page of pages) {
+			const html = readFileSync(page, 'utf8');
+			/* text nodes only: an <meta itemprop="isbn"> carries no visible digits */
+			const text = html.replace(/<!--[\s\S]*?-->/g, '').replace(/<[^>]+>/g, ' ');
+			if (/\bISBN\b|\bISSN\b/.test(text) && !/name="format-detection"[^>]*telephone=no/.test(html)) {
+				bad.push(page.pathname.split('/demo/')[1]);
+			}
+		}
+		assert.deepEqual(bad, [], 'a page showing an ISBN/ISSN needs <meta name="format-detection" content="telephone=no">');
+	});
+});
