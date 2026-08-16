@@ -55,6 +55,7 @@
     "glossary",
     "podcastseries",
     "comicseries",
+    "comicissue",
     "artist",
     "media-block",
     "prose-block"

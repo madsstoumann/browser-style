@@ -131,6 +131,7 @@
         { "value": "glossary", "label": "Glossary (DefinedTermSet)" },
         { "value": "podcastseries", "label": "Podcast series (PodcastSeries)" },
         { "value": "comicseries", "label": "Comic series (ComicSeries)" },
+        { "value": "comicissue", "label": "Comic issue (ComicIssue)" },
         { "value": "artist", "label": "Artist (Person)" }
       ]
     },

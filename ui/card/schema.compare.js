@@ -73,6 +73,7 @@ const PAIRS = [
 	/* only one ComicSeries on the page, but it still matches by id: the bare form requires
 	   a card with NO id=, and this one's id is the artist card's link target */
 	['ComicSeries#schema-comicseries', 'ui/card/data/comicseries.json'],
+	['ComicIssue#schema-comicissue', 'ui/card/data/comicissue.json'],
 	/* the second Person card — `profile` is the first and is matched bare below, so the
 	   artist has to be matched by id, same as the map's second Place */
 	['Person#schema-artist', 'ui/card/data/artist.json'],

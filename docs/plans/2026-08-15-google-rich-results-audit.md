@@ -1,6 +1,8 @@
-# Google rich results — coverage audit of the 47 card itemtypes
+# Google rich results — coverage audit of the 48 card itemtypes
 
-> **Report only. No code changed.** Audited 2026-08-15 against `v4` at `c42e63f`.
+> **Report only. No code changed by this document.** Audited 2026-08-15 against `v4` at
+> `c42e63f`, and refreshed the same day when the `ComicIssue` card took the inventory from 47
+> to 48.
 > The question: how many of the card system's schema.org types have a live Google rich
 > result, which do not, and is it worth adding or reshaping anything to close the gap.
 >
@@ -36,21 +38,21 @@ The inventory itself is generated, not transcribed:
 ```sh
 node --input-type=module -e "
 import { SCHEMA_TYPES } from './ui/card/render.js';
-console.log(new Set(Object.values(SCHEMA_TYPES)).size)"   # → 47
+console.log(new Set(Object.values(SCHEMA_TYPES)).size)"   # → 48
 ```
 
 ---
 
 ## 1. The headline answer
 
-Of **47 distinct itemtypes** across 48 `schemaType` keys (`profile` and `artist` both resolve
+Of **48 distinct itemtypes** across 49 `schemaType` keys (`profile` and `artist` both resolve
 to `Person`):
 
 | Bucket | Count | Meaning |
 |---|---|---|
 | **Live** | ~18 | A Google feature exists today and this type is its subject |
 | **Withdrawn** | 7 | A feature existed and Google retired or narrowed it |
-| **None** | ~22 | Valid schema.org, no Google feature ever |
+| **None** | ~23 | Valid schema.org, no Google feature ever |
 
 The counts are approximate *because* of the ⚠ rows — several types sit on a Live/None boundary
 that only the live gallery can settle (`SoftwareApplication`, `Book`, `MusicAlbum`, `TVSeries`,
@@ -71,9 +73,9 @@ These matter more than any individual row.
 
 ### 2.1 Rich results are page-level; cards are components
 
-`demo/schema.html` carries **55 top-level entities**. No page shaped like that is a rich-result
+`demo/schema.html` carries **56 top-level entities**. No page shaped like that is a rich-result
 candidate whatever markup it holds, because Google resolves *the page's* main entity. That is
-not a defect in the demo — it is a gallery, and a gallery of 55 subjects is what it is meant to
+not a defect in the demo — it is a gallery, and a gallery of 56 subjects is what it is meant to
 be.
 
 The real candidates already exist and are already shaped correctly:
@@ -179,6 +181,7 @@ off the page without asking whether Google would have drawn a box around it.
 | `TVEpisode` | `tvepisode` | — | ⚠ |
 | `DefinedTermSet` | `glossary` | Both it and `DefinedTerm` are `pending.schema.org` | `repo` — schema.md § Glossary |
 | `ComicSeries` | `comicseries` | — | `dump` |
+| `ComicIssue` | `comicissue` | — | `dump` |
 
 ---
 
@@ -246,6 +249,6 @@ would call missing: `product` allowlists `Vehicle`/`Car`/`Motorcycle`, `social` 
    pages in the repo where a pass/fail verdict means anything, and neither has been run through
    it. Any failure there is worth more than any row in § 3.
 3. **Re-derive the inventory** before trusting the row count — the one-liner at the top of this
-   document. 47 rows, no itemtype missing, none invented.
+   document. 48 rows, no itemtype missing, none invented.
 4. **Dates must agree with `schema.md` § Rich results.** If this table and that section
    disagree, that section wins.

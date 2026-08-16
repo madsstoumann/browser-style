@@ -79,6 +79,7 @@ export const SCHEMA_TYPES = {
 	glossary: 'DefinedTermSet',
 	podcastseries: 'PodcastSeries',
 	comicseries: 'ComicSeries',
+	comicissue: 'ComicIssue',
 	/* schema.org has no Artist TYPE — `artist` is a PROPERTY (domain ComicIssue /
 	   ComicStory / VisualArtwork, range Person). So an artist card is a Person, the
 	   same itemtype `profile` resolves to; the key names the editorial shape, and the
@@ -185,7 +186,7 @@ const SUMMARY_PROP = { review: 'reviewBody', quote: 'text', announcement: 'text'
    owns it: job's eyebrow is display text, `industry` is details.industry. Docs: schema.md § Job.
    Exported for render.test.js, which re-adds the removed `job: 'industry'` entry to prove the
    duplicate-property guard below still holds when this map grows. */
-export const EYEBROW_PROP = { article: 'articleSection', news: 'articleSection', product: 'category', recipe: 'recipeCategory', course: 'about', video: 'genre', movie: 'genre', book: 'genre', tvseries: 'genre', music: 'genre', comicseries: 'genre' };
+export const EYEBROW_PROP = { article: 'articleSection', news: 'articleSection', product: 'category', recipe: 'recipeCategory', course: 'about', video: 'genre', movie: 'genre', book: 'genre', tvseries: 'genre', music: 'genre', comicseries: 'genre', comicissue: 'genre' };
 /* published itemprop: JobPosting/SpecialAnnouncement use datePosted, VideoObject uploadDate */
 const PUBLISHED_PROP = { job: 'datePosted', announcement: 'datePosted', video: 'uploadDate' };
 /* datePosted is typed Date, so a timestamp is out of range; uploadDate takes a DateTime */
@@ -562,15 +563,15 @@ const creditsPart = (d) =>
 	(d.director?.name ? `<p data-part="meta"${scope('director', 'Person')}>${esc(d.director.label || 'Director:')} <span itemprop="name">${esc(d.director.name)}</span></p>` : '')
 	+ (d.actors?.length ? `<p data-part="meta">Starring: ${d.actors.map((name) => `<span${scope('actor', 'Person')}><span itemprop="name">${esc(name)}</span></span>`).join(', ')}</p>` : '');
 
-/* comic credits — one Person scope per filled role. All five are ComicIssue's OWN
-   properties: a ComicSeries has none of them, which is why they ride the hasPart rows
-   rather than the card root. Order is the masthead order, not alphabetical.
-   Docs: docs/schema.md § Comic series */
+/* comic credits — one Person scope per filled role, as a visible meta row. All five are
+   ComicIssue's OWN properties (shared with ComicStory) and a ComicSeries carries none of
+   them, which is why they belong to the ISSUE card and not the series. Order is the
+   masthead order, not alphabetical. Docs: docs/schema.md § Comic issue */
 const COMIC_ROLES = [['artist', 'Art'], ['penciler', 'Pencils'], ['inker', 'Inks'], ['letterer', 'Letters'], ['colorist', 'Colours']];
-const comicCredits = (issue) => {
-	const rows = COMIC_ROLES.filter(([key]) => issue[key])
-		.map(([key, label]) => `${label} <span${scope(key, 'Person')}><span itemprop="name">${esc(issue[key])}</span></span>`);
-	return rows.length ? ` <small>${rows.join(' · ')}</small>` : '';
+const comicCredits = (d) => {
+	const rows = COMIC_ROLES.filter(([key]) => d[key])
+		.map(([key, label]) => `${label} <span${scope(key, 'Person')}><span itemprop="name">${esc(d[key])}</span></span>`);
+	return rows.length ? `<p data-part="meta">${rows.join(' · ')}</p>` : '';
 };
 
 /* quote part via @browser.style/quote — variant on the <ui-quote> wrapper styles it, data-part stays the card hook */
@@ -2036,16 +2037,41 @@ const DETAILS = {
 		].filter(Boolean).join(' · ');
 		if (bits) html += `<p data-part="meta">${bits}</p>`;
 		if (d.publisher) html += `<p data-part="meta"${scope('publisher', 'Organization')}>Published by <span itemprop="name">${esc(d.publisher)}</span></p>`;
-		/* hasPart → ComicIssue is a SAMPLE, not the run: the card lists the current issue,
-		   because the five comic credits are ComicIssue's own properties and a ComicSeries
-		   carries none of them — one row is what gives them somewhere to live, and gives
-		   the artist card something to be pointed at. hasPart makes no completeness claim,
-		   so listing 1 of 12 is honest; it just means cardinality is NOT the issue count.
-		   Ordered by default: issues ascend, so an ordinal marker is true (a podcast feed
-		   descends, hence its `<ul>`). Docs: docs/schema.md § Comic series */
-		return html + scopedList((d.issues || []).map((issue) =>
-			`<li${scope('hasPart', 'ComicIssue')}>${meta('issueNumber', issue.issueNumber)}${meta('datePublished', issue.datePublished)}${meta('image', issue.image)}<span itemprop="name">${esc(issue.name)}</span>${comicCredits(issue)}</li>`
-		), d.ordered ?? true);
+		/* This card introduces the SERIES. It deliberately enumerates no issues: an
+		   individual issue is its own card (`comicissue` → ComicIssue), which is where the
+		   five comic credits can actually live, and that card points back with isPartOf.
+		   Docs: docs/schema.md § Comic series */
+		return html;
+	},
+
+	/* ComicIssue ⊂ PublicationIssue ⊂ CreativeWork. `issueNumber` and the page range come
+	   from PublicationIssue; `artist`, `penciler`, `inker`, `letterer`, `colorist` and
+	   `variantCover` are ComicIssue's OWN — the only place in the vocabulary they exist.
+	   `isPartOf` (range CreativeWork|URL) carries the link up to the series, which is the
+	   direction the vocabulary actually supports: there is no inverse to walk back down.
+	   Docs: docs/schema.md § Comic issue */
+	comicissue(d) {
+		let html = meta('issueNumber', d.issueNumber) + meta('datePublished', d.datePublished)
+			+ meta('variantCover', d.variantCover) + meta('pagination', d.pagination);
+		const bits = [
+			d.issueNumber != null ? `Issue ${num(d.issueNumber)}` : null,
+			d.datePublishedDisplay ? esc(d.datePublishedDisplay) : null,
+			d.pagination ? `${esc(d.pagination)} pages` : null,
+			/* the cover price is DISPLAY TEXT with no itemprop: a real price claim needs an
+			   Offer scope, and a 1960s cover price is not an offer anyone can accept */
+			d.coverPrice ? esc(d.coverPrice) : null
+		].filter(Boolean).join(' · ');
+		if (bits) html += `<p data-part="meta">${bits}</p>`;
+		/* a REAL anchor, not a hidden meta — the series is a page the reader can reach, and
+		   only a link is crawlable (same reasoning as the ProductGroup variant URLs) */
+		if (d.series?.name) {
+			html += `<p data-part="meta"${scope('isPartOf', 'ComicSeries')}>${meta('issn', d.series.issn)}Part of `
+				+ (d.series.url
+					? `<a itemprop="url" href="${esc(d.series.url)}"><span itemprop="name">${esc(d.series.name)}</span></a>`
+					: `<span itemprop="name">${esc(d.series.name)}</span>`)
+				+ '</p>';
+		}
+		return html + comicCredits(d);
 	},
 
 	/* A Person who makes things. The jobTitle · worksFor row is profile's, shared through

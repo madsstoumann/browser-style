@@ -585,7 +585,7 @@ The verdict chip leads — it is the answer (`reviewRating` → `Rating`, `alter
 
 ## Types authored markup-first
 
-The thirteen types below — plus `EmployerAggregateRating` on the job card — were authored **markup
+The fourteen types below — plus `EmployerAggregateRating` on the job card — were authored **markup
 first**: `demo/schema.html` was the specification and `render.js` was written to reproduce it, not
 the other way round. They now have a `schemaType` key, a `DETAILS` renderer and an instance in
 `data/`, and the transcription was verified by a mechanical comparator rather than by eye.
@@ -861,37 +861,46 @@ own vocabulary is thin and entirely inherited: `issn`, `startDate` and `endDate`
 `Periodical` is merely on the path and contributes nothing this card uses — plus
 `genre` / `publisher` / `keywords` from `CreativeWork`.
 
-**`hasPart` lists one issue, not the run.** The card shows a single `hasPart` → `ComicIssue`
-row against a 12-issue series. That is not an oversight and not a half-measure: `hasPart` makes
-no completeness claim, and one row is what the card actually needs, because —
-
-**the five comic credits belong to the issue, not the series.** `artist`, `penciler`, `inker`,
-`letterer` and `colorist` are `ComicIssue`'s own properties (shared with `ComicStory`); a
-`ComicSeries` carries none of them and has no masthead-style credit property to hang them on.
-The row is therefore the only vocabulary-correct home for them, and the only thing that gives
-the [artist card](#artist--person) something to be pointed at — one `Person` scope per filled
-role, with an unfilled role emitting nothing rather than an empty scope. The row is `<ol>`, not
-`<ul>`: issues ascend, so an ordinal marker is true, the opposite of the podcast feed above.
-The switch is data (`details.ordered`), not type.
+**This card introduces the series; it does not enumerate it.** No `hasPart`, no issue list, one
+cover. An individual issue is its own card — [Comic issue](#comic-issue--comicissue) — which is
+where the five comic credits can actually live, and which points back with `isPartOf`. The two
+cards are the vocabulary's own division of labour, not an editorial preference: `artist`,
+`penciler`, `inker`, `letterer` and `colorist` exist on `ComicIssue` and `ComicStory` and
+nowhere else, so a series card that tried to carry them would be inventing properties.
 
 ⚠️ **The issue count has no machine counterpart.** `numberOfEpisodes` is scoped to
 `CreativeWorkSeason`, `RadioSeries`, `TVSeries` and `VideoGameSeries` — neither `ComicSeries`
 nor any of its ancestors is in its domain — and no `numberOfIssues` exists. `PodcastSeries` hits
-the same wall and answers it with `hasPart` cardinality; that answer is unavailable here
-precisely *because* the list is a sample. "12 issues since 2026" is prose in the `meta` part and
-nothing more.
-
-**Both covers are the series' `image`.** The media area is a carousel (`nav(mrk) nav(arw)`, the
-`comic-covers` preset) and each `<img>` carries `itemprop="image"` — repeatable on
-`CreativeWork`, and the same convention the [gallery card](#gallery--imagegallery) uses. That
-says nothing about *which* cover belongs to which issue, so the `hasPart` row additionally
-carries its own `<meta itemprop="image">`. Different scopes, so this is not a duplicate
-property.
+the same wall and answers it with `hasPart` cardinality; this card has no `hasPart` at all, so
+"12 issues since 2026" is prose in the `meta` part and nothing more.
 
 ⚠️ **No U+2060 word joiners on the ISSN**, unlike the book card's ISBN. An 8-digit ISSN is far
 less phone-shaped than a 13-digit ISBN, the page-level `<meta name="format-detection"
 content="telephone=no">` already covers it, and the joiners would put invisible characters into
 reference markup that `schema.compare.js` compares byte for byte.
+
+### Comic issue — `ComicIssue`
+
+`ComicIssue` ⊂ `PublicationIssue` ⊂ `CreativeWork`. `issueNumber` and the page range
+(`pageStart` / `pageEnd` / `pagination`) come from `PublicationIssue`; **`artist`, `penciler`,
+`inker`, `letterer`, `colorist` and `variantCover` are `ComicIssue`'s own** — the only place in
+the whole vocabulary those five roles exist, shared with `ComicStory`. Each is a `Person` scope,
+and an unfilled role emits nothing rather than an empty scope.
+
+**`isPartOf` is the link, and it only runs one way.** Its range is `CreativeWork | URL`, so the
+issue points up at the series through a **real anchor** rather than a hidden `<meta>` — only a
+link is crawlable, the same reasoning as the [ProductGroup variant URLs](#product--product).
+There is no inverse to walk back down: a `ComicSeries` cannot point at its issues except through
+`hasPart`, which this pair deliberately does not use.
+
+That makes the chain **issue → series** and **issue → artist**, with the
+[artist card](#artist--person) as the `Person` the `artist` property names. It is the only
+machine-readable tie between the three cards.
+
+⚠️ **The cover price is display text, not an `Offer`.** "10¢" renders in the `meta` row with no
+`itemprop`. A price *claim* needs an `Offer` scope with `priceCurrency` and `availability`, and
+a 1960s cover price is not an offer anyone can accept — so the card shows the number and claims
+nothing, rather than half-declaring an offer that would fail validation.
 
 ### Artist — `Person`
 
@@ -902,11 +911,10 @@ range `Person`). So an artist card is a `Person` — the second one on the page,
 at it. The `artist` `schemaType` key names the editorial shape, not an itemtype.
 
 **Where the link is actually made:** `artist`'s only domains are `ComicIssue`, `ComicStory` and
-`VisualArtwork` — never `ComicSeries` — so the tie runs from the series card's single `hasPart`
-→ `ComicIssue` row. Drop that row and the two cards are related by an `<a href>` and editorial
-intent only; the nearest series-level substitute would be `creator` (domain `CreativeWork`,
-range `Person`/`Organization`), a weaker claim naming a maker of the series rather than who
-inked which issue.
+`VisualArtwork` — never `ComicSeries` — so the tie runs from the
+[comic issue card](#comic-issue--comicissue), which names this `Person` as its `artist` and
+points up at the series with `isPartOf`. The series card itself is related to this one by an
+`<a href>` and editorial intent only, and that is the vocabulary's doing, not a shortcut.
 
 What it shares with `profile`: the `jobTitle` · `worksFor` subheadline (the same function,
 shared through `SUBHEADLINE_SLOT`, not copied), `address`, and `knowsAbout` for the tags —
