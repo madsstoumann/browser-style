@@ -423,3 +423,34 @@ Taken instead: the documentation pass (one vocabulary — *text area / text colu
 altitude stated once in `ui/card/AGENTS.md`; the editor-facing label in
 `card-preset.schema.json`), and the packaging repair that the investigation surfaced as
 the actual defect — see the same plan, work items B-F.
+
+---
+
+## 12. `demo/schema.html` has no sections — plus three inconsistencies it hides
+
+From the [card-sections proposal](./2026-08-16-schema-card-sections.md). The page is one
+`<lay-out>` holding all 57 cards in accretive order, so it reads as a changelog rather than a
+reference. That document proposes ten sections grouped by what the thing *is* — the `meta.folder`
+values in `ui/card/data/*.json` are the right signal at the wrong granularity (22 folders,
+Media 12, Commerce 12, eleven singletons).
+
+**Nothing is decided.** The grid stays `md="columns(2) items(start)"`; the three-column and
+page-width question was raised and parked, with the measurements recorded there.
+
+Three defects the exercise surfaced, all verified, none fixed:
+
+- **Podcast is ordered backwards.** Every other pair on the page runs container-then-part
+  (TVSeries→TVEpisode, MusicGroup→MusicAlbum, ComicSeries→ComicIssue); podcast runs
+  Episode→Series.
+- **Two linking conventions for one relationship.** `ComicIssue` and `MusicAlbum` link to their
+  sibling card with a crawlable `<a itemprop="url">`; `TVEpisode` and `PodcastEpisode` emit
+  `partOfSeries` as a hidden, name-only scope with no url — with the sibling card on the same
+  page. The cheapest of the three to unify.
+- **Sectioning costs a heading level.** Every card headline is an `<h2>` under the single
+  `<lay-out>`; real sections need `<h2>` for the section and `<h3>` for the cards, which is a
+  renderer/preset concern (`textTag`), not just markup.
+
+**Unrelated, found while measuring:** `ui/card/demo.layout.css` sets
+`--layout-space-unit: var(--spacing-lg, 1.5rem)` for page-level lay-outs, but that shim is **not
+in `dist/demo.min.css`** and `demo/schema.html` links only the bundle — so page gaps are 16px
+where the shim intends 24px. Either the shim belongs in the bundle or the page should link it.
