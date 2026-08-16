@@ -61,10 +61,15 @@ type — a demo affordance, emitted by `render.js` only when `renderCard` gets `
 
 > **The full cross-map lives in
 > [`docs/plans/2026-08-15-google-rich-results-audit.md`](../../../docs/plans/2026-08-15-google-rich-results-audit.md)** —
-> all 47 itemtypes against the Google gallery, bucketed Live / Withdrawn / None, with a
+> all 49 itemtypes against the Google gallery, bucketed Live / Withdrawn / None, with a
 > per-row marker saying whether each Google claim was researched here or is unverified model
 > knowledge. This section stays the source of truth for the withdrawn dates below; that
 > document defers to it.
+>
+> A companion document,
+> [`docs/plans/2026-08-16-schema-card-sections.md`](../../../docs/plans/2026-08-16-schema-card-sections.md),
+> proposes grouping this page's 57 cards into ten sections — and records why 57 cards and 59
+> validator items are both correct, plus three ordering/linking inconsistencies it surfaced.
 
 Google has withdrawn or narrowed the search feature behind six of the types on this page.
 `FAQPage` results stopped appearing on **2026-05-07** and the documentation was removed on

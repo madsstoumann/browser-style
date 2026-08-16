@@ -1,8 +1,8 @@
-# Google rich results — coverage audit of the 48 card itemtypes
+# Google rich results — coverage audit of the 49 card itemtypes
 
 > **Report only. No code changed by this document.** Audited 2026-08-15 against `v4` at
-> `c42e63f`, and refreshed the same day when the `ComicIssue` card took the inventory from 47
-> to 48.
+> `c42e63f`, and refreshed twice since: on 2026-08-15 when the `ComicIssue` card took the
+> inventory from 47 to 48, and on 2026-08-16 when `MusicGroup` took it to 49.
 > The question: how many of the card system's schema.org types have a live Google rich
 > result, which do not, and is it worth adding or reshaping anything to close the gap.
 >
@@ -38,7 +38,7 @@ The inventory itself is generated, not transcribed:
 ```sh
 node --input-type=module -e "
 import { SCHEMA_TYPES } from './ui/card/render.js';
-console.log(new Set(Object.values(SCHEMA_TYPES)).size)"   # → 48
+console.log(new Set(Object.values(SCHEMA_TYPES)).size)"   # → 49
 ```
 
 ---
@@ -250,6 +250,6 @@ would call missing: `product` allowlists `Vehicle`/`Car`/`Motorcycle`, `social` 
    pages in the repo where a pass/fail verdict means anything, and neither has been run through
    it. Any failure there is worth more than any row in § 3.
 3. **Re-derive the inventory** before trusting the row count — the one-liner at the top of this
-   document. 48 rows, no itemtype missing, none invented.
+   document. 49 rows, no itemtype missing, none invented.
 4. **Dates must agree with `schema.md` § Rich results.** If this table and that section
    disagree, that section wins.
