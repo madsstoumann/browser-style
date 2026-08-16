@@ -31,6 +31,9 @@
         "alt": "The Nordic Pantry book cover"
       }
     ],
+    "actions": [
+      { "link": { "text": "Buy the book" }, "style": "primary", "ariaLabel": "Buy The Nordic Pantry" }
+    ],
     "details": {
       "isbn": "978-87-12345-67-8",
       "numberOfPages": 312,
