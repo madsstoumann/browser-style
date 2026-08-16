@@ -365,7 +365,34 @@ so it takes no `media=` token: there is no `buttonGroup()` stem to mint, and the
 
 ---
 
-## 10. Closed — `<ui-content>` → `<ui-text>` rename (decided against, 2026-08-03)
+## 10. Three Google features with no card type — and one is cheap
+
+From the [Google rich-results audit](./2026-08-15-google-rich-results-audit.md). Coverage of
+the live gallery is already high; these are the only gaps worth recording, and **none of them
+is a new card type** — all three are page-level furniture.
+
+- **`BreadcrumbList` — the clear win.** Still live, and it applies to *every* page rather than
+  one type. `ui/breadcrumbs` emits **zero microdata** today: the markup is already
+  `<nav aria-label="Breadcrumb"><ol data-breadcrumbs><li><a>`, so it needs `BreadcrumbList` /
+  `ListItem` / `position` / `item` attributes and nothing else. The six single-entity demo
+  pages (`demo/articles/*.html`, `demo/products/*.html`) carry no breadcrumb at all.
+- **`ProfilePage`.** Google's profile result wants a `ProfilePage` host around the `Person`;
+  `profile` and `artist` emit a bare `Person` — correct as a component, insufficient as a page.
+- **`ItemList` as a carousel host.** The surviving half of the Course feature (*Course list*,
+  ≥3 items) and the shape behind Movie/Recipe carousels. `<lay-out>` already produces the right
+  markup shape and carries no microdata, which makes this the most interesting of the three.
+
+**Deliberately not on this list:** `VacationRental`, `MathSolver`, Vehicle listing, `Speakable`,
+IPTC image metadata — new types chasing narrow coverage. The 2026-08-05 coverage audit already
+deferred the lodging family for the same reason.
+
+⚠️ **Verify before building.** The audit could not fetch the gallery — `developers.google.com`
+is a policy denial at the egress proxy — so its Google column is largely model knowledge, marked
+row by row. Walk the ⚠ rows before acting on any of this.
+
+---
+
+## 11. Closed — `<ui-content>` → `<ui-text>` rename (decided against, 2026-08-03)
 
 Recorded so it is not rediscovered as an open question. The proposal was to rename
 `<ui-content>` (the text area) to `<ui-text>`, recycle `<ui-content>` for the host, move

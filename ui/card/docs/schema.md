@@ -58,6 +58,13 @@ type — a demo affordance, emitted by `render.js` only when `renderCard` gets `
 
 ## Rich results vs. structured data
 
+> **The full cross-map lives in
+> [`docs/plans/2026-08-15-google-rich-results-audit.md`](../../../docs/plans/2026-08-15-google-rich-results-audit.md)** —
+> all 47 itemtypes against the Google gallery, bucketed Live / Withdrawn / None, with a
+> per-row marker saying whether each Google claim was researched here or is unverified model
+> knowledge. This section stays the source of truth for the withdrawn dates below; that
+> document defers to it.
+
 Google has withdrawn or narrowed the search feature behind six of the types on this page.
 `FAQPage` results stopped appearing on **2026-05-07** and the documentation was removed on
 **2026-06-15**. `HowTo` was deprecated in **August 2023**, its documentation removed
