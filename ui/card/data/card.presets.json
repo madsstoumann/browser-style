@@ -8,16 +8,14 @@
       "description": "Default column card — media on top, 16:9",
       "element": "ui-card",
       "variant": "col",
-      "media": "asr(16/9)",
-      "headingTag": "h2"
+      "media": "asr(16/9)"
     },
     "showcase": {
       "name": "Showcase Preset",
       "description": "Column card with a taller 4:3 media frame — products, credentials",
       "element": "ui-card",
       "variant": "col",
-      "media": "asr(4/3)",
-      "headingTag": "h2"
+      "media": "asr(4/3)"
     },
     "split": {
       "name": "Split Preset",
@@ -78,8 +76,7 @@
       "variant": "col",
       "media": "asr(16/9)",
       "theme": "gray",
-      "content": "scl(lg)",
-      "headingTag": "h2"
+      "content": "scl(lg)"
     },
     "stack-brand": {
       "name": "Stack Brand Preset",
@@ -87,8 +84,7 @@
       "element": "ui-card",
       "variant": "col",
       "media": "asr(16/9)",
-      "theme": "black dark",
-      "headingTag": "h2"
+      "theme": "black dark"
     },
     "stack-accordion-divided": {
       "name": "Stack Accordion Divided Preset",
@@ -98,8 +94,7 @@
       "media": "asr(16/9)",
       "parts": {
         "accordion": "divided"
-      },
-      "headingTag": "h2"
+      }
     },
     "stack-offer": {
       "name": "Stack Offer Preset",
@@ -107,8 +102,7 @@
       "element": "ui-card",
       "variant": "col",
       "media": "asr(16/9)",
-      "theme": "muted gray",
-      "headingTag": "h2"
+      "theme": "muted gray"
     },
     "stack-accordion": {
       "name": "Stack Accordion Preset",
@@ -118,16 +112,14 @@
       "media": "asr(16/9)",
       "parts": {
         "accordion": "bordered rounded divided"
-      },
-      "headingTag": "h2"
+      }
     },
     "stack-square": {
       "name": "Stack Square Preset",
       "description": "Column card with a square media frame — album covers, podcast artwork, anything whose artwork is 1:1",
       "element": "ui-card",
       "variant": "col",
-      "media": "asr(1/1)",
-      "headingTag": "h2"
+      "media": "asr(1/1)"
     },
     "panel-subtle": {
       "name": "Panel Subtle Preset",
@@ -178,8 +170,7 @@
       "description": "Bare <ui-content> column, no card chrome — standalone text sections and full article views. text: body — the long-form body renders instead of the teaser summary (summary as fallback when no body exists).",
       "element": "ui-content",
       "content": "scl(md)",
-      "text": "body",
-      "headingTag": "h2"
+      "text": "body"
     },
     "prose-article": {
       "name": "Prose Article Preset",
@@ -201,16 +192,14 @@
       "variant": "col",
       "styles": {
         "--ui-rating-c": "#e75d26"
-      },
-      "headingTag": "h2"
+      }
     },
     "carousel": {
       "name": "Carousel Preset",
       "description": "Column card whose media items scroll-snap with dot navigation — galleries",
       "element": "ui-card",
       "variant": "col",
-      "media": "asr(16/9) nav(mrk) nav(arw)",
-      "headingTag": "h2"
+      "media": "asr(16/9) nav(mrk) nav(arw)"
     },
     "flip": {
       "name": "Flip Preset",
@@ -232,7 +221,6 @@
       "variant": "ovr(bs)",
       "media": "asr(4/3) obp(cc) scm",
       "content": "scl(lg)",
-      "headingTag": "h2",
       "reveal": {
         "type": "flip",
         "icon": "top right sm",

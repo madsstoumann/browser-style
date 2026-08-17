@@ -331,16 +331,14 @@
       "description": "Place card whose media frame is a map embed. The type chip moves to the start corner: a map's own zoom/layer controls own the end corner.",
       "element": "ui-card",
       "variant": "col",
-      "media": "asr(16/9) chip(ts)",
-      "headingTag": "h2"
+      "media": "asr(16/9) chip(ts)"
     },
     "stack-portrait": {
       "name": "Stack Portrait",
       "description": "Column card with a 2:3 portrait frame — book jackets, cover art, standing portraits.",
       "element": "ui-card",
       "variant": "col",
-      "media": "asr(2/3)",
-      "headingTag": "h2"
+      "media": "asr(2/3)"
     },
     "product-collage": {
       "name": "Product collage",
@@ -348,7 +346,6 @@
       "element": "ui-card",
       "variant": "col",
       "media": "chip(tc)",
-      "headingTag": "h2",
       "variants": {
         "layout": { "xs": "cg(3xs) rg(3xs)", "md": "columns(2)" },
         "tile": { "variant": "rds(non)", "media": "asr(1/1) chip(bs) chip(blue) chip(pale) chip(sm)", "content": "pad(none)" }

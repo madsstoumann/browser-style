@@ -1,17 +1,16 @@
 # Grouping `demo/schema.html` into logical sections
 
-> **Ideas only. No code changed by this document.** Written 2026-08-16 against `v4` at
-> `1c3d9aa`, with every count and measurement taken from that revision.
-> The question: if the 57 cards on the schema reference page were grouped into sections,
-> what should the sections be?
+> **Implemented.** Written 2026-08-16 as a proposal against `v4` at `1c3d9aa`; the sections
+> and card order below shipped the same day, so this now documents the page as it is rather
+> than a plan for it. Every count and measurement is from that revision.
 >
-> The grid spec is **parked** — the page stays `md="columns(2) items(start)"`. The
-> three-column / page-width discussion that came up alongside this is recorded in
-> [§ The grid](#the-grid--parked) so it need not be re-derived, but nothing was decided.
+> The grid spec stayed **parked** — the page is still `md="columns(2) items(start)"`, one
+> `<lay-out>` per section. The three-column / page-width discussion is recorded in
+> [§ The grid](#the-grid--parked) so it need not be re-derived; nothing was decided.
 
 ## Context
 
-`demo/schema.html` is **one `<lay-out md="columns(2) items(start)">` holding all 57 cards**, in
+`demo/schema.html` **was** one `<lay-out md="columns(2) items(start)">` holding all 57 cards, in
 accretive order: the original card types first, the model v1.3 additions next, the
 [markup-first types](../../ui/card/docs/schema.md) appended at the end as they were written. It
 reads as a changelog. A developer arriving with "how do I mark up a podcast?" has to scan the
@@ -24,9 +23,9 @@ They measure different things, and conflating them is the trap
 top-level microdata items — what a structured-data validator reports. **57** is the count of
 *cards*. The two non-cards need no section, and neither is a `WebPage`:
 
-- **`WebSite`** (`demo/schema.html:81`) — a `<div … hidden>` sitting **before** `<lay-out>`
-  opens at `:103`. Outside the grid entirely; it never was a cell.
-- **`EmployerAggregateRating`** (`:421`) — a top-level *item* but a nested *element*, inside the
+- **`WebSite`** (`demo/schema.html:94`) — a `<div … hidden>` sitting **before** the first
+  section opens at `:116`. Outside every grid; it never was a cell.
+- **`EmployerAggregateRating`** (`:1181`) — a top-level *item* but a nested *element*, inside the
   JobPosting card as `data-part="rating"`. It travels with the job card wherever that goes.
 
 The page *does* carry four `WebPage` **subtypes** — FAQPage, QAPage, MedicalWebPage,
@@ -51,8 +50,8 @@ unusable as sections: **Media 12, Commerce 12, and eleven singletons** (Careers,
 Generic, News, Operations, Property, Reference, Business, Events, Support…).
 
 It is a CMS filing tree — optimised for "where does this content live" — not a reading order.
-The right starting signal at the wrong granularity. The proposal below merges the singletons and
-splits the two giants.
+The right starting signal at the wrong granularity. The sections below merge the singletons and
+split the two giants.
 
 ```sh
 for f in ui/card/data/*.json; do
@@ -60,22 +59,24 @@ for f in ui/card/data/*.json; do
 done | sort | uniq -c | sort -rn
 ```
 
-## Recommended: 10 sections, by what the thing *is*
+## The ten sections, in page order
 
 | § | Section | Cards |
 |---|---|---|
 | 1 | **Editorial & journalism** (5) | CreativeWork · Article · NewsArticle · Quotation · ClaimReview |
-| 2 | **Commerce & offers** (9) | Product · ProductGroup · Review · Review *(testimonial)* · ItemList *(comparison)* · Offer *(membership)* · MemberProgram · Reservation · SoftwareApplication |
+| 2 | **Commerce & offers** (9) | Product · ProductGroup · SoftwareApplication · ItemList *(comparison)* · Review · Review *(testimonial)* · Offer *(membership)* · MemberProgram · Reservation |
 | 3 | **Screen** (4) | Movie · TVSeries · TVEpisode · VideoObject |
 | 4 | **Audio** (4) | PodcastSeries · PodcastEpisode · MusicGroup · MusicAlbum |
 | 5 | **Page & picture** (4) | Book · ComicSeries · ComicIssue · ImageGallery |
-| 6 | **Learning & reference** (7) | Course · Quiz ×3 · HowTo · EducationalOccupationalCredential · DefinedTermSet |
+| 6 | **Learning & reference** (7) | Course · EducationalOccupationalCredential · Quiz · Quiz *(graded)* · Quiz *(flashcard `ui-reveal`)* · HowTo · DefinedTermSet |
 | 7 | **People, work & history** (6) | Person *(profile)* · Person *(artist)* · Organization · JobPosting · EventSeries ×2 |
-| 8 | **Places, venues & property** (7) | CafeOrCoffeeShop · Menu · Recipe · Place ×2 · RealEstateListing · Event |
-| 9 | **Community & support** (6) | Question *(poll)* · FAQPage · QAPage · ContactPoint · SocialMediaPosting · DiscussionForumPosting |
+| 8 | **Places, venues & property** (7) | Place · Place *(map)* · CafeOrCoffeeShop · Menu · Recipe · Event · RealEstateListing |
+| 9 | **Community & support** (6) | FAQPage · QAPage · Question *(poll)* · ContactPoint · SocialMediaPosting · DiscussionForumPosting |
 | 10 | **Data, health & operations** (5) | Observation · Dataset · MedicalWebPage · SpecialAnnouncement · Service |
 
-5 + 9 + 4 + 4 + 4 + 7 + 6 + 7 + 6 + 5 = **57**, every card placed exactly once.
+5 + 9 + 4 + 4 + 4 + 7 + 6 + 7 + 6 + 5 = **57**, every card placed exactly once — asserted by the
+reorder script rather than trusted. Each section is an `<h2 id="sec-…">` followed by its own
+`<lay-out md="columns(2) items(start)">`.
 
 **Why the Media dozen splits three ways.** Twelve cards is too long a section and the natural
 seam is the *medium* — screen, audio, page. Each arm lands on four cards, and each arm carries a
@@ -94,19 +95,19 @@ container/part pair, so the sections teach the same lesson three times in three 
    Organization↔JobPosting, CafeOrCoffeeShop↔Menu, Person(artist)↔ComicSeries. Sectioning puts
    each pair side by side for the first time; the pattern deserves naming once.
 
-## Three inconsistencies the exercise surfaced
+## Three inconsistencies the exercise surfaced — two fixed by the reorder
 
-All verified against the current page, all cheap to fix, none fixed here:
-
-- **Podcast is ordered backwards.** Every other pair on the page runs container-then-part
-  (TVSeries→TVEpisode, MusicGroup→MusicAlbum, ComicSeries→ComicIssue). Podcast runs
-  Episode→Series.
-- **Two linking conventions for one relationship.** `ComicIssue` and `MusicAlbum` link to their
-  sibling card with a real crawlable `<a itemprop="url">`. `TVEpisode` and `PodcastEpisode` emit
-  `partOfSeries` as a **hidden, name-only scope** with no url — even though the sibling card is
-  on the same page.
-- **`Person` appears twice, 38 cards apart** — profile at 21, comic artist at 59. §7 is the
-  first arrangement in which the two Person shapes can be compared.
+- ✅ **Podcast was ordered backwards.** Every other pair runs container-then-part
+  (TVSeries→TVEpisode, MusicGroup→MusicAlbum, ComicSeries→ComicIssue); podcast ran
+  Episode→Series. §4 now leads with `PodcastSeries`. The inter-card comment that read *"the card
+  above is one episode"* was rewritten with it — it encoded the old adjacency.
+- ⬜ **Two linking conventions for one relationship — still open.** `ComicIssue` and `MusicAlbum`
+  link to their sibling card with a real crawlable `<a itemprop="url">`. `TVEpisode` and
+  `PodcastEpisode` emit `partOfSeries` as a **hidden, name-only scope** with no url — and now the
+  sibling card is not merely on the same page but directly adjacent, which makes the gap starker.
+  A renderer change, so out of scope for a reorder.
+- ✅ **`Person` appeared twice, 38 cards apart** — profile and comic artist. They are now the
+  first two cards of §7, so the two Person shapes sit side by side.
 
 ## The grid — parked
 
@@ -141,22 +142,57 @@ The page stays `md="columns(2) items(start)"`. Recorded so it need not be re-mea
 
 ## The one structural cost of sectioning
 
-Every card headline is an `<h2>` under a single `<lay-out>`. Real sections need `<h2>` for the
-section heading and card headlines demoted to `<h3>` — a renderer/preset concern (`textTag`),
-not just markup. Mechanically each section is one `<lay-out>`; `lay-out-group` exists and joins
-the `bs-card` container namespace, so the cards' `md:`/`lg:` container queries keep working —
-worth confirming before committing to it.
+Every card headline used to be an `<h2>` under a single `<lay-out>`. Sections need `<h2>` for the
+section heading and the card headlines one level down — which is a **preset** concern, not
+markup, and is the subject of point 2 below. Mechanically each section is one plain `<lay-out>`;
+no `<section>` wrapper and no `lay-out-group` were needed, because nothing in the layout CSS
+assumes a direct-child relationship (`[data-layout-root]` is a bare rule and `body:has(lay-out)`
+matches descendants).
 
-## If the sections are ever built
+## How it shipped, and the two things that turned out differently
 
-1. Agree the sections, then the heading levels.
-2. Reorder `ui/card/demo/schema.html`.
-3. Mirror the order in `ui/card/data/index.json` so `demo/render.html` matches.
-4. Re-run `node ui/card/schema.compare.js`. **Id-keyed pairs are order-independent; bare-key
-   pairs are not** — the regex matches the first card of a type *without* an `id`, so the
-   `Review` / `EventSeries` / `Place` / `Quiz` / `Observation` duplicates need re-checking.
-5. Decide whether `meta.folder` should be rewritten to match, making the sections the CMS tree
-   too.
+1. **The compare gate was never order-sensitive.** This document originally warned that bare-key
+   pairs in `schema.compare.js` would need re-checking, because that regex matches the first card
+   of a type *without* an `id`. Checked mechanically before touching anything: **zero** bare pairs
+   have more than one id-less card. Every duplicated type is either disambiguated
+   (`Place#schema-map`, `Person#schema-artist`, `Quiz#schema-quiz-mc`, `ui-reveal:Quiz`) or not
+   paired at all (`Review`, `EventSeries`). Reordering could not break it, and did not — 25/25
+   before and after.
+2. **Heading level moved through the presets, not through the page.** The original plan floated a
+   per-page override in the compare gate. The better answer, and the one taken: *no card
+   hardcodes a heading tag*. `headingTag` already defaults to `h3` in
+   [`card-preset.schema.json`](../../cms/baseline/models/card-preset.schema.json), so the fifteen
+   grid presets simply **dropped their redundant `"headingTag": "h2"`** and inherit it. The two
+   presets backing a standalone single-entity page — `prose-article` and `product-page` — keep an
+   explicit `h2`, because there the card headline is the page's own top heading.
+
+   That containment matters: `demo/articles/*.html` and `demo/products/*.html` have **no `<h1>`**
+   at all, so demoting them would have pushed those pages to start at `h3` — and they are the
+   real rich-result candidates. `demo/render.html` needed nothing either: it already prints an
+   `<h2>` label per card, so the change turned a flat `h2`-over-`h2` into a correct `h2`-over-`h3`.
+
+The 11 comments interleaved between cards were carried with the card each one introduces, and the
+five that assert adjacency (*"the card above…"*) were checked individually: four are preserved by
+the new order, one — the podcast note — was rewritten.
+
+`ui/card/data/index.json` was reordered to the same sequence so `demo/render.html` reads in step;
+its shape is unchanged, since that page labels every card individually and needs no section
+metadata.
+
+**Not done:** rewriting `meta.folder` so the sections become the CMS tree too. Left deliberately —
+the folder tree answers "where does this content live", which is a different question from "how
+does this page read".
+
+## Verification
+
+| Check | Result |
+|---|---|
+| `node ui/card/tokens.lint.js` | ok |
+| `node --test ui/card/render.test.js` | 185/185 |
+| `node ui/card/schema.compare.js` | **25/25** — unchanged, both sides now `h3` |
+| SSR snapshot vs the pre-change baseline | 114 changed lines, **every one** a `data-part="headline"` tag; nothing else moved |
+| Heading outline in the browser | `h1` ×1 → `h2` ×10 → `h3` ×54, **zero skips** |
+| Card and comment count | 57 cards and 27 comments before and after |
 
 ## Unrelated finding, worth its own issue
 

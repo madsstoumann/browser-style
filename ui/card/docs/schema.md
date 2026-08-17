@@ -57,6 +57,23 @@ the page is optional: `video.js` polyfills the proposed media invoker commands
 without it. Each media frame also carries a `<ui-chip data-type>` naming the card's schema.org
 type — a demo affordance, emitted by `render.js` only when `renderCard` gets `{ typeChip: true }`.
 
+## Page structure — ten sections, and where the heading level comes from
+
+The page groups its 57 cards into **ten sections by what the thing *is*** — Editorial &
+journalism · Commerce & offers · Screen · Audio · Page & picture · Learning & reference ·
+People, work & history · Places, venues & property · Community & support · Data, health &
+operations. Each section is an `<h2 id="sec-…">` followed by its own
+`<lay-out md="columns(2) items(start)">`. Rationale, and the card-by-card allocation:
+[`docs/plans/2026-08-16-schema-card-sections.md`](../../../docs/plans/2026-08-16-schema-card-sections.md).
+
+⚠️ **No card hardcodes its heading tag.** The level is `preset.headingTag`, whose default is
+declared in [`card-preset.schema.json`](../../../cms/baseline/models/card-preset.schema.json) as
+`h3` — heading level is *placement*, so it belongs to the preset, not the content. Grid presets
+carry no override and therefore render `<h3>` under the section `<h2>`; the two presets that back
+a **standalone single-entity page** — `prose-article` and `product-page` — keep an explicit `h2`,
+because there the card headline is the page's own top heading rather than an item in a list.
+That is the whole mechanism: sections own `<h2>`, cards render whatever their preset says.
+
 ## Rich results vs. structured data
 
 > **The full cross-map lives in
@@ -68,8 +85,9 @@ type — a demo affordance, emitted by `render.js` only when `renderCard` gets `
 >
 > A companion document,
 > [`docs/plans/2026-08-16-schema-card-sections.md`](../../../docs/plans/2026-08-16-schema-card-sections.md),
-> proposes grouping this page's 57 cards into ten sections — and records why 57 cards and 59
-> validator items are both correct, plus three ordering/linking inconsistencies it surfaced.
+> is the rationale for the page's **ten sections** — why the cards are grouped as they are, why
+> 57 cards and 59 validator items are both correct, and the inconsistencies the grouping
+> surfaced.
 
 Google has withdrawn or narrowed the search feature behind six of the types on this page.
 `FAQPage` results stopped appearing on **2026-05-07** and the documentation was removed on
@@ -421,7 +439,7 @@ holding the preset and the variant data together.
 
 ```json
 "product-collage": {
-  "element": "ui-card", "variant": "col", "media": "chip(tc)", "headingTag": "h2",
+  "element": "ui-card", "variant": "col", "media": "chip(tc)",
   "variants": {
     "layout": { "xs": "cg(2xs) rg(2xs)", "md": "columns(2)" },
     "tile": { "variant": "rds(non)", "media": "asr(1/1) chip(bs) chip(green) chip(pale)", "content": "pad(none)" }
