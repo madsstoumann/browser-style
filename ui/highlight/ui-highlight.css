@@ -85,7 +85,14 @@
 		   `--x: attr(…)` form is true in Safari too. Placed after the presets so a
 		   named fill still wins. -- */
 		@supports not (background-color: attr(x type(<color>), red)) {
-			& { --_fill: #82ffad; --_ink: var(--_ink-auto); }
+			/* Bare declarations, NOT `& { … }`: the minifier flattens a `&` block into
+			   plain declarations and relocates them AFTER its sibling nested rules,
+			   producing "declarations after a nested rule" in the shipped bundle — the
+			   most interop-fragile corner of CSS nesting. Written bare and FIRST, there
+			   is nothing to relocate. Same cascade: these apply to the parent selector,
+			   and the attribute rules below still win on specificity. */
+			--_fill: #82ffad;
+			--_ink: var(--_ink-auto);
 			&[fill="green"] { --_fill: #82ffad; }
 			&[fill="yellow"] { --_fill: #fdfa8c; }
 			&[fill="orange"] { --_fill: #ffbe7b; }

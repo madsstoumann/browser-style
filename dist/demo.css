@@ -6684,9 +6684,7 @@
       white-space: nowrap;
     }
     @supports not (background-color: attr(fill type(<color>), red)) {
-      & {
-        --_angle: 0deg;
-      }
+      --_angle: 0deg;
       &[fill] {
         --ui-sticker-bg: var(--color-accent);
       }
@@ -10269,10 +10267,8 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
       --_fill: #ff9dc9;
     }
     @supports not (background-color: attr(x type(<color>), red)) {
-      & {
-        --_fill: #82ffad;
-        --_ink: var(--_ink-auto);
-      }
+      --_fill: #82ffad;
+      --_ink: var(--_ink-auto);
       &[fill=green] {
         --_fill: #82ffad;
       }
