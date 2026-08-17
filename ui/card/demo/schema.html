@@ -1287,87 +1287,8 @@
 			</cq-box>
 		</ui-card>
 	</lay-out>
-	<h2 id="sec-places">Places, venues &amp; property</h2>
+	<h2 id="sec-food">Food &amp; drink</h2>
 	<lay-out md="columns(2) items(start)">
-		<ui-card variant="col" media="asr(16/9) chip(te)" itemscope itemtype="https://schema.org/Place">
-			<cq-box>
-				<ui-media><img src="/assets/images/hammershus.png" alt="Hammershus castle ruin on the cliffs" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/hammershus.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/hammershus.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/hammershus.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/hammershus.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/hammershus.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>Place</ui-chip></ui-media>
-				<ui-content>
-					<div itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates" hidden>
-						<meta itemprop="latitude" content="55.0603">
-						<meta itemprop="longitude" content="14.7009">
-					</div>
-					<small data-part="eyebrow">Destination</small>
-					<h3 data-part="headline" itemprop="name">Hammershus Point</h3>
-					<p data-part="summary" itemprop="description">Northern Europe’s largest castle ruin, perched on Bornholm’s granite cliffs.</p>
-					<address data-part="address" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
-						<span><span itemprop="addressLocality">Allinge</span></span>
-						<span><span itemprop="addressCountry">Denmark</span></span>
-					</address>
-					<dl data-part="hours">
-						<dt>Mon–Sun</dt>
-						<dd>
-							<span itemprop="openingHoursSpecification" itemscope itemtype="https://schema.org/OpeningHoursSpecification" hidden>
-								<meta itemprop="dayOfWeek" content="https://schema.org/Monday"><meta itemprop="dayOfWeek" content="https://schema.org/Tuesday"><meta itemprop="dayOfWeek" content="https://schema.org/Wednesday"><meta itemprop="dayOfWeek" content="https://schema.org/Thursday"><meta itemprop="dayOfWeek" content="https://schema.org/Friday"><meta itemprop="dayOfWeek" content="https://schema.org/Saturday"><meta itemprop="dayOfWeek" content="https://schema.org/Sunday">
-								<meta itemprop="opens" content="06:00"><meta itemprop="closes" content="22:00">
-							</span>
-							6:00–22:00
-						</dd>
-					</dl>
-					<div data-part="rating" itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
-						<meta itemprop="ratingValue" content="4.7"><meta itemprop="ratingCount" content="950">
-						<meta itemprop="bestRating" content="5"><meta itemprop="worstRating" content="1">
-						<input class="ui-rating" type="range" min="1" max="5" value="4.7" step="0.01" disabled aria-hidden="true">
-						<span data-sr>Rated 4.7 out of 5 stars from 950 ratings</span>
-						<span aria-hidden="true">4.7 / 5 (950 ratings)</span>
-					</div>
-					<ul data-part="list">
-						<li>Free parking</li>
-						<li>Guided tours</li>
-						<li>Coastal viewpoint</li>
-					</ul>
-					<p data-part="meta"><a itemprop="telephone" href="tel:+4556482401">+45 56 48 24 01</a></p>
-					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="https://www.google.com/maps/search/?api=1&amp;query=55.0603,14.7009" target="_blank" rel="noopener">Open in Maps</a></nav>
-					<span data-part="tags"><ui-chip itemprop="keywords">Bornholm</ui-chip><ui-chip itemprop="keywords">Landmark</ui-chip></span>
-				</ui-content>
-			</cq-box>
-		</ui-card>
-		<!-- The map card: the media frame IS the map. An <iframe> needs no new element —
-		     media.css already sizes iframe like img/video, so the embed inherits asr(),
-		     the radius, the furniture and the carousel. Coordinates come from the same
-		     GeoCoordinates the card already carries — docs/media.md § Map -->
-		<ui-card id="schema-map" variant="col" media="asr(16/9) chip(ts)" itemscope itemtype="https://schema.org/Place">
-			<cq-box>
-				<ui-media><iframe src="https://www.openstreetmap.org/export/embed.html?bbox=12.596553,55.706053,12.602047,55.709147&amp;layer=mapnik&amp;marker=55.7076,12.5993" title="Map of Nordhavn Studio, Sundkaj 9, Copenhagen" loading="lazy" itemprop="hasMap"></iframe><ui-chip data-type>Place</ui-chip></ui-media>
-				<ui-content>
-					<div itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates" hidden>
-						<meta itemprop="latitude" content="55.7076">
-						<meta itemprop="longitude" content="12.5993">
-					</div>
-					<small data-part="eyebrow">Find us</small>
-					<h3 data-part="headline" itemprop="name">Nordhavn Studio</h3>
-					<p data-part="summary" itemprop="description">The media frame is the map: an OpenStreetMap embed drawn from the same coordinates the GeoCoordinates scope carries.</p>
-					<address data-part="address" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
-						<span><span itemprop="streetAddress">Sundkaj 9</span></span>
-						<span><span itemprop="postalCode">2150</span> <span itemprop="addressLocality">Copenhagen</span></span>
-						<meta itemprop="addressCountry" content="DK">
-					</address>
-					<dl data-part="hours">
-						<dt>Mon–Fri</dt>
-						<dd>
-							<span itemprop="openingHoursSpecification" itemscope itemtype="https://schema.org/OpeningHoursSpecification" hidden>
-								<meta itemprop="dayOfWeek" content="https://schema.org/Monday"><meta itemprop="dayOfWeek" content="https://schema.org/Tuesday"><meta itemprop="dayOfWeek" content="https://schema.org/Wednesday"><meta itemprop="dayOfWeek" content="https://schema.org/Thursday"><meta itemprop="dayOfWeek" content="https://schema.org/Friday">
-								<meta itemprop="opens" content="09:00"><meta itemprop="closes" content="17:00">
-							</span>
-							9:00–17:00
-						</dd>
-					</dl>
-					<p data-part="meta"><a itemprop="telephone" href="tel:+4535551290">+45 35 55 12 90</a></p>
-					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="https://www.google.com/maps/search/?api=1&amp;query=55.7076,12.5993" target="_blank" rel="noopener">Open in Maps</a></nav>
-					<span data-part="tags"><ui-chip itemprop="keywords">Copenhagen</ui-chip><ui-chip itemprop="keywords">Studio</ui-chip></span>
-				</ui-content>
-			</cq-box>
-		</ui-card>
 		<ui-card variant="col" media="asr(16/9) chip(te)" itemscope itemtype="https://schema.org/CafeOrCoffeeShop">
 			<cq-box>
 				<ui-media><img src="/assets/images/brewandbean.png" alt="Brew &amp; Bean café storefront" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/brewandbean.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/brewandbean.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/brewandbean.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/brewandbean.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/brewandbean.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>CafeOrCoffeeShop</ui-chip></ui-media>
@@ -1516,6 +1437,88 @@
 						</details>
 					</cq-box></ui-accordion>
 					<span data-part="tags"><ui-chip itemprop="keywords">Pasta</ui-chip><ui-chip itemprop="keywords">Italian</ui-chip><ui-chip itemprop="keywords">Quick</ui-chip></span>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</lay-out>
+	<h2 id="sec-places">Places, events &amp; property</h2>
+	<lay-out md="columns(2) items(start)">
+		<ui-card variant="col" media="asr(16/9) chip(te)" itemscope itemtype="https://schema.org/Place">
+			<cq-box>
+				<ui-media><img src="/assets/images/hammershus.png" alt="Hammershus castle ruin on the cliffs" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/hammershus.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/hammershus.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/hammershus.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/hammershus.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/hammershus.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>Place</ui-chip></ui-media>
+				<ui-content>
+					<div itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates" hidden>
+						<meta itemprop="latitude" content="55.0603">
+						<meta itemprop="longitude" content="14.7009">
+					</div>
+					<small data-part="eyebrow">Destination</small>
+					<h3 data-part="headline" itemprop="name">Hammershus Point</h3>
+					<p data-part="summary" itemprop="description">Northern Europe’s largest castle ruin, perched on Bornholm’s granite cliffs.</p>
+					<address data-part="address" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
+						<span><span itemprop="addressLocality">Allinge</span></span>
+						<span><span itemprop="addressCountry">Denmark</span></span>
+					</address>
+					<dl data-part="hours">
+						<dt>Mon–Sun</dt>
+						<dd>
+							<span itemprop="openingHoursSpecification" itemscope itemtype="https://schema.org/OpeningHoursSpecification" hidden>
+								<meta itemprop="dayOfWeek" content="https://schema.org/Monday"><meta itemprop="dayOfWeek" content="https://schema.org/Tuesday"><meta itemprop="dayOfWeek" content="https://schema.org/Wednesday"><meta itemprop="dayOfWeek" content="https://schema.org/Thursday"><meta itemprop="dayOfWeek" content="https://schema.org/Friday"><meta itemprop="dayOfWeek" content="https://schema.org/Saturday"><meta itemprop="dayOfWeek" content="https://schema.org/Sunday">
+								<meta itemprop="opens" content="06:00"><meta itemprop="closes" content="22:00">
+							</span>
+							6:00–22:00
+						</dd>
+					</dl>
+					<div data-part="rating" itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
+						<meta itemprop="ratingValue" content="4.7"><meta itemprop="ratingCount" content="950">
+						<meta itemprop="bestRating" content="5"><meta itemprop="worstRating" content="1">
+						<input class="ui-rating" type="range" min="1" max="5" value="4.7" step="0.01" disabled aria-hidden="true">
+						<span data-sr>Rated 4.7 out of 5 stars from 950 ratings</span>
+						<span aria-hidden="true">4.7 / 5 (950 ratings)</span>
+					</div>
+					<ul data-part="list">
+						<li>Free parking</li>
+						<li>Guided tours</li>
+						<li>Coastal viewpoint</li>
+					</ul>
+					<p data-part="meta"><a itemprop="telephone" href="tel:+4556482401">+45 56 48 24 01</a></p>
+					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="https://www.google.com/maps/search/?api=1&amp;query=55.0603,14.7009" target="_blank" rel="noopener">Open in Maps</a></nav>
+					<span data-part="tags"><ui-chip itemprop="keywords">Bornholm</ui-chip><ui-chip itemprop="keywords">Landmark</ui-chip></span>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		<!-- The map card: the media frame IS the map. An <iframe> needs no new element —
+		     media.css already sizes iframe like img/video, so the embed inherits asr(),
+		     the radius, the furniture and the carousel. Coordinates come from the same
+		     GeoCoordinates the card already carries — docs/media.md § Map -->
+		<ui-card id="schema-map" variant="col" media="asr(16/9) chip(ts)" itemscope itemtype="https://schema.org/Place">
+			<cq-box>
+				<ui-media><iframe src="https://www.openstreetmap.org/export/embed.html?bbox=12.596553,55.706053,12.602047,55.709147&amp;layer=mapnik&amp;marker=55.7076,12.5993" title="Map of Nordhavn Studio, Sundkaj 9, Copenhagen" loading="lazy" itemprop="hasMap"></iframe><ui-chip data-type>Place</ui-chip></ui-media>
+				<ui-content>
+					<div itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates" hidden>
+						<meta itemprop="latitude" content="55.7076">
+						<meta itemprop="longitude" content="12.5993">
+					</div>
+					<small data-part="eyebrow">Find us</small>
+					<h3 data-part="headline" itemprop="name">Nordhavn Studio</h3>
+					<p data-part="summary" itemprop="description">The media frame is the map: an OpenStreetMap embed drawn from the same coordinates the GeoCoordinates scope carries.</p>
+					<address data-part="address" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
+						<span><span itemprop="streetAddress">Sundkaj 9</span></span>
+						<span><span itemprop="postalCode">2150</span> <span itemprop="addressLocality">Copenhagen</span></span>
+						<meta itemprop="addressCountry" content="DK">
+					</address>
+					<dl data-part="hours">
+						<dt>Mon–Fri</dt>
+						<dd>
+							<span itemprop="openingHoursSpecification" itemscope itemtype="https://schema.org/OpeningHoursSpecification" hidden>
+								<meta itemprop="dayOfWeek" content="https://schema.org/Monday"><meta itemprop="dayOfWeek" content="https://schema.org/Tuesday"><meta itemprop="dayOfWeek" content="https://schema.org/Wednesday"><meta itemprop="dayOfWeek" content="https://schema.org/Thursday"><meta itemprop="dayOfWeek" content="https://schema.org/Friday">
+								<meta itemprop="opens" content="09:00"><meta itemprop="closes" content="17:00">
+							</span>
+							9:00–17:00
+						</dd>
+					</dl>
+					<p data-part="meta"><a itemprop="telephone" href="tel:+4535551290">+45 35 55 12 90</a></p>
+					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="https://www.google.com/maps/search/?api=1&amp;query=55.7076,12.5993" target="_blank" rel="noopener">Open in Maps</a></nav>
+					<span data-part="tags"><ui-chip itemprop="keywords">Copenhagen</ui-chip><ui-chip itemprop="keywords">Studio</ui-chip></span>
 				</ui-content>
 			</cq-box>
 		</ui-card>

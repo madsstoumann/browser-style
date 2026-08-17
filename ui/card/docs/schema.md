@@ -59,10 +59,10 @@ type — a demo affordance, emitted by `render.js` only when `renderCard` gets `
 
 ## Page structure — ten sections, and where the heading level comes from
 
-The page groups its 57 cards into **ten sections by what the thing *is*** — Editorial &
+The page groups its 57 cards into **eleven sections by what the thing *is*** — Editorial &
 journalism · Commerce & offers · Screen · Audio · Page & picture · Learning & reference ·
-People, work & history · Places, venues & property · Community & support · Data, health &
-operations. Each section is an `<h2 id="sec-…">` followed by its own
+People, work & history · Food & drink · Places, events & property · Community & support ·
+Data, health & operations. Each section is an `<h2 id="sec-…">` followed by its own
 `<lay-out md="columns(2) items(start)">`. Rationale, and the card-by-card allocation:
 [`docs/plans/2026-08-16-schema-card-sections.md`](../../../docs/plans/2026-08-16-schema-card-sections.md).
 

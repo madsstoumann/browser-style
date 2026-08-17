@@ -59,7 +59,7 @@ for f in ui/card/data/*.json; do
 done | sort | uniq -c | sort -rn
 ```
 
-## The ten sections, in page order
+## The eleven sections, in page order
 
 | § | Section | Cards |
 |---|---|---|
@@ -70,13 +70,21 @@ done | sort | uniq -c | sort -rn
 | 5 | **Page & picture** (4) | Book · ComicSeries · ComicIssue · ImageGallery |
 | 6 | **Learning & reference** (7) | Course · EducationalOccupationalCredential · Quiz · Quiz *(graded)* · Quiz *(flashcard `ui-reveal`)* · HowTo · DefinedTermSet |
 | 7 | **People, work & history** (6) | Person *(profile)* · Person *(artist)* · Organization · JobPosting · EventSeries ×2 |
-| 8 | **Places, venues & property** (7) | Place · Place *(map)* · CafeOrCoffeeShop · Menu · Recipe · Event · RealEstateListing |
-| 9 | **Community & support** (6) | FAQPage · QAPage · Question *(poll)* · ContactPoint · SocialMediaPosting · DiscussionForumPosting |
-| 10 | **Data, health & operations** (5) | Observation · Dataset · MedicalWebPage · SpecialAnnouncement · Service |
+| 8 | **Food & drink** (3) | CafeOrCoffeeShop · Menu · Recipe |
+| 9 | **Places, events & property** (4) | Place · Place *(map)* · Event · RealEstateListing |
+| 10 | **Community & support** (6) | FAQPage · QAPage · Question *(poll)* · ContactPoint · SocialMediaPosting · DiscussionForumPosting |
+| 11 | **Data, health & operations** (5) | Observation · Dataset · MedicalWebPage · SpecialAnnouncement · Service |
 
-5 + 9 + 4 + 4 + 4 + 7 + 6 + 7 + 6 + 5 = **57**, every card placed exactly once — asserted by the
+5 + 9 + 4 + 4 + 4 + 7 + 6 + 3 + 4 + 6 + 5 = **57**, every card placed exactly once — asserted by the
 reorder script rather than trusted. Each section is an `<h2 id="sec-…">` followed by its own
 `<lay-out md="columns(2) items(start)">`.
+
+**Why Food & drink is its own section.** It began as one seven-card *Places, venues & property*
+holding `CafeOrCoffeeShop` → `Menu` → `Recipe` → `Place` ×2 → `Event` → `RealEstateListing`, and a
+recipe filed under "places" reads as a mistake — the food chain had dragged it in behind the café
+and its menu. Splitting the three food cards out fixes that and lets the remaining section be
+honest about `Event` too: everything left in *Places, events & property* is a thing with an
+address. Three cards is a small section, but no smaller than the point it makes.
 
 **Why the Media dozen splits three ways.** Twelve cards is too long a section and the natural
 seam is the *medium* — screen, audio, page. Each arm lands on four cards, and each arm carries a
@@ -88,7 +96,7 @@ container/part pair, so the sections teach the same lesson three times in three 
    MedicalWebPage and RealEstateListing are pages *about* a thing. That is why
    RealEstateListing hangs the home off `mainEntity`, and why MedicalWebPage's
    `specialty` / `reviewedBy` / `lastReviewed` are WebPage properties it merely inherits. A
-   domain grouping scatters them across §8, §9 and §10 and a reader never notices they are one
+   domain grouping scatters them across §9, §10 and §11 and a reader never notices they are one
    shape. Worth a cross-reference note, not a section of its own.
 2. **Container/part is the page's most repeated pattern** — ProductGroup↔Product,
    PodcastSeries↔Episode, TVSeries↔Episode, MusicGroup↔Album, ComicSeries↔Issue,
