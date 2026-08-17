@@ -428,7 +428,7 @@ the actual defect — see the same plan, work items B-F.
 
 ## 12. Closed — `demo/schema.html` sections (shipped 2026-08-16)
 
-The page is now ten sections, each an `<h2 id="sec-…">` followed by its own
+The page is now eleven sections, each an `<h2 id="sec-…">` followed by its own
 `<lay-out md="columns(2) items(start)">`, grouped by what the thing *is*. Rationale and the
 card-by-card allocation: [card-sections](./2026-08-16-schema-card-sections.md).
 
