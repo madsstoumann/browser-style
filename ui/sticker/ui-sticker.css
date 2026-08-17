@@ -299,7 +299,8 @@
 		/* typed attr() has NO fallback in Safari/FF — without this the sticker renders
 		   as bare text. Keep LAST. Docs: ../base/polyfills/readme.md */
 		@supports not (background-color: attr(fill type(<color>), red)) {
-			& { --_angle: 0deg; }
+			/* bare + first, not `& { … }` — see ui/highlight/ui-highlight.css for why */
+			--_angle: 0deg;
 			&[fill] { --ui-sticker-bg: var(--color-accent); }
 			&[ink]  { --ui-sticker-c: hsl(0, 0%, 100%); }
 		}
