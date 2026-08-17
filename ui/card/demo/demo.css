@@ -23,4 +23,5 @@
 @import '../../timeline/ui-timeline.css';
 @import '../../gradient-text/ui-gradient-text.css';
 @import '../../highlight/ui-highlight.css';
+@import '../../breadcrumbs/ui-breadcrumbs.css';
 @import '../ui-card.css';

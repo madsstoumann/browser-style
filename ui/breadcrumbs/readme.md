@@ -11,6 +11,7 @@ A CSS-first breadcrumb navigation component with separator variants. No JavaScri
 - Works as plain CSS with `<ol data-breadcrumbs>` or as a `<ui-breadcrumbs>` web component
 - RTL support built in
 - No JavaScript required for full styling
+- `BreadcrumbList` structured data — emitted by the web component, documented for the CSS-only path
 
 ---
 
@@ -298,6 +299,53 @@ ui-breadcrumbs {
 | `--ui-breadcrumbs-underline-offset` | `.5em` | Underline offset on hover |
 | `--ui-breadcrumbs-gap` | `.25ch .5ch` | Inline margin around the separator |
 | `--ui-breadcrumbs-align` | `baseline` | Vertical alignment of items |
+
+---
+
+## Structured data
+
+Breadcrumbs are one of Google's rich results, and the markup for it is `BreadcrumbList`
+microdata. **The web component emits it for you**; on the CSS-only path it is hand-authored,
+because CSS cannot add attributes.
+
+The canonical form — the list is the `BreadcrumbList`, each `<li>` a `ListItem`, and the label
+goes in a `<span itemprop="name">` *inside* the link so the `name` belongs to the list item and
+not to the URL:
+
+```html
+<nav aria-label="Breadcrumb">
+  <ol data-breadcrumbs itemscope itemtype="https://schema.org/BreadcrumbList">
+    <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+      <a itemprop="item" href="/books"><span itemprop="name">Books</span></a>
+      <meta itemprop="position" content="1">
+    </li>
+    <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+      <a itemprop="item" href="/books/scifi"><span itemprop="name">Science Fiction</span></a>
+      <meta itemprop="position" content="2">
+    </li>
+    <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+      <span itemprop="name">Award Winners</span>
+      <meta itemprop="position" content="3">
+    </li>
+  </ol>
+</nav>
+```
+
+Two rules are easy to get wrong:
+
+- **`position` starts at 1 and must not skip.** The component derives it from the item's
+  position among its siblings, so it stays correct no matter what order the custom elements
+  upgrade in.
+- **The last crumb takes no `item`.** It is the current page, and Google expects it linkless —
+  which is also the accessibility guidance below, so the two agree.
+
+**The list scope is opened by the first `<ui-breadcrumbs-item>`, not by the host.** That is
+deliberate, and it is what makes mixing safe: `<ui-breadcrumbs>` also accepts plain `<li>`
+children, and a host that stamped `BreadcrumbList` unconditionally would publish an *empty*
+list around them — a `BreadcrumbList` with no `itemListElement`, which is an error. It also
+sidesteps a timing trap: a host upgrading mid-parse cannot see its own children yet. An
+`itemscope` you put on the host yourself always wins, so a breadcrumb nested inside another
+item scope stays under your control.
 
 ---
 

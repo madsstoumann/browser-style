@@ -46,3 +46,16 @@ export const esc = (value) => String(value)
 /* ONE microdata scope on the page root — the bare-primitive renders each carry their
    own itemscope, which would split the page into partial items */
 export const descope = (html) => html.replace(/ itemscope itemtype="https:\/\/schema\.org\/\w+"/, '');
+
+/* Breadcrumb — `@browser.style/breadcrumbs` markup + BreadcrumbList microdata, the
+   hand-authored (CSS-only) form so these pages need no extra script. `trail` is
+   [{ name, url? }]; the LAST crumb is the current page and takes no url/`item`.
+   Docs: ui/breadcrumbs/readme.md § Structured data */
+export const breadcrumb = (trail) => `<nav aria-label="Breadcrumb">
+		<ol data-breadcrumbs itemscope itemtype="https://schema.org/BreadcrumbList">
+			${trail.map(({ name, url }, index) => `<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+				${url ? `<a itemprop="item" href="${esc(url)}"><span itemprop="name">${esc(name)}</span></a>` : `<span itemprop="name">${esc(name)}</span>`}
+				<meta itemprop="position" content="${index + 1}">
+			</li>`).join('\n\t\t\t')}
+		</ol>
+	</nav>`;

@@ -199,6 +199,13 @@ const HEADING_TAGS = new Set(['h2', 'h3', 'h4', 'h5']);
 const ARTICLE_BODY_TYPES = new Set(['article', 'news']);
 /* types where the image/video belongs to another scope — skip itemprop */
 const NO_IMAGE_PROP = new Set(['review', 'contact']);
+/* A gallery whose data carries licensing emits a full ImageObject per photo, which then
+   owns `image` — the bare <img> must NOT also claim it (one property, one value). Keyed on
+   the DATA, not the type: the carousel demos are galleries too and carry no licence, so
+   their images keep the plain itemprop. Docs: docs/schema.md § Gallery */
+const IMAGE_OBJECT_KEYS = ['license', 'acquireLicensePage', 'creator', 'creditText', 'copyrightNotice'];
+const hasImageObject = (fields, type) =>
+	type === 'gallery' && IMAGE_OBJECT_KEYS.some((key) => fields.details?.[key]);
 /* types whose ROOT is the VideoObject — media props emit at root, never a nested scope */
 const ROOT_VIDEO_TYPES = new Set(['video']);
 /* Person has no keywords property. Intangible-rooted types (JobPosting, Offer,
@@ -914,7 +921,7 @@ const buildMedia = (fields, type, tokens, preset = {}, frameAttrs = {}, cardId =
 			loading: eager ? 'eager' : 'lazy',
 			fetchpriority: eager && firstImg ? 'high' : null,
 			decoding: IMG ? 'async' : null,
-			itemprop: NO_IMAGE_PROP.has(type) ? null : 'image'
+			itemprop: NO_IMAGE_PROP.has(type) || hasImageObject(fields, type) ? null : 'image'
 		})}>`;
 		firstImg = false;
 	}
@@ -1473,9 +1480,25 @@ const DETAILS = {
 		}).join('')}</ol>`;
 	},
 
-	gallery(d) {
+	/* The ImageObject scopes live HERE, in the text column, not around the <img>s: the
+	   frame is a carousel whose slides are its direct children, and <img> is void so the
+	   scope cannot ride the image itself. Docs: docs/schema.md § Gallery */
+	gallery(d, fields) {
 		const bits = [d.albumName, d.totalCount ? `${d.totalCount} photos` : null].filter(Boolean).join(' · ');
-		return bits ? `<p data-part="meta">${esc(bits)}</p>` : '';
+		let html = bits ? `<p data-part="meta">${esc(bits)}</p>` : '';
+		if (!hasImageObject(fields, 'gallery')) return html;
+		for (const item of fields?.media || []) {
+			if (item.mediaType && item.mediaType !== 'image') continue;
+			/* contentUrl is required; `license` is what earns the Licensable badge */
+			const props = meta('caption', item.alt)
+				+ (item.creditText || d.creditText ? meta('creditText', item.creditText || d.creditText) : '')
+				+ (item.copyrightNotice || d.copyrightNotice ? meta('copyrightNotice', item.copyrightNotice || d.copyrightNotice) : '')
+				+ (d.license ? `<link itemprop="license" href="${esc(d.license)}">` : '')
+				+ (d.acquireLicensePage ? `<link itemprop="acquireLicensePage" href="${esc(d.acquireLicensePage)}">` : '')
+				+ (d.creator ? `<span${scope('creator', 'Person')}>${meta('name', d.creator)}</span>` : '');
+			html += `<span${scope('image', 'ImageObject')} hidden><link itemprop="contentUrl" href="${esc(item.src)}">${props}</span>`;
+		}
+		return html;
 	},
 
 	statistic(d) {

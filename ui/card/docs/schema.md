@@ -515,6 +515,25 @@ Part `timeline` — styled by `@browser.style/timeline`: a dot per entry on a co
 
 Multiple media items become a carousel — `nav(mrk)` — each image carrying `itemprop="image"`.
 
+**Image licensing — `ImageObject`, and it lives in the text column.** Give `details` any of
+`license` · `acquireLicensePage` · `creator` · `creditText` · `copyrightNotice` and each photo
+emits a full `ImageObject` (`contentUrl` + `caption` + those) instead of a bare
+`itemprop="image"`. That is what Google's *Image metadata* feature reads; `license` is the one
+that earns the **Licensable** badge.
+
+Two constraints shape the markup, and both are easy to undo by accident:
+
+- **The scopes sit in `<ui-content>`, not around the images.** The frame is a carousel whose
+  slides are the **direct children** of `<ui-media>` (`slidesOf()`/`NOT_SLIDE` and the CSS
+  `:not()` list both key on that), so wrapping each `<img>` in an `ImageObject` span would
+  change what a slide *is* — and `<img>` is void, so the scope cannot ride the image either.
+  Hidden scopes in the text column are the page's existing machine-metadata convention and
+  leave the carousel untouched.
+- **The suppression is keyed on the DATA, not the type.** `itemprop="image"` is dropped from
+  the `<img>` only when an `ImageObject` is actually emitted (`hasImageObject()`), because the
+  carousel demos are `gallery` cards too and carry no licensing — keying it on the type alone
+  stripped `image` from every one of them and gave nothing back.
+
 ### Statistic — `Observation`
 
 Part `stat`: big number + unit + trend, value → `QuantitativeValue` (`Observation` *is* a

@@ -37,6 +37,7 @@ grouped by role. Paths are relative to `ui/`, matching how the demos link them
 |---|---|---|
 | `ui/accordion` | `<ui-accordion>` — faq / recipe / job presets | `accordion/ui-accordion.css` |
 | `ui/avatar` | `<ui-avatar>` — byline images + initials | `avatar/ui-avatar.css` |
+| `ui/breadcrumbs` | `<ol data-breadcrumbs>` — the page trail on `schema.html` and every generated single-entity page, carrying `BreadcrumbList` microdata (`demo/build.shared.js` § `breadcrumb()`) | `breadcrumbs/ui-breadcrumbs.css` |
 | `ui/button-group` | `<ui-button-group>` · `.ui-button-group` — the product-page size picker (`details.variants.control: "buttons"`); the card emits the `<fieldset class="ui-button-group">` form, so `data-variant=`/`data-theme=` | `button-group/ui-button-group.css` |
 | `ui/gradient-text` | `<ui-gradient-text>` | `gradient-text/ui-gradient-text.css` |
 | `ui/highlight` | `<high-light>` — pen-marker highlight on inline text | `highlight/ui-highlight.css` |

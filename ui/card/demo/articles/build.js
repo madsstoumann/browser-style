@@ -17,7 +17,7 @@ import { fileURLToPath } from 'node:url';
 import { renderCard, resolveItemtype } from '../../render.js';
 import { generateSrcsets, calculateSizes } from '../../../../layout/src/srcsets.js';
 import { srcsetMap, srcsetConfig } from '../../../../layout/layouts-map.js';
-import { CDN_BASE, CONTRAST_STYLE, HEAD_COMMON, descope, esc, withPreset } from '../build.shared.js';
+import { CDN_BASE, CONTRAST_STYLE, HEAD_COMMON, breadcrumb, descope, esc, withPreset } from '../build.shared.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const data = (file) => JSON.parse(readFileSync(join(here, '../../data', file), 'utf8'));
@@ -83,6 +83,11 @@ const page = (ucf, name) => {
 	${CONTRAST_STYLE}
 </head>
 <body>
+	${breadcrumb([
+		{ name: 'Card', url: '/ui/card/' },
+		{ name: 'Schema.org', url: '/ui/card/demo/schema.html' },
+		{ name: title }
+	])}
 	<main>
 	<article class="article-view" data-view="card-${ucf.id}" itemscope itemtype="https://schema.org/${itemtype}">
 		<link itemprop="mainEntityOfPage" href="${name}.html">

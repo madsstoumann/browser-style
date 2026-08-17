@@ -21,13 +21,30 @@
 
 	<hr>
 	<h2>CSS-only (data-breadcrumbs)</h2>
+	<p>
+		The first example is the <strong>canonical form</strong>: it carries the schema.org
+		<code>BreadcrumbList</code> microdata Google needs for the breadcrumb rich result. On this
+		path the markup is hand-authored — CSS cannot add it. The variant examples below leave it
+		out so the separator is the only thing that differs; copy the first one for real use. The
+		<code>&lt;ui-breadcrumbs&gt;</code> web component emits it for you. See readme.md § Structured data.
+	</p>
 
 	<h3>Default</h3>
 	<nav aria-label="Breadcrumb">
-		<ol data-breadcrumbs>
-			<li><a href="https://example.com/books">Books</a></li>
-			<li><a href="https://example.com/books/sciencefiction">Science Fiction</a></li>
-			<li>Award Winners</li>
+		<ol data-breadcrumbs itemscope itemtype="https://schema.org/BreadcrumbList">
+			<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+				<a itemprop="item" href="https://example.com/books"><span itemprop="name">Books</span></a>
+				<meta itemprop="position" content="1">
+			</li>
+			<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+				<a itemprop="item" href="https://example.com/books/sciencefiction"><span itemprop="name">Science Fiction</span></a>
+				<meta itemprop="position" content="2">
+			</li>
+			<!-- the current page: the last crumb needs no `item` -->
+			<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+				<span itemprop="name">Award Winners</span>
+				<meta itemprop="position" content="3">
+			</li>
 		</ol>
 	</nav>
 

@@ -10317,6 +10317,48 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
   }
 }
 
+/* ui/breadcrumbs/ui-breadcrumbs.css */
+@layer bs-component {
+  :where(ui-breadcrumbs, ol[data-breadcrumbs]) {
+    --ui-breadcrumbs-separator-color: var(--color-text-muted);
+    all: unset;
+    align-items: var(--ui-breadcrumbs-align, baseline);
+    display: flex;
+    flex-wrap: wrap;
+    & a {
+      color: var(--ui-breadcrumbs-link-color, var(--color-text-muted));
+      display: inline;
+      text-decoration: none;
+      text-underline-offset: var(--ui-breadcrumbs-underline-offset, .5em);
+      &:visited {
+        color: var(--ui-breadcrumbs-link-color, var(--color-text-muted));
+      }
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+    & li {
+      list-style-type: none;
+      &:not(:last-of-type)::after {
+        color: var(--ui-breadcrumbs-separator-color);
+        content: var(--ui-breadcrumbs-separator, "\203a");
+        font-size: var(--ui-breadcrumbs-separator-font-size, 1.25em);
+        margin-inline: var(--ui-breadcrumbs-gap, .25ch .5ch);
+      }
+    }
+    &:is([variant~=slash], [data-variant~=slash]) li:not(:last-of-type)::after {
+      content: "/";
+    }
+    &:is([variant~=dot], [data-variant~=dot]) li:not(:last-of-type)::after {
+      content: "\b7";
+      font-size: var(--ui-breadcrumbs-separator-font-size, 1.5em);
+    }
+    &:is([variant~=arrow], [data-variant~=arrow]) li:not(:last-of-type)::after {
+      content: "\2192";
+    }
+  }
+}
+
 /* ui/card/media.css */
 @layer bs-component {
   :where(ui-card, ui-reveal) :where(ui-card, ui-reveal) {

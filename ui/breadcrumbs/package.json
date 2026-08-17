@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/breadcrumbs",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "description": "CSS-first breadcrumbs component with optional web component wrapper",
   "type": "module",
   "module": "index.js",

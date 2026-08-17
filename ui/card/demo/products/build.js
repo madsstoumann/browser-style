@@ -19,7 +19,7 @@ import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { renderCard } from '../../render.js';
-import { CDN_BASE, CONTRAST_STYLE, HEAD_COMMON, VT_HEAD, esc, withPreset } from '../build.shared.js';
+import { CDN_BASE, CONTRAST_STYLE, HEAD_COMMON, VT_HEAD, breadcrumb, esc, withPreset } from '../build.shared.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const data = (file) => JSON.parse(readFileSync(join(here, '../../data', file), 'utf8'));
@@ -101,6 +101,11 @@ const shell = ({ title, description, styles = '', card }) => `<!DOCTYPE html>
 	${CONTRAST_STYLE}
 </head>
 <body>
+	${breadcrumb([
+		{ name: 'Card', url: '/ui/card/' },
+		{ name: 'Schema.org', url: '/ui/card/demo/schema.html' },
+		{ name: title }
+	])}
 	<main>
 		${card}
 	</main>

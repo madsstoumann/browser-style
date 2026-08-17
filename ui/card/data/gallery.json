@@ -46,7 +46,12 @@
     ],
     "details": {
       "albumName": "Four seasons",
-      "totalCount": 48
+      "totalCount": 48,
+      "creator": "Mads Stoumann",
+      "creditText": "browser.style",
+      "copyrightNotice": "© 2026 browser.style",
+      "license": "https://creativecommons.org/licenses/by/4.0/",
+      "acquireLicensePage": "https://browser.style/license"
     }
   }
 }
