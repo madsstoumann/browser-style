@@ -23,6 +23,21 @@
 	<link rel="stylesheet" href="/dist/demo.356c5df4.min.css">
 
 	<style>
+		/* Skip style + layout for OFF-SCREEN cards. This page is 57 cards / ~2,400
+		   elements, and PageSpeed's top diagnostic is Style & Layout — 1,670 ms of a
+		   2.4 s main thread. It is not script: Script Evaluation is 22 ms there, and 3 ms
+		   measured locally. Measured at an iPhone viewport, before → after:
+		   layout 550 → 132 ms, style recalc 230 → 77 ms, layout objects 2,945 → 459,
+		   CLS unchanged at 0. `auto` remembers each card's real size once rendered, and
+		   567px is the measured MEDIAN card height so the initial scrollbar starts close.
+		   Verified still working while contained: in-page anchors (#schema-music),
+		   carousel scroll-snap, <ui-reveal> disclosure, accordion <details>.
+		   Page-scoped deliberately — a lone card on a product page must NOT skip layout. */
+		main > lay-out > ui-card,
+		main > lay-out > ui-reveal {
+			content-visibility: auto;
+			contain-intrinsic-size: auto 567px;
+		}
 		/* Page-scoped WCAG AA contrast overrides — pending a token retune in ui/base/tokens.css.
 		   Unlayered on purpose: beats the bs-core layer. Pale chip ink = the raw hue token
 		   (theme.css pale chain), so darkening a hue fixes pale ink + white-on-solid together. */
