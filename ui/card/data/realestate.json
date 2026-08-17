@@ -12,7 +12,13 @@
   "fields": {
     "internalName": "Demo — Real estate listing",
     "schemaType": "realestate",
-    "preset": { "$ref": "card-preset/stack" },
+    "preset": {
+      "$ref": "card-preset/carousel"
+    },
+    "chip": {
+      "text": "New",
+      "theme": "pale orange"
+    },
     "eyebrow": "For sale",
     "headline": "Top-floor apartment, Havnegade 44",
     "summary": "Three bedrooms and a south-facing terrace over the canal, five minutes from Kongens Nytorv.",
@@ -20,11 +26,42 @@
       {
         "mediaType": "image",
         "src": "/assets/images/coorperation.png",
-        "alt": "The harbourfront block at Havnegade 44, Copenhagen"
+        "alt": "The harbourfront block at Havnegade 44, seen from the canal"
+      },
+      {
+        "mediaType": "image",
+        "src": "/assets/images/city.png",
+        "alt": "Living room with south-facing windows over the rooftops"
+      },
+      {
+        "mediaType": "image",
+        "src": "/assets/images/river.png",
+        "alt": "The 14 m² terrace looking along the canal"
+      },
+      {
+        "mediaType": "image",
+        "src": "/assets/images/hammershus.png",
+        "alt": "Main bedroom under the original roof beams"
+      },
+      {
+        "mediaType": "image",
+        "src": "/assets/images/destinations.png",
+        "alt": "Kitchen and dining end of the open-plan floor"
+      },
+      {
+        "mediaType": "image",
+        "src": "/assets/images/autumn.jpg",
+        "alt": "The courtyard entrance in autumn"
       }
     ],
     "actions": [
-      { "link": { "url": "#", "text": "Book a viewing" }, "style": "primary" }
+      {
+        "link": {
+          "url": "realestate/havnegade-44.html",
+          "text": "See the full listing"
+        },
+        "style": "primary"
+      }
     ],
     "details": {
       "datePosted": "2026-07-18",

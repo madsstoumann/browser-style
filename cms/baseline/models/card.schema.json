@@ -136,6 +136,15 @@
         { "value": "artist", "label": "Artist (Person)" }
       ]
     },
+    "chip": {
+      "type": "object",
+      "title": "Status chip",
+      "description": "A short status flag at the very top of the TEXT column, above the eyebrow — \"New\", \"Sold\", \"Last places\". { text, theme } where theme is a ui-chip theme string, default \"pale accent\". NOT to be confused with `furniture.chip`, which is the chip overlaid on the MEDIA: a frame gets one chip family, so a furniture chip suppresses the <ui-chip data-type> type label, which is why a status flag belongs here instead.",
+      "properties": {
+        "text": { "type": "string", "title": "Text" },
+        "theme": { "type": "string", "title": "Theme", "default": "pale accent" }
+      }
+    },
     "eyebrow": {
       "type": "string",
       "title": "Eyebrow",

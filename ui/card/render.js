@@ -1007,6 +1007,16 @@ const buildContent = (fields, type, overlay, slots = {}, textMode = 'summary', p
 	const body = textMode !== 'summary' ? bodyHtml(fields, type, textTag) : '';
 	const showSummary = textMode !== 'body' || !body;
 	let html = '';
+	/* `chip` is the TEXT-COLUMN chip — a status flag above the eyebrow ("New", "Sold").
+	   Do not confuse it with `furniture.chip`, which is the one overlaid on the MEDIA;
+	   the names are close and the distinction is load-bearing. Media furniture is also
+	   the wrong place for a status flag on a demo card: buildMedia gives a frame ONE
+	   chip family, so a furniture chip suppresses the <ui-chip data-type> type label.
+	   Same <p data-part="meta"><ui-chip theme="pale …"> shape the achievement status,
+	   most-popular and version chips already use, so it inherits their spacing. */
+	if (fields.chip?.text) {
+		html += `<p data-part="meta"><ui-chip theme="${esc(fields.chip.theme || 'pale accent')}">${esc(fields.chip.text)}</ui-chip></p>`;
+	}
 	if (fields.eyebrow) {
 		html += `<small data-part="eyebrow"${EYEBROW_PROP[type] ? ` itemprop="${EYEBROW_PROP[type]}"` : ''}>${esc(fields.eyebrow)}</small>`;
 	}

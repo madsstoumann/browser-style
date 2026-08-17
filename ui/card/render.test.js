@@ -1901,3 +1901,36 @@ describe('data detectors', () => {
 		assert.deepEqual(bad, [], 'a page showing an ISBN/ISSN needs <meta name="format-detection" content="telephone=no">');
 	});
 });
+
+/* ── the text-column status chip ──
+   `fields.chip` is the flag above the eyebrow ("New", "Sold"). Distinct from
+   `fields.furniture.chip`, which is overlaid on the MEDIA — and deliberately so: a
+   frame gets one chip family, so a furniture chip suppresses the <ui-chip data-type>
+   type label. Docs: docs/schema.md § Real estate */
+describe('content chip', () => {
+	const card = (chip) => render({ schemaType: 'content', chip, eyebrow: 'For sale', headline: 'H' });
+
+	test('renders before the eyebrow, in the shared meta-chip shape', () => {
+		const html = card({ text: 'New', theme: 'pale orange' });
+		assert.match(html, /<p data-part="meta"><ui-chip theme="pale orange">New<\/ui-chip><\/p><small data-part="eyebrow">/);
+	});
+
+	test('defaults its theme and is absent when unset', () => {
+		assert.match(card({ text: 'New' }), /<ui-chip theme="pale accent">New<\/ui-chip>/);
+		assert.ok(!card(undefined).includes('<ui-chip'), 'no chip field, no chip');
+		assert.ok(!card({ theme: 'pale red' }).includes('<ui-chip'), 'a theme with no text renders nothing');
+	});
+
+	test('escapes hostile text and theme', () => {
+		const html = card({ text: '<script>alert(1)</script>', theme: '"><img src=x onerror=alert(1)>' });
+		assert.ok(!html.includes('<script>') && !html.includes('<img'), 'no raw markup reaches output');
+		assert.match(html, /&lt;script&gt;alert\(1\)&lt;\/script&gt;/, 'text still renders, escaped');
+	});
+
+	test('does NOT suppress the type chip the way furniture.chip does', () => {
+		const html = renderCard({ fields: { schemaType: 'realestate', headline: 'H', chip: { text: 'New' },
+			media: [{ mediaType: 'image', src: '/a.png', alt: '' }] } }, {}, {}, { typeChip: true });
+		assert.match(html, /<ui-chip data-type>RealEstateListing<\/ui-chip>/, 'the type label survives');
+		assert.match(html, /<ui-chip theme="pale accent">New<\/ui-chip>/, 'and so does the status chip');
+	});
+});
