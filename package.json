@@ -15,7 +15,7 @@
   ],
   "scripts": {
     "build": "npm run build --workspaces",
-    "build:demo-css": "node scripts/css-bundle.js . ui/card/demo/demo.css demo",
+    "build:demo-css": "node scripts/css-bundle.js . ui/card/demo/demo.css demo && node scripts/hash-asset.js dist/demo.min.css",
     "test": "npm run test --workspaces --if-present",
     "publish-all": "read -p 'OTP: ' otp && node scripts/publish.js $otp",
     "test-packages": "node scripts/test-packages.js",
