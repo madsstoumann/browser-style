@@ -62,7 +62,7 @@ type — a demo affordance, emitted by `render.js` only when `renderCard` gets `
 The page groups its 57 cards into **eleven sections by what the thing *is*** — Editorial &
 journalism · Commerce & offers · Screen · Audio · Page & picture · Learning & reference ·
 People, work & history · Food & drink · Places, events & property · Community & support ·
-Data, health & operations. Each section is an `<h2 id="sec-…">` followed by its own
+Data, health & operations. Each section is a bare `<h2>` followed by its own
 `<lay-out md="columns(2) items(start)">`. Rationale, and the card-by-card allocation:
 [`docs/plans/2026-08-16-schema-card-sections.md`](../../../docs/plans/2026-08-16-schema-card-sections.md).
 
@@ -468,13 +468,17 @@ Ingredients as proposed part `list`; instructions as a nested `<ui-accordion>` w
 
 ### Review — `Review`
 
-Summary emits `reviewBody`; rating → `Rating`, reviewer → `Person` (`reviewer.title` → `jobTitle`), reviewed item → `Product` by default. `details.reviewedType` sharpens `itemReviewed` to `Organization` or `Service` (allowlisted, never verbatim data — same pattern as [`subtype`](#subtypes)); no offer is emitted for `Organization`, which has no `offers` property.
+Summary emits `reviewBody`; rating → `Rating`, reviewer → `Person` (`reviewer.title` → `jobTitle`), reviewed item → `Product` by default.
+
+**`details.productImage` is not decorative.** A reviewed `Product` that carries `offers` is a merchant listing to Google, and merchant listings **require** `image` — without it the item is invalid even though the review itself is fine. Set it whenever `productPrice` is set. `details.reviewedType` sharpens `itemReviewed` to `Organization` or `Service` (allowlisted, never verbatim data — same pattern as [`subtype`](#subtypes)); no offer is emitted for `Organization`, which has no `offers` property.
 
 **Testimonial** — schema.org has no `Testimonial` type; a testimonial is a `Review` of your organization or service: `reviewedType: "Organization"`, a 5-star rating, quote and byline, usually media-less (the `testimonial` preset, which also tints the stars via `--ui-rating-c`). Note Google excludes "self-serving" reviews — testimonials about your own org on your own site stay valid microdata but get no star rich results.
 
 ### Job — `JobPosting`
 
 Headline emits `title`. Salary → `MonetaryAmount` → `QuantitativeValue`; requirements/benefits in a nested `<ui-accordion>`. The card also carries a **second top-level item** — see [Employer rating](#employer-rating--employeraggregaterating).
+
+**`jobLocation` carries a `PostalAddress`, never a bare `Place.name`.** Google requires `jobLocation.address`; a `Place` with only a name is valid schema.org and an invalid job posting. `details.location` becomes `addressLocality` and `details.locationCountry` (ISO code) becomes `addressCountry` — the visible text is unchanged, the city simply sits one scope deeper.
 
 **The eyebrow is display text here, deliberately unmarked.** `industry` is emitted once, from `details.industry`, as a hidden `<meta>`. The eyebrow used to carry `itemprop="industry"` as well, so a card whose eyebrow named the department ("Engineering") and whose data named the sector ("Software") published *both* values for one property and left the consumer to pick. A `details` field that owns a property wins: the visible kicker stays free to say whatever reads best on the card.
 
@@ -500,7 +504,12 @@ The type that moves *out* of `<ui-content>` parts: a nested `<ui-accordion>`, ea
 
 ### Timeline — `EventSeries`
 
-Part `timeline` — styled by `@browser.style/timeline`: a dot per entry on a continuous rail. Each entry is `subEvent` → `Event`. Add `variant="horizontal"` for the inline rail (second card). Colour a single entry with `data-theme="accent"` (the `theme=` palette names) or an arbitrary `data-fill="#c9b8ff"` — `data-` prefixed, because a bare attribute is invalid on a built-in `<li>`. A coloured dot is filled; in `variant="minimal"` the bullets default to the rail grey; in `variant="horizontal"` plain dots are open rings (transparent centre, rail stops at the dot edge) — only a `data-theme`/`data-fill` entry fills.
+Part `timeline` — styled by `@browser.style/timeline`: a dot per entry on a continuous rail. Each entry is `subEvent` → `Event`. Add `variant="horizontal"` for the inline rail (second card).
+
+**Each entry is a real `Event`, so it carries `startDate`, a Text `name` and a `location`.** Two rules keep Google's Event profile satisfied (schema.org alone accepts less):
+
+- **`name` never rides the `<time>`.** Microdata takes a `<time>`'s value from its `datetime` attribute, so `itemprop="name"` there publishes a *date* where Google wants Text — it reports "invalid value type for field name". The `<time>` is presentation only (no `itemprop`; `startDate` already carries the machine date) and the visible sentence is the `name`.
+- **`location` is required**, and a milestone has no venue. `details.locationUrl` (or a per-item `locationUrl`) emits `eventAttendanceMode: OnlineEventAttendanceMode` + a hidden `location` → `VirtualLocation` with that `url` — honest for a software project's history. A per-item `location` string emits a hidden `Place` instead, for milestones that really happened somewhere. Without either, no location is emitted: the renderer will not invent one. Colour a single entry with `data-theme="accent"` (the `theme=` palette names) or an arbitrary `data-fill="#c9b8ff"` — `data-` prefixed, because a bare attribute is invalid on a built-in `<li>`. A coloured dot is filled; in `variant="minimal"` the bullets default to the rail grey; in `variant="horizontal"` plain dots are open rings (transparent centre, rail stops at the dot edge) — only a `data-theme`/`data-fill` entry fills.
 
 ### Gallery — `ImageGallery`
 
@@ -542,6 +551,8 @@ Items as `ListItem` with position metas; recommendation in the footer.
 ### Location — `Place`
 
 Overlay over a destination shot; address + geo, amenities as `list`, hours in the tabular `hours` part. **Place-only hours:** the flat `openingHours` string is a `LocalBusiness`/`CivicStructure` property, so a plain `Place` emits *only* `openingHoursSpecification` (business and organization offices emit both).
+
+**A `Place` emits no `aggregateRating` — do not re-add it.** `aggregateRating` *is* a valid property of `Place` in the vocabulary, so schema.org's validator accepts it; Google's review-snippet feature has its own type allowlist (Book, Course, Event, LocalBusiness, Movie, Product, Recipe, SoftwareApp, plus `CreativeWorkSeason`, `CreativeWorkSeries`, `Episode`, `Game`, `MediaObject`, `MusicPlaylist`, `MusicRecording`, `Organization`) and `Place` is not on it — the item fails with "invalid object type for field `<parent_node>`". The `location` renderer therefore drops `details.rating` on the floor. [Business](#business--localbusiness-subtype-cafeorcoffeeshop) keeps its rating: `LocalBusiness` **is** allowlisted.
 
 ### Map — `Place` (second card)
 

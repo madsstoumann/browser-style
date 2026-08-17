@@ -1358,7 +1358,7 @@ const DETAILS = {
 		/* `industry` was emitted twice for a while — here and on the eyebrow. The eyebrow
 		   entry is gone; the guard is what keeps it from coming back. § One property, one value */
 		let html = (owned.has('industry') ? '' : meta('industry', d.industry)) + meta('employmentType', d.employmentType) + meta('validThrough', d.applicationDeadline);
-		html += `<p data-part="meta"><span${scope('hiringOrganization', 'Organization')}><span itemprop="name">${esc(d.company)}</span></span> · <span${scope('jobLocation', 'Place')}><span itemprop="name">${esc(d.location)}</span></span>${d.employmentTypeDisplay ? ` · ${esc(d.employmentTypeDisplay)}` : ''}${d.applicationDeadlineDisplay ? ` · Apply by ${esc(d.applicationDeadlineDisplay)}` : ''}</p>`;
+		html += `<p data-part="meta"><span${scope('hiringOrganization', 'Organization')}><span itemprop="name">${esc(d.company)}</span></span> · <span${scope('jobLocation', 'Place')}><span${scope('address', 'PostalAddress')}><span itemprop="addressLocality">${esc(d.location)}</span>${meta('addressCountry', d.locationCountry)}</span></span>${d.employmentTypeDisplay ? ` · ${esc(d.employmentTypeDisplay)}` : ''}${d.applicationDeadlineDisplay ? ` · Apply by ${esc(d.applicationDeadlineDisplay)}` : ''}</p>`;
 		const salary = d.salaryRange;
 		if (salary) {
 			html += `<p data-part="price"${scope('baseSalary', 'MonetaryAmount')}>
@@ -1458,11 +1458,19 @@ const DETAILS = {
 
 	timeline(d) {
 		if (!d.items?.length) return '';
-		/* Event REQUIRES startDate — the visible <time> is the label, so the date also
-		   rides a startDate meta (name falls back to the date only when there is no headline) */
-		return `<ol data-part="timeline">${d.items.map((item) =>
-			`<li${scope('subEvent', 'Event')}${item.theme ? ` data-theme="${esc(item.theme)}"` : ''}>${meta('startDate', item.date)}${meta('endDate', item.endDate)}${item.location ? meta('location', item.location) : ''}<time${item.headline ? '' : ' itemprop="name"'} datetime="${esc(item.date)}">${esc(item.headline || item.date)}</time>${item.headline ? meta('name', item.headline) : ''} <span itemprop="description">${esc(item.text)}</span></li>`
-		).join('')}</ol>`;
+		/* Event REQUIRES startDate, a Text name and a location. The <time> carries NO
+		   itemprop — microdata reads a <time>'s datetime attribute, so `name` there is a
+		   date, not text (Google: "invalid value type"). Docs: docs/schema.md § Timeline */
+		return `<ol data-part="timeline">${d.items.map((item) => {
+			const virtual = item.locationUrl || d.locationUrl;
+			const location = item.location
+				? `<span${scope('location', 'Place')} hidden>${meta('name', item.location)}</span>`
+				: virtual
+					? meta('eventAttendanceMode', SCHEMA + 'OnlineEventAttendanceMode')
+						+ `<span${scope('location', 'VirtualLocation')} hidden>${meta('url', virtual)}</span>`
+					: '';
+			return `<li${scope('subEvent', 'Event')}${item.theme ? ` data-theme="${esc(item.theme)}"` : ''}>${meta('startDate', item.date)}${meta('endDate', item.endDate)}${location}<time datetime="${esc(item.date)}">${esc(item.headline || item.date)}</time>${item.headline ? meta('name', item.headline) : ''} <span itemprop="${item.headline ? 'description' : 'name'}">${esc(item.text)}</span></li>`;
+		}).join('')}</ol>`;
 	},
 
 	gallery(d) {
@@ -1559,7 +1567,8 @@ const DETAILS = {
 		/* Place has openingHoursSpecification but NOT the flat openingHours string */
 		if (d.openingHours?.length) html += hoursPart(d.openingHours, { flat: false });
 		else if (d.hours) html += `<p data-part="meta">${esc(d.hours)}</p>`;
-		html += ratingPart('aggregateRating', 'AggregateRating', d.rating);
+		/* NO aggregateRating: valid schema.org, but Place is not a review-snippet host for
+		   Google — it errors with "invalid object type". Docs: docs/schema.md § Place */
 		/* amenityFeature wants LocationFeatureSpecification scopes — plain list, no itemprop */
 		html += listPart(d.amenities);
 		if (d.contact) html += `<p data-part="meta"><a itemprop="telephone" href="tel:${esc(String(d.contact).replace(/\s/g, ''))}">${esc(d.contact)}</a></p>`;

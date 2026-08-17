@@ -45,11 +45,6 @@
           "schema": "Mo-Su 06:00-22:00"
         }
       ],
-      "rating": {
-        "value": 4.7,
-        "count": 950,
-        "max": 5
-      },
       "contact": "+45 56 48 24 01"
     },
     "tags": [

@@ -39,6 +39,7 @@
       "industry": "Software",
       "company": "Nordlys ApS",
       "location": "Copenhagen",
+      "locationCountry": "DK",
       "employmentType": "FULL_TIME",
       "employmentTypeDisplay": "Full-time",
       "salaryRange": {

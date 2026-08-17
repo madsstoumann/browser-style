@@ -21,19 +21,7 @@
 	<!-- One bundle for every card-demo package (source list: ui/card/components.md).
 	     Build: npm run build:demo-css (entry demo.css, output /dist/demo.min.css) -->
 	<link rel="stylesheet" href="/dist/demo.min.css">
-	<style>
-		/* Section headings. The page groups its cards by what the thing IS — see
-		   docs/plans/2026-08-16-schema-card-sections.md. Each section is an <h2> followed by
-		   its own <lay-out>; the cards below it render <h3>, which is the preset default, so
-		   the outline is h1 → h2 → h3 with nothing hardcoded in this markup. */
-		main > h2 {
-			border-block-start: var(--border-width, 1px) solid var(--color-border, currentColor);
-			font-size: var(--font-size-xl);
-			margin-block: var(--spacing-2xl) 0;
-			padding-block-start: var(--spacing-md);
-		}
-		main > h2:first-of-type { border-block-start: 0; margin-block-start: var(--spacing-lg); }
-	</style>
+
 	<style>
 		/* Page-scoped WCAG AA contrast overrides — pending a token retune in ui/base/tokens.css.
 		   Unlayered on purpose: beats the bs-core layer. Pale chip ink = the raw hue token
@@ -44,10 +32,6 @@
 			--color-success: light-dark(hsl(136, 45%, 30%), hsl(136, 25%, 60%));
 			--color-error: light-dark(hsl(360, 65%, 41%), hsl(360, 45%, 62%));
 			--color-text-muted: light-dark(hsl(0, 0%, 42%), hsl(0, 0%, 65%));
-			/* blue: the pale chip's ink IS this hue on a 20% tint of it, so the stock
-			   210 60%/46% only reached 3.67:1 (light) and 3.74:1 (dark) on the collage
-			   tiles. Moved AWAY from the surface in each scheme — darker on light,
-			   lighter on dark — rather than darker in both. */
 			--color-info: light-dark(hsl(210, 65%, 36%), hsl(210, 40%, 62%));
 		}
 		ui-content {
@@ -113,7 +97,7 @@
 
 	<main data-layout-root data-page-gap="2">
 
-	<h2 id="sec-editorial">Editorial &amp; journalism</h2>
+	<h2>Editorial &amp; journalism</h2>
 	<lay-out md="columns(2) items(start)">
 		<ui-card variant="col" media="asr(16/9) load(eager) chip(te)" itemscope itemtype="https://schema.org/CreativeWork">
 			<cq-box>
@@ -207,7 +191,7 @@
 			</cq-box>
 		</ui-card>
 	</lay-out>
-	<h2 id="sec-commerce">Commerce &amp; offers</h2>
+	<h2>Commerce &amp; offers</h2>
 	<lay-out md="columns(2) items(start)">
 		<ui-card data-view="card-product-1" variant="col" media="asr(4/3) sticker(te) sticker(red) sticker(2xl) sticker(sh:spark) save(be)" itemscope itemtype="https://schema.org/Product">
 			<cq-box>
@@ -385,7 +369,7 @@
 					</address>
 					<meta itemprop="datePublished" content="2026-05-14">
 					<div itemprop="itemReviewed" itemscope itemtype="https://schema.org/Product" hidden>
-						<meta itemprop="name" content="SoundWave Mini">
+						<meta itemprop="name" content="SoundWave Mini"><meta itemprop="image" content="/assets/images/soundwavemini.png">
 					<span itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating"><meta itemprop="ratingValue" content="4.6"><meta itemprop="ratingCount" content="1847"><meta itemprop="bestRating" content="5"><meta itemprop="worstRating" content="1"></span><span itemprop="offers" itemscope itemtype="https://schema.org/Offer"><meta itemprop="priceCurrency" content="USD"><meta itemprop="price" content="279"><meta itemprop="availability" content="https://schema.org/InStock"></span></div>
 				</ui-content>
 			</cq-box>
@@ -517,7 +501,7 @@
 			</cq-box>
 		</ui-card>
 	</lay-out>
-	<h2 id="sec-screen">Screen</h2>
+	<h2>Screen</h2>
 	<lay-out md="columns(2) items(start)">
 		<ui-card variant="col" media="asr(4/3) chip(te)" itemscope itemtype="https://schema.org/Movie">
 			<cq-box>
@@ -614,7 +598,7 @@
 			</cq-box>
 		</ui-card>
 	</lay-out>
-	<h2 id="sec-audio">Audio</h2>
+	<h2>Audio</h2>
 	<lay-out md="columns(2) items(start)">
 		<!-- the SERIES as card subject; the episode below is one instalment of it. No numberOfEpisodes: it is not a
 		     PodcastSeries property — the count is prose, the episodes are hasPart. docs/schema.md § Podcast series -->
@@ -715,7 +699,7 @@
 			</cq-box>
 		</ui-card>
 	</lay-out>
-	<h2 id="sec-page">Page &amp; picture</h2>
+	<h2>Page &amp; picture</h2>
 	<lay-out md="columns(2) items(start)">
 		<ui-card variant="col" media="asr(4/3) chip(te)" itemscope itemtype="https://schema.org/Book">
 			<cq-box>
@@ -802,7 +786,7 @@
 			</cq-box>
 		</ui-card>
 	</lay-out>
-	<h2 id="sec-learning">Learning &amp; reference</h2>
+	<h2>Learning &amp; reference</h2>
 	<lay-out md="columns(2) items(start)">
 		<ui-card variant="col" media="asr(16/9) chip(te)" itemscope itemtype="https://schema.org/Course">
 			<cq-box>
@@ -1013,7 +997,7 @@
 			</cq-box>
 		</ui-card>
 	</lay-out>
-	<h2 id="sec-people">People, work &amp; history</h2>
+	<h2>People, work &amp; history</h2>
 	<lay-out md="columns(2) items(start)">
 		<ui-card variant="col" media="asr(16/9) chip(te)" itemscope itemtype="https://schema.org/Person">
 			<cq-box>
@@ -1165,7 +1149,7 @@
 					<p data-part="summary" itemprop="description">Own the design system of a product used by two million people. CSS depth valued over framework trivia.</p>
 					<p data-part="meta">
 						<span itemprop="hiringOrganization" itemscope itemtype="https://schema.org/Organization"><span itemprop="name">Nordlys ApS</span></span> ·
-						<span itemprop="jobLocation" itemscope itemtype="https://schema.org/Place"><span itemprop="name">Copenhagen</span></span> ·
+						<span itemprop="jobLocation" itemscope itemtype="https://schema.org/Place"><span itemprop="address" itemscope itemtype="https://schema.org/PostalAddress"><span itemprop="addressLocality">Copenhagen</span><meta itemprop="addressCountry" content="DK"></span></span> ·
 						Full-time · Apply by Aug 15, 2026
 					</p>
 					<p data-part="price" itemprop="baseSalary" itemscope itemtype="https://schema.org/MonetaryAmount">
@@ -1223,28 +1207,38 @@
 					<ol data-part="timeline" data-variant="minimal">
 						<li itemprop="subEvent" itemscope itemtype="https://schema.org/Event">
 							<meta itemprop="startDate" content="2016">
-							<time itemprop="name" datetime="2016">2016</time>
-							<span itemprop="description">First CSS-only component published.</span>
+							<meta itemprop="eventAttendanceMode" content="https://schema.org/OnlineEventAttendanceMode">
+							<span itemprop="location" itemscope itemtype="https://schema.org/VirtualLocation" hidden><meta itemprop="url" content="https://browser.style"></span>
+							<time datetime="2016">2016</time>
+							<span itemprop="name">First CSS-only component published.</span>
 						</li>
 						<li itemprop="subEvent" itemscope itemtype="https://schema.org/Event">
 							<meta itemprop="startDate" content="2021">
-							<time itemprop="name" datetime="2021">2021</time>
-							<span itemprop="description">Design token system and 100th component.</span>
+							<meta itemprop="eventAttendanceMode" content="https://schema.org/OnlineEventAttendanceMode">
+							<span itemprop="location" itemscope itemtype="https://schema.org/VirtualLocation" hidden><meta itemprop="url" content="https://browser.style"></span>
+							<time datetime="2021">2021</time>
+							<span itemprop="name">Design token system and 100th component.</span>
 						</li>
 						<li itemprop="subEvent" itemscope itemtype="https://schema.org/Event">
 							<meta itemprop="startDate" content="2018">
-							<time itemprop="name" datetime="2018">2018</time>
-							<span itemprop="description">Container queries land; the layout system is rebuilt.</span>
+							<meta itemprop="eventAttendanceMode" content="https://schema.org/OnlineEventAttendanceMode">
+							<span itemprop="location" itemscope itemtype="https://schema.org/VirtualLocation" hidden><meta itemprop="url" content="https://browser.style"></span>
+							<time datetime="2018">2018</time>
+							<span itemprop="name">Container queries land; the layout system is rebuilt.</span>
 						</li>
 						<li itemprop="subEvent" itemscope itemtype="https://schema.org/Event">
 							<meta itemprop="startDate" content="2023">
-							<time itemprop="name" datetime="2023">2023</time>
-							<span itemprop="description">Cascade layers adopted across every component.</span>
+							<meta itemprop="eventAttendanceMode" content="https://schema.org/OnlineEventAttendanceMode">
+							<span itemprop="location" itemscope itemtype="https://schema.org/VirtualLocation" hidden><meta itemprop="url" content="https://browser.style"></span>
+							<time datetime="2023">2023</time>
+							<span itemprop="name">Cascade layers adopted across every component.</span>
 						</li>
 						<li itemprop="subEvent" itemscope itemtype="https://schema.org/Event" data-theme="accent">
 							<meta itemprop="startDate" content="2026">
-							<time itemprop="name" datetime="2026">2026</time>
-							<span itemprop="description">v4: the unified card engine ships.</span>
+							<meta itemprop="eventAttendanceMode" content="https://schema.org/OnlineEventAttendanceMode">
+							<span itemprop="location" itemscope itemtype="https://schema.org/VirtualLocation" hidden><meta itemprop="url" content="https://browser.style"></span>
+							<time datetime="2026">2026</time>
+							<span itemprop="name">v4: the unified card engine ships.</span>
 						</li>
 					</ol>
 				</ui-content>
@@ -1259,35 +1253,45 @@
 					<ol data-part="timeline" data-variant="horizontal">
 						<li itemprop="subEvent" itemscope itemtype="https://schema.org/Event">
 							<meta itemprop="startDate" content="2016">
-							<time itemprop="name" datetime="2016">2016</time>
-							<span itemprop="description">First CSS-only component published.</span>
+							<meta itemprop="eventAttendanceMode" content="https://schema.org/OnlineEventAttendanceMode">
+							<span itemprop="location" itemscope itemtype="https://schema.org/VirtualLocation" hidden><meta itemprop="url" content="https://browser.style"></span>
+							<time datetime="2016">2016</time>
+							<span itemprop="name">First CSS-only component published.</span>
 						</li>
 						<li itemprop="subEvent" itemscope itemtype="https://schema.org/Event">
 							<meta itemprop="startDate" content="2021">
-							<time itemprop="name" datetime="2021">2021</time>
-							<span itemprop="description">Design token system and 100th component.</span>
+							<meta itemprop="eventAttendanceMode" content="https://schema.org/OnlineEventAttendanceMode">
+							<span itemprop="location" itemscope itemtype="https://schema.org/VirtualLocation" hidden><meta itemprop="url" content="https://browser.style"></span>
+							<time datetime="2021">2021</time>
+							<span itemprop="name">Design token system and 100th component.</span>
 						</li>
 						<li itemprop="subEvent" itemscope itemtype="https://schema.org/Event">
 							<meta itemprop="startDate" content="2018">
-							<time itemprop="name" datetime="2018">2018</time>
-							<span itemprop="description">Container queries land; the layout system is rebuilt.</span>
+							<meta itemprop="eventAttendanceMode" content="https://schema.org/OnlineEventAttendanceMode">
+							<span itemprop="location" itemscope itemtype="https://schema.org/VirtualLocation" hidden><meta itemprop="url" content="https://browser.style"></span>
+							<time datetime="2018">2018</time>
+							<span itemprop="name">Container queries land; the layout system is rebuilt.</span>
 						</li>
 						<li itemprop="subEvent" itemscope itemtype="https://schema.org/Event">
 							<meta itemprop="startDate" content="2023">
-							<time itemprop="name" datetime="2023">2023</time>
-							<span itemprop="description">Cascade layers adopted across every component.</span>
+							<meta itemprop="eventAttendanceMode" content="https://schema.org/OnlineEventAttendanceMode">
+							<span itemprop="location" itemscope itemtype="https://schema.org/VirtualLocation" hidden><meta itemprop="url" content="https://browser.style"></span>
+							<time datetime="2023">2023</time>
+							<span itemprop="name">Cascade layers adopted across every component.</span>
 						</li>
 						<li itemprop="subEvent" itemscope itemtype="https://schema.org/Event" data-theme="accent">
 							<meta itemprop="startDate" content="2026">
-							<time itemprop="name" datetime="2026">2026</time>
-							<span itemprop="description">v4: the unified card engine ships.</span>
+							<meta itemprop="eventAttendanceMode" content="https://schema.org/OnlineEventAttendanceMode">
+							<span itemprop="location" itemscope itemtype="https://schema.org/VirtualLocation" hidden><meta itemprop="url" content="https://browser.style"></span>
+							<time datetime="2026">2026</time>
+							<span itemprop="name">v4: the unified card engine ships.</span>
 						</li>
 					</ol>
 				</ui-content>
 			</cq-box>
 		</ui-card>
 	</lay-out>
-	<h2 id="sec-food">Food &amp; drink</h2>
+	<h2>Food &amp; drink</h2>
 	<lay-out md="columns(2) items(start)">
 		<ui-card variant="col" media="asr(16/9) chip(te)" itemscope itemtype="https://schema.org/CafeOrCoffeeShop">
 			<cq-box>
@@ -1441,7 +1445,7 @@
 			</cq-box>
 		</ui-card>
 	</lay-out>
-	<h2 id="sec-places">Places, events &amp; property</h2>
+	<h2>Places, events &amp; property</h2>
 	<lay-out md="columns(2) items(start)">
 		<ui-card variant="col" media="asr(16/9) chip(te)" itemscope itemtype="https://schema.org/Place">
 			<cq-box>
@@ -1468,13 +1472,7 @@
 							6:00–22:00
 						</dd>
 					</dl>
-					<div data-part="rating" itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
-						<meta itemprop="ratingValue" content="4.7"><meta itemprop="ratingCount" content="950">
-						<meta itemprop="bestRating" content="5"><meta itemprop="worstRating" content="1">
-						<input class="ui-rating" type="range" min="1" max="5" value="4.7" step="0.01" disabled aria-hidden="true">
-						<span data-sr>Rated 4.7 out of 5 stars from 950 ratings</span>
-						<span aria-hidden="true">4.7 / 5 (950 ratings)</span>
-					</div>
+					<!-- no aggregateRating: valid schema.org, but Google rejects Place as a review-snippet host — docs/schema.md § Place -->
 					<ul data-part="list">
 						<li>Free parking</li>
 						<li>Guided tours</li>
@@ -1585,7 +1583,7 @@
 			</cq-box>
 		</ui-card>
 	</lay-out>
-	<h2 id="sec-community">Community &amp; support</h2>
+	<h2>Community &amp; support</h2>
 	<lay-out md="columns(2) items(start)">
 		<ui-card variant="col" media="asr(16/9) chip(te)" itemscope itemtype="https://schema.org/FAQPage">
 			<cq-box>
@@ -1749,7 +1747,7 @@
 			</cq-box>
 		</ui-card>
 	</lay-out>
-	<h2 id="sec-data">Data, health &amp; operations</h2>
+	<h2>Data, health &amp; operations</h2>
 	<lay-out md="columns(2) items(start)">
 		<ui-card variant="col" media="asr(16/9) chip(te)" theme="black dark" itemscope itemtype="https://schema.org/Observation">
 			<cq-box>

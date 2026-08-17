@@ -76,8 +76,11 @@ done | sort | uniq -c | sort -rn
 | 11 | **Data, health & operations** (5) | Observation · Dataset · MedicalWebPage · SpecialAnnouncement · Service |
 
 5 + 9 + 4 + 4 + 4 + 7 + 6 + 3 + 4 + 6 + 5 = **57**, every card placed exactly once — asserted by the
-reorder script rather than trusted. Each section is an `<h2 id="sec-…">` followed by its own
-`<lay-out md="columns(2) items(start)">`.
+reorder script rather than trusted. Each section is a bare `<h2>` followed by its own
+`<lay-out md="columns(2) items(start)">` — the headings carry no `id`: nothing linked to them
+(no TOC, no script, no cross-reference), so they were dropped. The **card** ids
+(`id="schema-map"`, `id="schema-comicseries"`, …) are unrelated and load-bearing:
+`schema.compare.js` uses them to tell two cards of one itemtype apart, and cards link to them.
 
 **Why Food & drink is its own section.** It began as one seven-card *Places, venues & property*
 holding `CafeOrCoffeeShop` → `Menu` → `Recipe` → `Place` ×2 → `Event` → `RealEstateListing`, and a

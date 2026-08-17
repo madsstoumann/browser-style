@@ -38,6 +38,7 @@
       "reviewDate": "2026-05-14",
       "reviewDateDisplay": "May 14, 2026",
       "productReviewed": "SoundWave Mini",
+      "productImage": "/assets/images/soundwavemini.png",
       "aggregateRating": {
         "value": 4.6,
         "count": 1847,
