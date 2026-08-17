@@ -1375,48 +1375,216 @@
 				<ui-content>
 					<small data-part="eyebrow">Dinner menu</small>
 					<h3 data-part="headline" itemprop="name">Brew &amp; Bean kitchen</h3>
-					<p data-part="summary" itemprop="description">Served 17:00–21:30, Wednesday to Sunday. Everything is cooked to order, so allow a little time.</p>
-					<ui-accordion variant="bordered rounded divided" group="menu-section"><cq-box>
-						<details name="menu-section" itemprop="hasMenuSection" itemscope itemtype="https://schema.org/MenuSection">
-							<summary><span itemprop="name">Small plates</span><ui-icon type="plus-minus"></ui-icon></summary>
-							<div>
-								<ul data-part="list">
-									<li itemprop="hasMenuItem" itemscope itemtype="https://schema.org/MenuItem">
-										<p><strong itemprop="name">Charred hispi cabbage</strong> · <span itemprop="offers" itemscope itemtype="https://schema.org/Offer"><meta itemprop="priceCurrency" content="DKK"><meta itemprop="price" content="85">DKK 85</span> <ui-chip theme="pale green">Vegetarian</ui-chip></p>
-										<span itemprop="description">Brown butter, toasted hazelnut and aged pecorino.</span>
-										<meta itemprop="suitableForDiet" content="https://schema.org/VegetarianDiet">
-										<meta itemprop="suitableForDiet" content="https://schema.org/GlutenFreeDiet">
-										<span itemprop="nutrition" itemscope itemtype="https://schema.org/NutritionInformation" hidden><meta itemprop="calories" content="310 calories"><meta itemprop="servingSize" content="1 plate"></span>
-									</li>
-									<li itemprop="hasMenuItem" itemscope itemtype="https://schema.org/MenuItem">
-										<p><strong itemprop="name">Cured trout, rye crisp</strong> · <span itemprop="offers" itemscope itemtype="https://schema.org/Offer"><meta itemprop="priceCurrency" content="DKK"><meta itemprop="price" content="95">DKK 95</span></p>
-										<span itemprop="description">Beetroot, horseradish cream and dill oil.</span>
-										<span itemprop="nutrition" itemscope itemtype="https://schema.org/NutritionInformation" hidden><meta itemprop="calories" content="280 calories"><meta itemprop="servingSize" content="1 plate"></span>
-									</li>
-								</ul>
-							</div>
-						</details>
-						<details name="menu-section" itemprop="hasMenuSection" itemscope itemtype="https://schema.org/MenuSection">
-							<summary><span itemprop="name">Mains</span><ui-icon type="plus-minus"></ui-icon></summary>
-							<div>
-								<ul data-part="list">
-									<li itemprop="hasMenuItem" itemscope itemtype="https://schema.org/MenuItem">
-										<p><strong itemprop="name">Coconut chicken curry</strong> · <span itemprop="offers" itemscope itemtype="https://schema.org/Offer"><meta itemprop="priceCurrency" content="DKK"><meta itemprop="price" content="145">DKK 145</span> <ui-chip theme="pale green">Gluten free</ui-chip></p>
-										<span itemprop="description">Mild, with mint, coriander and steamed basmati.</span>
-										<meta itemprop="suitableForDiet" content="https://schema.org/GlutenFreeDiet">
-										<span itemprop="nutrition" itemscope itemtype="https://schema.org/NutritionInformation" hidden><meta itemprop="calories" content="620 calories"><meta itemprop="proteinContent" content="42 g"><meta itemprop="servingSize" content="1 bowl"></span>
-									</li>
-									<li itemprop="hasMenuItem" itemscope itemtype="https://schema.org/MenuItem">
-										<p><strong itemprop="name">Barley risotto, wild mushroom</strong> · <span itemprop="offers" itemscope itemtype="https://schema.org/Offer"><meta itemprop="priceCurrency" content="DKK"><meta itemprop="price" content="135">DKK 135</span> <ui-chip theme="pale green">Vegan</ui-chip></p>
-										<span itemprop="description">Pearl barley, chanterelle, thyme and a hazelnut crumb.</span>
-										<meta itemprop="suitableForDiet" content="https://schema.org/VeganDiet">
-										<meta itemprop="suitableForDiet" content="https://schema.org/VegetarianDiet">
-										<span itemprop="nutrition" itemscope itemtype="https://schema.org/NutritionInformation" hidden><meta itemprop="calories" content="540 calories"><meta itemprop="servingSize" content="1 bowl"></span>
-									</li>
-								</ul>
-							</div>
-						</details>
-					</cq-box></ui-accordion>
+					<p data-part="summary" itemprop="description">Served 17:00–21:30, Wednesday to Sunday. Everything is cooked to order, so allow a little time. Prices in DKK.</p>
+					<ui-accordion group="menu-section" variant="bordered rounded divided">
+						<cq-box>
+							<details name="menu-section" itemprop="hasMenuSection" itemscope itemtype="https://schema.org/MenuSection">
+								<summary><span itemprop="name">Starters</span><ui-icon type="plus-minus"></ui-icon></summary>
+								<div>
+									<ul data-part="list" data-variant="menu">
+										<li itemprop="hasMenuItem" itemscope itemtype="https://schema.org/MenuItem">
+											<strong itemprop="name">Charred hispi cabbage</strong>
+											<ui-chip theme="pale green">Vegetarian</ui-chip>
+											<span itemprop="offers" itemscope itemtype="https://schema.org/Offer"><meta itemprop="priceCurrency" content="DKK"><meta itemprop="price" content="85">85.00</span>
+											<small itemprop="description">Brown butter, toasted hazelnut and aged pecorino.</small>
+											<meta itemprop="suitableForDiet" content="https://schema.org/VegetarianDiet">
+											<meta itemprop="suitableForDiet" content="https://schema.org/GlutenFreeDiet">
+										</li>
+										<li itemprop="hasMenuItem" itemscope itemtype="https://schema.org/MenuItem">
+											<strong itemprop="name">Cured trout, rye crisp</strong>
+											<ui-chip theme="pale blue">Fish</ui-chip>
+											<span itemprop="offers" itemscope itemtype="https://schema.org/Offer"><meta itemprop="priceCurrency" content="DKK"><meta itemprop="price" content="95">95.00</span>
+											<small itemprop="description">Beetroot, horseradish cream and dill oil.</small>
+										</li>
+										<li itemprop="hasMenuItem" itemscope itemtype="https://schema.org/MenuItem">
+											<strong itemprop="name">Smoked beetroot tartare</strong>
+											<ui-chip theme="pale green">Vegan</ui-chip>
+											<span itemprop="offers" itemscope itemtype="https://schema.org/Offer"><meta itemprop="priceCurrency" content="DKK"><meta itemprop="price" content="80">80.00</span>
+											<small itemprop="description">Capers, mustard seed and puffed buckwheat.</small>
+											<meta itemprop="suitableForDiet" content="https://schema.org/VeganDiet">
+											<meta itemprop="suitableForDiet" content="https://schema.org/VegetarianDiet">
+										</li>
+										<li itemprop="hasMenuItem" itemscope itemtype="https://schema.org/MenuItem">
+											<strong itemprop="name">Chicken liver parfait</strong>
+											<ui-chip theme="pale orange">Chicken</ui-chip>
+											<span itemprop="offers" itemscope itemtype="https://schema.org/Offer"><meta itemprop="priceCurrency" content="DKK"><meta itemprop="price" content="90">90.00</span>
+											<small itemprop="description">Rhubarb compote and grilled sourdough.</small>
+										</li>
+										<li itemprop="hasMenuItem" itemscope itemtype="https://schema.org/MenuItem">
+											<strong itemprop="name">Hand-peeled shrimp</strong>
+											<ui-chip theme="pale blue">Shellfish</ui-chip>
+											<span itemprop="offers" itemscope itemtype="https://schema.org/Offer"><meta itemprop="priceCurrency" content="DKK"><meta itemprop="price" content="110">110.00</span>
+											<small itemprop="description">Lemon mayonnaise, chives and toasted rye.</small>
+										</li>
+									</ul>
+								</div>
+							</details>
+							<details name="menu-section" itemprop="hasMenuSection" itemscope itemtype="https://schema.org/MenuSection">
+								<summary><span itemprop="name">Mains</span><ui-icon type="plus-minus"></ui-icon></summary>
+								<div>
+									<ul data-part="list" data-variant="menu">
+										<li itemprop="hasMenuItem" itemscope itemtype="https://schema.org/MenuItem">
+											<strong itemprop="name">Coconut chicken curry</strong>
+											<ui-chip theme="pale orange">Chicken</ui-chip>
+											<span itemprop="offers" itemscope itemtype="https://schema.org/Offer"><meta itemprop="priceCurrency" content="DKK"><meta itemprop="price" content="145">145.00</span>
+											<small itemprop="description">Mild, with mint, coriander and steamed basmati.</small>
+											<meta itemprop="suitableForDiet" content="https://schema.org/GlutenFreeDiet">
+											<span itemprop="nutrition" itemscope itemtype="https://schema.org/NutritionInformation" hidden><meta itemprop="calories" content="620 calories"><meta itemprop="proteinContent" content="42 g"><meta itemprop="servingSize" content="1 bowl"></span>
+										</li>
+										<li itemprop="hasMenuItem" itemscope itemtype="https://schema.org/MenuItem">
+											<strong itemprop="name">Barley risotto, wild mushroom</strong>
+											<ui-chip theme="pale green">Vegan</ui-chip>
+											<span itemprop="offers" itemscope itemtype="https://schema.org/Offer"><meta itemprop="priceCurrency" content="DKK"><meta itemprop="price" content="135">135.00</span>
+											<small itemprop="description">Pearl barley, chanterelle, thyme and a hazelnut crumb.</small>
+											<meta itemprop="suitableForDiet" content="https://schema.org/VeganDiet">
+											<meta itemprop="suitableForDiet" content="https://schema.org/VegetarianDiet">
+											<span itemprop="nutrition" itemscope itemtype="https://schema.org/NutritionInformation" hidden><meta itemprop="calories" content="540 calories"><meta itemprop="servingSize" content="1 bowl"></span>
+										</li>
+										<li itemprop="hasMenuItem" itemscope itemtype="https://schema.org/MenuItem">
+											<strong itemprop="name">Braised lamb shank</strong>
+											<ui-chip theme="pale orange">Lamb</ui-chip>
+											<span itemprop="offers" itemscope itemtype="https://schema.org/Offer"><meta itemprop="priceCurrency" content="DKK"><meta itemprop="price" content="195">195.00</span>
+											<small itemprop="description">Slow-cooked in dark beer with root vegetables and mash.</small>
+											<span itemprop="nutrition" itemscope itemtype="https://schema.org/NutritionInformation" hidden><meta itemprop="calories" content="780 calories"><meta itemprop="proteinContent" content="48 g"><meta itemprop="servingSize" content="1 plate"></span>
+										</li>
+										<li itemprop="hasMenuItem" itemscope itemtype="https://schema.org/MenuItem">
+											<strong itemprop="name">Pan-fried cod, brown butter</strong>
+											<ui-chip theme="pale blue">Fish</ui-chip>
+											<span itemprop="offers" itemscope itemtype="https://schema.org/Offer"><meta itemprop="priceCurrency" content="DKK"><meta itemprop="price" content="175">175.00</span>
+											<small itemprop="description">New potatoes, capers and parsley.</small>
+											<meta itemprop="suitableForDiet" content="https://schema.org/GlutenFreeDiet">
+											<span itemprop="nutrition" itemscope itemtype="https://schema.org/NutritionInformation" hidden><meta itemprop="calories" content="520 calories"><meta itemprop="proteinContent" content="41 g"><meta itemprop="servingSize" content="1 plate"></span>
+										</li>
+										<li itemprop="hasMenuItem" itemscope itemtype="https://schema.org/MenuItem">
+											<strong itemprop="name">Dry-aged beef burger</strong>
+											<ui-chip theme="pale orange">Beef</ui-chip>
+											<span itemprop="offers" itemscope itemtype="https://schema.org/Offer"><meta itemprop="priceCurrency" content="DKK"><meta itemprop="price" content="165">165.00</span>
+											<small itemprop="description">Aged cheddar, pickles and hand-cut fries.</small>
+											<span itemprop="nutrition" itemscope itemtype="https://schema.org/NutritionInformation" hidden><meta itemprop="calories" content="890 calories"><meta itemprop="proteinContent" content="45 g"><meta itemprop="servingSize" content="1 burger"></span>
+										</li>
+									</ul>
+								</div>
+							</details>
+							<details name="menu-section" itemprop="hasMenuSection" itemscope itemtype="https://schema.org/MenuSection">
+								<summary><span itemprop="name">Desserts</span><ui-icon type="plus-minus"></ui-icon></summary>
+								<div>
+									<ul data-part="list" data-variant="menu">
+										<li itemprop="hasMenuItem" itemscope itemtype="https://schema.org/MenuItem">
+											<strong itemprop="name">Rhubarb trifle</strong>
+											<ui-chip theme="pale green">Vegetarian</ui-chip>
+											<span itemprop="offers" itemscope itemtype="https://schema.org/Offer"><meta itemprop="priceCurrency" content="DKK"><meta itemprop="price" content="75">75.00</span>
+											<small itemprop="description">Vanilla custard, macerated rhubarb and almond crumble.</small>
+											<meta itemprop="suitableForDiet" content="https://schema.org/VegetarianDiet">
+										</li>
+										<li itemprop="hasMenuItem" itemscope itemtype="https://schema.org/MenuItem">
+											<strong itemprop="name">Dark chocolate mousse</strong>
+											<ui-chip theme="pale green">Vegetarian</ui-chip>
+											<span itemprop="offers" itemscope itemtype="https://schema.org/Offer"><meta itemprop="priceCurrency" content="DKK"><meta itemprop="price" content="80">80.00</span>
+											<small itemprop="description">Sea salt, cold-pressed olive oil and a rye tuile.</small>
+											<meta itemprop="suitableForDiet" content="https://schema.org/VegetarianDiet">
+										</li>
+										<li itemprop="hasMenuItem" itemscope itemtype="https://schema.org/MenuItem">
+											<strong itemprop="name">Blackcurrant sorbet</strong>
+											<ui-chip theme="pale green">Vegan</ui-chip>
+											<span itemprop="offers" itemscope itemtype="https://schema.org/Offer"><meta itemprop="priceCurrency" content="DKK"><meta itemprop="price" content="65">65.00</span>
+											<small itemprop="description">Sea buckthorn, lemon verbena and toasted oats.</small>
+											<meta itemprop="suitableForDiet" content="https://schema.org/VeganDiet">
+											<meta itemprop="suitableForDiet" content="https://schema.org/VegetarianDiet">
+											<meta itemprop="suitableForDiet" content="https://schema.org/GlutenFreeDiet">
+										</li>
+										<li itemprop="hasMenuItem" itemscope itemtype="https://schema.org/MenuItem">
+											<strong itemprop="name">Æbleskiver, three pieces</strong>
+											<ui-chip theme="pale green">Vegetarian</ui-chip>
+											<span itemprop="offers" itemscope itemtype="https://schema.org/Offer"><meta itemprop="priceCurrency" content="DKK"><meta itemprop="price" content="70">70.00</span>
+											<small itemprop="description">Warm apple doughnuts, icing sugar and blackberry jam.</small>
+											<meta itemprop="suitableForDiet" content="https://schema.org/VegetarianDiet">
+										</li>
+										<li itemprop="hasMenuItem" itemscope itemtype="https://schema.org/MenuItem">
+											<strong itemprop="name">Danish cheese plate</strong>
+											<ui-chip theme="pale green">Vegetarian</ui-chip>
+											<span itemprop="offers" itemscope itemtype="https://schema.org/Offer"><meta itemprop="priceCurrency" content="DKK"><meta itemprop="price" content="95">95.00</span>
+											<small itemprop="description">Three cheeses, honeycomb and rye crispbread.</small>
+											<meta itemprop="suitableForDiet" content="https://schema.org/VegetarianDiet">
+										</li>
+									</ul>
+								</div>
+							</details>
+							<details name="menu-section" itemprop="hasMenuSection" itemscope itemtype="https://schema.org/MenuSection">
+								<summary><span itemprop="name">Soft drinks, coffee &amp; tea</span><ui-icon type="plus-minus"></ui-icon></summary>
+								<div>
+									<ul data-part="list" data-variant="menu">
+										<li itemprop="hasMenuItem" itemscope itemtype="https://schema.org/MenuItem">
+											<strong itemprop="name">Still water, 50 cl</strong>
+											<ui-chip theme="pale blue">Still</ui-chip>
+											<span itemprop="offers" itemscope itemtype="https://schema.org/Offer"><meta itemprop="priceCurrency" content="DKK"><meta itemprop="price" content="30">30.00</span>
+											<small itemprop="description">Filtered and chilled — refills are free.</small>
+										</li>
+										<li itemprop="hasMenuItem" itemscope itemtype="https://schema.org/MenuItem">
+											<strong itemprop="name">Sparkling water, 50 cl</strong>
+											<ui-chip theme="pale blue">Sparkling</ui-chip>
+											<span itemprop="offers" itemscope itemtype="https://schema.org/Offer"><meta itemprop="priceCurrency" content="DKK"><meta itemprop="price" content="35">35.00</span>
+											<small itemprop="description">Carbonated in house, served with lemon.</small>
+										</li>
+										<li itemprop="hasMenuItem" itemscope itemtype="https://schema.org/MenuItem">
+											<strong itemprop="name">Apple &amp; elderflower</strong>
+											<ui-chip theme="pale blue">Juice</ui-chip>
+											<span itemprop="offers" itemscope itemtype="https://schema.org/Offer"><meta itemprop="priceCurrency" content="DKK"><meta itemprop="price" content="45">45.00</span>
+											<small itemprop="description">Pressed Danish apples, lightly sparkling.</small>
+										</li>
+										<li itemprop="hasMenuItem" itemscope itemtype="https://schema.org/MenuItem">
+											<strong itemprop="name">Filter coffee</strong>
+											<ui-chip theme="pale blue">Coffee</ui-chip>
+											<span itemprop="offers" itemscope itemtype="https://schema.org/Offer"><meta itemprop="priceCurrency" content="DKK"><meta itemprop="price" content="35">35.00</span>
+											<small itemprop="description">Single origin, roasted a few streets away.</small>
+										</li>
+										<li itemprop="hasMenuItem" itemscope itemtype="https://schema.org/MenuItem">
+											<strong itemprop="name">Loose-leaf tea</strong>
+											<ui-chip theme="pale blue">Tea</ui-chip>
+											<span itemprop="offers" itemscope itemtype="https://schema.org/Offer"><meta itemprop="priceCurrency" content="DKK"><meta itemprop="price" content="35">35.00</span>
+											<small itemprop="description">Green, black or herbal — ask for today's selection.</small>
+										</li>
+									</ul>
+								</div>
+							</details>
+							<details name="menu-section" itemprop="hasMenuSection" itemscope itemtype="https://schema.org/MenuSection">
+								<summary><span itemprop="name">Beer &amp; wine</span><ui-icon type="plus-minus"></ui-icon></summary>
+								<div>
+									<ul data-part="list" data-variant="menu">
+										<li itemprop="hasMenuItem" itemscope itemtype="https://schema.org/MenuItem">
+											<strong itemprop="name">House lager, 40 cl</strong>
+											<ui-chip theme="pale red">Lager</ui-chip>
+											<span itemprop="offers" itemscope itemtype="https://schema.org/Offer"><meta itemprop="priceCurrency" content="DKK"><meta itemprop="price" content="65">65.00</span>
+											<small itemprop="description">Crisp pilsner from a small brewery in Nørrebro.</small>
+										</li>
+										<li itemprop="hasMenuItem" itemscope itemtype="https://schema.org/MenuItem">
+											<strong itemprop="name">Session IPA, 40 cl</strong>
+											<ui-chip theme="pale red">IPA</ui-chip>
+											<span itemprop="offers" itemscope itemtype="https://schema.org/Offer"><meta itemprop="priceCurrency" content="DKK"><meta itemprop="price" content="75">75.00</span>
+											<small itemprop="description">Citrus-forward and light on the bitterness.</small>
+										</li>
+										<li itemprop="hasMenuItem" itemscope itemtype="https://schema.org/MenuItem">
+											<strong itemprop="name">House red, 15 cl</strong>
+											<ui-chip theme="pale red">Red wine</ui-chip>
+											<span itemprop="offers" itemscope itemtype="https://schema.org/Offer"><meta itemprop="priceCurrency" content="DKK"><meta itemprop="price" content="75">75.00</span>
+											<small itemprop="description">Grenache from the southern Rhône, served cool.</small>
+										</li>
+										<li itemprop="hasMenuItem" itemscope itemtype="https://schema.org/MenuItem">
+											<strong itemprop="name">House white, 15 cl</strong>
+											<ui-chip theme="pale red">White wine</ui-chip>
+											<span itemprop="offers" itemscope itemtype="https://schema.org/Offer"><meta itemprop="priceCurrency" content="DKK"><meta itemprop="price" content="75">75.00</span>
+											<small itemprop="description">Dry Riesling from the Mosel.</small>
+										</li>
+										<li itemprop="hasMenuItem" itemscope itemtype="https://schema.org/MenuItem">
+											<strong itemprop="name">Crémant rosé, 12 cl</strong>
+											<ui-chip theme="pale red">Rosé</ui-chip>
+											<span itemprop="offers" itemscope itemtype="https://schema.org/Offer"><meta itemprop="priceCurrency" content="DKK"><meta itemprop="price" content="85">85.00</span>
+											<small itemprop="description">Brut, from the Loire — dry and bright.</small>
+										</li>
+									</ul>
+								</div>
+							</details>
+						</cq-box>
+					</ui-accordion>
 					<footer data-part="footer">Tell us about allergies when you order — the kitchen adapts most dishes.</footer>
 				</ui-content>
 			</cq-box>

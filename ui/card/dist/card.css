@@ -1844,6 +1844,32 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       flex-direction: column;
       gap: var(--ui-content-list-answer-gap, var(--spacing-sm));
     }
+    & [data-part=list][data-variant=menu] {
+      --ui-content-list-gap: var(--ui-content-list-menu-gap, var(--spacing-md));
+      & li {
+        align-items: baseline;
+        column-gap: var(--ui-content-list-menu-cgap, var(--spacing-sm));
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+      }
+      & strong {
+        grid-column: 1;
+      }
+      & ui-chip {
+        grid-column: 2;
+        justify-self: start;
+      }
+      & [itemprop=offers] {
+        font-variant-numeric: tabular-nums;
+        grid-column: 3;
+        justify-self: end;
+        text-align: end;
+      }
+      & small {
+        color: var(--ui-content-list-menu-ink, var(--ui-content-muted));
+        grid-column: 1 / -1;
+      }
+    }
     & [data-part=list][data-variant=crossed] {
       --ui-content-list-marker: "\2717   ";
       --ui-content-list-marker-ink: var(--ui-content-list-crossed-mark, var(--color-error, currentColor));

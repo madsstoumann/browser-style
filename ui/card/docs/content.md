@@ -361,7 +361,7 @@ Content parts are **semantic children** marked with `data-part`. They are auto-s
 | `footer` | `<footer data-part="footer">` | Trailing muted meta row — flex-wrap |
 | `price` | `<p data-part="price">` | **Body group** (prominent) — large current price; `<del>` struck original, `<small>` accent discount |
 | `stat` | `<p data-part="stat">` | **Body group** (prominent) — big `<data>` number + `<small>` unit; muted trend |
-| `list` | `<ul>`/`<ol data-part="list">` | **Body group** — feature / step list; flex column |
+| `list` | `<ul>`/`<ol data-part="list">` | **Body group** — feature / step list; flex column. Two `data-variant`s: `crossed` (excluded items, ✗ marker) and `menu` (priced rows — see below) |
 | `address` | `<address data-part="address">` | **Body group** — postal block, no avatar (distinct from byline) |
 | `timeline` | `<ol data-part="timeline">` | **Body group** — dated entries; muted `<time>` |
 | `quote` | `<ui-quote data-part="quote">` wrapping `<blockquote>` | **Body group** — indented; composes with `@browser.style/quote` via `variant` |
@@ -371,6 +371,16 @@ Content parts are **semantic children** marked with `data-part`. They are auto-s
 Bare headings (`h2`–`h6`) are styled identically to `data-part="headline"` as a convenience, so plain semantic markup just works.
 
 Each part keeps its own `--ui-content-{part}-*` token(s) (see *Tokens*) for future per-part typography knobs.
+
+#### `data-variant="menu"` — the priced row
+
+Each `<li>` becomes a three-column grid (`auto 1fr auto`): name, optional label `<ui-chip>`, price.
+The price is right-aligned and `tabular-nums`, so with a fixed two decimals the decimal points line
+up down the list; the `<small>` description spans the full width on the row below. Children are
+direct — a `<p>` wrapper would break the row onto two lines. Knobs:
+`--ui-content-list-menu-gap` (row rhythm), `--ui-content-list-menu-cgap` (column gap),
+`--ui-content-list-menu-ink` (description). Used by the `menu` type — see
+[schema.md § Menu](schema.md).
 
 ### Structured parts — microdata scope + who uses them
 

@@ -866,10 +866,9 @@ describe('realestate — RealEstateListing', () => {
 	});
 });
 
-/* Intl separates an ALPHABETIC currency code from its amount with U+00A0, so the code
-   cannot wrap away from the number. The difference is invisible in a browser and a
-   whitespace-normalising comparator cannot see it, so it is pinned in the two DKK
-   assertions below and in the real-estate offer test above. */
+/* A menu is a price COLUMN: the visible amount drops the currency code (stated once on
+   the card) and always carries two decimals, so the decimal points line up. The machine
+   value on the <meta> is unchanged — that is what a validator reads. */
 describe('menu — Menu', () => {
 	const sections = [{ name: 'Mains', items: [{ name: 'Curry', price: 145, currency: 'DKK', label: 'Gluten free', description: 'Mild.', diets: ['GlutenFreeDiet', 'PaleoDiet'], nutrition: { calories: '620 calories', proteinContent: '42 g', servingSize: '1 bowl' } }] }];
 	const card = () => render({ schemaType: 'menu', headline: 'Kitchen', details: { sections } });
@@ -880,7 +879,7 @@ describe('menu — Menu', () => {
 		const html = card();
 		assert.match(html, /itemprop="hasMenuSection" itemscope itemtype="https:\/\/schema\.org\/MenuSection"/);
 		assert.match(html, /<li itemprop="hasMenuItem" itemscope itemtype="https:\/\/schema\.org\/MenuItem">/);
-		assert.match(html, /<span itemprop="offers" itemscope itemtype="https:\/\/schema\.org\/Offer"><meta itemprop="priceCurrency" content="DKK"><meta itemprop="price" content="145">DKK 145<\/span>/);
+		assert.match(html, /<span itemprop="offers" itemscope itemtype="https:\/\/schema\.org\/Offer"><meta itemprop="priceCurrency" content="DKK"><meta itemprop="price" content="145">145\.00<\/span>/);
 		assert.match(html, /<span itemprop="nutrition" itemscope itemtype="https:\/\/schema\.org\/NutritionInformation" hidden><meta itemprop="calories" content="620 calories"><meta itemprop="proteinContent" content="42 g"><meta itemprop="servingSize" content="1 bowl"><\/span>/);
 	});
 

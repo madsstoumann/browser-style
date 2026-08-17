@@ -355,13 +355,22 @@ const fmtPrice = (currency, value) => {
 	return esc(new Intl.NumberFormat('en-US', { style: 'currency', currency, maximumFractionDigits: Number.isInteger(number) ? 0 : 2 }).format(number));
 };
 
+/* Same contract as fmtPrice, minus the currency: a price COLUMN reads as one number
+   per row (always two decimals, so the decimal points line up under tabular-nums)
+   and states its currency once on the card. Docs: docs/schema.md § Menu */
+const fmtAmount = (currency, value) => {
+	const number = Number(value);
+	if (value == null || value === '' || Number.isNaN(number)) return esc(String(value ?? ''));
+	return esc(new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(number));
+};
+
 /* A priced row: the machine value on a <meta>, the human string as the text node.
    Google's price must carry no currency symbol and no thousands separator, and the
    validator reads the TEXT node — `<data itemprop="price" value="279">$279</data>`
    survives only on price's Text arm. Same shape as loyalty's MonetaryAmount rows.
    fmtPrice() is already escaped; do NOT esc() this. docs/schema.md § Price */
-const priceValue = (currency, value, prop = 'price') =>
-	value == null || value === '' ? '' : meta(prop, value) + fmtPrice(currency, value);
+const priceValue = (currency, value, prop = 'price', format = fmtPrice) =>
+	value == null || value === '' ? '' : meta(prop, value) + format(currency, value);
 
 /* "PT15M" → "15 min", "P6W" → "6 weeks", "P14D" → "14 days" */
 const duration = (iso) => {
@@ -1253,17 +1262,22 @@ const scopedList = (rows, ordered) => rows.length
 	? `<${ordered ? 'ol' : 'ul'} data-part="list">${rows.join('')}</${ordered ? 'ol' : 'ul'}>`
 	: '';
 
-/* one MenuItem row. suitableForDiet takes RestrictedDiet members by URL; the visible
-   chip is a separate label so the machine value and the reader's value agree.
-   calories is an Energy and servingSize is Text — both unit-bearing strings. */
+/* one MenuItem row: name · label · price on one line, description under it. The row
+   is a grid, so the three lead nodes are siblings of the <li> and NOT wrapped in a <p>
+   — a block wrapper would put the price on its own line. suitableForDiet takes
+   RestrictedDiet members by URL; the visible chip is a separate label so the machine
+   value and the reader's value agree. calories is an Energy and servingSize is Text —
+   both unit-bearing strings. Docs: docs/schema.md § Menu */
 const menuItem = (item) => {
-	const offer = item.price == null ? '' : `<span${scope('offers', 'Offer')}>${meta('priceCurrency', item.currency)}${priceValue(item.currency, item.price)}</span>`;
+	const offer = item.price == null ? '' : `<span${scope('offers', 'Offer')}>${meta('priceCurrency', item.currency)}${priceValue(item.currency, item.price, 'price', fmtAmount)}</span>`;
 	const nutrition = item.nutrition
 		? `<span${scope('nutrition', 'NutritionInformation')} hidden>${meta('calories', item.nutrition.calories)}${meta('proteinContent', item.nutrition.proteinContent)}${meta('servingSize', item.nutrition.servingSize)}</span>`
 		: '';
 	return `<li${scope('hasMenuItem', 'MenuItem')}>`
-		+ `<p><strong itemprop="name">${esc(item.name)}</strong>${offer ? ` · ${offer}` : ''}${item.label ? ` <ui-chip theme="pale green">${esc(item.label)}</ui-chip>` : ''}</p>`
-		+ (item.description ? `<span itemprop="description">${esc(item.description)}</span>` : '')
+		+ `<strong itemprop="name">${esc(item.name)}</strong>`
+		+ (item.label ? `<ui-chip theme="${esc(item.labelTheme || 'pale green')}">${esc(item.label)}</ui-chip>` : '')
+		+ offer
+		+ (item.description ? `<small itemprop="description">${esc(item.description)}</small>` : '')
 		+ (item.diets || []).filter((diet) => RESTRICTED_DIETS.has(diet)).map((diet) => meta('suitableForDiet', SCHEMA + diet)).join('')
 		+ nutrition
 		+ '</li>';
@@ -1937,7 +1951,7 @@ const DETAILS = {
 		if (d.sections?.length) {
 			html += accordion('menu-section', d.sections.map((section) => ({
 				summary: `<span itemprop="name">${esc(section.name)}</span>`,
-				body: `<div><ul data-part="list">${(section.items || []).map(menuItem).join('')}</ul></div>`,
+				body: `<div><ul data-part="list" data-variant="menu">${(section.items || []).map(menuItem).join('')}</ul></div>`,
 				scopeAttrs: scope('hasMenuSection', 'MenuSection')
 			})), parts.accordion);
 		}

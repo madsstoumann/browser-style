@@ -15,7 +15,7 @@
     "preset": { "$ref": "card-preset/stack-accordion" },
     "eyebrow": "Dinner menu",
     "headline": "Brew & Bean kitchen",
-    "summary": "Served 17:00–21:30, Wednesday to Sunday. Everything is cooked to order, so allow a little time.",
+    "summary": "Served 17:00–21:30, Wednesday to Sunday. Everything is cooked to order, so allow a little time. Prices in DKK.",
     "media": [
       {
         "mediaType": "image",
@@ -27,23 +27,49 @@
       "note": "Tell us about allergies when you order — the kitchen adapts most dishes.",
       "sections": [
         {
-          "name": "Small plates",
+          "name": "Starters",
           "items": [
             {
               "name": "Charred hispi cabbage",
               "price": 85,
               "currency": "DKK",
               "label": "Vegetarian",
+              "labelTheme": "pale green",
               "description": "Brown butter, toasted hazelnut and aged pecorino.",
-              "diets": ["VegetarianDiet", "GlutenFreeDiet"],
-              "nutrition": { "calories": "310 calories", "servingSize": "1 plate" }
+              "diets": ["VegetarianDiet", "GlutenFreeDiet"]
             },
             {
               "name": "Cured trout, rye crisp",
               "price": 95,
               "currency": "DKK",
-              "description": "Beetroot, horseradish cream and dill oil.",
-              "nutrition": { "calories": "280 calories", "servingSize": "1 plate" }
+              "label": "Fish",
+              "labelTheme": "pale blue",
+              "description": "Beetroot, horseradish cream and dill oil."
+            },
+            {
+              "name": "Smoked beetroot tartare",
+              "price": 80,
+              "currency": "DKK",
+              "label": "Vegan",
+              "labelTheme": "pale green",
+              "description": "Capers, mustard seed and puffed buckwheat.",
+              "diets": ["VeganDiet", "VegetarianDiet"]
+            },
+            {
+              "name": "Chicken liver parfait",
+              "price": 90,
+              "currency": "DKK",
+              "label": "Chicken",
+              "labelTheme": "pale orange",
+              "description": "Rhubarb compote and grilled sourdough."
+            },
+            {
+              "name": "Hand-peeled shrimp",
+              "price": 110,
+              "currency": "DKK",
+              "label": "Shellfish",
+              "labelTheme": "pale blue",
+              "description": "Lemon mayonnaise, chives and toasted rye."
             }
           ]
         },
@@ -54,7 +80,8 @@
               "name": "Coconut chicken curry",
               "price": 145,
               "currency": "DKK",
-              "label": "Gluten free",
+              "label": "Chicken",
+              "labelTheme": "pale orange",
               "description": "Mild, with mint, coriander and steamed basmati.",
               "diets": ["GlutenFreeDiet"],
               "nutrition": { "calories": "620 calories", "proteinContent": "42 g", "servingSize": "1 bowl" }
@@ -64,9 +91,178 @@
               "price": 135,
               "currency": "DKK",
               "label": "Vegan",
+              "labelTheme": "pale green",
               "description": "Pearl barley, chanterelle, thyme and a hazelnut crumb.",
               "diets": ["VeganDiet", "VegetarianDiet"],
               "nutrition": { "calories": "540 calories", "servingSize": "1 bowl" }
+            },
+            {
+              "name": "Braised lamb shank",
+              "price": 195,
+              "currency": "DKK",
+              "label": "Lamb",
+              "labelTheme": "pale orange",
+              "description": "Slow-cooked in dark beer with root vegetables and mash.",
+              "nutrition": { "calories": "780 calories", "proteinContent": "48 g", "servingSize": "1 plate" }
+            },
+            {
+              "name": "Pan-fried cod, brown butter",
+              "price": 175,
+              "currency": "DKK",
+              "label": "Fish",
+              "labelTheme": "pale blue",
+              "description": "New potatoes, capers and parsley.",
+              "diets": ["GlutenFreeDiet"],
+              "nutrition": { "calories": "520 calories", "proteinContent": "41 g", "servingSize": "1 plate" }
+            },
+            {
+              "name": "Dry-aged beef burger",
+              "price": 165,
+              "currency": "DKK",
+              "label": "Beef",
+              "labelTheme": "pale orange",
+              "description": "Aged cheddar, pickles and hand-cut fries.",
+              "nutrition": { "calories": "890 calories", "proteinContent": "45 g", "servingSize": "1 burger" }
+            }
+          ]
+        },
+        {
+          "name": "Desserts",
+          "items": [
+            {
+              "name": "Rhubarb trifle",
+              "price": 75,
+              "currency": "DKK",
+              "label": "Vegetarian",
+              "labelTheme": "pale green",
+              "description": "Vanilla custard, macerated rhubarb and almond crumble.",
+              "diets": ["VegetarianDiet"]
+            },
+            {
+              "name": "Dark chocolate mousse",
+              "price": 80,
+              "currency": "DKK",
+              "label": "Vegetarian",
+              "labelTheme": "pale green",
+              "description": "Sea salt, cold-pressed olive oil and a rye tuile.",
+              "diets": ["VegetarianDiet"]
+            },
+            {
+              "name": "Blackcurrant sorbet",
+              "price": 65,
+              "currency": "DKK",
+              "label": "Vegan",
+              "labelTheme": "pale green",
+              "description": "Sea buckthorn, lemon verbena and toasted oats.",
+              "diets": ["VeganDiet", "VegetarianDiet", "GlutenFreeDiet"]
+            },
+            {
+              "name": "Æbleskiver, three pieces",
+              "price": 70,
+              "currency": "DKK",
+              "label": "Vegetarian",
+              "labelTheme": "pale green",
+              "description": "Warm apple doughnuts, icing sugar and blackberry jam.",
+              "diets": ["VegetarianDiet"]
+            },
+            {
+              "name": "Danish cheese plate",
+              "price": 95,
+              "currency": "DKK",
+              "label": "Vegetarian",
+              "labelTheme": "pale green",
+              "description": "Three cheeses, honeycomb and rye crispbread.",
+              "diets": ["VegetarianDiet"]
+            }
+          ]
+        },
+        {
+          "name": "Soft drinks, coffee & tea",
+          "items": [
+            {
+              "name": "Still water, 50 cl",
+              "price": 30,
+              "currency": "DKK",
+              "label": "Still",
+              "labelTheme": "pale blue",
+              "description": "Filtered and chilled — refills are free."
+            },
+            {
+              "name": "Sparkling water, 50 cl",
+              "price": 35,
+              "currency": "DKK",
+              "label": "Sparkling",
+              "labelTheme": "pale blue",
+              "description": "Carbonated in house, served with lemon."
+            },
+            {
+              "name": "Apple & elderflower",
+              "price": 45,
+              "currency": "DKK",
+              "label": "Juice",
+              "labelTheme": "pale blue",
+              "description": "Pressed Danish apples, lightly sparkling."
+            },
+            {
+              "name": "Filter coffee",
+              "price": 35,
+              "currency": "DKK",
+              "label": "Coffee",
+              "labelTheme": "pale blue",
+              "description": "Single origin, roasted a few streets away."
+            },
+            {
+              "name": "Loose-leaf tea",
+              "price": 35,
+              "currency": "DKK",
+              "label": "Tea",
+              "labelTheme": "pale blue",
+              "description": "Green, black or herbal — ask for today's selection."
+            }
+          ]
+        },
+        {
+          "name": "Beer & wine",
+          "items": [
+            {
+              "name": "House lager, 40 cl",
+              "price": 65,
+              "currency": "DKK",
+              "label": "Lager",
+              "labelTheme": "pale red",
+              "description": "Crisp pilsner from a small brewery in Nørrebro."
+            },
+            {
+              "name": "Session IPA, 40 cl",
+              "price": 75,
+              "currency": "DKK",
+              "label": "IPA",
+              "labelTheme": "pale red",
+              "description": "Citrus-forward and light on the bitterness."
+            },
+            {
+              "name": "House red, 15 cl",
+              "price": 75,
+              "currency": "DKK",
+              "label": "Red wine",
+              "labelTheme": "pale red",
+              "description": "Grenache from the southern Rhône, served cool."
+            },
+            {
+              "name": "House white, 15 cl",
+              "price": 75,
+              "currency": "DKK",
+              "label": "White wine",
+              "labelTheme": "pale red",
+              "description": "Dry Riesling from the Mosel."
+            },
+            {
+              "name": "Crémant rosé, 12 cl",
+              "price": 85,
+              "currency": "DKK",
+              "label": "Rosé",
+              "labelTheme": "pale red",
+              "description": "Brut, from the Loire — dry and bright."
             }
           ]
         }

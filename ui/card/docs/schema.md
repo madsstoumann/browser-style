@@ -830,9 +830,23 @@ Two structural traps, both worth knowing before writing a renderer:
 ### Menu — `Menu`
 
 Sections are `<details>` in a `<ui-accordion>` — `hasMenuSection` → `MenuSection` — each holding a
-`<ul data-part="list">` of `hasMenuItem` → `MenuItem`. ⚠️ **`MenuItem` is an `Intangible`**, while
+`<ul data-part="list" data-variant="menu">` of `hasMenuItem` → `MenuItem`. ⚠️ **`MenuItem` is an `Intangible`**, while
 `Menu` and `MenuSection` are `CreativeWork`s; the split matters because `MenuItem` gets `offers`,
 `nutrition` and `suitableForDiet`, none of which the two containers have.
+
+**The row is a grid, not a paragraph.** `<strong itemprop="name">`, the label `<ui-chip>` and the
+`offers` span are direct children of the `<li>` — `name · label · price` on one line — with
+`<small itemprop="description">` on the row below (`grid-column: 1 / -1`). Wrapping the first three
+in a `<p>` is what the card did until v5, and a block wrapper pushes the price onto its own line.
+The chip's hue is data (`labelTheme`), because a menu labels diets *and* proteins: a green chip on
+"Lamb" would read as a claim the markup does not make.
+
+**Prices read as a column, not as prose.** `fmtAmount()` (not `fmtPrice()`) renders the visible
+amount: no currency code, always two fraction digits, `font-variant-numeric: tabular-nums` and
+right-aligned, so the decimal points line up down the section. The currency is stated once, in the
+card summary, and the machine value on `<meta itemprop="price">` is unchanged — that is the string
+a validator reads, so dropping the code from the text node costs nothing. `priceValue()` takes the
+formatter as its 4th argument; every other type keeps the `fmtPrice()` default.
 
 `suitableForDiet` takes `RestrictedDiet` members by URL (11 of them: `DiabeticDiet`,
 `GlutenFreeDiet`, `HalalDiet`, `HinduDiet`, `KosherDiet`, `LowCalorieDiet`, `LowFatDiet`,
