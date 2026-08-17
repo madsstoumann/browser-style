@@ -347,8 +347,15 @@
       "variant": "col",
       "media": "chip(tc)",
       "variants": {
-        "layout": { "xs": "cg(3xs) rg(3xs)", "md": "columns(2)" },
-        "tile": { "variant": "rds(non)", "media": "asr(1/1) chip(bs) chip(blue) chip(pale) chip(sm)", "content": "pad(none)" }
+        "layout": {
+          "xs": "cg(3xs) rg(3xs)",
+          "md": "columns(2)"
+        },
+        "tile": {
+          "variant": "rds(non)",
+          "media": "asr(1/1) chip(bs) chip(blue) chip(pale) chip(sm)",
+          "content": "pad(none)"
+        }
       }
     },
     "product-page": {
@@ -374,6 +381,14 @@
       "media": "asr(4/3) rds(lg)",
       "content": "scl(lg)",
       "headingTag": "h2"
+    },
+    "realestate-page": {
+      "name": "Real estate page",
+      "description": "Full listing view — the photo carousel opens into a full-bleed 3-column contact sheet (open:grid); media beside the text column from the lg tier",
+      "element": "ui-card",
+      "variant": "col lg:row lg:spl(1/1) shd(non)",
+      "media": "asr(4/3) rds(lg) nav mrk(pll) lightbox(bs) open:grid(3c)",
+      "content": "scl(lg)"
     },
     "carousel-row": {
       "name": "Carousel Row",
@@ -1213,14 +1228,18 @@
       "variant": "vis(content)",
       "theme": "gray",
       "content": "scl(lg)",
-      "parts": { "quote": "breaker" }
+      "parts": {
+        "quote": "breaker"
+      }
     },
     "parts-faq-bordered": {
       "name": "Parts Demo — FAQ Bordered",
       "description": "Panel FAQ card; parts.accordion renders the nested accordion bordered and divided",
       "element": "ui-card",
       "variant": "vis(content)",
-      "parts": { "accordion": "bordered divided" }
+      "parts": {
+        "accordion": "bordered divided"
+      }
     },
     "reveal-slide-right": {
       "name": "Reveal Demo — Slide (media right)",

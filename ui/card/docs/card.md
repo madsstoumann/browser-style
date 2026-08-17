@@ -62,6 +62,7 @@ lives in one `details` object discriminated by `schemaType`.
 | `internalName` | string | CMS editor label (required, invariant) |
 | `schemaType` | select | 46 values — drives itemtype + microdata mapping |
 | `preset` | reference → `card-preset` | The look & feel. Swap to restyle |
+| `chip` | `{ text, theme }` | Status flag at the very TOP of the text column, above the eyebrow — "New", "Sold". `theme` is a ui-chip theme string, default `pale accent`. **Not** `furniture.chip`, which is overlaid on the media: a frame gets one chip family, so a furniture chip suppresses the `<ui-chip data-type>` type label |
 | `eyebrow` | string | Kicker; → `articleSection`/`category`/`recipeCategory`/`about`/`genre` (unmarked on `job` — `details.industry` owns `industry`) |
 | `headline` | string | → `headline` (article/news), `title` (job), `name` (rest) |
 | `subheadline` | string | |

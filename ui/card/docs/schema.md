@@ -812,6 +812,25 @@ while `serviceUrl` sits directly on the CTA.
 
 ### Real estate — `RealEstateListing`
 
+The demo pair models a property portal: a **teaser** on `demo/schema.html` (photo carousel via
+`card-preset/carousel`, a `pale orange` "New" chip, the facts row) linking to a generated
+**detail page**, `demo/realestate/havnegade-44.html`, built by `demo/realestate/build.js` —
+the same shape as the article and product-colourway pages.
+
+Two things about that pair are easy to get wrong:
+
+- **The "New" chip is `fields.chip`, not `fields.furniture.chip`.** A frame gets one chip family,
+  so a furniture chip *suppresses* the `<ui-chip data-type>` type label — putting the flag on the
+  media would silently delete `RealEstateListing` from the card. `fields.chip` renders it at the
+  top of the text column instead, in the same `<p data-part="meta"><ui-chip theme="pale …">`
+  shape as the achievement status and most-popular chips.
+- **The gallery is `open:grid(3c)`, not a collage.** `collagePart()` is gated to `ProductGroup`
+  and builds *variant* tiles; it cannot express a photo grid. `open:grid()` keeps the frame an
+  ordinary carousel while closed and turns it into a full-bleed three-column contact sheet when
+  the lightbox opens — the "view all photos" pattern. The lightbox invoker is added by the
+  **builder**, not the data file, because that file is shared with the teaser and the teaser must
+  not grow a gallery button.
+
 Two structural traps, both worth knowing before writing a renderer:
 
 1. **It is a `WebPage` subtype.** The home is not the card's subject; it hangs off `mainEntity` →
