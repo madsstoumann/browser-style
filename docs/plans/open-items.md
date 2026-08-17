@@ -426,31 +426,34 @@ the actual defect — see the same plan, work items B-F.
 
 ---
 
-## 12. `demo/schema.html` has no sections — plus three inconsistencies it hides
+## 12. Closed — `demo/schema.html` sections (shipped 2026-08-16)
 
-From the [card-sections proposal](./2026-08-16-schema-card-sections.md). The page is one
-`<lay-out>` holding all 57 cards in accretive order, so it reads as a changelog rather than a
-reference. That document proposes ten sections grouped by what the thing *is* — the `meta.folder`
-values in `ui/card/data/*.json` are the right signal at the wrong granularity (22 folders,
-Media 12, Commerce 12, eleven singletons).
+The page is now ten sections, each an `<h2 id="sec-…">` followed by its own
+`<lay-out md="columns(2) items(start)">`, grouped by what the thing *is*. Rationale and the
+card-by-card allocation: [card-sections](./2026-08-16-schema-card-sections.md).
 
-**Nothing is decided.** The grid stays `md="columns(2) items(start)"`; the three-column and
-page-width question was raised and parked, with the measurements recorded there.
+Two of the three inconsistencies that document surfaced were fixed by the reorder: **podcast is
+no longer ordered part-then-container**, and **the two `Person` cards now sit side by side**.
 
-Three defects the exercise surfaced, all verified, none fixed:
+**Still open — one linking convention, one grid question:**
 
-- **Podcast is ordered backwards.** Every other pair on the page runs container-then-part
-  (TVSeries→TVEpisode, MusicGroup→MusicAlbum, ComicSeries→ComicIssue); podcast runs
-  Episode→Series.
-- **Two linking conventions for one relationship.** `ComicIssue` and `MusicAlbum` link to their
-  sibling card with a crawlable `<a itemprop="url">`; `TVEpisode` and `PodcastEpisode` emit
-  `partOfSeries` as a hidden, name-only scope with no url — with the sibling card on the same
-  page. The cheapest of the three to unify.
-- **Sectioning costs a heading level.** Every card headline is an `<h2>` under the single
-  `<lay-out>`; real sections need `<h2>` for the section and `<h3>` for the cards, which is a
-  renderer/preset concern (`textTag`), not just markup.
+- **`TVEpisode` and `PodcastEpisode` link to their series differently from everyone else.**
+  `ComicIssue` and `MusicAlbum` use a crawlable `<a itemprop="url">`; these two emit
+  `partOfSeries` as a hidden, name-only scope with no url. Now that the sibling card is
+  *directly adjacent*, the gap is starker. A `render.js` change, so it was out of scope for a
+  reorder.
+- **Three columns / page width stays parked.** The measurements are recorded in the same
+  document: `--layout-bleed-mw` is 1024px, `--layout-mi` (1rem) already equals the 16px column
+  gap, and a third column would put cells at 331px — below the card engine's own 400px `md:`
+  tier.
 
-**Unrelated, found while measuring:** `ui/card/demo.layout.css` sets
+**How the heading level was solved, since it will come up again:** no card hardcodes a heading
+tag. `headingTag` defaults to `h3` in `card-preset.schema.json`, so the fifteen grid presets
+dropped their redundant `"headingTag": "h2"` and inherit it, while `prose-article` and
+`product-page` keep an explicit `h2` because they back standalone single-entity pages that have
+no `<h1>` above the card.
+
+**Unrelated, still open:** `ui/card/demo.layout.css` sets
 `--layout-space-unit: var(--spacing-lg, 1.5rem)` for page-level lay-outs, but that shim is **not
 in `dist/demo.min.css`** and `demo/schema.html` links only the bundle — so page gaps are 16px
 where the shim intends 24px. Either the shim belongs in the bundle or the page should link it.
