@@ -51,13 +51,6 @@
         },
         "style": "primary",
         "ariaLabel": "Add AuraSound Pro to cart"
-      },
-      {
-        "link": {
-          "url": "#",
-          "text": "Details"
-        },
-        "style": "ghost"
       }
     ],
     "details": {

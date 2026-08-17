@@ -357,7 +357,7 @@ Content parts are **semantic children** marked with `data-part`. They are auto-s
 | `caption` | `<figcaption data-part="caption">` | Same treatment as `meta`; usable inside `<ui-media>` (sits above the scrim) |
 | `byline` | `<address data-part="byline">` | Author row — flex, centered; an inner `<img>` becomes a round avatar |
 | `tags` | `<ul data-part="tags">` | Tag list — flex-wrap. Children are either **plain links** (default pill) or **`<ui-chip>`** (full colour palette) — see below |
-| `actions` | `<div data-part="actions">` | Button / link row — flex-wrap with action gap |
+| `actions` | `<div data-part="actions">` | Button / link row — flex-wrap with action gap. The accent (primary) CTA goes **last**, so it reads at the inline-end of the row and mirrors under `dir="rtl"`; `render.js` reorders it there whatever order the data declares |
 | `footer` | `<footer data-part="footer">` | Trailing muted meta row — flex-wrap |
 | `price` | `<p data-part="price">` | **Body group** (prominent) — large current price; `<del>` struck original, `<small>` accent discount |
 | `stat` | `<p data-part="stat">` | **Body group** (prominent) — big `<data>` number + `<small>` unit; muted trend |
@@ -475,6 +475,22 @@ The general lesson for any packaged component rendered into `<ui-content>`: **a 
 - **Plain links** — `<li><a href="…">Tag</a></li>` or direct `<a>` children render as the built-in **pill fallback** (`--ui-content-tag-bg` / `-color` / `-radius` / `-padding`). Hand-authored lists keep working; `<li>` wrappers dissolve via `display: contents` (scoped to `li` only — a direct-child chip keeps its box).
 
 The bespoke pill is scoped to `& a:not(ui-chip *)`, so it never leaks onto a chip's own `<a>` — a `<ui-chip>` always styles itself. Mixing both in one container is fine.
+
+**Focus on a linked tag swaps its fill and ink.** A ring around the *text inside* a chip reads as a stray box, so the anchor's outline is suppressed and the whole pill flips instead: `background-color: currentColor` makes the chip's own ink the fill, and the label takes `contrast-color()` against it (with a `--color-surface` declaration first, for engines without `contrast-color()`). The bespoke pill does the same through `--ui-content-tag-focus-bg` (default `--color-text`).
+
+A **darkening veil was measured and rejected.** It only works on chips with light ink; anything with dark ink collapses — measured in light mode, label contrast fell from 12.1:1 → 4.4:1 on the grey pill, 4.6:1 → **1.7:1** on `pale green` and 4.9:1 → **1.8:1** on `pale red`. Darkening is the wrong direction whenever the label is the dark half of the pair, and no single veil direction is right for a palette that contains both.
+
+The swap is the only variant that holds across the whole palette (measured, both colour schemes):
+
+| chip | idle → focus (light) | label on focus | state Δ |
+|---|---|---|---|
+| grey (default) | `#e6e6e6` → `#262626` | 15.1:1 | 12.1:1 |
+| `pale green` | `#d4e2d8` → `#2a6f3c` | 6.1:1 | 4.6:1 |
+| `pale red` | `#efd3d3` → `#ad2525` | 6.8:1 | 4.9:1 |
+| `blue` | `#205c97` → `#ffffff` | 21:1 | 6.9:1 |
+| `black` | `#1f2937` → `#f5f5f5` | 19.3:1 | 13.5:1 |
+
+Dark mode inverts the same way (grey `#666` → `#d9d9d9`, label 14.9:1, Δ 4.1:1). Every combination clears 4.5:1 for the label and 3:1 for the state change, except `blue` in dark mode (Δ 2.8:1 — a full hue-to-white flip whose luminance ratio happens to land low) and an **unthemed** `variant="outline"` chip, which is already unreadable at rest (label 1.25:1 on white — its ink falls back to `--color-button`) and is not a tag look to use.
 
 ---
 
@@ -723,6 +739,7 @@ All tokens live in the `--ui-content-*` namespace. Override per instance, per ho
 | `--ui-content-tag-color` | `inherit` | tag pill text |
 | `--ui-content-tag-radius` | `var(--radius-pill, 100px)` | tag pill corner radius — set to `0` (or a small radius) for square tags |
 | `--ui-content-tag-padding` | `0.2em 0.7em` | tag pill padding (label is centered via `place-content`) |
+| `--ui-content-tag-focus-bg` | `var(--color-text)` | fill a **bespoke** tag pill takes on `:focus-visible` (replaces the anchor's outline); the label auto-contrasts against it. A `<ui-chip>` swaps to its own ink instead and reads no token |
 | `--ui-content-actions-gap` | `var(--spacing-sm)` | actions gap |
 | `--ui-content-footer-ink` | `var(--ui-content-muted)` | footer ink |
 | `--ui-content-footer-fs` | `calc(var(--ui-content-fs) * 0.78)` | footer size |

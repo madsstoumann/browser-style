@@ -347,6 +347,23 @@
 			& a:not(ui-chip *) { display: inline-grid; place-content: center; }
 			/* a link INSIDE a tag chip: the chip paints the pill, the anchor stays flush */
 			& ui-chip a { background: none; color: inherit; padding: 0; text-decoration: none; }
+
+			/* a focused tag LINK swaps fill and ink — no ring inside the pill. A darkening
+			   veil was measured and rejected: any chip with dark ink (grey, pale) drops
+			   its label to 1.7–4.4:1. Docs: docs/content.md § Tags */
+			& a:focus-visible { outline: none; }
+			& ui-chip:has(a:focus-visible) {
+				background-color: currentColor; /* fill := the chip's own ink */
+				& a {
+					color: var(--color-surface); /* fallback where contrast-color() is unsupported */
+					color: contrast-color(currentColor);
+				}
+			}
+			& a:not(ui-chip *):focus-visible {
+				background-color: var(--ui-content-tag-focus-bg, var(--color-text));
+				color: var(--color-surface);
+				color: contrast-color(var(--ui-content-tag-focus-bg, var(--color-text)));
+			}
 		}
 
 		/* actions (button / link row) */
@@ -375,6 +392,21 @@
 		& [data-part~="cover"] {
 			color: inherit;
 			text-decoration: none;
+
+			/* FOCUS — the ring is a second stretched pseudo drawn INSIDE the card edge.
+			   Both halves are load-bearing: an outline on the card paints under the
+			   frame's positioned image, and a pseudo's outline is clipped by the card's
+			   own overflow, so it can only go inward. Docs: docs/card.md § cover */
+			&:focus-visible { outline: none; }
+			&:focus-visible::before {
+				border-radius: var(--ui-card-radius, 0);
+				content: '';
+				inset: 0;
+				outline: var(--ui-card-focus-width, var(--ui-media-focus-width, 2px)) dashed var(--ui-card-focus-color, var(--ui-media-focus-color, var(--ring-color)));
+				outline-offset: var(--ui-card-focus-offset, calc(-1 * var(--ui-card-focus-width, var(--ui-media-focus-width, 2px))));
+				position: absolute;
+				z-index: 3;
+			}
 
 			&::after {
 				content: '';
@@ -613,7 +645,8 @@
 	:where(ui-card):has([data-part~="cover"]) {
 		position: relative;
 
-		& :is([data-part="tags"], [data-part="actions"]) a {
+		/* a CTA row holds <button>s as often as links — both must stay clickable */
+		& :is([data-part="tags"], [data-part="actions"]) :is(a, button) {
 			position: relative;
 			z-index: 2;
 		}

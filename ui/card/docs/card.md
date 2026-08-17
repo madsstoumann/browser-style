@@ -482,7 +482,7 @@ Eleven parts added for the typed cards, all styled in [`content.css`](../content
 | `price` | `<p>` + `<data>`/`<del>`/`<small>` | product, course, booking, membership, software, job, book |
 | `rating` | `<div>` + decorative `<input class="ui-rating">` + `[data-sr]` label + visible count | product, review, software, business, movie, book |
 | `list` | `<ul>` check / `<ol>` ordered; `data-variant="crossed"` = muted ✗ rows (excluded items). Marker themes via `--ui-content-list-marker` (any `list-style-type` string, e.g. `"→ "`; `none` for block-content rows) + `--ui-content-list-marker-ink` (`::marker` color) — string markers ride `list-style-type` because `::marker` `content` never shipped in Safari | recipe, job, course, booking, location, membership, howto, qa, dataset |
-| `links` | `<ul>` of plain related-link rows (default bullet, hairline dividers) — the envelope `links[]` field; deliberately not buttons, no itemprop. Marker via `--ui-content-links-marker` (e.g. `'"→ "'`), ink via `--ui-content-links-mark` | any type |
+| `links` | `<ul>` of plain related-link rows (default bullet, hairline dividers) — the envelope `links[]` field; deliberately not buttons, no itemprop. Emitted **before** `actions`: the CTA row always closes the text column. Marker via `--ui-content-links-marker` (e.g. `'"→ "'`), ink via `--ui-content-links-mark` | any type |
 | `address` | `<address>` of stacked lines: street · postal + locality · country (a 2-letter country code stays machine-only) | business, location, event, contact, organization |
 | `hours` | two-column `<dl>` — `<dt>` day range, `<dd>` time; one row per opening pattern. Days/times derive from the machine string (`Mo-We 09:00-17:00` → "Mon–Wed 9:00–17:00", `Th 09:00-16:00` → "Thu"), overridable per entry with `days`/`time`. Every row emits a structured `OpeningHoursSpecification`; the flat `openingHours` string only where the type owns it — it is a `LocalBusiness`/`CivicStructure` property, so `location` (plain `Place`) passes `flat: false` | business, location, organization offices |
 | `office` | `<div>` wrapping one `department` → `LocalBusiness`: name, address, phone, own `hours` table | organization |
@@ -692,8 +692,9 @@ rest ([`article.render.html`](../demo/article.render.html) is the working demo):
   other (no classes), styled in [`content.css`](../content.css): its `::after`
   covers the card (the legacy content-card "clickable" pattern). The link stays
   where it belongs semantically — inside the headline — so there are **no
-  nested anchors**; the card's own links (tag pills, actions) stay clickable
-  above it via `z-index`:
+  nested anchors**; the card's own controls (tag pills, actions — `<a>` *and*
+  `<button>`, e.g. a product card's "Add to cart") stay clickable above it via
+  `z-index`:
 
   ```css
   :where(ui-card):has([data-part~="cover"]) { position: relative; }
@@ -703,8 +704,32 @@ rest ([`article.render.html`](../demo/article.render.html) is the working demo):
     position: absolute;
     z-index: 1;
   }
-  /* tags/actions links sit above the cover surface (z-index: 2) */
+  /* tags/actions controls sit above the cover surface (z-index: 2) */
   ```
+
+  **Focus rings the card, not the link.** A `:focus-visible` cover suppresses its
+  own outline and paints a card-sized dashed ring — the `--ui-card-focus-*`
+  family, in the style of a focused carousel frame
+  ([`media.carousel.css`](../media.carousel.css)), picking up the host's corner
+  via `--ui-card-radius`.
+
+  Two constraints decide *how*, and each one rules out the obvious answer:
+
+  1. **Not an `outline` on the card.** Chromium paints an element's outline
+     *under* its positioned descendants, and a media frame's `<img>` is
+     `position: absolute; inset: 0` — so any inward ring vanishes behind the
+     photo. That is why the ring is a second stretched pseudo
+     (`::before`, `z-index: 3`) on the cover link, which already sits above the
+     frame.
+  2. **Therefore it can only go inward.** `ui-card` is `overflow: hidden`, which
+     does *not* clip the element's own outline but **does** clip a descendant's —
+     so a positive `--ui-card-focus-offset` on that pseudo is cut away entirely
+     and nothing renders. The default is `calc(-1 * var(--ui-card-focus-width))`:
+     the ring traces the inside of the card edge, and the nested variant swatches
+     (clipped again by their frame) need no special case.
+
+  Neither shows up in computed style — the rule matches, the outline resolves,
+  and nothing paints. Verify this one against pixels.
 
   Return is the browser Back button, which morphs in reverse (the article pages
   carry no backlink — the reference pages they morph from are several, so there
@@ -724,7 +749,7 @@ navigation; `prefers-reduced-motion` keeps default timing.
 | [`render.html`](../demo/render.html) | The 52 cards of [`data/index.json`](../data/index.json) rendered by `render.js` from UCF data + presets |
 | [`carousel.render.html`](../demo/carousel.render.html) · [`video.render.html`](../demo/video.render.html) | The original demo pages recreated data-driven: presets from [`data/card.presets.demo.json`](../data/card.presets.demo.json) (129 presets extracted from the originals) + UCF instances in [`data/demo/`](../data/demo). Each page lists its not-expressible demos in a bottom note. The `media` and `reveal` twins were dropped — [`media.html`](../demo/media.html) and [`../reveal/index.html`](../../reveal/index.html) are the better pages |
 | [`article.render.html`](../demo/article.render.html) + [`articles/`](../demo/articles/) | The article pattern above, live and **fully static** (pre-rendered by `articles/build.js`): teaser cards with stretched-link headlines → cross-document view transition morphs the whole card into the per-article page and back (`card-{id}` + nested `hero-{id}` names via `data-view` + CSS `attr()`), body-instead-of-summary via the `prose` preset, plain `<a>` navigation, zero runtime JS |
-| [`products/`](../demo/products/) | The same pattern for commerce, pre-rendered by `products/build.js`: `schema.html`'s ProductGroup collage links to one page per colourway, each a `mrk(rail)` thumbnail carousel + lightbox with the rounded size picker (`variants.control: "buttons"`). The transition behaviour is **pure name matching** — a page carries only its own colourway's `data-view` names, so collage→page pairs (morph) while page→page does not (fade). Deliberately no page-scoped view-transition CSS: the incoming document drives a cross-document transition, so a blanket fade rule would kill the morph too |
+| [`products/`](../demo/products/) | The same pattern for commerce, pre-rendered by `products/build.js`: `schema.html`'s ProductGroup collage links to one page per colourway, each a `mrk(rail)` thumbnail carousel + lightbox with the rounded size picker (`variants.control: "buttons"`); the plain Product card links to `aurasound-pro.html`, the same shell on the `product-page-solo` preset (one photo, no rail). The transition behaviour is **pure name matching** — a page carries only its own colourway's `data-view` names, so collage→page pairs (morph) while page→page does not (fade). Deliberately no page-scoped view-transition CSS: the incoming document drives a cross-document transition, so a blanket fade rule would kill the morph too |
 | [`index.html`](../index.html) · [`media.html`](../demo/media.html) · [`content.html`](../demo/content.html) · [`carousel.html`](../demo/media.carousel.html) · [`video.html`](../demo/media.video.html) | The card engine itself (hand-authored originals) |
 | [`../reveal/index.html`](../../reveal/index.html) | Reveal types incl. the hero (source of `hero-reveal` preset) |
 

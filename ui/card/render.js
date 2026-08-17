@@ -408,6 +408,17 @@ const contactLink = ({ type, value, label }, primary = false) => {
 	return `${type === 'email' ? meta('email', value) : ''}<a class="ui-button"${primary ? ' data-variant="accent"' : ''}${prop ? ` itemprop="${prop}"` : ''} href="${esc(href)}">${esc(label || value)}</a>`;
 };
 
+/* CTA row — the accent (primary) action TRAILS the row, whatever order the data
+   declares it in: presentation only, and the flex row's logical direction mirrors
+   it under dir="rtl". The needle is this file's own spelling, never author data. */
+const actionsPart = (links) => {
+	const index = links.findIndex((link) => link.includes('data-variant="accent"'));
+	const ordered = index < 0 || index === links.length - 1
+		? links
+		: [...links.slice(0, index), ...links.slice(index + 1), links[index]];
+	return `<nav data-part="actions">${ordered.join(' ')}</nav>`;
+};
+
 /* map link — `geo:lat,lng` (RFC 5870) is the standards answer and hands off to the
    OS map app on Android/desktop Linux, but iOS Safari and desktop browsers ignore
    it. The https Apple/Google form is what actually opens an app everywhere, so the
@@ -1043,8 +1054,16 @@ const buildTail = (fields, type) => {
 			return `<ui-chip${tagProp ? ` itemprop="${tagProp}"` : ''}>${text}</ui-chip>`;
 		}).join('')}</span>`;
 	}
+	if (fields.links?.length) {
+		/* plain related links — a text-link list, deliberately not buttons (no itemprop:
+		   multiple url values on the card scope would misdeclare the card's own url).
+		   Emitted BEFORE the actions: the CTA row always closes the text column */
+		html += `<ul data-part="links">${fields.links.map((link) =>
+			`<li><a href="${esc(link.url || '#')}">${esc(link.text || link.url || '')}</a></li>`
+		).join('')}</ul>`;
+	}
 	if (fields.actions?.length) {
-		html += `<nav data-part="actions">${fields.actions.map((action) => {
+		html += actionsPart(fields.actions.map((action) => {
 			const variant = action.style === 'primary' ? ' data-variant="accent"' : '';
 			const label = action.link?.text || '';
 			const aria = action.ariaLabel ? ` aria-label="${esc(action.ariaLabel)}"` : '';
@@ -1052,14 +1071,7 @@ const buildTail = (fields, type) => {
 			return action.link?.url
 				? `<a class="ui-button"${variant}${aria} href="${esc(action.link.url)}">${esc(label)}</a>`
 				: `<button class="ui-button" type="button"${variant}${aria}>${esc(label)}</button>`;
-		}).join(' ')}</nav>`;
-	}
-	if (fields.links?.length) {
-		/* plain related links — a text-link list, deliberately not buttons (no itemprop:
-		   multiple url values on the card scope would misdeclare the card's own url) */
-		html += `<ul data-part="links">${fields.links.map((link) =>
-			`<li><a href="${esc(link.url || '#')}">${esc(link.text || link.url || '')}</a></li>`
-		).join('')}</ul>`;
+		}));
 	}
 	const eng = fields.engagement;
 	if (eng && Object.keys(eng).length) {
@@ -1430,7 +1442,7 @@ const DETAILS = {
 			if (/^https?:\/\/\S+/.test(contact.value || '')) html += meta('sameAs', contact.value);
 		}
 		if (d.contacts?.length) {
-			html += `<nav data-part="actions">${d.contacts.map((contact, index) => contactLink(contact, index === 0)).join(' ')}</nav>`;
+			html += actionsPart(d.contacts.map((contact, index) => contactLink(contact, index === 0)));
 		}
 		return html;
 	},
@@ -1508,7 +1520,7 @@ const DETAILS = {
 		const links = [];
 		if (d.telephone) links.push(`<a class="ui-button" itemprop="telephone" href="tel:${esc(d.telephone.replace(/\s/g, ''))}">${esc(d.telephone)}</a>`);
 		if (d.email) links.push(`${meta('email', d.email)}<a class="ui-button" href="mailto:${esc(d.email)}">Email</a>`);
-		if (links.length) html += `<nav data-part="actions">${links.join(' ')}</nav>`;
+		if (links.length) html += actionsPart(links);
 		return html;
 	},
 
@@ -1535,7 +1547,7 @@ const DETAILS = {
 		const bits = [d.department, d.availableHoursDisplay, langs.join(', '), d.responseTime ? `Replies ${d.responseTime}` : null].filter(Boolean).join(' · ');
 		if (bits) html += `<p data-part="meta">${esc(bits)}</p>`;
 		if (d.contactMethods?.length) {
-			html += `<nav data-part="actions">${d.contactMethods.map((method, index) => contactLink(method, index === 0)).join(' ')}</nav>`;
+			html += actionsPart(d.contactMethods.map((method, index) => contactLink(method, index === 0)));
 		}
 		return html;
 	},
@@ -1718,9 +1730,9 @@ const DETAILS = {
 		if (bits) html += `<p data-part="meta">${esc(bits)}</p>`;
 		html += listPart(d.variableMeasured);
 		if (d.distribution?.length) {
-			html += `<nav data-part="actions">${d.distribution.map((dist, index) =>
+			html += actionsPart(d.distribution.map((dist, index) =>
 				`<span${scope('distribution', 'DataDownload')}>${meta('encodingFormat', dist.format)}<a class="ui-button"${index === 0 ? ' data-variant="accent"' : ''} itemprop="contentUrl" href="${esc(dist.url)}">${esc(dist.format)}</a></span>`
-			).join(' ')}</nav>`;
+			));
 		}
 		return html;
 	},
@@ -1845,7 +1857,7 @@ const DETAILS = {
 				channel.url ? `<a class="ui-button" data-variant="accent" itemprop="serviceUrl" href="${esc(channel.url)}">${esc(channel.urlText || 'Get in touch')}</a>` : '',
 				channel.telephone ? `<span${scope('servicePhone', 'ContactPoint')}>${meta('contactType', channel.contactType)}<a class="ui-button" itemprop="telephone" href="tel:${esc(String(channel.telephone).replace(/\s/g, ''))}">${esc(channel.telephone)}</a></span>` : ''
 			].filter(Boolean);
-			html += `<div${scope('availableChannel', 'ServiceChannel')}>${(channel.languages || []).map((lang) => meta('availableLanguage', lang)).join('')}${meta('processingTime', channel.processingTime)}${links.length ? `<nav data-part="actions">${links.join(' ')}</nav>` : ''}</div>`;
+			html += `<div${scope('availableChannel', 'ServiceChannel')}>${(channel.languages || []).map((lang) => meta('availableLanguage', lang)).join('')}${meta('processingTime', channel.processingTime)}${links.length ? actionsPart(links) : ''}</div>`;
 		}
 		return html;
 	},

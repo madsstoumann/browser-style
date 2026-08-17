@@ -66,27 +66,24 @@ const variantOf = (slug) => `<link itemprop="mainEntityOfPage" href="${file(slug
 						<meta itemprop="productGroupID" content="${esc(GROUP.id)}">
 					</div>`;
 
-const page = (ucf, color) => {
-	const title = String(ucf.fields.headline).replace(/<[^>]+>/g, '');
-	/* the card IS the page root — the product-page preset's lg:row arrangement is the
-	   layout, so unlike the article pages there is nothing to descope into an <article> */
-	const card = renderCard(withPreset(ucf, 'product-page'), presets, undefined, USE_CDN ? { images: IMAGES } : {})
-		.replace('<ui-card', `<ui-card class="product-view" data-view="card-variant-${color.slug}"`)
+/* the card IS the page root — the product-page presets' lg:row arrangement is the
+   layout, so unlike the article pages there is nothing to descope into an <article>.
+   `view` names the two morph targets the page it is linked from also names. */
+const productCard = (ucf, { preset, view }) =>
+	renderCard(withPreset(ucf, preset), presets, undefined, USE_CDN ? { images: IMAGES } : {})
+		.replace('<ui-card', `<ui-card class="product-view" data-view="card-${view}"`)
 		/* first slide only: the LCP element and the morph target — always eager */
-		.replace('<img', `<img id="hero" data-view="hero-variant-${color.slug}"`)
+		.replace('<img', `<img id="hero" data-view="hero-${view}"`)
 		.replace(' loading="lazy"', ' loading="eager" fetchpriority="high"')
-		.replace('sizes="auto, ', 'sizes="') /* `auto` is spec-invalid on eager images */
-		/* machine metadata leads the text column; the colourway switcher closes it */
-		.replace(/(<ui-content[^>]*>)/, `$1\n\t\t\t\t\t${variantOf(color.slug)}\n\t\t\t\t\t`)
-		.replace('</ui-content>', `${siblings(color.slug)}\n\t\t\t\t</ui-content>`);
+		.replace('sizes="auto, ', 'sizes="'); /* `auto` is spec-invalid on eager images */
 
-	return `<!DOCTYPE html>
+const shell = ({ title, description, styles = '', card }) => `<!DOCTYPE html>
 <html lang="en-US" dir="ltr">
 <head>
 	<title>${esc(title)}</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-	<meta name="description" content="${esc(ucf.fields.summary || title)}">
+	<meta name="description" content="${esc(description)}">
 	${HEAD_COMMON}
 	<!-- Block first paint (and the view-transition snapshot) until the hero is parsed,
 	     so the card/hero morph targets exist when the browser captures the incoming
@@ -99,7 +96,24 @@ const page = (ucf, color) => {
 		   naming rule and group timing) come from ui-card.css — nothing page-scoped
 		   here, deliberately: see the header comment in products/build.js */
 		body { margin-inline: auto; max-inline-size: 64rem; }
-		.product-view { margin-block-end: var(--spacing-2xl); }
+		.product-view { margin-block-end: var(--spacing-2xl); }${styles}
+	</style>
+	${CONTRAST_STYLE}
+</head>
+<body>
+	<main>
+		${card}
+	</main>
+	<!-- Native scroll-control pseudos do NOT follow a popover frame into the top layer
+	     (Chromium), so the open lightbox gets real DOM controls from this module. Non
+	     render-blocking: it must not delay the transition snapshot. Docs: docs/media.md -->
+	<script type="module" src="/ui/card/lightbox.min.js"></script>
+</body>
+</html>
+`;
+
+/* one colourway of the gown — the four pages schema.html's ProductGroup collage links to */
+const SWATCH_STYLES = `
 		/* the colourway switcher — cross-page navigation, not a content part.
 		   Caption UNDER the swatch: the row reads as a set of choices, and each
 		   label sits with the photo it names instead of between two of them. */
@@ -125,26 +139,36 @@ const page = (ucf, color) => {
 				object-fit: cover;
 			}
 			& a:hover span { text-decoration: underline; }
-		}
-	</style>
-	${CONTRAST_STYLE}
-</head>
-<body>
-	<main>
-		${card}
-	</main>
-	<!-- Native scroll-control pseudos do NOT follow a popover frame into the top layer
-	     (Chromium), so the open lightbox gets real DOM controls from this module. Non
-	     render-blocking: it must not delay the transition snapshot. Docs: docs/media.md -->
-	<script type="module" src="/ui/card/lightbox.min.js"></script>
-</body>
-</html>
-`;
-};
+		}`;
+
+const title = (ucf) => String(ucf.fields.headline).replace(/<[^>]+>/g, '');
+
+const colourwayPage = (ucf, color) => shell({
+	title: title(ucf),
+	description: ucf.fields.summary || title(ucf),
+	styles: SWATCH_STYLES,
+	card: productCard(ucf, { preset: 'product-page', view: `variant-${color.slug}` })
+		/* machine metadata leads the text column; the colourway switcher closes it */
+		.replace(/(<ui-content[^>]*>)/, `$1\n\t\t\t\t\t${variantOf(color.slug)}\n\t\t\t\t\t`)
+		.replace('</ui-content>', `${siblings(color.slug)}\n\t\t\t\t</ui-content>`)
+});
+
+/* the single-photo product — schema.html's plain Product card links here through its
+   headline cover link, and morphs on the same card-/hero- name pair the gowns use */
+const SOLO = { data: 'product.json', file: 'aurasound-pro.html', view: 'product-1' };
+
+const soloPage = (ucf) => shell({
+	title: title(ucf),
+	description: ucf.fields.summary || title(ucf),
+	card: productCard(ucf, { preset: 'product-page-solo', view: SOLO.view })
+});
 
 mkdirSync(here, { recursive: true });
 for (const color of COLORS) {
 	const ucf = data(`product-${color.slug}.json`);
-	writeFileSync(join(here, file(color.slug)), page(ucf, color));
+	writeFileSync(join(here, file(color.slug)), colourwayPage(ucf, color));
 	console.log(`products/${file(color.slug)} ← data/product-${color.slug}.json (${ucf.id})`);
 }
+const solo = data(SOLO.data);
+writeFileSync(join(here, SOLO.file), soloPage(solo));
+console.log(`products/${SOLO.file} ← data/${SOLO.data} (${solo.id})`);

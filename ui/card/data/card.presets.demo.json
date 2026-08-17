@@ -366,6 +366,15 @@
         "buttonGroupTheme": "gray"
       }
     },
+    "product-page-solo": {
+      "name": "Product Page (single photo)",
+      "description": "Full product view for a product with ONE image — no carousel, no thumbnail rail; media beside the text column from the lg tier",
+      "element": "ui-card",
+      "variant": "col lg:row lg:spl(1/1) shd(non)",
+      "media": "asr(4/3) rds(lg)",
+      "content": "scl(lg)",
+      "headingTag": "h2"
+    },
     "carousel-row": {
       "name": "Carousel Row",
       "description": "Carousel as the media half of a row card",
