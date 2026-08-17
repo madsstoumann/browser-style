@@ -6,8 +6,13 @@
  * convention drift, and the convention is the point.
  */
 
-/* shared head fragment: bundle CSS + hotlink-safe referrer + srcset-origin preconnect */
-export const HEAD_COMMON = `<link rel="stylesheet" href="/dist/demo.min.css">
+/* shared head fragment: bundle CSS + hotlink-safe referrer + srcset-origin preconnect.
+   The ?v= token on the bundle is a cache key, not decoration — /dist/* is served with
+   max-age=86400 + stale-while-revalidate=604800 (see /_headers) and the filename never
+   changes, so without a new query a CSS change can stay invisible for up to 8 days at
+   the browser AND the Cloudflare edge. BUMP IT when the bundle changes, here and in the
+   26 hand-authored demo pages. */
+export const HEAD_COMMON = `<link rel="stylesheet" href="/dist/demo.min.css?v=20260817">
 	<!-- srcset uses absolute v4.browser.style CDN URLs; the zone's Hotlink Protection
 	     403s any cross-origin Referer (pages.dev, localhost) — no-referrer passes -->
 	<meta name="referrer" content="no-referrer">

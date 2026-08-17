@@ -2,5 +2,14 @@
 # Demo assets are content-stable; HTML revalidates via Pages defaults.
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
+# /dist/demo.min.css is UNHASHED, so this TTL is what decides how long a shipped CSS
+# change stays invisible: 1 day fresh, then up to 7 more served stale while it
+# revalidates. `public` means shared caches (the Cloudflare edge) hold it too, so
+# neither a browser hard-reload nor a private tab is enough to shake it loose.
+# The pages therefore link it with a version query — /dist/demo.min.css?v=YYYYMMDD.
+# ⚠️ BUMP THAT TOKEN whenever the bundle changes, or the change ships invisibly.
+# It lives in 26 demo pages and in ui/card/demo/build.shared.js (HEAD_COMMON), which
+# is the template the articles/ and products/ builders emit — change both or a
+# rebuild reverts the generated pages.
 /dist/*
   Cache-Control: public, max-age=86400, stale-while-revalidate=604800
