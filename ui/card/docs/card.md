@@ -708,6 +708,24 @@ rest ([`article.render.html`](../demo/article.render.html) is the working demo):
   /* tags/actions controls sit above the cover surface (z-index: 2) */
   ```
 
+  **A carousel frame is excluded, automatically.** `inset: 0` resolves against the
+  nearest positioned ancestor, so on a plain card the `::after` covers the media
+  frame too — and on touch a swipe then lands on the *link* rather than the
+  scroller, which never scrolls. Desktop hides it: the dots and arrows are
+  scroll-control pseudos at `z-index: 3`, above the cover, so the arrows keep
+  working while the swipe is dead. When the frame is a carousel the text column is
+  positioned instead, which re-anchors the same `::after` to it:
+
+  ```css
+  :where(ui-card[media*="nav"], ui-card:has(ui-media[media*="nav"]))
+    :has([data-part~="cover"]) ui-content { position: relative; }
+  ```
+
+  The consequence is deliberate: on those cards **tapping the photo no longer
+  navigates** — the headline link still does. A full-card cover over a scroller is
+  a defect rather than a choice, so the engine prevents it instead of asking each
+  author to remember.
+
   **Focus rings the card, not the link.** A `:focus-visible` cover suppresses its
   own outline and paints a card-sized dashed ring — the `--ui-card-focus-*`
   family, in the style of a focused carousel frame

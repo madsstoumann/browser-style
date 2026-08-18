@@ -714,6 +714,15 @@
 			pointer-events: none;
 		}
 
+		/* A CAROUSEL FRAME KEEPS ITS TOUCH. The ::after is `inset: 0` against the nearest
+		   positioned ancestor, so on a plain card it covers the frame too — and a swipe
+		   then lands on the LINK instead of the scroller, which never scrolls. Desktop
+		   hides this: the dots and arrows are scroll-control pseudos at z-index 3, above
+		   the cover, so the arrows work while the swipe is dead. Positioning the text
+		   column re-anchors the same ::after to it, no second rule needed.
+		   Tapping the photo stops navigating; the headline link still does. Docs: docs/card.md § cover */
+		&:is([media*="nav"], :has(ui-media[media*="nav"])) ui-content { position: relative; }
+
 		/* FOCUS — one ring per card, on the card box and OUTSIDE it, the same shape and
 		   offset a focused frame paints. Outward is what lets an outline work here: an
 		   inward one hides under the frame's positioned image, which is why the link's
