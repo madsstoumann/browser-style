@@ -22,6 +22,12 @@
 		container-type: inline-size; /* enables ui-card's md:/lg: tiers on the front face */
 		display: block;
 		interpolate-size: allow-keywords;
+		/* As a grid/flex ITEM the host must never be wider than its share: an automatic
+		   minimum size (the default for an overflow:visible box) makes one long word
+		   inside the panel inflate the whole track, so an equal-columns layout stops
+		   being equal. ui-card gets this for free from its overflow:hidden; a reveal
+		   must ask. Docs: readme.md § Layout */
+		min-inline-size: 0;
 
 		> details {
 			backdrop-filter: var(--ui-reveal-bdf, none); /* theme="… glass" — the panel is the plate, not the host */
