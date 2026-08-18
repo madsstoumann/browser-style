@@ -136,7 +136,9 @@ ui-media:where([media*="mrk(pll)"]) > ui-carousel-controls [data-dot] {
 	background-clip: content-box; /* the shorthand resets it — keep the paint on the visual box */
 	background-origin: content-box;
 	block-size: var(--ui-carousel-pill-height);
-	border-radius: var(--radius-pill, 100px);
+	/* radius is BORDER-box; the content-box clip subtracts padding PER AXIS, and the hit
+	   padding is asymmetric — compensate or the pill paints as an ellipse. Docs: media.carousel.md */
+	border-radius: calc(var(--ui-carousel-pill-height) / 2 + var(--_hit-i)) / calc(var(--ui-carousel-pill-height) / 2 + var(--_hit-b));
 	inline-size: var(--ui-carousel-pill-width);
 	--_hit-b: max(0px, calc((24px - var(--ui-carousel-pill-height)) / 2));
 	--_hit-i: max(0px, calc((24px - var(--ui-carousel-pill-width)) / 2));
@@ -172,7 +174,8 @@ ui-media:where([media*="mrk(hyb)"]) > ui-carousel-controls [data-dot]:is([aria-c
 	background: var(--ui-carousel-pill-track);
 	background-clip: content-box; /* the shorthand resets it — keep the paint on the visual box */
 	background-origin: content-box;
-	border-radius: var(--radius-pill, 100px);
+	/* same per-axis compensation as mrk(pll) above */
+	border-radius: calc(var(--ui-carousel-marker-size) / 2 + var(--_hit-i)) / calc(var(--ui-carousel-marker-size) / 2 + var(--_hit-b));
 	inline-size: var(--ui-carousel-hyb-width, calc(var(--ui-carousel-pill-width) * 1.35));
 	--_hit-i: max(0px, calc((24px - var(--ui-carousel-hyb-width, calc(var(--ui-carousel-pill-width) * 1.35))) / 2));
 }
