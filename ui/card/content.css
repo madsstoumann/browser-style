@@ -462,6 +462,7 @@
 			margin: 0;
 			padding: 0;
 			& li::marker { color: var(--ui-content-list-marker-ink, currentColor); }
+
 		}
 		& ol[data-part="list"] { list-style-type: var(--ui-content-list-marker, decimal); }
 		/* block-content rows (qa answers): no marker — inside-position bullets wrap onto their own line */
@@ -521,6 +522,18 @@
 				color: var(--ui-content-links-ink, inherit);
 				text-decoration: none;
 				&:hover { text-decoration: underline; }
+				/* focus takes the accent rather than a ring: the row is prose in a bordered
+				   list, and a box around one line of it reads as chrome. Works here because
+				   the resting ink is the body colour, so the swap is a real change — it
+				   would NOT be on a list whose links are already accent-coloured. */
+				&:focus-visible {
+					color: var(--ui-content-links-focus-ink, var(--color-accent));
+					outline: 0;
+				}
+				/* ⚠️ forced-colors overrides `color`, which would leave no indicator at all */
+				@media (forced-colors: active) {
+					&:focus-visible { outline: auto; }
+				}
 			}
 		}
 
@@ -701,12 +714,22 @@
 		   offset a focused frame paints. Outward is what lets an outline work here: an
 		   inward one hides under the frame's positioned image, which is why the link's
 		   own pseudo ring (inset, below) stays the answer for a cover link with no card
-		   around it. Docs: docs/card.md § cover */
-		&:has([data-part~="cover"]:focus-visible) {
+		   around it. Docs: docs/card.md § cover
+
+		   ⚠️ :has() matches every ANCESTOR card, so the second half is load-bearing: a
+		   collage card (a ProductGroup, whose frame holds one nested card per variant)
+		   would otherwise paint a full-size ring around itself whenever a nested
+		   variant's link took focus — two rings, and the outer one lies about what is
+		   focused. The card only rings when the focused cover is its OWN — and only when
+		   it is not itself a collage TILE: a frame clips its descendants, so an outward
+		   ring on a nested card is cut away and the link's inset pseudo (below) is the
+		   one that can actually paint. */
+		&:not(:where(ui-media *)):has([data-part~="cover"]:focus-visible):not(:has(:where(ui-card, ui-reveal) [data-part~="cover"]:focus-visible)) {
 			outline: var(--ui-card-focus-width, var(--ui-media-focus-width, 2px)) dashed var(--ui-card-focus-color, var(--ui-media-focus-color, var(--ring-color)));
 			outline-offset: var(--ui-card-focus-offset, var(--ui-media-focus-offset, 3px));
 		}
-		& [data-part~="cover"]:focus-visible::before { outline: none; }
+		/* …and the pseudo stays for exactly those tiles, which have no outward ring */
+		& [data-part~="cover"]:focus-visible:not(:where(ui-media *))::before { outline: none; }
 	}
 
 }
