@@ -5,6 +5,17 @@ import { fileURLToPath } from 'url'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
+/**
+ * Equal-width column tracks must not be widened by their own content.
+ * `1fr` is shorthand for `minmax(auto, 1fr)`, and that `auto` floor is a grid item's
+ * automatic minimum size — one item with a wide min-content (an unbreakable string, a
+ * flex child that never got `min-width: 0`) grows its track and starves the others, so
+ * a columns(2) grid silently stops being two equal columns. `minmax(0, 1fr)` removes the
+ * floor. Only the columns() family is normalised: the pattern layouts (grid/bento/mosaic)
+ * intentionally size some tracks to their content.
+ */
+const equalTracks = (tracks) => tracks.replace(/(^|\s)1fr(?=\s|$)/g, '$1minmax(0, 1fr)')
+
 export class LayoutBuilder {
 	constructor(configPath, layoutsDir, outputPath, coreDir = null) {
 		this.configPath = configPath
@@ -331,7 +342,7 @@ export class LayoutBuilder {
 		const baseSelector = `${elementSelector}[${breakpointName}*="${selectorValue}"]`
 
 		const containerProps = {}
-		if (layout.columns) containerProps['--layout-gtc'] = layout.columns
+		if (layout.columns) containerProps['--layout-gtc'] = layoutPrefix === 'columns' ? equalTracks(layout.columns) : layout.columns
 		if (layout.rows) containerProps['--layout-gtr'] = layout.rows
 		if (layoutPrefix === 'columns' && layout.items) containerProps['--_ci'] = layout.items
 		if (layoutPrefix === 'lanes' && !isNaN(parseInt(layoutId))) {

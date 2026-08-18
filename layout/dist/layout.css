@@ -1084,7 +1084,7 @@
   }
 
   lay-out[sm*="columns(2)"] {
-    --layout-gtc: 1fr 1fr;
+    --layout-gtc: minmax(0, 1fr) minmax(0, 1fr);
     --_ci: 2;
   }
 
@@ -1147,32 +1147,32 @@
   }
 
   lay-out[md*="columns(1)"] {
-    --layout-gtc: 1fr;
+    --layout-gtc: minmax(0, 1fr);
     --_ci: 1;
   }
 
   lay-out[md*="columns(2)"] {
-    --layout-gtc: 1fr 1fr;
+    --layout-gtc: minmax(0, 1fr) minmax(0, 1fr);
     --_ci: 2;
   }
 
   lay-out[md*="columns(3)"] {
-    --layout-gtc: 1fr 1fr 1fr;
+    --layout-gtc: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
     --_ci: 3;
   }
 
   lay-out[md*="columns(4)"] {
-    --layout-gtc: 1fr 1fr 1fr 1fr;
+    --layout-gtc: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
     --_ci: 4;
   }
 
   lay-out[md*="columns(5)"] {
-    --layout-gtc: 1fr 1fr 1fr 1fr 1fr;
+    --layout-gtc: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
     --_ci: 5;
   }
 
   lay-out[md*="columns(6)"] {
-    --layout-gtc: 1fr 1fr 1fr 1fr 1fr 1fr;
+    --layout-gtc: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
     --_ci: 6;
   }
 
@@ -1538,32 +1538,32 @@
   }
 
   lay-out[lg*="columns(1)"] {
-    --layout-gtc: 1fr;
+    --layout-gtc: minmax(0, 1fr);
     --_ci: 1;
   }
 
   lay-out[lg*="columns(2)"] {
-    --layout-gtc: 1fr 1fr;
+    --layout-gtc: minmax(0, 1fr) minmax(0, 1fr);
     --_ci: 2;
   }
 
   lay-out[lg*="columns(3)"] {
-    --layout-gtc: 1fr 1fr 1fr;
+    --layout-gtc: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
     --_ci: 3;
   }
 
   lay-out[lg*="columns(4)"] {
-    --layout-gtc: 1fr 1fr 1fr 1fr;
+    --layout-gtc: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
     --_ci: 4;
   }
 
   lay-out[lg*="columns(5)"] {
-    --layout-gtc: 1fr 1fr 1fr 1fr 1fr;
+    --layout-gtc: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
     --_ci: 5;
   }
 
   lay-out[lg*="columns(6)"] {
-    --layout-gtc: 1fr 1fr 1fr 1fr 1fr 1fr;
+    --layout-gtc: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
     --_ci: 6;
   }
 
