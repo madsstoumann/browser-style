@@ -1,7 +1,7 @@
 /**
  * attr-fallback.js — typed attr() polyfill for the @browser.style components.
  *
- *   <script type="module" src="/ui/base/polyfills/attr-fallback.js"></script>
+ *   <script type="module" src="/ui/base/polyfills/attr-fallback.min.js"></script>
  *
  * WHY THIS EXISTS
  * Components read author values straight from attributes with typed attr():

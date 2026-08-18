@@ -4,6 +4,7 @@ import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
 import renderCard, { resolveItemtype, SUBTYPES, EYEBROW_PROP, vacationrentalSections } from './render.js';
+import { buildSrcset, maxUsableWidth } from './srcset.js';
 
 /* Render a bare fields object with no preset — the DEFAULT_PRESET stack card. */
 export const render = (fields) => renderCard({ fields });
@@ -1967,6 +1968,64 @@ describe('cover link', () => {
 		const html = renderCard({ fields: { schemaType: 'realestate', cover: '/x.html', headline: 'Flat',
 			tags: [{ name: 'Copenhagen', url: '/t' }], actions: [{ link: { url: '/a', text: 'Go' } }] } }, {}, {});
 		assert.equal((html.match(/data-part="cover"/g) || []).length, 1);
+	});
+});
+
+/* ── srcset ladder cap ──
+   Cloudflare's fit=cover does not decline an oversized request, it manufactures the
+   pixels: a 509px original asked for width=1200 comes back 1200x900 at ~4x the bytes.
+   Docs: docs/media.md § srcset */
+describe('srcset intrinsic cap', () => {
+	const BP = [240, 320, 480, 720, 1200];
+	const rungs = (opts) => (buildSrcset('/assets/images/x.jpg', { breakpoints: BP, fit: 'cover', ...opts }) || '')
+		.split(', ').map((c) => c.split(' ')[1]).filter(Boolean);
+
+	test('an unknown size keeps the whole ladder — the cap is opt-in', () => {
+		assert.deepEqual(rungs({ ratio: 16 / 9 }), ['240w', '320w', '480w', '720w', '1200w']);
+	});
+
+	test('a narrow original drops the rungs it cannot fill', () => {
+		assert.deepEqual(rungs({ ratio: 16 / 9, intrinsic: [870, 870] }), ['240w', '320w', '480w', '720w']);
+	});
+
+	test('HEIGHT binds too — the case a width-only cap gets wrong', () => {
+		/* 1440x960 in a 4/3 frame: 1200w wants 900px of height and only 960 exist, so it
+		   fits; 1440 would want 1080 and does not. The cap is min(w, h*ratio) = 1280. */
+		assert.equal(maxUsableWidth([1440, 960], 4 / 3), 1280);
+		assert.deepEqual(rungs({ ratio: 4 / 3, intrinsic: [1440, 960] }), ['240w', '320w', '480w', '720w', '1200w']);
+		/* the same original in a 16/9 frame is bound by its WIDTH instead */
+		assert.equal(maxUsableWidth([1440, 960], 16 / 9), 1440);
+		/* and a tall original in a wide frame is bound by its height */
+		assert.equal(maxUsableWidth([1264, 600], 16 / 9), 1066);
+	});
+
+	test('no ratio means only the width binds', () => {
+		assert.equal(maxUsableWidth([509, 509], null), 509);
+		assert.deepEqual(rungs({ ratio: null, intrinsic: [509, 509] }), ['240w', '320w', '480w']);
+	});
+
+	test('an original below the narrowest rung gets NO srcset — plain src is smaller', () => {
+		assert.equal(buildSrcset('/a.jpg', { breakpoints: BP, ratio: 1, intrinsic: [160, 160] }), null);
+	});
+
+	test('the real corpus is capped: no candidate exceeds its original', () => {
+		const sizes = JSON.parse(readFileSync(new URL('./data/assets.json', import.meta.url), 'utf8')).sizes;
+		const images = { cdnBase: 'https://v4.browser.style', sizes: '100vw' };
+		const files = readdirSync(new URL('./data/', import.meta.url))
+			.filter((f) => f.endsWith('.json') && !f.startsWith('card.presets') && !['index.json', 'tokens.json', 'assets.json'].includes(f));
+		const presets = JSON.parse(readFileSync(new URL('./data/card.presets.json', import.meta.url), 'utf8')).presets;
+		let checked = 0;
+		for (const file of files) {
+			const html = renderCard(JSON.parse(readFileSync(new URL(`./data/${file}`, import.meta.url), 'utf8')), presets, {}, { images });
+			for (const [, w, h, src] of html.matchAll(/width=(\d+),height=(\d+)(\/assets\/images\/[^\s",]+)/g)) {
+				const intrinsic = sizes[src];
+				if (!intrinsic) continue;
+				checked++;
+				assert.ok(+w <= intrinsic[0] && +h <= intrinsic[1],
+					`${file}: ${src} is ${intrinsic.join('x')} but a candidate asks for ${w}x${h}`);
+			}
+		}
+		assert.ok(checked > 200, `expected a real corpus, checked ${checked} candidates`);
 	});
 });
 

@@ -37,7 +37,7 @@ export const VT_HEAD = `<!-- Names the morph targets where typed attr() is unsup
 	     render-blocking in <head>: the incoming page is snapshotted at first paint,
 	     so a deferred script names the targets too late and the forward morph
 	     degrades to a cross-fade. Docs: ui/base/polyfills/readme.md -->
-	<script type="module" src="/ui/base/polyfills/attr-fallback.js" blocking="render"></script>`;
+	<script type="module" src="/ui/base/polyfills/attr-fallback.min.js" blocking="render"></script>`;
 
 export const CDN_BASE = 'https://v4.browser.style';
 

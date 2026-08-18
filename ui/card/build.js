@@ -7,15 +7,25 @@ import { readFileSync, statSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { gzipSync, brotliCompressSync, constants } from 'node:zlib';
 import { buildTokens } from './tokens.build.js';
+import { buildAssets } from './assets.build.js';
 import { bundleCss, reportCss } from '../../scripts/css-bundle.js';
 
 const ENTRIES = ['index.js', 'carousel.js', 'hover.js', 'video.js', 'lightbox.js'];
+/* ui/base has no build of its own, and this polyfill is loaded blocking="render" on every
+   demo page — unminified it was the whole of Lighthouse's "Minify JavaScript". Built here
+   because this is the only script that runs esbuild. Docs: ../base/polyfills/readme.md */
+const FOREIGN_ENTRIES = [['../base/polyfills/attr-fallback.js', '../base/polyfills/attr-fallback.min.js']];
 const dir = new URL('.', import.meta.url).pathname;
 
 const esbuild = (args) => execFileSync('npx', ['--yes', 'esbuild', ...args], { cwd: dir, stdio: ['ignore', 'pipe', 'inherit'] });
 
 const kb = (n) => (n / 1024).toFixed(1).padStart(6) + ' kB';
 const brotli = (buf) => brotliCompressSync(buf, { params: { [constants.BROTLI_PARAM_QUALITY]: 11 } }).length;
+
+/* the asset manifest gates the srcset ladder, so a stale one silently reintroduces
+   upscaled candidates — report the count here and fail loudly in CI via --check */
+const { sizes: assetSizes, skipped: assetSkipped } = buildAssets();
+console.log(`assets manifest: ${Object.keys(assetSizes).length} images${assetSkipped.length ? `, ${assetSkipped.length} without a raster header` : ''}\n`);
 
 /* tokens first: the lint imports the freshly written data/tokens.data.js */
 const { manifest } = buildTokens();
@@ -34,6 +44,13 @@ for (const entry of ENTRIES) {
 	const min = readFileSync(dir + out);
 	console.log(`${out.padEnd(16)}${kb(source)}${kb(min.length)}${kb(gzipSync(min, { level: 9 }).length)}${kb(brotli(min))}`);
 }
+for (const [entry, out] of FOREIGN_ENTRIES) {
+	const source = esbuild([entry, '--bundle', '--format=esm', '--log-level=warning']).length;
+	esbuild([entry, '--bundle', '--minify', '--format=esm', `--outfile=${out}`, '--log-level=warning']);
+	const min = readFileSync(dir + out);
+	console.log(`${out.split('/').pop().padEnd(16)}${kb(source)}${kb(min.length)}${kb(gzipSync(min, { level: 9 }).length)}${kb(brotli(min))}`);
+}
+
 console.log(`\nshared.js (source, inlined into carousel/video/index bundles): ${(statSync(dir + 'shared.js').size / 1024).toFixed(1)} kB`);
 
 /* CSS bundle — collapses the index.css -> ui-card.css -> 7-sheet @import chain into
