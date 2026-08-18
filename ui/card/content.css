@@ -130,8 +130,12 @@
 		text-align: var(--ui-content-ov-text, var(--ui-content-text-align, start));
 		z-index: var(--ui-content-ov-z, auto);
 
-		/* wid() — the cap rides the rows, not the column box */
-		& > * { margin: 0; max-inline-size: var(--ui-content-max, var(--width-prose, 65ch)); text-box: cap alphabetic; }
+		/* wid() — the cap rides the rows, not the column box. The second arm reaches
+		   THROUGH a dissolved scope (below): display:contents changes box generation, not
+		   selector matching, so those rows are grandchildren and `& > *` never saw them —
+		   they kept their UA <p> margins on top of the column's flex gap. */
+		& > *,
+		& > div[itemscope]:not([data-part], [hidden]) > * { margin: 0; max-inline-size: var(--ui-content-max, var(--width-prose, 65ch)); text-box: cap alphabetic; }
 
 		/* A bare microdata scope (mainEntity/about/hasOfferCatalog) is grouping, not a
 		   box — dissolve it so its rows join the column's flex gap. Docs: docs/schema.md */

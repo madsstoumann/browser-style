@@ -154,6 +154,7 @@ drift from the CSS. (`md:/lg:` is the container-query prefix column: only `asr()
 | `ani()` | carousel | **anim** rise fall lft rgt zom blr fde | — | — | --_stg-tr --_stg-sc --_stg-fl --_stg-origin | — | — |
 | `crd()` | carousel | **anim** rise fall lft rgt zom blr fde | — | — | --_stg-crd-tr --_stg-crd-sc --_stg-crd-fl | — | — |
 | `open:grid()` | open-state | **cols** 2c 3c 4c | — | — | --_lb-cols | — | — |
+| `hug` | fill | — | — | yes | — | — | — |
 | `clip` | corners | — | — | yes | --ui-media-radius | — | — |
 | `loop` | carousel | — | — | yes | --_play-block --_play-inline --_play-justify --_play-size | — | — |
 | `stagger` | carousel | — | — | yes | --_stg-base-i --_stg-crd-i | — | — |
@@ -199,6 +200,14 @@ There were never any named keywords — ratios are always numeric. Any other rat
 ```
 
 The base (unprefixed) value is the small-card default; the prefixes only ever override upward in width. Only `asr()` is prefixable — the base rule is whole-token (`~=`) matched so `md:`/`lg:` variants don't leak into it. (Prefixes are the card's own width via container queries, not the viewport, so aspect tracks how wide the card actually renders regardless of layout.)
+
+**`asr()` loses to a row card — unless you add `hug`.** In a `row`/`md:row`/`lg:row` card the frame is given `block-size: 100%` so a photo fills the card's full height beside the text. A definite height beats `aspect-ratio`, so the declared `asr()` is silently discarded and `object-fit: cover` crops the image to whatever the copy length happens to produce — a 4:3 photo in a card whose text column runs 456px tall is cropped to 1.08:1, and the crop moves every time the copy is edited. Most row cards want the fill; the ones that mean their ratio say so:
+
+```html
+<ui-card variant="col lg:row lg:spl(1/1)" media="asr(4/3) hug rds(lg)">…</ui-card>
+```
+
+`hug` opts the frame out of the fill rule (all three tiers) and adds `align-self: start`, so grid stretch cannot put the height back. It is bare, substring-matched and unprefixed — whether a frame owns its height is not a breakpoint decision — and inert outside a row card, where the frame already owns its height. `mrk(rail)` frames opt out of the same rule for their own reason (the rail reserves inline space), which is why the thumbnail-rail product page never had this problem and the single-photo one did.
 
 **Where the attribute may sit.** Each prefixed `asr()` ships **two arms**, so the token works in either placement:
 

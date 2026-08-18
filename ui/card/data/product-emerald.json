@@ -84,7 +84,29 @@
             "currency": "USD"
           }
         ]
-      }
+      },
+      "reviews": [
+        {
+          "author": "Sonya Kirby",
+          "rating": 4,
+          "max": 5,
+          "datePublished": "2026-07-01",
+          "dateDisplay": "July 1, 2026",
+          "context": "Verified purchase",
+          "headline": "Green that suits a lot of skin tones",
+          "body": "Warm emerald rather than a cold bottle green, which I think is why it works on so many people. Docked one star only because the palm print sits high and can crowd a necklace."
+        },
+        {
+          "author": "Hallie Brandt",
+          "rating": 5,
+          "max": 5,
+          "datePublished": "2026-05-27",
+          "dateDisplay": "May 27, 2026",
+          "context": "Verified purchase",
+          "headline": "Lined properly",
+          "body": "Full lining in the same silk, not a cheap acetate. That is rare at this price and it is what makes the drape sit the way it does in the photographs."
+        }
+      ]
     },
     "tags": [
       "Silk",

@@ -11,10 +11,12 @@ import { buildAssets } from './assets.build.js';
 import { bundleCss, reportCss } from '../../scripts/css-bundle.js';
 
 const ENTRIES = ['index.js', 'carousel.js', 'hover.js', 'video.js', 'lightbox.js'];
-/* ui/base has no build of its own, and this polyfill is loaded blocking="render" on every
-   demo page — unminified it was the whole of Lighthouse's "Minify JavaScript". Built here
-   because this is the only script that runs esbuild. Docs: ../base/polyfills/readme.md */
-const FOREIGN_ENTRIES = [['../base/polyfills/attr-fallback.js', '../base/polyfills/attr-fallback.min.js']];
+/* Neither ui/base nor ui/save has a build of its own, and this is the only script in the
+   repo that runs esbuild, so both borrow it. attr-fallback is loaded blocking="render" on
+   every demo page — unminified it was the whole of Lighthouse's "Minify JavaScript";
+   save.js is the <ui-save> toggle the demos load. Docs: ../base/polyfills/readme.md,
+   ../save/readme.md § Toggling */
+const FOREIGN_ENTRIES = [['../base/polyfills/attr-fallback.js', '../base/polyfills/attr-fallback.min.js'], ['../save/save.js', '../save/save.min.js']];
 const dir = new URL('.', import.meta.url).pathname;
 
 const esbuild = (args) => execFileSync('npx', ['--yes', 'esbuild', ...args], { cwd: dir, stdio: ['ignore', 'pipe', 'inherit'] });

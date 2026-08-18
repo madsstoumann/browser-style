@@ -375,10 +375,10 @@
     },
     "product-page-solo": {
       "name": "Product Page (single photo)",
-      "description": "Full product view for a product with ONE image — no carousel, no thumbnail rail; media beside the text column from the lg tier",
+      "description": "Full product view for a product with ONE image — no carousel, no thumbnail rail; the frame hugs its 4:3 instead of stretching to the text column; media beside the text column from the lg tier",
       "element": "ui-card",
       "variant": "col lg:row lg:spl(1/1) shd(non)",
-      "media": "asr(4/3) rds(lg)",
+      "media": "asr(4/3) hug rds(lg)",
       "content": "scl(lg)",
       "headingTag": "h2"
     },

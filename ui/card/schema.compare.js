@@ -27,7 +27,7 @@
  *                          of the same machine block extract identically and a diff
  *                          between them is a false positive. Visible nodes keep their
  *                          order, where sequence is the reading order and does matter.
- *   H3  root identity      id= / data-view= on the <ui-card> root are page-authoring
+ *   H3  identity           id= / data-view= on the <ui-card> root are page-authoring
  *                          hooks — anchor targets, view-transition names, and the
  *                          selector this script uses to tell two cards of one type
  *                          apart. The renderer never emits either on the root, so
@@ -98,7 +98,10 @@ const PAIRS = [
 	/* the job card carries EmployerAggregateRating as a second top-level item; the
 	   three residual diffs on this pair are older data/renderer divergences (a full
 	   ISO datePosted, industry on the eyebrow, the published dateline row) */
-	['JobPosting', 'ui/card/data/job.json']
+	['JobPosting', 'ui/card/data/job.json'],
+	/* the sticker shape had drifted (page sh:spark, data sh:burst) with nothing watching —
+	   pairing the product is what keeps the two spellings one spelling */
+	['Product', 'ui/card/data/product.json']
 ];
 
 /* ── minimal HTML tree parser ── */
@@ -163,11 +166,16 @@ function hoistMedia(tree) {
 	return tree;
 }
 
-/* H3 — page-authoring identity on the card root, never renderer output */
+/* H3 — page-authoring identity on the card root, never renderer output.
+   data-view is dropped EVERYWHERE, not just on the root: it names a view-transition
+   morph target, the renderer emits it nowhere, and a card whose detail page morphs
+   its hero has to name the <img> too (products/). id= stays root-only — the renderer
+   DOES emit ids further down (the <ui-media> a save button's commandfor points at). */
 const ROOT_IDENTITY = new Set(['id', 'data-view']);
 function dropRootIdentity(tree) {
 	walk(tree, (n) => {
 		if (n.tag === 'ui-card' || n.tag === 'ui-reveal') n.attrs = n.attrs.filter(([k]) => !ROOT_IDENTITY.has(k));
+		else n.attrs = n.attrs?.filter(([k]) => k !== 'data-view') ?? n.attrs;
 	});
 	return tree;
 }

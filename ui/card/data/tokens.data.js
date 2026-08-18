@@ -1518,6 +1518,34 @@ export default {
 						"ui/card/media.lightbox.css:127"
 					],
 					"notes": "OPEN-STATE prefix family (media.lightbox.css): arms only while the <ui-media popover> frame is :popover-open, presenting the SAME children as an N-column scrollable grid instead of the default fullscreen carousel. WHOLE-token on purpose, like md:/lg: asr() — an open: spelling must never contain a substring-matched stem, which is why there is no open:nav (the [media*=\"nav\"] needle would arm the closed carousel; fullscreen carousel is simply the default open presentation of a nav frame). The colon lives in the entry NAME so the needle audit and preset lint see the literal spellings; the cqPrefixes machinery is deliberately not reused (that is the container-query axis, and it would hide substring cross-fire from the shadow lint). Runtime carousel↔grid switching (data-lightbox attr) needs ui/card/lightbox.js."
+				},
+				"hug": {
+					"axis": "fill",
+					"element": null,
+					"args": {},
+					"argAliases": {},
+					"bare": true,
+					"matching": "substring",
+					"writes": [],
+					"realProperties": true,
+					"cqPrefixes": [],
+					"cqArgs": [],
+					"selfArm": true,
+					"hosts": [
+						"ui-media",
+						"ui-card",
+						"ui-reveal"
+					],
+					"requiresJs": {},
+					"deprecated": false,
+					"canonical": null,
+					"sources": [
+						"ui/card/media.css:47",
+						"ui/card/ui-card.css:87",
+						"ui/card/ui-card.css:169",
+						"ui/card/ui-card.css:268"
+					],
+					"notes": "Opts the frame OUT of a row card's block-size:100% fill so it keeps its OWN height — whatever asr() declared. In a row card <ui-media> is otherwise stretched to the TEXT column's height, and a definite height beats aspect-ratio, so a declared asr() is silently discarded and object-fit:cover crops the photo to whatever the copy length happens to produce. Two arms: the three row rules in ui-card.css (base, md:, lg:) exclude [media*=\"hug\"] on the same needle they already exclude [media*=\"mrk(rail)\"] — a rail frame reserves its own inline space and was the only previous opt-out — and media.css adds align-self:start so grid stretch does not put the height back. Bare and substring-matched; there is no prefixed form, because whether a frame owns its height is not a breakpoint decision. Inert outside a row card: a col card's frame already owns its height."
 				}
 			},
 			"bareFlags": {

@@ -426,6 +426,20 @@ const ratingPart = (prop, ratingType, rating, { lead = '', srLabel = null, visib
 	</div>`;
 };
 
+/* one <Review> block per entry — the seam the rental and product DETAIL pages share,
+   so two page builders cannot spell a review two ways. Never emitted on a teaser card:
+   individual reviews are a detail-page property, and DETAILS.* deliberately skip them.
+   `context` is plain text on purpose — contentReferenceTime's range is DateTime and
+   "June 2026" is not one. Docs: docs/schema.md § Reviews */
+export const reviewItems = (reviews = []) => reviews.map((review) => `<div${scope('review', 'Review')}>`
+	+ ratingPart('reviewRating', 'Rating', { value: review.rating, max: review.max })
+	+ `<p data-part="meta"><span${scope('author', 'Person')}><span itemprop="name">${esc(review.author)}</span></span>`
+	+ (review.datePublished ? ` · ${meta('datePublished', review.datePublished)}${esc(review.dateDisplay || review.datePublished)}` : '')
+	+ (review.context ? ` · ${esc(review.context)}` : '') + '</p>'
+	+ (review.headline ? `<p data-part="subheadline" itemprop="name">${esc(review.headline)}</p>` : '')
+	+ (review.body ? `<p data-part="summary" itemprop="reviewBody">${esc(review.body)}</p>` : '')
+	+ '</div>');
+
 /* check/ordered list — part "list" */
 /* contact button — schema.org email is Text, but itemprop on an <a> reads the
    href (mailto:…), so email rides a <meta> and the link stays plain */
@@ -1519,15 +1533,10 @@ export const vacationrentalSections = (d = {}, fields = {}) => {
 				: '',
 			action: mapCta(geo)
 		},
-		/* one guest review each. contentReferenceTime is DROPPED: its range is DateTime
-		   and a stay is known only to the month, so the month rides plain text instead */
-		reviews: (d.reviews || []).map((review) => `<div${scope('review', 'Review')}>`
-			+ ratingPart('reviewRating', 'Rating', { value: review.rating, max: review.max })
-			+ `<p data-part="meta"><span${scope('author', 'Person')}><span itemprop="name">${esc(review.author)}</span></span>`
-			+ (review.datePublished ? ` · ${meta('datePublished', review.datePublished)}${esc(review.dateDisplay || review.datePublished)}` : '')
-			+ (review.stayed ? ` · stayed ${esc(review.stayed)}` : '') + '</p>'
-			+ (review.body ? `<p data-part="summary" itemprop="reviewBody">${esc(review.body)}</p>` : '')
-			+ '</div>'),
+		/* one guest review each, through the shared emitter. contentReferenceTime is
+		   DROPPED: its range is DateTime and a stay is known only to the month, so the
+		   month rides `context` as plain text instead */
+		reviews: reviewItems((d.reviews || []).map((r) => ({ ...r, context: r.stayed ? `stayed ${r.stayed}` : r.context }))),
 		brand: d.brand ? `<p data-part="meta"${scope('brand', 'Brand')}>Hosted by <span itemprop="name">${esc(d.brand)}</span></p>` : ''
 	};
 };

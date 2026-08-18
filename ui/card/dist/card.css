@@ -45,6 +45,10 @@
   :where(ui-media:has(> lay-out)) {
     min-block-size: 0;
   }
+  :where([media*=hug]) ui-media,
+  :where(ui-media[media*=hug]) {
+    align-self: start;
+  }
   ui-media ui-media {
     display: grid;
     inline-size: auto;
@@ -1545,7 +1549,8 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     padding-inline-end: var(--ui-content-pie, var(--ui-content-pi, var(--ui-content-p, var(--spacing-md))));
     text-align: var(--ui-content-ov-text, var(--ui-content-text-align, start));
     z-index: var(--ui-content-ov-z, auto);
-    & > * {
+    & > *,
+    & > div[itemscope]:not([data-part], [hidden]) > * {
       margin: 0;
       max-inline-size: var(--ui-content-max, var(--width-prose, 65ch));
       text-box: cap alphabetic;
@@ -1910,6 +1915,15 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
         &:hover {
           text-decoration: underline;
         }
+        &:focus-visible {
+          color: var(--ui-content-links-focus-ink, var(--color-accent));
+          outline: 0;
+        }
+        @media (forced-colors: active) {
+          &:focus-visible {
+            outline: auto;
+          }
+        }
       }
     }
     & :is(a[href^="tel:"], a[href^="mailto:"]) {
@@ -2067,11 +2081,11 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     & ui-media :is(ui-chip, ui-sticker, ui-beacon):not(:has(a, button)) {
       pointer-events: none;
     }
-    &:has([data-part~=cover]:focus-visible):not(:has(:where(ui-card, ui-reveal) [data-part~=cover]:focus-visible)) {
+    &:not(:where(ui-media *)):has([data-part~=cover]:focus-visible):not(:has(:where(ui-card, ui-reveal) [data-part~=cover]:focus-visible)) {
       outline: var(--ui-card-focus-width, var(--ui-media-focus-width, 2px)) dashed var(--ui-card-focus-color, var(--ui-media-focus-color, var(--ring-color)));
       outline-offset: var(--ui-card-focus-offset, var(--ui-media-focus-offset, 3px));
     }
-    & [data-part~=cover]:focus-visible::before {
+    & [data-part~=cover]:focus-visible:not(:where(ui-media *))::before {
       outline: none;
     }
   }
@@ -2802,7 +2816,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
   :where([variant~=row], [variant~=row-r]) {
     --ui-card-cols: var(--ui-card-split, 1fr 1fr);
   }
-  :where([variant~=row], [variant~=row-r]):where(:not([media*="mrk(rail)"])) ui-media:where(:not([media*="mrk(rail)"])) {
+  :where([variant~=row], [variant~=row-r]):where(:not([media*="mrk(rail)"], [media*=hug])) ui-media:where(:not([media*="mrk(rail)"], [media*=hug])) {
     block-size: 100%;
     inline-size: 100%;
     min-block-size: 0;
@@ -2935,8 +2949,8 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     :where([variant~="md:row-r"]) :is(cq-box, summary) {
       --ui-card-cols: var(--ui-card-split, 1fr 1fr);
     }
-    :where([variant~="md:row"]):where(:not([media*="mrk(rail)"])) :is(cq-box, summary) ui-media:where(:not([media*="mrk(rail)"])),
-    :where([variant~="md:row-r"]):where(:not([media*="mrk(rail)"])) :is(cq-box, summary) ui-media:where(:not([media*="mrk(rail)"])) {
+    :where([variant~="md:row"]):where(:not([media*="mrk(rail)"], [media*=hug])) :is(cq-box, summary) ui-media:where(:not([media*="mrk(rail)"], [media*=hug])),
+    :where([variant~="md:row-r"]):where(:not([media*="mrk(rail)"], [media*=hug])) :is(cq-box, summary) ui-media:where(:not([media*="mrk(rail)"], [media*=hug])) {
       block-size: 100%;
       inline-size: 100%;
       min-block-size: 0;
@@ -3233,8 +3247,8 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     :where([variant~="lg:row-r"]) :is(cq-box, summary) {
       --ui-card-cols: var(--ui-card-split, 1fr 1fr);
     }
-    :where([variant~="lg:row"]):where(:not([media*="mrk(rail)"])) :is(cq-box, summary) ui-media:where(:not([media*="mrk(rail)"])),
-    :where([variant~="lg:row-r"]):where(:not([media*="mrk(rail)"])) :is(cq-box, summary) ui-media:where(:not([media*="mrk(rail)"])) {
+    :where([variant~="lg:row"]):where(:not([media*="mrk(rail)"], [media*=hug])) :is(cq-box, summary) ui-media:where(:not([media*="mrk(rail)"], [media*=hug])),
+    :where([variant~="lg:row-r"]):where(:not([media*="mrk(rail)"], [media*=hug])) :is(cq-box, summary) ui-media:where(:not([media*="mrk(rail)"], [media*=hug])) {
       block-size: 100%;
       inline-size: 100%;
       min-block-size: 0;

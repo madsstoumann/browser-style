@@ -84,7 +84,29 @@
             "currency": "USD"
           }
         ]
-      }
+      },
+      "reviews": [
+        {
+          "author": "Ines Vardan",
+          "rating": 5,
+          "max": 5,
+          "datePublished": "2026-07-14",
+          "dateDisplay": "July 14, 2026",
+          "context": "Verified purchase",
+          "headline": "Paisley without the costume",
+          "body": "I was nervous about a full paisley print, but the scale is small enough that it reads as texture from across a room. It has become the dress I pack when I only have room for one."
+        },
+        {
+          "author": "Marguerite Sowa",
+          "rating": 5,
+          "max": 5,
+          "datePublished": "2026-06-03",
+          "dateDisplay": "June 3, 2026",
+          "context": "Verified purchase",
+          "headline": "Travels without creasing",
+          "body": "Rolled in a suitcase for nine days and hung out overnight. No steaming, no marks. The crimson has not faded after three washes on a cold delicate cycle."
+        }
+      ]
     },
     "tags": [
       "Silk",

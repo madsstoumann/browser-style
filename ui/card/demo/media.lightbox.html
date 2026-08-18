@@ -11,7 +11,7 @@
 	<meta name="referrer" content="no-referrer">
 	<!-- srcset origin: handshake in parallel with the CSS download -->
 	<link rel="preconnect" href="https://v4.browser.style">
-	<link rel="stylesheet" href="/dist/demo.4e89c82e.min.css">
+	<link rel="stylesheet" href="/dist/demo.2f62611f.min.css">
 	<link rel="stylesheet" href="../../icon/ui-icon.css"><!-- <ui-icon> glyphs (save/play/lightbox) — raw sheets below don't import it -->
 	<link rel="stylesheet" href="../demo.layout.css">
 	<!-- typed attr() fallback for Safari/Firefox (layout gaps/spacing attributes) -->
@@ -403,18 +403,11 @@
 	<!-- section 5's layout toggle + [open]/aria-expanded reflection + the
 	     toggle-popover click fallback for browsers without command= invokers -->
 	<script type="module" src="../lightbox.min.js"></script>
-	<!-- Demo glue (same as ui/save/index.html): fill the heart on click by
-	     toggling aria-pressed — the attribute ui-save.css keys its active state
-	     on. Production code wires this to real persistence via the --save
-	     invoker command; lightbox.js's click fallback only matches
-	     command="toggle-popover" buttons, so the two never collide. -->
-	<script type="module">
-		document.addEventListener('click', (e) => {
-			const btn = e.target.closest('ui-save > button');
-			if (!btn) return;
-			btn.setAttribute('aria-pressed', btn.getAttribute('aria-pressed') !== 'true');
-		});
-	</script>
+	<!-- Fills the heart on click by flipping aria-pressed, the attribute ui-save.css
+	     keys its active state on. Listens for the --save invoker command on each
+	     commandfor target, with a click fallback; lightbox.js's own click fallback
+	     only matches command="toggle-popover" buttons, so the two never collide. -->
+	<script type="module" src="/ui/save/save.min.js"></script>
 	<!-- section 6's play-pause media-command polyfill -->
 	<script type="module" src="../video.min.js"></script>
 	<!-- Typed attr() polyfill — Safari/Firefox. No-op where typed attr() is

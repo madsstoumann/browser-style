@@ -10,7 +10,7 @@ sit on. Notes below each table carry the per-token caveats.
 
 ## `media=`
 
-27 stems · 5 bare flags
+28 stems · 5 bare flags
 
 | token | axis | args | aliases | bare | writes | md:/lg: | hosts | requiresJs | deprecated |
 |---|---|---|---|---|---|---|---|---|---|
@@ -41,6 +41,7 @@ sit on. Notes below each table carry the per-token caveats.
 | `ani()` | carousel | **anim** rise fall lft rgt zom blr fde | — | — | --_stg-tr --_stg-sc --_stg-fl --_stg-origin | — | ui-media ui-card ui-reveal | — | — |
 | `crd()` | carousel | **anim** rise fall lft rgt zom blr fde | — | — | --_stg-crd-tr --_stg-crd-sc --_stg-crd-fl | — | ui-media ui-card ui-reveal | — | — |
 | `open:grid()` | open-state | **cols** 2c 3c 4c | — | — | --_lb-cols | — | ui-media ui-card ui-reveal | — | — |
+| `hug` | fill | — | — | yes | — | — | ui-media ui-card ui-reveal | — | — |
 | `clip` | corners | — | — | yes | --ui-media-radius | — | ui-media | — | — |
 | `loop` | carousel | — | — | yes | --_play-block --_play-inline --_play-justify --_play-size | — | ui-media ui-card ui-reveal lay-out[overflow] | carousel.js (*) | — |
 | `stagger` | carousel | — | — | yes | --_stg-base-i --_stg-crd-i | — | ui-media ui-card ui-reveal | — | — |
@@ -129,6 +130,9 @@ sit on. Notes below each table carry the per-token caveats.
 
 **`open:grid`** *(whole-matched, self arm)* — OPEN-STATE prefix family (media.lightbox.css): arms only while the <ui-media popover> frame is :popover-open, presenting the SAME children as an N-column scrollable grid instead of the default fullscreen carousel. WHOLE-token on purpose, like md:/lg: asr() — an open: spelling must never contain a substring-matched stem, which is why there is no open:nav (the [media*="nav"] needle would arm the closed carousel; fullscreen carousel is simply the default open presentation of a nav frame). The colon lives in the entry NAME so the needle audit and preset lint see the literal spellings; the cqPrefixes machinery is deliberately not reused (that is the container-query axis, and it would hide substring cross-fire from the shadow lint). Runtime carousel↔grid switching (data-lightbox attr) needs ui/card/lightbox.js.
 <sub>ui/card/media.lightbox.css:112 · ui/card/media.lightbox.css:127</sub>
+
+**`hug`** *(substring-matched, self arm)* — Opts the frame OUT of a row card's block-size:100% fill so it keeps its OWN height — whatever asr() declared. In a row card <ui-media> is otherwise stretched to the TEXT column's height, and a definite height beats aspect-ratio, so a declared asr() is silently discarded and object-fit:cover crops the photo to whatever the copy length happens to produce. Two arms: the three row rules in ui-card.css (base, md:, lg:) exclude [media*="hug"] on the same needle they already exclude [media*="mrk(rail)"] — a rail frame reserves its own inline space and was the only previous opt-out — and media.css adds align-self:start so grid stretch does not put the height back. Bare and substring-matched; there is no prefixed form, because whether a frame owns its height is not a breakpoint decision. Inert outside a row card: a col card's frame already owns its height.
+<sub>ui/card/media.css:47 · ui/card/ui-card.css:87 · ui/card/ui-card.css:169 · ui/card/ui-card.css:268</sub>
 
 **`clip`** *(substring-matched, self arm)* — SELF ARM ONLY — the clip-path rule is :where(ui-media[media*="clip"]) with no host arm, so media="clip" on a <ui-card>/<ui-reveal> is a silent no-op (the sibling rule at media.css:50, which zeroes a nested frame's radius, DOES use a host arm). Clips to the rds() radius (falling back to --ui-card-radius) because a plain border-radius is unreliable during scroll; -sq clips as plain round. Suppressed on :focus-visible so the dashed ring is not cut off.
 <sub>ui/card/media.css:127 · ui/card/media.css:50 · ui/card/media.carousel.css:54</sub>

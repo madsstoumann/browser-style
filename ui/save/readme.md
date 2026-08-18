@@ -53,7 +53,29 @@ Pre-mark a saved item with `aria-pressed="true"` on the button.
 
 ### Toggling (script)
 
-`ui-save` ships no toggle logic — the paint is pure CSS, and flipping the state is one listener. The button fires a custom command on its target; handle it and flip `aria-pressed`:
+The paint is pure CSS off `aria-pressed`; flipping that attribute is the application's job, because
+"what does saving mean" is. Two ways to do it.
+
+**Ship the module.** `save.js` (`save.min.js`, ~0.5 kB gzipped) is the whole toggle: it flips
+`aria-pressed` and emits a `ui-save` event you can persist from. Import it, or drop the tag on the page:
+
+```html
+<script type="module" src="/ui/save/save.min.js"></script>
+```
+
+```js
+document.addEventListener('ui-save', (e) => {
+  // e.target is the button, e.detail.target the element its commandfor names
+  fetch('/api/favorites', { method: e.detail.saved ? 'PUT' : 'DELETE', body: e.detail.target.id });
+});
+```
+
+It listens for the `--save` command on each `commandfor` target — the documented path — and falls back
+to a delegated click where Invoker Commands are unsupported, marking wired targets so the two never
+double-toggle. `aria-label` is deliberately left alone: `aria-pressed` **is** the state of a toggle
+button, and renaming a control that keeps its identity is what toggle-button guidance warns against.
+
+**Or write the listener.** It is genuinely one:
 
 ```js
 document.getElementById('save-1').addEventListener('command', (e) => {

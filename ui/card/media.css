@@ -44,6 +44,11 @@
 	:where(ui-media[media*="asr("]),
 	:where(ui-media:has(> lay-out)) { min-block-size: 0; }
 
+	/* hug — the frame keeps its OWN height (asr()) instead of filling a row card's
+	   column. The row rules in ui-card.css opt out on the same needle. Docs: docs/card.md */
+	:where([media*="hug"]) ui-media,
+	:where(ui-media[media*="hug"]) { align-self: start; }
+
 	/* nested <ui-media> = always a plain frame, never a scroller */
 	ui-media ui-media {
 		display: grid;

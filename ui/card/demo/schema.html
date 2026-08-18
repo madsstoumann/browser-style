@@ -19,8 +19,8 @@
 	     Organization, ComicIssue, Occupation…) are not itemtypes "on the card hosts". -->
 	<meta name="description" content="57 cards covering 51 distinct schema.org itemtypes on the card hosts (Quiz runs three cards; Review, EventSeries, Place and Person two each) — re-created with the modern &lt;ui-card&gt; engine: inline microdata (itemscope/itemtype/itemprop), no JSON-LD. The job card carries a 51st type as a second top-level item: EmployerAggregateRating. One optional script: video.js polyfills the media invoker commands behind the podcast play button.">
 	<!-- One bundle for every card-demo package (source list: ui/card/components.md).
-	     Build: npm run build:demo-css (entry demo.css, output /dist/demo.4e89c82e.min.css) -->
-	<link rel="stylesheet" href="/dist/demo.4e89c82e.min.css">
+	     Build: npm run build:demo-css (entry demo.css, output /dist/demo.2f62611f.min.css) -->
+	<link rel="stylesheet" href="/dist/demo.2f62611f.min.css">
 
 	<style>
 		/* Skip style + layout for OFF-SCREEN cards. This page is 57 cards / ~2,400
@@ -228,13 +228,12 @@
 				<ui-media id="product-1-media">
 					<img data-view="hero-product-1" src="/assets/images/aurasoundpro.png" alt="AuraSound Pro wireless headphones" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=180/assets/images/aurasoundpro.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=240/assets/images/aurasoundpro.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=360/assets/images/aurasoundpro.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=540/assets/images/aurasoundpro.png 720w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image">
 					<ui-sticker><small>SAVE</small><strong>20%</strong></ui-sticker>
-					<ui-save><button type="button" command="--save" commandfor="product-1-media" aria-label="Save AuraSound Pro to favorites"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
+					<ui-save><button type="button" command="--save" commandfor="product-1-media" aria-label="Save AuraSound Pro Wireless Headphones to favorites"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
 				<ui-chip data-type>Product</ui-chip></ui-media>
 				<ui-content>
-					<meta itemprop="category" content="Electronics">
 					<meta itemprop="sku" content="WH-1000XM5">
-					<small data-part="eyebrow">Electronics</small>
-					<h3 data-part="headline" itemprop="name"><a data-part="cover" href="products/aurasound-pro.html" itemprop="url">AuraSound Pro Wireless Headphones</a></h3>
+					<small data-part="eyebrow" itemprop="category">Electronics</small>
+					<h3 data-part="headline" itemprop="name"><a data-part="cover" href="products/aurasound-pro.html">AuraSound Pro Wireless Headphones</a></h3>
 					<p data-part="summary" itemprop="description">Industry-leading noise cancellation, 30-hour battery and multipoint pairing.</p>
 					<div data-part="rating" itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
 						<meta itemprop="ratingValue" content="4.5">
@@ -2084,5 +2083,9 @@
 	<!-- optional: media invoker-command polyfill for the podcast <ui-play> button.
 	     The bundled build — the source's shared.js import adds a sequential request chain -->
 	<script type="module" src="../video.min.js"></script>
+	<!-- Fills the heart on click by flipping aria-pressed, the attribute ui-save.css
+	     keys its active state on: listens for the --save invoker command on each
+	     commandfor target, with a click fallback. Docs: /ui/save/readme.md § Toggling -->
+	<script type="module" src="/ui/save/save.min.js"></script>
 </body>
 </html>

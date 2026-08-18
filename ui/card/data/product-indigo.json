@@ -84,7 +84,29 @@
             "currency": "USD"
           }
         ]
-      }
+      },
+      "reviews": [
+        {
+          "author": "Nadia Fenwick",
+          "rating": 5,
+          "max": 5,
+          "datePublished": "2026-07-09",
+          "dateDisplay": "July 9, 2026",
+          "context": "Verified purchase",
+          "headline": "The indigo is deeper in person",
+          "body": "Photographs read almost navy; in daylight it is a proper inky indigo with the floral picked out in a lighter thread. Wore it to a summer wedding and was asked about it four times."
+        },
+        {
+          "author": "Beatrix Ohl",
+          "rating": 4,
+          "max": 5,
+          "datePublished": "2026-06-22",
+          "dateDisplay": "June 22, 2026",
+          "context": "Verified purchase",
+          "headline": "Size up if you are between",
+          "body": "The silk hangs beautifully and the seams are clean inside and out. Cut is narrow across the shoulders, so I swapped the M for an L and it is now perfect."
+        }
+      ]
     },
     "tags": [
       "Silk",

@@ -151,15 +151,9 @@
 		<ui-save variant="non"><button type="button" command="--save" commandfor="r4" aria-label="non" aria-pressed="true"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
 	</div>
 
-	<script type="module">
-		// Demo glue: toggle aria-pressed on any ui-save button click. (Production
-		// code would wire this via the invoker command + a valid commandfor target;
-		// here the demo buttons point at placeholder ids, so we delegate on click.)
-		document.addEventListener('click', (e) => {
-			const btn = e.target.closest('ui-save > button');
-			if (!btn) return;
-			btn.setAttribute('aria-pressed', btn.getAttribute('aria-pressed') !== 'true');
-		});
-	</script>
+	<!-- The toggle: listens for the --save invoker command on each commandfor target,
+	     falling back to a delegated click (these demo buttons point at placeholder ids,
+	     so the fallback is the path most of them take). Docs: readme.md § Toggling -->
+	<script type="module" src="save.min.js"></script>
 </body>
 </html>

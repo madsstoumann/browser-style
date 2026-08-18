@@ -202,6 +202,24 @@ are exempted by name pending a decision on their precedence direction (the refer
 the *envelope* value for the first and the *media item's* for the second, so "envelope wins" is
 not the answer at both).
 
+## Reviews
+
+`reviewItems(reviews)` is the one emitter for individual `Review` blocks, shared by every detail page
+that shows them — the rental page and the five product pages today. One seam, so two builders cannot
+spell a review two ways. Each entry becomes a `<div itemprop="review" itemscope>` holding
+`reviewRating` → `Rating`, an `author` → `Person` byline with `datePublished`, an optional `name`
+headline and `reviewBody`.
+
+**Reviews never render on a teaser card.** No `DETAILS.*` renderer reads `details.reviews`; the page
+builder calls the emitter itself and places the result where the microdata is still inside the item's
+scope. That is a content decision as much as a layout one — a card in a grid states the aggregate,
+the page states the individual opinions.
+
+**`contentReferenceTime` is dropped.** Its range is `DateTime`, and the thing a reviewer actually
+reports — "stayed June 2026", "Verified purchase" — is not one. It rides the `context` field as
+plain text in the byline instead, unmarked, rather than being forced into a property whose type it
+does not satisfy.
+
 ## Subtypes
 
 A large share of schema.org is **subtypes that inherit every property of a type we already
@@ -316,6 +334,15 @@ Envelope `summary` as `<ui-quote>` wrapping `<blockquote itemprop="text">` + aut
 ### Product — `Product` (subtype `ProductGroup`)
 
 Offer + AggregateRating, discount `<ui-sticker>`, save toggle. Proposed parts: `price`, `rating`.
+
+**Individual reviews are a detail-page property.** `details.reviews[]` renders nowhere on the
+teaser — `DETAILS.product` never reads it — and the five generated product pages compose it into a
+band under the card through the shared [`reviewItems()`](#reviews) emitter. `review` is in domain of
+`Product`, and a `ProductGroup` **is** a `Product`, so the same band serves the four colourway pages.
+The band's placement is what forces the page shape: a property has to sit inside its item's subtree,
+so the page wraps card + reviews in one `<article itemscope>` and the card renders **descoped** — the
+same structure the rental page uses, and the reason `productCard()` reads the itemtype off the raw
+render before stripping it (a gown resolves to `ProductGroup`, the headphones to `Product`).
 
 **Variants — `ProductGroup`.** Google's *Product variants* rich result is **not a new card type**:
 it is this type plus `details.subtype: "ProductGroup"` plus an optional `details.variants` block. A
@@ -451,12 +478,12 @@ The group's own machine metas (`productGroupID`, `variesBy`) stay in the text co
 that is where the `ProductGroup` scope lives. Data: `data/product-group-collage.json`.
 
 The page's collage card (`#schema-product-variants`) is deliberately **not** in `schema.compare`'s
-pairs. It carries two page-only things the renderer has no reason to emit: `data-view` names on the
-tiles, which drive the view-transition morph into the per-colour product pages, and plain local
-`src` + `width`/`height` instead of a CDN `srcset`, because the four crops are new assets that do not
-exist on the zone yet. The first is a page-authoring hook of the same class `H3` already drops; the
-second is a temporary deployment state, and encoding it in the comparator would outlast it. The
-collage renderer is covered by unit tests instead.
+pairs. One page-only thing remains in the way: plain local `src` + `width`/`height` on the tiles
+instead of a CDN `srcset`, because the four crops are new assets that do not exist on the zone yet —
+a temporary deployment state, and encoding it in the comparator would outlast it. (The tiles' other
+divergence, the `data-view` names driving the morph into the per-colour pages, stopped mattering when
+`H3` widened to drop `data-view` **everywhere** rather than on the card root alone.) The collage
+renderer is covered by unit tests instead.
 
 ### Event — `Event`
 

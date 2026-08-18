@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="Emerald palm fronds on a bias-cut column — the most fluid drape of the four.">
-	<link rel="stylesheet" href="/dist/demo.4e89c82e.min.css">
+	<link rel="stylesheet" href="/dist/demo.2f62611f.min.css">
 	<!-- srcset uses absolute v4.browser.style CDN URLs; the zone's Hotlink Protection
 	     403s any cross-origin Referer (pages.dev, localhost) — no-referrer passes -->
 	<meta name="referrer" content="no-referrer">
@@ -25,7 +25,15 @@
 		   naming rule and group timing) come from ui-card.css — nothing page-scoped
 		   here, deliberately: see the header comment in products/build.js */
 		body { margin-inline: auto; max-inline-size: 64rem; }
-		.product-view { margin-block-end: var(--spacing-2xl); }
+		.product-page { margin-block-end: var(--spacing-2xl); }
+		.reviews-heading { margin-block: var(--spacing-xl) var(--spacing-md); }
+		/* one column; the rule is the separator, so the column itself needs no gap */
+		.reviews > hr {
+			border: 0;
+			border-block-start: var(--border-width, 1px) solid var(--color-border, currentColor);
+			margin-block: var(--spacing-md);
+			opacity: 0.4;
+		}
 		/* the colourway switcher — cross-page navigation, not a content part.
 		   Caption UNDER the swatch: the row reads as a set of choices, and each
 		   label sits with the photo it names instead of between two of them. */
@@ -83,7 +91,8 @@
 		</ol>
 	</nav>
 	<main>
-		<ui-card class="product-view" data-view="card-variant-emerald" variant="col lg:row lg:spl(1/1) shd(non)" itemscope itemtype="https://schema.org/ProductGroup">
+		<article class="product-page" data-view="card-variant-emerald" itemscope itemtype="https://schema.org/ProductGroup">
+			<ui-card class="product-view" variant="col lg:row lg:spl(1/1) shd(non)">
 		<cq-box>
 			<ui-media media="asr(2/3) rds(lg) clip axis(y) nav(mrk) mrk(tmb) mrk(rail) mrk(lg) tmb(2/3) lightbox(bs)" id="product-emerald-media" popover media-open="nav mrk(tmb) mrk(blw) mrk(lg)"><ui-lightbox><button type="button" command="toggle-popover" commandfor="product-emerald-media" aria-label="View the Emerald Palm gallery"><ui-icon><svg viewBox="0 0 24 24"><path d="M7 5.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666"/><path d="M4.012 7.26a2.005 2.005 0 0 0 -1.012 1.737v10c0 1.1 .9 2 2 2h10c.75 0 1.158 -.385 1.5 -1"/><path d="M17 7h.01"/><path d="M7 13l3.644 -3.644a1.21 1.21 0 0 1 1.712 0l3.644 3.644"/><path d="M15 12l1.644 -1.644a1.21 1.21 0 0 1 1.712 0l2.644 2.644"/></svg></ui-icon></button></ui-lightbox><img id="hero" data-view="hero-variant-emerald" src="/assets/images/silkgown-emerald-front.png" alt="Persistence Silk Gown in Emerald Palm, front view, full length" style="--ui-carousel-thumb-url: url('https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=160/assets/images/silkgown-emerald-front.png')" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=360/assets/images/silkgown-emerald-front.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=480/assets/images/silkgown-emerald-front.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=720/assets/images/silkgown-emerald-front.png 480w" sizes="(min-width: 720px) 30rem, 100vw" loading="eager" fetchpriority="high" decoding="async" itemprop="image"><img src="/assets/images/silkgown-emerald-side.png" alt="Persistence Silk Gown in Emerald Palm, side view, showing the bias-cut drape and slit" style="--ui-carousel-thumb-url: url('https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=160/assets/images/silkgown-emerald-side.png')" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=360/assets/images/silkgown-emerald-side.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=480/assets/images/silkgown-emerald-side.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=720/assets/images/silkgown-emerald-side.png 480w" sizes="auto, (min-width: 720px) 30rem, 100vw" loading="lazy" decoding="async" itemprop="image"><img src="/assets/images/silkgown-emerald-back.png" alt="Persistence Silk Gown in Emerald Palm, back view, full length" style="--ui-carousel-thumb-url: url('https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=160/assets/images/silkgown-emerald-back.png')" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=360/assets/images/silkgown-emerald-back.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=480/assets/images/silkgown-emerald-back.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=720/assets/images/silkgown-emerald-back.png 480w" sizes="auto, (min-width: 720px) 30rem, 100vw" loading="lazy" decoding="async" itemprop="image"></ui-media>
 			<ui-content content="scl(lg)">
@@ -119,10 +128,35 @@
 				</ui-content>
 		</cq-box>
 	</ui-card>
+			<h2 class="reviews-heading">Reviews</h2>
+			<div class="reviews">
+				<ui-content><div itemprop="review" itemscope itemtype="https://schema.org/Review"><div data-part="rating" itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
+		<meta itemprop="ratingValue" content="4">
+		
+		<meta itemprop="bestRating" content="5"><meta itemprop="worstRating" content="1">
+		<input class="ui-rating" type="range" min="1" max="5" value="4" step="0.01" disabled aria-hidden="true">
+		<span data-sr>Rated 4 out of 5 stars</span>
+		<span aria-hidden="true">4 / 5</span>
+	</div><p data-part="meta"><span itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Sonya Kirby</span></span> · <meta itemprop="datePublished" content="2026-07-01">July 1, 2026 · Verified purchase</p><p data-part="subheadline" itemprop="name">Green that suits a lot of skin tones</p><p data-part="summary" itemprop="reviewBody">Warm emerald rather than a cold bottle green, which I think is why it works on so many people. Docked one star only because the palm print sits high and can crowd a necklace.</p></div></ui-content>
+				<hr>
+				<ui-content><div itemprop="review" itemscope itemtype="https://schema.org/Review"><div data-part="rating" itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
+		<meta itemprop="ratingValue" content="5">
+		
+		<meta itemprop="bestRating" content="5"><meta itemprop="worstRating" content="1">
+		<input class="ui-rating" type="range" min="1" max="5" value="5" step="0.01" disabled aria-hidden="true">
+		<span data-sr>Rated 5 out of 5 stars</span>
+		<span aria-hidden="true">5 / 5</span>
+	</div><p data-part="meta"><span itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Hallie Brandt</span></span> · <meta itemprop="datePublished" content="2026-05-27">May 27, 2026 · Verified purchase</p><p data-part="subheadline" itemprop="name">Lined properly</p><p data-part="summary" itemprop="reviewBody">Full lining in the same silk, not a cheap acetate. That is rare at this price and it is what makes the drape sit the way it does in the photographs.</p></div></ui-content>
+			</div>
+		</article>
 	</main>
 	<!-- Native scroll-control pseudos do NOT follow a popover frame into the top layer
 	     (Chromium), so the open lightbox gets real DOM controls from this module. Non
 	     render-blocking: it must not delay the transition snapshot. Docs: docs/media.md -->
 	<script type="module" src="/ui/card/lightbox.min.js"></script>
+	<!-- <ui-save>'s toggle: flips aria-pressed, which is what ui-save.css fills the
+	     glyph on. Only the solo product carries a save button today; the module is a
+	     no-op on a page with none. Docs: /ui/save/readme.md § Toggling -->
+	<script type="module" src="/ui/save/save.min.js"></script>
 </body>
 </html>

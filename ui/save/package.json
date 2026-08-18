@@ -12,12 +12,16 @@
     },
     "./style": "./index.css",
     "./index.css": "./index.css",
-    "./ui-save.css": "./ui-save.css"
+    "./ui-save.css": "./ui-save.css",
+    "./save.js": "./save.js",
+    "./save.min.js": "./save.min.js"
   },
   "files": [
     "index.js",
     "index.css",
-    "ui-save.css"
+    "ui-save.css",
+    "save.js",
+    "save.min.js"
   ],
   "publishConfig": {
     "access": "public",

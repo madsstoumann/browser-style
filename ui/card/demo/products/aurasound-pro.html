@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="Industry-leading noise cancellation, 30-hour battery and multipoint pairing.">
-	<link rel="stylesheet" href="/dist/demo.4e89c82e.min.css">
+	<link rel="stylesheet" href="/dist/demo.2f62611f.min.css">
 	<!-- srcset uses absolute v4.browser.style CDN URLs; the zone's Hotlink Protection
 	     403s any cross-origin Referer (pages.dev, localhost) — no-referrer passes -->
 	<meta name="referrer" content="no-referrer">
@@ -25,7 +25,15 @@
 		   naming rule and group timing) come from ui-card.css — nothing page-scoped
 		   here, deliberately: see the header comment in products/build.js */
 		body { margin-inline: auto; max-inline-size: 64rem; }
-		.product-view { margin-block-end: var(--spacing-2xl); }
+		.product-page { margin-block-end: var(--spacing-2xl); }
+		.reviews-heading { margin-block: var(--spacing-xl) var(--spacing-md); }
+		/* one column; the rule is the separator, so the column itself needs no gap */
+		.reviews > hr {
+			border: 0;
+			border-block-start: var(--border-width, 1px) solid var(--color-border, currentColor);
+			margin-block: var(--spacing-md);
+			opacity: 0.4;
+		}
 	</style>
 	<style>
 		:root {
@@ -57,9 +65,10 @@
 		</ol>
 	</nav>
 	<main>
-		<ui-card class="product-view" data-view="card-product-1" variant="col lg:row lg:spl(1/1) shd(non)" itemscope itemtype="https://schema.org/Product">
+		<article class="product-page" data-view="card-product-1" itemscope itemtype="https://schema.org/Product">
+			<ui-card class="product-view" variant="col lg:row lg:spl(1/1) shd(non)">
 		<cq-box>
-			<ui-media media="asr(4/3) rds(lg) sticker(te) sticker(red) sticker(2xl) sticker(sh:burst) save(be)" id="product-1-media"><img id="hero" data-view="hero-product-1" src="/assets/images/aurasoundpro.png" alt="AuraSound Pro wireless headphones" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=180/assets/images/aurasoundpro.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=240/assets/images/aurasoundpro.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=360/assets/images/aurasoundpro.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=540/assets/images/aurasoundpro.png 720w" sizes="(min-width: 720px) 30rem, 100vw" loading="eager" fetchpriority="high" decoding="async" itemprop="image"><ui-sticker><small>SAVE</small><strong>20%</strong></ui-sticker><ui-save><button type="button" command="--save" commandfor="product-1-media" aria-label="Save AuraSound Pro Wireless Headphones to favorites"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save></ui-media>
+			<ui-media media="asr(4/3) hug rds(lg) sticker(te) sticker(red) sticker(2xl) sticker(sh:spark) save(be)" id="product-1-media"><img id="hero" data-view="hero-product-1" src="/assets/images/aurasoundpro.png" alt="AuraSound Pro wireless headphones" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=180/assets/images/aurasoundpro.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=240/assets/images/aurasoundpro.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=360/assets/images/aurasoundpro.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=540/assets/images/aurasoundpro.png 720w" sizes="(min-width: 720px) 30rem, 100vw" loading="eager" fetchpriority="high" decoding="async" itemprop="image"><ui-sticker><small>SAVE</small><strong>20%</strong></ui-sticker><ui-save><button type="button" command="--save" commandfor="product-1-media" aria-label="Save AuraSound Pro Wireless Headphones to favorites"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save></ui-media>
 			<ui-content content="scl(lg)"><small data-part="eyebrow" itemprop="category">Electronics</small><h2 data-part="headline" itemprop="name">AuraSound Pro Wireless Headphones</h2><p data-part="summary" itemprop="description">Industry-leading noise cancellation, 30-hour battery and multipoint pairing.</p><div data-part="rating" itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
 		<meta itemprop="ratingValue" content="4.5">
 		<meta itemprop="ratingCount" content="1247">
@@ -70,13 +79,47 @@
 	</div><p data-part="price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
 				<meta itemprop="priceCurrency" content="USD"><meta itemprop="availability" content="https://schema.org/InStock"><meta itemprop="itemCondition" content="https://schema.org/NewCondition"><meta itemprop="priceValidUntil" content="2026-08-01">
 				<meta itemprop="price" content="279">$279 <del>$349</del> <ui-chip theme="pale green">Save 20%</ui-chip>
-			</p><p data-part="meta"><small>Valid until Aug 1, 2026</small></p><p data-part="meta"><ui-chip theme="pale green">In Stock</ui-chip></p><meta itemprop="sku" content="WH-1000XM5"><span data-part="tags"><ui-chip itemprop="keywords">Wireless</ui-chip><ui-chip itemprop="keywords">Noise Cancelling</ui-chip></span><nav data-part="actions"><button class="ui-button" type="button" data-variant="accent" aria-label="Add AuraSound Pro to cart">Add to cart</button></nav></ui-content>
+			</p><p data-part="meta"><small>Valid until Aug 1, 2026</small></p><p data-part="meta"><ui-chip theme="pale green">In stock</ui-chip></p><meta itemprop="sku" content="WH-1000XM5"><span data-part="tags"><ui-chip itemprop="keywords">Wireless</ui-chip><ui-chip itemprop="keywords">Noise Cancelling</ui-chip></span><nav data-part="actions"><button class="ui-button" type="button" data-variant="accent" aria-label="Add to cart: AuraSound Pro">Add to cart</button></nav></ui-content>
 		</cq-box>
 	</ui-card>
+			<h2 class="reviews-heading">Reviews</h2>
+			<div class="reviews">
+				<ui-content><div itemprop="review" itemscope itemtype="https://schema.org/Review"><div data-part="rating" itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
+		<meta itemprop="ratingValue" content="5">
+		
+		<meta itemprop="bestRating" content="5"><meta itemprop="worstRating" content="1">
+		<input class="ui-rating" type="range" min="1" max="5" value="5" step="0.01" disabled aria-hidden="true">
+		<span data-sr>Rated 5 out of 5 stars</span>
+		<span aria-hidden="true">5 / 5</span>
+	</div><p data-part="meta"><span itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Devon Marsh</span></span> · <meta itemprop="datePublished" content="2026-06-28">June 28, 2026 · Verified purchase</p><p data-part="subheadline" itemprop="name">The multipoint actually works</p><p data-part="summary" itemprop="reviewBody">Two weeks of commuting and one long-haul flight. They hand off between my laptop and phone without the half-second of silence every other pair I have owned makes you sit through. Battery went from full to 40% over the flight with ANC on the whole way.</p></div></ui-content>
+				<hr>
+				<ui-content><div itemprop="review" itemscope itemtype="https://schema.org/Review"><div data-part="rating" itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
+		<meta itemprop="ratingValue" content="4">
+		
+		<meta itemprop="bestRating" content="5"><meta itemprop="worstRating" content="1">
+		<input class="ui-rating" type="range" min="1" max="5" value="4" step="0.01" disabled aria-hidden="true">
+		<span data-sr>Rated 4 out of 5 stars</span>
+		<span aria-hidden="true">4 / 5</span>
+	</div><p data-part="meta"><span itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Priya Raman</span></span> · <meta itemprop="datePublished" content="2026-06-11">June 11, 2026 · Verified purchase</p><p data-part="subheadline" itemprop="name">Superb on planes, warm on hot days</p><p data-part="summary" itemprop="reviewBody">Noise cancelling on engine drone is the best I have tried and the case is genuinely pocketable. The earpads do get warm after about two hours in summer, which is the only reason this is not a five.</p></div></ui-content>
+				<hr>
+				<ui-content><div itemprop="review" itemscope itemtype="https://schema.org/Review"><div data-part="rating" itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
+		<meta itemprop="ratingValue" content="5">
+		
+		<meta itemprop="bestRating" content="5"><meta itemprop="worstRating" content="1">
+		<input class="ui-rating" type="range" min="1" max="5" value="5" step="0.01" disabled aria-hidden="true">
+		<span data-sr>Rated 5 out of 5 stars</span>
+		<span aria-hidden="true">5 / 5</span>
+	</div><p data-part="meta"><span itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Tomas Lind</span></span> · <meta itemprop="datePublished" content="2026-05-30">May 30, 2026 · Verified purchase</p><p data-part="subheadline" itemprop="name">Replaced a pair twice the price</p><p data-part="summary" itemprop="reviewBody">Bought these to leave at the office and ended up carrying them everywhere. Transparency mode is clear enough to order coffee without taking them off.</p></div></ui-content>
+			</div>
+		</article>
 	</main>
 	<!-- Native scroll-control pseudos do NOT follow a popover frame into the top layer
 	     (Chromium), so the open lightbox gets real DOM controls from this module. Non
 	     render-blocking: it must not delay the transition snapshot. Docs: docs/media.md -->
 	<script type="module" src="/ui/card/lightbox.min.js"></script>
+	<!-- <ui-save>'s toggle: flips aria-pressed, which is what ui-save.css fills the
+	     glyph on. Only the solo product carries a save button today; the module is a
+	     no-op on a page with none. Docs: /ui/save/readme.md § Toggling -->
+	<script type="module" src="/ui/save/save.min.js"></script>
 </body>
 </html>

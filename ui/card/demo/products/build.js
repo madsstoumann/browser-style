@@ -18,8 +18,8 @@
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { renderCard } from '../../render.js';
-import { CDN_BASE, CONTRAST_STYLE, HEAD_COMMON, VT_HEAD, breadcrumb, esc, withPreset } from '../build.shared.js';
+import { renderCard, reviewItems } from '../../render.js';
+import { CDN_BASE, CONTRAST_STYLE, HEAD_COMMON, VT_HEAD, breadcrumb, descope, esc, withPreset } from '../build.shared.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const data = (file) => JSON.parse(readFileSync(join(here, '../../data', file), 'utf8'));
@@ -66,18 +66,25 @@ const variantOf = (slug) => `<link itemprop="mainEntityOfPage" href="${file(slug
 						<meta itemprop="productGroupID" content="${esc(GROUP.id)}">
 					</div>`;
 
-/* the card IS the page root — the product-page presets' lg:row arrangement is the
-   layout, so unlike the article pages there is nothing to descope into an <article>.
-   `view` names the two morph targets the page it is linked from also names. */
-const productCard = (ucf, { preset, view }) =>
-	renderCard(withPreset(ucf, preset), presets, undefined, USE_CDN ? { images: IMAGES } : {})
-		.replace('<ui-card', `<ui-card class="product-view" data-view="card-${view}"`)
+/* The <article> owns the itemscope, not the card: reviews render as a BAND below the
+   card and a property has to sit inside the item's subtree, so the card is descoped
+   into a wrapper the way the rental page does it. `view` names the two morph targets
+   the page it is linked from also names — the wrapper carries the card-level one. */
+const productCard = (ucf, { preset, view }) => {
+	const raw = renderCard(withPreset(pageOnly(ucf), preset), presets, undefined, USE_CDN ? { images: IMAGES } : {});
+	/* the wrapper has to repeat the type the renderer resolved — a gown is a ProductGroup
+	   (details.subtype), the headphones a plain Product, and only the render knows which */
+	const itemtype = raw.match(/itemtype="(https:\/\/schema\.org\/\w+)"/)?.[1] || 'https://schema.org/Product';
+	const html = descope(raw)
+		.replace('<ui-card', '<ui-card class="product-view"')
 		/* first slide only: the LCP element and the morph target — always eager */
 		.replace('<img', `<img id="hero" data-view="hero-${view}"`)
 		.replace(' loading="lazy"', ' loading="eager" fetchpriority="high"')
 		.replace('sizes="auto, ', 'sizes="'); /* `auto` is spec-invalid on eager images */
+	return { html, itemtype };
+};
 
-const shell = ({ title, description, styles = '', card }) => `<!DOCTYPE html>
+const shell = ({ title, description, styles = '', card, itemtype, view, reviews = '' }) => `<!DOCTYPE html>
 <html lang="en-US" dir="ltr">
 <head>
 	<title>${esc(title)}</title>
@@ -96,7 +103,15 @@ const shell = ({ title, description, styles = '', card }) => `<!DOCTYPE html>
 		   naming rule and group timing) come from ui-card.css — nothing page-scoped
 		   here, deliberately: see the header comment in products/build.js */
 		body { margin-inline: auto; max-inline-size: 64rem; }
-		.product-view { margin-block-end: var(--spacing-2xl); }${styles}
+		.product-page { margin-block-end: var(--spacing-2xl); }
+		.reviews-heading { margin-block: var(--spacing-xl) var(--spacing-md); }
+		/* one column; the rule is the separator, so the column itself needs no gap */
+		.reviews > hr {
+			border: 0;
+			border-block-start: var(--border-width, 1px) solid var(--color-border, currentColor);
+			margin-block: var(--spacing-md);
+			opacity: 0.4;
+		}${styles}
 	</style>
 	${CONTRAST_STYLE}
 </head>
@@ -107,12 +122,18 @@ const shell = ({ title, description, styles = '', card }) => `<!DOCTYPE html>
 		{ name: title }
 	])}
 	<main>
-		${card}
+		<article class="product-page" data-view="card-${view}" itemscope itemtype="${itemtype}">
+			${card}${reviews}
+		</article>
 	</main>
 	<!-- Native scroll-control pseudos do NOT follow a popover frame into the top layer
 	     (Chromium), so the open lightbox gets real DOM controls from this module. Non
 	     render-blocking: it must not delay the transition snapshot. Docs: docs/media.md -->
 	<script type="module" src="/ui/card/lightbox.min.js"></script>
+	<!-- <ui-save>'s toggle: flips aria-pressed, which is what ui-save.css fills the
+	     glyph on. Only the solo product carries a save button today; the module is a
+	     no-op on a page with none. Docs: /ui/save/readme.md § Toggling -->
+	<script type="module" src="/ui/save/save.min.js"></script>
 </body>
 </html>
 `;
@@ -146,27 +167,56 @@ const SWATCH_STYLES = `
 			& a:hover span { text-decoration: underline; }
 		}`;
 
+/* the page's own render must not link to itself, and it renders the reviews as a band
+   BELOW the card rather than inside the text column — same split the rental page uses:
+   DETAILS.product never emits `review`, so a teaser stays a teaser. */
+const pageOnly = (ucf) => ({ ...ucf, fields: { ...ucf.fields, cover: undefined } });
+
+/* one <Review> per <ui-content>, stacked in ONE column with a rule between them —
+   a review is a paragraph of prose, and two narrow columns make the eye jump. `review`
+   is in domain of Product, and ProductGroup IS a Product, so the same band serves the
+   gowns. Docs: docs/schema.md § Reviews */
+const reviewsBand = (ucf) => {
+	const items = reviewItems(ucf.fields.details?.reviews);
+	if (!items.length) return '';
+	/* <hr> BETWEEN, never after the last — a trailing rule reads as "more below" */
+	return `\n\t\t\t<h2 class="reviews-heading">Reviews</h2>
+			<div class="reviews">${items.map((review, index) => `${index ? '\n\t\t\t\t<hr>' : ''}\n\t\t\t\t<ui-content>${review}</ui-content>`).join('')}
+			</div>`;
+};
+
 const title = (ucf) => String(ucf.fields.headline).replace(/<[^>]+>/g, '');
 
-const colourwayPage = (ucf, color) => shell({
-	title: title(ucf),
-	description: ucf.fields.summary || title(ucf),
-	styles: SWATCH_STYLES,
-	card: productCard(ucf, { preset: 'product-page', view: `variant-${color.slug}` })
-		/* machine metadata leads the text column; the colourway switcher closes it */
-		.replace(/(<ui-content[^>]*>)/, `$1\n\t\t\t\t\t${variantOf(color.slug)}\n\t\t\t\t\t`)
-		.replace('</ui-content>', `${siblings(color.slug)}\n\t\t\t\t</ui-content>`)
-});
+const colourwayPage = (ucf, color) => {
+	const view = `variant-${color.slug}`;
+	const { html, itemtype } = productCard(ucf, { preset: 'product-page', view });
+	return shell({
+		title: title(ucf),
+		description: ucf.fields.summary || title(ucf),
+		styles: SWATCH_STYLES,
+		itemtype, view,
+		card: html
+			/* machine metadata leads the text column; the colourway switcher closes it */
+			.replace(/(<ui-content[^>]*>)/, `$1\n\t\t\t\t\t${variantOf(color.slug)}\n\t\t\t\t\t`)
+			.replace('</ui-content>', `${siblings(color.slug)}\n\t\t\t\t</ui-content>`),
+		reviews: reviewsBand(ucf)
+	});
+};
 
 /* the single-photo product — schema.html's plain Product card links here through its
    headline cover link, and morphs on the same card-/hero- name pair the gowns use */
 const SOLO = { data: 'product.json', file: 'aurasound-pro.html', view: 'product-1' };
 
-const soloPage = (ucf) => shell({
-	title: title(ucf),
-	description: ucf.fields.summary || title(ucf),
-	card: productCard(ucf, { preset: 'product-page-solo', view: SOLO.view })
-});
+const soloPage = (ucf) => {
+	const { html, itemtype } = productCard(ucf, { preset: 'product-page-solo', view: SOLO.view });
+	return shell({
+		title: title(ucf),
+		description: ucf.fields.summary || title(ucf),
+		itemtype, view: SOLO.view,
+		card: html,
+		reviews: reviewsBand(ucf)
+	});
+};
 
 mkdirSync(here, { recursive: true });
 for (const color of COLORS) {

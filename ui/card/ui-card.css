@@ -83,8 +83,8 @@
 	:where([variant~="row"], [variant~="row-r"]) {
 		--ui-card-cols: var(--ui-card-split, 1fr 1fr);
 	}
-	/* mrk(rail) frames opt OUT — the rail reserves its own inline space. Docs: docs/media.carousel.md § Rail */
-	:where([variant~="row"], [variant~="row-r"]):where(:not([media*="mrk(rail)"])) ui-media:where(:not([media*="mrk(rail)"])) {
+	/* mrk(rail) and hug frames opt OUT — the rail reserves its own inline space; hug keeps asr(). Docs: docs/media.carousel.md § Rail, docs/card.md § hug */
+	:where([variant~="row"], [variant~="row-r"]):where(:not([media*="mrk(rail)"], [media*="hug"])) ui-media:where(:not([media*="mrk(rail)"], [media*="hug"])) {
 		block-size: 100%;
 		inline-size: 100%;
 		min-block-size: 0;
@@ -165,9 +165,9 @@
 		:where([variant~="md:col-r"]) :is(cq-box, summary)   { --ui-card-cols: 1fr; }
 		:where([variant~="md:row"]) :is(cq-box, summary),
 		:where([variant~="md:row-r"]) :is(cq-box, summary)   { --ui-card-cols: var(--ui-card-split, 1fr 1fr); }
-		/* mrk(rail) frames opt OUT — see the base row rule */
-		:where([variant~="md:row"]):where(:not([media*="mrk(rail)"])) :is(cq-box, summary) ui-media:where(:not([media*="mrk(rail)"])),
-		:where([variant~="md:row-r"]):where(:not([media*="mrk(rail)"])) :is(cq-box, summary) ui-media:where(:not([media*="mrk(rail)"])) { block-size: 100%; inline-size: 100%; min-block-size: 0; }
+		/* mrk(rail) + hug frames opt OUT — see the base row rule */
+		:where([variant~="md:row"]):where(:not([media*="mrk(rail)"], [media*="hug"])) :is(cq-box, summary) ui-media:where(:not([media*="mrk(rail)"], [media*="hug"])),
+		:where([variant~="md:row-r"]):where(:not([media*="mrk(rail)"], [media*="hug"])) :is(cq-box, summary) ui-media:where(:not([media*="mrk(rail)"], [media*="hug"])) { block-size: 100%; inline-size: 100%; min-block-size: 0; }
 		:where([variant~="md:col"]) :is(cq-box, summary) ui-content,
 		:where([variant~="md:row"]) :is(cq-box, summary) ui-content { order: 0; }
 		:where([variant~="md:col-r"]) :is(cq-box, summary) ui-content,
@@ -264,9 +264,9 @@
 		:where([variant~="lg:col-r"]) :is(cq-box, summary)   { --ui-card-cols: 1fr; }
 		:where([variant~="lg:row"]) :is(cq-box, summary),
 		:where([variant~="lg:row-r"]) :is(cq-box, summary)   { --ui-card-cols: var(--ui-card-split, 1fr 1fr); }
-		/* mrk(rail) frames opt OUT — see the base row rule */
-		:where([variant~="lg:row"]):where(:not([media*="mrk(rail)"])) :is(cq-box, summary) ui-media:where(:not([media*="mrk(rail)"])),
-		:where([variant~="lg:row-r"]):where(:not([media*="mrk(rail)"])) :is(cq-box, summary) ui-media:where(:not([media*="mrk(rail)"])) { block-size: 100%; inline-size: 100%; min-block-size: 0; }
+		/* mrk(rail) + hug frames opt OUT — see the base row rule */
+		:where([variant~="lg:row"]):where(:not([media*="mrk(rail)"], [media*="hug"])) :is(cq-box, summary) ui-media:where(:not([media*="mrk(rail)"], [media*="hug"])),
+		:where([variant~="lg:row-r"]):where(:not([media*="mrk(rail)"], [media*="hug"])) :is(cq-box, summary) ui-media:where(:not([media*="mrk(rail)"], [media*="hug"])) { block-size: 100%; inline-size: 100%; min-block-size: 0; }
 		:where([variant~="lg:col"]) :is(cq-box, summary) ui-content,
 		:where([variant~="lg:row"]) :is(cq-box, summary) ui-content { order: 0; }
 		:where([variant~="lg:col-r"]) :is(cq-box, summary) ui-content,

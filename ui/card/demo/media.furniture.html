@@ -11,7 +11,7 @@
 	<meta name="referrer" content="no-referrer">
 	<!-- srcset origin: handshake in parallel with the CSS download -->
 	<link rel="preconnect" href="https://v4.browser.style">
-	<link rel="stylesheet" href="/dist/demo.4e89c82e.min.css">
+	<link rel="stylesheet" href="/dist/demo.2f62611f.min.css">
 	<!-- Package entry points — play/save pull in <ui-icon> themselves. -->
 	<style>
 		code { font-size: 0.9em; }
@@ -383,6 +383,10 @@
 	     supported; each component's own @supports block already covers the no-JS
 	     case, this restores per-element attribute values on top. -->
 	<script type="module" src="/ui/base/polyfills/attr-fallback.min.js"></script>
+	<!-- Fills the heart on click by flipping aria-pressed, the attribute ui-save.css
+	     keys its active state on: listens for the --save invoker command on each
+	     commandfor target, with a click fallback. Docs: /ui/save/readme.md § Toggling -->
+	<script type="module" src="/ui/save/save.min.js"></script>
 </main>
 </body>
 </html>

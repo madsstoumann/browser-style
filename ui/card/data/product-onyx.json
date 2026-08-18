@@ -84,7 +84,29 @@
             "currency": "USD"
           }
         ]
-      }
+      },
+      "reviews": [
+        {
+          "author": "Rosalind Teoh",
+          "rating": 5,
+          "max": 5,
+          "datePublished": "2026-07-18",
+          "dateDisplay": "July 18, 2026",
+          "context": "Verified purchase",
+          "headline": "The one you will actually wear out",
+          "body": "Black with the deco print catching the light only when you move. Dressed up with heels, dressed down with flats and a denim jacket — it takes both without looking like it is trying."
+        },
+        {
+          "author": "Fenella Adjei",
+          "rating": 4,
+          "max": 5,
+          "datePublished": "2026-06-15",
+          "dateDisplay": "June 15, 2026",
+          "context": "Verified purchase",
+          "headline": "Beautiful, but the black shows lint",
+          "body": "No complaints about the make or the fit. It is dark silk, so it picks up every stray thread — keep a roller in your bag and it is faultless."
+        }
+      ]
     },
     "tags": [
       "Silk",

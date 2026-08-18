@@ -17,6 +17,7 @@
     },
     "eyebrow": "Electronics",
     "headline": "AuraSound Pro Wireless Headphones",
+    "cover": "products/aurasound-pro.html",
     "summary": "Industry-leading noise cancellation, 30-hour battery and multipoint pairing.",
     "media": [
       {
@@ -37,7 +38,7 @@
             "text": "20%"
           }
         ],
-        "style": "te red 2xl sh:burst"
+        "style": "te red 2xl sh:spark"
       },
       "save": {
         "shape": "heart",
@@ -50,7 +51,7 @@
           "text": "Add to cart"
         },
         "style": "primary",
-        "ariaLabel": "Add AuraSound Pro to cart"
+        "ariaLabel": "Add to cart: AuraSound Pro"
       }
     ],
     "details": {
@@ -60,7 +61,7 @@
         "currency": "USD",
         "discountText": "Save 20%"
       },
-      "availability": "In Stock",
+      "availability": "In stock",
       "rating": {
         "value": 4.5,
         "count": 1247,
@@ -68,7 +69,39 @@
       },
       "sku": "WH-1000XM5",
       "validUntil": "2026-08-01",
-      "validUntilDisplay": "Aug 1, 2026"
+      "validUntilDisplay": "Aug 1, 2026",
+      "reviews": [
+        {
+          "author": "Devon Marsh",
+          "rating": 5,
+          "max": 5,
+          "datePublished": "2026-06-28",
+          "dateDisplay": "June 28, 2026",
+          "context": "Verified purchase",
+          "headline": "The multipoint actually works",
+          "body": "Two weeks of commuting and one long-haul flight. They hand off between my laptop and phone without the half-second of silence every other pair I have owned makes you sit through. Battery went from full to 40% over the flight with ANC on the whole way."
+        },
+        {
+          "author": "Priya Raman",
+          "rating": 4,
+          "max": 5,
+          "datePublished": "2026-06-11",
+          "dateDisplay": "June 11, 2026",
+          "context": "Verified purchase",
+          "headline": "Superb on planes, warm on hot days",
+          "body": "Noise cancelling on engine drone is the best I have tried and the case is genuinely pocketable. The earpads do get warm after about two hours in summer, which is the only reason this is not a five."
+        },
+        {
+          "author": "Tomas Lind",
+          "rating": 5,
+          "max": 5,
+          "datePublished": "2026-05-30",
+          "dateDisplay": "May 30, 2026",
+          "context": "Verified purchase",
+          "headline": "Replaced a pair twice the price",
+          "body": "Bought these to leave at the office and ended up carrying them everywhere. Transparency mode is clear enough to order coffee without taking them off."
+        }
+      ]
     },
     "tags": [
       "Wireless",
