@@ -11,5 +11,16 @@
 # could shake it loose. Never point a page at an unhashed name in this directory.
 # NB: matches the ROOT /dist/ only. The npm package bundles (/ui/base/dist/, /ui/card/dist/…)
 # are deliberately unhashed — consumers link them by a stable name — and are not matched here.
+# Referrer-Policy: carousel thumbnails are a CSS background — `background-image:
+# var(--ui-carousel-thumb-url)`, where the url() is an absolute v4.browser.style/cdn-cgi
+# transform set per slide in a style= attribute. A CSS-initiated fetch uses the
+# STYLESHEET's referrer policy, not the document's, so the page's
+# <meta name="referrer" content="no-referrer"> never reaches it: Pages sets
+# `Referrer-Policy: strict-origin-when-cross-origin` on this response, the fetch sends the
+# pages.dev origin, and the zone's Hotlink Protection 403s it. An <img srcset> on the same
+# page is document-initiated, obeys the meta, and loads — which is why only the THUMBS went
+# missing, and only on pages.dev (on the zone itself page and images are same-origin).
+# A failed background-image is silent: nothing in the console says why.
 /dist/*
   Cache-Control: public, max-age=31536000, immutable
+  Referrer-Policy: no-referrer
