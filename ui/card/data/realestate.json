@@ -63,15 +63,6 @@
         "alt": "Bedroom with a balcony door and a pale wood floor"
       }
     ],
-    "actions": [
-      {
-        "link": {
-          "url": "realestate/havnegade-44.html",
-          "text": "See the full listing"
-        },
-        "style": "primary"
-      }
-    ],
     "details": {
       "datePosted": "2026-07-18",
       "datePostedDisplay": "Jul 18, 2026",

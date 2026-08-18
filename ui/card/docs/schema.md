@@ -866,10 +866,13 @@ Two other things about the pair are easy to get wrong:
   each entry carries `ui/chip`'s own attributes (`theme`, `size`, `radius`, `variant`), and
   this listing uses `radius: "rnd"` for the square-cornered look. A meta row holding more than
   one chip gains flex + gap — see [content.md](./content.md).
-- **The gallery is `open:grid(3c)`, not a collage.** `collagePart()` is gated to `ProductGroup`
-  and builds *variant* tiles; it cannot express a photo grid. `open:grid()` keeps the frame an
-  ordinary carousel while closed and turns it into a full-bleed three-column contact sheet when
-  the lightbox opens — the "view all photos" pattern. The `realestate-page` preset is
+- **The gallery carries no `open:` token.** The lightbox promotes the *same* frame into the
+  top layer, so a bare `nav` frame already opens as a fullscreen, one-image-at-a-time carousel
+  with arrows and dots — that is its default open presentation, and it is what a listing wants.
+  (`open:grid(3c)` would make it a three-column contact sheet instead; `collagePart()` is not an
+  option either way, being gated to `ProductGroup` variant tiles.) Chromium does not carry
+  scroll-control pseudos into the top layer, so the open state's controls are real DOM built by
+  `lightbox.js` — the page loads it, non-render-blocking. The `realestate-page` preset is
   `variant="col shd(non)"`: the gallery stays **above** the text column at every width, and its
   bare `nav` leaves the default round dot markers.
 

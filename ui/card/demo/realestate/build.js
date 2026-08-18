@@ -14,10 +14,10 @@
  * (sales copy, amenities, coordinates, the gallery invoker, its own CTA). Same split
  * as the product pages.
  *
- * The gallery is the `realestate-page` preset's `open:grid(3c)`: an ordinary carousel
- * closed, a full-bleed three-column contact sheet once the lightbox opens — the "view
- * all photos" pattern. That is media tokens only; render.js's collagePart() is for
- * ProductGroup VARIANT tiles and cannot express a photo grid.
+ * The gallery opens FULLSCREEN as the same one-image-at-a-time carousel, arrows and dots
+ * included — that is a bare `nav` frame's default open presentation, so it needs no
+ * `open:` token at all. Chromium does not carry scroll-control pseudos into the top
+ * layer, so the open state's controls are real DOM built by lightbox.js.
  */
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
