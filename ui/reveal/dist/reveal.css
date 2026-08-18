@@ -12,6 +12,7 @@
     container-type: inline-size;
     display: block;
     interpolate-size: allow-keywords;
+    min-inline-size: 0;
     > details {
       backdrop-filter: var(--ui-reveal-bdf, none);
       background: var(--ui-reveal-bg);
