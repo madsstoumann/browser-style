@@ -813,7 +813,7 @@ while `serviceUrl` sits directly on the CTA.
 ### Real estate — `RealEstateListing`
 
 The demo pair models a property portal: a **teaser** on `demo/schema.html` (photo carousel via
-`card-preset/carousel`, a `pale orange` "New" chip, the facts row) linking to a generated
+`card-preset/carousel`, a `pale green` "New" chip, the facts row) linking to a generated
 **detail page**, `demo/realestate/havnegade-44.html`, built by `demo/realestate/build.js` —
 the same shape as the article and product-colourway pages.
 

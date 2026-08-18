@@ -17,7 +17,7 @@
     },
     "chip": {
       "text": "New",
-      "theme": "pale orange"
+      "theme": "pale green"
     },
     "eyebrow": "For sale",
     "headline": "Top-floor apartment, Havnegade 44",
@@ -25,33 +25,33 @@
     "media": [
       {
         "mediaType": "image",
-        "src": "/assets/images/coorperation.png",
-        "alt": "The harbourfront block at Havnegade 44, seen from the canal"
+        "src": "/assets/images/real_01.jpg",
+        "alt": "Sunset over the canal and rooftops, seen from the apartment"
       },
       {
         "mediaType": "image",
-        "src": "/assets/images/city.png",
-        "alt": "Living room with south-facing windows over the rooftops"
+        "src": "/assets/images/real_02.jpg",
+        "alt": "Living room with a pale wood floor, sofa and dining table by the balcony doors"
       },
       {
         "mediaType": "image",
-        "src": "/assets/images/river.png",
-        "alt": "The 14 m² terrace looking along the canal"
+        "src": "/assets/images/real_03.jpg",
+        "alt": "Galley kitchen with an induction hob and a window over the sink"
       },
       {
         "mediaType": "image",
-        "src": "/assets/images/hammershus.png",
-        "alt": "Main bedroom under the original roof beams"
+        "src": "/assets/images/real_04.jpg",
+        "alt": "The dining end of the living room, with balcony doors onto the courtyard"
       },
       {
         "mediaType": "image",
-        "src": "/assets/images/destinations.png",
-        "alt": "Kitchen and dining end of the open-plan floor"
+        "src": "/assets/images/real_05.jpg",
+        "alt": "The spiral spire of Vor Frelsers Kirke, a few minutes away"
       },
       {
         "mediaType": "image",
-        "src": "/assets/images/autumn.jpg",
-        "alt": "The courtyard entrance in autumn"
+        "src": "/assets/images/real_06.jpg",
+        "alt": "Bedroom with a balcony door and a pale wood floor"
       }
     ],
     "actions": [
