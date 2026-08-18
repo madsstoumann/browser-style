@@ -19,8 +19,8 @@
 	     Organization, ComicIssue, Occupation…) are not itemtypes "on the card hosts". -->
 	<meta name="description" content="57 cards covering 51 distinct schema.org itemtypes on the card hosts (Quiz runs three cards; Review, EventSeries, Place and Person two each) — re-created with the modern &lt;ui-card&gt; engine: inline microdata (itemscope/itemtype/itemprop), no JSON-LD. The job card carries a 51st type as a second top-level item: EmployerAggregateRating. One optional script: video.js polyfills the media invoker commands behind the podcast play button.">
 	<!-- One bundle for every card-demo package (source list: ui/card/components.md).
-	     Build: npm run build:demo-css (entry demo.css, output /dist/demo.a190d40a.min.css) -->
-	<link rel="stylesheet" href="/dist/demo.a190d40a.min.css">
+	     Build: npm run build:demo-css (entry demo.css, output /dist/demo.4e89c82e.min.css) -->
+	<link rel="stylesheet" href="/dist/demo.4e89c82e.min.css">
 
 	<style>
 		/* Skip style + layout for OFF-SCREEN cards. This page is 57 cards / ~2,400
@@ -55,6 +55,7 @@
 		}
 		/* type chips keep one look on themed cards too (the theme relay's #666 plate is 4.06:1) */
 		ui-chip[data-type] { --ui-chip-bg: hsl(0, 0%, 95%); --ui-chip-c: hsl(0, 0%, 13%); }
+		ui-chip[data-type=dark] { --ui-chip-bg: hsl(0, 0%, 25%); --ui-chip-c: hsl(0, 0%, 85%); }
 		/* media-less card (testimonial): pin the type chip to the card's top end, chip(te)-style.
 		   relative: the containing block is otherwise the lay-out (contain: layout) */
 		ui-card:not(:has(ui-media)) { position: relative; }

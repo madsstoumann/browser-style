@@ -12301,6 +12301,15 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
         &:hover {
           text-decoration: underline;
         }
+        &:focus-visible {
+          color: var(--ui-content-links-focus-ink, var(--color-accent));
+          outline: 0;
+        }
+        @media (forced-colors: active) {
+          &:focus-visible {
+            outline: auto;
+          }
+        }
       }
     }
     & :is(a[href^="tel:"], a[href^="mailto:"]) {

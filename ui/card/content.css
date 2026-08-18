@@ -462,6 +462,7 @@
 			margin: 0;
 			padding: 0;
 			& li::marker { color: var(--ui-content-list-marker-ink, currentColor); }
+
 		}
 		& ol[data-part="list"] { list-style-type: var(--ui-content-list-marker, decimal); }
 		/* block-content rows (qa answers): no marker — inside-position bullets wrap onto their own line */
@@ -521,6 +522,18 @@
 				color: var(--ui-content-links-ink, inherit);
 				text-decoration: none;
 				&:hover { text-decoration: underline; }
+				/* focus takes the accent rather than a ring: the row is prose in a bordered
+				   list, and a box around one line of it reads as chrome. Works here because
+				   the resting ink is the body colour, so the swap is a real change — it
+				   would NOT be on a list whose links are already accent-coloured. */
+				&:focus-visible {
+					color: var(--ui-content-links-focus-ink, var(--color-accent));
+					outline: 0;
+				}
+				/* ⚠️ forced-colors overrides `color`, which would leave no indicator at all */
+				@media (forced-colors: active) {
+					&:focus-visible { outline: auto; }
+				}
 			}
 		}
 
