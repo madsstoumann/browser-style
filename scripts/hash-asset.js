@@ -19,19 +19,12 @@
  * is deliberately separate from scripts/css-bundle.js for exactly that reason —
  * five callers share that bundler, only one of them is a website.
  *
- * ALSO emits a precompressed `<hashed>.br` sibling. Cloudflare Pages compresses on the
- * fly at roughly q4; the same bytes at q11 are ~22% smaller, which is the single largest
- * win available on the render-blocking stylesheet and costs no CSS change at all.
- * functions/dist/[[path]].js serves the sibling to clients that accept `br`.
- * Docs: docs/performance-review.md § 1
- *
  * Usage:  node scripts/hash-asset.js <file>          e.g. dist/demo.min.css
  */
 
 import { createHash } from 'node:crypto';
 import { readdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { basename, dirname, join } from 'node:path';
-import { brotliCompressSync, constants } from 'node:zlib';
 
 /* Files that may reference the asset. Hand-authored demo pages plus the ONE build
    template — ui/card/demo/build.shared.js holds HEAD_COMMON, which the articles/ and
@@ -62,15 +55,11 @@ export function hashAsset(file) {
 	/* drop every previous build of this asset, hashed or not — leaving the unhashed
 	   name behind would let a missed reference keep serving stale bytes silently,
 	   which is the bug. A 404 is the loud failure we want instead. */
-	const stale = new RegExp(`^${stem}(\\.[0-9a-f]{8})?${suffix.replace(/\./g, '\\.')}(\\.br)?$`);
+	const stale = new RegExp(`^${stem}(\\.[0-9a-f]{8})?${suffix.replace(/\./g, '\\.')}$`);
 	for (const f of readdirSync(dir)) {
-		if (f !== hashed && f !== `${hashed}.br` && stale.test(f)) rmSync(join(dir, f), { force: true });
+		if (f !== hashed && stale.test(f)) rmSync(join(dir, f), { force: true });
 	}
 	writeFileSync(join(dir, hashed), bytes);
-	/* the q11 sibling — see the header. Written next to the hashed name so it inherits the
-	   same immutable URL lifetime: bytes change -> both names change together. */
-	const br = brotliCompressSync(bytes, { params: { [constants.BROTLI_PARAM_QUALITY]: 11 } });
-	writeFileSync(join(dir, `${hashed}.br`), br);
 
 	/* rewrite refs: match the unhashed name, any previous hash, and any ?v= token */
 	const ref = new RegExp(`/${dir}/${stem}(?:\\.[0-9a-f]{8})?${suffix.replace(/\./g, '\\.')}(\\?[^"']*)?`, 'g');
@@ -85,13 +74,12 @@ export function hashAsset(file) {
 			if (next !== src) { writeFileSync(f, next); changed++; }
 		}
 	}
-	return { hashed: want, changed, raw: bytes.length, br: br.length };
+	return { hashed: want, changed };
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
 	const file = process.argv[2];
 	if (!file) { console.error('usage: node scripts/hash-asset.js <file>'); process.exit(1); }
-	const { hashed, changed, raw, br } = hashAsset(file);
+	const { hashed, changed } = hashAsset(file);
 	console.log(`\nhashed  ${hashed}  (${changed} file${changed === 1 ? '' : 's'} rewritten)`);
-	console.log(`        +${hashed.split('/').pop()}.br  ${raw} -> ${br} B at brotli q11`);
 }
