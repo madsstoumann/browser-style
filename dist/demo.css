@@ -3060,6 +3060,9 @@
       --ui-carousel-arrow-border: 0;
       --ui-carousel-arrow-color: #fff;
       --ui-carousel-arrow-gap: 0.5rem;
+      --ui-carousel-arrow-ink: rgb(0 0 0 / 0.8);
+      --ui-carousel-arrow-plate: var(--ui-carousel-arrow-bg);
+      --ui-carousel-arrow-plate-hover: var(--ui-carousel-arrow-bg-hover);
       --ui-carousel-arrow-nudge: calc(var(--ui-carousel-arrow-size) * 0.03);
       --ui-carousel-arrow-shadow: 0 1px 3px rgb(0 0 0 / 0.15);
       --ui-carousel-arrow-size: 2.25rem;
@@ -3248,6 +3251,10 @@
       --ui-carousel-arrow-shadow: none;
       --ui-carousel-arrow-glyph: var(--ui-carousel-chevron-grey);
       --ui-carousel-arrow-color: color-mix(in oklab, var(--ui-carousel-controls-ink, currentColor) 80%, transparent);
+      --ui-carousel-arrow-ink: var(--ui-carousel-arrow-color);
+      --ui-carousel-arrow-ink-hover: var(--ui-carousel-arrow-color-hover, var(--ui-carousel-arrow-color));
+      --ui-carousel-arrow-plate: transparent;
+      --ui-carousel-arrow-plate-hover: transparent;
       --ui-carousel-marker-bg: color-mix(in oklab, var(--ui-carousel-controls-ink, currentColor) 25%, transparent);
       --ui-carousel-marker-active: color-mix(in oklab, var(--ui-carousel-controls-ink, currentColor) 70%, transparent);
       --ui-carousel-pill-track: color-mix(in oklab, var(--ui-carousel-controls-ink, currentColor) 20%, transparent);
@@ -3260,6 +3267,9 @@
       --ui-carousel-arrow-glyph: var(--ui-carousel-chevron-dark);
       --ui-carousel-arrow-color: rgb(255 255 255 / 0.92);
       --ui-carousel-arrow-color-hover: #fff;
+      --ui-carousel-arrow-ink: rgb(0 0 0 / 0.8);
+      --ui-carousel-arrow-plate: var(--ui-carousel-arrow-bg);
+      --ui-carousel-arrow-plate-hover: var(--ui-carousel-arrow-bg-hover);
     }
     &:where([media*="arw(arr)"][media*="arw(lgt)"]) {
       --ui-carousel-arrow-glyph: var(--ui-carousel-arrow-dark);
@@ -3269,6 +3279,9 @@
       --ui-carousel-arrow-bg-hover: rgb(0 0 0 / 0.78);
       --ui-carousel-arrow-glyph: var(--ui-carousel-chevron-light);
       --ui-carousel-arrow-color: rgb(0 0 0 / 0.85);
+      --ui-carousel-arrow-ink: hsl(0 0% 100%);
+      --ui-carousel-arrow-plate: var(--ui-carousel-arrow-bg);
+      --ui-carousel-arrow-plate-hover: var(--ui-carousel-arrow-bg-hover);
       --ui-carousel-arrow-hover-ring: 0 0 0 2px rgb(255 255 255 / 0.5);
     }
     &:where([media*="arw(arr)"][media*="arw(drk)"]) {
@@ -3287,6 +3300,19 @@
       --ui-carousel-arrow-shadow: none;
       --ui-carousel-arrow-glyph: var(--ui-carousel-chevron-grey);
       --ui-carousel-arrow-color: color-mix(in oklab, var(--ui-carousel-controls-ink, currentColor) 80%, transparent);
+    }
+    &:where(:is([media*="arw(blw)"], [media*="arw(abv)"]):not([media*="arw(lgt)"], [media*="arw(drk)"])) {
+      --ui-carousel-arrow-ink: var(--ui-carousel-arrow-color);
+      --ui-carousel-arrow-ink-hover: var(--ui-carousel-arrow-color-hover, var(--ui-carousel-arrow-color));
+      --ui-carousel-arrow-plate: transparent;
+      --ui-carousel-arrow-plate-hover: transparent;
+    }
+    &:where([media*="arw(bare)"]) {
+      --ui-carousel-arrow-ink: var(--ui-carousel-arrow-color);
+      --ui-carousel-arrow-ink-hover: var(--ui-carousel-arrow-color-hover, var(--ui-carousel-arrow-color));
+      --ui-carousel-arrow-plate: transparent;
+      --ui-carousel-arrow-plate-hover: transparent;
+      --ui-carousel-arrow-shadow: none;
     }
     &:where([media*="arw(blw)"][media*="arw(arr)"], [media*="arw(abv)"][media*="arw(arr)"]) {
       --ui-carousel-arrow-glyph: var(--ui-carousel-arrow-grey);
@@ -7365,7 +7391,7 @@
 /* ui/save/ui-save.css */
 @layer bs-component {
   :where(ui-save) {
-    --ui-save-c: var(--color-text);
+    --ui-save-c: var(--ui-carousel-arrow-ink, rgb(0 0 0 / 0.8));
     --ui-save-c-active: var(--ui-save-c);
     --ui-save-c-idle: var(--color-text-muted);
     --ui-save-sz: 1.2em;
@@ -7374,12 +7400,13 @@
     --ui-save-hover-ease: var(--ease-out);
     --ui-save-hover-pop: 1.15;
     --ui-save-hover-press: 0.85;
-    --ui-save-circle-bg: Canvas;
-    --ui-save-circle-border-color: var(--color-border);
-    --ui-save-circle-border-width: var(--border-width, 1px);
+    --ui-save-circle-bg: var(--ui-carousel-arrow-plate, rgb(255 255 255 / 0.7));
+    --ui-save-circle-bg-hover: var(--ui-carousel-arrow-plate-hover, rgb(255 255 255 / 0.9));
+    --ui-save-circle-border-color: rgb(0 0 0 / 0.12);
+    --ui-save-circle-border-width: var(--ui-carousel-arrow-border, var(--border-width, 1px));
     --ui-save-circle-pad: 0.4em;
     --ui-save-circle-radius: var(--radius-circle);
-    --ui-save-circle-shadow: var(--shadow-lg);
+    --ui-save-circle-shadow: var(--ui-carousel-arrow-shadow, 0 1px 3px rgb(0 0 0 / 0.15));
     color: var(--ui-save-c);
     display: inline-grid;
     font-size: var(--ui-save-sz);
@@ -7403,6 +7430,7 @@
       place-content: center;
       @media (hover: hover) {
         &:hover {
+          background-color: var(--ui-save-circle-bg-hover, var(--ui-save-circle-bg));
           color: var(--ui-save-c-active);
         }
       }
@@ -7463,17 +7491,17 @@
       --ui-save-c: var(--ui-theme-slate-bg);
     }
     &[ink] {
-      --ui-save-c: attr(ink type(<color>), var(--color-text));
+      --ui-save-c: attr(ink type(<color>), currentColor);
     }
     &[fill] {
-      --ui-save-circle-bg: attr(fill type(<color>), Canvas);
+      --ui-save-circle-bg: attr(fill type(<color>), transparent);
     }
     @supports not (background-color: attr(x type(<color>), red)) {
       &[ink] {
-        --ui-save-c: var(--color-text);
+        --ui-save-c: var(--ui-carousel-arrow-ink, rgb(0 0 0 / 0.8));
       }
       &[fill] {
-        --ui-save-circle-bg: Canvas;
+        --ui-save-circle-bg: var(--ui-carousel-arrow-plate, rgb(255 255 255 / 0.7));
       }
     }
     &[size~=sm],
@@ -7505,6 +7533,7 @@
     &[variant~=non],
     :where([media*="save(non)"]) & {
       --ui-save-circle-bg: none;
+      --ui-save-circle-bg-hover: none;
       --ui-save-circle-border-width: 0;
       --ui-save-circle-pad: 0;
       --ui-save-circle-radius: 0;
@@ -7533,18 +7562,20 @@
 /* ui/lightbox/ui-lightbox.css */
 @layer bs-component {
   :where(ui-lightbox) {
-    --ui-lightbox-c: var(--color-text);
+    --ui-lightbox-c: var(--ui-carousel-arrow-ink, rgb(0 0 0 / 0.8));
+    --ui-lightbox-c-hover: var(--ui-carousel-arrow-ink-hover, var(--ui-lightbox-c));
     --ui-lightbox-sz: 1.2em;
     --ui-lightbox-hover-duration: var(--duration-normal);
     --ui-lightbox-hover-ease: var(--ease-out);
     --ui-lightbox-hover-pop: 1.15;
     --ui-lightbox-hover-press: 0.85;
-    --ui-lightbox-circle-bg: Canvas;
-    --ui-lightbox-circle-border-color: var(--color-border);
-    --ui-lightbox-circle-border-width: var(--border-width, 1px);
+    --ui-lightbox-circle-bg: var(--ui-carousel-arrow-plate, rgb(255 255 255 / 0.7));
+    --ui-lightbox-circle-bg-hover: var(--ui-carousel-arrow-plate-hover, rgb(255 255 255 / 0.9));
+    --ui-lightbox-circle-border-color: rgb(0 0 0 / 0.12);
+    --ui-lightbox-circle-border-width: var(--ui-carousel-arrow-border, var(--border-width, 1px));
     --ui-lightbox-circle-pad: 0.4em;
     --ui-lightbox-circle-radius: var(--radius-circle);
-    --ui-lightbox-circle-shadow: var(--shadow-lg);
+    --ui-lightbox-circle-shadow: var(--ui-carousel-arrow-shadow, 0 1px 3px rgb(0 0 0 / 0.15));
     color: var(--ui-lightbox-c);
     display: inline-grid;
     font-size: var(--ui-lightbox-sz);
@@ -7566,7 +7597,8 @@
       place-content: center;
       @media (hover: hover) {
         &:hover {
-          color: var(--ui-lightbox-c-hover, var(--color-accent));
+          background-color: var(--ui-lightbox-circle-bg-hover, var(--ui-lightbox-circle-bg));
+          color: var(--ui-lightbox-c-hover, var(--ui-lightbox-c));
         }
       }
     }
@@ -7638,17 +7670,17 @@
       --ui-lightbox-c: var(--ui-theme-slate-bg);
     }
     &[ink] {
-      --ui-lightbox-c: attr(ink type(<color>), var(--color-text));
+      --ui-lightbox-c: attr(ink type(<color>), currentColor);
     }
     &[fill] {
-      --ui-lightbox-circle-bg: attr(fill type(<color>), Canvas);
+      --ui-lightbox-circle-bg: attr(fill type(<color>), transparent);
     }
     @supports not (background-color: attr(x type(<color>), red)) {
       &[ink] {
-        --ui-lightbox-c: var(--color-text);
+        --ui-lightbox-c: var(--ui-carousel-arrow-ink, rgb(0 0 0 / 0.8));
       }
       &[fill] {
-        --ui-lightbox-circle-bg: Canvas;
+        --ui-lightbox-circle-bg: var(--ui-carousel-arrow-plate, rgb(255 255 255 / 0.7));
       }
     }
     &[size~=sm],
@@ -7678,6 +7710,7 @@
     &[variant~=non],
     :where([media*="lightbox(non)"]) & {
       --ui-lightbox-circle-bg: none;
+      --ui-lightbox-circle-bg-hover: none;
       --ui-lightbox-circle-border-width: 0;
       --ui-lightbox-circle-pad: 0;
       --ui-lightbox-circle-radius: 0;
@@ -11577,6 +11610,12 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
     }
   }
   ui-media[popover]:popover-open > ui-lightbox {
+    --ui-lightbox-c: var(--ui-lightbox-open-c, hsl(0 0% 100%));
+    --ui-lightbox-c-hover: var(--ui-lightbox-open-c, hsl(0 0% 100%));
+    --ui-lightbox-circle-bg: var(--ui-lightbox-open-bg, rgb(255 255 255 / 0.15));
+    --ui-lightbox-circle-bg-hover: var(--ui-lightbox-open-bg-hover, rgb(255 255 255 / 0.25));
+    --ui-lightbox-circle-border-width: 0;
+    --ui-lightbox-circle-shadow: none;
     align-content: initial;
     display: inline-grid;
     inline-size: auto;

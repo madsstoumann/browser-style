@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/save",
-  "version": "5.0.0",
+  "version": "5.1.0",
   "description": "Save / favorite / wishlist / bookmark toggle — an invoker button + ui-icon shape overlay for cards and product images",
   "type": "module",
   "module": "index.js",

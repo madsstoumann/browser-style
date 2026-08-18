@@ -19,10 +19,11 @@
 		--ui-lightbox-hover-press: 0.85;
 
 		/* circle backdrop — on by default (retune any token; hide with "non") */
-		--ui-lightbox-circle-bg: var(--ui-carousel-arrow-bg, rgb(255 255 255 / 0.7));
-		--ui-lightbox-circle-bg-hover: var(--ui-carousel-arrow-bg-hover, rgb(255 255 255 / 0.9));
-		--ui-lightbox-circle-border-color: currentColor;
-		--ui-lightbox-circle-border-width: var(--ui-carousel-arrow-border, 0);
+		--ui-lightbox-circle-bg: var(--ui-carousel-arrow-plate, rgb(255 255 255 / 0.7));
+		--ui-lightbox-circle-bg-hover: var(--ui-carousel-arrow-plate-hover, rgb(255 255 255 / 0.9));
+		--ui-lightbox-circle-border-color: rgb(0 0 0 / 0.12);
+		/* carousels declare arrow-border: 0, so the ring survives only off-carousel */
+		--ui-lightbox-circle-border-width: var(--ui-carousel-arrow-border, var(--border-width, 1px));
 		--ui-lightbox-circle-pad: 0.4em;
 		--ui-lightbox-circle-radius: var(--radius-circle);
 		--ui-lightbox-circle-shadow: var(--ui-carousel-arrow-shadow, 0 1px 3px rgb(0 0 0 / 0.15));
@@ -102,7 +103,7 @@
 		/* typed attr() has NO fallback in Safari/FF. Docs: ../base/polyfills/readme.md */
 		@supports not (background-color: attr(x type(<color>), red)) {
 			&[ink]  { --ui-lightbox-c: var(--ui-carousel-arrow-ink, rgb(0 0 0 / 0.8)); }
-			&[fill] { --ui-lightbox-circle-bg: var(--ui-carousel-arrow-bg, rgb(255 255 255 / 0.7)); }
+			&[fill] { --ui-lightbox-circle-bg: var(--ui-carousel-arrow-plate, rgb(255 255 255 / 0.7)); }
 		}
 
 		/* size — em-based, from size= or the card's lightbox(<size>). md = default. */

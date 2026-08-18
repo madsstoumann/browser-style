@@ -97,8 +97,8 @@ Add your own by registering a `--ui-icon-shape-{name}` token (a `shape()` / `pol
 ## Circle backdrop
 
 Add a solid disc behind the glyph for contrast over busy images with `variant="circle"`. The disc
-colour is the `--ui-save-circle-bg` token (`Canvas` — the page background — by default), so it's
-easy to retune:
+colour is the `--ui-save-circle-bg` token (a white 70% overlay by default — see
+[below](#the-disc-follows-the-carousel-not-the-page)), so it's easy to retune:
 
 ```html
 <ui-save variant="circle">
@@ -111,16 +111,27 @@ easy to retune:
 It's a true circle by default; for an `rds(*-sq)`-style squircle set
 `--ui-save-circle-corner: superellipse(var(--squircle-md))`.
 
+### The disc follows the carousel, not the page
+
+Defaults are **not** `Canvas` / `--color-text`, and deliberately do not track
+`color-scheme`: `<ui-save>` sits on media, so a document-surface disc turned near-black at
+OS-dark while the carousel controls beside it stayed white. It now reads the carousel's own
+chrome (`--ui-carousel-arrow-plate` / `--ui-carousel-arrow-ink` and their `-hover` twins),
+matching `<ui-lightbox>` in the same corner grid. Off a carousel the fallbacks apply: white
+70% disc, dark glyph, soft shadow, hairline ring. Details:
+[card docs — band ink](../card/docs/carousel.md#the-furniture-discs-follow-the-arrows).
+
 ## Customization
 
 | Token | Default | Description |
 |-------|---------|-------------|
-| `--ui-save-c` | `var(--color-text)` | Idle (unsaved) ink (`var(--color-accent)` for `bookmark`) |
+| `--ui-save-c` | `var(--ui-carousel-arrow-ink, rgb(0 0 0 / 0.8))` | Idle (unsaved) ink — the carousel's glyph ink on media, else a dark overlay ink (`var(--color-accent)` for `bookmark`) |
 | `--ui-save-c-active` | `var(--ui-save-c)` | Saved ink (also on hover) — tracks the idle ink, so filling the glyph *is* the state change |
 | `--ui-save-c-idle` | `var(--color-text-muted)` | Idle ink in browsers without `border-shape` only — where the outline glyph paints solid, so hue is the only state cue |
 | `--ui-save-sz` | `1.2em` | Icon size |
 | `--ui-save-stroke` | `0.1em` | Outline thickness — em-based, so it tracks `--ui-save-sz` |
-| `--ui-save-circle-bg` | `Canvas`¹ | Disc colour (¹ `Canvas` once the circle is enabled) |
+| `--ui-save-circle-bg` | `var(--ui-carousel-arrow-plate, rgb(255 255 255 / 0.7))` | Disc colour — the carousel's arrow disc on media, else a white overlay disc |
+| `--ui-save-circle-bg-hover` | `var(--ui-carousel-arrow-plate-hover, rgb(255 255 255 / 0.9))` | Disc colour on hover |
 | `--ui-save-circle-radius` | `0` | Disc radius (`--radius-circle` when enabled) |
 | `--ui-save-circle-pad` | `0` | Space between glyph and disc edge |
 | `--ui-save-circle-corner` | `round` | `corner-shape` — `superellipse(...)` for a squircle |
@@ -189,7 +200,7 @@ stays on the `<ui-icon>`:
 | `save(<corner>)` | `radius="<corner>"` | Disc shape — `crc` circle (default) · `sqr` squircle · `rnd` rounded |
 | `save(non)` | `variant="non"` | Hide the disc (bare glyph) |
 
-The disc backdrop is **on by default** (`Canvas`). Standalone, use `theme=` (hue),
+The disc backdrop is **on by default**. Standalone, use `theme=` (hue),
 `ink="<css-color>"` (glyph) / `fill="<css-color>"` (the disc), `size=` and `radius=` — the same
 model as `chip`/`sticker`/`play`.
 

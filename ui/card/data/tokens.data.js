@@ -664,6 +664,7 @@ export default {
 					"matching": "substring",
 					"writes": [
 						"--ui-save-c",
+						"--ui-save-c-active",
 						"--ui-save-sz",
 						"--ui-save-circle-*"
 					],
@@ -890,6 +891,7 @@ export default {
 					"matching": "substring",
 					"writes": [
 						"--ui-lightbox-c",
+						"--ui-lightbox-c-hover",
 						"--ui-lightbox-sz",
 						"--ui-lightbox-circle-*",
 						"--_lb-block",
@@ -1173,6 +1175,10 @@ export default {
 						"--ui-carousel-arrow-bg-hover",
 						"--ui-carousel-arrow-color",
 						"--ui-carousel-arrow-color-hover",
+						"--ui-carousel-arrow-ink",
+						"--ui-carousel-arrow-ink-hover",
+						"--ui-carousel-arrow-plate",
+						"--ui-carousel-arrow-plate-hover",
 						"--ui-carousel-arrow-shadow",
 						"--ui-carousel-arrow-hover-ring",
 						"--ui-carousel-arrow-nudge",

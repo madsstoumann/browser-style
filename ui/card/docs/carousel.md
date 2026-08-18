@@ -76,7 +76,7 @@ inventory cannot drift from the CSS. The prose tables under it explain what the 
 | token | axis | args | aliases | bare | writes | md:/lg: | deprecated |
 |---|---|---|---|---|---|---|---|
 | `nav()` | carousel | **mode** mrk arw blw abv non | — | yes | --ui-media-bg --ui-carousel-* | — | — |
-| `arw()` | arrows | **variant** arr bare sqr sft lgt drk hid rev set · **size** sm lg xl · **pos** ts tc te cs cc bs bc be · **mode** blw abv | — | — | --ui-carousel-arrow-glyph --ui-carousel-arrow-size --ui-carousel-arrow-radius --ui-carousel-arrow-bg --ui-carousel-arrow-bg-hover --ui-carousel-arrow-color --ui-carousel-arrow-color-hover --ui-carousel-arrow-shadow --ui-carousel-arrow-hover-ring --ui-carousel-arrow-nudge --ui-carousel-arrow-disabled-opacity --ui-carousel-arrow-top --_arw-rot --_arw-scale | — | — |
+| `arw()` | arrows | **variant** arr bare sqr sft lgt drk hid rev set · **size** sm lg xl · **pos** ts tc te cs cc bs bc be · **mode** blw abv | — | — | --ui-carousel-arrow-glyph --ui-carousel-arrow-size --ui-carousel-arrow-radius --ui-carousel-arrow-bg --ui-carousel-arrow-bg-hover --ui-carousel-arrow-color --ui-carousel-arrow-color-hover --ui-carousel-arrow-ink --ui-carousel-arrow-ink-hover --ui-carousel-arrow-plate --ui-carousel-arrow-plate-hover --ui-carousel-arrow-shadow --ui-carousel-arrow-hover-ring --ui-carousel-arrow-nudge --ui-carousel-arrow-disabled-opacity --ui-carousel-arrow-top --_arw-rot --_arw-scale | — | — |
 | `mrk()` | markers | **variant** pll hyb bar tmb tml rail non lgt drk sbr lbl · **size** sm md lg xl · **pos** ts tc te cs cc ce bs bc be · **mode** blw abv | — | — | --ui-carousel-marker-size --ui-carousel-marker-bg --ui-carousel-marker-active --ui-carousel-marker-inset --ui-carousel-pill-width --ui-carousel-pill-height --ui-carousel-pill-track --ui-carousel-pill-fill --ui-carousel-thumb-size --ui-carousel-bar-* --ui-carousel-band --ui-carousel-rail --ui-carousel-sbr-* --ui-carousel-label-* --ui-carousel-tml-* | — | — |
 | `tmb()` | thumbs | **ratio** 1/1 4/3 3/4 16/9 3/2 2/3 | — | — | --ui-carousel-thumb-ratio --ui-carousel-thumb-ratio-n | — | — |
 | `axis()` | carousel | **value** y | — | — | — | — | — |
@@ -310,6 +310,41 @@ and no `@supports` gate. Two consequences worth knowing:
   `--ui-carousel-controls-bg: #123; --ui-carousel-controls-ink: white`. Individual
   `--ui-carousel-marker-*` / `--ui-carousel-arrow-*` overrides and
   `mrk(lgt)`/`mrk(drk)` still win over the derived defaults.
+
+#### The furniture discs follow the arrows
+
+`<ui-lightbox>` and `<ui-save>` sit **on the media**, next to the controls, so they take
+their chrome from the same bundle the arrows use rather than from the document surface.
+They were previously themed from `Canvas` / `--color-text`, which made them flip with
+`color-scheme` while the arrows did not — a dark disc on a still-light photo.
+
+Two tokens exist so a furniture disc can mirror an arrow exactly. They are **derived, not
+authored** — there is no `media=` spelling for either:
+
+| Token | Is | Why it is not `--ui-carousel-arrow-color` / `-bg` |
+|---|---|---|
+| `--ui-carousel-arrow-ink` | the ink the arrow glyph actually **draws** | `-color` only paints in the masked arm; elsewhere the ink is baked into the data-URI glyph (`#000` / `#fff` / `#555`), so `-color` holds a value that is never drawn — `#fff` in the default overlay bundle |
+| `--ui-carousel-arrow-plate` | the disc the arrow actually **paints** | in the masked arm `mask` clips the box to the glyph, so the `-bg` disc is not rendered at all; masked bundles set `transparent` |
+
+Both have a `-hover` twin. Off a carousel neither is declared, so the furniture falls back
+to scheme-stable overlay chrome (white 70% disc, dark glyph) plus a hairline ring that
+carousels suppress via `--ui-carousel-arrow-border: 0`.
+
+Net effect per bundle — furniture and arrow agree in every one:
+
+| Frame | Arrow | Disc + ink the furniture takes |
+|---|---|---|
+| overlay `nav` | white 70% circle, dark chevron | same |
+| `nav(blw)` / `nav(abv)` / `arw(blw)` / `arw(abv)` | masked ink glyph, no circle | no disc, ink at 80% |
+| `arw(drk)` | black 60% circle, light chevron | same |
+| `arw(lgt)` | white 70% circle, dark chevron | same |
+| `arw(bare)` | masked ink glyph, no circle | no disc, ink |
+| no carousel | — | white 70% disc, dark glyph, hairline ring |
+
+`lightbox(<hue>)` / `save(<hue>)`, `ink=` / `fill=` and `lightbox(non)` all still win over
+the derived values — they are declared after this binding in the component sheets. While a
+lightbox is **open**, the close button ignores all of it and pins light-on-dark, because the
+fullscreen surface is always dark (`--ui-lightbox-open-c` / `-open-bg` retune it).
 
 ### Thumbnail navigation — `mrk(tmb)`
 

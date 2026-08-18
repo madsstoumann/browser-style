@@ -1220,6 +1220,12 @@
     }
   }
   ui-media[popover]:popover-open > ui-lightbox {
+    --ui-lightbox-c: var(--ui-lightbox-open-c, hsl(0 0% 100%));
+    --ui-lightbox-c-hover: var(--ui-lightbox-open-c, hsl(0 0% 100%));
+    --ui-lightbox-circle-bg: var(--ui-lightbox-open-bg, rgb(255 255 255 / 0.15));
+    --ui-lightbox-circle-bg-hover: var(--ui-lightbox-open-bg-hover, rgb(255 255 255 / 0.25));
+    --ui-lightbox-circle-border-width: 0;
+    --ui-lightbox-circle-shadow: none;
     align-content: initial;
     display: inline-grid;
     inline-size: auto;

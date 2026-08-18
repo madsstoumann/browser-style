@@ -126,5 +126,23 @@ needs none of them):
 ## CSS custom properties
 
 `--ui-lightbox-c` (ink) · `--ui-lightbox-c-hover` · `--ui-lightbox-sz` ·
-`--ui-lightbox-circle-bg / -border-color / -border-width / -pad / -radius /
--shadow / -corner` · `--ui-lightbox-hover-pop / -press / -duration / -ease`.
+`--ui-lightbox-circle-bg / -bg-hover / -border-color / -border-width / -pad /
+-radius / -shadow / -corner` · `--ui-lightbox-hover-pop / -press / -duration / -ease` ·
+`--ui-lightbox-open-c / -open-bg / -open-bg-hover` (the close button while fullscreen).
+
+### The disc follows the carousel, not the page
+
+Defaults are **not** `Canvas` / `--color-text`, and deliberately do not track
+`color-scheme`: the button sits on media, so a document-surface disc turned near-black at
+OS-dark while the carousel arrows beside it stayed white. It now reads the carousel's own
+chrome — `--ui-carousel-arrow-plate` (disc) and `--ui-carousel-arrow-ink` (glyph), plus
+their `-hover` twins — so it matches the arrows in every nav style, including the band
+modes where the arrows are a bare masked glyph and the disc drops out entirely.
+
+Off a carousel those tokens are undeclared and the fallbacks apply: a white 70% disc, a
+dark glyph, a soft shadow and a hairline ring (carousels suppress the ring via
+`--ui-carousel-arrow-border: 0`). Hovering lightens the disc rather than re-hueing the
+glyph — again matching the arrows.
+
+`lightbox(<hue>)`, `ink=` / `fill=` and `lightbox(non)` all still override this.
+Full table: [card docs — band ink](../card/docs/carousel.md#the-furniture-discs-follow-the-arrows).

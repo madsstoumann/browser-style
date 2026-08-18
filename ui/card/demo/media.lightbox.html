@@ -11,7 +11,7 @@
 	<meta name="referrer" content="no-referrer">
 	<!-- srcset origin: handshake in parallel with the CSS download -->
 	<link rel="preconnect" href="https://v4.browser.style">
-	<link rel="stylesheet" href="/dist/demo.a05dbea7.min.css">
+	<link rel="stylesheet" href="/dist/demo.5fbf05e2.min.css">
 	<link rel="stylesheet" href="../../icon/ui-icon.css"><!-- <ui-icon> glyphs (save/play/lightbox) — raw sheets below don't import it -->
 	<link rel="stylesheet" href="../demo.layout.css">
 	<!-- typed attr() fallback for Safari/Firefox (layout gaps/spacing attributes) -->
@@ -176,6 +176,64 @@
 				<ui-content>
 					<h3 data-part="headline">Arrows-only → dots + arrows</h3>
 					<p data-part="summary"><code>media-open="nav mrk(lg)"</code> — union-built controls.</p>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</lay-out>
+
+	<!-- ============================================================
+	     2c. The invoker follows the carousel's ink
+	     ============================================================ -->
+	<h2>The invoker follows the carousel's ink</h2>
+	<p>The button is furniture pinned <em>on</em> the media, so it takes its disc and glyph from the
+		same bundle the arrows use &mdash; <code>--ui-carousel-arrow-plate</code> and
+		<code>--ui-carousel-arrow-ink</code> &mdash; instead of the page surface. In a band
+		(<code>nav(blw)</code>) the arrows are a bare masked glyph with no circle, so the invoker drops
+		its disc too and inks itself from the card; with <code>arw(drk)</code> it takes the dark circle
+		and light glyph. Nothing here tracks <code>color-scheme</code> on its own, which is what used to
+		make a dark disc appear next to white arrows. Override per element with
+		<code>lightbox(&lt;hue&gt;)</code>, <code>ink=</code>/<code>fill=</code> or
+		<code>lightbox(non)</code>.</p>
+	<lay-out md="columns(2)">
+		<ui-card variant="col" media="asr(4/3) nav(blw) lightbox(bs)" content="scl(sm)">
+			<cq-box>
+				<ui-media id="lb-band" popover>
+					<ui-lightbox>
+					<button type="button" command="toggle-popover" commandfor="lb-band" aria-label="View gallery">
+					<ui-icon>
+					<svg viewBox="0 0 24 24"><path d="M7 5.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666" /><path d="M4.012 7.26a2.005 2.005 0 0 0 -1.012 1.737v10c0 1.1 .9 2 2 2h10c.75 0 1.158 -.385 1.5 -1" /><path d="M17 7h.01" /><path d="M7 13l3.644 -3.644a1.21 1.21 0 0 1 1.712 0l3.644 3.644" /><path d="M15 12l1.644 -1.644a1.21 1.21 0 0 1 1.712 0l2.644 2.644" /></svg>
+					</ui-icon>
+					</button>
+					</ui-lightbox>
+					<img src="/assets/images/finance.png" alt="City skyline at dusk" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/finance.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/finance.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/finance.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/finance.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/finance.png 1200w" sizes="(min-width: 540px) min(50vw, 512px), 100vw" loading="eager" fetchpriority="high" decoding="async">
+					<img src="/assets/images/river.png" alt="River winding through a valley" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/river.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/river.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/river.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/river.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/river.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
+					<img src="/assets/images/mindfulness.png" alt="Calm lakeside at dawn" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/mindfulness.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/mindfulness.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/mindfulness.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/mindfulness.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/mindfulness.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
+					<img src="/assets/images/gastronomy.png" alt="Plated dish in a restaurant" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/gastronomy.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/gastronomy.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/gastronomy.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/gastronomy.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/gastronomy.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
+				</ui-media>
+				<ui-content>
+					<h3 data-part="headline">Band &mdash; <code>nav(blw)</code></h3>
+					<p data-part="summary">No disc, ink from the card &mdash; identical to the band arrows below the image.</p>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) nav arw(drk) lightbox(bs)" content="scl(sm)">
+			<cq-box>
+				<ui-media id="lb-drk" popover>
+					<ui-lightbox>
+					<button type="button" command="toggle-popover" commandfor="lb-drk" aria-label="View gallery">
+					<ui-icon>
+					<svg viewBox="0 0 24 24"><path d="M7 5.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666" /><path d="M4.012 7.26a2.005 2.005 0 0 0 -1.012 1.737v10c0 1.1 .9 2 2 2h10c.75 0 1.158 -.385 1.5 -1" /><path d="M17 7h.01" /><path d="M7 13l3.644 -3.644a1.21 1.21 0 0 1 1.712 0l3.644 3.644" /><path d="M15 12l1.644 -1.644a1.21 1.21 0 0 1 1.712 0l2.644 2.644" /></svg>
+					</ui-icon>
+					</button>
+					</ui-lightbox>
+					<img src="/assets/images/finance.png" alt="City skyline at dusk" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/finance.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/finance.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/finance.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/finance.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/finance.png 1200w" sizes="(min-width: 540px) min(50vw, 512px), 100vw" loading="eager" fetchpriority="high" decoding="async">
+					<img src="/assets/images/river.png" alt="River winding through a valley" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/river.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/river.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/river.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/river.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/river.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
+					<img src="/assets/images/mindfulness.png" alt="Calm lakeside at dawn" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/mindfulness.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/mindfulness.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/mindfulness.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/mindfulness.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/mindfulness.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
+					<img src="/assets/images/gastronomy.png" alt="Plated dish in a restaurant" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/gastronomy.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/gastronomy.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/gastronomy.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/gastronomy.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/gastronomy.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
+				</ui-media>
+				<ui-content>
+					<h3 data-part="headline">Dark arrows &mdash; <code>arw(drk)</code></h3>
+					<p data-part="summary">Dark circle, light glyph &mdash; the same pair the arrows use.</p>
 				</ui-content>
 			</cq-box>
 		</ui-card>

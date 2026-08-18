@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/lightbox",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "View-gallery / fullscreen lightbox toggle — an invoker button + ui-icon grid glyph that lifts a ui-media popover frame into the top layer",
   "type": "module",
   "module": "index.js",

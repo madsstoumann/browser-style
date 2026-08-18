@@ -523,6 +523,17 @@ defaults to the (light) card surface, so the marker/arrow ink defaults flip to d
   `mrk(ts|tc|te)`. `arw(set)` defaults dots to start; offsets account for arrow size/gap
   so they never overlap. The vertical band edge differs by band; the inline math is shared.
 
+### Furniture in a band
+
+`<ui-lightbox>` / `<ui-save>` are pinned over the media, never inside the band, but they
+read the band's chrome so they don't read as a foreign chip. The seam is two derived
+tokens — `--ui-carousel-arrow-ink` (the ink the glyph draws, which is *not*
+`--ui-carousel-arrow-color` outside the masked arm) and `--ui-carousel-arrow-plate` (the
+disc the pseudo paints, `transparent` wherever `mask` clips it away) — plus their `-hover`
+twins. Setters sit on the host **outside** the `@supports` gate, like every other control
+token, so the DOM-control path sees the same values. Full table:
+[carousel.md § The furniture discs follow the arrows](./carousel.md#the-furniture-discs-follow-the-arrows).
+
 ## Vertical controls (`axis(y)`)
 
 Up/down arrows + a vertical marker column on the inline-end edge by default; a start-inline

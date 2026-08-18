@@ -19,10 +19,11 @@
 		--ui-save-hover-press: 0.85;
 
 		/* circle backdrop — on by default */
-		--ui-save-circle-bg: var(--ui-carousel-arrow-bg, rgb(255 255 255 / 0.7));
-		--ui-save-circle-bg-hover: var(--ui-carousel-arrow-bg-hover, rgb(255 255 255 / 0.9));
-		--ui-save-circle-border-color: currentColor;
-		--ui-save-circle-border-width: var(--ui-carousel-arrow-border, 0);
+		--ui-save-circle-bg: var(--ui-carousel-arrow-plate, rgb(255 255 255 / 0.7));
+		--ui-save-circle-bg-hover: var(--ui-carousel-arrow-plate-hover, rgb(255 255 255 / 0.9));
+		--ui-save-circle-border-color: rgb(0 0 0 / 0.12);
+		/* carousels declare arrow-border: 0, so the ring survives only off-carousel */
+		--ui-save-circle-border-width: var(--ui-carousel-arrow-border, var(--border-width, 1px));
 		--ui-save-circle-pad: 0.4em;
 		--ui-save-circle-radius: var(--radius-circle);
 		--ui-save-circle-shadow: var(--ui-carousel-arrow-shadow, 0 1px 3px rgb(0 0 0 / 0.15));
@@ -98,7 +99,7 @@
 		/* typed attr() has NO fallback in Safari/FF. Docs: ../base/polyfills/readme.md */
 		@supports not (background-color: attr(x type(<color>), red)) {
 			&[ink]  { --ui-save-c: var(--ui-carousel-arrow-ink, rgb(0 0 0 / 0.8)); }
-			&[fill] { --ui-save-circle-bg: var(--ui-carousel-arrow-bg, rgb(255 255 255 / 0.7)); }
+			&[fill] { --ui-save-circle-bg: var(--ui-carousel-arrow-plate, rgb(255 255 255 / 0.7)); }
 		}
 
 		/* size — md = default; sm/xl retune the stroke so it doesn't round to a hairline */
