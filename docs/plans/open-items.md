@@ -382,9 +382,10 @@ is a new card type** — all three are page-level furniture.
   ≥3 items) and the shape behind Movie/Recipe carousels. `<lay-out>` already produces the right
   markup shape and carries no microdata, which makes this the most interesting of the three.
 
-**Deliberately not on this list:** `VacationRental`, `MathSolver`, Vehicle listing, `Speakable`,
-IPTC image metadata — new types chasing narrow coverage. The 2026-08-05 coverage audit already
-deferred the lodging family for the same reason.
+**Deliberately not on this list:** `MathSolver`, Vehicle listing, `Speakable`, IPTC image
+metadata — new types chasing narrow coverage. (`VacationRental` was here too until 2026-08-18,
+when it shipped as the `vacationrental` type; it still has no open rich result — Google's
+vacation-rental feature is a partner-programme feed — so the markup is the deliverable.)
 
 ⚠️ **Verify before building.** The audit could not fetch the gallery — `developers.google.com`
 is a policy denial at the egress proxy — so its Google column is largely model knowledge, marked

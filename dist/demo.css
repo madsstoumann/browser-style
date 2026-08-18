@@ -12092,13 +12092,19 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
         background-color: currentColor;
         & a {
           color: var(--color-surface);
-          color: contrast-color(currentColor);
         }
       }
       & a:not(ui-chip *):focus-visible {
         background-color: var(--ui-content-tag-focus-bg, var(--color-text));
         color: var(--color-surface);
-        color: contrast-color(var(--ui-content-tag-focus-bg, var(--color-text)));
+      }
+      @supports (color: contrast-color(red)) {
+        & ui-chip:has(a:focus-visible) a {
+          color: contrast-color(currentColor);
+        }
+        & a:not(ui-chip *):focus-visible {
+          color: contrast-color(var(--ui-content-tag-focus-bg, var(--color-text)));
+        }
       }
     }
     & [data-part=actions] {
@@ -12411,6 +12417,13 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     }
     & ui-media :is(ui-chip, ui-sticker, ui-beacon):not(:has(a, button)) {
       pointer-events: none;
+    }
+    &:has([data-part~=cover]:focus-visible) {
+      outline: var(--ui-card-focus-width, var(--ui-media-focus-width, 2px)) dashed var(--ui-card-focus-color, var(--ui-media-focus-color, var(--ring-color)));
+      outline-offset: var(--ui-card-focus-offset, var(--ui-media-focus-offset, 3px));
+    }
+    & [data-part~=cover]:focus-visible::before {
+      outline: none;
     }
   }
 }

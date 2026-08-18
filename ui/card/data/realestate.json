@@ -19,12 +19,12 @@
       {
         "text": "New",
         "theme": "pale green",
-        "radius": "rnd"
+        "radius": "non"
       },
       {
         "text": "Open house",
         "theme": "pale accent",
-        "radius": "rnd"
+        "radius": "non"
       }
     ],
     "eyebrow": "For sale",

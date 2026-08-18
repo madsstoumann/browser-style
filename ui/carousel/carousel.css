@@ -13,6 +13,8 @@
 			--ui-carousel-arrow-border: 0;
 			--ui-carousel-arrow-color: #fff;
 			--ui-carousel-arrow-gap: 0.5rem;
+			/* ink the glyph actually DRAWS — not arrow-color. Docs: ui/card/docs/media.carousel.md */
+			--ui-carousel-arrow-ink: rgb(0 0 0 / 0.8);
 			--ui-carousel-arrow-nudge: calc(var(--ui-carousel-arrow-size) * 0.03);
 			--ui-carousel-arrow-shadow: 0 1px 3px rgb(0 0 0 / 0.15);
 			--ui-carousel-arrow-size: 2.25rem;
@@ -152,19 +154,22 @@
 			--ui-carousel-arrow-shadow: none;
 			--ui-carousel-arrow-glyph: var(--ui-carousel-chevron-grey);
 			--ui-carousel-arrow-color: color-mix(in oklab, var(--ui-carousel-controls-ink, currentColor) 80%, transparent);
+			--ui-carousel-arrow-ink: var(--ui-carousel-arrow-color);
+			--ui-carousel-arrow-ink-hover: var(--ui-carousel-arrow-color-hover, var(--ui-carousel-arrow-color));
 			--ui-carousel-marker-bg: color-mix(in oklab, var(--ui-carousel-controls-ink, currentColor) 25%, transparent);
 			--ui-carousel-marker-active: color-mix(in oklab, var(--ui-carousel-controls-ink, currentColor) 70%, transparent);
 			--ui-carousel-pill-track: color-mix(in oklab, var(--ui-carousel-controls-ink, currentColor) 20%, transparent);
 			--ui-carousel-pill-fill: color-mix(in oklab, var(--ui-carousel-controls-ink, currentColor) 70%, transparent);
 		}
 		&:where([media*="nav(blw)"][media*="arw(arr)"], [media*="nav(abv)"][media*="arw(arr)"]) { --ui-carousel-arrow-glyph: var(--ui-carousel-arrow-grey); }
-		&:where([media*="arw(lgt)"]) { --ui-carousel-arrow-glyph: var(--ui-carousel-chevron-dark); --ui-carousel-arrow-color: rgb(255 255 255 / 0.92); --ui-carousel-arrow-color-hover: #fff; }
+		&:where([media*="arw(lgt)"]) { --ui-carousel-arrow-glyph: var(--ui-carousel-chevron-dark); --ui-carousel-arrow-color: rgb(255 255 255 / 0.92); --ui-carousel-arrow-color-hover: #fff; --ui-carousel-arrow-ink: rgb(0 0 0 / 0.8); }
 		&:where([media*="arw(arr)"][media*="arw(lgt)"]) { --ui-carousel-arrow-glyph: var(--ui-carousel-arrow-dark); }
 		&:where([media*="arw(drk)"]) {
 			--ui-carousel-arrow-bg: rgb(0 0 0 / 0.6);
 			--ui-carousel-arrow-bg-hover: rgb(0 0 0 / 0.78);
 			--ui-carousel-arrow-glyph: var(--ui-carousel-chevron-light);
 			--ui-carousel-arrow-color: rgb(0 0 0 / 0.85);
+			--ui-carousel-arrow-ink: hsl(0 0% 100%);
 			--ui-carousel-arrow-hover-ring: 0 0 0 2px rgb(255 255 255 / 0.5);
 		}
 		&:where([media*="arw(arr)"][media*="arw(drk)"]) { --ui-carousel-arrow-glyph: var(--ui-carousel-arrow-light); }
@@ -183,6 +188,17 @@
 			--ui-carousel-arrow-shadow: none;
 			--ui-carousel-arrow-glyph: var(--ui-carousel-chevron-grey);
 			--ui-carousel-arrow-color: color-mix(in oklab, var(--ui-carousel-controls-ink, currentColor) 80%, transparent);
+		}
+		/* ink only where the mask arm actually fires — mirror its :not(). Docs: ui/card/docs/media.carousel.md */
+		&:where(:is([media*="arw(blw)"], [media*="arw(abv)"]):not([media*="arw(lgt)"], [media*="arw(drk)"])) {
+			--ui-carousel-arrow-ink: var(--ui-carousel-arrow-color);
+			--ui-carousel-arrow-ink-hover: var(--ui-carousel-arrow-color-hover, var(--ui-carousel-arrow-color));
+		}
+		/* arw(bare) masks unconditionally, so it wins over lgt/drk here too — mirrors the
+		   mask arm's selector, which is inside the @supports gate. Docs: ui/card/docs/media.carousel.md */
+		&:where([media*="arw(bare)"]) {
+			--ui-carousel-arrow-ink: var(--ui-carousel-arrow-color);
+			--ui-carousel-arrow-ink-hover: var(--ui-carousel-arrow-color-hover, var(--ui-carousel-arrow-color));
 		}
 		&:where([media*="arw(blw)"][media*="arw(arr)"], [media*="arw(abv)"][media*="arw(arr)"]) { --ui-carousel-arrow-glyph: var(--ui-carousel-arrow-grey); }
 

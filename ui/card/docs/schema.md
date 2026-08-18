@@ -864,7 +864,7 @@ Two other things about the pair are easy to get wrong:
   flags on the media would silently delete `RealEstateListing` from the card. `fields.chip`
   renders them at the top of the text column instead. It takes one object **or an array**;
   each entry carries `ui/chip`'s own attributes (`theme`, `size`, `radius`, `variant`), and
-  this listing uses `radius: "rnd"` for the square-cornered look. A meta row holding more than
+  this listing uses `radius: "non"` for square corners. A meta row holding more than
   one chip gains flex + gap — see [content.md](./content.md).
 - **The gallery carries no `open:` token.** The lightbox promotes the *same* frame into the
   top layer, so a bare `nav` frame already opens as a fullscreen, one-image-at-a-time carousel
@@ -903,6 +903,63 @@ Three structural traps, all worth knowing before writing a renderer:
 [rich-results audit](../../../docs/plans/2026-08-15-google-rich-results-audit.md). The markup
 is valid, complete schema.org that any consumer can read; the page's Google-eligible surface is
 its `BreadcrumbList` and its images, not a listing card.
+
+### Vacation rental — `VacationRental`
+
+`VacationRental` ⊂ `LodgingBusiness` ⊂ `LocalBusiness` ⊂ (`Organization`, `Place`). That double
+descent is the whole shape of the card: `brand`, `knowsLanguage` and `review` arrive from
+**`Organization`**, `latitude`/`longitude`, `containsPlace`, `hasMap` and `amenityFeature` from
+**`Place`**, `checkinTime`/`checkoutTime` from **`LodgingBusiness`**, and `priceRange` from
+**`LocalBusiness`** — all on one element. Only the rooms nest:
+
+```
+<ui-card itemscope itemtype=".../VacationRental">     ← additionalType, identifier, brand,
+  <ui-media> photos → itemprop="image"                   lat/long, knowsLanguage, rating,
+  <ui-content>                                           priceRange, address, check-in/out
+    <div itemprop="containsPlace" itemscope Accommodation>  ← floorSize, bedrooms, bathrooms,
+      facts run · beds                                        rooms, occupancy, bed, amenities
+    </div>
+```
+
+Like [real estate](#real-estate--realestatelisting), the pair shares one source:
+**`vacationrentalSections(details, fields)` is the seam**, exported from `render.js`. The teaser
+composes `machine + rating + price + containsPlace{factsRun, beds} + address + stay + brand`;
+[`demo/rentals/build.js`](../demo/rentals/build.js) wraps the same strings in bands and adds the
+amenity list, the map and the reviews. `factsRun` and `figures` are ALTERNATIVES — a page emitting
+both restates floorSize/numberOfBedrooms/… and fails *one property, one value*. The page also
+strips `address`, `checkin` and `checkout` from band 1's details, because its location band owns
+them.
+
+Four traps, each one a property that had to move or go:
+
+1. ⚠️ **`offers` is out of domain.** Its domain is `AggregateOffer, CreativeWork,
+   EducationalOccupationalProgram, Event, MenuItem, Product, Service, Trip` — no `Organization`,
+   no `Place`. A nightly rate on this type is **`priceRange`** (`LocalBusiness`, range `Text`).
+   Same shape of refusal as `RealEstateListing`, opposite resolution: there the price moved *out*
+   of the residence scope, here there is no offer to move.
+2. ⚠️ **The coordinates are stated once, flat.** `latitude`/`longitude` are valid directly on a
+   `Place`, and that is what Google's reference payload uses. Emitting `geo` → `GeoCoordinates`
+   *as well* would state the same location twice. `hasMap` is declared once, on the map `<iframe>`
+   — and unlike the real-estate page it rides the **root**, because this type *is* a `Place`.
+3. ⚠️ **`bed` and `occupancy` are `Accommodation` properties**, not business ones (`bed`:
+   `Accommodation, HotelRoom, Suite`; `occupancy`: `Accommodation, Apartment, HotelRoom,
+   SingleFamilyResidence, Suite`). They are the reason `containsPlace` exists on this card at
+   all. `numberOfBeds` is the count on a `<meta>`; `typeOfBed` is the visible text.
+4. ⚠️ **`contentReferenceTime` is dropped from the reviews.** Its range is `DateTime`, and a stay
+   is known only to the month — so the month is plain text ("stayed June 2026") and the property
+   is not asserted. Google's own sample payload gives it a bare date, which is out of range.
+
+`additionalType` (`HolidayVillageRental` on the rental, `EntirePlace` on the accommodation) is
+**Google's vocabulary, not schema.org's** — neither name exists as a class in the 30.0 dump. That
+is legal precisely because `additionalType` takes `Text|URL`; it would not be legal as an
+`itemtype`.
+
+**No open rich result.** Google's *Vacation rental* feature is fed through its vacation-rental
+**partner programme**, not by markup a site publishes on its own — so, as with `RealEstateListing`,
+what ships here is valid, complete schema.org plus a `BreadcrumbList` and images. The
+[rich-results audit](../../../docs/plans/2026-08-15-google-rich-results-audit.md) previously listed
+this type as *not to build*; it exists now because content needed expressing, and that note has
+been corrected rather than left contradicting the code.
 
 ### Menu — `Menu`
 

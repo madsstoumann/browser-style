@@ -66,6 +66,7 @@ const PAIRS = [
 	['Book', 'ui/card/data/book.json'],
 	['Service', 'ui/card/data/service.json'],
 	['RealEstateListing', 'ui/card/data/realestate.json'],
+	['VacationRental', 'ui/card/data/vacationrental.json'],
 	['Menu', 'ui/card/data/menu.json'],
 	['TVSeries', 'ui/card/data/tvseries.json'],
 	['TVEpisode', 'ui/card/data/tvepisode.json'],

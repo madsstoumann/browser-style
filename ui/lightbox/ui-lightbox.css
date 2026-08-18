@@ -7,7 +7,10 @@
 @layer bs-component {
 	:where(ui-lightbox) {
 		/* ───────── A. Base ───────── */
-		--ui-lightbox-c: var(--color-text);
+		/* carousel chrome when the frame is a carousel, scheme-stable overlay chrome when
+		   it is not — never Canvas/--color-text. Docs: ../card/docs/media.carousel.md § Band ink */
+		--ui-lightbox-c: var(--ui-carousel-arrow-ink, rgb(0 0 0 / 0.8));
+		--ui-lightbox-c-hover: var(--ui-carousel-arrow-ink-hover, var(--ui-lightbox-c));
 		--ui-lightbox-sz: 1.2em;
 
 		--ui-lightbox-hover-duration: var(--duration-normal);
@@ -16,12 +19,13 @@
 		--ui-lightbox-hover-press: 0.85;
 
 		/* circle backdrop — on by default (retune any token; hide with "non") */
-		--ui-lightbox-circle-bg: Canvas;
-		--ui-lightbox-circle-border-color: var(--color-border);
-		--ui-lightbox-circle-border-width: var(--border-width, 1px);
+		--ui-lightbox-circle-bg: var(--ui-carousel-arrow-bg, rgb(255 255 255 / 0.7));
+		--ui-lightbox-circle-bg-hover: var(--ui-carousel-arrow-bg-hover, rgb(255 255 255 / 0.9));
+		--ui-lightbox-circle-border-color: currentColor;
+		--ui-lightbox-circle-border-width: var(--ui-carousel-arrow-border, 0);
 		--ui-lightbox-circle-pad: 0.4em;
 		--ui-lightbox-circle-radius: var(--radius-circle);
-		--ui-lightbox-circle-shadow: var(--shadow-lg);
+		--ui-lightbox-circle-shadow: var(--ui-carousel-arrow-shadow, 0 1px 3px rgb(0 0 0 / 0.15));
 
 		color: var(--ui-lightbox-c);
 		display: inline-grid;
@@ -45,7 +49,10 @@
 			place-content: center;
 
 			@media (hover: hover) {
-				&:hover { color: var(--ui-lightbox-c-hover, var(--color-accent)); }
+				&:hover {
+					background-color: var(--ui-lightbox-circle-bg-hover, var(--ui-lightbox-circle-bg));
+					color: var(--ui-lightbox-c-hover, var(--ui-lightbox-c));
+				}
 			}
 		}
 
@@ -90,12 +97,12 @@
 
 		/* arbitrary colour (overrides theme) — ink = the glyph, fill = the circle
 		   disc. After the hue rules so an explicit ink=/fill= wins. */
-		&[ink]  { --ui-lightbox-c: attr(ink type(<color>), var(--color-text)); }
-		&[fill] { --ui-lightbox-circle-bg: attr(fill type(<color>), Canvas); }
+		&[ink]  { --ui-lightbox-c: attr(ink type(<color>), currentColor); }
+		&[fill] { --ui-lightbox-circle-bg: attr(fill type(<color>), transparent); }
 		/* typed attr() has NO fallback in Safari/FF. Docs: ../base/polyfills/readme.md */
 		@supports not (background-color: attr(x type(<color>), red)) {
-			&[ink]  { --ui-lightbox-c: var(--color-text); }
-			&[fill] { --ui-lightbox-circle-bg: Canvas; }
+			&[ink]  { --ui-lightbox-c: var(--ui-carousel-arrow-ink, rgb(0 0 0 / 0.8)); }
+			&[fill] { --ui-lightbox-circle-bg: var(--ui-carousel-arrow-bg, rgb(255 255 255 / 0.7)); }
 		}
 
 		/* size — em-based, from size= or the card's lightbox(<size>). md = default. */
@@ -112,6 +119,7 @@
 		/* non — hide the circle (bare glyph) */
 		&[variant~="non"], :where([media*="lightbox(non)"]) & {
 			--ui-lightbox-circle-bg: none;
+			--ui-lightbox-circle-bg-hover: none;
 			--ui-lightbox-circle-border-width: 0;
 			--ui-lightbox-circle-pad: 0;
 			--ui-lightbox-circle-radius: 0;

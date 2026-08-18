@@ -3,7 +3,7 @@
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
-import renderCard, { resolveItemtype, SUBTYPES, EYEBROW_PROP } from './render.js';
+import renderCard, { resolveItemtype, SUBTYPES, EYEBROW_PROP, vacationrentalSections } from './render.js';
 
 /* Render a bare fields object with no preset — the DEFAULT_PRESET stack card. */
 export const render = (fields) => renderCard({ fields });
@@ -1703,16 +1703,17 @@ describe('one property, one value', () => {
 	});
 
 	/* Corpus invariant. Repeated properties are LEGAL — schema.org lets most take many
-	   values, and the corpus repeats 36 of them on purpose — so the check is an allowlist:
+	   values, and the corpus repeats 42 of them on purpose — so the check is an allowlist:
 	   any property repeating on one item that is not declared multi-value here is a
 	   collision between two emitters, which is what went wrong twice. */
 	const REPEATABLE = new Set([
-		'actor', 'album', 'amenityFeature', 'author', 'availableLanguage', 'containsSeason', 'dayOfWeek',
+		'actor', 'album', 'amenityFeature', 'author', 'availableLanguage', 'bed', 'containsSeason', 'dayOfWeek',
 		'department', 'distribution', 'genre', 'hasDefinedTerm', 'hasMenuItem', 'hasMenuSection', 'hasPart',
 		'hasTierBenefit', 'hasTiers', 'hasVariant', 'image', 'interactionStatistic', 'itemListElement',
-		'keywords', 'knowsAbout', 'mainEntity', 'member', 'offers', 'openingHours', 'openingHoursSpecification',
-		'operatingSystem', 'recipeIngredient', 'sameAs', 'signOrSymptom', 'step', 'subEvent',
-		'suggestedAnswer', 'suitableForDiet', 'supply', 'track', 'variableMeasured', 'variesBy', 'video'
+		'keywords', 'knowsAbout', 'knowsLanguage', 'mainEntity', 'member', 'offers', 'openingHours',
+		'openingHoursSpecification', 'operatingSystem', 'recipeIngredient', 'review', 'sameAs', 'signOrSymptom',
+		'step', 'subEvent', 'suggestedAnswer', 'suitableForDiet', 'supply', 'track', 'variableMeasured',
+		'variesBy', 'video'
 	]);
 	/* Live collisions of the same class, found BY this check, deferred because their
 	   precedence runs the other way per site — demo/schema.html gives the envelope value
@@ -1942,10 +1943,114 @@ describe('cover link', () => {
 		assert.ok(!html.includes('onclick="'), 'no attribute escaped the href');
 	});
 
+	/* Chromium makes a scrollable frame a tab stop of its own, which on a cover card
+	   lands one stop before the link and paints the same card-sized ring twice.
+	   Docs: docs/card.md § cover */
+	const frame = (fields, presetMedia) => /<ui-media[^>]*>/.exec(renderCard(
+		{ fields: { schemaType: 'realestate', headline: 'Flat', preset: { $ref: 'card-preset/t' }, ...fields } },
+		{ t: { element: 'ui-card', media: presetMedia } }, {}
+	))[0];
+	const SLIDES = [{ mediaType: 'image', src: '/a.png' }, { mediaType: 'image', src: '/b.png' }];
+
+	test('a navigable multi-slide frame leaves the tab order on a cover card', () => {
+		assert.match(frame({ cover: '/x.html', media: SLIDES }, 'asr(4/3) nav(mrk)'), /<ui-media[^>]*tabindex="-1"/);
+		assert.match(frame({ cover: '/x.html', media: SLIDES }, 'asr(4/3) nav'), /tabindex="-1"/);
+	});
+
+	test('…and stays in it otherwise — no cover, no controls, or nothing to scroll', () => {
+		assert.ok(!frame({ media: SLIDES }, 'asr(4/3) nav(mrk)').includes('tabindex'), 'no cover: the ring is the frame\'s own');
+		assert.ok(!frame({ cover: '/x.html', media: SLIDES }, 'asr(4/3)').includes('tabindex'), 'no controls: the stop is the only keyboard access');
+		assert.ok(!frame({ cover: '/x.html', media: [SLIDES[0]] }, 'asr(4/3) nav(mrk)').includes('tabindex'), 'one slide does not scroll');
+	});
+
 	test('there is exactly ONE cover link — nested anchors are invalid', () => {
 		const html = renderCard({ fields: { schemaType: 'realestate', cover: '/x.html', headline: 'Flat',
 			tags: [{ name: 'Copenhagen', url: '/t' }], actions: [{ link: { url: '/a', text: 'Go' } }] } }, {}, {});
 		assert.equal((html.match(/data-part="cover"/g) || []).length, 1);
+	});
+});
+
+/* ── VacationRental ──
+   A LodgingBusiness is an Organization AND a Place, which is the whole reason this type's
+   properties split the way they do. Docs: docs/schema.md § Vacation rental */
+describe('vacation rental', () => {
+	const UNIT = { additionalType: 'EntirePlace', name: 'The whole house', floorSize: 180,
+		bedrooms: 3, bathrooms: 2, rooms: 6, sleeps: 6,
+		beds: [{ count: 2, type: 'Queen' }, { count: 1, type: 'Single' }], amenities: ['Pool'] };
+	const DETAILS = { additionalType: 'HolidayVillageRental', identifier: 'MSL-1', brand: 'Masseria Collective',
+		priceRange: '€320–€540 per night', checkin: '16:00:00+02:00', checkinDisplay: '16:00',
+		checkout: '10:00:00+02:00', checkoutDisplay: '10:00', languages: ['en-GB', 'it-IT'],
+		rating: { value: 4.8, count: 64 }, geo: { latitude: 40.7297, longitude: 17.5794 },
+		address: { streetAddress: 'Contrada 12', addressLocality: 'Ostuni', addressRegion: 'Apulia', addressCountry: 'IT' },
+		property: UNIT };
+	const card = (details = DETAILS) => render({ schemaType: 'vacationrental', headline: 'Masseria Lucia', details });
+
+	test('resolves to VacationRental', () => {
+		assert.match(card(), /itemtype="https:\/\/schema\.org\/VacationRental"/);
+	});
+
+	test('the rooms hang off containsPlace, the business properties do not', () => {
+		const html = card();
+		const unit = /<div itemprop="containsPlace"[^>]*>([\s\S]*?)<\/div>/.exec(html)[1];
+		for (const prop of ['floorSize', 'numberOfBedrooms', 'numberOfBathroomsTotal', 'numberOfRooms', 'occupancy', 'bed'])
+			assert.ok(unit.includes(`itemprop="${prop}"`), `${prop} belongs inside containsPlace`);
+		/* Accommodation has none of these — they are Organization/Place/LodgingBusiness properties */
+		for (const prop of ['brand', 'priceRange', 'checkinTime', 'knowsLanguage', 'latitude'])
+			assert.ok(!unit.includes(`itemprop="${prop}"`), `${prop} is not an Accommodation property`);
+	});
+
+	test('no offers anywhere — the rate is priceRange', () => {
+		const html = card();
+		assert.ok(!html.includes('itemprop="offers"'), 'offers has neither Organization nor Place in its domain');
+		assert.match(html, /<p data-part="price" itemprop="priceRange">€320–€540 per night<\/p>/);
+	});
+
+	test('coordinates are stated once, flat — never also as a geo scope', () => {
+		const html = card();
+		assert.match(html, /<meta itemprop="latitude" content="40.7297">/);
+		assert.ok(!html.includes('itemprop="geo"'), 'geo would restate the same coordinates');
+	});
+
+	test('every numeric property rides a <meta>, never a <data>', () => {
+		const html = card();
+		assert.ok(!html.includes('<data'), 'a <data value="3"> reads as the string "3 bedrooms"');
+		assert.match(html, /<meta itemprop="numberOfBedrooms" content="3">3 bedrooms/);
+		/* occupancy and floorSize are QuantitativeValues, so their number is a nested value */
+		assert.match(html, /<span itemprop="occupancy" itemscope itemtype="https:\/\/schema\.org\/QuantitativeValue"><meta itemprop="value" content="6">sleeps 6<\/span>/);
+	});
+
+	test('one <li> per bed type, count on a meta and the type as visible text', () => {
+		assert.match(card(), /<li itemprop="bed" itemscope itemtype="https:\/\/schema\.org\/BedDetails"><meta itemprop="numberOfBeds" content="2">2 × <span itemprop="typeOfBed">Queen<\/span><\/li>/);
+	});
+
+	test('one knowsLanguage meta per language, never a joined string', () => {
+		const html = card();
+		assert.equal((html.match(/itemprop="knowsLanguage"/g) || []).length, 2);
+		assert.ok(!html.includes('content="en-GB,it-IT"'));
+	});
+
+	test('the teaser leaves amenities and reviews to the detail page', () => {
+		const html = card({ ...DETAILS, reviews: [{ author: 'A', rating: 5, body: 'Lovely' }] });
+		assert.ok(!html.includes('itemprop="review"'), 'reviews are a page band');
+		assert.ok(!html.includes('itemprop="amenityFeature"'), 'the amenity list is a page band');
+	});
+
+	test('the sections seam builds reviews the page composes, and drops contentReferenceTime', () => {
+		const s = vacationrentalSections({ ...DETAILS, reviews: [{ author: 'Lillian Ruiz', rating: 5, max: 5,
+			datePublished: '2026-07-02', dateDisplay: 'July 2, 2026', stayed: 'June 2026', body: 'Cooler than any AC.' }] }, {});
+		assert.equal(s.reviews.length, 1);
+		assert.match(s.reviews[0], /<div itemprop="review" itemscope itemtype="https:\/\/schema\.org\/Review">/);
+		assert.match(s.reviews[0], /<span itemprop="author" itemscope itemtype="https:\/\/schema\.org\/Person"><span itemprop="name">Lillian Ruiz<\/span><\/span>/);
+		assert.match(s.reviews[0], /<meta itemprop="datePublished" content="2026-07-02">/);
+		/* contentReferenceTime takes a DateTime and a stay is known only to the month */
+		assert.ok(!s.reviews[0].includes('contentReferenceTime'));
+		assert.match(s.reviews[0], /stayed June 2026/);
+		assert.ok(s.amenities.includes('itemprop="amenityFeature"'), 'the seam still carries them for the page');
+	});
+
+	test('an address region renders, and no existing card grows one', () => {
+		assert.match(card(), /<span><span itemprop="addressRegion">Apulia<\/span><\/span>/);
+		assert.ok(!render({ schemaType: 'location', headline: 'X', details: { address: { addressLocality: 'Aarhus' } } }).includes('addressRegion'));
 	});
 });
 

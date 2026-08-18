@@ -714,20 +714,27 @@ rest ([`article.render.html`](../demo/article.render.html) is the working demo):
   ([`media.carousel.css`](../media.carousel.css)), picking up the host's corner
   via `--ui-card-radius`.
 
-  Two constraints decide *how*, and each one rules out the obvious answer:
+  Two paths draw it, and which one runs depends on whether there is a card:
 
-  1. **Not an `outline` on the card.** Chromium paints an element's outline
-     *under* its positioned descendants, and a media frame's `<img>` is
-     `position: absolute; inset: 0` — so any inward ring vanishes behind the
-     photo. That is why the ring is a second stretched pseudo
-     (`::before`, `z-index: 3`) on the cover link, which already sits above the
-     frame.
-  2. **Therefore it can only go inward.** `ui-card` is `overflow: hidden`, which
-     does *not* clip the element's own outline but **does** clip a descendant's —
-     so a positive `--ui-card-focus-offset` on that pseudo is cut away entirely
-     and nothing renders. The default is `calc(-1 * var(--ui-card-focus-width))`:
-     the ring traces the inside of the card edge, and the nested variant swatches
-     (clipped again by their frame) need no special case.
+  1. **Inside a card — an `outline` on the host, offset outward.** Same shape and
+     `--ui-media-focus-offset` (`3px`) as a focused frame, so a card that has both
+     never paints two different rings. Outward is what makes an outline work here:
+     Chromium paints an element's outline *under* its positioned descendants, and
+     a frame's `<img>` is `position: absolute; inset: 0`, so an inward ring would
+     vanish behind the photo — but a ring outside the card box never overlaps it.
+     `overflow: hidden` on `ui-card` does not clip the element's *own* outline.
+  2. **No card around it — a stretched pseudo on the link.** `::before`,
+     `z-index: 3`, inset by `calc(-1 * var(--ui-card-focus-width))`. A descendant's
+     outline *is* clipped by the card, so this one can only go inward; inside a
+     card it is suppressed in favour of path 1.
+
+  **The frame leaves the tab order on a cover card.** Chromium makes a scrollable
+  frame a tab stop of its own, which on a cover card lands one stop before the
+  cover link and paints the same card-sized ring twice in a row. Where the frame
+  carries its own `nav`/`mrk`/`arw` controls the keyboard already has everything
+  it needs, so the renderer writes `tabindex="-1"` on `<ui-media>` (cover set,
+  nav controls present, more than one slide). Hand-written CSS-only markup wants
+  the same attribute.
 
   Neither shows up in computed style — the rule matches, the outline resolves,
   and nothing paints. Verify this one against pixels.

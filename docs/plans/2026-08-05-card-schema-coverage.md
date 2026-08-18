@@ -121,8 +121,9 @@ from the existing `{schema, display}` hour strings, `priceRange`,
 
 - Tier 2: `discussion` (`DiscussionForumPosting` — could be a data-driven
   subtype of `social`), `music` (`MusicRecording`/`MusicAlbum`)
-- Industry verticals: `lodging` (`LodgingBusiness`/`VacationRental` — Google
-  vacation-rental rich results), `vehicle` (`Car`/`Vehicle` listings),
+- Industry verticals: `lodging` (`LodgingBusiness`/`VacationRental` — shipped
+  2026-08-18 as `vacationrental`; there is no open rich result, Google's
+  vacation-rental feature is a partner-programme feed), `vehicle` (`Car`/`Vehicle` listings),
   `realestate` (`RealEstateListing`/`Apartment`), `restaurant` + `menu`
   (`Restaurant`/`Menu`/`MenuItem` — the Restaurant *subtype* is covered by
   `businessType`; a structured menu is not), `service` (`Service` — already

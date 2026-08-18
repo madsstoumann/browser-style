@@ -1,0 +1,98 @@
+{
+  "$schema": "../../../cms/baseline/models/card.schema.json",
+  "id": "vacationrental-1",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-08-18T09:00:00Z",
+    "updatedAt": "2026-08-18T09:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Property"
+  },
+  "fields": {
+    "internalName": "Demo — Vacation rental",
+    "schemaType": "vacationrental",
+    "preset": {
+      "$ref": "card-preset/carousel"
+    },
+    "chip": [
+      {
+        "text": "Entire villa",
+        "theme": "pale green",
+        "radius": "non"
+      },
+      {
+        "text": "Private pool",
+        "theme": "pale accent",
+        "radius": "non"
+      }
+    ],
+    "eyebrow": "Puglia, Italy",
+    "headline": "Masseria Lucia",
+    "cover": "rentals/masseria-lucia.html",
+    "summary": "A restored stone farmhouse in an olive grove outside Ostuni, with a walled garden and a heated pool.",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/rental_01.jpg",
+        "alt": "The stone farmhouse seen from the garden, with olive trees and bougainvillea"
+      },
+      {
+        "mediaType": "image",
+        "src": "/assets/images/rental_02.jpg",
+        "alt": "The pool terrace with sun loungers, palms and flowering bougainvillea"
+      },
+      {
+        "mediaType": "image",
+        "src": "/assets/images/rental_03.jpg",
+        "alt": "A bedroom with exposed stone walls, a wrought-iron bed and shuttered windows"
+      },
+      {
+        "mediaType": "image",
+        "src": "/assets/images/rental_04.jpg",
+        "alt": "A bathroom in local stone with a walk-in shower and a wooden washstand"
+      }
+    ],
+    "details": {
+      "additionalType": "HolidayVillageRental",
+      "identifier": "MSL-2026-04",
+      "brand": "Masseria Collective",
+      "priceRange": "€320–€540 per night",
+      "checkin": "16:00:00+02:00",
+      "checkinDisplay": "16:00",
+      "checkout": "10:00:00+02:00",
+      "checkoutDisplay": "10:00",
+      "languages": ["en-GB", "it-IT"],
+      "rating": {
+        "value": 4.8,
+        "count": 64,
+        "max": 5
+      },
+      "geo": {
+        "latitude": 40.7297,
+        "longitude": 17.5794
+      },
+      "address": {
+        "streetAddress": "Contrada Lamacoppa 12",
+        "postalCode": "72017",
+        "addressLocality": "Ostuni",
+        "addressRegion": "Apulia",
+        "addressCountry": "IT"
+      },
+      "property": {
+        "additionalType": "EntirePlace",
+        "name": "The whole farmhouse",
+        "petsAllowed": true,
+        "floorSize": 180,
+        "bedrooms": 3,
+        "bathrooms": 2,
+        "rooms": 6,
+        "sleeps": 6,
+        "beds": [
+          { "count": 2, "type": "Queen" },
+          { "count": 2, "type": "Single" }
+        ]
+      }
+    }
+  }
+}

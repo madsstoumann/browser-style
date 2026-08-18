@@ -354,15 +354,18 @@
 			& a:focus-visible { outline: none; }
 			& ui-chip:has(a:focus-visible) {
 				background-color: currentColor; /* fill := the chip's own ink */
-				& a {
-					color: var(--color-surface); /* fallback where contrast-color() is unsupported */
-					color: contrast-color(currentColor);
-				}
+				& a { color: var(--color-surface); }
 			}
 			& a:not(ui-chip *):focus-visible {
 				background-color: var(--ui-content-tag-focus-bg, var(--color-text));
 				color: var(--color-surface);
-				color: contrast-color(var(--ui-content-tag-focus-bg, var(--color-text)));
+			}
+			/* ink picked against the new fill where the function exists; --color-surface
+			   above is the fallback. Gated, not double-declared, so a duplicate-property
+			   lint stays quiet. Docs: docs/content.md § Tags */
+			@supports (color: contrast-color(red)) {
+				& ui-chip:has(a:focus-visible) a { color: contrast-color(currentColor); }
+				& a:not(ui-chip *):focus-visible { color: contrast-color(var(--ui-content-tag-focus-bg, var(--color-text))); }
 			}
 		}
 
@@ -693,6 +696,17 @@
 		& ui-media :is(ui-chip, ui-sticker, ui-beacon):not(:has(a, button)) {
 			pointer-events: none;
 		}
+
+		/* FOCUS — one ring per card, on the card box and OUTSIDE it, the same shape and
+		   offset a focused frame paints. Outward is what lets an outline work here: an
+		   inward one hides under the frame's positioned image, which is why the link's
+		   own pseudo ring (inset, below) stays the answer for a cover link with no card
+		   around it. Docs: docs/card.md § cover */
+		&:has([data-part~="cover"]:focus-visible) {
+			outline: var(--ui-card-focus-width, var(--ui-media-focus-width, 2px)) dashed var(--ui-card-focus-color, var(--ui-media-focus-color, var(--ring-color)));
+			outline-offset: var(--ui-card-focus-offset, var(--ui-media-focus-offset, 3px));
+		}
+		& [data-part~="cover"]:focus-visible::before { outline: none; }
 	}
 
 }

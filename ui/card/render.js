@@ -71,6 +71,7 @@ export const SCHEMA_TYPES = {
 	quiz: 'Quiz',
 	service: 'Service',
 	realestate: 'RealEstateListing',
+	vacationrental: 'VacationRental',
 	menu: 'Menu',
 	tvseries: 'TVSeries',
 	tvepisode: 'TVEpisode',
@@ -566,6 +567,9 @@ const addressPart = (address, prop = 'address') => {
 			address.postalCode ? `<span itemprop="postalCode">${esc(address.postalCode)}</span>` : '',
 			address.addressLocality ? `<span itemprop="addressLocality">${esc(address.addressLocality)}</span>` : ''
 		].filter(Boolean).join(' '),
+		/* a region is its own line, not appended to the locality: the punctuation between
+		   them is locale-specific and a card is not the place to guess it */
+		address.addressRegion ? `<span itemprop="addressRegion">${esc(address.addressRegion)}</span>` : '',
 		country.length > 2 ? `<span itemprop="addressCountry">${esc(country)}</span>` : ''
 	].filter(Boolean).map((line) => `<span>${line}</span>`).join('');
 	return `<address data-part="address"${scope(prop, 'PostalAddress')}>${lines}${country.length > 2 ? '' : meta('addressCountry', country)}</address>`;
@@ -967,9 +971,15 @@ const buildMedia = (fields, type, tokens, preset = {}, frameAttrs = {}, cardId =
 		if (!teTaken && !chipPlaced) tokens.media.push('chip(te)');
 		typeChip = `<ui-chip data-type>${esc(resolveItemtype(fields))}</ui-chip>`;
 	}
+	/* Chromium makes a scrollable frame its own tab stop. On a cover card that stop paints
+	   the SAME whole-card ring the cover link paints one stop later — and the frame's own
+	   markers/arrows already drive it from the keyboard, so drop it out of the tab order.
+	   Docs: docs/card.md § cover */
+	const navigable = /(^|\s)(nav|mrk|arw)(\(|\s|$)/.test(`${preset.media || ''} ${tokens.media.join(' ')}`);
 	const html = `<ui-media${attrs({
 		id: mediaId,
 		popover: fields.furniture?.lightbox ? true : null,
+		tabindex: fields.cover && navigable && (fields.media?.length || 0) > 1 ? '-1' : null,
 		/* open-state control vocabulary (standard media spellings) — swapped in by
 		   ui/card/lightbox.js while the popover is open; inert without JS */
 		'media-open': (fields.furniture?.lightbox && preset['media-open']) || null,
@@ -1406,6 +1416,109 @@ export const realestateSections = (d = {}, fields = {}) => {
 			: '',
 		place,
 		footer: bits ? `<p data-part="meta">${bits}</p>` : ''
+	};
+};
+
+/* ── VacationRental, section by section ───────────────────────────────────────
+   Same two-consumer contract as realestateSections above: the TEASER composes a
+   short subset (DETAILS.vacationrental), the generated page wraps bands of the same
+   strings. VacationRental is a LodgingBusiness, so it is BOTH an Organization and a
+   Place — which is what puts brand/knowsLanguage and latitude/longitude/containsPlace
+   on the same element. The rooms hang off `containsPlace` → Accommodation, because
+   bed/occupancy/floorSize are Accommodation properties, not business ones.
+   Docs: docs/schema.md § Vacation rental ── */
+export const vacationrentalSections = (d = {}, fields = {}) => {
+	const unit = d.property;
+	const numbered = (prop, value, text) => value == null || value === '' ? null : `${meta(prop, value)}${text}`;
+	const plural = (n, word) => `${num(n)} ${word}${n === 1 ? '' : 's'}`;
+	const floorSize = unit?.floorSize == null ? null
+		: `<span${scope('floorSize', 'QuantitativeValue')}>${meta('unitCode', unit.floorSizeUnit || 'MTK')}${meta('value', unit.floorSize)}${num(unit.floorSize)}`;
+	/* occupancy is a QuantitativeValue, so the sleeper count cannot ride a bare <meta> */
+	const occupancy = unit?.sleeps == null ? null
+		: `<span${scope('occupancy', 'QuantitativeValue')}>${meta('value', unit.sleeps)}sleeps ${num(unit.sleeps)}</span>`;
+
+	const facts = !unit ? [] : [
+		floorSize ? `${floorSize} ${esc(unit.floorSizeLabel || 'm²')}</span>` : null,
+		numbered('numberOfBedrooms', unit.bedrooms, plural(unit.bedrooms, 'bedroom')),
+		numbered('numberOfBathroomsTotal', unit.bathrooms, plural(unit.bathrooms, 'bathroom')),
+		numbered('numberOfRooms', unit.rooms, plural(unit.rooms, 'room')),
+		occupancy
+	].filter(Boolean);
+
+	/* the value is ALWAYS the first element — content.css sizes `> :first-child` */
+	const figure = (value, label, machine = '') =>
+		`<p data-part="stat" data-variant="stacked"><span>${value}</span>${machine}<small>${esc(label)}</small></p>`;
+	const numFigure = (prop, value, label, text = num(value)) =>
+		value == null || value === '' ? null : figure(text, label, meta(prop, value));
+	const figures = !unit ? [] : [
+		floorSize ? `<p data-part="stat" data-variant="stacked">${floorSize}</span><small>${esc(`Floor area (${unit.floorSizeLabel || 'm²'})`)}</small></p>` : null,
+		numFigure('numberOfBedrooms', unit.bedrooms, 'Bedrooms'),
+		numFigure('numberOfBathroomsTotal', unit.bathrooms, 'Bathrooms'),
+		numFigure('numberOfRooms', unit.rooms, 'Rooms'),
+		occupancy ? `<p data-part="stat" data-variant="stacked"><span${scope('occupancy', 'QuantitativeValue')}>${meta('value', unit.sleeps)}${num(unit.sleeps)}</span><small>Sleeps</small></p>` : null
+	].filter(Boolean);
+
+	/* one <li> per bed TYPE: numberOfBeds is the count, typeOfBed the name — and the
+	   name is the visible text, so it is a <span itemprop>, not a second <meta> */
+	const beds = unit?.beds?.length
+		? `<ul data-part="list">${unit.beds.map((bed) =>
+			`<li${scope('bed', 'BedDetails')}>${meta('numberOfBeds', bed.count)}${num(bed.count)} × <span itemprop="typeOfBed">${esc(bed.type)}</span></li>`).join('')}</ul>`
+		: '';
+
+	const stayBits = [
+		d.checkin ? `${meta('checkinTime', d.checkin)}Check-in from ${esc(d.checkinDisplay || d.checkin)}` : null,
+		d.checkout ? `${meta('checkoutTime', d.checkout)}check-out by ${esc(d.checkoutDisplay || d.checkout)}` : null
+	].filter(Boolean).join(' · ');
+
+	/* the map frame declares hasMap. Unlike a RealEstateListing (a WebPage, where the
+	   property had to move inside mainEntity) this type IS a Place, so it rides the root */
+	const geo = d.geo;
+	const mapItem = d.mapMedia || (geo ? { mediaType: 'map' } : null);
+
+	return {
+		/* additionalType is Text|URL — "HolidayVillageRental"/"EntirePlace" are GOOGLE's
+		   vocabulary, not schema.org classes, so they can only ever be additionalType
+		   values. latitude/longitude are stated FLAT here and the `geo` scope is never
+		   emitted: both spell the same coordinates, and one property, one value. */
+		machine: meta('additionalType', d.additionalType) + meta('identifier', d.identifier)
+			+ meta('latitude', geo?.latitude) + meta('longitude', geo?.longitude)
+			+ (d.languages || []).map((lang) => meta('knowsLanguage', lang)).join(''),
+		rating: ratingPart('aggregateRating', 'AggregateRating', d.rating),
+		/* priceRange is free Text on LocalBusiness — `offers` is NOT in domain here (its
+		   domain has no Organization and no Place), so the nightly rate rides this */
+		price: d.priceRange ? `<p data-part="price" itemprop="priceRange">${esc(d.priceRange)}</p>` : '',
+		/* `attrs` so a caller can hang the scope on whatever element its layout needs */
+		unit: unit ? {
+			attrs: scope('containsPlace', 'Accommodation'),
+			open: `<div${scope('containsPlace', 'Accommodation')}>`,
+			close: '</div>',
+			metas: meta('additionalType', unit.additionalType) + meta('name', unit.name) + meta('petsAllowed', unit.petsAllowed)
+		} : null,
+		factsRun: facts.length ? `<p data-part="meta">${facts.join(' · ')}</p>` : '',
+		figures,
+		beds,
+		amenities: unit?.amenities?.length
+			? `<ul data-part="list">${unit.amenities.map((amenity) =>
+				`<li${scope('amenityFeature', 'LocationFeatureSpecification')}>${meta('value', 'true')}<span itemprop="name">${esc(amenity)}</span></li>`).join('')}</ul>`
+			: '',
+		address: addressPart(d.address),
+		stay: stayBits ? `<p data-part="meta">${stayBits}</p>` : '',
+		place: {
+			frame: mapItem && geo
+				? mapFrame(mapItem, { headline: fields.headline, details: { geo, map: d.map } }, 'vacationrental', true)
+				: '',
+			action: mapCta(geo)
+		},
+		/* one guest review each. contentReferenceTime is DROPPED: its range is DateTime
+		   and a stay is known only to the month, so the month rides plain text instead */
+		reviews: (d.reviews || []).map((review) => `<div${scope('review', 'Review')}>`
+			+ ratingPart('reviewRating', 'Rating', { value: review.rating, max: review.max })
+			+ `<p data-part="meta"><span${scope('author', 'Person')}><span itemprop="name">${esc(review.author)}</span></span>`
+			+ (review.datePublished ? ` · ${meta('datePublished', review.datePublished)}${esc(review.dateDisplay || review.datePublished)}` : '')
+			+ (review.stayed ? ` · stayed ${esc(review.stayed)}` : '') + '</p>'
+			+ (review.body ? `<p data-part="summary" itemprop="reviewBody">${esc(review.body)}</p>` : '')
+			+ '</div>'),
+		brand: d.brand ? `<p data-part="meta"${scope('brand', 'Brand')}>Hosted by <span itemprop="name">${esc(d.brand)}</span></p>` : ''
 	};
 };
 
@@ -2043,6 +2156,17 @@ const DETAILS = {
 		return s.listing
 			+ (s.residence ? s.residence.open + s.residence.metas + s.factsRun + s.address + s.amenities + s.residence.close : '')
 			+ s.footer;
+	},
+
+	/* VacationRental is a LodgingBusiness — an Organization AND a Place — so brand and
+	   the coordinates sit on the root while the rooms hang off containsPlace. The teaser
+	   keeps the amenity list and the reviews OFF the card; the detail page owns those.
+	   Docs: docs/schema.md § Vacation rental */
+	vacationrental(d, fields = {}) {
+		const s = vacationrentalSections(d, fields);
+		return s.machine + s.rating + s.price
+			+ (s.unit ? s.unit.open + s.unit.metas + s.factsRun + s.beds + s.unit.close : '')
+			+ s.address + s.stay + s.brand;
 	},
 
 	/* Menu and MenuSection are CreativeWorks; MenuItem is an Intangible — which is why

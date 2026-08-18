@@ -56,7 +56,7 @@ const { fields } = ucf;
 /* Band 1 renders the LISTING level only. Handing the card a details object with no
    `property` is what keeps it there: DETAILS.realestate then emits datePosted, the
    price and the agent line, and no mainEntity block — which the bands below own. */
-const listingOnly = { ...ucf, fields: { ...fields, body: undefined, details: { ...fields.details, property: undefined } } };
+const listingOnly = { ...ucf, fields: { ...fields, body: undefined, cover: undefined, details: { ...fields.details, property: undefined } } };
 
 const galleryCard = renderCard(withPreset(listingOnly, 'realestate-page'), presets, undefined, USE_CDN ? { images: IMAGES } : {})
 	/* first slide only: the LCP element and the morph target — always eager */

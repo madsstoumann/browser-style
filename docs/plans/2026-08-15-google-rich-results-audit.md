@@ -171,7 +171,7 @@ off the page without asking whether Google would have drawn a box around it.
 | `Observation` | `statistic` | — | `dump` |
 | `EducationalOccupationalCredential` | `achievement` | — | ⚠ |
 | `Service` | `service` | — | ⚠ |
-| `RealEstateListing` | `realestate` | No Google real-estate result; *Vacation rental* is a separate feature and a different type | ⚠ |
+| `RealEstateListing` | `realestate` | No Google real-estate result; *Vacation rental* is a separate feature and a different type (now shipped as `vacationrental`, also with no open result — it is a partner-programme feed) | ⚠ |
 | `Menu` | `menu` | Feeds local-business context, not its own result | ⚠ |
 | `MedicalWebPage` | `medical` | — | ⚠ |
 | `MusicAlbum` | `music` | Music actions exist for approved partners; not a general result | ⚠ |
@@ -223,10 +223,15 @@ microdata.
 
 ## 5. What not to chase
 
-`VacationRental`, `MathSolver`, Vehicle listing, `Speakable`, IPTC image metadata. Each would be
-a new card type chasing narrow or region-limited coverage, and the 2026-08-05 coverage audit
-already considered and deferred the lodging family for the same reason. Adding a type because a
-gallery lists it — rather than because content needs expressing — is how a taxonomy rots.
+`MathSolver`, Vehicle listing, `Speakable`, IPTC image metadata. Each would be a new card type
+chasing narrow or region-limited coverage. Adding a type because a gallery lists it — rather than
+because content needs expressing — is how a taxonomy rots.
+
+**Superseded 2026-08-18:** `VacationRental` was on this list and is not any more — it shipped as
+the `vacationrental` card type, because content needed expressing, not because the gallery lists
+it. The reasoning above still stands as the *test*, and the type still has no open rich result:
+Google's *Vacation rental* feature is fed through its partner programme, not by published markup.
+See [schema.md § Vacation rental](../../ui/card/docs/schema.md).
 
 Note also that three of the four SUBTYPE families already cover vertical ground a naive reading
 would call missing: `product` allowlists `Vehicle`/`Car`/`Motorcycle`, `social` allowlists

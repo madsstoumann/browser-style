@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Masseria Lucia</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="A restored stone farmhouse in an olive grove outside Ostuni, with a walled garden and a heated pool.">
+	<link rel="stylesheet" href="/dist/demo.a05dbea7.min.css">
+	<!-- srcset uses absolute v4.browser.style CDN URLs; the zone's Hotlink Protection
+	     403s any cross-origin Referer (pages.dev, localhost) — no-referrer passes -->
+	<meta name="referrer" content="no-referrer">
+	<link rel="preconnect" href="https://v4.browser.style">
+	<!-- Block first paint (and the view-transition snapshot) until the hero is parsed, so
+	     the card/hero morph targets exist when the browser captures the incoming page. -->
+	<link rel="expect" href="#hero" blocking="render">
+	<!-- Names the morph targets where typed attr() is unsupported (Safari). MUST be
+	     render-blocking in <head>: the incoming page is snapshotted at first paint,
+	     so a deferred script names the targets too late and the forward morph
+	     degrades to a cross-fade. Docs: ui/base/polyfills/readme.md -->
+	<script type="module" src="/ui/base/polyfills/attr-fallback.js" blocking="render"></script>
+	<style>
+		/* cross-document view transitions come from ui-card.css — nothing page-scoped
+		   here, deliberately: see the header comment in products/build.js */
+		body { margin-inline: auto; max-inline-size: 64rem; }
+		.rental-view { margin-block-end: var(--spacing-2xl); }
+		.rental-view > lay-out { margin-block-start: var(--spacing-xl); }
+	</style>
+	<style>
+		:root {
+			--color-link: light-dark(hsl(221, 100%, 44%), hsl(221, 70%, 70%));
+			--color-accent: light-dark(hsl(211, 100%, 38%), hsl(211, 70%, 72%));
+			--color-success: light-dark(hsl(136, 45%, 30%), hsl(136, 25%, 60%));
+			--color-error: light-dark(hsl(360, 65%, 41%), hsl(360, 45%, 62%));
+			--color-text-muted: light-dark(hsl(0, 0%, 42%), hsl(0, 0%, 65%));
+		}
+		ui-content { --ui-content-muted: color-mix(in oklab, currentColor 85%, transparent); }
+		ui-chip[data-type] { --ui-chip-bg: hsl(0, 0%, 95%); --ui-chip-c: hsl(0, 0%, 13%); }
+	</style>
+</head>
+<body>
+	<nav aria-label="Breadcrumb">
+		<ol data-breadcrumbs itemscope itemtype="https://schema.org/BreadcrumbList">
+			<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+				<a itemprop="item" href="/ui/card/"><span itemprop="name">Card</span></a>
+				<meta itemprop="position" content="1">
+			</li>
+			<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+				<a itemprop="item" href="/ui/card/demo/schema.html"><span itemprop="name">Schema.org</span></a>
+				<meta itemprop="position" content="2">
+			</li>
+			<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+				<span itemprop="name">Masseria Lucia</span>
+				<meta itemprop="position" content="3">
+			</li>
+		</ol>
+	</nav>
+	<main>
+		<article class="rental-view" data-view="card-vacationrental-1" itemscope itemtype="https://schema.org/VacationRental">
+			<link itemprop="url" href="masseria-lucia.html">
+			<ui-card variant="col shd(non)">
+		<cq-box>
+			<ui-media media="asr(4/3) rds(lg) nav lightbox(bs)" id="vacationrental-1-media" popover><ui-lightbox><button type="button" command="toggle-popover" commandfor="vacationrental-1-media" aria-label="View all 4 photos"><ui-icon><svg viewBox="0 0 24 24"><path d="M7 5.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666"/><path d="M4.012 7.26a2.005 2.005 0 0 0 -1.012 1.737v10c0 1.1 .9 2 2 2h10c.75 0 1.158 -.385 1.5 -1"/><path d="M17 7h.01"/><path d="M7 13l3.644 -3.644a1.21 1.21 0 0 1 1.712 0l3.644 3.644"/><path d="M15 12l1.644 -1.644a1.21 1.21 0 0 1 1.712 0l2.644 2.644"/></svg></ui-icon></button></ui-lightbox><img id="hero" data-view="hero-vacationrental-1" src="/assets/images/rental_01.jpg" alt="The stone farmhouse seen from the garden, with olive trees and bougainvillea" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=180/assets/images/rental_01.jpg 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=240/assets/images/rental_01.jpg 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=360/assets/images/rental_01.jpg 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=540/assets/images/rental_01.jpg 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=900/assets/images/rental_01.jpg 1200w" sizes="min(64rem, 100vw)" loading="eager" fetchpriority="high" decoding="async" itemprop="image"><img src="/assets/images/rental_02.jpg" alt="The pool terrace with sun loungers, palms and flowering bougainvillea" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=180/assets/images/rental_02.jpg 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=240/assets/images/rental_02.jpg 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=360/assets/images/rental_02.jpg 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=540/assets/images/rental_02.jpg 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=900/assets/images/rental_02.jpg 1200w" sizes="auto, min(64rem, 100vw)" loading="lazy" decoding="async" itemprop="image"><img src="/assets/images/rental_03.jpg" alt="A bedroom with exposed stone walls, a wrought-iron bed and shuttered windows" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=180/assets/images/rental_03.jpg 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=240/assets/images/rental_03.jpg 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=360/assets/images/rental_03.jpg 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=540/assets/images/rental_03.jpg 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=900/assets/images/rental_03.jpg 1200w" sizes="auto, min(64rem, 100vw)" loading="lazy" decoding="async" itemprop="image"><img src="/assets/images/rental_04.jpg" alt="A bathroom in local stone with a walk-in shower and a wooden washstand" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=180/assets/images/rental_04.jpg 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=240/assets/images/rental_04.jpg 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=360/assets/images/rental_04.jpg 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=540/assets/images/rental_04.jpg 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=900/assets/images/rental_04.jpg 1200w" sizes="auto, min(64rem, 100vw)" loading="lazy" decoding="async" itemprop="image"></ui-media>
+			<ui-content content="scl(lg)"><p data-part="meta"><ui-chip theme="pale green" radius="non">Entire villa</ui-chip><ui-chip theme="pale accent" radius="non">Private pool</ui-chip></p><small data-part="eyebrow">Puglia, Italy</small><h3 data-part="headline" itemprop="name">Masseria Lucia</h3><p data-part="summary" itemprop="description">A restored stone farmhouse in an olive grove outside Ostuni, with a walled garden and a heated pool.</p><meta itemprop="additionalType" content="HolidayVillageRental"><meta itemprop="identifier" content="MSL-2026-04"><meta itemprop="latitude" content="40.7297"><meta itemprop="longitude" content="17.5794"><meta itemprop="knowsLanguage" content="en-GB"><meta itemprop="knowsLanguage" content="it-IT"><div data-part="rating" itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
+		<meta itemprop="ratingValue" content="4.8">
+		<meta itemprop="ratingCount" content="64">
+		<meta itemprop="bestRating" content="5"><meta itemprop="worstRating" content="1">
+		<input class="ui-rating" type="range" min="1" max="5" value="4.8" step="0.01" disabled aria-hidden="true">
+		<span data-sr>Rated 4.8 out of 5 stars from 64 ratings</span>
+		<span aria-hidden="true">4.8 / 5 (64 ratings)</span>
+	</div><p data-part="price" itemprop="priceRange">€320–€540 per night</p><p data-part="meta" itemprop="brand" itemscope itemtype="https://schema.org/Brand">Hosted by <span itemprop="name">Masseria Collective</span></p><nav data-part="actions"><a class="ui-button" data-variant="accent" href="#availability">Check availability</a></nav></ui-content>
+		</cq-box>
+	</ui-card>
+			<!-- ONE scope: every band below is a property of the same rental. Only the rooms
+			     nest, inside containsPlace, and each property is stated exactly once. -->
+			<section itemprop="containsPlace" itemscope itemtype="https://schema.org/Accommodation"><meta itemprop="additionalType" content="EntirePlace"><meta itemprop="name" content="The whole farmhouse"><meta itemprop="petsAllowed" content="true">
+			<lay-out sm="columns(2) items(start)" md="columns(3) items(start)">
+				<ui-content><p data-part="stat" data-variant="stacked"><span itemprop="floorSize" itemscope itemtype="https://schema.org/QuantitativeValue"><meta itemprop="unitCode" content="MTK"><meta itemprop="value" content="180">180</span><small>Floor area (m²)</small></p></ui-content>
+				<ui-content><p data-part="stat" data-variant="stacked"><span>3</span><meta itemprop="numberOfBedrooms" content="3"><small>Bedrooms</small></p></ui-content>
+				<ui-content><p data-part="stat" data-variant="stacked"><span>2</span><meta itemprop="numberOfBathroomsTotal" content="2"><small>Bathrooms</small></p></ui-content>
+				<ui-content><p data-part="stat" data-variant="stacked"><span>6</span><meta itemprop="numberOfRooms" content="6"><small>Rooms</small></p></ui-content>
+				<ui-content><p data-part="stat" data-variant="stacked"><span itemprop="occupancy" itemscope itemtype="https://schema.org/QuantitativeValue"><meta itemprop="value" content="6">6</span><small>Sleeps</small></p></ui-content>
+			</lay-out>
+			<lay-out lg="ratio(60:40) items(start)">
+				<ui-content content="scl(md)"><h2 data-part="headline">About the house</h2><p>Masseria Lucia was a working olive farm until the 1970s, and the walls tell you so: a metre of local stone, small windows on the south side, and vaults high enough that the rooms stay cool through August. The restoration kept all of it and added the things a stone farmhouse never had — underfloor heating, insect screens, fast wifi and a kitchen you can actually cook in.</p><p>The ground floor is one long room: kitchen at one end, a table for eight in the middle, and doors onto the terrace at the other. Two bedrooms open off it. The third is upstairs under the old beams, with its own bathroom and a window looking back over the grove.</p><p>Outside, the pool is heated from April and screened from the lane by a dry-stone wall and forty-year-old bougainvillea. There is shade by eleven, a wood oven that works, and enough loungers that nobody has to negotiate.</p><p>Ostuni is fifteen minutes by car — the white town on the hill you can see from the terrace. The Adriatic beaches at Torre Guaceto are twenty, and the nature reserve behind them is worth the morning. Bari airport is an hour and ten; Brindisi is forty minutes.</p></ui-content>
+				<ui-content><h2 data-part="headline">Beds</h2><ul data-part="list"><li itemprop="bed" itemscope itemtype="https://schema.org/BedDetails"><meta itemprop="numberOfBeds" content="2">2 × <span itemprop="typeOfBed">Queen</span></li><li itemprop="bed" itemscope itemtype="https://schema.org/BedDetails"><meta itemprop="numberOfBeds" content="2">2 × <span itemprop="typeOfBed">Single</span></li></ul><h2 data-part="headline">What's here</h2><ul data-part="list"><li itemprop="amenityFeature" itemscope itemtype="https://schema.org/LocationFeatureSpecification"><meta itemprop="value" content="true"><span itemprop="name">Heated pool, open April to October</span></li><li itemprop="amenityFeature" itemscope itemtype="https://schema.org/LocationFeatureSpecification"><meta itemprop="value" content="true"><span itemprop="name">Air conditioning in every bedroom</span></li><li itemprop="amenityFeature" itemscope itemtype="https://schema.org/LocationFeatureSpecification"><meta itemprop="value" content="true"><span itemprop="name">Walled garden and wood-fired oven</span></li><li itemprop="amenityFeature" itemscope itemtype="https://schema.org/LocationFeatureSpecification"><meta itemprop="value" content="true"><span itemprop="name">Fast wifi and a desk in the upstairs room</span></li><li itemprop="amenityFeature" itemscope itemtype="https://schema.org/LocationFeatureSpecification"><meta itemprop="value" content="true"><span itemprop="name">Cot, high chair and stair gate on request</span></li></ul></ui-content>
+			</lay-out>
+			</section>
+			<lay-out lg="ratio(40:60) items(start)">
+				<ui-content><h2 data-part="headline">Where it is</h2><address data-part="address" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress"><span><span itemprop="streetAddress">Contrada Lamacoppa 12</span></span><span><span itemprop="postalCode">72017</span> <span itemprop="addressLocality">Ostuni</span></span><span><span itemprop="addressRegion">Apulia</span></span><meta itemprop="addressCountry" content="IT"></address><p data-part="meta"><meta itemprop="checkinTime" content="16:00:00+02:00">Check-in from 16:00 · <meta itemprop="checkoutTime" content="10:00:00+02:00">check-out by 10:00</p><nav data-part="actions"><a class="ui-button" data-variant="accent" href="https://www.google.com/maps/search/?api=1&amp;query=40.7297,17.5794" target="_blank" rel="noopener">Open in Maps</a></nav></ui-content>
+				<ui-media media="asr(4/3) rds(lg)"><iframe src="https://www.openstreetmap.org/export/embed.html?bbox=17.576653,40.727619,17.582147,40.731781&amp;layer=mapnik&amp;marker=40.7297,17.5794" title="Map of Masseria Lucia" loading="lazy" itemprop="hasMap"></iframe></ui-media>
+			</lay-out>
+			<h2>Guest reviews</h2>
+			<lay-out md="columns(2) items(start)">
+				<ui-content><div itemprop="review" itemscope itemtype="https://schema.org/Review"><div data-part="rating" itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
+		<meta itemprop="ratingValue" content="5">
+		
+		<meta itemprop="bestRating" content="5"><meta itemprop="worstRating" content="1">
+		<input class="ui-rating" type="range" min="1" max="5" value="5" step="0.01" disabled aria-hidden="true">
+		<span data-sr>Rated 5 out of 5 stars</span>
+		<span aria-hidden="true">5 / 5</span>
+	</div><p data-part="meta"><span itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Lillian Ruiz</span></span> · <meta itemprop="datePublished" content="2026-07-02">July 2, 2026 · stayed June 2026</p><p data-part="summary" itemprop="reviewBody">We were six adults and never once felt on top of each other. The house is cooler than any air conditioning, the pool is genuinely heated, and Nico left us oil from the grove and a map of where to eat. We used both.</p></div></ui-content>
+				<ui-content><div itemprop="review" itemscope itemtype="https://schema.org/Review"><div data-part="rating" itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
+		<meta itemprop="ratingValue" content="4">
+		
+		<meta itemprop="bestRating" content="5"><meta itemprop="worstRating" content="1">
+		<input class="ui-rating" type="range" min="1" max="5" value="4" step="0.01" disabled aria-hidden="true">
+		<span data-sr>Rated 4 out of 5 stars</span>
+		<span aria-hidden="true">4 / 5</span>
+	</div><p data-part="meta"><span itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">John S.</span></span> · <meta itemprop="datePublished" content="2026-05-19">May 19, 2026 · stayed May 2026</p><p data-part="summary" itemprop="reviewBody">Beautiful, quiet and exactly as photographed. The lane in is rough for the last kilometre — take the higher clearance car if you have the choice — but everything else was faultless.</p></div></ui-content>
+			</lay-out>
+		</article>
+	</main>
+	<!-- Native scroll-control pseudos do NOT follow a popover frame into the top layer
+	     (Chromium), so the open lightbox gets real DOM controls from this module. Non
+	     render-blocking: it must not delay the transition snapshot. Docs: docs/media.md -->
+	<script type="module" src="/ui/card/lightbox.min.js"></script>
+</body>
+</html>

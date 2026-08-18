@@ -1,0 +1,57 @@
+{
+  "$schema": "../../../../cms/baseline/models/card.schema.json",
+  "id": "vacationrental-1",
+  "model": "card",
+  "meta": {
+    "internalName": "Demo — Vacation rental, PAGE-ONLY additions",
+    "note": "Deep-merged over ui/card/data/vacationrental.json by build.js. Everything here is what the DETAIL PAGE has and the teaser must not: the long description, the amenity list, the guest reviews, the map behind the location band, the gallery invoker and the page's own call to action. Same split as the real-estate and product pages."
+  },
+  "fields": {
+    "body": "Masseria Lucia was a working olive farm until the 1970s, and the walls tell you so: a metre of local stone, small windows on the south side, and vaults high enough that the rooms stay cool through August. The restoration kept all of it and added the things a stone farmhouse never had — underfloor heating, insect screens, fast wifi and a kitchen you can actually cook in.\n\nThe ground floor is one long room: kitchen at one end, a table for eight in the middle, and doors onto the terrace at the other. Two bedrooms open off it. The third is upstairs under the old beams, with its own bathroom and a window looking back over the grove.\n\nOutside, the pool is heated from April and screened from the lane by a dry-stone wall and forty-year-old bougainvillea. There is shade by eleven, a wood oven that works, and enough loungers that nobody has to negotiate.\n\nOstuni is fifteen minutes by car — the white town on the hill you can see from the terrace. The Adriatic beaches at Torre Guaceto are twenty, and the nature reserve behind them is worth the morning. Bari airport is an hour and ten; Brindisi is forty minutes.",
+    "furniture": {
+      "lightbox": { "label": "View all 4 photos" }
+    },
+    "actions": [
+      {
+        "link": { "url": "#availability", "text": "Check availability" },
+        "style": "primary"
+      }
+    ],
+    "details": {
+      "geo": {
+        "latitude": 40.7297,
+        "longitude": 17.5794,
+        "url": "https://www.google.com/maps/search/?api=1&query=40.7297,17.5794"
+      },
+      "reviews": [
+        {
+          "author": "Lillian Ruiz",
+          "rating": 5,
+          "max": 5,
+          "datePublished": "2026-07-02",
+          "dateDisplay": "July 2, 2026",
+          "stayed": "June 2026",
+          "body": "We were six adults and never once felt on top of each other. The house is cooler than any air conditioning, the pool is genuinely heated, and Nico left us oil from the grove and a map of where to eat. We used both."
+        },
+        {
+          "author": "John S.",
+          "rating": 4,
+          "max": 5,
+          "datePublished": "2026-05-19",
+          "dateDisplay": "May 19, 2026",
+          "stayed": "May 2026",
+          "body": "Beautiful, quiet and exactly as photographed. The lane in is rough for the last kilometre — take the higher clearance car if you have the choice — but everything else was faultless."
+        }
+      ],
+      "property": {
+        "amenities": [
+          "Heated pool, open April to October",
+          "Air conditioning in every bedroom",
+          "Walled garden and wood-fired oven",
+          "Fast wifi and a desk in the upstairs room",
+          "Cot, high chair and stair gate on request"
+        ]
+      }
+    }
+  }
+}

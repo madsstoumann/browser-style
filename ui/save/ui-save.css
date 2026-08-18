@@ -5,7 +5,9 @@
 @layer bs-component {
 	:where(ui-save) {
 		/* ───────── A. Base ───────── */
-		--ui-save-c: var(--color-text);
+		/* carousel chrome when the frame is a carousel, scheme-stable overlay chrome when
+		   it is not — never Canvas/--color-text. Docs: ../card/docs/media.carousel.md § Band ink */
+		--ui-save-c: var(--ui-carousel-arrow-ink, rgb(0 0 0 / 0.8));
 		--ui-save-c-active: var(--ui-save-c); /* saved ink; set it for a two-colour toggle */
 		--ui-save-c-idle: var(--color-text-muted); /* no-border-shape fallback only */
 		--ui-save-sz: 1.2em;
@@ -17,12 +19,13 @@
 		--ui-save-hover-press: 0.85;
 
 		/* circle backdrop — on by default */
-		--ui-save-circle-bg: Canvas;
-		--ui-save-circle-border-color: var(--color-border);
-		--ui-save-circle-border-width: var(--border-width, 1px);
+		--ui-save-circle-bg: var(--ui-carousel-arrow-bg, rgb(255 255 255 / 0.7));
+		--ui-save-circle-bg-hover: var(--ui-carousel-arrow-bg-hover, rgb(255 255 255 / 0.9));
+		--ui-save-circle-border-color: currentColor;
+		--ui-save-circle-border-width: var(--ui-carousel-arrow-border, 0);
 		--ui-save-circle-pad: 0.4em;
 		--ui-save-circle-radius: var(--radius-circle);
-		--ui-save-circle-shadow: var(--shadow-lg);
+		--ui-save-circle-shadow: var(--ui-carousel-arrow-shadow, 0 1px 3px rgb(0 0 0 / 0.15));
 
 		color: var(--ui-save-c);
 		display: inline-grid;
@@ -48,7 +51,10 @@
 			place-content: center;
 
 			@media (hover: hover) {
-				&:hover { color: var(--ui-save-c-active); }
+				&:hover {
+					background-color: var(--ui-save-circle-bg-hover, var(--ui-save-circle-bg));
+					color: var(--ui-save-c-active);
+				}
 			}
 		}
 
@@ -87,12 +93,12 @@
 		&[theme~="slate"],  :where([media*="save(slate)"])  & { --ui-save-c: var(--ui-theme-slate-bg); }
 
 		/* arbitrary colour — ink = glyph, fill = disc. After the hues so it wins. */
-		&[ink]  { --ui-save-c: attr(ink type(<color>), var(--color-text)); }
-		&[fill] { --ui-save-circle-bg: attr(fill type(<color>), Canvas); }
+		&[ink]  { --ui-save-c: attr(ink type(<color>), currentColor); }
+		&[fill] { --ui-save-circle-bg: attr(fill type(<color>), transparent); }
 		/* typed attr() has NO fallback in Safari/FF. Docs: ../base/polyfills/readme.md */
 		@supports not (background-color: attr(x type(<color>), red)) {
-			&[ink]  { --ui-save-c: var(--color-text); }
-			&[fill] { --ui-save-circle-bg: Canvas; }
+			&[ink]  { --ui-save-c: var(--ui-carousel-arrow-ink, rgb(0 0 0 / 0.8)); }
+			&[fill] { --ui-save-circle-bg: var(--ui-carousel-arrow-bg, rgb(255 255 255 / 0.7)); }
 		}
 
 		/* size — md = default; sm/xl retune the stroke so it doesn't round to a hairline */
@@ -108,6 +114,7 @@
 		/* non — bare glyph, no disc */
 		&[variant~="non"], :where([media*="save(non)"]) & {
 			--ui-save-circle-bg: none;
+			--ui-save-circle-bg-hover: none;
 			--ui-save-circle-border-width: 0;
 			--ui-save-circle-pad: 0;
 			--ui-save-circle-radius: 0;
