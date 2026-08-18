@@ -25,15 +25,35 @@ export function buildCfUrl(src, t, base = '') {
 }
 
 /**
+ * Largest ladder rung an original can fill without being upscaled.
+ * Cloudflare's fit=cover does NOT decline an oversized request — it manufactures the
+ * pixels, so a 509px original asked for width=1200 returns 1200x900 at ~4x the bytes.
+ * With a ratio BOTH axes bind: a 1440x960 original cropped to 4/3 tops out at 1280.
+ * @param {[number,number]|null|undefined} intrinsic - [width, height] of the source
+ * @param {number|null} [ratio] - width/height of the frame, when asr() fixes one
+ * @returns {number} the cap in CSS px, or Infinity when the source size is unknown
+ */
+export function maxUsableWidth(intrinsic, ratio) {
+	const [w, h] = intrinsic || [];
+	if (!w || !h) return Infinity;
+	return ratio ? Math.min(w, Math.floor(h * ratio)) : w;
+}
+
+/**
  * Build a full responsive srcset string.
  * @param {string} src
- * @param {{breakpoints:number[], format?:string, quality?:number, fit?:string, ratio?:number|null, base?:string}} opts
+ * @param {{breakpoints:number[], format?:string, quality?:number, fit?:string, ratio?:number|null, base?:string, intrinsic?:[number,number]}} opts
  *        ratio = width/height from an asr() token (e.g. 16/9). null => preserve natural ratio.
- * @returns {string|null} "url 240w, url 320w, ..." or null when inputs are invalid.
+ *        intrinsic = [width, height] of the ORIGINAL; rungs above it are dropped.
+ * @returns {string|null} "url 240w, url 320w, ..." or null when inputs are invalid, or
+ *          when the original cannot fill even the narrowest rung (plain src is smaller).
  */
-export function buildSrcset(src, { breakpoints, format, quality, fit, ratio, base }) {
+export function buildSrcset(src, { breakpoints, format, quality, fit, ratio, base, intrinsic }) {
 	if (!src || !breakpoints?.length) return null;
-	return breakpoints
+	const max = maxUsableWidth(intrinsic, ratio);
+	const rungs = breakpoints.filter(w => w <= max);
+	if (!rungs.length) return null;
+	return rungs
 		.map(w => {
 			const t = { format, quality, fit, width: w };
 			if (ratio) t.height = Math.round(w / ratio);

@@ -19,7 +19,7 @@ function generateLayoutHTML(layoutName, layoutData, layoutType, iconsDir) {
 	<link rel="stylesheet" href="/ui/base/index.css">
 	<link rel="stylesheet" href="layout.min.css">
 	<link rel="stylesheet" href="/layout/demo.css">
-	<script type="module" src="../polyfills/attr-fallback.js"></script>
+	<script type="module" src="../polyfills/attr-fallback.min.js"></script>
 </head>
 <body>
 	<h1>${title}</h1>`
@@ -153,7 +153,7 @@ function generateOverflowHTML(columnsData, iconsDir) {
 	<link rel="stylesheet" href="/ui/base/index.css">
 	<link rel="stylesheet" href="layout.min.css">
 	<link rel="stylesheet" href="/layout/demo.css">
-	<script type="module" src="../polyfills/attr-fallback.js"></script>
+	<script type="module" src="../polyfills/attr-fallback.min.js"></script>
 	<script src="../polyfills/overflow-drag.js"></script>
 </head>
 <body>
@@ -341,7 +341,7 @@ function generateIconsHTML(iconsDir) {
 	<link rel="stylesheet" href="/ui/base/index.css">
 	<link rel="stylesheet" href="layout.min.css">
 	<link rel="stylesheet" href="/layout/demo.css">
-	<script type="module" src="../polyfills/attr-fallback.js"></script>
+	<script type="module" src="../polyfills/attr-fallback.min.js"></script>
 	<style>
 		.icon-list {
 			display: grid;

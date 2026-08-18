@@ -81,7 +81,13 @@ export default class UiMedia extends HTMLElement {
 			const src = el.getAttribute('src');
 			if (!this.#eligible(src)) return;
 
-			const srcset = buildSrcset(src, { ...cfg, ratio });
+			/* an author-stated width/height caps the ladder: fit=cover UPSCALES rather
+			   than declining, so a rung the original cannot fill is pure waste. This
+			   module ships no size manifest (the SSR path has one) — without the
+			   attributes the ladder is unchanged. Docs: docs/media.md § srcset */
+			const w = Number(el.getAttribute('width')), h = Number(el.getAttribute('height'));
+			const intrinsic = w > 0 && h > 0 ? [w, h] : cfg.intrinsic?.[src];
+			const srcset = buildSrcset(src, { ...cfg, ratio, intrinsic });
 			if (!srcset) return;
 			el.setAttribute('srcset', srcset);
 			if (!el.hasAttribute('sizes')) el.setAttribute('sizes', cfg.sizes);
