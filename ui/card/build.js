@@ -16,7 +16,16 @@ const ENTRIES = ['index.js', 'carousel.js', 'hover.js', 'video.js', 'lightbox.js
    every demo page — unminified it was the whole of Lighthouse's "Minify JavaScript";
    save.js is the <ui-save> toggle the demos load. Docs: ../base/polyfills/readme.md,
    ../save/readme.md § Toggling */
-const FOREIGN_ENTRIES = [['../base/polyfills/attr-fallback.js', '../base/polyfills/attr-fallback.min.js'], ['../save/save.js', '../save/save.min.js']];
+const FOREIGN_ENTRIES = [
+	['../base/polyfills/attr-fallback.js', '../base/polyfills/attr-fallback.min.js'],
+	/* IIFE twin, for INLINING into <head>. The source ends in `export {…}`, which an
+	   inline classic <script> cannot carry — and it has to be a classic script, because
+	   an inline `type="module"` is DEFERRED by spec and would run after first paint,
+	   reintroducing the exact bug blocking="render" exists to prevent.
+	   Consumed by scripts/inline-polyfill.js. Docs: ../base/polyfills/readme.md */
+	['../base/polyfills/attr-fallback.js', '../base/polyfills/attr-fallback.iife.min.js', 'iife'],
+	['../save/save.js', '../save/save.min.js']
+];
 const dir = new URL('.', import.meta.url).pathname;
 
 const esbuild = (args) => execFileSync('npx', ['--yes', 'esbuild', ...args], { cwd: dir, stdio: ['ignore', 'pipe', 'inherit'] });
@@ -46,9 +55,9 @@ for (const entry of ENTRIES) {
 	const min = readFileSync(dir + out);
 	console.log(`${out.padEnd(16)}${kb(source)}${kb(min.length)}${kb(gzipSync(min, { level: 9 }).length)}${kb(brotli(min))}`);
 }
-for (const [entry, out] of FOREIGN_ENTRIES) {
-	const source = esbuild([entry, '--bundle', '--format=esm', '--log-level=warning']).length;
-	esbuild([entry, '--bundle', '--minify', '--format=esm', `--outfile=${out}`, '--log-level=warning']);
+for (const [entry, out, format = 'esm'] of FOREIGN_ENTRIES) {
+	const source = esbuild([entry, '--bundle', `--format=${format}`, '--log-level=warning']).length;
+	esbuild([entry, '--bundle', '--minify', `--format=${format}`, `--outfile=${out}`, '--log-level=warning']);
 	const min = readFileSync(dir + out);
 	console.log(`${out.split('/').pop().padEnd(16)}${kb(source)}${kb(min.length)}${kb(gzipSync(min, { level: 9 }).length)}${kb(brotli(min))}`);
 }
