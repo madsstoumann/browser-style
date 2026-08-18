@@ -59,7 +59,44 @@ Three levers, none of which touch a stylesheet:
 
 ---
 
-## 1. Serve the CSS at brotli q11 via a Pages Function
+## 1. Serve the CSS at brotli q11 via a Pages Function — ❌ TRIED, DOES NOT WORK
+
+> **Attempted 2026-08-18 and reverted (`50483ba7`, reverted by `4c9bd070`). Do not retry.**
+>
+> Cloudflare **normalises `Accept-Encoding` before the Worker sees it.** Measured on
+> `wrangler pages dev` with a Function that echoed the header back:
+>
+> ```
+> sent identity                 -> worker saw: [br, gzip]
+> sent gzip                     -> worker saw: [br, gzip]
+> sent gzip, deflate, br, zstd  -> worker saw: [br, gzip]
+> ```
+>
+> So the `accept-encoding.includes('br')` guard below is **always true** and the Function
+> serves the precompressed body to every client. For a br-capable browser the edge keeps
+> `content-encoding: br` and it works; for anything else the edge strips the header but not
+> the compression, so the client receives brotli bytes labelled `text/css` and renders an
+> unstyled page. Verified live: `Accept-Encoding: identity` returned 50,090 B byte-identical
+> to the `.br` sibling.
+>
+> A Function cannot recover the client's real `Accept-Encoding`, so it can never decide
+> safely whether to serve a precompressed body. The `vary: accept-encoding` mitigation does
+> not help — the wrong body has already been chosen.
+>
+> Two testing traps this cost, worth remembering: **`curl -I` sends HEAD**, which
+> `onRequestGet` does not handle, so every header check silently bypassed the Function and
+> measured the static asset instead; and **`curl --raw`** leaves chunked-transfer framing in
+> the body, which then fails to brotli-decode and looks like corruption that is not there.
+>
+> Ruled out along the way: Pages does **not** auto-serve `.br` siblings. With the sibling
+> present and the Function removed, `identity` correctly returns the full 405,998 B stylesheet.
+>
+> The 14 kB is real but not reachable this way. Go after § 3 instead — it is a bigger number
+> (−19 kB on the LCP image alone) and it is entirely ours to control.
+
+<details>
+<summary>Original plan, kept for the record</summary>
+
 
 Cloudflare Pages compresses dynamically at ~q4. Verified: the deployed response is 64,028 B;
 locally `brotli -q 4` gives 64,097 and `brotli -q 11` gives 50,082. Precompressing is the whole
@@ -107,6 +144,8 @@ client is never served a cached `br` body.
   would trade 14 KB for an invocation on every load — a bad trade, and the fallback is then the
   `_headers` `.br`-direct-link approach
 - the page still renders (double-encoding fails silently: the browser just shows unstyled HTML)
+
+</details>
 
 ## 2. Inline the typed-`attr()` polyfill
 
