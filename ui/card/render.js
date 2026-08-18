@@ -443,6 +443,16 @@ const mapUrl = (geo) => geo?.url || (geo?.latitude != null && geo?.longitude != 
 	? `geo:${geo.latitude},${geo.longitude}`
 	: null);
 
+/* the derived "Open in Maps" CTA. Unmarked on purpose: hasMap is declared once, on the
+   map frame — docs/schema.md § One property, one value. Emitted through DETAILS_ACTIONS
+   so it closes the text column AFTER the tags, like every other CTA row. */
+const mapCta = (geo) => {
+	const link = mapUrl(geo);
+	return link
+		? `<nav data-part="actions"><a class="ui-button" data-variant="accent" href="${esc(link)}"${/^geo:/.test(link) ? '' : ' target="_blank" rel="noopener"'}>Open in Maps</a></nav>`
+		: '';
+};
+
 /* map EMBED src — the frame's iframe, not the "Open in Maps" href above.
    Coordinates are validated as NUMBERS before they reach a URL; esc() is the second
    layer, never the first. Docs: docs/media.md § Map */
@@ -476,12 +486,14 @@ const MAP_PROVIDERS = { osm: (c) => osmEmbed(c), google: (c, options) => googleE
    Place. Other types still get the frame, just unmarked. Docs: docs/schema.md § Map */
 const HAS_MAP_TYPES = new Set(['business', 'location']);
 
-const mapFrame = (item, fields, type) => {
+/* `hasMap` defaults to the type gate above, but a caller that KNOWS its enclosing
+   scope descends from Place (the realestate mainEntity) passes it explicitly. */
+const mapFrame = (item, fields, type, hasMap = HAS_MAP_TYPES.has(type)) => {
 	const coords = mapCoords(fields.details?.geo, item);
 	const src = item.src || (coords && (MAP_PROVIDERS[item.provider]?.(coords, fields.details?.map || {}) || osmEmbed(coords)));
 	if (!src) return '';
 	const title = item.alt || `Map of ${plain(fields.headline) || 'this location'}`;
-	return `<iframe${attrs({ src, title, loading: 'lazy', itemprop: HAS_MAP_TYPES.has(type) ? 'hasMap' : null })}></iframe>`;
+	return `<iframe${attrs({ src, title, loading: 'lazy', itemprop: hasMap ? 'hasMap' : null })}></iframe>`;
 };
 
 /* eligibleDuration is QuantitativeValue-typed — expand ISO P<n><unit>, not Duration text */
@@ -1014,14 +1026,28 @@ const buildContent = (fields, type, overlay, slots = {}, textMode = 'summary', p
 	   chip family, so a furniture chip suppresses the <ui-chip data-type> type label.
 	   Same <p data-part="meta"><ui-chip theme="pale …"> shape the achievement status,
 	   most-popular and version chips already use, so it inherits their spacing. */
-	if (fields.chip?.text) {
-		html += `<p data-part="meta"><ui-chip theme="${esc(fields.chip.theme || 'pale accent')}">${esc(fields.chip.text)}</ui-chip></p>`;
+	const chips = (Array.isArray(fields.chip) ? fields.chip : [fields.chip]).filter((chip) => chip?.text);
+	if (chips.length) {
+		/* theme/size/radius/variant are ui/chip's own standalone attributes, written
+		   verbatim — the card DSL has no text-column chip token. Docs: ui/chip/readme.md */
+		html += `<p data-part="meta">${chips.map((chip) => `<ui-chip${attrs({
+			theme: chip.theme || 'pale accent', size: chip.size, radius: chip.radius, variant: chip.variant
+		})}>${esc(chip.text)}</ui-chip>`).join('')}</p>`;
 	}
 	if (fields.eyebrow) {
 		html += `<small data-part="eyebrow"${EYEBROW_PROP[type] ? ` itemprop="${EYEBROW_PROP[type]}"` : ''}>${esc(fields.eyebrow)}</small>`;
 	}
 	if (fields.headline && type !== 'quote') {
-		html += `<${headlineTag} data-part="headline" itemprop="${headlineProp(fields, type)}">${renderInline(fields.headline)}</${headlineTag}>`;
+		/* `cover` makes the WHOLE card clickable: one <a> in the headline whose ::after
+		   stretches over the card. Safe over a carousel — the scroll-button/marker pseudos
+		   are z-index 3 and the overlay furniture 2, against the cover's 1, and content.css
+		   already drops pointer-events on decorative chips. One link only: nested anchors
+		   are invalid, so tag/action links are raised above it instead. Docs: docs/content.md */
+		const inner = renderInline(fields.headline);
+		const headline = fields.cover
+			? `<a data-part="cover" href="${esc(fields.cover)}">${inner}</a>`
+			: inner;
+		html += `<${headlineTag} data-part="headline" itemprop="${headlineProp(fields, type)}">${headline}</${headlineTag}>`;
 	}
 	html += slots.subheadline || (fields.subheadline ? `<${textTag} data-part="subheadline">${esc(fields.subheadline)}</${textTag}>` : '');
 	if (fields.summary && showSummary && !DETAILS_OWNS_SUMMARY.has(type)) {
@@ -1285,12 +1311,102 @@ const menuItem = (item) => {
 		: '';
 	return `<li${scope('hasMenuItem', 'MenuItem')}>`
 		+ `<strong itemprop="name">${esc(item.name)}</strong>`
-		+ (item.label ? `<ui-chip theme="${esc(item.labelTheme || 'pale green')}">${esc(item.label)}</ui-chip>` : '')
+		/* sm: the diet chip shares a tight `auto 1fr auto` row with the name and the price */
+		+ (item.label ? `<ui-chip${attrs({ theme: item.labelTheme || 'pale green', size: item.labelSize || 'sm' })}>${esc(item.label)}</ui-chip>` : '')
 		+ offer
 		+ (item.description ? `<small itemprop="description">${esc(item.description)}</small>` : '')
 		+ (item.diets || []).filter((diet) => RESTRICTED_DIETS.has(diet)).map((diet) => meta('suitableForDiet', SCHEMA + diet)).join('')
 		+ nutrition
 		+ '</li>';
+};
+
+/* ── RealEstateListing, section by section ────────────────────────────────────
+   Two consumers, one source: the TEASER composes them in one text column (see
+   DETAILS.realestate below), the generated detail page wraps bands of them in its
+   own <section itemprop="mainEntity">. Every residence property is stated ONCE, so
+   `factsRun` and `figures` are ALTERNATIVES — a page emitting both would restate
+   floorSize/numberOfBedrooms/... and fail "one property, one value".
+   `geo` and `hasMap` are Place properties: invalid on the listing (a WebPage), valid
+   INSIDE the residence scope, which is why `place` is a residence-level section.
+   Docs: docs/schema.md § Real estate ── */
+export const realestateSections = (d = {}, fields = {}) => {
+	const home = d.property;
+	const numbered = (prop, value, text) => value == null || value === '' ? null : `${meta(prop, value)}${text}`;
+	const plural = (n, word) => `${num(n)} ${word}${n === 1 ? '' : 's'}`;
+	const floorSize = home?.floorSize == null ? null
+		: `<span${scope('floorSize', 'QuantitativeValue')}>${meta('unitCode', home.floorSizeUnit || 'MTK')}${meta('value', home.floorSize)}${num(home.floorSize)}`;
+
+	/* the machine value rides a <meta>, never a <data> — "3 bedrooms" is the string a
+	   text-reading validator takes as numberOfBedrooms. Docs: docs/schema.md § Real estate */
+	const facts = !home ? [] : [
+		floorSize ? `${floorSize} ${esc(home.floorSizeLabel || 'm²')}</span>` : null,
+		numbered('numberOfBedrooms', home.bedrooms, plural(home.bedrooms, 'bedroom')),
+		numbered('numberOfBathroomsTotal', home.bathrooms, plural(home.bathrooms, 'bathroom')),
+		numbered('numberOfRooms', home.rooms, plural(home.rooms, 'room')),
+		/* esc(), not num(): a year is not a quantity — num() would print "2,018" */
+		numbered('yearBuilt', home.yearBuilt, `built ${esc(home.yearBuilt)}`)
+	].filter(Boolean);
+
+	/* the same properties as `facts`, one big number each. data-variant="stacked" puts
+	   the label under the figure; `floorLevel` joins here because a grid has room for it.
+	   The value is ALWAYS the first element — content.css sizes `> :first-child`, so a
+	   leading <meta> would silently steal the big type off the number. */
+	const figure = (value, label, machine = '') =>
+		`<p data-part="stat" data-variant="stacked"><span>${value}</span>${machine}<small>${esc(label)}</small></p>`;
+	const numFigure = (prop, value, label, text = num(value)) =>
+		value == null || value === '' ? null : figure(text, label, meta(prop, value));
+	const figures = !home ? [] : [
+		/* the run says "118 m²"; a figure needs a NAME under the number, so the unit joins the label */
+		floorSize ? `<p data-part="stat" data-variant="stacked">${floorSize}</span><small>${esc(`Floor area (${home.floorSizeLabel || 'm²'})`)}</small></p>` : null,
+		numFigure('numberOfRooms', home.rooms, 'Rooms'),
+		numFigure('numberOfBedrooms', home.bedrooms, 'Bedrooms'),
+		numFigure('numberOfBathroomsTotal', home.bathrooms, 'Bathrooms'),
+		/* esc(), not num(): a year is not a quantity — num() would print "2,018" */
+		numFigure('yearBuilt', home.yearBuilt, 'Year built', esc(home.yearBuilt)),
+		numFigure('floorLevel', home.floorLevel, 'Floor', esc(home.floorLevel))
+	].filter(Boolean);
+
+	/* geo + the map frame + the crawlable "Open in Maps" link. hasMap is declared ONCE,
+	   on the iframe (HTML takes a frame's microdata value from its src), so the action
+	   link stays unmarked — docs/schema.md § One property, one value. */
+	const geo = home?.geo;
+	const mapItem = d.mapMedia || (geo ? { mediaType: 'map' } : null);
+	const place = {
+		geo: geoPart(geo),
+		frame: mapItem && geo
+			? mapFrame(mapItem, { headline: fields.headline, details: { geo, map: d.map } }, 'realestate', true)
+			: '',
+		action: mapCta(geo)
+	};
+
+	const bits = [
+		d.datePostedDisplay ? `Listed ${esc(d.datePostedDisplay)}` : null,
+		d.agent ? esc(d.agent) : null,
+		d.viewings ? esc(d.viewings) : null
+	].filter(Boolean).join(' · ');
+
+	return {
+		listing: meta('datePosted', d.datePosted) + (d.price
+			? `<p data-part="price"${scope('offers', 'Offer')}>${meta('priceCurrency', d.price.currency)}${meta('availability', availabilityUrl(d.availability || 'in stock'))}${priceValue(d.price.currency, d.price.amount)}${d.price.note ? ` <small>${esc(d.price.note)}</small>` : ''}</p>`
+			: ''),
+		/* `attrs` so a caller can hang the scope on whatever element its layout needs
+		   (the detail page uses a <section>); open/close are the <div> the teaser wants */
+		residence: home ? {
+			attrs: scope('mainEntity', RESIDENCE_TYPES.has(home.type) ? home.type : 'Accommodation'),
+			open: `<div${scope('mainEntity', RESIDENCE_TYPES.has(home.type) ? home.type : 'Accommodation')}>`,
+			close: '</div>',
+			metas: meta('name', home.name) + meta('floorLevel', home.floorLevel) + meta('petsAllowed', home.petsAllowed)
+		} : null,
+		factsRun: facts.length ? `<p data-part="meta">${facts.join(' · ')}</p>` : '',
+		figures,
+		address: addressPart(home?.address),
+		amenities: home?.amenities?.length
+			? `<ul data-part="list">${home.amenities.map((amenity) =>
+				`<li${scope('amenityFeature', 'LocationFeatureSpecification')}>${meta('value', 'true')}<span itemprop="name">${esc(amenity)}</span></li>`).join('')}</ul>`
+			: '',
+		place,
+		footer: bits ? `<p data-part="meta">${bits}</p>` : ''
+	};
 };
 
 const DETAILS = {
@@ -1619,8 +1735,8 @@ const DETAILS = {
 		/* amenityFeature wants LocationFeatureSpecification scopes — plain list, no itemprop */
 		html += listPart(d.amenities);
 		if (d.contact) html += `<p data-part="meta"><a itemprop="telephone" href="tel:${esc(String(d.contact).replace(/\s/g, ''))}">${esc(d.contact)}</a></p>`;
-		const map = mapUrl(d.geo);
-		if (map) html += `<nav data-part="actions"><a class="ui-button" data-variant="accent" href="${esc(map)}"${/^geo:/.test(map) ? '' : ' target="_blank" rel="noopener"'}>Open in Maps</a></nav>`;
+		/* the "Open in Maps" CTA is a DETAILS_ACTIONS entry, not emitted here: a CTA row
+		   closes the text column, so it has to land after buildTail's tags and links */
 		return html;
 	},
 
@@ -1920,38 +2036,13 @@ const DETAILS = {
 
 	/* RealEstateListing is a WebPage: the home hangs off mainEntity. `offers` is NOT
 	   valid on Accommodation/Place, so the price rides the LISTING, outside that scope.
-	   Every strictly-numeric property emits its machine value via <meta> with the unit
-	   words in a separate text node. Docs: docs/schema.md § Real estate */
-	realestate(d) {
-		let html = meta('datePosted', d.datePosted);
-		if (d.price) {
-			html += `<p data-part="price"${scope('offers', 'Offer')}>${meta('priceCurrency', d.price.currency)}${meta('availability', availabilityUrl(d.availability || 'in stock'))}${priceValue(d.price.currency, d.price.amount)}${d.price.note ? ` <small>${esc(d.price.note)}</small>` : ''}</p>`;
-		}
-		const home = d.property;
-		if (home) {
-			const numbered = (prop, value, text) => value == null || value === '' ? null : `${meta(prop, value)}${text}`;
-			const facts = [
-				home.floorSize != null
-					? `<span${scope('floorSize', 'QuantitativeValue')}>${meta('unitCode', home.floorSizeUnit || 'MTK')}${meta('value', home.floorSize)}${num(home.floorSize)} ${esc(home.floorSizeLabel || 'm²')}</span>`
-					: null,
-				numbered('numberOfBedrooms', home.bedrooms, `${num(home.bedrooms)} bedroom${home.bedrooms === 1 ? '' : 's'}`),
-				numbered('numberOfBathroomsTotal', home.bathrooms, `${num(home.bathrooms)} bathroom${home.bathrooms === 1 ? '' : 's'}`),
-				numbered('numberOfRooms', home.rooms, `${num(home.rooms)} room${home.rooms === 1 ? '' : 's'}`),
-				/* esc(), not num(): a year is not a quantity — num() would print "2,018" */
-				numbered('yearBuilt', home.yearBuilt, `built ${esc(home.yearBuilt)}`)
-			].filter(Boolean).join(' · ');
-			const amenities = home.amenities?.length
-				? `<ul data-part="list">${home.amenities.map((amenity) =>
-					`<li${scope('amenityFeature', 'LocationFeatureSpecification')}>${meta('value', 'true')}<span itemprop="name">${esc(amenity)}</span></li>`).join('')}</ul>`
-				: '';
-			html += `<div${scope('mainEntity', RESIDENCE_TYPES.has(home.type) ? home.type : 'Accommodation')}>`
-				+ meta('name', home.name) + meta('floorLevel', home.floorLevel) + meta('petsAllowed', home.petsAllowed)
-				+ (facts ? `<p data-part="meta">${facts}</p>` : '')
-				+ addressPart(home.address) + amenities + '</div>';
-		}
-		const bits = [d.datePostedDisplay ? `Listed ${esc(d.datePostedDisplay)}` : null, d.agent ? esc(d.agent) : null, d.viewings ? esc(d.viewings) : null].filter(Boolean).join(' · ');
-		if (bits) html += `<p data-part="meta">${bits}</p>`;
-		return html;
+	   Composed from realestateSections() so the teaser and the banded detail page can
+	   never drift. Docs: docs/schema.md § Real estate */
+	realestate(d, fields = {}) {
+		const s = realestateSections(d, fields);
+		return s.listing
+			+ (s.residence ? s.residence.open + s.residence.metas + s.factsRun + s.address + s.amenities + s.residence.close : '')
+			+ s.footer;
 	},
 
 	/* Menu and MenuSection are CreativeWorks; MenuItem is an Intangible — which is why
@@ -2245,6 +2336,8 @@ const SUBHEADLINE_SLOT = {
    A preset's byline: "lede" opts any type in — the full-article shape. */
 const BYLINE_EARLY = new Set(['book']);
 
+const DETAILS_ACTIONS = { location: (d) => mapCta(d.geo) };
+
 /* full content column for a card (envelope + details + trailers) */
 /* `itemtype` is the bare schema.org name ACTUALLY WRITTEN on the enclosing scope —
    threaded down so a DETAILS renderer can gate subtype-only properties on it. It is
@@ -2268,6 +2361,10 @@ const contentColumn = (fields, type, overlay, extras = '', textMode = 'summary',
 	let html = buildContent(fields, type, overlay, slots, textMode, parts, headingTag) + (slots.after || '');
 	if (DETAILS[type] && fields.details) html += DETAILS[type](fields.details, fields, parts, itemtype, envelopeProps(fields, type));
 	html += buildTail(tailFields, type);
+	/* a CTA the type DERIVES from its details rather than from fields.actions. It runs
+	   after buildTail for the same reason fields.actions does: the CTA row closes the
+	   text column, below the tags. Docs: docs/schema.md § Location */
+	if (DETAILS_ACTIONS[type] && fields.details) html += DETAILS_ACTIONS[type](fields.details, fields);
 	return html + extras;
 };
 

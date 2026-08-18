@@ -132,7 +132,7 @@ The twelve parts the typed cards add on top of the envelope. All are **styled** 
 | `timeline` | `<ol>` of `<time>` + text | Milestone list (`subEvent` scopes) | timeline |
 | `quote` | `<ui-quote>` + `<blockquote>` (+ `<cite>`) | Third-party voice: pull-quote, review body, post, answer, reviewed claim | quote, review, social, Q&A, fact check |
 | `options` | `<ul>` of `<label>` + `<progress>` | Poll answers / comparison rows with bars | poll, comparison |
-| `cover` | `<a>` inside the headline, `::after` covering the card | Clickable card — one link, no nested anchors; tag/action links stay above it | article, news (→ the [full-article pages](../demo/articles/article.html)) |
+| `cover` | `<a>` inside the headline, `::after` covering the card | Clickable card — one link, no nested anchors; tag/action links stay above it. From content it is the envelope field `fields.cover`. Safe over a carousel: the `::scroll-button()`/`::scroll-marker-group` pseudos are `z-index: 3` and the overlay furniture `2`, against the cover's `1` | article, news (→ the [full-article pages](../demo/articles/article.html)), real estate |
 
 ## Price
 
@@ -577,7 +577,7 @@ Overlay over a destination shot; address + geo, amenities as `list`, hours in th
 
 The same type as [Location](#location--place), with the **map** as the media instead of a photo: a `{ "mediaType": "map" }` item whose coordinates come from `details.geo` — the very object that emits the card's `GeoCoordinates` scope, so the drawn point and the machine-readable one cannot drift. OpenStreetMap is the only keyless provider and is the default; the frame is a plain `<iframe>` because `media.css` already sizes one like an `<img>`. Full field list, the provider table and the coordinate-validation rule: [media.md § Map](./media.md#map--the-frame-as-an-embedded-map).
 
-The property is **`hasMap`** — valid on `Place` and everything below it (`LocalBusiness` included), so it is gated to the `business` and `location` types; a map on any other type renders unmarked. It rides the `<iframe>` itself, because HTML takes a frame's microdata value from its `src`. The "Open in Maps" action link stays unmarked so `hasMap` is declared exactly once — see [One property, one value](#one-property-one-value).
+The property is **`hasMap`** — valid on `Place` and everything below it (`LocalBusiness` included), so it is gated to the `business` and `location` types; a map on any other type renders unmarked. The one caller that overrides the gate is the real-estate detail page, whose map sits inside a `mainEntity` → `Apartment` scope that *does* descend from `Place`; `mapFrame()` takes `hasMap` as an explicit argument for it. See [Real estate](#real-estate--realestatelisting). It rides the `<iframe>` itself, because HTML takes a frame's microdata value from its `src`. The "Open in Maps" action link stays unmarked so `hasMap` is declared exactly once — see [One property, one value](#one-property-one-value).
 
 ### Membership — `Offer`
 
@@ -812,26 +812,68 @@ while `serviceUrl` sits directly on the CTA.
 
 ### Real estate — `RealEstateListing`
 
-The demo pair models a property portal: a **teaser** on `demo/schema.html` (photo carousel via
-`card-preset/carousel`, a `pale green` "New" chip, the facts row) linking to a generated
-**detail page**, `demo/realestate/havnegade-44.html`, built by `demo/realestate/build.js` —
-the same shape as the article and product-colourway pages.
+The demo pair models a property portal: a short **teaser** on `demo/schema.html` (photo
+carousel via `card-preset/carousel`, two square status chips, the facts row) linking to a
+generated **detail page**, `demo/realestate/havnegade-44.html`, built by
+`demo/realestate/build.js`.
 
-Two things about that pair are easy to get wrong:
+**Two data files, deep-merged by the builder.** `data/realestate.json` is shared with the
+teaser and stays short; `demo/realestate/havnegade-44.json` carries what only the page has —
+the long sales copy, `amenities[]`, the coordinates behind the map band, the gallery invoker
+and the page's own CTA. That split is why the teaser shows no amenity list and does not
+self-link. It is the same shape the product pages use, and it is what
+[`build.js`](../demo/realestate/build.js) already documented for the lightbox invoker alone.
 
-- **The "New" chip is `fields.chip`, not `fields.furniture.chip`.** A frame gets one chip family,
-  so a furniture chip *suppresses* the `<ui-chip data-type>` type label — putting the flag on the
-  media would silently delete `RealEstateListing` from the card. `fields.chip` renders it at the
-  top of the text column instead, in the same `<p data-part="meta"><ui-chip theme="pale …">`
-  shape as the achievement status and most-popular chips.
+**The page is banded, not one card.** One `<article>` carries the listing scope; band 1 is
+the gallery card; the residence bands sit inside **one** `<section itemprop="mainEntity">`.
+They have to: microdata scopes are DOM subtrees, and each property is stated exactly once
+([One property, one value](#one-property-one-value)).
+
+```
+<article itemscope itemtype=".../RealEstateListing">   ← name, description, datePosted, offers, image
+  band 1  gallery + eyebrow/headline/summary/price/agent/CTA
+  <section itemprop="mainEntity" itemscope itemtype=".../Apartment">
+    band 2  key figures    floorSize · rooms · bedrooms · bathrooms · yearBuilt · floorLevel
+    band 3  sales copy (a ui-reveal read-more) + amenityFeature
+    band 4  address + geo + hasMap
+  </section>
+</article>
+```
+
+**`realestateSections(details, fields)` is the seam**, exported from `render.js`. The teaser
+composes its pieces into one text column (that is all `DETAILS.realestate` does now); the
+builder wraps bands of the same pieces in its own markup. One source, two compositions, so
+they cannot drift — and `schema.compare.js` still proves the teaser half.
+
+⚠️ **`factsRun` and `figures` are ALTERNATIVES.** They state the same properties —
+`floorSize`, `numberOfBedrooms`, `numberOfBathroomsTotal`, `numberOfRooms`, `yearBuilt` — one
+as an interpunct run, one as a grid of `data-part="stat"` figures. A page emitting both
+restates every one of them and is invalid. The teaser takes the run, the page takes the grid.
+In a figure the value is always the **first element**: `content.css` sizes `> :first-child`,
+so a leading `<meta>` would silently steal the big type off the number.
+
+**Band 1 is kept listing-level by its data, not by a flag.** The builder hands that
+`renderCard()` call a `details` object with no `property`, so `DETAILS.realestate` emits
+`datePosted`, the price and the agent line and no `mainEntity` block — which the bands below
+own.
+
+Two other things about the pair are easy to get wrong:
+
+- **The status chips are `fields.chip`, not `fields.furniture.chip`.** A frame gets one chip
+  family, so a furniture chip *suppresses* the `<ui-chip data-type>` type label — putting the
+  flags on the media would silently delete `RealEstateListing` from the card. `fields.chip`
+  renders them at the top of the text column instead. It takes one object **or an array**;
+  each entry carries `ui/chip`'s own attributes (`theme`, `size`, `radius`, `variant`), and
+  this listing uses `radius: "rnd"` for the square-cornered look. A meta row holding more than
+  one chip gains flex + gap — see [content.md](./content.md).
 - **The gallery is `open:grid(3c)`, not a collage.** `collagePart()` is gated to `ProductGroup`
   and builds *variant* tiles; it cannot express a photo grid. `open:grid()` keeps the frame an
   ordinary carousel while closed and turns it into a full-bleed three-column contact sheet when
-  the lightbox opens — the "view all photos" pattern. The lightbox invoker is added by the
-  **builder**, not the data file, because that file is shared with the teaser and the teaser must
-  not grow a gallery button.
+  the lightbox opens — the "view all photos" pattern. The `realestate-page` preset is
+  `variant="col shd(non)"`: the gallery stays **above** the text column at every width, and its
+  bare `nav` leaves the default round dot markers.
 
-Two structural traps, both worth knowing before writing a renderer:
+Three structural traps, all worth knowing before writing a renderer:
 
 1. **It is a `WebPage` subtype.** The home is not the card's subject; it hangs off `mainEntity` →
    `Apartment` (or `House` / `SingleFamilyResidence` / `Accommodation`), which carries `floorSize`
@@ -842,9 +884,22 @@ Two structural traps, both worth knowing before writing a renderer:
    `AggregateOffer`, `CreativeWork`, `EducationalOccupationalProgram`, `Event`, `MenuItem`,
    `Product`, `Service`, `Trip` — so the price rides the **listing** (a `CreativeWork`), *outside*
    the `mainEntity` scope. Putting it on the residence is invalid markup, not merely unread.
+3. ⚠️ **`geo` and `hasMap` are the mirror image of that.** Both are `Place` properties, and
+   `RealEstateListing` is a `WebPage` — so they are invalid on the listing root and valid
+   **inside** the residence scope (`Apartment` ⊂ `Accommodation` ⊂ `Place`). That is why the map
+   band lives under `mainEntity`, why the coordinates are `details.property.geo`, and why
+   `HAS_MAP_TYPES` still does **not** list `realestate`: a `{ "mediaType": "map" }` item on the
+   listing's own media would render the frame unmarked, which is correct. `mapFrame()` takes an
+   explicit `hasMap` argument for the one caller that knows its enclosing scope. `hasMap` is
+   declared once, on the `<iframe>`; the "Open in Maps" link stays unmarked.
 
 `datePosted` and `leaseLength` are the listing's only two own properties. Note also that
 `SingleFamilyResidence` descends from `House` → `Accommodation`, **not** from `Residence`.
+
+**There is no Google rich result for `RealEstateListing`** — see the
+[rich-results audit](../../../docs/plans/2026-08-15-google-rich-results-audit.md). The markup
+is valid, complete schema.org that any consumer can read; the page's Google-eligible surface is
+its `BreadcrumbList` and its images, not a listing card.
 
 ### Menu — `Menu`
 

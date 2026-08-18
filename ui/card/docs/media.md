@@ -657,6 +657,11 @@ A card with coordinates can make the **map** its media, instead of a photo of th
 | `alt` | `Map of {headline}` | becomes the iframe `title` — an iframe needs one |
 | `src` | — | an explicit embed URL, bypassing the builder entirely |
 
+`itemprop="hasMap"` is gated to the `business` and `location` types, because `hasMap` is a
+`Place` property. A caller that KNOWS its enclosing scope descends from `Place` — the
+real-estate detail page's map band, which sits inside `mainEntity` → `Apartment` — passes
+`hasMap` to `mapFrame()` explicitly instead. Docs: [schema.md § Real estate](./schema.md#real-estate--realestatelisting).
+
 ### Providers — only one is keyless
 
 | Provider | Ships | Why |

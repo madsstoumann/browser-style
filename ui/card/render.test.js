@@ -1902,6 +1902,53 @@ describe('data detectors', () => {
 	});
 });
 
+/* ── a DERIVED CTA still closes the text column ──
+   Place's "Open in Maps" is built by the type from details.geo, not by fields.actions,
+   so it goes through DETAILS_ACTIONS and lands AFTER the tags. Docs: docs/schema.md § Location */
+describe('derived CTA ordering', () => {
+	test('the Place map CTA comes after the tags, not before', () => {
+		const html = renderCard({ fields: { schemaType: 'location', headline: 'P', tags: ['Bornholm'],
+			details: { geo: { latitude: 55.06, longitude: 14.7 }, amenities: ['Parking'] } } }, {}, {});
+		const tags = html.indexOf('data-part="tags"');
+		const cta = html.indexOf('Open in Maps');
+		assert.ok(tags > -1 && cta > -1, 'both render');
+		assert.ok(tags < cta, 'tags precede the CTA row');
+	});
+
+	test('and it is still emitted when the card has no tags', () => {
+		const html = renderCard({ fields: { schemaType: 'location', headline: 'P',
+			details: { geo: { latitude: 55.06, longitude: 14.7 } } } }, {}, {});
+		assert.match(html, /<nav data-part="actions">.*Open in Maps/);
+	});
+});
+
+/* ── cover: the whole card is one link ──
+   Safe over a carousel: the ::scroll-button/::scroll-marker pseudos are z-index 3 and
+   the overlay furniture 2, against the cover ::after's 1. Docs: docs/content.md */
+describe('cover link', () => {
+	const card = (cover) => render({ schemaType: 'realestate', cover, headline: 'Flat', eyebrow: 'For sale' });
+
+	test('wraps the headline text, inside the heading and its itemprop', () => {
+		assert.match(card('/x.html'), /<h3 data-part="headline" itemprop="name"><a data-part="cover" href="\/x.html">Flat<\/a><\/h3>/);
+	});
+
+	test('absent unless asked for, and cannot break out of the href', () => {
+		assert.ok(!card(undefined).includes('data-part="cover"'));
+		const html = card('" onclick="alert(1)');
+		/* esc() turns the quote into &quot;, so "onclick=" survives as inert TEXT inside
+		   the attribute value — what matters is that the <a> tag has no second attribute */
+		assert.match(html, /<a data-part="cover" href="&quot; onclick=&quot;alert\(1\)">/);
+		/* a real attribute would read onclick=" — the escaped value reads onclick=&quot; */
+		assert.ok(!html.includes('onclick="'), 'no attribute escaped the href');
+	});
+
+	test('there is exactly ONE cover link — nested anchors are invalid', () => {
+		const html = renderCard({ fields: { schemaType: 'realestate', cover: '/x.html', headline: 'Flat',
+			tags: [{ name: 'Copenhagen', url: '/t' }], actions: [{ link: { url: '/a', text: 'Go' } }] } }, {}, {});
+		assert.equal((html.match(/data-part="cover"/g) || []).length, 1);
+	});
+});
+
 /* ── the text-column status chip ──
    `fields.chip` is the flag above the eyebrow ("New", "Sold"). Distinct from
    `fields.furniture.chip`, which is overlaid on the MEDIA — and deliberately so: a
@@ -1925,6 +1972,31 @@ describe('content chip', () => {
 		const html = card({ text: '<script>alert(1)</script>', theme: '"><img src=x onerror=alert(1)>' });
 		assert.ok(!html.includes('<script>') && !html.includes('<img'), 'no raw markup reaches output');
 		assert.match(html, /&lt;script&gt;alert\(1\)&lt;\/script&gt;/, 'text still renders, escaped');
+	});
+
+	/* several flags on one listing — one meta row, not one row each, so content.css's
+	   :has(> ui-chip + ui-chip) gap arms. ui/chip's own attributes ride through verbatim. */
+	test('accepts an ARRAY and renders every chip in ONE meta row', () => {
+		const html = card([{ text: 'New', theme: 'pale green', radius: 'rnd' }, { text: 'Open house', radius: 'rnd' }]);
+		assert.match(html, /<p data-part="meta"><ui-chip theme="pale green" radius="rnd">New<\/ui-chip><ui-chip theme="pale accent" radius="rnd">Open house<\/ui-chip><\/p>/);
+		assert.equal(html.match(/<p data-part="meta">/g).length, 1, 'ONE row, not one per chip');
+	});
+
+	test('forwards size and variant, and drops entries with no text', () => {
+		assert.match(card([{ text: 'Sold', size: 'lg', variant: 'outline' }]),
+			/<ui-chip theme="pale accent" size="lg" variant="outline">Sold<\/ui-chip>/);
+		const sparse = card([{ text: 'New' }, { theme: 'pale red' }, null]);
+		assert.equal(sparse.match(/<ui-chip/g).length, 1, 'a textless entry renders nothing');
+	});
+
+	test('an empty array renders no meta row at all', () => {
+		assert.ok(!card([]).includes('<p data-part="meta">'), 'no chips, no row');
+		assert.ok(!card([{ theme: 'pale red' }]).includes('<p data-part="meta">'));
+	});
+
+	test('escapes hostile chip attributes in the array form', () => {
+		const html = card([{ text: 'ok', radius: '"><img src=x onerror=alert(1)>', size: '"><script>' }]);
+		assert.ok(!html.includes('<img') && !html.includes('<script>'), 'no raw markup reaches output');
 	});
 
 	test('does NOT suppress the type chip the way furniture.chip does', () => {

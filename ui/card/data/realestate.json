@@ -15,12 +15,21 @@
     "preset": {
       "$ref": "card-preset/carousel"
     },
-    "chip": {
-      "text": "New",
-      "theme": "pale green"
-    },
+    "chip": [
+      {
+        "text": "New",
+        "theme": "pale green",
+        "radius": "rnd"
+      },
+      {
+        "text": "Open house",
+        "theme": "pale accent",
+        "radius": "rnd"
+      }
+    ],
     "eyebrow": "For sale",
     "headline": "Top-floor apartment, Havnegade 44",
+    "cover": "realestate/havnegade-44.html",
     "summary": "Three bedrooms and a south-facing terrace over the canal, five minutes from Kongens Nytorv.",
     "media": [
       {
@@ -88,13 +97,7 @@
           "postalCode": "1058",
           "addressLocality": "Copenhagen",
           "addressCountry": "DK"
-        },
-        "amenities": [
-          "South-facing terrace, 14 m²",
-          "Lift to every floor",
-          "Underground parking, one space",
-          "District heating, energy label B"
-        ]
+        }
       }
     }
   }

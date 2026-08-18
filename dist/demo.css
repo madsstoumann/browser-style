@@ -12204,7 +12204,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     & [data-part=list][data-variant=menu] {
       --ui-content-list-gap: var(--ui-content-list-menu-gap, var(--spacing-md));
       & li {
-        align-items: baseline;
+        align-items: center;
         column-gap: var(--ui-content-list-menu-cgap, var(--spacing-sm));
         display: grid;
         grid-template-columns: auto 1fr auto;
@@ -12322,6 +12322,11 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       & small {
         color: var(--ui-content-muted);
       }
+      &[data-variant=stacked] {
+        align-items: start;
+        flex-direction: column;
+        gap: var(--ui-content-stat-stacked-gap, 0);
+      }
     }
     & [data-part=timeline] {
       color: var(--ui-content-timeline-ink, var(--ui-content-body-ink, inherit));
@@ -12383,6 +12388,11 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     font-size: var(--ui-content-meta-fs, calc(var(--ui-content-meta-base, var(--ui-content-fs, var(--ui-content-fs-md))) * 0.75));
     font-weight: var(--ui-content-meta-weight, inherit);
     text-shadow: var(--ui-content-meta-text-shadow, none);
+  }
+  :where(ui-content) [data-part=meta]:has(> ui-chip + ui-chip) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ui-content-meta-chip-gap, var(--spacing-xs, 0.35rem));
   }
   :where([content~="scr(x)"]) [data-part=tags],
   :where(ui-content[content~="scr(x)"]) [data-part=tags] {
