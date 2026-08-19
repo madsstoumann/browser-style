@@ -22,7 +22,7 @@
       {
         "mediaType": "places",
         "alt": "Map of five homes in central Copenhagen",
-        "map": "tiles(positron) tint(soft) cluster(sm) fit"
+        "map": "tiles(voyager) tint(vivid) cluster(sm) fit"
       }
     ],
     "details": {

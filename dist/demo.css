@@ -7766,6 +7766,9 @@
   :where(ui-map) .leaflet-tile-pane {
     filter: var(--ui-map-filter);
   }
+  :where(ui-map[map*="tint(vivid)"]) {
+    --ui-map-filter: saturate(1.4) brightness(1.04);
+  }
   :where(ui-map[map*="tint(gray)"]) {
     --ui-map-filter: grayscale(1);
   }

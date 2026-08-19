@@ -37,7 +37,7 @@ the single-point map already has with `details.geo` (see
 | token | axis | args | aliases | bare | writes | md:/lg: | deprecated |
 |---|---|---|---|---|---|---|---|
 | `tiles()` | tiles | **provider** auto positron dark voyager osm topo sat | — | — | — | — | — |
-| `tint()` | tint | **look** gray mono sepia invert warm cool soft | — | — | --ui-map-filter | — | — |
+| `tint()` | tint | **look** vivid gray mono sepia invert warm cool soft | — | — | --ui-map-filter | — | — |
 | `pin()` | pin | **look** dot pin label price | — | — | --ui-map-pin-size --ui-map-pin-bg --ui-map-pin-c --ui-map-cluster-size | — | — |
 | `cluster()` | cluster | **radius** sm md lg &lt;n&gt; | — | yes | — | — | — |
 | `zoom()` | zoom | **level** &lt;n&gt; | — | — | — | — | — |
@@ -50,7 +50,7 @@ the single-point map already has with `details.geo` (see
 | token | arg class | values | aliases |
 |---|---|---|---|
 | `tiles()` | **provider** | auto positron dark voyager osm topo sat | — |
-| `tint()` | **look** | gray mono sepia invert warm cool soft | — |
+| `tint()` | **look** | vivid gray mono sepia invert warm cool soft | — |
 | `pin()` | **look** | dot pin label price | — |
 <!-- /tokens -->
 
@@ -110,6 +110,11 @@ layers and hiding one in CSS would double every tile request.
 
 `tint()` is **pure CSS** — one `filter` on `.leaflet-tile-pane` — so it composes with any
 `tiles()` value at no extra request.
+
+`tint(vivid)` is the odd one out: it **adds** colour (`saturate(1.4) brightness(1.04)`) where
+every other value desaturates or shifts hue. Pair it with `tiles(voyager)` — CARTO's
+colourful style — when a map should read as bright rather than as a backdrop; pair a muted
+value with `tiles(positron)` when the map is there to sit behind something else.
 
 It must never go on `.leaflet-tile-container`: `leaflet.css` gives `.leaflet-tile`
 `filter: inherit`, so a filter there is applied **twice**, and `invert(1)` twice is the
