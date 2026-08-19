@@ -28,6 +28,15 @@
 		inset: auto;
 		position: static;
 	}
+
+	/* a card that IS a slide takes the FRAME's shape. A <ui-card> paints --ui-card-radius by
+	   default, and inside a frame that only draws a SECOND, inset rounding — the frame is
+	   the thing with the clip. Bare <img>/<iframe> slides never had this because they are
+	   not hosts. Zero the custom property, not border-radius, so the squircle derivations
+	   go with it. KEEP IN SYNC with the slide list above. */
+	ui-media:where([media*="nav"], :is(ui-card, ui-reveal)[media*="nav"] *) > :is(ui-card, ui-reveal) {
+		--ui-card-radius: 0;
+	}
 	/* media="pages" — grandchild arms, scoped to the dissolve query at the file foot */
 	@media (width < 540px) {
 		ui-media:where([media~="pages"], :is(ui-card, ui-reveal)[media~="pages"] *) > lay-out > * {

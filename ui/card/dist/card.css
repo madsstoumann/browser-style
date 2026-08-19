@@ -846,6 +846,9 @@
     inset: auto;
     position: static;
   }
+  ui-media:where([media*=nav], :is(ui-card, ui-reveal)[media*=nav] *) > :is(ui-card, ui-reveal) {
+    --ui-card-radius: 0;
+  }
   @media (width < 540px) {
     ui-media:where([media~=pages], :is(ui-card, ui-reveal)[media~=pages] *) > lay-out > * {
       block-size: 100%;

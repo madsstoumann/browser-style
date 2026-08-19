@@ -1269,7 +1269,7 @@
       "description": "Collection card whose frame is a carousel: the clustered map is slide one, and every place after it is its own nested card. The slides ARE the itemListElement set, so the text column carries no list.",
       "element": "ui-card",
       "variant": "col",
-      "media": "asr(1/1) nav(mrk)"
+      "media": "asr(1/1) nav"
     }
   }
 }
