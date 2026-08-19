@@ -629,14 +629,20 @@ const addressPart = (address, prop = 'address') => {
 	return `<address data-part="address"${scope(prop, 'PostalAddress')}>${lines}${country.length > 2 ? '' : meta('addressCountry', country)}</address>`;
 };
 
-/* an item is a plain string, or { text, icon } where `icon` names a glyph in
-   @browser.style/icon/icons.json — it rides data-icon and becomes the ::marker.
-   An unknown name is inert (the list falls back to its normal marker). */
+/* an item is a plain string, or { text, icon, href, itemprop } where `icon` names a
+   glyph in @browser.style/icon/icons.json — it rides data-icon and becomes the ::marker.
+   An unknown name is inert (the list falls back to its normal marker). `href` makes the
+   row a link; the marker keeps the row's body colour while the link takes link colour,
+   which is what lets a contact row sit in the same list as plain ones. There is NO raw
+   markup escape hatch here — every part is escaped. */
 const listPart = (items, { ordered = false, itemprop = null, crossed = false } = {}) =>
 	items?.length
 		? `<${ordered ? 'ol' : 'ul'} data-part="list"${crossed ? ' data-variant="crossed"' : ''}${itemprop ? ` itemprop="${esc(itemprop)}"` : ''}>${items.map((item) => {
-			const { text, icon } = typeof item === 'object' && item !== null ? item : { text: item, icon: null };
-			return `<li${icon ? ` data-icon="${esc(icon)}"` : ''}>${esc(text)}</li>`;
+			const { text, icon, href, itemprop: rowProp } = typeof item === 'object' && item !== null ? item : { text: item };
+			const body = href
+				? `<a${rowProp ? ` itemprop="${esc(rowProp)}"` : ''} href="${esc(href)}">${esc(text)}</a>`
+				: esc(text);
+			return `<li${icon ? ` data-icon="${esc(icon)}"` : ''}>${body}</li>`;
 		}).join('')}</${ordered ? 'ol' : 'ul'}>`
 		: '';
 
@@ -2071,9 +2077,13 @@ const DETAILS = {
 		else if (d.hours) html += `<p data-part="meta">${esc(d.hours)}</p>`;
 		/* NO aggregateRating: valid schema.org, but Place is not a review-snippet host for
 		   Google — it errors with "invalid object type". Docs: docs/schema.md § Place */
-		/* amenityFeature wants LocationFeatureSpecification scopes — plain list, no itemprop */
-		html += listPart(d.amenities);
-		if (d.contact) html += `<p data-part="meta"><a itemprop="telephone" href="tel:${esc(String(d.contact).replace(/\s/g, ''))}">${esc(d.contact)}</a></p>`;
+		/* amenityFeature wants LocationFeatureSpecification scopes — plain list, no itemprop.
+		   The phone joins the SAME list as a linked row: it is one more fact about the place,
+		   and as a row its icon is a marker (body colour) while the link stays link-coloured. */
+		html += listPart([
+			...(d.amenities || []),
+			...(d.contact ? [{ text: d.contact, icon: 'call', href: `tel:${String(d.contact).replace(/\s/g, '')}`, itemprop: 'telephone' }] : [])
+		]);
 		/* the "Open in Maps" CTA is a DETAILS_ACTIONS entry, not emitted here: a CTA row
 		   closes the text column, so it has to land after buildTail's tags and links */
 		return html;
