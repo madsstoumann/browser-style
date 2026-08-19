@@ -1604,6 +1604,8 @@ const PLACE_ITEM_TYPES = {
 	residence: RESIDENCE_TYPES
 };
 const PLACE_FALLBACK = { business: 'LocalBusiness', residence: 'Accommodation' };
+/* the slide CTA's label — override per card with details.slide.cta */
+const DEFAULT_PLACE_CTA = 'See More';
 /* the complete schema.org ItemListOrderType member set */
 const ITEM_LIST_ORDERS = new Set(['ItemListOrderAscending', 'ItemListOrderDescending', 'ItemListUnordered']);
 
@@ -1661,7 +1663,7 @@ const officeBody = (place, type, cover = false) => {
 
 /* one listing row — the facts use the same spellings as realestateSections(), so a portal
    card and the detail page it links to cannot spell one home two ways */
-const listingBody = (place, type, cover = false) => {
+const listingBody = (place, type, cover = false, cta = null) => {
 	const numbered = (prop, value, text) => value == null || value === '' ? null : `${meta(prop, value)}${text}`;
 	const plural = (n, word) => `${num(n)} ${word}${n === 1 ? '' : 's'}`;
 	const floorSize = place.floorSize == null ? null
@@ -1677,15 +1679,22 @@ const listingBody = (place, type, cover = false) => {
 		? `<p data-part="price"${scope('offers', 'Offer')}>${meta('priceCurrency', place.price.currency)}${meta('availability', SCHEMA + 'InStock')}${priceValue(place.price.currency, place.price.amount)}</p>`
 		: '';
 	/* geo and hasMap are Place properties — invalid on the listing (a WebPage), valid inside
-	   the residence scope, so they sit in mainEntity. Docs: docs/schema.md § Real estate */
-	const map = placeMapLink(place.geo);
+	   the residence scope, so they sit in mainEntity. Docs: docs/schema.md § Real estate.
+	   hasMap is MACHINE-ONLY here: the visible affordance is the CTA below, which goes to
+	   the listing rather than to a map, and the pin already opens the map. */
+	const ctaRow = cta && place.url
+		/* UNMARKED on purpose — the cover link already carries itemprop="url", and one
+		   property gets one value. Docs: docs/schema.md § One property, one value */
+		? `<nav data-part="actions"><a class="ui-button" data-variant="accent" href="${esc(place.url)}">${esc(cta)}</a></nav>`
+		: '';
 	return placeName(place, cover) + meta('datePosted', place.datePosted) + price
 		+ `<div${scope('mainEntity', type)}>`
 		+ geoPart(place.geo)
 		+ addressPart(place.address)
 		+ (facts.length ? `<p data-part="meta">${facts.join(' · ')}</p>` : '')
-		+ (map ? `<p data-part="meta">${map}</p>` : '')
-		+ '</div>';
+		+ machineOnly(placeMapLink(place.geo))
+		+ '</div>'
+		+ ctaRow;
 };
 
 /* one <li> — the ListItem owns only position + item; everything else hangs off `item` */
@@ -1693,7 +1702,7 @@ const listingBody = (place, type, cover = false) => {
 const placeType = (place, kind) => PLACE_ITEM_TYPES[kind].has(place.type) ? place.type : PLACE_FALLBACK[kind];
 /* a residence's ITEM is the listing; the Accommodation hangs off its mainEntity */
 const placeItemtype = (kind, type) => kind === 'residence' ? 'RealEstateListing' : type;
-const placeBody = (place, kind, type, cover = false) => kind === 'residence' ? listingBody(place, type, cover) : officeBody(place, type, cover);
+const placeBody = (place, kind, type, cover = false, cta = null) => kind === 'residence' ? listingBody(place, type, cover, cta) : officeBody(place, type, cover);
 
 /* one <li> — the ListItem owns only position + item; everything else hangs off `item` */
 const placeRow = (place, kind, index) => {
@@ -1724,7 +1733,7 @@ const placeSlide = (place, kind, index, look = {}, cardId = null) => {
 		+ meta('position', index + 1)
 		+ `<cq-box${scope('item', placeItemtype(kind, type))}>`
 		+ photo
-		+ `<ui-content>${placeBody(place, kind, type, true)}</ui-content>`
+		+ `<ui-content>${placeBody(place, kind, type, true, look.cta ?? DEFAULT_PLACE_CTA)}</ui-content>`
 		+ '</cq-box></ui-card>';
 };
 
@@ -2688,10 +2697,9 @@ const SUBHEADLINE_SLOT = {
    A preset's byline: "lede" opts any type in — the full-article shape. */
 const BYLINE_EARLY = new Set(['book']);
 
-/* For `places` the CTA points at details.center — the same point <ui-map> opens on — and
-   stays UNMARKED, which here is required rather than merely tidy: hasMap is out of
-   domain on an ItemList, so the property lives per item (placeMapLink). */
-const DETAILS_ACTIONS = { location: (d) => mapCta(d.geo), places: (d) => mapCta(d.center) };
+/* `places` has NO card-level CTA: the map is the affordance, and each place carries its own
+   (a "See More" on a slide). details.center still feeds the no-JS fallback frame. */
+const DETAILS_ACTIONS = { location: (d) => mapCta(d.geo) };
 
 /* full content column for a card (envelope + details + trailers) */
 /* `itemtype` is the bare schema.org name ACTUALLY WRITTEN on the enclosing scope —

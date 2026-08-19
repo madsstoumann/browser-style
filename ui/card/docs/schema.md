@@ -649,11 +649,12 @@ from `Thing`. That is the whole vocabulary. Out of domain on it, verified agains
 
 - **`TAGS_PROP.places = null`** — tags still render, unmarked. Re-adding `keywords` here would be
   invalid, the same call as `comparison`.
-- **`places` is deliberately absent from `HAS_MAP_TYPES`.** `hasMap` is a `Place` property, and
-  the frame's enclosing scope is the list. It moves **down** to each item's own link instead —
-  which is also why the "Open in Maps" CTA stays unmarked, exactly as on the single map card.
-- **There is no property for the region.** "6 studios · 3 continents" is `details.regionDisplay`,
-  visible text only; there is nothing valid to mark it up as.
+- **`places` is deliberately absent from `HAS_MAP_TYPES`.** `hasMap` is a `Place` property,
+  and the frame's enclosing scope is the list. It moves **down** to each item, where it is
+  **machine-only** — the map itself is the affordance, so there is no card-level "Open in
+  Maps" CTA at all (`DETAILS_ACTIONS` has no `places` entry). An estate slide instead
+  carries a **"See More"** CTA to its own listing, unmarked because the `cover` link already
+  supplies `itemprop="url"`. Override the label with `details.slide.cta`.
 
 **Two shapes, one type, chosen by `details.kind` — not `subtype`.** `details.subtype` feeds
 `resolveItemtype()` and sharpens the **root**, and the root is an `ItemList` in both shapes; what

@@ -2297,3 +2297,36 @@ describe('places — compact rows and card slides', () => {
 		assert.ok(!/<ui-card[^>]*itemprop=/.test(html), 'no nested card slides in list mode');
 	});
 });
+
+describe('places — actions', () => {
+	const HOME = { type: 'Apartment', name: 'Havnegade 44', url: 'https://example.com/h44', image: '/assets/images/real_01.jpg', geo: { latitude: 55.6761, longitude: 12.5911 }, price: { currency: 'DKK', amount: 7950000 } };
+	const slides = (details) => render({ schemaType: 'places', headline: 'Homes', media: [{ mediaType: 'places', alt: 'Map' }], details: { kind: 'residence', slides: true, center: { latitude: 55.6, longitude: 12.5 }, ...details } });
+
+	test('a places card has no card-level Open in Maps CTA', () => {
+		const html = slides({ items: [HOME] });
+		assert.ok(!html.includes('Open in Maps'), 'the map is the affordance; each place carries its own CTA');
+		const offices = render({ schemaType: 'places', headline: 'Offices', details: { kind: 'business', center: { latitude: 1, longitude: 2 }, items: [{ type: 'LocalBusiness', name: 'CPH', geo: { latitude: 1, longitude: 2 } }] } });
+		assert.ok(!offices.includes('Open in Maps'));
+		/* the single-place card keeps its CTA — this only drops it for `places` */
+		assert.match(render({ schemaType: 'location', headline: 'X', details: { geo: { latitude: 1, longitude: 2 } } }), /Open in Maps/);
+	});
+
+	test('each estate slide gets a See More CTA to the listing', () => {
+		const html = slides({ items: [HOME] });
+		assert.match(html, /<nav data-part="actions"><a class="ui-button" data-variant="accent" href="https:\/\/example\.com\/h44">See More<\/a><\/nav>/);
+		/* UNMARKED: the cover link already carries itemprop="url" */
+		assert.equal(html.match(/itemprop="url"/g).length, 1);
+	});
+
+	test('hasMap survives as machine-only markup', () => {
+		const html = slides({ items: [HOME] });
+		assert.match(html, /<div hidden><a itemprop="hasMap"/);
+		assert.ok(!/>Map<\/a>[\s\S]*?<\/p>/.test(html), 'no visible "Map" link remains on a slide');
+	});
+
+	test('the CTA label is overridable and omitted without a url', () => {
+		assert.match(slides({ slide: { cta: 'View home' }, items: [HOME] }), />View home</);
+		const noUrl = slides({ items: [{ ...HOME, url: undefined }] });
+		assert.ok(!noUrl.includes('data-part="actions"'), 'nothing to link to, no CTA');
+	});
+});
