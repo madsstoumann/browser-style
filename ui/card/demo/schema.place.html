@@ -6,7 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="text-scale" content="scale">
 	<meta name="color-scheme" content="light dark">
-	<meta name="description" content="The Place card from demo/schema.html, once per OpenStreetMap embed layer — six layers on six places, from a Copenhagen studio to the Stelvio pass, Shibuya, Kathmandu and the Marrakesh medina. Only the layer= string in the iframe src picks the basemap: mapnik, cyclosm, cyclemap, transportmap, hot, shortbread.">
+	<meta name="description" content="The Place card from demo/schema.html, once per OpenStreetMap embed layer — six layers on six places, from a Copenhagen studio to the Stelvio pass, Shibuya, Kathmandu and the Colosseum. Only the layer= string in the iframe src picks the basemap: mapnik, cyclosm, cyclemap, transportmap, hot, shortbread.">
 	<link rel="alternate" type="text/markdown" href="/ui/card/docs/media.md">
 	<link rel="stylesheet" href="/dist/demo.c160558b.min.css">
 	<style>
@@ -177,7 +177,7 @@
 		</ui-card>
 		<ui-card id="place-hot" variant="col" media="asr(16/9) chip(ts)" itemscope itemtype="https://schema.org/LandmarksOrHistoricalBuildings">
 			<cq-box>
-				<ui-media><iframe src="https://www.openstreetmap.org/export/embed.html?bbox=85.304453,27.701868,85.309947,27.706732&amp;layer=hot&amp;marker=27.7043,85.3072" title="Map of Kathmandu Durbar Square, Kathmandu — Humanitarian layer" loading="lazy" itemprop="hasMap"></iframe><ui-chip data-type>LandmarksOrHistoricalBuildings</ui-chip></ui-media>
+				<ui-media><iframe src="https://www.openstreetmap.org/export/embed.html?bbox=85.305827,27.703084,85.308573,27.705516&amp;layer=hot&amp;marker=27.7043,85.3072" title="Map of Kathmandu Durbar Square, Kathmandu — Humanitarian layer" loading="lazy" itemprop="hasMap"></iframe><ui-chip data-type>LandmarksOrHistoricalBuildings</ui-chip></ui-media>
 				<ui-content>
 					<div itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates" hidden>
 						<meta itemprop="latitude" content="27.7043">
@@ -208,36 +208,36 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card id="place-shortbread" variant="col" media="asr(16/9) chip(ts)" itemscope itemtype="https://schema.org/TouristDestination">
+		<ui-card id="place-shortbread" variant="col" media="asr(16/9) chip(ts)" itemscope itemtype="https://schema.org/TouristAttraction">
 			<cq-box>
-				<ui-media><iframe src="https://www.openstreetmap.org/export/embed.html?bbox=-7.991847,31.623461,-7.986353,31.628139&amp;layer=shortbread&amp;marker=31.6258,-7.9891" title="Map of Marrakesh Medina, Marrakesh — Shortbread layer" loading="lazy" itemprop="hasMap"></iframe><ui-chip data-type>TouristDestination</ui-chip></ui-media>
+				<ui-media><iframe src="https://www.openstreetmap.org/export/embed.html?bbox=12.490827,41.889178,12.493573,41.891222&amp;layer=shortbread&amp;marker=41.8902,12.4922" title="Map of the Colosseum, Rome — Shortbread layer" loading="lazy" itemprop="hasMap"></iframe><ui-chip data-type>TouristAttraction</ui-chip></ui-media>
 				<ui-content>
 					<div itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates" hidden>
-						<meta itemprop="latitude" content="31.6258">
-						<meta itemprop="longitude" content="-7.9891">
+						<meta itemprop="latitude" content="41.8902">
+						<meta itemprop="longitude" content="12.4922">
 					</div>
 					<small data-part="eyebrow">Shortbread</small>
-					<h3 data-part="headline" itemprop="name">Marrakesh Medina</h3>
+					<h3 data-part="headline" itemprop="name">Colosseum</h3>
 					<p data-part="meta"><code>layer=shortbread</code></p>
-					<p data-part="summary" itemprop="description">A thousand alleys inside one wall. Shortbread is a vector tile schema, so the medina is drawn in the browser from data rather than baked into a picture on a server.</p>
+					<p data-part="summary" itemprop="description">Shortbread is a vector tile schema, so the amphitheatre’s footprint and the streets ringing it are drawn in the browser from data, rather than baked into a picture on a server.</p>
 					<address data-part="address" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
-						<span><span itemprop="streetAddress">Jemaa el-Fnaa</span></span>
-						<span><span itemprop="postalCode">40000</span> <span itemprop="addressLocality">Marrakesh</span></span>
-						<meta itemprop="addressCountry" content="MA">
+						<span><span itemprop="streetAddress">Piazza del Colosseo 1</span></span>
+						<span><span itemprop="postalCode">00184</span> <span itemprop="addressLocality">Rome</span></span>
+						<meta itemprop="addressCountry" content="IT">
 					</address>
 					<dl data-part="hours">
 						<dt>Mon–Sun</dt>
 						<dd>
 							<span itemprop="openingHoursSpecification" itemscope itemtype="https://schema.org/OpeningHoursSpecification" hidden>
 								<meta itemprop="dayOfWeek" content="https://schema.org/Monday"><meta itemprop="dayOfWeek" content="https://schema.org/Tuesday"><meta itemprop="dayOfWeek" content="https://schema.org/Wednesday"><meta itemprop="dayOfWeek" content="https://schema.org/Thursday"><meta itemprop="dayOfWeek" content="https://schema.org/Friday"><meta itemprop="dayOfWeek" content="https://schema.org/Saturday"><meta itemprop="dayOfWeek" content="https://schema.org/Sunday">
-								<meta itemprop="opens" content="00:00"><meta itemprop="closes" content="23:59">
+								<meta itemprop="opens" content="08:30"><meta itemprop="closes" content="19:00">
 							</span>
-							Open 24 hours
+							8:30–19:00
 						</dd>
 					</dl>
-					<ul data-part="list"><li data-icon="groups">Alleys drawn client-side from vector tiles, not from a raster image</li></ul>
-					<span data-part="tags"><ui-chip itemprop="keywords">Marrakesh</ui-chip><ui-chip itemprop="keywords">Medina</ui-chip></span>
-					<nav data-part="actions"><a href="https://www.google.com/maps/search/?api=1&amp;query=31.6258,-7.9891" target="_blank" rel="noopener" aria-label="Open Marrakesh Medina in Google Maps"><img src="/assets/svg/google.maps.svg" alt="" width="40" height="40"></a><a href="https://maps.apple.com/?ll=31.6258,-7.9891&amp;q=Marrakesh%20Medina" target="_blank" rel="noopener" aria-label="Open Marrakesh Medina in Apple Maps"><img src="/assets/svg/apple.maps.svg" alt="" width="40" height="40"></a></nav>
+					<ul data-part="list"><li data-icon="groups">Street and building footprints drawn client-side from vector tiles</li></ul>
+					<span data-part="tags"><ui-chip itemprop="keywords">Rome</ui-chip><ui-chip itemprop="keywords">Amphitheatre</ui-chip></span>
+					<nav data-part="actions"><a href="https://www.google.com/maps/search/?api=1&amp;query=41.8902,12.4922" target="_blank" rel="noopener" aria-label="Open the Colosseum in Google Maps"><img src="/assets/svg/google.maps.svg" alt="" width="40" height="40"></a><a href="https://maps.apple.com/?ll=41.8902,12.4922&amp;q=Colosseum" target="_blank" rel="noopener" aria-label="Open the Colosseum in Apple Maps"><img src="/assets/svg/apple.maps.svg" alt="" width="40" height="40"></a></nav>
 				</ui-content>
 			</cq-box>
 		</ui-card>
