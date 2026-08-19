@@ -1939,10 +1939,13 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     & :is(a[href^="tel:"], a[href^="mailto:"]) {
       font-size: var(--ui-content-contact-fs, var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))));
       &::before {
-        content: var(--icon);
+        content: var(--icon) / "";
         font-family: var(--ui-icon-font);
         margin-inline-end: var(--ui-content-contact-icon-gap, 0.35em);
       }
+    }
+    & li[data-icon] :is(a[href^="tel:"], a[href^="mailto:"])::before {
+      content: none;
     }
     & a[href^="tel:"] {
       --icon: var(--icon-call);

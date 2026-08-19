@@ -559,12 +559,16 @@
 		& :is(a[href^="tel:"], a[href^="mailto:"]) {
 			font-size: var(--ui-content-contact-fs, var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))));
 
+			/* `/ ""` is the alt-text arm — WITHOUT it the private-use codepoint lands in the
+			   link's accessible name (measured). Never ship this content: without it. */
 			&::before {
-				content: var(--icon);
+				content: var(--icon) / "";
 				font-family: var(--ui-icon-font);
 				margin-inline-end: var(--ui-content-contact-icon-gap, 0.35em);
 			}
 		}
+		/* in a marked-up row the ::marker already carries the icon — don't draw it twice */
+		& li[data-icon] :is(a[href^="tel:"], a[href^="mailto:"])::before { content: none; }
 		& a[href^="tel:"] { --icon: var(--icon-call); }
 		& a[href^="mailto:"] { --icon: var(--icon-mail); }
 

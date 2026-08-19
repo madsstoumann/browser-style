@@ -411,6 +411,15 @@ icons, which are `::before` glyphs for the same reason — one vocabulary, two p
 Knobs: `--ui-content-list-icon-gap` (default `0.4em`, rides `letter-spacing` on the marker)
 and `--ui-content-list-marker-ink` (defaults to `currentColor`, i.e. the row's own colour).
 
+**Prefer the marker over `::before` on a link.** Generated content on an element lands in that
+element's *accessible name* — a private-use icon codepoint in front of a phone number,
+measured. A `::marker` never does. That is why two contact methods render as a `<ul>` with
+`data-icon="call"` / `data-icon="mail"` rather than a `<br>`-split `<p>`: they are a list, and
+the list form is the accessible one. A lone contact stays a `<p>` and keeps its `::before` —
+which **must** carry the alt-text arm, `content: var(--icon) / ""`, or the codepoint leaks
+into the name again. Inside a `li[data-icon]` the `::before` is suppressed, so the icon is
+never drawn twice.
+
 **Why a font here and masks elsewhere.** `::marker` accepts almost nothing: `mask` and
 `background` are dropped outright, an image `content:` can be neither tinted nor sized, and
 `vertical-align` / `transform` / `translate` are all ignored — measured in Chrome 150, not

@@ -10,7 +10,7 @@
 	<meta name="format-detection" content="telephone=no">
 	<link rel="preconnect" href="https://v4.browser.style">
 	<meta name="description" content="60 cards covering 52 distinct schema.org itemtypes on the card hosts (Quiz and ItemList run three cards each; Review, EventSeries, Place and Person two each) — re-created with the modern &lt;ui-card&gt; engine: inline microdata (itemscope/itemtype/itemprop), no JSON-LD. The job card carries a 53rd type as a second top-level item: EmployerAggregateRating. Two optional scripts: video.min.js polyfills the media invoker commands behind the podcast play button, save.min.js flips the save heart.">
-	<link rel="stylesheet" href="/dist/demo.ba29e7e3.min.css">
+	<link rel="stylesheet" href="/dist/demo.c160558b.min.css">
 
 	<style>
 		/* Off-screen cards skip style+layout. Page-scoped on purpose; 567px is this page's
@@ -1041,7 +1041,7 @@
 							<span><span itemprop="addressLocality">Aarhus</span></span>
 							<meta itemprop="addressCountry" content="DK">
 						</address>
-						<p data-part="meta"><a itemprop="telephone" href="tel:+4586123456">+45 86 12 34 56</a><br><meta itemprop="email" content="aarhus@northwind.example"><a href="mailto:aarhus@northwind.example">aarhus@northwind.example</a></p>
+						<ul data-part="list"><li data-icon="call"><a itemprop="telephone" href="tel:+4586123456">+45 86 12 34 56</a></li><li data-icon="mail"><meta itemprop="email" content="aarhus@northwind.example"><a href="mailto:aarhus@northwind.example">aarhus@northwind.example</a></li></ul>
 						<dl data-part="hours">
 							<dt>Mon–Wed</dt>
 							<dd>
@@ -1083,7 +1083,7 @@
 							<span><span itemprop="addressLocality">Berlin</span></span>
 							<meta itemprop="addressCountry" content="DE">
 						</address>
-						<p data-part="meta"><a itemprop="telephone" href="tel:+4930901820">+49 30 901820</a><br><meta itemprop="email" content="berlin@northwind.example"><a href="mailto:berlin@northwind.example">berlin@northwind.example</a></p>
+						<ul data-part="list"><li data-icon="call"><a itemprop="telephone" href="tel:+4930901820">+49 30 901820</a></li><li data-icon="mail"><meta itemprop="email" content="berlin@northwind.example"><a href="mailto:berlin@northwind.example">berlin@northwind.example</a></li></ul>
 						<dl data-part="hours">
 							<dt>Mon–Thu</dt>
 							<dd>
@@ -1611,9 +1611,9 @@
 						</dd>
 					</dl>
 					<ul data-part="list">
-						<li>Free parking</li>
-						<li>Guided tours</li>
-						<li>Coastal viewpoint</li>
+						<li data-icon="local-parking">Free parking</li>
+						<li data-icon="tour">Guided tours</li>
+						<li data-icon="landscape">Coastal viewpoint</li>
 					</ul>
 					<p data-part="meta"><a itemprop="telephone" href="tel:+4556482401">+45 56 48 24 01</a></p>
 					<span data-part="tags"><ui-chip itemprop="keywords">Bornholm</ui-chip><ui-chip itemprop="keywords">Landmark</ui-chip></span>

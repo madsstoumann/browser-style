@@ -42,6 +42,8 @@
     "check",
     "close",
     "star",
-    "favorite"
+    "favorite",
+    "tour",
+    "landscape"
   ]
 }

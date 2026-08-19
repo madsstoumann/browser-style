@@ -10,14 +10,14 @@
     "folder": "Cards/Places"
   },
   "fields": {
-    "internalName": "Demo — Location",
+    "internalName": "Demo \u2014 Location",
     "schemaType": "location",
     "preset": {
       "$ref": "card-preset/stack"
     },
     "eyebrow": "Destination",
     "headline": "Hammershus Point",
-    "summary": "Northern Europe’s largest castle ruin, perched on Bornholm’s granite cliffs.",
+    "summary": "Northern Europe\u2019s largest castle ruin, perched on Bornholm\u2019s granite cliffs.",
     "media": [
       {
         "mediaType": "image",
@@ -36,9 +36,18 @@
         "url": "https://www.google.com/maps/search/?api=1&query=55.0603,14.7009"
       },
       "amenities": [
-        "Free parking",
-        "Guided tours",
-        "Coastal viewpoint"
+        {
+          "text": "Free parking",
+          "icon": "local-parking"
+        },
+        {
+          "text": "Guided tours",
+          "icon": "tour"
+        },
+        {
+          "text": "Coastal viewpoint",
+          "icon": "landscape"
+        }
       ],
       "openingHours": [
         {

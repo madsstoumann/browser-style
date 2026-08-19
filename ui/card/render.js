@@ -2164,13 +2164,16 @@ const DETAILS = {
 		/* each local office is a department → LocalBusiness (Google's multi-location pattern),
 		   with its own coordinates so each branch geocodes independently */
 		for (const office of d.offices || []) {
+			/* a list, not a <br>-split <p>: two contact methods ARE a list, and the icon
+			   then rides ::marker instead of ::before — generated content on the link
+			   lands in its accessible name, a marker does not. Docs: docs/content.md */
 			const contacts = [
-				office.telephone ? `<a itemprop="telephone" href="tel:${esc(office.telephone.replace(/\s/g, ''))}">${esc(office.telephone)}</a>` : '',
-				office.email ? `${meta('email', office.email)}<a href="mailto:${esc(office.email)}">${esc(office.email)}</a>` : ''
+				office.telephone ? `<li data-icon="call"><a itemprop="telephone" href="tel:${esc(office.telephone.replace(/\s/g, ''))}">${esc(office.telephone)}</a></li>` : '',
+				office.email ? `<li data-icon="mail">${meta('email', office.email)}<a href="mailto:${esc(office.email)}">${esc(office.email)}</a></li>` : ''
 			].filter(Boolean);
 			html += `<div data-part="office"${scope('department', 'LocalBusiness')}>
 				<strong itemprop="name">${esc(office.name)}</strong>
-				${geoPart(office.geo)}${addressPart(office.address)}${contacts.length ? `<p data-part="meta">${contacts.join('<br>')}</p>` : ''}${hoursPart(office.openingHours)}
+				${geoPart(office.geo)}${addressPart(office.address)}${contacts.length ? `<ul data-part="list">${contacts.join('')}</ul>` : ''}${hoursPart(office.openingHours)}
 			</div>`;
 		}
 		return html;
