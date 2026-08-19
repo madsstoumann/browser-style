@@ -8,10 +8,14 @@
 	<meta name="color-scheme" content="light dark">
 	<meta name="description" content="The Place card from demo/schema.html, once per OpenStreetMap embed layer — eight places over the six layers, from a Copenhagen studio to the Stelvio pass, Shibuya, Kathmandu, the pyramids at Giza, the Colosseum and an airport on an artificial island. Only the layer= string in the iframe src picks the basemap: mapnik, cyclosm, cyclemap, transportmap, hot, shortbread.">
 	<link rel="alternate" type="text/markdown" href="/ui/card/docs/media.md">
+	<!-- preconnect: every frame on this page is an openstreetmap.org document. Docs: docs/performance.md -->
+	<link rel="preconnect" href="https://www.openstreetmap.org">
 	<link rel="stylesheet" href="/dist/demo.c160558b.min.css">
 	<style>
-		/* Off-screen cards skip style+layout — page-scoped, as on demo/schema.html */
-		main > lay-out > ui-card { content-visibility: auto; contain-intrinsic-size: auto 567px; }
+		/* Off-screen cards skip style+layout — page-scoped, as on demo/schema.html.
+		   700px is THIS page’s measured card height; schema.html’s 567 under-estimates it,
+		   which shortens the document and pulls more map embeds inside the lazy threshold. */
+		main > lay-out > ui-card { content-visibility: auto; contain-intrinsic-size: auto 700px; }
 		/* AA muted ink — same block as demo/schema.html */
 		ui-content { --ui-content-muted: color-mix(in oklab, currentColor 85%, transparent); }
 		ui-chip[data-type] { --ui-chip-bg: hsl(0, 0%, 95%); --ui-chip-c: hsl(0, 0%, 13%); }
