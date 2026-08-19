@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>UI: Card — Place map layers</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="text-scale" content="scale">
+	<meta name="color-scheme" content="light dark">
+	<meta name="description" content="The Place card from demo/schema.html, once per OpenStreetMap embed layer. Same card, same coordinates — only the layer= string in the iframe src differs: mapnik, cyclosm, cyclemap, transportmap, hot, shortbread, plus the two switcher entries the embed does not accept.">
+	<link rel="alternate" type="text/markdown" href="/ui/card/docs/media.md">
+	<link rel="stylesheet" href="/dist/demo.c160558b.min.css">
+	<style>
+		/* Off-screen cards skip style+layout — page-scoped, as on demo/schema.html */
+		main > lay-out > ui-card { content-visibility: auto; contain-intrinsic-size: auto 567px; }
+		/* AA muted ink — same block as demo/schema.html */
+		ui-content { --ui-content-muted: color-mix(in oklab, currentColor 85%, transparent); }
+		ui-chip[data-type] { --ui-chip-bg: hsl(0, 0%, 95%); --ui-chip-c: hsl(0, 0%, 13%); }
+	</style>
+</head>
+<body data-layout-root data-page-gap="2">
+	<header>
+	<nav aria-label="Breadcrumb">
+		<ol data-breadcrumbs>
+			<li><a href="/ui/card/">Card</a></li>
+			<li><a href="schema.html">Schema.org</a></li>
+			<li>Place map layers</li>
+		</ol>
+	</nav>
+	<h1>UI: Card — Place map layers</h1>
+	</header>
+
+	<main data-layout-root data-page-gap="2">
+	<p>The <a href="schema.html#schema-map">Place card on the schema.org page</a> makes an OpenStreetMap embed its media frame. That embed takes a <code>layer=</code> string in its URL, which picks the basemap style — the same eight entries the layer switcher on openstreetmap.org offers. Every card below is that same card at the same coordinates; only <code>layer=</code> changes.</p>
+	<p>Six of the eight are embeddable. <code>tracestracktopo</code> and <code>openmaptiles_osm</code> are marked <code>canEmbed</code>-less in OpenStreetMap’s <a href="https://github.com/openstreetmap/openstreetmap-website/blob/master/config/layers.yml"><code>config/layers.yml</code></a>, so the embed drops them and renders Standard instead — the last two cards are here to show exactly that.</p>
+
+	<h2>Embeddable layers</h2>
+	<lay-out md="columns(2) items(start)">
+		<ui-card id="place-mapnik" variant="col" media="asr(16/9) chip(ts)" itemscope itemtype="https://schema.org/Place">
+			<cq-box>
+				<ui-media><iframe src="https://www.openstreetmap.org/export/embed.html?bbox=12.596553,55.706053,12.602047,55.709147&amp;layer=mapnik&amp;marker=55.7076,12.5993" title="Map of Nordhavn Studio, Sundkaj 9, Copenhagen — Standard layer" loading="lazy" itemprop="hasMap"></iframe><ui-chip data-type>Place</ui-chip></ui-media>
+				<ui-content>
+					<div itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates" hidden>
+						<meta itemprop="latitude" content="55.7076">
+						<meta itemprop="longitude" content="12.5993">
+					</div>
+					<small data-part="eyebrow">layer=mapnik</small>
+					<h3 data-part="headline" itemprop="name">Nordhavn Studio</h3>
+					<p data-part="meta">Standard</p>
+					<p data-part="summary" itemprop="description">Same card, same coordinates — only <code>layer=mapnik</code> differs in the embed URL.</p>
+					<address data-part="address" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
+						<span><span itemprop="streetAddress">Sundkaj 9</span></span>
+						<span><span itemprop="postalCode">2150</span> <span itemprop="addressLocality">Copenhagen</span></span>
+						<meta itemprop="addressCountry" content="DK">
+					</address>
+					<dl data-part="hours">
+						<dt>Mon–Fri</dt>
+						<dd>
+							<span itemprop="openingHoursSpecification" itemscope itemtype="https://schema.org/OpeningHoursSpecification" hidden>
+								<meta itemprop="dayOfWeek" content="https://schema.org/Monday"><meta itemprop="dayOfWeek" content="https://schema.org/Tuesday"><meta itemprop="dayOfWeek" content="https://schema.org/Wednesday"><meta itemprop="dayOfWeek" content="https://schema.org/Thursday"><meta itemprop="dayOfWeek" content="https://schema.org/Friday">
+								<meta itemprop="opens" content="09:00"><meta itemprop="closes" content="17:00">
+							</span>
+							9:00–17:00
+						</dd>
+					</dl>
+					<ul data-part="list"><li data-icon="call"><a itemprop="telephone" href="tel:+4535551290">+45 35 55 12 90</a></li></ul>
+					<span data-part="tags"><ui-chip itemprop="keywords">Copenhagen</ui-chip><ui-chip itemprop="keywords">Studio</ui-chip></span>
+					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="https://www.google.com/maps/search/?api=1&amp;query=55.7076,12.5993" target="_blank" rel="noopener">Open in Maps</a></nav>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card id="place-cyclosm" variant="col" media="asr(16/9) chip(ts)" itemscope itemtype="https://schema.org/Place">
+			<cq-box>
+				<ui-media><iframe src="https://www.openstreetmap.org/export/embed.html?bbox=12.596553,55.706053,12.602047,55.709147&amp;layer=cyclosm&amp;marker=55.7076,12.5993" title="Map of Nordhavn Studio, Sundkaj 9, Copenhagen — CyclOSM layer" loading="lazy" itemprop="hasMap"></iframe><ui-chip data-type>Place</ui-chip></ui-media>
+				<ui-content>
+					<div itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates" hidden>
+						<meta itemprop="latitude" content="55.7076">
+						<meta itemprop="longitude" content="12.5993">
+					</div>
+					<small data-part="eyebrow">layer=cyclosm</small>
+					<h3 data-part="headline" itemprop="name">Nordhavn Studio</h3>
+					<p data-part="meta">CyclOSM</p>
+					<p data-part="summary" itemprop="description">Same card, same coordinates — only <code>layer=cyclosm</code> differs in the embed URL.</p>
+					<address data-part="address" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
+						<span><span itemprop="streetAddress">Sundkaj 9</span></span>
+						<span><span itemprop="postalCode">2150</span> <span itemprop="addressLocality">Copenhagen</span></span>
+						<meta itemprop="addressCountry" content="DK">
+					</address>
+					<dl data-part="hours">
+						<dt>Mon–Fri</dt>
+						<dd>
+							<span itemprop="openingHoursSpecification" itemscope itemtype="https://schema.org/OpeningHoursSpecification" hidden>
+								<meta itemprop="dayOfWeek" content="https://schema.org/Monday"><meta itemprop="dayOfWeek" content="https://schema.org/Tuesday"><meta itemprop="dayOfWeek" content="https://schema.org/Wednesday"><meta itemprop="dayOfWeek" content="https://schema.org/Thursday"><meta itemprop="dayOfWeek" content="https://schema.org/Friday">
+								<meta itemprop="opens" content="09:00"><meta itemprop="closes" content="17:00">
+							</span>
+							9:00–17:00
+						</dd>
+					</dl>
+					<ul data-part="list"><li data-icon="call"><a itemprop="telephone" href="tel:+4535551290">+45 35 55 12 90</a></li></ul>
+					<span data-part="tags"><ui-chip itemprop="keywords">Copenhagen</ui-chip><ui-chip itemprop="keywords">Studio</ui-chip></span>
+					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="https://www.google.com/maps/search/?api=1&amp;query=55.7076,12.5993" target="_blank" rel="noopener">Open in Maps</a></nav>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card id="place-cyclemap" variant="col" media="asr(16/9) chip(ts)" itemscope itemtype="https://schema.org/Place">
+			<cq-box>
+				<ui-media><iframe src="https://www.openstreetmap.org/export/embed.html?bbox=12.596553,55.706053,12.602047,55.709147&amp;layer=cyclemap&amp;marker=55.7076,12.5993" title="Map of Nordhavn Studio, Sundkaj 9, Copenhagen — Cycle Map layer" loading="lazy" itemprop="hasMap"></iframe><ui-chip data-type>Place</ui-chip></ui-media>
+				<ui-content>
+					<div itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates" hidden>
+						<meta itemprop="latitude" content="55.7076">
+						<meta itemprop="longitude" content="12.5993">
+					</div>
+					<small data-part="eyebrow">layer=cyclemap</small>
+					<h3 data-part="headline" itemprop="name">Nordhavn Studio</h3>
+					<p data-part="meta">Cycle Map</p>
+					<p data-part="summary" itemprop="description">Same card, same coordinates — only <code>layer=cyclemap</code> differs in the embed URL.</p>
+					<address data-part="address" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
+						<span><span itemprop="streetAddress">Sundkaj 9</span></span>
+						<span><span itemprop="postalCode">2150</span> <span itemprop="addressLocality">Copenhagen</span></span>
+						<meta itemprop="addressCountry" content="DK">
+					</address>
+					<dl data-part="hours">
+						<dt>Mon–Fri</dt>
+						<dd>
+							<span itemprop="openingHoursSpecification" itemscope itemtype="https://schema.org/OpeningHoursSpecification" hidden>
+								<meta itemprop="dayOfWeek" content="https://schema.org/Monday"><meta itemprop="dayOfWeek" content="https://schema.org/Tuesday"><meta itemprop="dayOfWeek" content="https://schema.org/Wednesday"><meta itemprop="dayOfWeek" content="https://schema.org/Thursday"><meta itemprop="dayOfWeek" content="https://schema.org/Friday">
+								<meta itemprop="opens" content="09:00"><meta itemprop="closes" content="17:00">
+							</span>
+							9:00–17:00
+						</dd>
+					</dl>
+					<ul data-part="list"><li data-icon="call"><a itemprop="telephone" href="tel:+4535551290">+45 35 55 12 90</a></li></ul>
+					<span data-part="tags"><ui-chip itemprop="keywords">Copenhagen</ui-chip><ui-chip itemprop="keywords">Studio</ui-chip></span>
+					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="https://www.google.com/maps/search/?api=1&amp;query=55.7076,12.5993" target="_blank" rel="noopener">Open in Maps</a></nav>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card id="place-transportmap" variant="col" media="asr(16/9) chip(ts)" itemscope itemtype="https://schema.org/Place">
+			<cq-box>
+				<ui-media><iframe src="https://www.openstreetmap.org/export/embed.html?bbox=12.596553,55.706053,12.602047,55.709147&amp;layer=transportmap&amp;marker=55.7076,12.5993" title="Map of Nordhavn Studio, Sundkaj 9, Copenhagen — Transport Map layer" loading="lazy" itemprop="hasMap"></iframe><ui-chip data-type>Place</ui-chip></ui-media>
+				<ui-content>
+					<div itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates" hidden>
+						<meta itemprop="latitude" content="55.7076">
+						<meta itemprop="longitude" content="12.5993">
+					</div>
+					<small data-part="eyebrow">layer=transportmap</small>
+					<h3 data-part="headline" itemprop="name">Nordhavn Studio</h3>
+					<p data-part="meta">Transport Map</p>
+					<p data-part="summary" itemprop="description">Same card, same coordinates — only <code>layer=transportmap</code> differs in the embed URL.</p>
+					<address data-part="address" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
+						<span><span itemprop="streetAddress">Sundkaj 9</span></span>
+						<span><span itemprop="postalCode">2150</span> <span itemprop="addressLocality">Copenhagen</span></span>
+						<meta itemprop="addressCountry" content="DK">
+					</address>
+					<dl data-part="hours">
+						<dt>Mon–Fri</dt>
+						<dd>
+							<span itemprop="openingHoursSpecification" itemscope itemtype="https://schema.org/OpeningHoursSpecification" hidden>
+								<meta itemprop="dayOfWeek" content="https://schema.org/Monday"><meta itemprop="dayOfWeek" content="https://schema.org/Tuesday"><meta itemprop="dayOfWeek" content="https://schema.org/Wednesday"><meta itemprop="dayOfWeek" content="https://schema.org/Thursday"><meta itemprop="dayOfWeek" content="https://schema.org/Friday">
+								<meta itemprop="opens" content="09:00"><meta itemprop="closes" content="17:00">
+							</span>
+							9:00–17:00
+						</dd>
+					</dl>
+					<ul data-part="list"><li data-icon="call"><a itemprop="telephone" href="tel:+4535551290">+45 35 55 12 90</a></li></ul>
+					<span data-part="tags"><ui-chip itemprop="keywords">Copenhagen</ui-chip><ui-chip itemprop="keywords">Studio</ui-chip></span>
+					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="https://www.google.com/maps/search/?api=1&amp;query=55.7076,12.5993" target="_blank" rel="noopener">Open in Maps</a></nav>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card id="place-hot" variant="col" media="asr(16/9) chip(ts)" itemscope itemtype="https://schema.org/Place">
+			<cq-box>
+				<ui-media><iframe src="https://www.openstreetmap.org/export/embed.html?bbox=12.596553,55.706053,12.602047,55.709147&amp;layer=hot&amp;marker=55.7076,12.5993" title="Map of Nordhavn Studio, Sundkaj 9, Copenhagen — Humanitarian layer" loading="lazy" itemprop="hasMap"></iframe><ui-chip data-type>Place</ui-chip></ui-media>
+				<ui-content>
+					<div itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates" hidden>
+						<meta itemprop="latitude" content="55.7076">
+						<meta itemprop="longitude" content="12.5993">
+					</div>
+					<small data-part="eyebrow">layer=hot</small>
+					<h3 data-part="headline" itemprop="name">Nordhavn Studio</h3>
+					<p data-part="meta">Humanitarian</p>
+					<p data-part="summary" itemprop="description">Same card, same coordinates — only <code>layer=hot</code> differs in the embed URL.</p>
+					<address data-part="address" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
+						<span><span itemprop="streetAddress">Sundkaj 9</span></span>
+						<span><span itemprop="postalCode">2150</span> <span itemprop="addressLocality">Copenhagen</span></span>
+						<meta itemprop="addressCountry" content="DK">
+					</address>
+					<dl data-part="hours">
+						<dt>Mon–Fri</dt>
+						<dd>
+							<span itemprop="openingHoursSpecification" itemscope itemtype="https://schema.org/OpeningHoursSpecification" hidden>
+								<meta itemprop="dayOfWeek" content="https://schema.org/Monday"><meta itemprop="dayOfWeek" content="https://schema.org/Tuesday"><meta itemprop="dayOfWeek" content="https://schema.org/Wednesday"><meta itemprop="dayOfWeek" content="https://schema.org/Thursday"><meta itemprop="dayOfWeek" content="https://schema.org/Friday">
+								<meta itemprop="opens" content="09:00"><meta itemprop="closes" content="17:00">
+							</span>
+							9:00–17:00
+						</dd>
+					</dl>
+					<ul data-part="list"><li data-icon="call"><a itemprop="telephone" href="tel:+4535551290">+45 35 55 12 90</a></li></ul>
+					<span data-part="tags"><ui-chip itemprop="keywords">Copenhagen</ui-chip><ui-chip itemprop="keywords">Studio</ui-chip></span>
+					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="https://www.google.com/maps/search/?api=1&amp;query=55.7076,12.5993" target="_blank" rel="noopener">Open in Maps</a></nav>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card id="place-shortbread" variant="col" media="asr(16/9) chip(ts)" itemscope itemtype="https://schema.org/Place">
+			<cq-box>
+				<ui-media><iframe src="https://www.openstreetmap.org/export/embed.html?bbox=12.596553,55.706053,12.602047,55.709147&amp;layer=shortbread&amp;marker=55.7076,12.5993" title="Map of Nordhavn Studio, Sundkaj 9, Copenhagen — Shortbread layer" loading="lazy" itemprop="hasMap"></iframe><ui-chip data-type>Place</ui-chip></ui-media>
+				<ui-content>
+					<div itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates" hidden>
+						<meta itemprop="latitude" content="55.7076">
+						<meta itemprop="longitude" content="12.5993">
+					</div>
+					<small data-part="eyebrow">layer=shortbread</small>
+					<h3 data-part="headline" itemprop="name">Nordhavn Studio</h3>
+					<p data-part="meta">Shortbread</p>
+					<p data-part="summary" itemprop="description">Same card, same coordinates — only <code>layer=shortbread</code> differs in the embed URL.</p>
+					<address data-part="address" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
+						<span><span itemprop="streetAddress">Sundkaj 9</span></span>
+						<span><span itemprop="postalCode">2150</span> <span itemprop="addressLocality">Copenhagen</span></span>
+						<meta itemprop="addressCountry" content="DK">
+					</address>
+					<dl data-part="hours">
+						<dt>Mon–Fri</dt>
+						<dd>
+							<span itemprop="openingHoursSpecification" itemscope itemtype="https://schema.org/OpeningHoursSpecification" hidden>
+								<meta itemprop="dayOfWeek" content="https://schema.org/Monday"><meta itemprop="dayOfWeek" content="https://schema.org/Tuesday"><meta itemprop="dayOfWeek" content="https://schema.org/Wednesday"><meta itemprop="dayOfWeek" content="https://schema.org/Thursday"><meta itemprop="dayOfWeek" content="https://schema.org/Friday">
+								<meta itemprop="opens" content="09:00"><meta itemprop="closes" content="17:00">
+							</span>
+							9:00–17:00
+						</dd>
+					</dl>
+					<ul data-part="list"><li data-icon="call"><a itemprop="telephone" href="tel:+4535551290">+45 35 55 12 90</a></li></ul>
+					<span data-part="tags"><ui-chip itemprop="keywords">Copenhagen</ui-chip><ui-chip itemprop="keywords">Studio</ui-chip></span>
+					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="https://www.google.com/maps/search/?api=1&amp;query=55.7076,12.5993" target="_blank" rel="noopener">Open in Maps</a></nav>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</lay-out>
+
+	<h2>Not embeddable — these fall back to Standard</h2>
+	<p>Both are real entries in the layer switcher, and both need an API key that the embed does not carry. The embed resolves an unknown layer with <code>layers[layerId] || layers.mapnik</code>, so these two render as Standard rather than failing.</p>
+	<lay-out md="columns(2) items(start)">
+		<ui-card id="place-tracestracktopo" variant="col" media="asr(16/9) chip(ts)" itemscope itemtype="https://schema.org/Place">
+			<cq-box>
+				<ui-media><iframe src="https://www.openstreetmap.org/export/embed.html?bbox=12.596553,55.706053,12.602047,55.709147&amp;layer=tracestracktopo&amp;marker=55.7076,12.5993" title="Map of Nordhavn Studio, Sundkaj 9, Copenhagen — Tracestrack Topo layer" loading="lazy" itemprop="hasMap"></iframe><ui-chip data-type>Place</ui-chip></ui-media>
+				<ui-content>
+					<div itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates" hidden>
+						<meta itemprop="latitude" content="55.7076">
+						<meta itemprop="longitude" content="12.5993">
+					</div>
+					<small data-part="eyebrow">layer=tracestracktopo</small>
+					<h3 data-part="headline" itemprop="name">Nordhavn Studio</h3>
+					<p data-part="meta">Tracestrack Topo — not embeddable, falls back to Standard</p>
+					<p data-part="summary" itemprop="description">Same card, same coordinates — only <code>layer=tracestracktopo</code> differs in the embed URL.</p>
+					<address data-part="address" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
+						<span><span itemprop="streetAddress">Sundkaj 9</span></span>
+						<span><span itemprop="postalCode">2150</span> <span itemprop="addressLocality">Copenhagen</span></span>
+						<meta itemprop="addressCountry" content="DK">
+					</address>
+					<dl data-part="hours">
+						<dt>Mon–Fri</dt>
+						<dd>
+							<span itemprop="openingHoursSpecification" itemscope itemtype="https://schema.org/OpeningHoursSpecification" hidden>
+								<meta itemprop="dayOfWeek" content="https://schema.org/Monday"><meta itemprop="dayOfWeek" content="https://schema.org/Tuesday"><meta itemprop="dayOfWeek" content="https://schema.org/Wednesday"><meta itemprop="dayOfWeek" content="https://schema.org/Thursday"><meta itemprop="dayOfWeek" content="https://schema.org/Friday">
+								<meta itemprop="opens" content="09:00"><meta itemprop="closes" content="17:00">
+							</span>
+							9:00–17:00
+						</dd>
+					</dl>
+					<ul data-part="list"><li data-icon="call"><a itemprop="telephone" href="tel:+4535551290">+45 35 55 12 90</a></li></ul>
+					<span data-part="tags"><ui-chip itemprop="keywords">Copenhagen</ui-chip><ui-chip itemprop="keywords">Studio</ui-chip></span>
+					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="https://www.google.com/maps/search/?api=1&amp;query=55.7076,12.5993" target="_blank" rel="noopener">Open in Maps</a></nav>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card id="place-openmaptiles-osm" variant="col" media="asr(16/9) chip(ts)" itemscope itemtype="https://schema.org/Place">
+			<cq-box>
+				<ui-media><iframe src="https://www.openstreetmap.org/export/embed.html?bbox=12.596553,55.706053,12.602047,55.709147&amp;layer=openmaptiles_osm&amp;marker=55.7076,12.5993" title="Map of Nordhavn Studio, Sundkaj 9, Copenhagen — MapTiler OMT layer" loading="lazy" itemprop="hasMap"></iframe><ui-chip data-type>Place</ui-chip></ui-media>
+				<ui-content>
+					<div itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates" hidden>
+						<meta itemprop="latitude" content="55.7076">
+						<meta itemprop="longitude" content="12.5993">
+					</div>
+					<small data-part="eyebrow">layer=openmaptiles_osm</small>
+					<h3 data-part="headline" itemprop="name">Nordhavn Studio</h3>
+					<p data-part="meta">MapTiler OMT — not embeddable, falls back to Standard</p>
+					<p data-part="summary" itemprop="description">Same card, same coordinates — only <code>layer=openmaptiles_osm</code> differs in the embed URL.</p>
+					<address data-part="address" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
+						<span><span itemprop="streetAddress">Sundkaj 9</span></span>
+						<span><span itemprop="postalCode">2150</span> <span itemprop="addressLocality">Copenhagen</span></span>
+						<meta itemprop="addressCountry" content="DK">
+					</address>
+					<dl data-part="hours">
+						<dt>Mon–Fri</dt>
+						<dd>
+							<span itemprop="openingHoursSpecification" itemscope itemtype="https://schema.org/OpeningHoursSpecification" hidden>
+								<meta itemprop="dayOfWeek" content="https://schema.org/Monday"><meta itemprop="dayOfWeek" content="https://schema.org/Tuesday"><meta itemprop="dayOfWeek" content="https://schema.org/Wednesday"><meta itemprop="dayOfWeek" content="https://schema.org/Thursday"><meta itemprop="dayOfWeek" content="https://schema.org/Friday">
+								<meta itemprop="opens" content="09:00"><meta itemprop="closes" content="17:00">
+							</span>
+							9:00–17:00
+						</dd>
+					</dl>
+					<ul data-part="list"><li data-icon="call"><a itemprop="telephone" href="tel:+4535551290">+45 35 55 12 90</a></li></ul>
+					<span data-part="tags"><ui-chip itemprop="keywords">Copenhagen</ui-chip><ui-chip itemprop="keywords">Studio</ui-chip></span>
+					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="https://www.google.com/maps/search/?api=1&amp;query=55.7076,12.5993" target="_blank" rel="noopener">Open in Maps</a></nav>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</lay-out>
+	</main>
+</body>
+</html>
