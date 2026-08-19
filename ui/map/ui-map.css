@@ -47,9 +47,11 @@
 	:where(ui-map) .leaflet-tile-pane { filter: var(--ui-map-filter); }
 
 	:where(ui-map[map*="tint(vivid)"])  { --ui-map-filter: saturate(1.4) brightness(1.04); }
-	/* sepia FIRST: hue-rotate() rotates hue that already exists, and a dark basemap is
-	   effectively greyscale — sepia forces a uniform cast the rotation can then move */
-	:where(ui-map[map*="tint(blue)"])   { --ui-map-filter: sepia(1) hue-rotate(185deg) saturate(2.2); }
+	/* navy — for tiles(dark) only. sepia FIRST: hue-rotate() rotates hue that already
+	   exists, and a dark basemap is effectively greyscale, so sepia forces a uniform cast
+	   the rotation can move. The brightness lift is load-bearing, not taste: Dark Matter
+	   measures mean-luma 10/255 at spread 4, so a cast alone stays unreadable. Docs: readme.md § Tint */
+	:where(ui-map[map*="tint(navy)"])   { --ui-map-filter: sepia(0.7) hue-rotate(190deg) saturate(2) brightness(2.6); }
 	:where(ui-map[map*="tint(gray)"])   { --ui-map-filter: grayscale(1); }
 	:where(ui-map[map*="tint(mono)"])   { --ui-map-filter: grayscale(1) contrast(1.15); }
 	:where(ui-map[map*="tint(sepia)"])  { --ui-map-filter: sepia(0.6); }

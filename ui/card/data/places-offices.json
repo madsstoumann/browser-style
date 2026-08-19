@@ -22,7 +22,7 @@
       {
         "mediaType": "places",
         "alt": "Map of six studios worldwide",
-        "map": "tiles(dark) tint(blue) cluster fit"
+        "map": "tiles(dark) tint(navy) cluster fit"
       }
     ],
     "details": {
