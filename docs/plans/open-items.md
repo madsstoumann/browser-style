@@ -5,7 +5,7 @@
 > their rationale lives in git history (`git log --diff-filter=D -- docs/plans`).
 > Settled decisions of record are summarised in `ui/card/AGENTS.md`.
 >
-> Items 1–7 came from the 2026-07-26 architecture ledger; 8–12, 30 and 31 were added as they
+> Items 1–7 came from the 2026-07-26 architecture ledger; 8–12 and 30–32 were added as they
 > surfaced. **Items 13–29 (2026-08-19) absorb what was still live from the deleted
 > plan docs** — the 2026-08-15 consistency audit, the 2026-08-16 schema-card-sections
 > note and the 2026-08-10 feature-gap ledger. Every absorbed finding was re-verified
@@ -991,3 +991,47 @@ isolation. Verify against `docs/html-head.md` § 4 — the 3× sweep there is th
 
 **Until it is fixed,** `media.furniture.html` carries a `text-scale` opt-in it does not fully
 honour at the top of the scaling range.
+
+---
+
+## 32. Map cards cannot choose a basemap — `layer` is missing from the data model
+
+**Where:** `ui/card/render.js` (`osmEmbed`, `mapFrame`), `cms/baseline/models/card.schema.json`
+
+```js
+return `https://www.openstreetmap.org/export/embed.html?bbox=${box.join(',')}&layer=mapnik&marker=${lat},${lon}`;
+```
+
+The OSM embed takes a `layer=` string that picks the basemap style — Standard, CyclOSM,
+Cycle Map, Transport Map, Humanitarian, Shortbread. `osmEmbed()` hardcodes `mapnik`, so a
+**map card rendered from content is always the Standard basemap**; only hand-authored
+markup can pick another. `ui/card/demo/schema.place.html` is the eight-card reference for
+what the other five look like, and the vocabulary table is
+[media.md § Basemap layer](../../ui/card/docs/media.md#basemap-layer--the-one-map-field-the-data-model-does-not-carry).
+
+**What the field needs to be:**
+
+- **Name it `layer`, not `type`.** A media item already carries `mediaType`, the card
+  carries `schemaType` and `details.subtype`; a bare `type` on a map item would read as one
+  of those. `layer` also matches the URL parameter it becomes, so the mapping is
+  inspectable.
+- **Allowlist the six embeddable values** — a `Set`, checked before interpolation, exactly
+  as `SUBTYPES` is. OpenStreetMap resolves an unknown layer as
+  `layers[layerId] || layers.mapnik`, so a typo is *silently* the default rather than a
+  visible failure — the allowlist is what turns that into a caught error.
+- **`tracestracktopo` and `openmaptiles_osm` must NOT be spellable.** They appear in the
+  switcher on openstreetmap.org but carry no `canEmbed` flag in that project's
+  `config/layers.yml`, so the embed drops them. Offering them in the DSL would ship a value
+  that quietly does nothing.
+
+**Zoom is already there, under a different name.** The item field is **`zoom`** (clamped
+1–20), not `zoomLevel` — it needs no new capability, only the awareness that it is not a URL
+parameter: the builder turns it into the `bbox` half-span. Renaming it is a breaking change
+to every existing map item for no behavioural gain; if the longer spelling is wanted, decide
+that separately from this item.
+
+**Why it is waiting:** it is a change to `render.js` plus the CMS content model, so it
+carries the full gate chain — `render.test.js`, the SSR snapshot, `schema.compare.js` and a
+`card.schema.json` version bump. Worth doing in one pass with a decision on whether the
+Google provider gets an equivalent (the Maps Embed API spells it `maptype`, and takes only
+`roadmap` / `satellite`), so the two providers do not grow divergent vocabularies.

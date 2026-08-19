@@ -672,15 +672,50 @@ A card with coordinates can make the **map** its media, instead of a photo of th
 | Field | Default | Notes |
 |---|---|---|
 | `provider` | `osm` | `osm` · `google`. An unknown or unbuildable provider falls back to OSM |
-| `zoom` | `16` | clamped to 1–20 |
+| `zoom` | `16` | clamped to 1–20. **Not a URL parameter** — see § Zoom is a bbox |
 | `latitude` / `longitude` | `details.geo` | per-item override, for a map that must point somewhere else (a parking entrance) |
 | `alt` | `Map of {headline}` | becomes the iframe `title` — an iframe needs one |
 | `src` | — | an explicit embed URL, bypassing the builder entirely |
+| `layer` | `mapnik` | **NOT IMPLEMENTED** — the basemap style. See § Basemap layer |
 
 `itemprop="hasMap"` is gated to the `business` and `location` types, because `hasMap` is a
 `Place` property. A caller that KNOWS its enclosing scope descends from `Place` — the
 real-estate detail page's map band, which sits inside `mainEntity` → `Apartment` — passes
 `hasMap` to `mapFrame()` explicitly instead. Docs: [schema.md § Real estate](./schema.md#real-estate--realestatelisting).
+
+### Basemap layer — the one map field the data model does not carry
+
+The OSM embed takes a **`layer=` string** that picks the basemap style: the same list the
+layer switcher on openstreetmap.org offers. `osmEmbed()` hardcodes `mapnik`, so a card
+rendered **from content cannot choose one** — only hand-authored markup can, which is what
+[`demo/schema.place.html`](../demo/schema.place.html) does. Closing that is
+[open-items.md § 32](../../../docs/plans/open-items.md).
+
+| `layer=` | OSM's name | Tiles | In an embed |
+|---|---|---|---|
+| `mapnik` | Standard | raster | ✅ the default |
+| `cyclosm` | CyclOSM | raster | ✅ |
+| `cyclemap` | Cycle Map | raster | ✅ |
+| `transportmap` | Transport Map | vector | ✅ |
+| `hot` | Humanitarian | raster | ✅ |
+| `shortbread` | Shortbread | vector | ✅ |
+| `tracestracktopo` | Tracestrack Topo | raster | ✖ renders Standard |
+| `openmaptiles_osm` | MapTiler OMT | vector | ✖ renders Standard |
+
+**Two of the eight are in the switcher but not in an embed.** OpenStreetMap's
+`config/layers.yml` marks each entry `canEmbed`, `MapLayers::embed_definitions` selects on
+that flag, and `embed.js` resolves the parameter as `layers[layerId] || layers.mapnik` — so
+an unlisted value is not an error, it is silently the Standard basemap. A `layer` field
+therefore needs an **allowlist of the six**, the same discipline as `SUBTYPES`
+([schema.md § Subtypes](./schema.md#subtypes)): validate, never interpolate.
+
+### Zoom is a bbox, not a parameter
+
+The embed URL has **no zoom parameter**. `zoom` is expressed by how wide a `bbox` the
+builder computes — `osmEmbed()` derives a half-span of `180 / 2 ** zoom` and scales the
+latitude half by `cos(latitude)`. That is why a wide subject needs a *lower* number:
+`demo/schema.place.html` frames the Colosseum at 17 (~230 m across) and Kansai's artificial
+island at 13 (~4 km).
 
 ### Providers — only one is keyless
 
