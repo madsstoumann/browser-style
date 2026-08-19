@@ -1090,7 +1090,10 @@ cost from six map applications to zero. That is ~1.5 s of third-party CPU deferr
 page from "eight maps you scroll past" to "eight maps you open" — a product decision, not a
 mechanical one, which is why it is here and not done.
 
-**Cheaper partial — DONE.** The three vector-style cards now sit last, which halves the
-MapLibre boots inside the on-load set: measured 2 → 1 at 1280, unchanged at 0 on 412 (where
-only three raster embeds ever reached the threshold). The raster embeds still boot; the
-facade remains the fix for those.
+**Cheaper partial — TRIED AND REVERTED, do not retry.** Ordering the three vector-style
+cards last halves the MapLibre boots inside the on-load set — measured 2 → 1 at 1280,
+unchanged at 0 on 412 — and on the deployed page it made performance **worse**, not better.
+Shipped as `2647630`, reverted. The local request-count proxy and the real page disagree
+here, so the count of embeds inside the lazy threshold is **not** a usable stand-in for
+Lighthouse on this page: measure the deployed host or do not claim an improvement. The
+facade below remains the only lever with evidence behind it.
