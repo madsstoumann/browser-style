@@ -701,8 +701,14 @@ Two constraints on a slide, both learned the hard way in the browser:
 - **The slide's `asr()` must match the frame's.** The frame owns the height; a taller slide
   overflows it and the scroller clips the overlay. Override both together via `details.slide`.
 - **The title is a `cover` link inside the headline, not a plain anchor.** An `<a>`'s own
-  colour beats inheritance, so a bare link renders link-blue on a photo under `ovr()`. The
-  `cover` part takes `color: inherit` and stretches its `::after` over the whole card.
+  colour beats inheritance, so a bare link renders link-blue on a photo under `ovr()`; the
+  `cover` part takes `color: inherit`. But its stretched `::after` must **not** apply on a
+  slide — it would make the whole slide a link, so tapping the photo navigates away and a
+  swipe lands on the link instead of the scroller. `content.css` drops the stretch for a
+  card inside a `nav` frame; only the title stays clickable. The guard written for a plain
+  carousel card cannot cover this: it re-anchors the `::after` to `<ui-content>`, which is
+  the wrong element here (the scroller is the *parent* frame) and the wrong size (under
+  `ovr()` the text column fills the whole card).
 
 **Slides are anchor-addressable.** Each one gets a minted `id` (`<cardId>-place-<n>`), and a
 scroll-snap child is reachable by plain in-page anchor — so `<a href="#…">` scrolls a home

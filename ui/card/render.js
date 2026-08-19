@@ -535,7 +535,10 @@ const placesFrame = (item, fields, cardId = null) => {
 	const center = mapCoords(d.center, item);
 	const title = item.alt || `Map of ${plain(fields.headline) || 'these places'}`;
 	const fallback = center ? `<iframe${attrs({ src: osmEmbed(center), title, loading: 'lazy' })}></iframe>` : '';
+	/* the map gets an id too when it is a slide, so "back to the map" is one anchor like
+	   every other slide — <a href="#…-map">. Minted, never author data. */
 	const map = `<ui-map${attrs({
+		id: d.slides && cardId ? `${cardId}-map` : null,
 		map: item.map || 'tiles(auto) cluster fit',
 		lat: center?.lat, lon: center?.lon
 	})}>${fallback}</ui-map>`;

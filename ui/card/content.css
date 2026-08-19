@@ -225,7 +225,7 @@
 	/* eyebrow — Eyebrow group (the part IS the group's representative) */
 	:where(ui-content) {
 		& [data-part="eyebrow"] {
-			color: var(--ui-content-eyebrow-ink, var(--color-accent));
+			color: var(--ui-content-eyebrow-ink, var(--color-accent-ink));
 			font-size: var(--ui-content-eyebrow-fs, calc(var(--ui-content-fs, var(--ui-content-fs-md)) * 0.78));
 			font-weight: var(--ui-content-eyebrow-weight, var(--font-weight-medium, 500));
 			letter-spacing: var(--tracking-wide, 0.05em);
@@ -436,7 +436,7 @@
 			gap: var(--ui-content-price-gap, var(--spacing-sm));
 
 			& del   { color: var(--ui-content-muted); font-weight: var(--font-weight-normal, 400); }
-			& small { color: var(--ui-content-price-discount, var(--color-accent)); font-size: 0.7em; }
+			& small { color: var(--ui-content-price-discount, var(--color-accent-ink)); font-size: 0.7em; }
 			/* chip rides the price row at label size, not price size */
 			& ui-chip { align-self: center; font-size: 0.55em; font-weight: var(--font-weight-normal, 400); }
 		}
@@ -531,7 +531,7 @@
 				   the resting ink is the body colour, so the swap is a real change — it
 				   would NOT be on a list whose links are already accent-coloured. */
 				&:focus-visible {
-					color: var(--ui-content-links-focus-ink, var(--color-accent));
+					color: var(--ui-content-links-focus-ink, var(--color-accent-ink));
 					outline: 0;
 				}
 				/* ⚠️ forced-colors overrides `color`, which would leave no indicator at all */
@@ -722,6 +722,16 @@
 		   column re-anchors the same ::after to it, no second rule needed.
 		   Tapping the photo stops navigating; the headline link still does. Docs: docs/card.md § cover */
 		&:is([media*="nav"], :has(ui-media[media*="nav"])) ui-content { position: relative; }
+
+		/* A card that IS a slide keeps its swipe. Two reasons the re-anchor above cannot help
+		   here: the scroller is the PARENT frame, not this card's own media, so the selector
+		   never matches — and under ovr() the text column fills the whole card anyway, so
+		   re-anchoring would move the ::after nowhere. Drop the stretch instead; the title
+		   stays the click target, which is the same bargain the rule above strikes.
+		   Docs: docs/card.md § cover */
+		:where(ui-media:where([media*="nav"], :is(ui-card, ui-reveal)[media*="nav"] *)) > & [data-part~="cover"]::after {
+			content: none;
+		}
 
 		/* FOCUS — one ring per card, on the card box and OUTSIDE it, the same shape and
 		   offset a focused frame paints. Outward is what lets an outline work here: an

@@ -2084,6 +2084,9 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     &:is([media*=nav], :has(ui-media[media*=nav])) ui-content {
       position: relative;
     }
+    :where(ui-media:where([media*=nav], :is(ui-card, ui-reveal)[media*=nav] *)) > & [data-part~=cover]::after {
+      content: none;
+    }
     &:not(:where(ui-media *)):has([data-part~=cover]:focus-visible):not(:has(:where(ui-card, ui-reveal) [data-part~=cover]:focus-visible)) {
       outline: var(--ui-card-focus-width, var(--ui-media-focus-width, 2px)) dashed var(--ui-card-focus-color, var(--ui-media-focus-color, var(--ring-color)));
       outline-offset: var(--ui-card-focus-offset, var(--ui-media-focus-offset, 3px));

@@ -724,9 +724,11 @@ Three things make it hold together:
   `loop` clones leading and trailing slides, and cloning a `<ui-map>` would start a second
   map engine — **do not combine `loop` with a map slide.**
 - **The slide's `asr()` must match the frame's.** The frame owns the height.
-- **Each slide gets a minted `id`,** so a plain `<a href="#…">` scrolls it into view — a
-  scroll-snap child needs no JavaScript to be addressable. The map popup uses this to jump
-  from a pin to its card.
+- **Each slide gets a minted `id` — the map included,** so a plain `<a href="#…">` scrolls
+  it into view: a scroll-snap child needs no JavaScript to be addressable. The map popup
+  uses this to jump from a pin to its card, and `#<cardId>-map` goes back.
+- **A slide must not carry a stretched `cover` link.** It would swallow the swipe and turn
+  the whole photo into a link — see [schema.md § Places](./schema.md).
 
 Outside a card, [`@browser.style/map`](../../map/readme.md) carries `<ui-map>` for the interactive, clustered form on a bare page. (The pre-v4 `.ui-map` class it used to ship for a plain iframe was removed when that package was converted — the iframe above needs no class.)
 
