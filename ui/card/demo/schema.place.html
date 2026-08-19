@@ -6,7 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="text-scale" content="scale">
 	<meta name="color-scheme" content="light dark">
-	<meta name="description" content="The Place card from demo/schema.html, once per OpenStreetMap embed layer — six layers on six places, from a Copenhagen studio to the Stelvio pass, Shibuya, Kathmandu and the Colosseum. Only the layer= string in the iframe src picks the basemap: mapnik, cyclosm, cyclemap, transportmap, hot, shortbread.">
+	<meta name="description" content="The Place card from demo/schema.html, once per OpenStreetMap embed layer — six layers on six places, from a Copenhagen studio to the Stelvio pass, Shibuya, Kathmandu and the pyramids at Giza. Only the layer= string in the iframe src picks the basemap: mapnik, cyclosm, cyclemap, transportmap, hot, shortbread.">
 	<link rel="alternate" type="text/markdown" href="/ui/card/docs/media.md">
 	<link rel="stylesheet" href="/dist/demo.c160558b.min.css">
 	<style>
@@ -124,7 +124,7 @@
 					<address data-part="address" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
 						<span><span itemprop="streetAddress">Passo dello Stelvio</span></span>
 						<span><span itemprop="postalCode">23032</span> <span itemprop="addressLocality">Bormio</span></span>
-						<meta itemprop="addressCountry" content="IT">
+						<meta itemprop="addressCountry" content="EG">
 					</address>
 					<dl data-part="hours">
 						<dt>Jun–Oct</dt>
@@ -208,21 +208,21 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card id="place-shortbread" variant="col" media="asr(16/9) chip(ts)" itemscope itemtype="https://schema.org/TouristAttraction">
+		<ui-card id="place-shortbread" variant="col" media="asr(16/9) chip(ts)" itemscope itemtype="https://schema.org/TouristDestination">
 			<cq-box>
-				<ui-media><iframe src="https://www.openstreetmap.org/export/embed.html?bbox=12.490827,41.889178,12.493573,41.891222&amp;layer=shortbread&amp;marker=41.8902,12.4922" title="Map of the Colosseum, Rome — Shortbread layer" loading="lazy" itemprop="hasMap"></iframe><ui-chip data-type>TouristAttraction</ui-chip></ui-media>
+				<ui-media><iframe src="https://www.openstreetmap.org/export/embed.html?bbox=31.125607,29.971142,31.136593,29.980658&amp;layer=shortbread&amp;marker=29.9759,31.1311" title="Map of the Giza Necropolis, Giza — Shortbread layer" loading="lazy" itemprop="hasMap"></iframe><ui-chip data-type>TouristDestination</ui-chip></ui-media>
 				<ui-content>
 					<div itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates" hidden>
-						<meta itemprop="latitude" content="41.8902">
-						<meta itemprop="longitude" content="12.4922">
+						<meta itemprop="latitude" content="29.9759">
+						<meta itemprop="longitude" content="31.1311">
 					</div>
 					<small data-part="eyebrow">Shortbread</small>
-					<h3 data-part="headline" itemprop="name">Colosseum</h3>
+					<h3 data-part="headline" itemprop="name">Giza Necropolis</h3>
 					<p data-part="meta"><code>layer=shortbread</code></p>
-					<p data-part="summary" itemprop="description">Shortbread is a vector tile schema, so the amphitheatre’s footprint and the streets ringing it are drawn in the browser from data, rather than baked into a picture on a server.</p>
+					<p data-part="summary" itemprop="description">Three pyramids and a sphinx on one plateau. Shortbread is a vector tile schema, so those footprints are drawn in the browser from data, rather than baked into a picture on a server.</p>
 					<address data-part="address" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
-						<span><span itemprop="streetAddress">Piazza del Colosseo 1</span></span>
-						<span><span itemprop="postalCode">00184</span> <span itemprop="addressLocality">Rome</span></span>
+						<span><span itemprop="streetAddress">Al Haram</span></span>
+						<span><span itemprop="postalCode">12556</span> <span itemprop="addressLocality">Giza</span></span>
 						<meta itemprop="addressCountry" content="IT">
 					</address>
 					<dl data-part="hours">
@@ -230,14 +230,14 @@
 						<dd>
 							<span itemprop="openingHoursSpecification" itemscope itemtype="https://schema.org/OpeningHoursSpecification" hidden>
 								<meta itemprop="dayOfWeek" content="https://schema.org/Monday"><meta itemprop="dayOfWeek" content="https://schema.org/Tuesday"><meta itemprop="dayOfWeek" content="https://schema.org/Wednesday"><meta itemprop="dayOfWeek" content="https://schema.org/Thursday"><meta itemprop="dayOfWeek" content="https://schema.org/Friday"><meta itemprop="dayOfWeek" content="https://schema.org/Saturday"><meta itemprop="dayOfWeek" content="https://schema.org/Sunday">
-								<meta itemprop="opens" content="08:30"><meta itemprop="closes" content="19:00">
+								<meta itemprop="opens" content="07:00"><meta itemprop="closes" content="17:00">
 							</span>
-							8:30–19:00
+							7:00–17:00
 						</dd>
 					</dl>
-					<ul data-part="list"><li data-icon="groups">Street and building footprints drawn client-side from vector tiles</li></ul>
-					<span data-part="tags"><ui-chip itemprop="keywords">Rome</ui-chip><ui-chip itemprop="keywords">Amphitheatre</ui-chip></span>
-					<nav data-part="actions"><a href="https://www.google.com/maps/search/?api=1&amp;query=41.8902,12.4922" target="_blank" rel="noopener" aria-label="Open the Colosseum in Google Maps"><img src="/assets/svg/google.maps.svg" alt="" width="40" height="40"></a><a href="https://maps.apple.com/?ll=41.8902,12.4922&amp;q=Colosseum" target="_blank" rel="noopener" aria-label="Open the Colosseum in Apple Maps"><img src="/assets/svg/apple.maps.svg" alt="" width="40" height="40"></a></nav>
+					<ul data-part="list"><li data-icon="groups">Building footprints drawn client-side from vector tiles</li></ul>
+					<span data-part="tags"><ui-chip itemprop="keywords">Giza</ui-chip><ui-chip itemprop="keywords">Necropolis</ui-chip></span>
+					<nav data-part="actions"><a href="https://www.google.com/maps/search/?api=1&amp;query=29.9759,31.1311" target="_blank" rel="noopener" aria-label="Open the Giza Necropolis in Google Maps"><img src="/assets/svg/google.maps.svg" alt="" width="40" height="40"></a><a href="https://maps.apple.com/?ll=29.9759,31.1311&amp;q=Giza%20Necropolis" target="_blank" rel="noopener" aria-label="Open the Giza Necropolis in Apple Maps"><img src="/assets/svg/apple.maps.svg" alt="" width="40" height="40"></a></nav>
 				</ui-content>
 			</cq-box>
 		</ui-card>
