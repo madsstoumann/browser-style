@@ -1,8 +1,139 @@
-@layer bs-component {
-	:where(.ui-map) {
-		aspect-ratio: var(--uimap-ar, 19 / 9);
-		border: var(--input-bdw) solid var(--input-bdc);
-		border-radius: var(--input-bdrs);
-		width: 100%;
+/**
+ * ui-map — interactive map frame: keyless raster tiles + Supercluster clustering.
+ * Docs: readme.md · Token manifest: ui/card/data/tokens.json (map= family)
+ * @version 1.0.0 · @author Mads Stoumann
+ */
+
+/* Load-bearing: engine.js adopts leaflet.css into bs-component.leaflet, and an adopted
+   sheet is ordered AFTER author sheets — without this statement our rules would lose.
+   Docs: readme.md § Cascade */
+@layer bs-component.leaflet, bs-component.map;
+
+/* light-dark() resolves against the COMPUTED color-scheme, which theme= and .cs-* both
+   set — prefers-color-scheme does not see them. engine.js reads this to pick tiles(auto).
+   Docs: readme.md § Tiles */
+@property --ui-map-scheme {
+	syntax: '<color>';
+	inherits: false;
+	initial-value: #000;
+}
+
+@layer bs-component.map {
+	:where(ui-map) {
+		/* ───────── A. Base ───────── */
+		--ui-map-filter: none;
+		--ui-map-pin-size: 0.875rem;
+		--ui-map-scheme: light-dark(#000, #fff);
+		block-size: 100%;
+		display: block;
+		inline-size: 100%;
+		min-block-size: var(--ui-map-min-bs, 12.5rem);
+		position: relative;
+	}
+
+	/* the canvas Leaflet mounts into, and the zero-JS iframe it replaces, fill the box alike */
+	:where(ui-map) > :is(.ui-map-canvas, iframe) {
+		block-size: 100%;
+		border: 0;
+		display: block;
+		inline-size: 100%;
+	}
+	:where(ui-map) > .ui-map-canvas { background: var(--ui-map-bg, var(--color-surface-alt)); }
+
+	/* ───────── B. tint() — one filter on the TILE PANE ─────────
+	   Never .leaflet-tile-container: leaflet.css:89 gives .leaflet-tile `filter: inherit`,
+	   so a filter there applies twice and invert(1) twice is the identity. The pane holds
+	   only tiles, so markers, controls and attribution keep their true colours. */
+	:where(ui-map) .leaflet-tile-pane { filter: var(--ui-map-filter); }
+
+	:where(ui-map[map*="tint(gray)"])   { --ui-map-filter: grayscale(1); }
+	:where(ui-map[map*="tint(mono)"])   { --ui-map-filter: grayscale(1) contrast(1.15); }
+	:where(ui-map[map*="tint(sepia)"])  { --ui-map-filter: sepia(0.6); }
+	:where(ui-map[map*="tint(invert)"]) { --ui-map-filter: invert(1) hue-rotate(180deg) brightness(0.95); }
+	:where(ui-map[map*="tint(warm)"])   { --ui-map-filter: sepia(0.25) saturate(1.2) hue-rotate(-10deg); }
+	:where(ui-map[map*="tint(cool)"])   { --ui-map-filter: saturate(0.8) hue-rotate(15deg); }
+	:where(ui-map[map*="tint(soft)"])   { --ui-map-filter: saturate(0.6) brightness(1.05); }
+
+	/* ───────── C. Markers — divIcon content, never Leaflet's PNG assets ─────────
+	   .ui-map-marker is the element Leaflet positions; .ui-map-pin inside it is the visual,
+	   so `translate` centres the pin without fighting Leaflet's positioning transform. */
+	:where(.ui-map-pin) {
+		align-items: center;
+		background: var(--ui-map-pin-bg, var(--color-accent));
+		border: var(--ui-map-pin-bdw, 2px) solid var(--ui-map-pin-bdc, var(--color-surface));
+		border-radius: var(--radius-pill);
+		box-shadow: var(--ui-map-pin-shadow, 0 1px 3px hsl(0 0% 0% / 0.35));
+		box-sizing: border-box;
+		color: var(--ui-map-pin-c, contrast-color(var(--ui-map-pin-bg, var(--color-accent))));
+		display: flex;
+		font-family: var(--font-body);
+		font-size: var(--font-size-2xs);
+		font-weight: var(--font-weight-semibold);
+		justify-content: center;
+		line-height: 1;
+		translate: -50% -50%;
+		white-space: nowrap;
+	}
+
+	:where(.ui-map-pin[data-kind="point"]) {
+		block-size: var(--ui-map-pin-size);
+		inline-size: var(--ui-map-pin-size);
+	}
+	/* the text forms size to their content instead of to the dot */
+	:where(ui-map[map*="pin(label)"], ui-map[map*="pin(price)"]) :where(.ui-map-pin[data-kind="point"]) {
+		block-size: auto;
+		inline-size: auto;
+		padding: 0.25em 0.6em;
+	}
+	/* pin(pin) — a teardrop: one square corner plus a 45° rotation, no asset */
+	:where(ui-map[map*="pin(pin)"]) :where(.ui-map-pin[data-kind="point"]) {
+		--ui-map-pin-size: 1.25rem;
+		border-end-start-radius: 0;
+		rotate: -45deg;
+		translate: -50% -100%;
+	}
+
+	/* a cluster is a count bubble, in three steps so density reads at a glance */
+	:where(.ui-map-pin[data-kind="cluster"]) {
+		--ui-map-pin-bg: var(--ui-map-cluster-bg, var(--color-accent));
+		block-size: var(--ui-map-cluster-size, 2rem);
+		font-size: var(--font-size-xs);
+		inline-size: var(--ui-map-cluster-size, 2rem);
+	}
+	:where(.ui-map-pin[data-size="md"]) { --ui-map-cluster-size: 2.5rem; }
+	:where(.ui-map-pin[data-size="lg"]) { --ui-map-cluster-size: 3rem; font-size: var(--font-size-sm); }
+
+	/* ───────── D. Attribution — required by every tile licence, never hidden.
+	   Restyled from base tokens: leaflet.css:413-422 ships a translucent white plate
+	   with #333 ink and #0078A8 links, which cannot hold 4.5:1 over a satellite tile. */
+	:where(ui-map) .leaflet-control-attribution {
+		background: var(--ui-map-attr-bg, var(--color-surface));
+		color: var(--color-text);
+		font-family: var(--font-body);
+		/* xs, not 3xs: 3xs is 8px and Leaflet's own default is 11px — attribution has to stay readable */
+		font-size: var(--font-size-xs);
+		padding-inline: 0.5em;
+	}
+	:where(ui-map) .leaflet-control-attribution a { color: var(--color-link); }
+	/* satellite: an opaque plate, because there is no light tile to sit on */
+	:where(ui-map[map*="tiles(sat)"]) { --ui-map-attr-bg: var(--color-surface); }
+
+	/* ───────── E. Controls ───────── */
+	:where(ui-map[map*="ctl(non)"]) .leaflet-control-zoom { display: none; }
+	:where(ui-map) .leaflet-control-zoom a {
+		color: var(--color-text);
+		font-family: var(--font-body);
+	}
+
+	/* ───────── F. Reduced motion — the arm that always holds.
+	   Leaflet's transitions live in its stylesheet, and _zoomAnimated is computed once
+	   at init, so the JS options alone miss a mid-session preference change. Beating an
+	   adopted sheet needs no !important here: bs-component.map outranks .leaflet. */
+	@media (prefers-reduced-motion: reduce) {
+		:where(ui-map) :is(
+			.leaflet-zoom-anim .leaflet-zoom-animated,
+			.leaflet-fade-anim .leaflet-tile,
+			.leaflet-fade-anim .leaflet-popup
+		) { transition: none; }
 	}
 }

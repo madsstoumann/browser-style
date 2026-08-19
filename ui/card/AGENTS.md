@@ -78,7 +78,8 @@ thumbnails, bands) plus the Safari/Chromium DOM-control polyfill. It used to liv
 |---|---|---|
 | `<ui-card>` | no | static host; container-query root; grid |
 | `<cq-box>` | no | queryable descendant inside `<ui-card>` — the grid actually lives here (hand-authored; there is no auto-insert build) |
-| `<ui-media>` | **yes** — the ONLY registered element (`ui-media-srcset.js`) | media frame; registration only adds srcset/loading upgrades |
+| `<ui-media>` | **yes** — the only registered element in THIS package (`ui-media-srcset.js`) | media frame; registration only adds srcset/loading upgrades |
+| `<ui-map>` | **yes** — `ui/map`, the one other registered element in the system | clustered interactive map inside a frame. The exception to "don't register elements CSS can drive": CSS cannot fetch tiles or cluster points. Single static points stay an `<iframe>` — [docs/media.md § Map](docs/media.md) |
 | `<ui-content>` | no | text column |
 | `<ui-reveal>` | no | disclosure host built on `<details>/<summary>` (`ui/reveal`) |
 | `<ui-face>` | no | front-face wrapper inside `<summary>` for flip/scale/slide |

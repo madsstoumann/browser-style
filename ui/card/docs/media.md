@@ -635,13 +635,22 @@ Demo: [`media.collage.html`](../demo/media.collage.html).
 
 ## Map — the frame as an embedded map
 
-A card with coordinates can make the **map** its media, instead of a photo of the place. There is **no `<ui-map>` element and no new token**: the frame already styles `iframe` exactly like `img` / `video` —
+A card with coordinates can make the **map** its media, instead of a photo of the place. For **one static point there is no element and no token** — the frame already styles `iframe` exactly like `img` / `video` —
 
 ```css
 :where(ui-media) & :is(iframe, img, picture, video) { inset: 0; position: absolute; block-size: 100%; inline-size: 100%; border: 0; }
 ```
 
 — so an embed inherits `asr()`, `rds()`, the `shp()` clip, the overlay furniture, the carousel and the lightbox with nothing added. Registering an element for it would re-earn all of that and buy nothing; the difference between providers is a **URL**, not a DOM, so the seam lives in `render.js`.
+
+> **Two map paths, and this is the boundary between them.** The rule above holds for a
+> single, static point, and that path is unchanged. It does **not** stretch to a *collection*:
+> clustering needs tile fetching, a spatial index and hit-testing, which no `src` can express.
+> That case is `<ui-map>` in [`@browser.style/map`](../../map/readme.md) — a light-DOM element
+> configured by the fourth token DSL, `map=`, which reads its points from the microdata the
+> card's text column already carries. Do not collapse the two: an `<iframe>` cannot cluster,
+> and loading a map engine to drop one pin would be the waste this section was written to
+> prevent.
 
 **CSS-only** (the reference markup on [`schema.html`](../demo/schema.html)):
 
@@ -693,7 +702,7 @@ The OSM bbox is `(west, south, east, north)`, and its latitude half-span is scal
 
 `itemprop="hasMap"` rides the `<iframe>` — HTML takes a frame's microdata value from its `src`, so no companion `<link>` is needed. It is gated to types whose itemtype descends from `Place` (`business`, `location`); other types still get the frame, unmarked. The `Open in Maps` action link in `DETAILS.location` deliberately stays **unmarked**, so a map card declares the property exactly once — see [schema.md § One property, one value](./schema.md#one-property-one-value).
 
-Outside a card, `ui/map` carries a standalone `.ui-map` class for the same embed on a bare page.
+Outside a card, [`@browser.style/map`](../../map/readme.md) carries `<ui-map>` for the interactive, clustered form on a bare page. (The pre-v4 `.ui-map` class it used to ship for a plain iframe was removed when that package was converted — the iframe above needs no class.)
 
 ---
 

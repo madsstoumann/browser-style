@@ -2957,7 +2957,7 @@ export default {
 						"ui/card/content.css:237-247",
 						"ui/card/content.css:250-256"
 					],
-					"notes": "Headings group — restyles headline (+ bare h2-h6) and subheadline. Four DISJOINT arg vocabularies on one stem (size / tone / weight / font / flag), so whole-token matching can never confuse them and they compose freely on the same token: `hl(lg) hl(accent) hl(700)`. Tone maps to the 5-step ink ramp (shr 30% / lgt 45% / med 65% = --ui-content-muted / drk 85% / sld = --color-text) plus accent (--color-accent) and inv (#fff, for overlays) — note the CSS var names are NOT the arg names: lgt -> --ui-content-soft, med -> --ui-content-muted. Weight maps to --font-weight-* except 800, which is a literal (there is no --font-weight-extrabold). SIZE args are RELATIONAL: they read the ladder var with the absolute stop as fallback (`var(--ui-content-hl-lg, var(--ui-content-headline-lg))`), so with no scl() present the token IS its absolute stop, and with scl() it shifts. Size rules are DUAL-DECLARED — on the token host AND on the host's OWN queryable descendant, `:where(ui-card[content~=\"…\"]) > cq-box` and `:where(ui-reveal[content~=\"…\"] > details) > summary` — because var() substitution happens where the property is declared, and only a re-declaration on cq-box/summary can pick up a responsive md:/lg:scl() ladder remap made there. The dual declaration is deliberately scoped to the host's own box (not the broad `:is(cq-box, summary)` the md:/lg: rules use) so a size token on an outer group cannot reach into nested cards (nearest-host-wins). hl(<size>) sizes the HEADLINE only (sm-3xl, two display steps beyond the scl() ramp) and must sit AFTER every scl() form in source, because both write --ui-content-headline at tying specificity — that ordering is what lets an explicit hl() beat the master step at every breakpoint. hl(<font>) writes --ui-content-heading-font; because --font-heading resolves to `inherit`, a headline follows fnt() unless hl(<font>) overrides. hl(grad) was REMOVED in v5 — gradient headlines are now the <ui-gradient-text> element (@browser.style/gradient-text) wrapping the words in the headline data, which the renderer passes through renderInline()'s tag allowlist; the card no longer owns any background-clip styling. hl(shd)/the group shadow prop is also set automatically by a host ovr() for legibility over a scrim. No md:/lg: forms for tone/weight/flag (deferred: one rule per token x tier x arm); hl(<size>) IS prefixable."
+					"notes": "Headings group — restyles headline (+ bare h2-h6) and subheadline. Four DISJOINT arg vocabularies on one stem (size / tone / weight / font / flag), so whole-token matching can never confuse them and they compose freely on the same token: `hl(lg) hl(accent) hl(700)`. Tone maps to the 5-step ink ramp (shr 30% / lgt 45% / med 65% = --ui-content-muted / drk 85% / sld = --color-text) plus accent (--color-accent-ink) and inv (#fff, for overlays) — note the CSS var names are NOT the arg names: lgt -> --ui-content-soft, med -> --ui-content-muted. Weight maps to --font-weight-* except 800, which is a literal (there is no --font-weight-extrabold). SIZE args are RELATIONAL: they read the ladder var with the absolute stop as fallback (`var(--ui-content-hl-lg, var(--ui-content-headline-lg))`), so with no scl() present the token IS its absolute stop, and with scl() it shifts. Size rules are DUAL-DECLARED — on the token host AND on the host's OWN queryable descendant, `:where(ui-card[content~=\"…\"]) > cq-box` and `:where(ui-reveal[content~=\"…\"] > details) > summary` — because var() substitution happens where the property is declared, and only a re-declaration on cq-box/summary can pick up a responsive md:/lg:scl() ladder remap made there. The dual declaration is deliberately scoped to the host's own box (not the broad `:is(cq-box, summary)` the md:/lg: rules use) so a size token on an outer group cannot reach into nested cards (nearest-host-wins). hl(<size>) sizes the HEADLINE only (sm-3xl, two display steps beyond the scl() ramp) and must sit AFTER every scl() form in source, because both write --ui-content-headline at tying specificity — that ordering is what lets an explicit hl() beat the master step at every breakpoint. hl(<font>) writes --ui-content-heading-font; because --font-heading resolves to `inherit`, a headline follows fnt() unless hl(<font>) overrides. hl(grad) was REMOVED in v5 — gradient headlines are now the <ui-gradient-text> element (@browser.style/gradient-text) wrapping the words in the headline data, which the renderer passes through renderInline()'s tag allowlist; the card no longer owns any background-clip styling. hl(shd)/the group shadow prop is also set automatically by a host ovr() for legibility over a scrim. No md:/lg: forms for tone/weight/flag (deferred: one rule per token x tier x arm); hl(<size>) IS prefixable."
 				},
 				"eb": {
 					"axis": "type-group",
@@ -3020,7 +3020,7 @@ export default {
 						"ui/card/content.typography.css:364-392",
 						"ui/card/content.css:219-226"
 					],
-					"notes": "Eyebrow group — restyles eyebrow. Four DISJOINT arg vocabularies on one stem (size / tone / weight / flag), so whole-token matching can never confuse them and they compose freely on the same token: `eb(lg) eb(accent) eb(700)`. Tone maps to the 5-step ink ramp (shr 30% / lgt 45% / med 65% = --ui-content-muted / drk 85% / sld = --color-text) plus accent (--color-accent) and inv (#fff, for overlays) — note the CSS var names are NOT the arg names: lgt -> --ui-content-soft, med -> --ui-content-muted. Weight maps to --font-weight-* except 800, which is a literal (there is no --font-weight-extrabold). SIZE args are RELATIONAL: they read the ladder var with the absolute stop as fallback (`var(--ui-content-hl-lg, var(--ui-content-headline-lg))`), so with no scl() present the token IS its absolute stop, and with scl() it shifts. Size rules are DUAL-DECLARED — on the token host AND on the host's OWN queryable descendant, `:where(ui-card[content~=\"…\"]) > cq-box` and `:where(ui-reveal[content~=\"…\"] > details) > summary` — because var() substitution happens where the property is declared, and only a re-declaration on cq-box/summary can pick up a responsive md:/lg:scl() ladder remap made there. The dual declaration is deliberately scoped to the host's own box (not the broad `:is(cq-box, summary)` the md:/lg: rules use) so a size token on an outer group cannot reach into nested cards (nearest-host-wins). eb(flat) drops the default uppercase (--ui-content-eyebrow-transform: none). eb(<size>) writes the eyebrow part's fs hook WITH its 0.78 factor already applied. The eyebrow part is its own group representative, so the group prop and the part hook share a name (--ui-content-eyebrow-ink); the older -color hook survives as an alias. No md:/lg: forms for tone/weight/flag (deferred: one rule per token x tier x arm); group sizes need no prefixes — a responsive scl() shifts them through the ladder."
+					"notes": "Eyebrow group — restyles eyebrow. Four DISJOINT arg vocabularies on one stem (size / tone / weight / flag), so whole-token matching can never confuse them and they compose freely on the same token: `eb(lg) eb(accent) eb(700)`. Tone maps to the 5-step ink ramp (shr 30% / lgt 45% / med 65% = --ui-content-muted / drk 85% / sld = --color-text) plus accent (--color-accent-ink) and inv (#fff, for overlays) — note the CSS var names are NOT the arg names: lgt -> --ui-content-soft, med -> --ui-content-muted. Weight maps to --font-weight-* except 800, which is a literal (there is no --font-weight-extrabold). SIZE args are RELATIONAL: they read the ladder var with the absolute stop as fallback (`var(--ui-content-hl-lg, var(--ui-content-headline-lg))`), so with no scl() present the token IS its absolute stop, and with scl() it shifts. Size rules are DUAL-DECLARED — on the token host AND on the host's OWN queryable descendant, `:where(ui-card[content~=\"…\"]) > cq-box` and `:where(ui-reveal[content~=\"…\"] > details) > summary` — because var() substitution happens where the property is declared, and only a re-declaration on cq-box/summary can pick up a responsive md:/lg:scl() ladder remap made there. The dual declaration is deliberately scoped to the host's own box (not the broad `:is(cq-box, summary)` the md:/lg: rules use) so a size token on an outer group cannot reach into nested cards (nearest-host-wins). eb(flat) drops the default uppercase (--ui-content-eyebrow-transform: none). eb(<size>) writes the eyebrow part's fs hook WITH its 0.78 factor already applied. The eyebrow part is its own group representative, so the group prop and the part hook share a name (--ui-content-eyebrow-ink); the older -color hook survives as an alias. No md:/lg: forms for tone/weight/flag (deferred: one rule per token x tier x arm); group sizes need no prefixes — a responsive scl() shifts them through the ladder."
 				},
 				"tx": {
 					"axis": "type-group",
@@ -3081,7 +3081,7 @@ export default {
 						"ui/card/content.typography.css:395-423",
 						"ui/card/content.css:259-266"
 					],
-					"notes": "Body group — restyles summary, quote, list, address, timeline, price, stat. Four DISJOINT arg vocabularies on one stem (size / tone / weight / flag), so whole-token matching can never confuse them and they compose freely on the same token: `tx(lg) tx(accent) tx(700)`. Tone maps to the 5-step ink ramp (shr 30% / lgt 45% / med 65% = --ui-content-muted / drk 85% / sld = --color-text) plus accent (--color-accent) and inv (#fff, for overlays) — note the CSS var names are NOT the arg names: lgt -> --ui-content-soft, med -> --ui-content-muted. Weight maps to --font-weight-* except 800, which is a literal (there is no --font-weight-extrabold). SIZE args are RELATIONAL: they read the ladder var with the absolute stop as fallback (`var(--ui-content-hl-lg, var(--ui-content-headline-lg))`), so with no scl() present the token IS its absolute stop, and with scl() it shifts. Size rules are DUAL-DECLARED — on the token host AND on the host's OWN queryable descendant, `:where(ui-card[content~=\"…\"]) > cq-box` and `:where(ui-reveal[content~=\"…\"] > details) > summary` — because var() substitution happens where the property is declared, and only a re-declaration on cq-box/summary can pick up a responsive md:/lg:scl() ladder remap made there. The dual declaration is deliberately scoped to the host's own box (not the broad `:is(cq-box, summary)` the md:/lg: rules use) so a size token on an outer group cannot reach into nested cards (nearest-host-wins). tx(<size>) writes --ui-content-body-fs, which summary reads at x1.0 and the factor parts (price x1.35, stat x2, quote x1.1, address x0.9) multiply. No md:/lg: forms for tone/weight/flag (deferred: one rule per token x tier x arm); group sizes need no prefixes — a responsive scl() shifts them through the ladder."
+					"notes": "Body group — restyles summary, quote, list, address, timeline, price, stat. Four DISJOINT arg vocabularies on one stem (size / tone / weight / flag), so whole-token matching can never confuse them and they compose freely on the same token: `tx(lg) tx(accent) tx(700)`. Tone maps to the 5-step ink ramp (shr 30% / lgt 45% / med 65% = --ui-content-muted / drk 85% / sld = --color-text) plus accent (--color-accent-ink) and inv (#fff, for overlays) — note the CSS var names are NOT the arg names: lgt -> --ui-content-soft, med -> --ui-content-muted. Weight maps to --font-weight-* except 800, which is a literal (there is no --font-weight-extrabold). SIZE args are RELATIONAL: they read the ladder var with the absolute stop as fallback (`var(--ui-content-hl-lg, var(--ui-content-headline-lg))`), so with no scl() present the token IS its absolute stop, and with scl() it shifts. Size rules are DUAL-DECLARED — on the token host AND on the host's OWN queryable descendant, `:where(ui-card[content~=\"…\"]) > cq-box` and `:where(ui-reveal[content~=\"…\"] > details) > summary` — because var() substitution happens where the property is declared, and only a re-declaration on cq-box/summary can pick up a responsive md:/lg:scl() ladder remap made there. The dual declaration is deliberately scoped to the host's own box (not the broad `:is(cq-box, summary)` the md:/lg: rules use) so a size token on an outer group cannot reach into nested cards (nearest-host-wins). tx(<size>) writes --ui-content-body-fs, which summary reads at x1.0 and the factor parts (price x1.35, stat x2, quote x1.1, address x0.9) multiply. No md:/lg: forms for tone/weight/flag (deferred: one rule per token x tier x arm); group sizes need no prefixes — a responsive scl() shifts them through the ladder."
 				},
 				"mt": {
 					"axis": "type-group",
@@ -3142,7 +3142,7 @@ export default {
 						"ui/card/content.typography.css:426-455",
 						"ui/card/content.css:270-275"
 					],
-					"notes": "Meta group — restyles meta, caption, byline, footer, tags, rating, options. Four DISJOINT arg vocabularies on one stem (size / tone / weight / flag), so whole-token matching can never confuse them and they compose freely on the same token: `mt(lg) mt(accent) mt(700)`. Tone maps to the 5-step ink ramp (shr 30% / lgt 45% / med 65% = --ui-content-muted / drk 85% / sld = --color-text) plus accent (--color-accent) and inv (#fff, for overlays) — note the CSS var names are NOT the arg names: lgt -> --ui-content-soft, med -> --ui-content-muted. Weight maps to --font-weight-* except 800, which is a literal (there is no --font-weight-extrabold). SIZE args are RELATIONAL: they read the ladder var with the absolute stop as fallback (`var(--ui-content-hl-lg, var(--ui-content-headline-lg))`), so with no scl() present the token IS its absolute stop, and with scl() it shifts. Size rules are DUAL-DECLARED — on the token host AND on the host's OWN queryable descendant, `:where(ui-card[content~=\"…\"]) > cq-box` and `:where(ui-reveal[content~=\"…\"] > details) > summary` — because var() substitution happens where the property is declared, and only a re-declaration on cq-box/summary can pick up a responsive md:/lg:scl() ladder remap made there. The dual declaration is deliberately scoped to the host's own box (not the broad `:is(cq-box, summary)` the md:/lg: rules use) so a size token on an outer group cannot reach into nested cards (nearest-host-wins). mt(<size>) writes --ui-content-meta-BASE, not --ui-content-meta-fs: -meta-fs stays the meta part's own literal font-size hook, while the group's parts multiply their factor (meta x0.75, byline x0.82, footer x0.78, tags x0.72, rating x0.9, options x0.9) onto -meta-base. No md:/lg: forms for tone/weight/flag (deferred: one rule per token x tier x arm); group sizes need no prefixes — a responsive scl() shifts them through the ladder."
+					"notes": "Meta group — restyles meta, caption, byline, footer, tags, rating, options. Four DISJOINT arg vocabularies on one stem (size / tone / weight / flag), so whole-token matching can never confuse them and they compose freely on the same token: `mt(lg) mt(accent) mt(700)`. Tone maps to the 5-step ink ramp (shr 30% / lgt 45% / med 65% = --ui-content-muted / drk 85% / sld = --color-text) plus accent (--color-accent-ink) and inv (#fff, for overlays) — note the CSS var names are NOT the arg names: lgt -> --ui-content-soft, med -> --ui-content-muted. Weight maps to --font-weight-* except 800, which is a literal (there is no --font-weight-extrabold). SIZE args are RELATIONAL: they read the ladder var with the absolute stop as fallback (`var(--ui-content-hl-lg, var(--ui-content-headline-lg))`), so with no scl() present the token IS its absolute stop, and with scl() it shifts. Size rules are DUAL-DECLARED — on the token host AND on the host's OWN queryable descendant, `:where(ui-card[content~=\"…\"]) > cq-box` and `:where(ui-reveal[content~=\"…\"] > details) > summary` — because var() substitution happens where the property is declared, and only a re-declaration on cq-box/summary can pick up a responsive md:/lg:scl() ladder remap made there. The dual declaration is deliberately scoped to the host's own box (not the broad `:is(cq-box, summary)` the md:/lg: rules use) so a size token on an outer group cannot reach into nested cards (nearest-host-wins). mt(<size>) writes --ui-content-meta-BASE, not --ui-content-meta-fs: -meta-fs stays the meta part's own literal font-size hook, while the group's parts multiply their factor (meta x0.75, byline x0.82, footer x0.78, tags x0.72, rating x0.9, options x0.9) onto -meta-base. No md:/lg: forms for tone/weight/flag (deferred: one rule per token x tier x arm); group sizes need no prefixes — a responsive scl() shifts them through the ladder."
 				},
 				"fnt": {
 					"axis": "font",
@@ -3385,6 +3385,269 @@ export default {
 				}
 			},
 			"bareFlags": {}
+		},
+		"map": {
+			"attribute": "map",
+			"tokens": {
+				"tiles": {
+					"axis": "tiles",
+					"element": null,
+					"args": {
+						"provider": [
+							"auto",
+							"positron",
+							"dark",
+							"voyager",
+							"osm",
+							"topo",
+							"sat"
+						]
+					},
+					"argAliases": {},
+					"bare": false,
+					"matching": "substring",
+					"writes": [],
+					"realProperties": false,
+					"cqPrefixes": [],
+					"cqArgs": [],
+					"selfArm": true,
+					"hosts": [
+						"ui-map"
+					],
+					"requiresJs": {
+						"*": "ui/map/ui-map.js"
+					},
+					"deprecated": false,
+					"canonical": null,
+					"sources": [
+						"ui/map/ui-map.css:118",
+						"ui/map/engine.js:22",
+						"ui/map/ui-map.js:88"
+					],
+					"notes": "Keyless raster basemap. Default positron. positron/dark/voyager are the RASTER twins of the openmaptiles.org styles of the same names (those are MapLibre vector styles and need an API key). Almost entirely JS — engine.js TILES holds the URL template, maxZoom, subdomains and the attribution each licence requires, so a provider cannot ship without one. The ONE css arm is tiles(sat), which swaps the attribution plate to opaque: there is no light tile under it to hold 4.5:1. tiles(auto) reads the --ui-map-scheme light-dark() probe, NOT prefers-color-scheme — theme= and .cs-* set color-scheme, which that media query cannot see. osm is dev/self-host only: the OSMF tile policy forbids a library defaulting to it and names referer-stripping as grounds for blocking. Docs: ui/map/readme.md § Tiles"
+				},
+				"tint": {
+					"axis": "tint",
+					"element": null,
+					"args": {
+						"look": [
+							"gray",
+							"mono",
+							"sepia",
+							"invert",
+							"warm",
+							"cool",
+							"soft"
+						]
+					},
+					"argAliases": {},
+					"bare": false,
+					"matching": "substring",
+					"writes": [
+						"--ui-map-filter"
+					],
+					"realProperties": true,
+					"cqPrefixes": [],
+					"cqArgs": [],
+					"selfArm": true,
+					"hosts": [
+						"ui-map"
+					],
+					"requiresJs": {},
+					"deprecated": false,
+					"canonical": null,
+					"sources": [
+						"ui/map/ui-map.css:47",
+						"ui/map/ui-map.css:49"
+					],
+					"notes": "Pure CSS, and it composes with ANY tiles() value at no extra request — one filter on .leaflet-tile-pane. NEVER on .leaflet-tile-container: leaflet.css:89 gives .leaflet-tile `filter: inherit`, so a filter there applies TWICE and invert(1) twice is the identity. The pane holds only tiles, so markers, zoom controls and the attribution keep their true colours. Unanimated, so the cost is a filter pass per tile paint, not per frame — but the filtered subtree does repaint per frame during a ZOOM tween. Docs: ui/map/readme.md § Tint"
+				},
+				"pin": {
+					"axis": "pin",
+					"element": null,
+					"args": {
+						"look": [
+							"dot",
+							"pin",
+							"label",
+							"price"
+						]
+					},
+					"argAliases": {},
+					"bare": false,
+					"matching": "substring",
+					"writes": [
+						"--ui-map-pin-size",
+						"--ui-map-pin-bg",
+						"--ui-map-pin-c",
+						"--ui-map-cluster-size"
+					],
+					"realProperties": true,
+					"cqPrefixes": [],
+					"cqArgs": [],
+					"selfArm": true,
+					"hosts": [
+						"ui-map"
+					],
+					"requiresJs": {},
+					"deprecated": false,
+					"canonical": null,
+					"sources": [
+						"ui/map/ui-map.css:83",
+						"ui/map/ui-map.css:89",
+						"ui/map/ui-map.js:89"
+					],
+					"notes": "The single-point marker look; a cluster is always a count bubble. dot (default) and pin are sized boxes, label and price size to their text. Every form is a divIcon <span>, so Leaflet's marker-icon/marker-shadow PNGs are never fetched. Colour comes from the shared theme= axis, not from a hue arg — one hue palette (ui/card/AGENTS.md pitfall 8). Docs: ui/map/readme.md § Markers"
+				},
+				"cluster": {
+					"axis": "cluster",
+					"element": null,
+					"args": {
+						"radius": [
+							"sm",
+							"md",
+							"lg",
+							"<n>"
+						]
+					},
+					"argAliases": {},
+					"bare": true,
+					"matching": "substring",
+					"writes": [],
+					"realProperties": false,
+					"cqPrefixes": [],
+					"cqArgs": [],
+					"selfArm": true,
+					"hosts": [
+						"ui-map"
+					],
+					"requiresJs": {
+						"*": "ui/map/engine.js"
+					},
+					"deprecated": false,
+					"canonical": null,
+					"sources": [
+						"ui/map/ui-map.js:91",
+						"ui/map/engine.js:125"
+					],
+					"notes": "Supercluster on, at a radius in CSS pixels: sm 30 / md 40 (bare) / lg 60, or a raw number. Same bare+parameterized shape as media=auto. JS-ONLY — no CSS needle, so nothing audits the arg vocabulary in either direction; CLUSTER_RADIUS in ui/map/ui-map.js is the mirror to keep in sync. Docs: ui/map/readme.md § Clustering"
+				},
+				"zoom": {
+					"axis": "zoom",
+					"element": null,
+					"args": {
+						"level": [
+							"<n>"
+						]
+					},
+					"argAliases": {},
+					"bare": false,
+					"matching": "substring",
+					"writes": [],
+					"realProperties": false,
+					"cqPrefixes": [],
+					"cqArgs": [],
+					"selfArm": true,
+					"hosts": [
+						"ui-map"
+					],
+					"requiresJs": {
+						"*": "ui/map/engine.js"
+					},
+					"deprecated": false,
+					"canonical": null,
+					"sources": [
+						"ui/map/ui-map.js:95",
+						"ui/map/engine.js:167"
+					],
+					"notes": "Initial zoom, 1-20. Ignored when `fit` is present, which derives the view from the points instead. Must stay bare:false — a bare `zoom` needle would be a SUBSTRING of the ctl(zoom) spelling and the shadowing check would fire. JS-only. Docs: ui/map/readme.md § View"
+				},
+				"ctl": {
+					"axis": "ctl",
+					"element": null,
+					"args": {
+						"control": [
+							"zoom",
+							"non"
+						]
+					},
+					"argAliases": {},
+					"bare": false,
+					"matching": "substring",
+					"writes": [],
+					"realProperties": true,
+					"cqPrefixes": [],
+					"cqArgs": [],
+					"selfArm": true,
+					"hosts": [
+						"ui-map"
+					],
+					"requiresJs": {
+						"*": "ui/map/engine.js"
+					},
+					"deprecated": false,
+					"canonical": null,
+					"sources": [
+						"ui/map/ui-map.css:121",
+						"ui/map/engine.js:89"
+					],
+					"notes": "Which Leaflet controls render. ctl(zoom) is the default; ctl(non) hides the zoom control. There is deliberately NO word for the attribution control: every tile licence here requires it, so it must not be spellable in the DSL. Docs: ui/map/readme.md § Controls"
+				}
+			},
+			"bareFlags": {
+				"fit": {
+					"axis": "view",
+					"element": null,
+					"args": {},
+					"argAliases": {},
+					"bare": true,
+					"matching": "whole",
+					"writes": [],
+					"realProperties": false,
+					"cqPrefixes": [],
+					"cqArgs": [],
+					"selfArm": true,
+					"hosts": [
+						"ui-map"
+					],
+					"requiresJs": {
+						"*": "ui/map/engine.js"
+					},
+					"deprecated": false,
+					"canonical": null,
+					"sources": [
+						"ui/map/ui-map.js:93",
+						"ui/map/engine.js:167"
+					],
+					"notes": "fitBounds() to the harvested points on load, with a 24px padding. WHOLE-token like every other short bare flag (loop/pages) so a three-letter word cannot cross-fire. Wins over zoom(). JS-only. Docs: ui/map/readme.md § View"
+				},
+				"scroll": {
+					"axis": "view",
+					"element": null,
+					"args": {},
+					"argAliases": {},
+					"bare": true,
+					"matching": "whole",
+					"writes": [],
+					"realProperties": false,
+					"cqPrefixes": [],
+					"cqArgs": [],
+					"selfArm": true,
+					"hosts": [
+						"ui-map"
+					],
+					"requiresJs": {
+						"*": "ui/map/engine.js"
+					},
+					"deprecated": false,
+					"canonical": null,
+					"sources": [
+						"ui/map/ui-map.js:94",
+						"ui/map/engine.js:90"
+					],
+					"notes": "Enables wheel zoom, which is OFF by default: a map embedded in a page must not swallow the page scroll. WHOLE-token. JS-only. Docs: ui/map/readme.md § Controls"
+				}
+			}
 		}
 	}
 };

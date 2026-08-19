@@ -1,0 +1,63 @@
+{
+  "name": "@browser.style/map",
+  "version": "1.0.0",
+  "description": "CSS-first interactive map \u2014 <ui-map> reads its points from the microdata already on the page, clusters them with Supercluster, and draws them on keyless OpenStreetMap-family raster tiles via Leaflet",
+  "type": "module",
+  "module": "index.js",
+  "style": "index.css",
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "style": "./index.css"
+    },
+    "./style": "./index.css",
+    "./index.css": "./index.css",
+    "./ui-map.css": "./ui-map.css",
+    "./index.js": "./index.js",
+    "./ui-map.js": "./ui-map.js",
+    "./ui-map.min.js": "./ui-map.min.js",
+    "./engine.min.js": "./engine.min.js"
+  },
+  "files": [
+    "index.css",
+    "ui-map.css",
+    "index.js",
+    "ui-map.js",
+    "ui-map.min.js",
+    "engine.min.js"
+  ],
+  "scripts": {
+    "build": "node build.js"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "browser.style",
+    "map",
+    "openstreetmap",
+    "leaflet",
+    "supercluster",
+    "clustering",
+    "microdata",
+    "css-first",
+    "web-components"
+  ],
+  "author": "Mads Stoumann",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/map"
+  },
+  "homepage": "https://browser.style/ui/map",
+  "peerDependencies": {
+    "@browser.style/base": "^1.0.11"
+  },
+  "devDependencies": {
+    "leaflet": "1.9.4",
+    "supercluster": "9.0.0",
+    "esbuild": "^0.28.1"
+  }
+}

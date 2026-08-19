@@ -23,6 +23,8 @@ const root = new URL('../../', import.meta.url).pathname;
    control/engine sheets the card's carousel tokens resolve through. */
 const ALL = ['media', 'variant', 'content'];
 const MEDIA_ONLY = ['media'];
+/* ui/map owns map= entirely — no card sheet may needle it, and it needles nothing else */
+const MAP_ONLY = ['map'];
 const SHEETS = [
 	['ui/card/content.css', ALL], ['ui/card/content.typography.css', ALL], ['ui/card/demo.layout.css', ALL],
 	['ui/card/index.css', ALL], ['ui/card/media.carousel.css', ALL], ['ui/card/media.css', ALL],
@@ -35,10 +37,11 @@ const SHEETS = [
 	['ui/marquee/ui-marquee.css', MEDIA_ONLY], ['ui/play/ui-play.css', MEDIA_ONLY],
 	['ui/lightbox/ui-lightbox.css', MEDIA_ONLY],
 	['ui/carousel/carousel.css', MEDIA_ONLY], ['ui/base/stagger.css', MEDIA_ONLY],
-	['layout/core/base.css', ALL]
+	['layout/core/base.css', ALL],
+	['ui/map/ui-map.css', MAP_ONLY]
 ];
 
-const NEEDLE = /\[(media|content|variant)([*~])=("([^"]*)"|'([^']*)'|([^\]\s]+))\]/g;
+const NEEDLE = /\[(media|content|variant|map)([*~])=("([^"]*)"|'([^']*)'|([^\]\s]+))\]/g;
 
 /* every literal spelling an entry can appear as in markup */
 const spellings = (name, entry) => {

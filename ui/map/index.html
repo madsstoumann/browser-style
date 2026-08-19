@@ -5,46 +5,149 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="color-scheme" content="light dark">
-	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="description" content="Interactive keyless-raster map with Supercluster clustering. <ui-map> reads its points from the microdata already on the page, and the map= token DSL picks the basemap, the tint and the marker look.">
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/ui/base/index.css">
-	<link rel="stylesheet" href="ui-map.css">
+	<link rel="stylesheet" href="index.css">
+	<style>
+		.map-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr)); }
+		.map-grid figcaption { font-size: 0.875rem; padding-block-start: 0.35rem; }
+		.map-tall { block-size: 26rem; }
+		#offices { columns: 16rem; font-size: 0.9rem; }
+		#offices li { break-inside: avoid; }
+	</style>
 </head>
 <body>
 	<h1>UI: Components</h1>
 
 	<h2>Map</h2>
 	<p>
-		<code>Map</code> is an iframe with an embedded map from <a href="https://www.openstreetmap.org/" target="_blank" rel="noopener noreferrer">OpenStreetMap</a>.
+		<code>&lt;ui-map&gt;</code> draws an interactive map on keyless OpenStreetMap-family raster
+		tiles, clustering its points with <a href="https://github.com/mapbox/supercluster">Supercluster</a>
+		via <a href="https://leafletjs.com">Leaflet</a>. It is configured by the <code>map=</code>
+		token DSL, and it <strong>reads its points from the microdata already on the page</strong> —
+		there is no second copy of the data, so a pin and its machine-readable value cannot drift.
 	</p>
 	<p>
-		This is the <strong>standalone</strong> form, for a bare page. Inside a card the frame does the work instead:
-		put the iframe in <code>&lt;ui-media&gt;</code> — or, from content, a <code>{ "mediaType": "map" }</code> media item
-		whose coordinates come from the card's own <code>details.geo</code>. See
-		<a href="../card/docs/media.md">ui/card/docs/media.md § Map</a>.
+		Inside a card, put it in <code>&lt;ui-media&gt;</code>. For a single, static point you do not
+		need this element at all — an OpenStreetMap <code>&lt;iframe&gt;</code> is enough, and the frame
+		already sizes it: see <a href="../card/docs/media.md">ui/card/docs/media.md § Map</a>.
 	</p>
-	<p>Go to <a href="https://www.openstreetmap.org/" target="_blank" rel="noopener noreferrer">OpenStreetMap</a>, locate an address, click Share, and copy the <code>src</code> of the iframe.<br>Optionally, click "Add Marker", and drag it to the correct place.</p>
-	
-	<p>Next, use the <code>latituide</code> and <code>langitude</code> in the URL to create links for
-		<a href="https://developer.apple.com/library/archive/featuredarticles/iPhoneURLScheme_Reference/MapLinks/MapLinks.html" target="_blank" rel="noopener noreferrer">Apple Maps</a> and
-		<a href="https://developers.google.com/maps/documentation/urls/get-started" target="_blank" rel="noopener noreferrer">Google Maps</a>
-	</p>
-	
-	<iframe class="ui-map" src="https://www.openstreetmap.org/export/embed.html?bbox=12.567951679229738%2C55.67832546115546%2C12.569088935852053%2C55.679883132870415&amp;layer=mapnik&amp;marker=55.679104304766774%2C12.568520307540894"></iframe>
-	<small>
-		Find directions with <a href="http://maps.apple.com/?ll=55.679104304766774,12.568520307540894&z=18" target="_blank" rel="noopener noreferrer">Apple Maps</a> or
-		<a href="http://maps.google.com/?ll=55.679104304766774,12.568520307540894&z=18" target="_blank" rel="noopener noreferrer">Google Maps</a>
-	</small>
 
-	<br>
-	<h2>With opposite color-scheme</h2>
-	<div class="bdrs-md cs-opposite pb-3 pi-3">
-		<iframe class="ui-map" src="https://www.openstreetmap.org/export/embed.html?bbox=12.567951679229738%2C55.67832546115546%2C12.569088935852053%2C55.679883132870415&amp;layer=mapnik&amp;marker=55.679104304766774%2C12.568520307540894"></iframe>
-		<small>
-			Find directions with <a href="http://maps.apple.com/?ll=55.679104304766774,12.568520307540894&z=18" target="_blank" rel="noopener noreferrer">Apple Maps</a> or
-			<a href="http://maps.google.com/?ll=55.679104304766774,12.568520307540894&z=18" target="_blank" rel="noopener noreferrer">Google Maps</a>
-		</small>
+	<h3>Clustered, fitted to its points</h3>
+	<p><code>map="tiles(auto) cluster fit"</code> — zoom in and the clusters split.</p>
+	<div class="map-tall">
+		<ui-map map="tiles(auto) cluster fit" for="offices">
+			<iframe src="https://www.openstreetmap.org/export/embed.html?bbox=-130,-45,160,62&amp;layer=mapnik" title="Map of 14 offices worldwide" loading="lazy"></iframe>
+		</ui-map>
 	</div>
 
+	<h3>The points</h3>
+	<p>
+		This list is the map's data source <em>and</em> its text alternative. With JavaScript off,
+		the list and the fallback frame above are all that render — nothing is lost.
+	</p>
+	<ol id="offices">
+		<li itemscope itemtype="https://schema.org/LocalBusiness">
+			<a itemprop="url" href="#offices"><span itemprop="name">Copenhagen</span></a>
+			<div itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates" hidden><meta itemprop="latitude" content="55.6761"><meta itemprop="longitude" content="12.5683"></div>
+		</li>
+		<li itemscope itemtype="https://schema.org/LocalBusiness">
+			<a itemprop="url" href="#offices"><span itemprop="name">Malmö</span></a>
+			<div itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates" hidden><meta itemprop="latitude" content="55.6050"><meta itemprop="longitude" content="13.0038"></div>
+		</li>
+		<li itemscope itemtype="https://schema.org/LocalBusiness">
+			<a itemprop="url" href="#offices"><span itemprop="name">Hamburg</span></a>
+			<div itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates" hidden><meta itemprop="latitude" content="53.5511"><meta itemprop="longitude" content="9.9937"></div>
+		</li>
+		<li itemscope itemtype="https://schema.org/LocalBusiness">
+			<a itemprop="url" href="#offices"><span itemprop="name">Berlin</span></a>
+			<div itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates" hidden><meta itemprop="latitude" content="52.5200"><meta itemprop="longitude" content="13.4050"></div>
+		</li>
+		<li itemscope itemtype="https://schema.org/LocalBusiness">
+			<a itemprop="url" href="#offices"><span itemprop="name">Amsterdam</span></a>
+			<div itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates" hidden><meta itemprop="latitude" content="52.3676"><meta itemprop="longitude" content="4.9041"></div>
+		</li>
+		<li itemscope itemtype="https://schema.org/LocalBusiness">
+			<a itemprop="url" href="#offices"><span itemprop="name">London</span></a>
+			<div itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates" hidden><meta itemprop="latitude" content="51.5072"><meta itemprop="longitude" content="-0.1276"></div>
+		</li>
+		<li itemscope itemtype="https://schema.org/LocalBusiness">
+			<a itemprop="url" href="#offices"><span itemprop="name">Paris</span></a>
+			<div itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates" hidden><meta itemprop="latitude" content="48.8566"><meta itemprop="longitude" content="2.3522"></div>
+		</li>
+		<li itemscope itemtype="https://schema.org/LocalBusiness">
+			<a itemprop="url" href="#offices"><span itemprop="name">Lisbon</span></a>
+			<div itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates" hidden><meta itemprop="latitude" content="38.7223"><meta itemprop="longitude" content="-9.1393"></div>
+		</li>
+		<li itemscope itemtype="https://schema.org/LocalBusiness">
+			<a itemprop="url" href="#offices"><span itemprop="name">New York</span></a>
+			<div itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates" hidden><meta itemprop="latitude" content="40.7128"><meta itemprop="longitude" content="-74.0060"></div>
+		</li>
+		<li itemscope itemtype="https://schema.org/LocalBusiness">
+			<a itemprop="url" href="#offices"><span itemprop="name">Boston</span></a>
+			<div itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates" hidden><meta itemprop="latitude" content="42.3601"><meta itemprop="longitude" content="-71.0589"></div>
+		</li>
+		<li itemscope itemtype="https://schema.org/LocalBusiness">
+			<a itemprop="url" href="#offices"><span itemprop="name">San Francisco</span></a>
+			<div itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates" hidden><meta itemprop="latitude" content="37.7749"><meta itemprop="longitude" content="-122.4194"></div>
+		</li>
+		<li itemscope itemtype="https://schema.org/LocalBusiness">
+			<a itemprop="url" href="#offices"><span itemprop="name">Tokyo</span></a>
+			<div itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates" hidden><meta itemprop="latitude" content="35.6762"><meta itemprop="longitude" content="139.6503"></div>
+		</li>
+		<li itemscope itemtype="https://schema.org/LocalBusiness">
+			<a itemprop="url" href="#offices"><span itemprop="name">Singapore</span></a>
+			<div itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates" hidden><meta itemprop="latitude" content="1.3521"><meta itemprop="longitude" content="103.8198"></div>
+		</li>
+		<li itemscope itemtype="https://schema.org/LocalBusiness">
+			<a itemprop="url" href="#offices"><span itemprop="name">Sydney</span></a>
+			<div itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates" hidden><meta itemprop="latitude" content="-33.8688"><meta itemprop="longitude" content="151.2093"></div>
+		</li>
+	</ol>
+
+	<h3>tiles() — six keyless basemaps</h3>
+	<p>
+		<code>positron</code>, <code>dark</code> and <code>voyager</code> are the raster twins of the
+		<a href="https://openmaptiles.org/styles/">openmaptiles.org</a> styles of the same names.
+		<code>tiles(osm)</code> is dev/self-host only — see the readme.
+	</p>
+	<div class="map-grid">
+		<figure><ui-map map="tiles(positron) cluster fit" for="offices"></ui-map><figcaption><code>tiles(positron)</code> — the default</figcaption></figure>
+		<figure><ui-map map="tiles(dark) cluster fit" for="offices"></ui-map><figcaption><code>tiles(dark)</code></figcaption></figure>
+		<figure><ui-map map="tiles(voyager) cluster fit" for="offices"></ui-map><figcaption><code>tiles(voyager)</code></figcaption></figure>
+		<figure><ui-map map="tiles(topo) cluster fit" for="offices"></ui-map><figcaption><code>tiles(topo)</code></figcaption></figure>
+		<figure><ui-map map="tiles(sat) cluster fit" for="offices"></ui-map><figcaption><code>tiles(sat)</code></figcaption></figure>
+		<figure><ui-map map="tiles(osm) cluster fit" for="offices"></ui-map><figcaption><code>tiles(osm)</code></figcaption></figure>
+	</div>
+
+	<h3>tint() — pure CSS, composes with any basemap</h3>
+	<p>One <code>filter</code> on the tile pane, so it costs no extra request and works on every <code>tiles()</code> value.</p>
+	<div class="map-grid">
+		<figure><ui-map map="tiles(voyager) tint(gray) cluster fit" for="offices"></ui-map><figcaption><code>tint(gray)</code></figcaption></figure>
+		<figure><ui-map map="tiles(voyager) tint(mono) cluster fit" for="offices"></ui-map><figcaption><code>tint(mono)</code></figcaption></figure>
+		<figure><ui-map map="tiles(voyager) tint(sepia) cluster fit" for="offices"></ui-map><figcaption><code>tint(sepia)</code></figcaption></figure>
+		<figure><ui-map map="tiles(voyager) tint(invert) cluster fit" for="offices"></ui-map><figcaption><code>tint(invert)</code></figcaption></figure>
+		<figure><ui-map map="tiles(voyager) tint(warm) cluster fit" for="offices"></ui-map><figcaption><code>tint(warm)</code></figcaption></figure>
+		<figure><ui-map map="tiles(voyager) tint(cool) cluster fit" for="offices"></ui-map><figcaption><code>tint(cool)</code></figcaption></figure>
+		<figure><ui-map map="tiles(voyager) tint(soft) cluster fit" for="offices"></ui-map><figcaption><code>tint(soft)</code></figcaption></figure>
+	</div>
+
+	<h3>pin() — the single-point look</h3>
+	<p>A cluster is always a count bubble; <code>pin()</code> picks how an individual point draws. Zoom in to see them.</p>
+	<div class="map-grid">
+		<figure><ui-map map="tiles(positron) pin(dot) zoom(9)" lat="55.64" lon="12.78" for="offices"></ui-map><figcaption><code>pin(dot)</code> — the default</figcaption></figure>
+		<figure><ui-map map="tiles(positron) pin(pin) zoom(9)" lat="55.64" lon="12.78" for="offices"></ui-map><figcaption><code>pin(pin)</code></figcaption></figure>
+		<figure><ui-map map="tiles(positron) pin(label) zoom(9)" lat="55.64" lon="12.78" for="offices"></ui-map><figcaption><code>pin(label)</code></figcaption></figure>
+	</div>
+
+	<h3>ctl() and scroll</h3>
+	<p>Wheel zoom is <strong>off</strong> by default — a map embedded in a page must not swallow the page scroll. The attribution control is not spellable in the DSL: every tile licence here requires it.</p>
+	<div class="map-grid">
+		<figure><ui-map map="tiles(positron) ctl(non) cluster fit" for="offices"></ui-map><figcaption><code>ctl(non)</code> — no zoom buttons</figcaption></figure>
+		<figure><ui-map map="tiles(positron) scroll cluster fit" for="offices"></ui-map><figcaption><code>scroll</code> — wheel zoom enabled</figcaption></figure>
+	</div>
+
+	<script type="module" src="ui-map.min.js"></script>
 </body>
 </html>

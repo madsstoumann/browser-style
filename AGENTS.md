@@ -17,11 +17,12 @@ capabilities: design tokens, container queries, cascade layers, light-DOM custom
 ```
 browser-style/
 ├── package.json          Workspace root (npm workspaces)
-├── ui/                   Component packages (45 published, ~194 dirs incl. unconverted)
+├── ui/                   Component packages (46 published, ~194 dirs incl. unconverted)
 │   ├── base/             @browser.style/base — tokens, reset, animation + stagger engines
 │   ├── card/             @browser.style/card — THE card/content system (<ui-card>/<ui-media>/<ui-content>)
 │   ├── carousel/         @browser.style/carousel — scroll-marker controls + Safari polyfill
 │   ├── reveal/           @browser.style/reveal — <ui-reveal>, the second card host
+│   ├── map/              @browser.style/map — <ui-map>, clustered keyless-raster maps
 │   └── [component]/      Leaf packages (chip, sticker, avatar, accordion, …)
 ├── layout/               @browser.style/layout — <lay-out>, builder-generated grid CSS
 ├── apps/                 Standalone apps, games & tools (not npm packages)
@@ -172,7 +173,7 @@ cd layout && npm run build:all                                # CSS + maps + dem
 | **CMS editors** (`cms/editors/`) | editor-card, editor-csp, editor-manifest |
 | **Interactive** | piano-keys, rich-text, xy, color-picker, color-palette |
 
-A `ui/` directory is only a package if it has a `package.json` — 45 of ~194 do. The rest are
+A `ui/` directory is only a package if it has a `package.json` — 46 of ~194 do. The rest are
 unconverted v3 components (see § Legacy) or docs-only folders.
 
 ## v4 component conventions
