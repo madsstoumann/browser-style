@@ -1090,6 +1090,7 @@ cost from six map applications to zero. That is ~1.5 s of third-party CPU deferr
 page from "eight maps you scroll past" to "eight maps you open" — a product decision, not a
 mechanical one, which is why it is here and not done.
 
-**Cheaper partial:** the three vector-style cards are the expensive ones. Ordering them last
-would leave one rather than two inside the on-load set. It costs the layer narrative its
-running order, so it is only worth doing if the facade is rejected.
+**Cheaper partial — DONE.** The three vector-style cards now sit last, which halves the
+MapLibre boots inside the on-load set: measured 2 → 1 at 1280, unchanged at 0 on 412 (where
+only three raster embeds ever reached the threshold). The raster embeds still boot; the
+facade remains the fix for those.
