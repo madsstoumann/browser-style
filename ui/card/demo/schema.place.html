@@ -6,7 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="text-scale" content="scale">
 	<meta name="color-scheme" content="light dark">
-	<meta name="description" content="The Place card from demo/schema.html, once per OpenStreetMap embed layer — six layers on six places, from a Copenhagen studio to the Stelvio pass, Shibuya, Kathmandu and the pyramids at Giza. Only the layer= string in the iframe src picks the basemap: mapnik, cyclosm, cyclemap, transportmap, hot, shortbread.">
+	<meta name="description" content="The Place card from demo/schema.html, once per OpenStreetMap embed layer — eight places over the six layers, from a Copenhagen studio to the Stelvio pass, Shibuya, Kathmandu, the pyramids at Giza, the Colosseum and an airport on an artificial island. Only the layer= string in the iframe src picks the basemap: mapnik, cyclosm, cyclemap, transportmap, hot, shortbread.">
 	<link rel="alternate" type="text/markdown" href="/ui/card/docs/media.md">
 	<link rel="stylesheet" href="/dist/demo.c160558b.min.css">
 	<style>
@@ -38,7 +38,7 @@
 	</header>
 
 	<main data-layout-root data-page-gap="2">
-	<p>The <a href="schema.html#schema-map">Place card on the schema.org page</a> makes an OpenStreetMap embed its media frame. That embed takes a <code>layer=</code> string in its URL, which picks the basemap style — the same eight entries the layer switcher on openstreetmap.org offers. Each card below pairs one layer with a place that shows off what it draws.</p>
+	<p>The <a href="schema.html#schema-map">Place card on the schema.org page</a> makes an OpenStreetMap embed its media frame. That embed takes a <code>layer=</code> string in its URL, which picks the basemap style — the same eight entries the layer switcher on openstreetmap.org offers. Each card below pairs a layer with a place that shows off what it draws — eight cards over the six layers, so Standard and Shortbread each get a second look.</p>
 	<p>Six of the eight are embeddable, and those six are below. <code>tracestracktopo</code> and <code>openmaptiles_osm</code> are marked <code>canEmbed</code>-less in OpenStreetMap’s <a href="https://github.com/openstreetmap/openstreetmap-website/blob/master/config/layers.yml"><code>config/layers.yml</code></a>, so the embed drops them and renders Standard instead.</p>
 
 	<h2>Embeddable layers</h2>
@@ -238,6 +238,72 @@
 					<ul data-part="list"><li data-icon="groups">Building footprints drawn client-side from vector tiles</li></ul>
 					<span data-part="tags"><ui-chip itemprop="keywords">Giza</ui-chip><ui-chip itemprop="keywords">Necropolis</ui-chip></span>
 					<nav data-part="actions"><a href="https://www.google.com/maps/search/?api=1&amp;query=29.9759,31.1311" target="_blank" rel="noopener" aria-label="Open the Giza Necropolis in Google Maps"><img src="/assets/svg/google.maps.svg" alt="" width="40" height="40"></a><a href="https://maps.apple.com/?ll=29.9759,31.1311&amp;q=Giza%20Necropolis" target="_blank" rel="noopener" aria-label="Open the Giza Necropolis in Apple Maps"><img src="/assets/svg/apple.maps.svg" alt="" width="40" height="40"></a></nav>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card id="place-colosseum" variant="col" media="asr(16/9) chip(ts)" itemscope itemtype="https://schema.org/TouristAttraction">
+			<cq-box>
+				<ui-media><iframe src="https://www.openstreetmap.org/export/embed.html?bbox=12.490827,41.889178,12.493573,41.891222&amp;layer=shortbread&amp;marker=41.8902,12.4922" title="Map of the Colosseum, Rome — Shortbread layer" loading="lazy" itemprop="hasMap"></iframe><ui-chip data-type>TouristAttraction</ui-chip></ui-media>
+				<ui-content>
+					<div itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates" hidden>
+						<meta itemprop="latitude" content="41.8902">
+						<meta itemprop="longitude" content="12.4922">
+					</div>
+					<small data-part="eyebrow">Shortbread</small>
+					<h3 data-part="headline" itemprop="name">Colosseum</h3>
+					<p data-part="meta"><code>layer=shortbread</code></p>
+					<p data-part="summary" itemprop="description">Shortbread again, on one building instead of a plateau: the amphitheatre’s footprint and the streets ringing it, drawn in the browser from vector tiles.</p>
+					<address data-part="address" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
+						<span><span itemprop="streetAddress">Piazza del Colosseo 1</span></span>
+						<span><span itemprop="postalCode">00184</span> <span itemprop="addressLocality">Rome</span></span>
+						<meta itemprop="addressCountry" content="IT">
+					</address>
+					<dl data-part="hours">
+						<dt>Mon–Sun</dt>
+						<dd>
+							<span itemprop="openingHoursSpecification" itemscope itemtype="https://schema.org/OpeningHoursSpecification" hidden>
+								<meta itemprop="dayOfWeek" content="https://schema.org/Monday"><meta itemprop="dayOfWeek" content="https://schema.org/Tuesday"><meta itemprop="dayOfWeek" content="https://schema.org/Wednesday"><meta itemprop="dayOfWeek" content="https://schema.org/Thursday"><meta itemprop="dayOfWeek" content="https://schema.org/Friday"><meta itemprop="dayOfWeek" content="https://schema.org/Saturday"><meta itemprop="dayOfWeek" content="https://schema.org/Sunday">
+								<meta itemprop="opens" content="08:30"><meta itemprop="closes" content="19:00">
+							</span>
+							8:30–19:00
+						</dd>
+					</dl>
+					<ul data-part="list"><li data-icon="groups">Street and building footprints drawn client-side from vector tiles</li></ul>
+					<span data-part="tags"><ui-chip itemprop="keywords">Rome</ui-chip><ui-chip itemprop="keywords">Amphitheatre</ui-chip></span>
+					<nav data-part="actions"><a href="https://www.google.com/maps/search/?api=1&amp;query=41.8902,12.4922" target="_blank" rel="noopener" aria-label="Open the Colosseum in Google Maps"><img src="/assets/svg/google.maps.svg" alt="" width="40" height="40"></a><a href="https://maps.apple.com/?ll=41.8902,12.4922&amp;q=Colosseum" target="_blank" rel="noopener" aria-label="Open the Colosseum in Apple Maps"><img src="/assets/svg/apple.maps.svg" alt="" width="40" height="40"></a></nav>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card id="place-kansai" variant="col" media="asr(16/9) chip(ts)" itemscope itemtype="https://schema.org/Airport">
+			<cq-box>
+				<ui-media><iframe src="https://www.openstreetmap.org/export/embed.html?bbox=135.208427,34.413877,135.252373,34.450123&amp;layer=mapnik&amp;marker=34.4320,135.2304" title="Map of Kansai International Airport, Izumisano, Osaka — Standard layer" loading="lazy" itemprop="hasMap"></iframe><ui-chip data-type>Airport</ui-chip></ui-media>
+				<ui-content>
+					<div itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates" hidden>
+						<meta itemprop="latitude" content="34.4320">
+						<meta itemprop="longitude" content="135.2304">
+					</div>
+					<small data-part="eyebrow">Standard</small>
+					<h3 data-part="headline" itemprop="name">Kansai International Airport</h3>
+					<p data-part="meta"><code>layer=mapnik</code></p>
+					<p data-part="summary" itemprop="description">An airport built on an artificial island in Osaka Bay, framed at zoom 13 so the whole rectangle and its access bridge fit — the Standard basemap handling coastline rather than street furniture.</p>
+					<address data-part="address" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
+						<span><span itemprop="streetAddress">1 Senshukukokita</span></span>
+						<span><span itemprop="postalCode">549-0001</span> <span itemprop="addressLocality">Izumisano, Osaka</span></span>
+						<meta itemprop="addressCountry" content="JP">
+					</address>
+					<dl data-part="hours">
+						<dt>Mon–Sun</dt>
+						<dd>
+							<span itemprop="openingHoursSpecification" itemscope itemtype="https://schema.org/OpeningHoursSpecification" hidden>
+								<meta itemprop="dayOfWeek" content="https://schema.org/Monday"><meta itemprop="dayOfWeek" content="https://schema.org/Tuesday"><meta itemprop="dayOfWeek" content="https://schema.org/Wednesday"><meta itemprop="dayOfWeek" content="https://schema.org/Thursday"><meta itemprop="dayOfWeek" content="https://schema.org/Friday"><meta itemprop="dayOfWeek" content="https://schema.org/Saturday"><meta itemprop="dayOfWeek" content="https://schema.org/Sunday">
+								<meta itemprop="opens" content="00:00"><meta itemprop="closes" content="23:59">
+							</span>
+							Open 24 hours
+						</dd>
+					</dl>
+					<ul data-part="list"><li data-icon="schedule">Runways, terminals and the bridge to the mainland, at 4 km across</li></ul>
+					<span data-part="tags"><ui-chip itemprop="keywords">Osaka</ui-chip><ui-chip itemprop="keywords">Artificial island</ui-chip></span>
+					<nav data-part="actions"><a href="https://www.google.com/maps/search/?api=1&amp;query=34.4320,135.2304" target="_blank" rel="noopener" aria-label="Open Kansai International Airport in Google Maps"><img src="/assets/svg/google.maps.svg" alt="" width="40" height="40"></a><a href="https://maps.apple.com/?ll=34.4320,135.2304&amp;q=Kansai%20International%20Airport" target="_blank" rel="noopener" aria-label="Open Kansai International Airport in Apple Maps"><img src="/assets/svg/apple.maps.svg" alt="" width="40" height="40"></a></nav>
 				</ui-content>
 			</cq-box>
 		</ui-card>
