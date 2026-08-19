@@ -5,7 +5,7 @@
 > their rationale lives in git history (`git log --diff-filter=D -- docs/plans`).
 > Settled decisions of record are summarised in `ui/card/AGENTS.md`.
 >
-> Items 1–7 came from the 2026-07-26 architecture ledger; 8–12 and 30–32 were added as they
+> Items 1–7 came from the 2026-07-26 architecture ledger; 8–12 and 30–33 were added as they
 > surfaced. **Items 13–29 (2026-08-19) absorb what was still live from the deleted
 > plan docs** — the 2026-08-15 consistency audit, the 2026-08-16 schema-card-sections
 > note and the 2026-08-10 feature-gap ledger. Every absorbed finding was re-verified
@@ -1035,3 +1035,45 @@ carries the full gate chain — `render.test.js`, the SSR snapshot, `schema.comp
 `card.schema.json` version bump. Worth doing in one pass with a decision on whether the
 Google provider gets an equivalent (the Maps Embed API spells it `maptype`, and takes only
 `roadmap` / `satellite`), so the two providers do not grow divergent vocabularies.
+
+---
+
+## 33. `schema.place.html` boots six third-party map applications before load finishes
+
+**Where:** `ui/card/demo/schema.place.html`
+
+Measured 2026-08-19, Chromium, `loading="lazy"` on all eight frames, page-scoped
+`content-visibility: auto` applying to all eight cards:
+
+| Page | Elements | Frames | Embeds requested **on load** | After full scroll |
+|---|---|---|---|---|
+| `schema.html` | 2,941 | 3 | **0** | — |
+| `schema.place.html` | 386 | 8 | **6** at 1280, 3 at 412 | 8 |
+
+**This is why the smaller page feels slower.** `schema.html` has ten times the DOM, but its
+document is 36,032px tall and its three map frames sit far below the fold, so lazy loading
+defers every one of them — it boots **zero** maps. `schema.place.html` is 3,284px tall and
+*every card is a map*, so six of eight OSM embeds start before load completes. Each is a
+whole document: HTML, a map library, CSS and tiles. Three of the eight (`transportmap`,
+`shortbread` ×2) are vector styles, so they boot MapLibre GL and a WebGL context each.
+
+**What does not fix it, and was measured:**
+
+- `loading="lazy"` is already on all eight frames — it is what keeps the count at six rather
+  than eight, and it cannot go further.
+- Correcting `contain-intrinsic-size` from 567px to the measured 700px (done, `87e03a3`)
+  lengthens the placeholder document but moved the on-load count **not at all** — Chromium's
+  lazy threshold is generous enough to reach those cards either way. Keep the fix for scroll
+  stability; do not expect it to defer an embed.
+- `content-visibility: auto` skips rendering for off-screen cards. It does **not** stop a
+  frame inside them from loading.
+
+**The lever that would work is a facade:** hold the embed URL in `data-src`, paint a cheap
+placeholder, and swap it in on click or on `IntersectionObserver`. That takes the on-load
+cost from six map applications to zero. It needs page-scoped JavaScript, and it changes the
+page from "eight maps you scroll past" to "eight maps you open" — a product decision, not a
+mechanical one, which is why it is here and not done.
+
+**Cheaper partial:** the three vector-style cards are the expensive ones. Ordering them last
+would leave one rather than two inside the on-load set. It costs the layer narrative its
+running order, so it is only worth doing if the facade is rejected.
