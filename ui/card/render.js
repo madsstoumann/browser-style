@@ -1699,17 +1699,19 @@ const listingBody = (place, type, cover = false, cta = null) => {
 		+ ctaRow;
 };
 
-/* one <li> — the ListItem owns only position + item; everything else hangs off `item` */
 /* never verbatim data — the value lands in an itemtype (docs/schema.md § Subtypes) */
 const placeType = (place, kind) => PLACE_ITEM_TYPES[kind].has(place.type) ? place.type : PLACE_FALLBACK[kind];
 /* a residence's ITEM is the listing; the Accommodation hangs off its mainEntity */
 const placeItemtype = (kind, type) => kind === 'residence' ? 'RealEstateListing' : type;
 const placeBody = (place, kind, type, cover = false, cta = null) => kind === 'residence' ? listingBody(place, type, cover, cta) : officeBody(place, type, cover);
 
-/* one <li> — the ListItem owns only position + item; everything else hangs off `item` */
+/* one <li> — the ListItem owns position, name and item; everything else hangs off `item`.
+   The name is NOT a duplicate of item.name: they sit on different NODES (the list entry vs.
+   the place it points at), each stating its own name once. Google's carousel validation reads
+   the ENTRY's name and reports "Unnamed item" without it. Docs: docs/schema.md § Places */
 const placeRow = (place, kind, index) => {
 	const type = placeType(place, kind);
-	return `<li${scope('itemListElement', 'ListItem')}>${meta('position', index + 1)}`
+	return `<li${scope('itemListElement', 'ListItem')}>${meta('position', index + 1)}${meta('name', place.name)}`
 		+ `<div${scope('item', placeItemtype(kind, type))}>${placeBody(place, kind, type)}</div>`
 		+ '</li>';
 };
@@ -1733,6 +1735,7 @@ const placeSlide = (place, kind, index, look = {}, cardId = null) => {
 	   Override both together via details.slide. Docs: docs/media.md § Places */
 	return `<ui-card${attrs({ id, variant: look.variant || 'ovr(bs)', media: look.media || 'asr(1/1) scm', content: look.content || 'scl(sm)' })}${scope('itemListElement', 'ListItem')}>`
 		+ meta('position', index + 1)
+		+ meta('name', place.name)
 		+ `<cq-box${scope('item', placeItemtype(kind, type))}>`
 		+ photo
 		+ `<ui-content>${placeBody(place, kind, type, true, look.cta ?? DEFAULT_PLACE_CTA)}</ui-content>`

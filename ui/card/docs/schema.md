@@ -687,8 +687,17 @@ linked to its own office page, built by
 [`demo/offices/build.js`](../demo/offices/build.js). That page is the simplest of the four
 detail builders on purpose: real estate and rentals are banded because their subject spans
 two scopes, while an office is one `LocalBusiness`, so a single card states every property
-exactly once and there is nothing to split. Every row points at the one page that exists,
-the same demo convenience as the five homes. The address, hours and `hasMap` link stay fully marked up inside one bare
+exactly once and there is nothing to split.
+
+**Every entry needs a distinct `url`.** Only one office page exists in this demo, so each row
+points at it with a per-office query string (`?studio=berlin`). That is not decoration:
+Google's carousel validation rejects an `ItemList` whose entries share a property value —
+*"Identical property values given, but unique values are required"* — because entries a
+consumer cannot tell apart are not a list. Each `ListItem` also carries its **own** `name`,
+which is what the same validation reads; without it every entry reports as *"Unnamed item"*.
+That name is not a duplicate of `item.name`: they are different nodes, the list entry and the
+place it points at, each naming itself once. In production the query string is a real
+per-office URL — the shape is the point, the placeholder is not. The address, hours and `hasMap` link stay fully marked up inside one bare
 `<div hidden>`, and the phone becomes a `<meta>`. A reader gets them from the map popup,
 which `<ui-map>` builds out of exactly those nodes.
 

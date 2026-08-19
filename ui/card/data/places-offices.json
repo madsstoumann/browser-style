@@ -39,7 +39,7 @@
         {
           "type": "LocalBusiness",
           "name": "Copenhagen",
-          "url": "offices/copenhagen.html",
+          "url": "offices/copenhagen.html?studio=copenhagen",
           "branchCode": "CPH",
           "geo": { "latitude": 55.7076, "longitude": 12.5993, "url": "https://www.google.com/maps/search/?api=1&query=55.7076,12.5993" },
           "address": { "streetAddress": "Sundkaj 9", "postalCode": "2150", "addressLocality": "Copenhagen", "addressCountry": "DK" },
@@ -49,7 +49,7 @@
         {
           "type": "LocalBusiness",
           "name": "Berlin",
-          "url": "offices/copenhagen.html",
+          "url": "offices/copenhagen.html?studio=berlin",
           "branchCode": "BER",
           "geo": { "latitude": 52.52, "longitude": 13.405 },
           "address": { "streetAddress": "Torstraße 140", "postalCode": "10119", "addressLocality": "Berlin", "addressCountry": "DE" },
@@ -59,7 +59,7 @@
         {
           "type": "LocalBusiness",
           "name": "London",
-          "url": "offices/copenhagen.html",
+          "url": "offices/copenhagen.html?studio=london",
           "branchCode": "LON",
           "geo": { "latitude": 51.5072, "longitude": -0.1276 },
           "address": { "streetAddress": "12 Rivington Street", "postalCode": "EC2A 3DU", "addressLocality": "London", "addressCountry": "GB" },
@@ -69,7 +69,7 @@
         {
           "type": "LocalBusiness",
           "name": "New York",
-          "url": "offices/copenhagen.html",
+          "url": "offices/copenhagen.html?studio=new-york",
           "branchCode": "NYC",
           "geo": { "latitude": 40.7128, "longitude": -74.006 },
           "address": { "streetAddress": "45 Greenwich Avenue", "postalCode": "10014", "addressLocality": "New York", "addressRegion": "NY", "addressCountry": "US" },
@@ -79,7 +79,7 @@
         {
           "type": "LocalBusiness",
           "name": "Toronto",
-          "url": "offices/copenhagen.html",
+          "url": "offices/copenhagen.html?studio=toronto",
           "branchCode": "YYZ",
           "geo": { "latitude": 43.6532, "longitude": -79.3832 },
           "address": { "streetAddress": "36 Wellington Street East", "postalCode": "M5E 1C7", "addressLocality": "Toronto", "addressRegion": "ON", "addressCountry": "CA" },
@@ -89,7 +89,7 @@
         {
           "type": "LocalBusiness",
           "name": "Singapore",
-          "url": "offices/copenhagen.html",
+          "url": "offices/copenhagen.html?studio=singapore",
           "branchCode": "SIN",
           "geo": { "latitude": 1.3521, "longitude": 103.8198 },
           "address": { "streetAddress": "8 Marina View", "postalCode": "018960", "addressLocality": "Singapore", "addressCountry": "SG" },
@@ -99,7 +99,7 @@
         {
           "type": "LocalBusiness",
           "name": "Kuala Lumpur",
-          "url": "offices/copenhagen.html",
+          "url": "offices/copenhagen.html?studio=kuala-lumpur",
           "branchCode": "KUL",
           "geo": { "latitude": 3.139, "longitude": 101.6869 },
           "address": { "streetAddress": "Jalan Sultan Ismail 88", "postalCode": "50250", "addressLocality": "Kuala Lumpur", "addressCountry": "MY" },
@@ -109,7 +109,7 @@
         {
           "type": "LocalBusiness",
           "name": "Sydney",
-          "url": "offices/copenhagen.html",
+          "url": "offices/copenhagen.html?studio=sydney",
           "branchCode": "SYD",
           "geo": { "latitude": -33.8688, "longitude": 151.2093 },
           "address": { "streetAddress": "3 Kent Street", "postalCode": "2000", "addressLocality": "Sydney", "addressRegion": "NSW", "addressCountry": "AU" },

@@ -2352,3 +2352,26 @@ describe('places — a screen-reader-only list', () => {
 		assert.match(card({}), /<ol data-part="list">/);
 	});
 });
+
+describe('places — carousel validation requirements', () => {
+	const OFFICES = [
+		{ type: 'LocalBusiness', name: 'Copenhagen', url: '/o.html?studio=copenhagen', geo: { latitude: 55.6, longitude: 12.5 } },
+		{ type: 'LocalBusiness', name: 'Berlin', url: '/o.html?studio=berlin', geo: { latitude: 52.5, longitude: 13.4 } }
+	];
+	const html = render({ schemaType: 'places', headline: 'Offices', details: { kind: 'business', items: OFFICES } });
+
+	test('every ListItem carries its own name', () => {
+		/* Google's carousel reads the ENTRY's name; without it the item reports as
+		   "Unnamed item". It is not a duplicate of item.name — different nodes. */
+		assert.match(html, /<meta itemprop="position" content="1"><meta itemprop="name" content="Copenhagen">/);
+		assert.match(html, /<meta itemprop="position" content="2"><meta itemprop="name" content="Berlin">/);
+		/* the place still names itself inside its own scope */
+		assert.match(html, /<strong itemprop="name">Copenhagen<\/strong>/);
+	});
+
+	test('item urls are distinct — "identical property values" is a carousel error', () => {
+		const urls = [...html.matchAll(/itemprop="url" href="([^"]+)"/g)].map((m) => m[1]);
+		assert.equal(urls.length, 2);
+		assert.equal(new Set(urls).size, urls.length, 'each entry must be distinguishable by url');
+	});
+});
