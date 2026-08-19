@@ -1057,6 +1057,22 @@ defers every one of them — it boots **zero** maps. `schema.place.html` is 3,28
 whole document: HTML, a map library, CSS and tiles. Three of the eight (`transportmap`,
 `shortbread` ×2) are vector styles, so they boot MapLibre GL and a WebGL context each.
 
+**Confirmed on the deployed page** (Lighthouse, `browser-style-v4.pages.dev`, 2026-08-19).
+"Reduce JavaScript execution time" 1.3 s, "Minimize main-thread work" 2.1 s:
+
+| Source | Total CPU | Script evaluation | Script parse |
+|---|---|---|---|
+| `openstreetmap.org` | **1,526 ms** | 619 ms | 545 ms |
+| — `assets/embed-1cd41c3….js` | 906 ms | 434 ms | 445 ms |
+| — `assets/embed-3b3d336….js` | 620 ms | 185 ms | 101 ms |
+| Unattributable (frame layout/compositing) | 376 ms | 166 ms | 0 ms |
+| **the page itself** | **107 ms** | **2 ms** | 1 ms |
+
+First-party script evaluation is **2 ms**; ~93% of the JS time is OSM's embed bundles.
+Nothing in this repo can make that code faster — the only lever is not running it. Note the
+**two** distinct bundles: consistent with OSM shipping separate raster and vector paths, so
+the three vector-style cards (`transportmap`, `shortbread` ×2) are what pull the second one.
+
 **What does not fix it, and was measured:**
 
 - `loading="lazy"` is already on all eight frames — it is what keeps the count at six rather
@@ -1070,7 +1086,7 @@ whole document: HTML, a map library, CSS and tiles. Three of the eight (`transpo
 
 **The lever that would work is a facade:** hold the embed URL in `data-src`, paint a cheap
 placeholder, and swap it in on click or on `IntersectionObserver`. That takes the on-load
-cost from six map applications to zero. It needs page-scoped JavaScript, and it changes the
+cost from six map applications to zero. That is ~1.5 s of third-party CPU deferred to a click. It needs page-scoped JavaScript, and it changes the
 page from "eight maps you scroll past" to "eight maps you open" — a product decision, not a
 mechanical one, which is why it is here and not done.
 
