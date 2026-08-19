@@ -18,13 +18,13 @@
 		scrollbar-width: thin;
 	}
 	/* slides = every direct child but furniture. KEEP IN SYNC with shared.js NOT_SLIDE */
-	ui-media:where([media*="nav"], :is(ui-card, ui-reveal)[media*="nav"] *) > :not(ui-beacon, ui-chip, ui-lightbox, ui-marquee, ui-play, ui-save, ui-sticker) {
+	ui-media:where([media*="nav"], :is(ui-card, ui-reveal)[media*="nav"] *) > :not(ui-beacon, ui-chip, ui-lightbox, ui-map, ui-marquee, ui-play, ui-save, ui-sticker) {
 		block-size: 100%;
 		flex: 0 0 100%;
 		inline-size: 100%;
 		scroll-snap-align: start;
 	}
-	ui-media:where([media*="nav"], :is(ui-card, ui-reveal)[media*="nav"] *) > :is(iframe, img, picture, video) {
+	ui-media:where([media*="nav"], :is(ui-card, ui-reveal)[media*="nav"] *) > :is(iframe, img, picture, video, ui-map) {
 		inset: auto;
 		position: static;
 	}
@@ -38,16 +38,16 @@
 		}
 	}
 	/* band slides size by STRETCH, never `100%`. Docs: docs/media.carousel.md */
-	:where(ui-card, ui-reveal):where([media*="nav(blw)"], [media*="mrk(blw)"], [media*="arw(blw)"], [media*="nav(abv)"], [media*="mrk(abv)"], [media*="arw(abv)"]) ui-media > :not(ui-beacon, ui-chip, ui-lightbox, ui-marquee, ui-play, ui-save, ui-sticker, ui-carousel-controls),
-	:where(ui-media, lay-out[overflow]):where([media*="nav(blw)"], [media*="mrk(blw)"], [media*="arw(blw)"], [media*="nav(abv)"], [media*="mrk(abv)"], [media*="arw(abv)"]) > :not(ui-beacon, ui-chip, ui-lightbox, ui-marquee, ui-play, ui-save, ui-sticker, ui-carousel-controls) {
+	:where(ui-card, ui-reveal):where([media*="nav(blw)"], [media*="mrk(blw)"], [media*="arw(blw)"], [media*="nav(abv)"], [media*="mrk(abv)"], [media*="arw(abv)"]) ui-media > :not(ui-beacon, ui-chip, ui-lightbox, ui-map, ui-marquee, ui-play, ui-save, ui-sticker, ui-carousel-controls),
+	:where(ui-media, lay-out[overflow]):where([media*="nav(blw)"], [media*="mrk(blw)"], [media*="arw(blw)"], [media*="nav(abv)"], [media*="mrk(abv)"], [media*="arw(abv)"]) > :not(ui-beacon, ui-chip, ui-lightbox, ui-map, ui-marquee, ui-play, ui-save, ui-sticker, ui-carousel-controls) {
 		align-self: stretch;
 		block-size: auto;
 	}
 
 	/* reserved band: round the slide itself — the outer clip only rounds the frame.
 	   ui-content is in the list because a themed slide paints its own plate */
-	:where(ui-card, ui-reveal):where([media*="nav(blw)"], [media*="mrk(blw)"], [media*="arw(blw)"], [media*="nav(abv)"], [media*="mrk(abv)"], [media*="arw(abv)"]) ui-media > :is(iframe, img, picture, video, ui-content),
-	ui-media:where([media*="nav(blw)"], [media*="mrk(blw)"], [media*="arw(blw)"], [media*="nav(abv)"], [media*="mrk(abv)"], [media*="arw(abv)"]) > :is(iframe, img, picture, video, ui-content) {
+	:where(ui-card, ui-reveal):where([media*="nav(blw)"], [media*="mrk(blw)"], [media*="arw(blw)"], [media*="nav(abv)"], [media*="mrk(abv)"], [media*="arw(abv)"]) ui-media > :is(iframe, img, picture, video, ui-map, ui-content),
+	ui-media:where([media*="nav(blw)"], [media*="mrk(blw)"], [media*="arw(blw)"], [media*="nav(abv)"], [media*="mrk(abv)"], [media*="arw(abv)"]) > :is(iframe, img, picture, video, ui-map, ui-content) {
 		border-radius: var(--ui-media-radius, 0);
 	}
 
@@ -142,7 +142,7 @@
 	ui-media:where(
 		[media*="mrk(tmb)"]:is([media*="nav(blw)"], [media*="mrk(blw)"], [media*="nav(abv)"], [media*="mrk(abv)"], [media*="mrk(rail)"]),
 		:is(ui-card, ui-reveal)[media*="mrk(tmb)"]:is([media*="nav(blw)"], [media*="mrk(blw)"], [media*="nav(abv)"], [media*="mrk(abv)"], [media*="mrk(rail)"]) *
-	) > :is(iframe, img, picture, video) {
+	) > :is(iframe, img, picture, video, ui-map) {
 		border-radius: var(--ui-media-radius, 0);
 	}
 

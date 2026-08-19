@@ -1,0 +1,106 @@
+{
+  "$schema": "../../../cms/baseline/models/card.schema.json",
+  "id": "places-homes-1",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-08-19T09:00:00Z",
+    "updatedAt": "2026-08-19T09:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Places"
+  },
+  "fields": {
+    "internalName": "Demo — Places (listings)",
+    "schemaType": "places",
+    "preset": {
+      "$ref": "card-preset/places"
+    },
+    "eyebrow": "Copenhagen",
+    "headline": "Five homes on the harbour",
+    "summary": "Each pin is a listing. Every home is a RealEstateListing wrapping its own Apartment or House — the wrapper is what lets a price exist at all.",
+    "media": [
+      {
+        "mediaType": "places",
+        "alt": "Map of five homes in central Copenhagen",
+        "map": "tiles(positron) tint(soft) cluster(sm) fit pin(dot)"
+      }
+    ],
+    "details": {
+      "kind": "residence",
+      "center": {
+        "latitude": 55.6789,
+        "longitude": 12.5834,
+        "url": "https://www.google.com/maps/search/?api=1&query=55.6789,12.5834"
+      },
+      "regionDisplay": "5 homes · Indre By & Christianshavn",
+      "items": [
+        {
+          "type": "Apartment",
+          "name": "Havnegade 44",
+          "url": "https://example.com/homes/havnegade-44",
+          "datePosted": "2026-08-02",
+          "price": { "currency": "DKK", "amount": 7950000 },
+          "geo": { "latitude": 55.6761, "longitude": 12.5911, "url": "https://www.google.com/maps/search/?api=1&query=55.6761,12.5911" },
+          "address": { "streetAddress": "Havnegade 44", "postalCode": "1058", "addressLocality": "Copenhagen", "addressCountry": "DK" },
+          "floorSize": 118,
+          "numberOfBedrooms": 2,
+          "numberOfRooms": 4,
+          "yearBuilt": 1932
+        },
+        {
+          "type": "Apartment",
+          "name": "Strandgade 8",
+          "url": "https://example.com/homes/strandgade-8",
+          "datePosted": "2026-07-28",
+          "price": { "currency": "DKK", "amount": 6250000 },
+          "geo": { "latitude": 55.6738, "longitude": 12.5946 },
+          "address": { "streetAddress": "Strandgade 8", "postalCode": "1401", "addressLocality": "Copenhagen", "addressCountry": "DK" },
+          "floorSize": 94,
+          "numberOfBedrooms": 2,
+          "numberOfRooms": 3,
+          "yearBuilt": 1907
+        },
+        {
+          "type": "Apartment",
+          "name": "Overgaden Neden Vandet 21",
+          "url": "https://example.com/homes/overgaden-21",
+          "datePosted": "2026-08-11",
+          "price": { "currency": "DKK", "amount": 9400000 },
+          "geo": { "latitude": 55.6721, "longitude": 12.5928 },
+          "address": { "streetAddress": "Overgaden Neden Vandet 21", "postalCode": "1414", "addressLocality": "Copenhagen", "addressCountry": "DK" },
+          "floorSize": 142,
+          "numberOfBedrooms": 3,
+          "numberOfRooms": 5,
+          "yearBuilt": 1888
+        },
+        {
+          "type": "House",
+          "name": "Christianshavns Voldgade 3",
+          "url": "https://example.com/homes/voldgade-3",
+          "datePosted": "2026-06-19",
+          "price": { "currency": "DKK", "amount": 14750000 },
+          "geo": { "latitude": 55.6746, "longitude": 12.5989 },
+          "address": { "streetAddress": "Christianshavns Voldgade 3", "postalCode": "1424", "addressLocality": "Copenhagen", "addressCountry": "DK" },
+          "floorSize": 211,
+          "numberOfBedrooms": 4,
+          "numberOfRooms": 7,
+          "yearBuilt": 1874
+        },
+        {
+          "type": "Apartment",
+          "name": "Nyhavn 17",
+          "url": "https://example.com/homes/nyhavn-17",
+          "datePosted": "2026-08-15",
+          "price": { "currency": "DKK", "amount": 5100000 },
+          "geo": { "latitude": 55.6797, "longitude": 12.5896 },
+          "address": { "streetAddress": "Nyhavn 17", "postalCode": "1051", "addressLocality": "Copenhagen", "addressCountry": "DK" },
+          "floorSize": 71,
+          "numberOfBedrooms": 1,
+          "numberOfRooms": 2,
+          "yearBuilt": 1921
+        }
+      ]
+    },
+    "tags": ["For sale", "Copenhagen"]
+  }
+}

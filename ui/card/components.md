@@ -28,6 +28,7 @@ grouped by role. Paths are relative to `ui/`, matching how the demos link them
 | `ui/beacon` | `<ui-beacon>` | `beacon/ui-beacon.css` |
 | `ui/chip` | `<ui-chip>` | `chip/ui-chip.css` |
 | `ui/lightbox` | `<ui-lightbox>` | `lightbox/ui-lightbox.css` |
+| `ui/map` | `<ui-map>` | `map/ui-map.css` |
 | `ui/marquee` | `<ui-marquee>` | `marquee/ui-marquee.css` |
 | `ui/play` | `<ui-play>` | `play/ui-play.css` |
 | `ui/save` | `<ui-save>` | `save/ui-save.css` |

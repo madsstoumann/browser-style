@@ -2170,3 +2170,79 @@ describe('content chip', () => {
 		assert.match(html, /<ui-chip theme="pale accent">New<\/ui-chip>/, 'and so does the status chip');
 	});
 });
+
+describe('places — a collection of places on one clustered map', () => {
+	const OFFICES = [
+		{ type: 'LocalBusiness', name: 'Copenhagen', url: 'https://example.com/cph', geo: { latitude: 55.6761, longitude: 12.5683 }, address: { addressLocality: 'Copenhagen', addressCountry: 'DK' }, telephone: '+45 35 55 12 90', openingHours: [{ schema: 'Mo-Fr 09:00-17:00' }] },
+		{ type: 'LocalBusiness', name: 'Berlin', url: 'https://example.com/ber', geo: { latitude: 52.52, longitude: 13.405 } }
+	];
+	const HOMES = [
+		{ type: 'Apartment', name: 'Havnegade 44', url: 'https://example.com/h44', geo: { latitude: 55.6761, longitude: 12.5911 }, address: { streetAddress: 'Havnegade 44', addressLocality: 'Copenhagen', addressCountry: 'DK' }, price: { currency: 'DKK', amount: 7950000 }, numberOfRooms: 4, numberOfBedrooms: 2, floorSize: 118, yearBuilt: 1932 }
+	];
+	const places = (details) => render({ schemaType: 'places', headline: 'Where we are', summary: 'Our offices.', details });
+
+	test('root is an ItemList carrying numberOfItems', () => {
+		const html = places({ kind: 'business', items: OFFICES });
+		assert.match(html, /itemtype="https:\/\/schema\.org\/ItemList"/);
+		assert.match(html, /<meta itemprop="numberOfItems" content="2">/);
+	});
+
+	test('each row is a ListItem with a position and an item scope', () => {
+		const html = places({ kind: 'business', items: OFFICES });
+		assert.equal(html.match(/itemprop="itemListElement" itemscope itemtype="https:\/\/schema\.org\/ListItem"/g).length, 2);
+		assert.match(html, /<meta itemprop="position" content="1">/);
+		assert.match(html, /<meta itemprop="position" content="2">/);
+		assert.match(html, /itemprop="item" itemscope itemtype="https:\/\/schema\.org\/LocalBusiness"/);
+	});
+
+	test('office items carry geo, address and BOTH hours forms', () => {
+		const html = places({ kind: 'business', items: OFFICES });
+		assert.match(html, /itemprop="geo" itemscope itemtype="https:\/\/schema\.org\/GeoCoordinates"/);
+		assert.match(html, /<meta itemprop="latitude" content="55.6761">/);
+		assert.match(html, /itemprop="address" itemscope itemtype="https:\/\/schema\.org\/PostalAddress"/);
+		/* openingHours is a LocalBusiness property, so the flat string IS in domain here */
+		assert.match(html, /<meta itemprop="openingHours" content="Mo-Fr 09:00-17:00">/);
+		assert.match(html, /itemprop="openingHoursSpecification"/);
+	});
+
+	test('residence items are a RealEstateListing wrapping the Accommodation', () => {
+		const html = places({ kind: 'residence', items: HOMES });
+		/* `offers` is out of domain on Apartment, Place AND ListItem — it can only ride
+		   RealEstateListing, which is a WebPage and therefore a CreativeWork */
+		assert.match(html, /itemprop="item" itemscope itemtype="https:\/\/schema\.org\/RealEstateListing"/);
+		assert.match(html, /itemprop="mainEntity" itemscope itemtype="https:\/\/schema\.org\/Apartment"/);
+		assert.match(html, /itemprop="offers" itemscope itemtype="https:\/\/schema\.org\/Offer"/);
+		assert.match(html, /<meta itemprop="priceCurrency" content="DKK">/);
+		assert.match(html, /itemprop="numberOfRooms"/);
+		assert.match(html, /itemprop="floorSize"/);
+	});
+
+	test('an off-allowlist item type falls back instead of reaching the itemtype', () => {
+		const evil = places({ kind: 'business', items: [{ type: 'Evil"><script>', name: 'X', geo: { latitude: 1, longitude: 2 } }] });
+		assert.ok(!evil.includes('<script>'), 'a supplied type must never reach an itemtype');
+		assert.match(evil, /itemprop="item" itemscope itemtype="https:\/\/schema\.org\/LocalBusiness"/);
+		/* Residence descends from Place, not Accommodation — floorSize/yearBuilt are out
+		   of domain on it, so it is deliberately NOT in RESIDENCE_TYPES */
+		const res = places({ kind: 'residence', items: [{ type: 'Residence', name: 'X', geo: { latitude: 1, longitude: 2 } }] });
+		assert.match(res, /itemprop="mainEntity" itemscope itemtype="https:\/\/schema\.org\/Accommodation"/);
+	});
+
+	test('no keywords: tags are out of domain on an ItemList', () => {
+		const html = render({ schemaType: 'places', headline: 'Where we are', tags: ['Global', 'Offices'], details: { kind: 'business', items: OFFICES } });
+		assert.ok(!html.includes('itemprop="keywords"'), 'ItemList is an Intangible — keywords is Organization/Event/Place/CreativeWork/Product only');
+		assert.match(html, /Global/, 'the tags still render, just unmarked');
+	});
+
+	test('no hasMap on the frame — the root is an ItemList, not a Place', () => {
+		const html = render({ schemaType: 'places', headline: 'Where we are', media: [{ mediaType: 'places', alt: 'Map of our offices' }], details: { kind: 'business', center: { latitude: 52, longitude: 9 }, items: OFFICES } });
+		assert.match(html, /<ui-map[^>]*>/);
+		assert.ok(!/<ui-map[^>]*itemprop="hasMap"/.test(html), 'hasMap is a Place property and the enclosing scope is an ItemList');
+		assert.match(html, /<iframe[^>]*openstreetmap\.org\/export\/embed\.html/, 'the no-JS fallback frame is inside <ui-map>');
+	});
+
+	test('escapes hostile place data', () => {
+		const html = places({ kind: 'business', items: [{ type: 'LocalBusiness', name: '"><img src=x onerror=alert(1)>', url: 'javascript:alert(1)', geo: { latitude: 1, longitude: 2 } }] });
+		assert.ok(!html.includes('<img'), 'attribute breakout must be escaped');
+		assert.match(html, /&quot;&gt;&lt;img src=x onerror=alert\(1\)&gt;/);
+	});
+});

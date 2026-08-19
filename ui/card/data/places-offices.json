@@ -1,0 +1,101 @@
+{
+  "$schema": "../../../cms/baseline/models/card.schema.json",
+  "id": "places-offices-1",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-08-19T09:00:00Z",
+    "updatedAt": "2026-08-19T09:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Places"
+  },
+  "fields": {
+    "internalName": "Demo — Places (offices)",
+    "schemaType": "places",
+    "preset": {
+      "$ref": "card-preset/places"
+    },
+    "eyebrow": "Worldwide",
+    "headline": "Where you'll find us",
+    "summary": "Six studios on three continents. The map clusters them; the list below is both its data source and its text alternative.",
+    "media": [
+      {
+        "mediaType": "places",
+        "alt": "Map of six studios worldwide"
+      }
+    ],
+    "details": {
+      "kind": "business",
+      "center": {
+        "latitude": 30.0,
+        "longitude": 5.0,
+        "url": "https://www.google.com/maps/search/?api=1&query=30,5"
+      },
+      "regionDisplay": "6 studios · 3 continents",
+      "order": "ItemListOrderAscending",
+      "items": [
+        {
+          "type": "LocalBusiness",
+          "name": "Copenhagen",
+          "url": "https://example.com/studios/copenhagen",
+          "branchCode": "CPH",
+          "geo": { "latitude": 55.7076, "longitude": 12.5993, "url": "https://www.google.com/maps/search/?api=1&query=55.7076,12.5993" },
+          "address": { "streetAddress": "Sundkaj 9", "postalCode": "2150", "addressLocality": "Copenhagen", "addressCountry": "DK" },
+          "telephone": "+45 35 55 12 90",
+          "openingHours": [{ "schema": "Mo-Fr 09:00-17:00" }]
+        },
+        {
+          "type": "LocalBusiness",
+          "name": "Berlin",
+          "url": "https://example.com/studios/berlin",
+          "branchCode": "BER",
+          "geo": { "latitude": 52.52, "longitude": 13.405 },
+          "address": { "streetAddress": "Torstraße 140", "postalCode": "10119", "addressLocality": "Berlin", "addressCountry": "DE" },
+          "telephone": "+49 30 1234 5678",
+          "openingHours": [{ "schema": "Mo-Fr 09:00-18:00" }]
+        },
+        {
+          "type": "LocalBusiness",
+          "name": "London",
+          "url": "https://example.com/studios/london",
+          "branchCode": "LON",
+          "geo": { "latitude": 51.5072, "longitude": -0.1276 },
+          "address": { "streetAddress": "12 Rivington Street", "postalCode": "EC2A 3DU", "addressLocality": "London", "addressCountry": "GB" },
+          "telephone": "+44 20 7946 0102",
+          "openingHours": [{ "schema": "Mo-Fr 09:00-17:30" }]
+        },
+        {
+          "type": "LocalBusiness",
+          "name": "New York",
+          "url": "https://example.com/studios/new-york",
+          "branchCode": "NYC",
+          "geo": { "latitude": 40.7128, "longitude": -74.006 },
+          "address": { "streetAddress": "45 Greenwich Avenue", "postalCode": "10014", "addressLocality": "New York", "addressRegion": "NY", "addressCountry": "US" },
+          "telephone": "+1 212 555 0148",
+          "openingHours": [{ "schema": "Mo-Fr 09:00-18:00" }]
+        },
+        {
+          "type": "LocalBusiness",
+          "name": "Singapore",
+          "url": "https://example.com/studios/singapore",
+          "branchCode": "SIN",
+          "geo": { "latitude": 1.3521, "longitude": 103.8198 },
+          "address": { "streetAddress": "8 Marina View", "postalCode": "018960", "addressLocality": "Singapore", "addressCountry": "SG" },
+          "telephone": "+65 6123 4567",
+          "openingHours": [{ "schema": "Mo-Fr 09:00-18:00" }]
+        },
+        {
+          "type": "LocalBusiness",
+          "name": "Sydney",
+          "url": "https://example.com/studios/sydney",
+          "branchCode": "SYD",
+          "geo": { "latitude": -33.8688, "longitude": 151.2093 },
+          "address": { "streetAddress": "3 Kent Street", "postalCode": "2000", "addressLocality": "Sydney", "addressRegion": "NSW", "addressCountry": "AU" },
+          "telephone": "+61 2 8123 4567",
+          "openingHours": [{ "schema": "Mo-Fr 09:00-17:00" }]
+        }
+      ]
+    },
+    "tags": ["Studios", "Global"]
+  }
+}

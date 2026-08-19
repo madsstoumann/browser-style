@@ -60,7 +60,9 @@
     "announcement",
     "service",
     "media-block",
-    "prose-block"
+    "prose-block",
+    "places-offices",
+    "places-homes"
   ],
   "shared": [
     "software-flipside"

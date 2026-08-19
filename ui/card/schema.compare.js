@@ -102,7 +102,11 @@ const PAIRS = [
 	['JobPosting', 'ui/card/data/job.json'],
 	/* the sticker shape had drifted (page sh:spark, data sh:burst) with nothing watching —
 	   pairing the product is what keeps the two spellings one spelling */
-	['Product', 'ui/card/data/product.json']
+	['Product', 'ui/card/data/product.json'],
+	/* the two collection cards. Both are keyed by id: the page's bare ItemList is the
+	   comparison card, which has none, and the bare form matches only an id-less card */
+	['ItemList#schema-places-offices', 'ui/card/data/places-offices.json'],
+	['ItemList#schema-places-homes', 'ui/card/data/places-homes.json']
 ];
 
 /* ── minimal HTML tree parser ── */

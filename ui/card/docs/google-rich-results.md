@@ -50,7 +50,7 @@ console.log(new Set(Object.values(SCHEMA_TYPES)).size)"   # → 50
 
 ## 1. The headline answer
 
-Of **50 distinct itemtypes** across 51 `schemaType` keys (`profile` and `artist` both resolve
+Of **50 distinct itemtypes** across 52 `schemaType` keys (`profile` and `artist` both resolve
 to `Person`):
 
 | Bucket | Count | Meaning |
@@ -165,6 +165,7 @@ off the page without asking whether Google would have drawn a box around it.
 | `CreativeWork` | `content` | Generic fallback; no feature by design | `dump` |
 | `Person` | `profile`, `artist` | The *feature* is Profile page, which wants a `ProfilePage` **host** — see [§ 4](#4-gaps--live-features-with-no-card-type) | ⚠ |
 | `Place` | `location` | `LocalBusiness` is the feature; bare `Place` is not | ⚠ |
+| `ItemList` | `places` | Google's host carousel takes `ItemList` only in combination with Course list, Movie, Recipe or Restaurant — a list of offices or of homes is none of those, and there is no real-estate result at all | ✓ |
 | `Offer` | `membership` | A component of the Product/Event features, not a subject | `dump` |
 | `Question` | `poll` | `QAPage` is the feature; a bare `Question` is not | ⚠ |
 | `Reservation` | `booking` | — | ⚠ |

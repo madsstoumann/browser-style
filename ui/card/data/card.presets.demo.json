@@ -1256,6 +1256,13 @@
         "iconType": "left-arrow-cross",
         "from": "right"
       }
+    },
+    "places": {
+      "name": "Places",
+      "description": "Collection card whose media frame is a clustered <ui-map>. The type chip takes the renderer's default end corner — the OPPOSITE of the single-map preset, because Leaflet's zoom control owns the start corner where an OpenStreetMap iframe has nothing.",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(16/9)"
     }
   }
 }

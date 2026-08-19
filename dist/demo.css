@@ -3,6 +3,7 @@
   :root {
     --color-accent: light-dark(hsl(211, 100%, 38%), hsl(211, 60%, 50%));
     --color-accent-dark: light-dark(hsl(211, 80%, 30%), hsl(211, 30%, 20%));
+    --color-accent-ink: light-dark( oklch(from var(--color-accent) min(l, 0.55) c h), oklch(from var(--color-accent) max(l, 0.78) c h));
     --color-accent-text: hsl(211, 100%, 95%);
     --color-border: light-dark(hsl(0, 0%, 80%), hsl(0, 0%, 35%));
     --color-button: light-dark(hsl(0, 0%, 90%), hsl(0, 0%, 40%));
@@ -326,6 +327,7 @@
 @property --_theme-base-c { syntax: "*"; inherits: false; }
 @property --_theme-pale-bg { syntax: "*"; inherits: false; }
 @property --_theme-pale-c { syntax: "*"; inherits: false; }
+@property --_theme-hue-ink { syntax: "*"; inherits: false; }
 @property --_theme-tone-bg { syntax: "*"; inherits: false; }
 @property --_theme-tone-c { syntax: "*"; inherits: false; }
 @property --_theme-glass { syntax: "*"; inherits: false; }
@@ -381,6 +383,7 @@
     --_theme-ink: var(--_theme-tone-c);
     --_theme-border: var(--_theme-base-bg);
     --_theme-bw: var(--border-width, 1px);
+    --_theme-hue-ink: light-dark( oklch(from var(--_theme-base-bg) min(l, 0.45) c h), oklch(from var(--_theme-base-bg) max(l, 0.80) c h));
   }
   :where([theme~=ink], [data-theme~=ink]) {
     --_theme-c: var(--_theme-ink);
@@ -391,7 +394,7 @@
   }
   :where([theme~=pale], [data-theme~=pale]) {
     --_theme-pale-bg: color-mix(in srgb, var(--_theme-base-bg), var(--color-surface) 80%);
-    --_theme-pale-c: var(--_theme-base-bg);
+    --_theme-pale-c: var(--_theme-hue-ink);
   }
   :where([theme~=glass], [data-theme~=glass]) {
     --_theme-glass: color-mix(in srgb, var(--_theme-tone-bg), transparent var(--ui-theme-glass-fade));
@@ -425,7 +428,7 @@
   }
   :where([theme*=border]:not([theme~=pale], [theme~=glass]), [data-theme*=border]:not([data-theme~=pale], [data-theme~=glass])) {
     --_theme-bg: #0000;
-    --_theme-ink: var(--_theme-base-bg);
+    --_theme-ink: var(--_theme-hue-ink);
   }
   :where([theme*="border(sm)"], [data-theme*="border(sm)"]) {
     --_theme-bw: var(--border-width);
@@ -6155,7 +6158,8 @@
     }
     :where([media*="chip(pale)"]) & {
       --_theme-bg: color-mix(in srgb, var(--_theme-base-bg), var(--color-surface) 80%);
-      --_theme-c: var(--_theme-base-bg);
+      --_theme-hue-ink: light-dark( oklch(from var(--_theme-base-bg) min(l, 0.45) c h), oklch(from var(--_theme-base-bg) max(l, 0.80) c h));
+      --_theme-c: var(--_theme-hue-ink);
     }
     :where([media*="chip(muted)"]) & {
       --_theme-bg: color-mix(in srgb, var(--_theme-base-bg), transparent 50%);
@@ -7732,6 +7736,125 @@
       &:is([hover~=pop], [hover~=press]) button:is(:hover, :active) {
         scale: none;
       }
+    }
+  }
+}
+
+/* ui/map/ui-map.css */
+@layer bs-component.leaflet, bs-component.map;
+@property --ui-map-scheme { syntax: "<color>"; inherits: false; initial-value: #000; }
+@layer bs-component.map {
+  :where(ui-map) {
+    --ui-map-filter: none;
+    --ui-map-pin-size: 0.875rem;
+    --ui-map-scheme: light-dark(#000, #fff);
+    block-size: 100%;
+    display: block;
+    inline-size: 100%;
+    min-block-size: var(--ui-map-min-bs, 12.5rem);
+    position: relative;
+  }
+  :where(ui-map) > :is(.ui-map-canvas, iframe) {
+    block-size: 100%;
+    border: 0;
+    display: block;
+    inline-size: 100%;
+  }
+  :where(ui-map) > .ui-map-canvas {
+    background: var(--ui-map-bg, var(--color-surface-alt));
+  }
+  :where(ui-map) .leaflet-tile-pane {
+    filter: var(--ui-map-filter);
+  }
+  :where(ui-map[map*="tint(gray)"]) {
+    --ui-map-filter: grayscale(1);
+  }
+  :where(ui-map[map*="tint(mono)"]) {
+    --ui-map-filter: grayscale(1) contrast(1.15);
+  }
+  :where(ui-map[map*="tint(sepia)"]) {
+    --ui-map-filter: sepia(0.6);
+  }
+  :where(ui-map[map*="tint(invert)"]) {
+    --ui-map-filter: invert(1) hue-rotate(180deg) brightness(0.95);
+  }
+  :where(ui-map[map*="tint(warm)"]) {
+    --ui-map-filter: sepia(0.25) saturate(1.2) hue-rotate(-10deg);
+  }
+  :where(ui-map[map*="tint(cool)"]) {
+    --ui-map-filter: saturate(0.8) hue-rotate(15deg);
+  }
+  :where(ui-map[map*="tint(soft)"]) {
+    --ui-map-filter: saturate(0.6) brightness(1.05);
+  }
+  :where(.ui-map-pin) {
+    align-items: center;
+    background: var(--ui-map-pin-bg, var(--color-accent));
+    border: var(--ui-map-pin-bdw, 2px) solid var(--ui-map-pin-bdc, var(--color-surface));
+    border-radius: var(--radius-pill);
+    box-shadow: var(--ui-map-pin-shadow, 0 1px 3px hsl(0 0% 0% / 0.35));
+    box-sizing: border-box;
+    color: var(--ui-map-pin-c, contrast-color(var(--ui-map-pin-bg, var(--color-accent))));
+    display: flex;
+    font-family: var(--font-body);
+    font-size: var(--font-size-2xs);
+    font-weight: var(--font-weight-semibold);
+    justify-content: center;
+    line-height: 1;
+    translate: -50% -50%;
+    white-space: nowrap;
+  }
+  :where(.ui-map-pin[data-kind=point]) {
+    block-size: var(--ui-map-pin-size);
+    inline-size: var(--ui-map-pin-size);
+  }
+  :where(ui-map[map*="pin(label)"], ui-map[map*="pin(price)"]) :where(.ui-map-pin[data-kind=point]) {
+    block-size: auto;
+    inline-size: auto;
+    padding: 0.25em 0.6em;
+  }
+  :where(ui-map[map*="pin(pin)"]) :where(.ui-map-pin[data-kind=point]) {
+    --ui-map-pin-size: 1.25rem;
+    border-end-start-radius: 0;
+    rotate: -45deg;
+    translate: -50% -100%;
+  }
+  :where(.ui-map-pin[data-kind=cluster]) {
+    --ui-map-pin-bg: var(--ui-map-cluster-bg, var(--color-accent));
+    block-size: var(--ui-map-cluster-size, 2rem);
+    font-size: var(--font-size-xs);
+    inline-size: var(--ui-map-cluster-size, 2rem);
+  }
+  :where(.ui-map-pin[data-size=md]) {
+    --ui-map-cluster-size: 2.5rem;
+  }
+  :where(.ui-map-pin[data-size=lg]) {
+    --ui-map-cluster-size: 3rem;
+    font-size: var(--font-size-sm);
+  }
+  :where(ui-map) .leaflet-control-attribution {
+    background: var(--ui-map-attr-bg, var(--color-surface));
+    color: var(--color-text);
+    font-family: var(--font-body);
+    font-size: var(--font-size-xs);
+    padding-inline: 0.5em;
+  }
+  :where(ui-map) .leaflet-control-attribution a {
+    color: var(--color-link);
+  }
+  :where(ui-map[map*="tiles(sat)"]) {
+    --ui-map-attr-bg: var(--color-surface);
+  }
+  :where(ui-map[map*="ctl(non)"]) .leaflet-control-zoom {
+    display: none;
+  }
+  :where(ui-map) .leaflet-control-zoom a {
+    color: var(--color-text);
+    font-family: var(--font-body);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :where(ui-map) :is(.leaflet-zoom-anim .leaflet-zoom-animated, .leaflet-fade-anim .leaflet-tile, .leaflet-fade-anim .leaflet-popup) {
+      transition: none;
     }
   }
 }
@@ -10418,7 +10541,7 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
     min-block-size: var(--ui-media-min, 12.5rem);
     overflow: hidden;
     position: relative;
-    & :is(iframe, img, picture, video) {
+    & :is(iframe, img, picture, video, ui-map) {
       block-size: 100%;
       border: 0;
       inline-size: 100%;
@@ -10445,7 +10568,7 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
     inline-size: auto;
     overflow: hidden;
     scroll-snap-type: none;
-    & > :is(iframe, img, picture, video) {
+    & > :is(iframe, img, picture, video, ui-map) {
       flex: initial;
       inset: 0;
       position: absolute;
@@ -10579,7 +10702,7 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
     background: #0000;
   }
   @container style(--_shp-clip: 1) {
-    ui-media :is(iframe, img, picture, video) {
+    ui-media :is(iframe, img, picture, video, ui-map) {
       clip-path: var(--ui-media-shape, none);
     }
   }
@@ -11227,13 +11350,13 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
     scroll-snap-type: x mandatory;
     scrollbar-width: thin;
   }
-  ui-media:where([media*=nav], :is(ui-card, ui-reveal)[media*=nav] *) > :not(ui-beacon, ui-chip, ui-lightbox, ui-marquee, ui-play, ui-save, ui-sticker) {
+  ui-media:where([media*=nav], :is(ui-card, ui-reveal)[media*=nav] *) > :not(ui-beacon, ui-chip, ui-lightbox, ui-map, ui-marquee, ui-play, ui-save, ui-sticker) {
     block-size: 100%;
     flex: 0 0 100%;
     inline-size: 100%;
     scroll-snap-align: start;
   }
-  ui-media:where([media*=nav], :is(ui-card, ui-reveal)[media*=nav] *) > :is(iframe, img, picture, video) {
+  ui-media:where([media*=nav], :is(ui-card, ui-reveal)[media*=nav] *) > :is(iframe, img, picture, video, ui-map) {
     inset: auto;
     position: static;
   }
@@ -11245,13 +11368,13 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
       scroll-snap-align: start;
     }
   }
-  :where(ui-card, ui-reveal):where([media*="nav(blw)"], [media*="mrk(blw)"], [media*="arw(blw)"], [media*="nav(abv)"], [media*="mrk(abv)"], [media*="arw(abv)"]) ui-media > :not(ui-beacon, ui-chip, ui-lightbox, ui-marquee, ui-play, ui-save, ui-sticker, ui-carousel-controls),
-  :where(ui-media, lay-out[overflow]):where([media*="nav(blw)"], [media*="mrk(blw)"], [media*="arw(blw)"], [media*="nav(abv)"], [media*="mrk(abv)"], [media*="arw(abv)"]) > :not(ui-beacon, ui-chip, ui-lightbox, ui-marquee, ui-play, ui-save, ui-sticker, ui-carousel-controls) {
+  :where(ui-card, ui-reveal):where([media*="nav(blw)"], [media*="mrk(blw)"], [media*="arw(blw)"], [media*="nav(abv)"], [media*="mrk(abv)"], [media*="arw(abv)"]) ui-media > :not(ui-beacon, ui-chip, ui-lightbox, ui-map, ui-marquee, ui-play, ui-save, ui-sticker, ui-carousel-controls),
+  :where(ui-media, lay-out[overflow]):where([media*="nav(blw)"], [media*="mrk(blw)"], [media*="arw(blw)"], [media*="nav(abv)"], [media*="mrk(abv)"], [media*="arw(abv)"]) > :not(ui-beacon, ui-chip, ui-lightbox, ui-map, ui-marquee, ui-play, ui-save, ui-sticker, ui-carousel-controls) {
     align-self: stretch;
     block-size: auto;
   }
-  :where(ui-card, ui-reveal):where([media*="nav(blw)"], [media*="mrk(blw)"], [media*="arw(blw)"], [media*="nav(abv)"], [media*="mrk(abv)"], [media*="arw(abv)"]) ui-media > :is(iframe, img, picture, video, ui-content),
-  ui-media:where([media*="nav(blw)"], [media*="mrk(blw)"], [media*="arw(blw)"], [media*="nav(abv)"], [media*="mrk(abv)"], [media*="arw(abv)"]) > :is(iframe, img, picture, video, ui-content) {
+  :where(ui-card, ui-reveal):where([media*="nav(blw)"], [media*="mrk(blw)"], [media*="arw(blw)"], [media*="nav(abv)"], [media*="mrk(abv)"], [media*="arw(abv)"]) ui-media > :is(iframe, img, picture, video, ui-map, ui-content),
+  ui-media:where([media*="nav(blw)"], [media*="mrk(blw)"], [media*="arw(blw)"], [media*="nav(abv)"], [media*="mrk(abv)"], [media*="arw(abv)"]) > :is(iframe, img, picture, video, ui-map, ui-content) {
     border-radius: var(--ui-media-radius, 0);
   }
   :where(ui-card, ui-reveal):has(ui-media:focus-visible:not(:where(ui-media *))),
@@ -11384,7 +11507,7 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
   ui-media:where([media*="mrk(tmb)"], :is(ui-card, ui-reveal)[media*="mrk(tmb)"] *) {
     box-sizing: content-box;
   }
-  ui-media:where([media*="mrk(tmb)"]:is([media*="nav(blw)"], [media*="mrk(blw)"], [media*="nav(abv)"], [media*="mrk(abv)"], [media*="mrk(rail)"]), :is(ui-card, ui-reveal)[media*="mrk(tmb)"]:is([media*="nav(blw)"], [media*="mrk(blw)"], [media*="nav(abv)"], [media*="mrk(abv)"], [media*="mrk(rail)"]) *) > :is(iframe, img, picture, video) {
+  ui-media:where([media*="mrk(tmb)"]:is([media*="nav(blw)"], [media*="mrk(blw)"], [media*="nav(abv)"], [media*="mrk(abv)"], [media*="mrk(rail)"]), :is(ui-card, ui-reveal)[media*="mrk(tmb)"]:is([media*="nav(blw)"], [media*="mrk(blw)"], [media*="nav(abv)"], [media*="mrk(abv)"], [media*="mrk(rail)"]) *) > :is(iframe, img, picture, video, ui-map) {
     border-radius: var(--ui-media-radius, 0);
   }
   ui-media:where([media*="axis(y)"][media*="mrk(rail)"], :is(ui-card, ui-reveal)[media*="axis(y)"][media*="mrk(rail)"] *) {
@@ -12019,7 +12142,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
   }
   :where(ui-content) {
     & [data-part=eyebrow] {
-      color: var(--ui-content-eyebrow-ink, var(--color-accent));
+      color: var(--ui-content-eyebrow-ink, var(--color-accent-ink));
       font-size: var(--ui-content-eyebrow-fs, calc(var(--ui-content-fs, var(--ui-content-fs-md)) * 0.78));
       font-weight: var(--ui-content-eyebrow-weight, var(--font-weight-medium, 500));
       letter-spacing: var(--tracking-wide, 0.05em);
@@ -12204,7 +12327,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
         font-weight: var(--font-weight-normal, 400);
       }
       & small {
-        color: var(--ui-content-price-discount, var(--color-accent));
+        color: var(--ui-content-price-discount, var(--color-accent-ink));
         font-size: 0.7em;
       }
       & ui-chip {
@@ -12307,7 +12430,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
           text-decoration: underline;
         }
         &:focus-visible {
-          color: var(--ui-content-links-focus-ink, var(--color-accent));
+          color: var(--ui-content-links-focus-ink, var(--color-accent-ink));
           outline: 0;
         }
         @media (forced-colors: active) {
@@ -12742,7 +12865,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     --ui-content-eyebrow-ink: var(--color-text);
   }
   :where([content~="eb(accent)"]) {
-    --ui-content-eyebrow-ink: var(--color-accent);
+    --ui-content-eyebrow-ink: var(--color-accent-ink);
   }
   :where([content~="eb(inv)"]) {
     --ui-content-eyebrow-ink: var(--ui-content-inv);
@@ -12814,7 +12937,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     --ui-content-body-ink: var(--color-text);
   }
   :where([content~="tx(accent)"]) {
-    --ui-content-body-ink: var(--color-accent);
+    --ui-content-body-ink: var(--color-accent-ink);
   }
   :where([content~="tx(inv)"]) {
     --ui-content-body-ink: var(--ui-content-inv);
@@ -12883,7 +13006,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     --ui-content-meta-ink: var(--color-text);
   }
   :where([content~="mt(accent)"]) {
-    --ui-content-meta-ink: var(--color-accent);
+    --ui-content-meta-ink: var(--color-accent-ink);
   }
   :where([content~="mt(inv)"]) {
     --ui-content-meta-ink: var(--ui-content-inv);
@@ -12952,7 +13075,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     --ui-content-heading-ink: var(--color-text);
   }
   :where([content~="hl(accent)"]) {
-    --ui-content-heading-ink: var(--color-accent);
+    --ui-content-heading-ink: var(--color-accent-ink);
   }
   :where([content~="hl(inv)"]) {
     --ui-content-heading-ink: var(--ui-content-inv);

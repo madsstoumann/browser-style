@@ -11,23 +11,23 @@
 > demo pages: [cards.html](../demo/cards.html) · [media.html](../demo/media.html) ·
 > [content.html](../demo/content.html).
 
-**Four counts, four different quantities — do not conflate them.** The page carries **58
-cards** with **52 distinct root itemtypes**; a structured-data validator reports **61 items**;
-the renderer knows **51 `schemaType` keys**.
+**Four counts, four different quantities — do not conflate them.** The page carries **60
+cards** with **52 distinct root itemtypes**; a structured-data validator reports **63 items**;
+the renderer knows **52 `schemaType` keys**.
 
 | Count | What it measures | Reproduce it |
 |---|---|---|
-| **58** | card hosts on the page — `<ui-card>` plus the one `<ui-reveal>` | `grep -oE '<ui-(card\|reveal)[^>]*itemtype="[^"]*"' ui/card/demo/schema.html \| grep -vc 'itemprop='` |
-| **61** | top-level microdata items — **what schema.org's validator reports** | `grep -o '<[a-z-]*[^<>]*itemscope[^<>]*>' ui/card/demo/schema.html \| grep -v 'itemprop=' \| grep -c 'itemtype='` |
+| **60** | card hosts on the page — `<ui-card>` plus the one `<ui-reveal>` | `grep -oE '<ui-(card\|reveal)[^>]*itemtype="[^"]*"' ui/card/demo/schema.html \| grep -vc 'itemprop='` |
+| **63** | top-level microdata items — **what schema.org's validator reports** | `grep -o '<[a-z-]*[^<>]*itemscope[^<>]*>' ui/card/demo/schema.html \| grep -v 'itemprop=' \| grep -c 'itemtype='` |
 | **52** | distinct root `itemtype` values | `grep -oE '<ui-(card\|reveal)[^>]*itemtype="[^"]*"' ui/card/demo/schema.html \| grep -v 'itemprop=' \| grep -o 'itemtype="[^"]*"' \| sort -u \| wc -l` |
-| **51** | `schemaType` keys `render.js` supports (`SCHEMA_TYPES`) | `node -e "import('./ui/card/render.js').then(m => console.log(Object.keys(m.SCHEMA_TYPES).length))"` |
+| **52** | `schemaType` keys `render.js` supports (`SCHEMA_TYPES`) | `node -e "import('./ui/card/render.js').then(m => console.log(Object.keys(m.SCHEMA_TYPES).length))"` |
 
 The flashcard Quiz is the page's one **`<ui-reveal>`** host rather than a `<ui-card>` — a
 question on the front face, its answer on the flipside, which is what a flashcard actually is.
 It counts identically in every column below; only the element differs.
 
 **Items ≠ cards.** A validator counts every *top-level* item — an `itemscope` with no `itemprop`
-of its own — so it sees the 58 cards plus **three items that are not cards**: the standalone
+of its own — so it sees the 60 cards plus **three items that are not cards**: the standalone
 `EmployerAggregateRating` on the job card, the page-level `WebSite` (site identity plus the
 sitelinks-searchbox `potentialAction`, which describes the *site*, not any card on it), and the
 page-trail `BreadcrumbList` on the breadcrumb `<ol>` — 61. Nested scopes (`author` → `Person`,
@@ -45,15 +45,15 @@ nested property scope (`AggregateRating`, a byline `Person`, `Organization`, `Co
 `Occupation`, …) is not an itemtype *on a card host*.
 
 **Cards ≠ types.** `Quiz` runs three cards, and `Review`, `EventSeries`, `Place` and `Person`
-run two each — so 58 − 2 − 4 = 52. The `grep -v itemprop=` in those commands is load-bearing: the
+run two each, and ItemList three (the comparison card plus the two collection cards) — so 60 − 2 − 2 − 4 = 52. The `grep -v itemprop=` in those commands is load-bearing: the
 collage `ProductGroup` nests a `<ui-card>` per variant, and a nested card is a **property** of
 its parent item, not a card of its own. Note the second `grep` in that command: **reduce to the `itemtype=`
 substring before `sort -u`**. Uniquing the whole `<ui-card …>` match counts one type twice
 whenever its two cards differ in any other attribute (an `id`, a `style`) — that is how this
 count once read 50.
 
-**Types ≠ renderer keys.** The 52 is the **50** distinct base itemtypes behind the 51
-`schemaType` keys (`profile` and `artist` both resolve to `Person`), minus `LocalBusiness` (never
+**Types ≠ renderer keys.** The 52 is the **50** distinct base itemtypes behind the 52
+`schemaType` keys (`profile` and `artist` both resolve to `Person`, `comparison` and `places` both to `ItemList`), minus `LocalBusiness` (never
 shown plain — the business card is always sharpened), plus the three sharpened [subtypes](#subtypes)
 `ProductGroup`, `CafeOrCoffeeShop` and `DiscussionForumPosting`, which `details.subtype` produces
 with no key of their own. Three further types appear as **top-level items that are not cards**
@@ -77,7 +77,7 @@ type — a demo affordance, emitted by `render.js` only when `renderCard` gets `
 
 ## Page structure — eleven sections, and where the heading level comes from
 
-The page groups its 58 cards into **eleven sections by what the thing *is*** — Editorial &
+The page groups its 60 cards into **eleven sections by what the thing *is*** — Editorial &
 journalism · Commerce & offers · Screen · Audio · Page & picture · Learning & reference ·
 People, work & history · Food & drink · Places, events & property · Community & support ·
 Data, health & operations. Each section is a bare `<h2>` followed by its own
@@ -627,6 +627,64 @@ Overlay over a destination shot; address + geo, amenities as `list`, hours in th
 The same type as [Location](#location--place), with the **map** as the media instead of a photo: a `{ "mediaType": "map" }` item whose coordinates come from `details.geo` — the very object that emits the card's `GeoCoordinates` scope, so the drawn point and the machine-readable one cannot drift. OpenStreetMap is the only keyless provider and is the default; the frame is a plain `<iframe>` because `media.css` already sizes one like an `<img>`. Full field list, the provider table and the coordinate-validation rule: [media.md § Map](./media.md#map--the-frame-as-an-embedded-map).
 
 The property is **`hasMap`** — valid on `Place` and everything below it (`LocalBusiness` included), so it is gated to the `business` and `location` types; a map on any other type renders unmarked. The one caller that overrides the gate is the real-estate detail page, whose map sits inside a `mainEntity` → `Apartment` scope that *does* descend from `Place`; `mapFrame()` takes `hasMap` as an explicit argument for it. See [Real estate](#real-estate--realestatelisting). It rides the `<iframe>` itself, because HTML takes a frame's microdata value from its `src`. The "Open in Maps" action link stays unmarked so `hasMap` is declared exactly once — see [One property, one value](#one-property-one-value).
+
+### Places — `ItemList` (two cards)
+
+A **collection** of places on one clustered map — `<ui-map>` from
+[`@browser.style/map`](../../map/readme.md), not the single-point `<iframe>`. The page runs two:
+`#schema-places-offices` (studios worldwide) and `#schema-places-homes` (homes for sale in one
+city). Both are keyed by `id` in `schema.compare.js`, because the page's *bare* `ItemList` is the
+comparison card and the bare form matches only an id-less card.
+
+**The list is the map's data source.** `<ui-map>` reads `latitude`/`longitude`/`name`/`url`
+straight off these `ListItem`s, so the drawn pin and the machine-readable point cannot drift —
+the collection-scale version of the contract `mediaType: "map"` already has with `details.geo`.
+Nothing is duplicated into a JSON payload or per-pin attributes.
+
+**The root is an Intangible, and that constrains almost everything.** `ItemList` owns
+`numberOfItems`, `itemListOrder` and `itemListElement`, and inherits `name`/`description`/`url`
+from `Thing`. That is the whole vocabulary. Out of domain on it, verified against the schema.org
+30.0 dump: `keywords`, `about`, `spatialCoverage`, `contentLocation`, `areaServed`, `location`,
+`geo`, `hasMap`, `datePublished`, `author`. Consequences:
+
+- **`TAGS_PROP.places = null`** — tags still render, unmarked. Re-adding `keywords` here would be
+  invalid, the same call as `comparison`.
+- **`places` is deliberately absent from `HAS_MAP_TYPES`.** `hasMap` is a `Place` property, and
+  the frame's enclosing scope is the list. It moves **down** to each item's own link instead —
+  which is also why the "Open in Maps" CTA stays unmarked, exactly as on the single map card.
+- **There is no property for the region.** "6 studios · 3 continents" is `details.regionDisplay`,
+  visible text only; there is nothing valid to mark it up as.
+
+**Two shapes, one type, chosen by `details.kind` — not `subtype`.** `details.subtype` feeds
+`resolveItemtype()` and sharpens the **root**, and the root is an `ItemList` in both shapes; what
+varies is the **item**. `kind` is allowlisted all the same, because the value it selects lands in
+an `itemtype`.
+
+| kind | item itemtype | why |
+|---|---|---|
+| `business` | `LocalBusiness` + its allowlisted subtypes | every member *is* a `LocalBusiness`, so the flat `openingHours` string is uniformly in domain — one gate, no per-member test. A bare `Place` item would need `hoursPart(…, { flat: false })`, which is why the allowlist stops here |
+| `residence` | `RealEstateListing` wrapping the Accommodation in `mainEntity` | see below |
+
+**Why a listing wraps the home instead of being it.** `offers` is out of domain on `Apartment`,
+on `Place` **and** on `ListItem`. A priced home has nowhere else to state its price, so the item
+is a `RealEstateListing` — a `WebPage`, hence a `CreativeWork`, which owns `offers` — and the
+`Apartment`/`House` hangs off `mainEntity`, carrying `geo`, `hasMap`, `floorSize`,
+`numberOfBedrooms`, `numberOfRooms` and `yearBuilt`. That is the same shape
+[§ Real estate](#real-estate--realestatelisting) already uses, with the same spellings, so a
+portal card and the detail page it links to cannot spell one home two ways.
+
+The item allowlist reuses `RESIDENCE_TYPES` **verbatim**. It excludes `Residence` and
+`ApartmentComplex` on purpose: both descend from `Place`, not `Accommodation`, so `floorSize`,
+`numberOfRooms`, `numberOfBedrooms`, `numberOfBathroomsTotal` and `yearBuilt` are all out of
+domain on them — a listing typed `Residence` could state none of its own facts.
+
+**Complement, not competitor, to `organization`.** That type already emits branch offices as
+`department` → `LocalBusiness`. It is the right answer when the card's subject is *the company*;
+`places` is for when the subject is *the list*. Do not merge them.
+
+**Google rich result: none**, and that is expected — the host carousel takes `ItemList` only
+alongside Course list, Movie, Recipe or Restaurant. See
+[google-rich-results.md](./google-rich-results.md).
 
 ### Membership — `Offer`
 
@@ -1357,7 +1415,7 @@ main > lay-out > ui-card,
 main > lay-out > ui-reveal { content-visibility: auto; contain-intrinsic-size: auto 567px; }
 ```
 
-The page is ~58 cards / ~2,400 elements, and its top PageSpeed diagnostic was Style &
+The page is ~60 cards / ~2,600 elements, and its top PageSpeed diagnostic was Style &
 Layout — 1,670 ms of a 2.4 s main thread (not script: Script Evaluation was 22 ms there,
 3 ms locally). Measured at an iPhone viewport, before → after: layout 550 → 132 ms, style
 recalc 230 → 77 ms, layout objects 2,945 → 459, CLS unchanged at 0. `auto` remembers each

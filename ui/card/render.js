@@ -57,6 +57,7 @@ export const SCHEMA_TYPES = {
 	comparison: 'ItemList',
 	contact: 'ContactPoint',
 	location: 'Place',
+	places: 'ItemList',
 	membership: 'Offer',
 	social: 'SocialMediaPosting',
 	software: 'SoftwareApplication',
@@ -214,7 +215,7 @@ const ROOT_VIDEO_TYPES = new Set(['video']);
 /* Person has no keywords property. Intangible-rooted types (JobPosting, Offer,
    Reservation, ContactPoint, ItemList, Observation, MemberProgram, Service) have
    none either — null = visible chips only, no itemprop */
-const TAGS_PROP = { profile: 'knowsAbout', artist: 'knowsAbout', job: null, membership: null, booking: null, contact: null, comparison: null, statistic: null, loyalty: null, service: null };
+const TAGS_PROP = { profile: 'knowsAbout', artist: 'knowsAbout', job: null, membership: null, booking: null, contact: null, comparison: null, places: null, statistic: null, loyalty: null, service: null };
 /* byline itemprop — a quote's people are its creators, everyone else's are authors */
 const bylineProp = (type) => type === 'quote' ? 'creator' : 'author';
 
@@ -519,6 +520,24 @@ const mapFrame = (item, fields, type, hasMap = HAS_MAP_TYPES.has(type)) => {
 	if (!src) return '';
 	const title = item.alt || `Map of ${plain(fields.headline) || 'this location'}`;
 	return `<iframe${attrs({ src, title, loading: 'lazy', itemprop: hasMap ? 'hasMap' : null })}></iframe>`;
+};
+
+/* The COLLECTION frame — <ui-map> (@browser.style/map), not an iframe: clustering needs
+   tile fetching, a spatial index and hit-testing that no src can express. It takes NO
+   coordinates per point: the element reads them from the microdata this card's text column
+   already carries, so pins and machine data cannot drift. Its point source is resolved as
+   the nearest ui-card/ui-reveal host, which is why no id is minted here.
+   The child <iframe> is the no-JS fallback, centred on details.center; ui-map.js removes it
+   on upgrade. NEITHER carries itemprop="hasMap" — that is a Place property and the enclosing
+   scope is an ItemList. Node-safe: string building only. Docs: docs/media.md § Places */
+const placesFrame = (item, fields) => {
+	const center = mapCoords(fields.details?.center, item);
+	const title = item.alt || `Map of ${plain(fields.headline) || 'these places'}`;
+	const fallback = center ? `<iframe${attrs({ src: osmEmbed(center), title, loading: 'lazy' })}></iframe>` : '';
+	return `<ui-map${attrs({
+		map: item.map || 'tiles(auto) cluster fit',
+		lat: center?.lat, lon: center?.lon
+	})}>${fallback}</ui-map>`;
 };
 
 /* eligibleDuration is QuantitativeValue-typed — expand ISO P<n><unit>, not Duration text */
@@ -950,6 +969,11 @@ const buildMedia = (fields, type, tokens, preset = {}, frameAttrs = {}, cardId =
 			/* the frame IS the map — coordinates come from details.geo, the same object
 			   geoPart() emits, so the two can never disagree. Docs: docs/media.md § Map */
 			frames += mapFrame(item, fields, type);
+			continue;
+		}
+		if (item.mediaType === 'places') {
+			/* the frame is a CLUSTERED map of this card's whole itemListElement set */
+			frames += placesFrame(item, fields);
 			continue;
 		}
 		if (item.mediaType === 'audio') {
@@ -1541,6 +1565,107 @@ export const vacationrentalSections = (d = {}, fields = {}) => {
 	};
 };
 
+/* ── a COLLECTION of places on one clustered map ──────────────────────────────────────
+   The root is an ItemList — an INTANGIBLE. It owns numberOfItems / itemListOrder /
+   itemListElement and inherits name / description / url from Thing, and that is the whole
+   vocabulary: keywords, about, spatialCoverage, areaServed, geo and hasMap are ALL out of
+   domain on it (hence TAGS_PROP.places = null, and `places` is deliberately absent from
+   HAS_MAP_TYPES). Every Place property lives on the ITEM.
+
+   Two shapes, one type, chosen by `details.kind`. Deliberately NOT `subtype`: that sharpens
+   the ROOT itemtype through resolveItemtype(), and the root is an ItemList in both shapes —
+   what varies is the ITEM type. Allowlisted all the same, because it lands in an itemtype.
+     business   items are LocalBusiness or one of its allowlisted subtypes. Every member IS
+                a LocalBusiness, so the flat `openingHours` string is uniformly in domain —
+                one gate, no per-member test. (A bare Place item would need
+                hoursPart(…, {flat:false}), which is why the allowlist stops at LocalBusiness.)
+     residence  items are RealEstateListing wrapping an Accommodation in `mainEntity`. The
+                wrapper is not decoration: `offers` is out of domain on Apartment, on Place
+                AND on ListItem, so a priced home has nowhere else to state its price.
+                RealEstateListing is a WebPage, hence a CreativeWork, which owns `offers`.
+   This complements `organization`, which says "this company, and here are its branches";
+   `places` says "these N places, on a map". Docs: docs/schema.md § Places ── */
+const PLACE_KINDS = new Set(['business', 'residence']);
+/* RESIDENCE_TYPES is reused verbatim — it already excludes Residence and ApartmentComplex,
+   which descend from Place rather than Accommodation and can carry none of the facts below */
+const PLACE_ITEM_TYPES = {
+	business: new Set(['LocalBusiness', ...SUBTYPES.business]),
+	residence: RESIDENCE_TYPES
+};
+const PLACE_FALLBACK = { business: 'LocalBusiness', residence: 'Accommodation' };
+/* the complete schema.org ItemListOrderType member set */
+const ITEM_LIST_ORDERS = new Set(['ItemListOrderAscending', 'ItemListOrderDescending', 'ItemListUnordered']);
+
+/* the per-place map link, and the ONE place hasMap is declared. On the single-place card
+   hasMap rides the <iframe> and the CTA stays bare; here the frame's enclosing scope is an
+   ItemList, which is not a Place, so the property moves DOWN onto the item's own link. */
+const placeMapLink = (geo, label = 'Map') => {
+	const link = mapUrl(geo);
+	return link
+		? `<a itemprop="hasMap" href="${esc(link)}"${/^geo:/.test(link) ? '' : ' target="_blank" rel="noopener"'}>${esc(label)}</a>`
+		: '';
+};
+
+/* the item's name, linked when it has a url — `url` is a Thing property, valid on both shapes */
+const placeName = (place) => {
+	const name = `<strong itemprop="name">${esc(place.name)}</strong>`;
+	return place.url ? `<a itemprop="url" href="${esc(place.url)}">${name}</a>` : name;
+};
+
+/* one office row — LocalBusiness and below, so the flat openingHours string is in domain */
+const officeItem = (place, type) => {
+	const contacts = [
+		place.telephone ? `<a itemprop="telephone" href="tel:${esc(String(place.telephone).replace(/\s/g, ''))}">${esc(place.telephone)}</a>` : '',
+		place.email ? `${meta('email', place.email)}<a href="mailto:${esc(place.email)}">${esc(place.email)}</a>` : '',
+		placeMapLink(place.geo)
+	].filter(Boolean);
+	return `<div${scope('item', type)}>${placeName(place)}${meta('branchCode', place.branchCode)}`
+		/* the SAME emitter the single-place card uses — <ui-map> reads these very metas */
+		+ geoPart(place.geo)
+		+ addressPart(place.address)
+		+ (contacts.length ? `<p data-part="meta">${contacts.join(' · ')}</p>` : '')
+		+ hoursPart(place.openingHours)
+		+ '</div>';
+};
+
+/* one listing row — the facts use the same spellings as realestateSections(), so a portal
+   card and the detail page it links to cannot spell one home two ways */
+const listingItem = (place, type) => {
+	const numbered = (prop, value, text) => value == null || value === '' ? null : `${meta(prop, value)}${text}`;
+	const plural = (n, word) => `${num(n)} ${word}${n === 1 ? '' : 's'}`;
+	const floorSize = place.floorSize == null ? null
+		: `<span${scope('floorSize', 'QuantitativeValue')}>${meta('unitCode', place.floorSizeUnit || 'MTK')}${meta('value', place.floorSize)}${num(place.floorSize)} ${esc(place.floorSizeLabel || 'm²')}</span>`;
+	const facts = [
+		floorSize,
+		numbered('numberOfBedrooms', place.numberOfBedrooms, plural(place.numberOfBedrooms, 'bedroom')),
+		numbered('numberOfRooms', place.numberOfRooms, plural(place.numberOfRooms, 'room')),
+		/* esc(), not num(): a year is not a quantity — num() would print "1,932" */
+		numbered('yearBuilt', place.yearBuilt, `built ${esc(place.yearBuilt)}`)
+	].filter(Boolean);
+	const price = place.price
+		? `<p data-part="price"${scope('offers', 'Offer')}>${meta('priceCurrency', place.price.currency)}${meta('availability', SCHEMA + 'InStock')}${priceValue(place.price.currency, place.price.amount)}</p>`
+		: '';
+	/* geo and hasMap are Place properties — invalid on the listing (a WebPage), valid inside
+	   the residence scope, so they sit in mainEntity. Docs: docs/schema.md § Real estate */
+	const map = placeMapLink(place.geo);
+	return `<div${scope('item', 'RealEstateListing')}>${placeName(place)}${meta('datePosted', place.datePosted)}${price}`
+		+ `<div${scope('mainEntity', type)}>`
+		+ geoPart(place.geo)
+		+ addressPart(place.address)
+		+ (facts.length ? `<p data-part="meta">${facts.join(' · ')}</p>` : '')
+		+ (map ? `<p data-part="meta">${map}</p>` : '')
+		+ '</div></div>';
+};
+
+/* one <li> — the ListItem owns only position + item; everything else hangs off `item` */
+const placeRow = (place, kind, index) => {
+	const wanted = place.type;
+	const type = PLACE_ITEM_TYPES[kind].has(wanted) ? wanted : PLACE_FALLBACK[kind];
+	return `<li${scope('itemListElement', 'ListItem')}>${meta('position', index + 1)}`
+		+ (kind === 'residence' ? listingItem(place, type) : officeItem(place, type))
+		+ '</li>';
+};
+
 const DETAILS = {
 	product(d, fields, parts, itemtype) {
 		/* PDP order: rating under the title, then price, then stock state */
@@ -1869,6 +1994,27 @@ const DETAILS = {
 		if (d.contact) html += `<p data-part="meta"><a itemprop="telephone" href="tel:${esc(String(d.contact).replace(/\s/g, ''))}">${esc(d.contact)}</a></p>`;
 		/* the "Open in Maps" CTA is a DETAILS_ACTIONS entry, not emitted here: a CTA row
 		   closes the text column, so it has to land after buildTail's tags and links */
+		return html;
+	},
+
+	/* A collection of places on ONE clustered map. This list IS the map's data source:
+	   <ui-map> reads latitude/longitude/name/url straight off these ListItems, so the pins
+	   and the microdata cannot drift — the collection-scale version of the contract
+	   mediaType:"map" already has with details.geo. Docs: docs/schema.md § Places */
+	places(d, fields, parts = {}, itemtype = null, owned = NO_PROPS) {
+		const kind = PLACE_KINDS.has(d.kind) ? d.kind : 'business';
+		const items = d.items || [];
+		let html = meta('numberOfItems', items.length || null)
+			+ (ITEM_LIST_ORDERS.has(d.order) ? meta('itemListOrder', SCHEMA + d.order) : '')
+			/* the envelope summary owns `description` whenever it is filled — this is the
+			   fallback only. Docs: docs/schema.md § One property, one value */
+			+ (owned.has('description') ? '' : meta('description', d.description));
+		/* the region is VISIBLE TEXT ONLY: about / spatialCoverage / areaServed are all out
+		   of domain on an ItemList, so there is no property to hang it on */
+		if (d.regionDisplay) html += `<p data-part="meta">${esc(d.regionDisplay)}</p>`;
+		/* ordered by default — every row already carries a `position`, so an <ol>'s markers
+		   tell the truth; `details.ordered: false` opts out */
+		html += scopedList(items.map((place, index) => placeRow(place, kind, index)), d.ordered !== false);
 		return html;
 	},
 
@@ -2479,7 +2625,10 @@ const SUBHEADLINE_SLOT = {
    A preset's byline: "lede" opts any type in — the full-article shape. */
 const BYLINE_EARLY = new Set(['book']);
 
-const DETAILS_ACTIONS = { location: (d) => mapCta(d.geo) };
+/* For `places` the CTA points at details.center — the same point <ui-map> opens on — and
+   stays UNMARKED, which here is required rather than merely tidy: hasMap is out of
+   domain on an ItemList, so the property lives per item (placeMapLink). */
+const DETAILS_ACTIONS = { location: (d) => mapCta(d.geo), places: (d) => mapCta(d.center) };
 
 /* full content column for a card (envelope + details + trailers) */
 /* `itemtype` is the bare schema.org name ACTUALLY WRITTEN on the enclosing scope —
