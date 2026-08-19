@@ -5,7 +5,7 @@
 > their rationale lives in git history (`git log --diff-filter=D -- docs/plans`).
 > Settled decisions of record are summarised in `ui/card/AGENTS.md`.
 >
-> Items 1–7 came from the 2026-07-26 architecture ledger; 8–12 were added as they
+> Items 1–7 came from the 2026-07-26 architecture ledger; 8–12 and 30 were added as they
 > surfaced. **Items 13–29 (2026-08-19) absorb what was still live from the deleted
 > plan docs** — the 2026-08-15 consistency audit, the 2026-08-16 schema-card-sections
 > note and the 2026-08-10 feature-gap ledger. Every absorbed finding was re-verified
@@ -870,12 +870,20 @@ Lighthouse accessibility 100 as the demo-page floor in the `perf-pass` definitio
    green **3.17**, accent **3.74** — already under 4.5; the proposed lighter arms would
    have taken them to 3.40 / 2.41 / 1.87, and blue from a passing 4.80 to **2.80**.
 
-   `--color-warning` proves it is structural, not a tuning miss: as pale-chip ink on white
+   `--color-warning` proved it is structural, not a tuning miss: as pale-chip ink on white
    it needs L ≤ 34% (4.76:1), as an orange plate under `--color-text` it needs L ≥ 42%
-   (4.61:1). **There is no overlap at any lightness.** Live on `demo/schema.html`, a
-   `theme="pale orange"` tag chip measures **2.03**. The old override comment claimed
-   "darkening a hue fixes pale ink + white-on-solid together" — true for the four hues
-   whose plates use white ink, false for orange, whose plate uses dark ink.
+   (4.61:1) — **no overlap at any lightness**, and a `theme="pale orange"` tag chip
+   measured **1.76**. **DONE 2026-08-19 for the ink half.** The two roles no longer share a
+   value: `pale` (and a transparent-fill `border`) read `--_theme-hue-ink` in
+   `ui/base/theme.css` — the hue with its OKLCH *lightness* clamped to the readable side of
+   the scheme, `min(l, 0.45)` light / `max(l, 0.80)` dark — so the hue token itself is free
+   to stay tuned as a plate. Mirrored in `ui/chip/ui-chip.css` for the `media="chip(pale)"`
+   path (marked KEEP IN SYNC). Measured after, both schemes, all five hues: **5.28–9.71**
+   (was orange 1.76 light; red 4.24 / accent 4.18 / blue 3.74 dark).
+
+   **What that leaves is the PLATE ink only** — `--ui-theme-*-c`, the fixed white/dark ink
+   on a solid bundle chip. Measured on the dark arms: orange **1.63**, green **3.18**, accent
+   **3.74**, red **4.15** (blue 4.82 passes). The decision below is now scoped to that.
 
    **Decide one of:** (a) derive bundle ink with `contrast-color(var(--ui-theme-*-bg))` —
    the pattern `ui/base/tint.css` already uses, and `contrast-color()` is inside the
@@ -884,12 +892,20 @@ Lighthouse accessibility 100 as the demo-page floor in the `perf-pass` definitio
    plates below AA and document it. (a) is the recommendation. Until then the ink warning
    sits at `--ui-theme-*-bg` in `tokens.css`.
 
+   **DONE 2026-08-19 — accent as text on a dark plate.** A `theme="black dark"` card's
+   eyebrow measured **2.40** (and **3.46** on an ordinary card in dark mode) because
+   `--color-accent`'s dark arm is tuned as a *plate*, not as text. Rather than move it —
+   it also fills accent buttons, checkboxes, the range track and `theme="accent"` — the
+   roles were split: **`--color-accent-ink`** (`ui/base/tokens.css`) derives the same hue
+   with its lightness clamped per scheme, and the card's seven accent-as-text sites read it
+   (eyebrow default, `eb|tx|mt|hl(accent)`, price discount, link focus). Measured after:
+   **4.97** on the black plate, **6.21** light / **7.17** dark on an ordinary card. Accent
+   plates are byte-for-byte unchanged (button still 5.48).
+
    **Also still open:** the *muted-compounding* fix — `--ui-content-muted` is 65% and
    `dateline` re-applies it inside an already-muted `byline` (0.65² ≈ 0.42).
    `demo/schema.html` still carries an 85% page override; the real fix is stopping the
-   double application in `ui/card/content.css`. And accent's **dark arm as text on a dark
-   plate** measures **2.40** live (a `theme="black dark"` card's eyebrow) — the same
-   conflict seen from the text side.
+   double application in `ui/card/content.css`.
 2. **`prefers-reduced-motion` is policy, not verified.** The arms have never been audited
    across the animation engines (`ui/base/animate.css`, `stagger.css`, the beacon/marquee
    always-running set). Related: item 5's RTL stagger failure, where a reduced-motion
@@ -898,3 +914,37 @@ Lighthouse accessibility 100 as the demo-page floor in the `perf-pass` definitio
    pseudo-elements, so nothing has ever checked it (item 8).
 
 (2) and (3) are work, not decisions; (1) is a bug.
+
+---
+
+## 30. `schema.html` — the inline polyfill sits below the stylesheet, serialising CSS and parse
+
+**Where:** `ui/card/demo/schema.html` — `<link rel="stylesheet" href="/dist/demo.<hash>.min.css">`
+at line 13, the `<!-- polyfill:start/end -->` block at line 42.
+
+A parser-inserted **classic** `<script>` is blocked by every stylesheet that precedes it, and
+because such a script also blocks the parser, HTML parsing halts with it. The two phases that
+should overlap therefore run in series: the ~62 kB bundle downloads, *then* the 2,482-element
+body is parsed, *then* the page can paint — with the render-blocking
+`<link rel="expect" href="#schema-product-variants">` queued behind that parse. The preload
+scanner keeps scanning ahead the whole time, so subresource discovery is **not** affected;
+this is a DOM-construction cost only.
+
+**The fix is one move, not a rewrite:** relocate the `<!-- polyfill:start -->` … `<!-- polyfill:end -->`
+block above the stylesheet `<link>`. `scripts/inline-polyfill.js` rewrites *between* the
+markers and does not care where they sit, so nothing in the build changes. The polyfill's
+"must run before first paint" guarantee is not weakened by moving it earlier — it is
+strengthened. Its initial `u()` walk finds an empty body either way; the `MutationObserver`
+does the real work.
+
+**Why it is waiting: the magnitude is unknown.** Paint is gated on CSS regardless, so the
+saving is whatever the body parse costs once it is allowed to overlap the download — plausibly
+small, plausibly not on a document this size. Trace it before and after
+(`performance_start_trace`, then `LCPBreakdown` and `RenderBlocking`) rather than shipping it
+as an obvious win. If the delta is inside run-to-run noise, close this item and keep the rule
+as documentation only.
+
+The rule itself is recorded in `docs/performance.md` § JavaScript and the polyfill and in the
+`perf-pass` skill. `ui/card/demo/media.html` has a body-level inline classic script (line 201)
+that is technically subject to the same rule, but head CSS has resolved long before the parser
+reaches it — not worth touching.

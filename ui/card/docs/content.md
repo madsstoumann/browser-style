@@ -288,7 +288,7 @@ Every part belongs to one of **four logical groups**. A group family token write
 
 **Three disjoint arg vocabularies** (so whole-token matching can't confuse them):
 
-- **tone** (ink): `shr` `lgt` `med` `drk` `sld` `accent` `inv` — an opacity ramp of the current ink (`shr` 30% → `sld` 100% via `--ui-content-{shr,soft,muted,drk}`), plus `accent` (`--color-accent`) and `inv` (`#fff`, for overlays). Writes the group ink prop.
+- **tone** (ink): `shr` `lgt` `med` `drk` `sld` `accent` `inv` — an opacity ramp of the current ink (`shr` 30% → `sld` 100% via `--ui-content-{shr,soft,muted,drk}`), plus `accent` (`--color-accent-ink`) and `inv` (`#fff`, for overlays). Writes the group ink prop.
 - **size** (all four families + `scl()`): `sm` `md` `lg` `xl` (+ `2xl` `3xl` on `hl()`). `scl()` is the master step (body **and** headline, `sm`–`xl`); `hl()` sizes the **headline only** (`sm`–`3xl`) so a display title can decouple from readable body copy; `eb()`/`tx()`/`mt()` size their group off the body ramp. All sizes are **relational** — they shift with `scl()` (see *Relational scale*). `3xl` is the display step (`clamp(2.5rem, 1rem + 11cqi, 8rem)`, the token formerly called `poster`).
 - **weight**: `300`–`900` → `--font-weight-*` (`800` is a literal; there is no `--font-weight-extrabold`). Offered on `eb()`, `hl()`, `tx()`, `mt()`.
 
@@ -727,7 +727,7 @@ All tokens live in the `--ui-content-*` namespace. Override per instance, per ho
 
 | Token | Default | Part |
 |-------|---------|------|
-| `--ui-content-eyebrow-ink` | `var(--color-accent)` | eyebrow ink |
+| `--ui-content-eyebrow-ink` | `var(--color-accent-ink)` | eyebrow ink |
 | `--ui-content-eyebrow-fs` | `calc(var(--ui-content-fs) * 0.78)` | eyebrow size |
 | `--ui-content-eyebrow-weight` | `var(--font-weight-medium, 500)` | eyebrow weight |
 | `--ui-content-headline-weight` | `var(--font-weight-bold, 700)` | headline weight |

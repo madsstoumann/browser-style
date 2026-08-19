@@ -77,7 +77,7 @@ dark mode); the `light-dark()` pair only softens the shade for the opposite sche
 
 | Token | Effect |
 |---|---|
-| `pale` | Tinted surface (`color-mix` of the color with the page surface, 80%), ink = the color. Mirrors the light button variant — a pale/pastel version. |
+| `pale` | Tinted surface (`color-mix` of the color with the page surface, 80%), ink = the color **lightness-clamped for AA** (see [Hue as ink](#hue-as-ink)). Mirrors the light button variant — a pale/pastel version. |
 | `muted` | Fades the theme colors via `color-mix(… transparent 50%)`. Reduces the **theme's** alpha only — it does **not** use element `opacity`, so descendant content is not dimmed. |
 | `ink` | Applies the theme's paired **text colour**. Off by default — see [Ink](#ink). |
 | `light` | Sets `color-scheme: light` on the element. |
@@ -119,13 +119,29 @@ theme's paired text colour.
   `<ui-save>`) are colored objects where the paired ink is essential, so they show it
   regardless of `ink` — a `theme="red"` chip is still white-on-red.
 
+### Hue as ink
+
+`pale` and a transparent-fill `border` both put the **hue itself** on screen as text.
+The raw hue does not clear WCAG AA that way — `theme="orange pale"` measured **1.76**
+on its own pale plate in light mode, and `pale red` / `pale blue` / `pale accent` all
+failed in dark mode. Both therefore read `--_theme-hue-ink`: the same hue with its
+**OKLCH lightness clamped** to the readable side of the current `color-scheme`
+(`min(l, 0.45)` light, `max(l, 0.80)` dark), so chroma and hue survive and only
+lightness moves. Every bundle now measures 5.3–9.7 in both schemes.
+
+The card system does the same thing one level up with `--color-accent-ink` — the
+accent hue as text, clamped against the scheme — which is what a card eyebrow and the
+`eb|tx|mt|hl(accent)` tones read. Without it, an eyebrow on a `theme="black dark"`
+card measured **2.40**. The paired **plate** inks (`--ui-theme-*-c`, e.g. white on a
+solid red chip) are a separate, still-open case — see `docs/plans/open-items.md` § 29.
+
 ## Border
 
 `border` draws a solid border in the theme's **solid base colour** — always the pure
 color, unaffected by `pale`/`muted` — and makes the **fill transparent** unless
 `pale` re-establishes it. With a transparent fill the **ink also becomes the base
-colour** (like the border, matching the chip/button outline look). Sides and width
-are both spelled `border(<arg>)`.
+colour** (like the border, matching the chip/button outline look) — lightness-clamped
+for AA, see [Hue as ink](#hue-as-ink). Sides and width are both spelled `border(<arg>)`.
 
 | Token | Meaning |
 |---|---|

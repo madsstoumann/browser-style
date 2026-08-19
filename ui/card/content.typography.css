@@ -262,7 +262,7 @@
 	:where([content~="eb(med)"])    { --ui-content-eyebrow-ink: var(--ui-content-muted); }
 	:where([content~="eb(drk)"])    { --ui-content-eyebrow-ink: var(--ui-content-drk); }
 	:where([content~="eb(sld)"])    { --ui-content-eyebrow-ink: var(--color-text); }
-	:where([content~="eb(accent)"]) { --ui-content-eyebrow-ink: var(--color-accent); }
+	:where([content~="eb(accent)"]) { --ui-content-eyebrow-ink: var(--color-accent-ink); }
 	:where([content~="eb(inv)"])    { --ui-content-eyebrow-ink: var(--ui-content-inv); }
 	:where([content~="eb(300)"])    { --ui-content-eyebrow-weight: var(--font-weight-light); }
 	:where([content~="eb(400)"])    { --ui-content-eyebrow-weight: var(--font-weight-normal); }
@@ -297,7 +297,7 @@
 	:where([content~="tx(med)"])    { --ui-content-body-ink: var(--ui-content-muted); }
 	:where([content~="tx(drk)"])    { --ui-content-body-ink: var(--ui-content-drk); }
 	:where([content~="tx(sld)"])    { --ui-content-body-ink: var(--color-text); }
-	:where([content~="tx(accent)"]) { --ui-content-body-ink: var(--color-accent); }
+	:where([content~="tx(accent)"]) { --ui-content-body-ink: var(--color-accent-ink); }
 	:where([content~="tx(inv)"])    { --ui-content-body-ink: var(--ui-content-inv); }
 	:where([content~="tx(300)"])    { --ui-content-body-weight: var(--font-weight-light); }
 	:where([content~="tx(400)"])    { --ui-content-body-weight: var(--font-weight-normal); }
@@ -331,7 +331,7 @@
 	:where([content~="mt(med)"])    { --ui-content-meta-ink: var(--ui-content-muted); }
 	:where([content~="mt(drk)"])    { --ui-content-meta-ink: var(--ui-content-drk); }
 	:where([content~="mt(sld)"])    { --ui-content-meta-ink: var(--color-text); }
-	:where([content~="mt(accent)"]) { --ui-content-meta-ink: var(--color-accent); }
+	:where([content~="mt(accent)"]) { --ui-content-meta-ink: var(--color-accent-ink); }
 	:where([content~="mt(inv)"])    { --ui-content-meta-ink: var(--ui-content-inv); }
 	:where([content~="mt(300)"])    { --ui-content-meta-weight: var(--font-weight-light); }
 	:where([content~="mt(400)"])    { --ui-content-meta-weight: var(--font-weight-normal); }
@@ -365,7 +365,7 @@
 	:where([content~="hl(med)"])    { --ui-content-heading-ink: var(--ui-content-muted); }
 	:where([content~="hl(drk)"])    { --ui-content-heading-ink: var(--ui-content-drk); }
 	:where([content~="hl(sld)"])    { --ui-content-heading-ink: var(--color-text); }
-	:where([content~="hl(accent)"]) { --ui-content-heading-ink: var(--color-accent); }
+	:where([content~="hl(accent)"]) { --ui-content-heading-ink: var(--color-accent-ink); }
 	:where([content~="hl(inv)"])    { --ui-content-heading-ink: var(--ui-content-inv); }
 	:where([content~="hl(300)"])    { --ui-content-heading-weight: var(--font-weight-light); }
 	:where([content~="hl(400)"])    { --ui-content-heading-weight: var(--font-weight-normal); }

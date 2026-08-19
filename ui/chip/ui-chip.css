@@ -42,7 +42,14 @@
 		:where([media*="chip(black)"])  & { --_theme-base-bg: var(--ui-theme-black-bg);  --_theme-base-c: var(--ui-theme-black-c); }
 		:where([media*="chip(white)"])  & { --_theme-base-bg: var(--ui-theme-white-bg);  --_theme-base-c: var(--ui-theme-white-c); }
 		/* pale = light tint + hue ink · muted = translucent plate (hue-agnostic) */
-		:where([media*="chip(pale)"])  & { --_theme-bg: color-mix(in srgb, var(--_theme-base-bg), var(--color-surface) 80%); --_theme-c: var(--_theme-base-bg); }
+		/* KEEP IN SYNC with --_theme-hue-ink in base/theme.css — the raw hue fails AA on its own pale plate */
+		:where([media*="chip(pale)"])  & {
+			--_theme-bg: color-mix(in srgb, var(--_theme-base-bg), var(--color-surface) 80%);
+			--_theme-hue-ink: light-dark(
+				oklch(from var(--_theme-base-bg) min(l, 0.45) c h),
+				oklch(from var(--_theme-base-bg) max(l, 0.80) c h));
+			--_theme-c: var(--_theme-hue-ink);
+		}
 		:where([media*="chip(muted)"]) & { --_theme-bg: color-mix(in srgb, var(--_theme-base-bg), transparent 50%); --_theme-c: var(--_theme-base-c); }
 		/* consumer — media hue → accent/ink (no-hue tokens keep the defaults) */
 		:where([media*="chip("]) & { --ui-chip-accent: var(--_theme-bg, var(--_theme-base-bg, var(--color-button))); --ui-chip-c: var(--_theme-c, var(--_theme-base-c, var(--color-text))); }

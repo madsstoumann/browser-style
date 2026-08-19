@@ -25,8 +25,9 @@ Semantic color roles using `light-dark()` for automatic light/dark adaptation.
 
 ### Core palette
 
-- **Accent** (`--color-accent`): `light-dark(hsl(211, 100%, 50%), hsl(211, 60%, 50%))` — Primary actions, active states, focus rings, links
+- **Accent** (`--color-accent`): `light-dark(hsl(211, 100%, 38%), hsl(211, 60%, 50%))` — Primary actions, active states, focus rings, links. This is the **plate** arm: it fills accent buttons, checkboxes and `theme="accent"` surfaces
 - **Accent Dark** (`--color-accent-dark`): `light-dark(hsl(211, 80%, 30%), hsl(211, 30%, 20%))` — Darker accent for hover states
+- **Accent Ink** (`--color-accent-ink`): the accent hue **as text**, derived from `--color-accent` with its OKLCH lightness clamped to the readable side of the current `color-scheme` (`min(l, 0.55)` light / `max(l, 0.78)` dark). Card eyebrows and the `eb|tx|mt|hl(accent)` tones read this, so accent text clears AA on a dark card plate as well as on the page surface. Not to be confused with `--color-accent-text`, which is the ink **on** an accent plate
 - **Accent Text** (`--color-accent-text`): `hsl(211, 100%, 95%)` — Text on accent backgrounds
 
 ### Surfaces

@@ -8,6 +8,11 @@
 		   see the ink note at --ui-theme-*-bg before changing them. */
 		--color-accent: light-dark(hsl(211, 100%, 38%), hsl(211, 60%, 50%));
 		--color-accent-dark: light-dark(hsl(211, 80%, 30%), hsl(211, 30%, 20%));
+		/* the accent hue AS TEXT — lightness clamped to the readable side of the scheme.
+		   Not --color-accent-text (that is ink ON the accent plate). Docs: theme.md § Ink roles */
+		--color-accent-ink: light-dark(
+			oklch(from var(--color-accent) min(l, 0.55) c h),
+			oklch(from var(--color-accent) max(l, 0.78) c h));
 		--color-accent-text: hsl(211, 100%, 95%);
 		--color-border: light-dark(hsl(0, 0%, 80%), hsl(0, 0%, 35%)); /* dark arm ≥35%: must stay visible on the #1f2937 card plate */
 		--color-button: light-dark(hsl(0, 0%, 90%), hsl(0, 0%, 40%));

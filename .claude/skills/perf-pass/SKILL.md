@@ -48,17 +48,20 @@ eager images must not (`auto` is spec-invalid there).
 **Never probe features with DOM + `getComputedStyle` in a render-blocking script** — it
 forces a full-document style pass (measured 618 ms). Use parser-level
 `CSS.supports('background-color', 'attr(x type(<color>), red)')` on a **real** property;
-the custom-property form returns true even where unsupported. Render-blocking
-`<link rel="expect">` and the attr polyfill are load-bearing for view-transition morphs —
-do not defer them.
+the custom-property form returns true even where unsupported. An **inline classic script goes
+above the stylesheet `<link>`, never below** — a parser-inserted classic script is blocked by
+every stylesheet before it, and blocks the parser in turn, so CSS and HTML parsing serialise
+instead of overlapping. Render-blocking `<link rel="expect">` and the attr polyfill are
+load-bearing for view-transition morphs — do not defer them.
 
 **Caching** — `_headers` at the repo root; the hashed-bundle contract is in
 `docs/performance.md` and the `demo-css` skill.
 
 **Resource hints — measure first; most preloads are 0 ms here.** `preconnect` to the CDN
-origin when the page uses absolute transform URLs; speculation rules for morph targets. Do
-**not** add preloads for head CSS/scripts (already the first requests), for a
-`fetchpriority=high` LCP image, or `modulepreload` for end-of-body polyfills.
+origin when the page uses absolute transform URLs; speculation rules for morph targets —
+`eagerness: moderate` caps at **two** concurrent prerenders (FIFO), so a third URL silently
+evicts the oldest. Do **not** add preloads for head CSS/scripts (already the first requests),
+for a `fetchpriority=high` LCP image, or `modulepreload` for end-of-body polyfills.
 
 **Animations** — check the price list in `docs/performance.md` first. Custom-property clocks
 driving layout properties cost an order of magnitude more than composited

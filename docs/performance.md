@@ -168,7 +168,11 @@ Contract (full detail: `ui/card/docs/media.md` § Responsive images): five-width
 `240/320/480/720/1200`, `format=auto,quality=80`, `fit=cover` + height only when the frame
 has `asr()` (no asr = width-only, Cloudflare keeps the natural ratio). Rungs above the
 original's intrinsic width are dropped (`buildSrcset` in `ui/card/srcset.js`, `intrinsic`
-option). **Root-relative src required** — `render.js` `cdnEligible` and
+option). The `srcset` must be **in the markup**: the preload scanner sees markup, never a
+JS-injected attribute, so an upgraded-at-runtime image is discovered late and loads
+sequentially — that is the standing reason to finish the SSR migration and stop shipping
+`ui/card/ui-media-srcset.js` (its own header already says "transitional"). **Root-relative
+src required** — `render.js` `cdnEligible` and
 `ui-media-srcset.js` `#eligible` both enforce it; a page-relative src becomes the wrong
 zone path (404, no fallback). Exactly **one** `loading="eager" fetchpriority="high"` per
 page (the LCP candidate; never lazy a view-transition morph hero); all else
@@ -216,6 +220,15 @@ the IIFE rebuild so the copy cannot drift (`--check` for CI). The emitted tag mu
 paint, and silently restores the bug. The standalone `attr-fallback.min.js` stays as the
 documented consumer entry.
 
+**Placement is the other half of that rule.** A parser-inserted classic `<script>` is blocked
+by every stylesheet that *precedes* it, and since it blocks the parser in turn, HTML parsing
+stops with it — `CSS ∥ parse` becomes `CSS → parse`. An inline classic script therefore
+belongs **above** the stylesheet `<link>`, not below. schema.html has it below (bundle line
+13, polyfill line 42), so DOM construction of a 2,482-element body waits on the ~62 kB
+bundle, with the render-blocking `<link rel="expect">` queued behind that parse. The preload
+scanner runs on regardless, so the *network* is not gated — and the cost is **unmeasured**;
+trace before moving it (`docs/plans/open-items.md` § 30).
+
 `<link rel="expect" blocking="render">` is spec-valid (whatwg/html #9970); the W3C
 validator's complaint is a stale rule. Morph-target anchors are load-bearing — schema.html's
 `#schema-product-variants` is the *deepest* cross-document morph target, not a regression.
@@ -224,7 +237,9 @@ validator's complaint is a stale rule. Morph-target anchors are load-bearing —
 
 Do: `preconnect` to `https://v4.browser.style` on pages with absolute CDN srcsets
 (handshake parallel to CSS on off-zone hosts); speculation rules (`prerender`,
-`eagerness: moderate`) for morph-target pages (Chromium-only, inert elsewhere). Do NOT:
+`eagerness: moderate`) for morph-target pages (Chromium-only, inert elsewhere) — but
+`moderate` caps at **two** concurrent prerenders, FIFO, so a third URL silently evicts the
+oldest; schema.html already declares exactly two. Do NOT:
 preload head CSS/scripts (already the first requests — RenderBlocking shows 0 ms), preload
 a `fetchpriority=high` LCP image, `modulepreload` end-of-body scripts.
 
@@ -279,6 +294,12 @@ either. The ~14 kB (edge q4 vs local q11 on the render-blocking CSS) is real but
 unreachable this way. Testing traps: `curl -I` sends HEAD, which `onRequestGet` never
 handled — every header check silently measured the static asset; `curl --raw` leaves
 chunked framing in the body and fakes corruption.
+
+**Rejected — Early Hints (HTTP 103).** Cloudflare only emits a 103 from `Link:` headers when
+the **zone**'s Early Hints feature is on, so it is dead on `browser-style-v4.pages.dev` —
+which this doc establishes as the page's clean scoring host. And a 103 buys server
+think-time, of which a static Pages asset has almost none. Both reasons would have to change
+before it is worth an `_headers` `Link:` line.
 
 **Open**, roughly by leverage:
 
