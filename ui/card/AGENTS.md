@@ -221,7 +221,8 @@ The full rationale docs behind these were removed 2026-08-19; they live in git h
 | `docs/stagger.md` | working on the stagger reveal engine (details / snap-carousel / scroll-driven adapters) |
 | `docs/animations.md` | working on the keyframe library or the `[animate]`/`animate-self` scroll API |
 | `/docs/performance.md` | adding a transition, a keyframe or a `will-change` — the CPU/GPU split, the four de-optimisations, and the measured cost of every always-running animation |
-| `docs/content.md` | working on the text column, `scl()`, `data-part`s, tag choice |
+| `docs/content.md` | working on the text column, `scl()`, `data-part`s, tag choice — incl. **§ Icon markers** (`<li data-icon>`), whose glyph rides `list-style-type`, never `::marker { content }` |
+| `../icon/readme.md` § Icon font | changing the icon SET, or wondering why alignment is baked into the font — `::marker` has no `vertical-align`. Opt-in sheet; regenerate with `npm run build:icons` |
 | `docs/typography.md` | you want to *use* the type system — use-case guide to `scl()`, the relational size ladder, group sizes, fonts |
 | `docs/ui-card-tokens.md` | you need the `variant=` token / custom-property reference |
 | `docs/video.md` | integrating video providers / posters / facades |

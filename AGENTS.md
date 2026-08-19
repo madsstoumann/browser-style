@@ -123,6 +123,8 @@ which is why the native `::scroll-marker` path has never been audited
 | `docs/guide.md` | Narrative guide: card → section → page |
 | `docs/performance.md` | CPU/GPU policy, `will-change` rules, measured animation costs |
 | `docs/token-comparison.md` | Naming rationale vs Tailwind v4 / Open Props |
+| `docs/html-head.md` | What the demo-page `<head>` carries and why — incl. why `theme-color` is rejected |
+| `docs/llms-txt.md` | `llms.txt`, markdown alternates and the crawler policy behind `robots.txt` |
 | `docs/plans/open-items.md` | The one live backlog (implemented plans are deleted, not archived) |
 
 **Skills live in `.claude/skills/`** — invoke them instead of reconstructing a procedure:
@@ -135,7 +137,10 @@ which is why the native `::scroll-marker` path has never been audited
 directory npm reports `Missing script`.
 
 ```bash
-npm run build            # build --workspaces (base, card, carousel, reveal, layout)
+npm run build            # base, carousel, card, reveal, layout — an EXPLICIT -w list, not
+                         # --workspaces: that swept cms/baseline too, and one root build
+                         # then regenerated the whole Docusaurus site (~100 files of churn)
+npm run build:docs       # the Docusaurus site (cms/baseline) — on demand, never from build
 npm run test             # test --workspaces --if-present (ui/card is the real suite)
 npm run build:demo       # ui/card/build.js + demo CSS bundle + polyfill inlining
 npm run build:demo-css   # bundle ui/card/demo/demo.css -> /dist/demo.<hash>.min.css
@@ -151,6 +156,7 @@ Package-local gates that the root does **not** reach (run them from the repo roo
 node ui/card/tokens.build.js && node ui/card/tokens.lint.js   # token manifest ↔ CSS sync
 node --test ui/card/render.test.js                            # renderer suite
 node ui/card/schema.compare.js                                # renderer ↔ demo/schema.html
+cd ui/icon && npm run build:icons                             # icon webfont; needs python3 fonttools
 cd layout && npm run build:all                                # CSS + maps + demos + icons
 ```
 

@@ -5,7 +5,7 @@
 > their rationale lives in git history (`git log --diff-filter=D -- docs/plans`).
 > Settled decisions of record are summarised in `ui/card/AGENTS.md`.
 >
-> Items 1–7 came from the 2026-07-26 architecture ledger; 8–12 and 30 were added as they
+> Items 1–7 came from the 2026-07-26 architecture ledger; 8–12, 30 and 31 were added as they
 > surfaced. **Items 13–29 (2026-08-19) absorb what was still live from the deleted
 > plan docs** — the 2026-08-15 consistency audit, the 2026-08-16 schema-card-sections
 > note and the 2026-08-10 feature-gap ledger. Every absorbed finding was re-verified
@@ -948,3 +948,46 @@ The rule itself is recorded in `docs/performance.md` § JavaScript and the polyf
 `perf-pass` skill. `ui/card/demo/media.html` has a body-level inline classic script (line 201)
 that is technically subject to the same rule, but head CSS has resolved long before the parser
 reaches it — not worth touching.
+
+---
+
+## 31. `columns(n)` grid children lack `min-inline-size: 0` — blow-out under large type
+
+**Where:** `layout/core/base.css` — the `columns()` arm. The fix already exists for lanes at
+lines 186–194 and was never generalised.
+
+**Repro:** `ui/card/demo/media.furniture.html` at a 1185px viewport with the root font-size at
+48px (300% OS text scaling, i.e. what `<meta name="text-scale" content="scale">` opts into):
+
+```
+<lay-out md="columns(2)" lg="columns(3)">
+grid-template-columns: 368.297px 368.297px 368.312px   → 1201px
+body width                                              → 1009px
+document scrollWidth − clientWidth                      → +104px
+```
+
+The tracks are `1fr`, so they should divide the container. They do not, because grid items
+default to `min-width: auto`: at 48px type the cards' min-content width exceeds the track and
+pushes the whole grid past its parent. Identical in shape to the masonry-lane bug already
+documented in `AGENTS.md` § Known sharp edges, and fixed there by:
+
+```css
+/* Lane items are grid items, so min-inline-size defaults to `auto` = the … */
+& > *:not(lay-out) { min-inline-size: 0; }
+```
+
+**Scope of the symptom is narrow — 1 of 24 demo pages.** A sweep of the card and layout demos
+at 1×/2×/3× root font-size found zero horizontal overflow everywhere else, including
+`bleed`, `overflow`, `lanes` and every card demo. So this is one layout arm, not a systemic
+sizing problem, and `text-scale` was shipped on that basis (`docs/html-head.md` § 4).
+
+**Why it is waiting:** it is not caused by text scaling — it reproduces at any narrow
+viewport with large enough type — but `min-inline-size: 0` on grid children is not a free
+change. It disables min-content protection for *every* `columns()` child, so a long
+unbreakable token (a code span, a URL) would start overflowing its own card instead of
+widening the track. Decide whether that trade is right, and whether the same guard belongs on
+the other grid arms (`grid`, `bento`, `mosaic`, `asym`) before touching one of them in
+isolation. Verify against `docs/html-head.md` § 4 — the 3× sweep there is the regression test.
+
+**Until it is fixed,** `media.furniture.html` carries a `text-scale` opt-in it does not fully
+honour at the top of the scaling range.

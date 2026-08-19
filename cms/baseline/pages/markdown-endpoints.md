@@ -37,7 +37,7 @@ Several approaches were considered. The chosen approach — **request intercepti
 Alternatives rejected:
 - **API route with query param** — defeats per-page edge caching, no ISR
 - **Config-level rewrites** — can't handle `index.md`, no runtime logic
-- **Content negotiation** (`Accept: text/markdown`) — crawlers and LLMs don't send this header; the `llms.txt` spec uses URL-based `.md` addressing
+- **Content negotiation** (`Accept: text/markdown`) — as the *only* mechanism. Crawlers still don't send the header (a month of Cloudflare logs in Jan 2026: "No AI crawler uses content negotiation. Not one."), and the `llms.txt` spec uses URL-based `.md` addressing, so URL routing has to exist regardless. But the header is no longer unused: by Feb 2026 Claude Code, Cursor and OpenCode all sent it, and it is the mechanism with the best growth. Treat it as a **cheap addition** to the route below — vary on `Accept` and return the same markdown — not as a replacement for it. Measurements: `docs/llms-txt.md`
 - **Static generation at build time** — stale until redeploy; webhook-driven caching gives both freshness and performance
 
 ---

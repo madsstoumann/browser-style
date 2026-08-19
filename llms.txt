@@ -1,12 +1,37 @@
 # browser.style
 
-> CSS-first component library and design system. Its card system renders 34 schema.org content types as semantic HTML with inline microdata (itemscope/itemtype/itemprop) — no JSON-LD required.
+> CSS-first component library and design system for Chrome 150+ / Safari 26.5+. Behaviour is selected by token strings on attributes (`variant=` `media=` `content=` on cards, breakpoint attributes on `<lay-out>`), not by class combinations. Light DOM, no Shadow DOM, `:where()` for zero specificity. The card system renders 52 schema.org itemtypes as semantic HTML with inline microdata — no JSON-LD required.
+>
+> Every document below is served as `text/markdown`. Fetch the `.md` directly; the HTML pages are CSS demonstrations and are the worse source for an agent.
+
+## Start here
+
+- [v4 operating guide](https://v4.browser.style/docs/v4.md): the mindset, reading order, the load-bearing facts that are easy to get wrong, and the verification gates. Read before writing any v4 markup.
+- [Narrative guide](https://v4.browser.style/docs/guide.md): card → section → page, explained rather than specified.
+- [Design tokens](https://v4.browser.style/DESIGN.md): every global token family.
+
+## Card system
+
+- [Card content model and renderer](https://v4.browser.style/ui/card/docs/card.md): the universal card format and how it is rendered.
+- [Media frame](https://v4.browser.style/ui/card/docs/media.md): the `media=` DSL — aspect ratio, radius, object-position/fit, scrim, tint, hover, overlay furniture, lightbox and collage.
+- [Carousel internals](https://v4.browser.style/ui/card/docs/media.carousel.md): scroll-marker controls, paging, the Safari polyfill.
+- [Content DSL](https://v4.browser.style/ui/card/docs/content.md) and [typography](https://v4.browser.style/ui/card/docs/typography.md).
+- [Video](https://v4.browser.style/ui/card/docs/video.md), [animations](https://v4.browser.style/ui/card/docs/animations.md), [stagger](https://v4.browser.style/ui/card/docs/stagger.md).
+- [Token reference](https://v4.browser.style/ui/card/docs/tokens.md): generated from the manifest — the complete vocabulary of all three DSLs.
 
 ## Structured content
 
-- [Schema.org card reference](https://v4.browser.style/ui/card/demo/schema): all 34 schema.org card types with complete inline microdata — Article, NewsArticle, Product, Event, Recipe, Review, JobPosting, Course, Person, FAQPage, LocalBusiness, Organization, VideoObject, HowTo, QAPage, PodcastEpisode, Movie, Book, Dataset, ClaimReview and more. Machine-readable reference markup.
-- [Card content model](https://v4.browser.style/cms/baseline/models/card.schema.json): JSON Schema for the universal card format every card type is rendered from.
+- [Schema.org card reference](https://v4.browser.style/ui/card/docs/schema.md): how the 52 itemtypes map to markup. The rendered counterpart is [demo/schema](https://v4.browser.style/ui/card/demo/schema) — complete inline microdata for Article, NewsArticle, Product, Event, Recipe, Review, JobPosting, Course, Person, FAQPage, LocalBusiness, Organization, VideoObject, HowTo, QAPage, PodcastEpisode, Movie, Book, Dataset, ClaimReview and more.
+- [Google rich results](https://v4.browser.style/ui/card/docs/google-rich-results.md): which types are eligible and what they require.
+- [Card content model (JSON Schema)](https://v4.browser.style/cms/baseline/models/card.schema.json): the format every card is rendered from.
 
-## Documentation
+## Layout
 
-- [Component library](https://v4.browser.style/): demos and docs for the full component collection.
+- [Layout system](https://v4.browser.style/layout/readme.md): `<lay-out>` — viewport breakpoints, grid patterns, spacing ladder, bleed, subgrid, overflow scrollers.
+- [Card integration](https://v4.browser.style/layout/docs/card-integration.md): how cards and layouts compose.
+
+## Policy
+
+- [Performance policy](https://v4.browser.style/docs/performance.md): the CPU/GPU split and the cost of every always-running animation.
+- [llms.txt and markdown for agents](https://v4.browser.style/docs/llms-txt.md): what this site serves machine consumers and the evidence behind it.
+- Training and scraping crawlers are disallowed in [robots.txt](https://v4.browser.style/robots.txt). User-invoked coding agents may read the documentation trees above.

@@ -56,6 +56,7 @@ const page = (ucf, name) => {
 	<title>${esc(title)}</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="text-scale" content="scale">
 	<meta name="description" content="${esc(ucf.fields.summary || title)}">
 	${HEAD_COMMON}
 	<!-- Block first paint (and the view-transition snapshot) until the hero is
@@ -117,6 +118,7 @@ const gridPage = (cards) => `<!DOCTYPE html>
 	<title>UI: Card — Article View Transition</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="text-scale" content="scale">
 	<meta name="description" content="Teaser cards linking to per-article pages — a cross-document view transition morphs the whole card into the full article. Fully static: pre-rendered by articles/build.js.">
 	${HEAD_COMMON}
 	<!-- Block first paint (and the incoming snapshot on Back) until the card

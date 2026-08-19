@@ -14,6 +14,7 @@ function generateLayoutHTML(layoutName, layoutData, layoutType, iconsDir) {
 	<title>${title}</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="text-scale" content="scale">
 	<meta name="color-scheme" content="light dark">
 	<meta name="description" content="${title} using CSS layout system">
 	<link rel="stylesheet" href="/ui/base/index.css">
@@ -148,6 +149,7 @@ function generateOverflowHTML(columnsData, iconsDir) {
 	<title>${title}</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="text-scale" content="scale">
 	<meta name="color-scheme" content="light dark">
 	<meta name="description" content="${title} using CSS layout system">
 	<link rel="stylesheet" href="/ui/base/index.css">
@@ -336,6 +338,7 @@ function generateIconsHTML(iconsDir) {
 	<title>${title}</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="text-scale" content="scale">
 	<meta name="color-scheme" content="light dark">
 	<meta name="description" content="All layout system icons">
 	<link rel="stylesheet" href="/ui/base/index.css">
@@ -461,6 +464,7 @@ function generateMainIndexHTML(generatedFiles) {
 	<title>${title}</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="text-scale" content="scale">
 	<meta name="color-scheme" content="light dark">
 	<meta name="description" content="A collection of layout system demos">
 	<meta name="view-transition" content="same-origin">

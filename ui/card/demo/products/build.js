@@ -90,6 +90,7 @@ const shell = ({ title, description, styles = '', card, itemtype, view, reviews 
 	<title>${esc(title)}</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="text-scale" content="scale">
 	<meta name="description" content="${esc(description)}">
 	${HEAD_COMMON}
 	<!-- Block first paint (and the view-transition snapshot) until the hero is parsed,
