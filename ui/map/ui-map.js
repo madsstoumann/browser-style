@@ -32,8 +32,24 @@ const coord = (value, limit) => {
 	return n === null || Math.abs(n) > limit ? null : n;
 };
 
+/* a <meta> keeps its value in content=; everything else in its text */
+const text = (el) => (!el ? '' : (el.tagName === 'META' ? el.getAttribute('content') : el.textContent) || '').trim();
+
+/* <address> stacks its lines in <span>s — join them so a popup reads as one line */
+const addressText = (el) => !el ? '' : [...el.children]
+	.filter((child) => child.tagName === 'SPAN')
+	.map((span) => span.textContent.replace(/\s+/g, ' ').trim())
+	.filter(Boolean).join(', ');
+
+/* the hours <dl> as "Mon\u2013Fri 9:00\u201317:00" pairs */
+const hoursText = (el) => !el ? [] : [...el.querySelectorAll('dt')]
+	.map((dt) => `${dt.textContent.trim()} ${(dt.nextElementSibling?.textContent || '').trim()}`.trim())
+	.filter(Boolean);
+
 /* One point per [itemprop="geo"] scope — the very <meta>s geoPart() emits, so the drawn
-   pin and the machine-readable value cannot drift. Docs: readme.md § Where points come from */
+   pin and the machine-readable value cannot drift. Everything harvested here is PLAIN TEXT:
+   a popup must carry no itemprops of its own, or the same place would be counted twice in
+   the list. Docs: readme.md § Where points come from */
 const pointsFrom = (root) => {
 	const out = [];
 	for (const geo of root.querySelectorAll('[itemprop="geo"]')) {
@@ -43,12 +59,22 @@ const pointsFrom = (root) => {
 		/* the enclosing item scope — start from the PARENT, or closest() returns the geo
 		   div itself, which carries itemscope of its own */
 		const item = geo.parentElement?.closest('[itemscope]') || geo.parentElement;
+		/* the listing wrapper, when the item is the mainEntity of one — that is where a
+		   residence keeps its name and price */
+		const outer = item?.parentElement?.closest('[itemscope]') || item;
 		out.push({
 			lat,
 			lon,
-			name: item?.querySelector('[itemprop="name"]')?.textContent.trim() || '',
-			price: item?.querySelector('[itemprop="price"]')?.getAttribute('content') || '',
-			url: item?.querySelector('[itemprop="url"]')?.getAttribute('href') || '',
+			name: text(item?.querySelector('[itemprop="name"]')) || text(outer?.querySelector('[itemprop="name"]')),
+			price: text(outer?.querySelector('[itemprop="price"]')),
+			address: addressText(item?.querySelector('[itemprop="address"]')),
+			telephone: text(item?.querySelector('[itemprop="telephone"]')),
+			hours: hoursText(item?.querySelector('[data-part="hours"]')),
+			url: (item?.querySelector('[itemprop="url"]') || outer?.querySelector('[itemprop="url"]'))?.getAttribute('href') || '',
+			/* the id of the carousel slide this place lives in, when it lives in one. A
+			   scroll-snap child is reachable by plain anchor, so the popup can jump to it
+			   with no JS. Scoped to a ListItem so it can never match the whole card. */
+			anchor: item?.closest('[itemprop="itemListElement"][id]')?.id || '',
 			row: item?.closest('li') || null
 		});
 	}

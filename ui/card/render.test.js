@@ -2246,3 +2246,54 @@ describe('places — a collection of places on one clustered map', () => {
 		assert.match(html, /&quot;&gt;&lt;img src=x onerror=alert\(1\)&gt;/);
 	});
 });
+
+describe('places — compact rows and card slides', () => {
+	const OFFICE = { type: 'LocalBusiness', name: 'Copenhagen', url: 'https://example.com/cph', geo: { latitude: 55.6761, longitude: 12.5683 }, address: { streetAddress: 'Sundkaj 9', addressLocality: 'Copenhagen', addressCountry: 'DK' }, telephone: '+45 35 55 12 90', openingHours: [{ schema: 'Mo-Fr 09:00-17:00' }] };
+	const HOME = { type: 'Apartment', name: 'Havnegade 44', url: 'https://example.com/h44', image: '/assets/images/real_01.jpg', geo: { latitude: 55.6761, longitude: 12.5911 }, address: { streetAddress: 'Havnegade 44', addressLocality: 'Copenhagen', addressCountry: 'DK' }, price: { currency: 'DKK', amount: 7950000 }, floorSize: 118 };
+
+	test('an office row keeps its detail marked up but hidden', () => {
+		const html = render({ schemaType: 'places', headline: 'Offices', details: { kind: 'business', items: [OFFICE] } });
+		/* still fully machine-readable … */
+		assert.match(html, /itemprop="address" itemscope/);
+		assert.match(html, /<meta itemprop="telephone" content="\+45 35 55 12 90">/);
+		assert.match(html, /itemprop="openingHoursSpecification"/);
+		assert.match(html, /itemprop="hasMap"/);
+		/* … but off the page, inside ONE bare <div hidden>. The wrapper is load-bearing:
+		   content.css gives [data-part="address"] display:flex and [data-part="hours"]
+		   display:grid, and an author `display` beats the UA `[hidden] { display: none }`
+		   rule — `hidden` on the parts themselves leaves them fully visible. */
+		assert.match(html, /<div hidden><address data-part="address"/);
+		assert.ok(!/<address[^>]*\shidden/.test(html), 'hidden must not sit on the styled part');
+		assert.ok(!/<dl[^>]*\shidden/.test(html), 'hidden must not sit on the styled part');
+		assert.match(html, /<div hidden>[\s\S]*<a itemprop="hasMap"[\s\S]*<\/div>/);
+		/* the visible line is the linked name */
+		assert.match(html, /<a itemprop="url" href="https:\/\/example\.com\/cph"><strong itemprop="name">Copenhagen<\/strong><\/a>/);
+	});
+
+	test('a locality that repeats the name is not printed twice', () => {
+		const same = render({ schemaType: 'places', headline: 'O', details: { kind: 'business', items: [OFFICE] } });
+		assert.ok(!/<small>Copenhagen<\/small>/.test(same), 'name and locality are identical here');
+		const differs = render({ schemaType: 'places', headline: 'O', details: { kind: 'business', items: [{ ...OFFICE, name: 'Nordhavn Studio' }] } });
+		assert.match(differs, /<small>Copenhagen<\/small>/);
+	});
+
+	test('details.slides puts the places in the frame and drops the list', () => {
+		const html = render({ schemaType: 'places', headline: 'Homes', media: [{ mediaType: 'places', alt: 'Map' }], details: { kind: 'residence', slides: true, center: { latitude: 55.6, longitude: 12.5 }, items: [HOME] } });
+		/* the map is still the first thing in the frame */
+		assert.match(html, /<ui-media[^>]*><ui-map/);
+		/* the slide is a nested card carrying the ListItem — a PROPERTY of the list */
+		assert.match(html, /<ui-card[^>]*itemprop="itemListElement" itemscope itemtype="https:\/\/schema\.org\/ListItem"/);
+		assert.match(html, /<cq-box itemprop="item" itemscope itemtype="https:\/\/schema\.org\/RealEstateListing"/);
+		assert.match(html, /<img[^>]*src="\/assets\/images\/real_01\.jpg"[^>]*itemprop="image"/);
+		/* exactly one copy of the set — no <ol> duplicating it */
+		assert.ok(!html.includes('<ol data-part="list">'), 'the slides ARE the list');
+		assert.equal(html.match(/itemprop="itemListElement"/g).length, 1);
+	});
+
+	test('without details.slides the list is still the list', () => {
+		const html = render({ schemaType: 'places', headline: 'Homes', details: { kind: 'residence', items: [HOME] } });
+		assert.match(html, /<ol data-part="list">/);
+		/* the card's own root is a <ui-card>; what must be absent is a nested SLIDE */
+		assert.ok(!/<ui-card[^>]*itemprop=/.test(html), 'no nested card slides in list mode');
+	});
+});

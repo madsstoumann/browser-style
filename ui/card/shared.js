@@ -17,7 +17,7 @@ export const hasToken = (str, name) => new RegExp(`(^|\\s)${name}(\\(|\\s|$)`).t
 
 // slides = direct children minus overlay furniture, bands and nested <lay-out> wrappers
 // (keep in sync with the :not() list in media.carousel.css)
-export const NOT_SLIDE = /^(AUDIO|UI-BEACON|UI-CHIP|UI-LIGHTBOX|UI-MAP|UI-MARQUEE|UI-PLAY|UI-SAVE|UI-STICKER|UI-CAROUSEL-CONTROLS|LAY-OUT)$/;
+export const NOT_SLIDE = /^(AUDIO|UI-BEACON|UI-CHIP|UI-LIGHTBOX|UI-MARQUEE|UI-PLAY|UI-SAVE|UI-STICKER|UI-CAROUSEL-CONTROLS|LAY-OUT)$/;
 export const slidesOf = (el) => [...el.children].filter(c => !NOT_SLIDE.test(c.tagName));
 
 // muted + autoplay = silent background loop; never coordinated/paused

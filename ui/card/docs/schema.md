@@ -678,6 +678,38 @@ The item allowlist reuses `RESIDENCE_TYPES` **verbatim**. It excludes `Residence
 `numberOfRooms`, `numberOfBedrooms`, `numberOfBathroomsTotal` and `yearBuilt` are all out of
 domain on them — a listing typed `Residence` could state none of its own facts.
 
+**Two presentations, one content model.** A collection card is long by nature — six offices
+with address, phone and hours is forty lines of page — so neither shape prints everything.
+
+*Compact rows (the default).* An office row shows the linked name and, when it differs, its
+locality. The address, hours and `hasMap` link stay fully marked up inside one bare
+`<div hidden>`, and the phone becomes a `<meta>`. A reader gets them from the map popup,
+which `<ui-map>` builds out of exactly those nodes. **The wrapper must be a bare `<div>`:**
+`content.css` gives `[data-part="address"]` `display: flex` and `[data-part="hours"]`
+`display: grid`, and an author `display` beats the UA `[hidden] { display: none }` rule — put
+`hidden` on the parts themselves and they stay fully visible.
+
+*Card slides (`details.slides: true`).* The media frame becomes a carousel: the clustered map
+is slide one, and every place after it is a nested `<ui-card>`. **The slides then ARE the
+`itemListElement` set** — `DETAILS.places` emits no `<ol>`, because a list would be a second
+copy of the same items. The nested card carries `itemprop`, so it is a *property* of the list
+and the page's card counts skip it; `<cq-box>` holds the `item` scope so the photo and the
+text sit inside one item.
+
+Two constraints on a slide, both learned the hard way in the browser:
+
+- **The slide's `asr()` must match the frame's.** The frame owns the height; a taller slide
+  overflows it and the scroller clips the overlay. Override both together via `details.slide`.
+- **The title is a `cover` link inside the headline, not a plain anchor.** An `<a>`'s own
+  colour beats inheritance, so a bare link renders link-blue on a photo under `ovr()`. The
+  `cover` part takes `color: inherit` and stretches its `::after` over the whole card.
+
+**Slides are anchor-addressable.** Each one gets a minted `id` (`<cardId>-place-<n>`), and a
+scroll-snap child is reachable by plain in-page anchor — so `<a href="#…">` scrolls a home
+into view with **no JavaScript at all**. That is what the map popup uses: clicking a pin
+jumps the carousel to that home, and falls back to the listing's own URL when there are no
+slides.
+
 **Complement, not competitor, to `organization`.** That type already emits branch offices as
 `department` → `LocalBusiness`. It is the right answer when the card's subject is *the company*;
 `places` is for when the subject is *the list*. Do not merge them.

@@ -126,15 +126,31 @@ The element positioned by Leaflet is `.ui-map-marker`; the visual inside it is
 `.ui-map-pin`, which centres itself with `translate` (not `transform`) so it composes with
 Leaflet's positioning rather than replacing it.
 
+## Popups
+
+Clicking a marker opens a Leaflet popup with the place's name, price, address, phone and
+opening hours; hovering still shows the name as a tooltip.
+
+The content is **plain text harvested from the list row, never cloned markup** — cloning
+would duplicate the row's `itemprop`s and the enclosing `ItemList` would count every place
+twice.
+
+If the place lives in a carousel slide with an `id`, the popup title links to `#that-id`
+instead of the listing's own URL: a scroll-snap child is reachable by plain in-page anchor,
+so clicking a pin scrolls the carousel to that card with **no JavaScript**. Without slides it
+falls back to the external URL.
+
 ## Accessibility
 
 **The visible list is the map's text alternative**, and the tiles and markers are
 decoration: every place is already a real link.
 
-So `aria-hidden` goes on **`.leaflet-map-pane` only** — not on the whole canvas. The control
-container is that pane's *sibling* and stays exposed, because the attribution links are
-required by the tile licences and have to be reachable. Hiding the whole canvas would bury
-them, and would also trip the axe `aria-hidden-focus` rule, since those links are focusable.
+So `aria-hidden` goes on the **five decorative panes** — `tilePane`, `overlayPane`,
+`shadowPane`, `markerPane`, `tooltipPane` — and on nothing else. Not the canvas, and not
+their shared parent `mapPane`: all six panes are children of it, `popupPane` included, and
+a popup's close button is `<a href="#close">`. Hiding the parent would bury a focusable
+control, which is the axe `aria-hidden-focus` rule, and would also hide the attribution
+links that the tile licences require be reachable.
 
 Nothing focusable is left inside the hidden subtree: Leaflet is created with
 `keyboard: false`, which drops the container's `tabindex` and every marker's, and the

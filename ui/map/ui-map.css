@@ -118,6 +118,32 @@
 	/* satellite: an opaque plate, because there is no light tile to sit on */
 	:where(ui-map[map*="tiles(sat)"]) { --ui-map-attr-bg: var(--color-surface); }
 
+	/* ───────── E. Popups — plain text harvested from the list row, never cloned markup.
+	   Restyled from base tokens; leaflet.css ships a white plate with its own type scale. */
+	:where(ui-map) .leaflet-popup-content-wrapper,
+	:where(ui-map) .leaflet-popup-tip {
+		background: var(--ui-map-popup-bg, var(--color-surface));
+		color: var(--color-text);
+	}
+	:where(ui-map) .leaflet-popup-content-wrapper { border-radius: var(--ui-map-popup-radius, var(--radius-md)); }
+	:where(ui-map) .leaflet-popup-content {
+		font-family: var(--font-body);
+		font-size: var(--font-size-sm);
+		margin: 0;
+		padding: 0.75rem 0.9rem;
+	}
+	:where(.ui-map-popup) {
+		display: grid;
+		gap: 0.15rem;
+	}
+	:where(.ui-map-popup-title) {
+		font-size: var(--font-size-base);
+		font-weight: var(--font-weight-semibold);
+		margin-block-end: 0.15rem;
+	}
+	:where(.ui-map-popup-price) { font-size: var(--font-size-base); }
+	:where(ui-map) .leaflet-popup-close-button { color: var(--color-text); }
+
 	/* ───────── E. Controls ───────── */
 	:where(ui-map[map*="ctl(non)"]) .leaflet-control-zoom { display: none; }
 	:where(ui-map) .leaflet-control-zoom a {

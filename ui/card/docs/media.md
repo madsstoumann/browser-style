@@ -702,6 +702,32 @@ The OSM bbox is `(west, south, east, north)`, and its latitude half-span is scal
 
 `itemprop="hasMap"` rides the `<iframe>` — HTML takes a frame's microdata value from its `src`, so no companion `<link>` is needed. It is gated to types whose itemtype descends from `Place` (`business`, `location`); other types still get the frame, unmarked. The `Open in Maps` action link in `DETAILS.location` deliberately stays **unmarked**, so a map card declares the property exactly once — see [schema.md § One property, one value](./schema.md#one-property-one-value).
 
+### Places — the frame as a clustered map, optionally a carousel
+
+A `places` card's frame is a `<ui-map>` (see [schema.md § Places](./schema.md)). With
+`details.slides: true` it becomes a **carousel whose first slide is the map** and whose rest
+are one nested `<ui-card>` per place — ordinary `nav()` on the frame, no new token:
+
+```html
+<ui-media media="asr(1/1) nav(mrk)">
+  <ui-map map="tiles(auto) cluster fit">…</ui-map>
+  <ui-card id="homes-1-place-1" variant="ovr(bs)" media="asr(1/1) scm" itemprop="itemListElement" …>…</ui-card>
+  …
+</ui-media>
+```
+
+Three things make it hold together:
+
+- **`<ui-map>` is a slide, not furniture.** It is deliberately absent from `NOT_SLIDE` and
+  from the CSS `:not()` lists, exactly like `<img>` and `<iframe>` — it is frame *content*.
+  (It was briefly added to both; that was wrong and is reverted.) The consequence to know:
+  `loop` clones leading and trailing slides, and cloning a `<ui-map>` would start a second
+  map engine — **do not combine `loop` with a map slide.**
+- **The slide's `asr()` must match the frame's.** The frame owns the height.
+- **Each slide gets a minted `id`,** so a plain `<a href="#…">` scrolls it into view — a
+  scroll-snap child needs no JavaScript to be addressable. The map popup uses this to jump
+  from a pin to its card.
+
 Outside a card, [`@browser.style/map`](../../map/readme.md) carries `<ui-map>` for the interactive, clustered form on a bare page. (The pre-v4 `.ui-map` class it used to ship for a plain iframe was removed when that package was converted — the iframe above needs no class.)
 
 ---

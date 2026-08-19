@@ -97,14 +97,17 @@ export function createMap(canvas, config, points) {
 		subdomains: tiles.subdomains || 'abc'
 	}).addTo(map);
 
-	/* Hide the DECORATION, not the whole canvas. Tiles, markers and tooltips duplicate the
-	   visible list, so .leaflet-map-pane is aria-hidden — but the control container is its
-	   SIBLING and stays exposed, because the attribution links are required by the tile
-	   licences and must be reachable. Nothing focusable is left inside the hidden subtree:
-	   keyboard:false drops the container's and every marker's tabindex, and we create
-	   tooltips (inert) rather than popups (which ship a close button).
-	   Docs: readme.md § Accessibility */
-	map.getPane('mapPane')?.setAttribute('aria-hidden', 'true');
+	/* Hide the DECORATIVE panes one by one — NOT mapPane, and not the whole canvas.
+	   All six panes are children of mapPane (leaflet-src.esm.js:4254-4269), popupPane
+	   included, and a popup's close button is <a href="#close"> — focusable. Hiding their
+	   shared parent would bury an interactive control inside an aria-hidden subtree, which
+	   is the axe `aria-hidden-focus` rule. So: tiles, vectors, shadows, markers and
+	   tooltips are hidden (they duplicate the visible list), while popupPane and the
+	   control container — whose attribution links the tile licences require — stay
+	   exposed. Docs: readme.md § Accessibility */
+	for (const pane of ['tilePane', 'overlayPane', 'shadowPane', 'markerPane', 'tooltipPane']) {
+		map.getPane(pane)?.setAttribute('aria-hidden', 'true');
+	}
 
 	/* tiles(auto) swaps the template on the EXISTING layer — setUrl keeps the old tiles
 	   visible until the new ones load. Stacking two layers and hiding one in CSS would
@@ -137,12 +140,37 @@ export function createMap(canvas, config, points) {
 
 	const emit = (name, detail) => host?.dispatchEvent(new CustomEvent(name, { bubbles: true, composed: true, detail }));
 
+	/* The popup is built from PLAIN TEXT harvested off the list row — never cloned markup.
+	   Cloning would duplicate the row's itemprops and the ItemList would count every place
+	   twice. Docs: readme.md § Popups */
+	const popupHtml = (point) => {
+		const rows = [
+			point.price ? `<strong class="ui-map-popup-price">${esc(point.price)}</strong>` : '',
+			point.address ? `<span>${esc(point.address)}</span>` : '',
+			point.telephone ? `<a href="tel:${esc(point.telephone.replace(/\s/g, ''))}">${esc(point.telephone)}</a>` : '',
+			...point.hours.map((line) => `<span>${esc(line)}</span>`)
+		].filter(Boolean);
+		/* an in-page anchor wins over the external URL: the slide is a scroll-snap child,
+		   so the browser scrolls it into view natively — pin to card, zero JavaScript. */
+		const href = point.anchor ? `#${point.anchor}` : point.url;
+		const title = href
+			? `<a class="ui-map-popup-title" href="${esc(href)}">${esc(point.name)}</a>`
+			: `<strong class="ui-map-popup-title">${esc(point.name)}</strong>`;
+		return `<div class="ui-map-popup">${point.name ? title : ''}${rows.join('')}</div>`;
+	};
+
 	const addPoint = (point) => {
 		const marker = L.marker([point.lat, point.lon], {
 			icon: markerIcon(pointLabel(point, config.pin), 'point'),
 			keyboard: false
 		});
+		/* both, as a map normally behaves: the name on hover, the detail on click. Leaflet
+		   closes the tooltip when the popup opens, so they never overlap. A point with
+		   nothing but a name gets the tooltip only — an empty popup is noise. */
 		if (point.name) marker.bindTooltip(esc(point.name), { direction: 'top' });
+		if (point.name && (point.price || point.address || point.telephone || point.hours.length)) {
+			marker.bindPopup(popupHtml(point), { closeButton: true, maxWidth: 260 });
+		}
 		marker.on('click', () => emit('ui-map:select', { point }));
 		marker.addTo(markers);
 	};

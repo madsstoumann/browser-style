@@ -530,14 +530,22 @@ const mapFrame = (item, fields, type, hasMap = HAS_MAP_TYPES.has(type)) => {
    The child <iframe> is the no-JS fallback, centred on details.center; ui-map.js removes it
    on upgrade. NEITHER carries itemprop="hasMap" — that is a Place property and the enclosing
    scope is an ItemList. Node-safe: string building only. Docs: docs/media.md § Places */
-const placesFrame = (item, fields) => {
-	const center = mapCoords(fields.details?.center, item);
+const placesFrame = (item, fields, cardId = null) => {
+	const d = fields.details || {};
+	const center = mapCoords(d.center, item);
 	const title = item.alt || `Map of ${plain(fields.headline) || 'these places'}`;
 	const fallback = center ? `<iframe${attrs({ src: osmEmbed(center), title, loading: 'lazy' })}></iframe>` : '';
-	return `<ui-map${attrs({
+	const map = `<ui-map${attrs({
 		map: item.map || 'tiles(auto) cluster fit',
 		lat: center?.lat, lon: center?.lon
 	})}>${fallback}</ui-map>`;
+	/* details.slides — the frame becomes a carousel whose FIRST slide is the map and whose
+	   rest are one nested card per place. The slides then ARE the itemListElement set, so
+	   DETAILS.places emits no <ol> and the card stays short. The frame needs a nav() token
+	   for controls; the preset supplies it. Docs: docs/media.md § Places */
+	if (!d.slides) return map;
+	const kind = PLACE_KINDS.has(d.kind) ? d.kind : 'business';
+	return map + (d.items || []).map((place, index) => placeSlide(place, kind, index, d.slide || {}, cardId)).join('');
 };
 
 /* eligibleDuration is QuantitativeValue-typed — expand ISO P<n><unit>, not Duration text */
@@ -973,7 +981,7 @@ const buildMedia = (fields, type, tokens, preset = {}, frameAttrs = {}, cardId =
 		}
 		if (item.mediaType === 'places') {
 			/* the frame is a CLUSTERED map of this card's whole itemListElement set */
-			frames += placesFrame(item, fields);
+			frames += placesFrame(item, fields, cardId);
 			continue;
 		}
 		if (item.mediaType === 'audio') {
@@ -1606,31 +1614,51 @@ const placeMapLink = (geo, label = 'Map') => {
 		: '';
 };
 
-/* the item's name, linked when it has a url — `url` is a Thing property, valid on both shapes */
-const placeName = (place) => {
-	const name = `<strong itemprop="name">${esc(place.name)}</strong>`;
-	return place.url ? `<a itemprop="url" href="${esc(place.url)}">${name}</a>` : name;
+/* the item's name. `url` is a Thing property, valid on both shapes.
+   In a LIST row the name is a plain inline link. On a CARD slide it becomes the headline
+   wrapping a `cover` link, which is the part designed for this: its ::after stretches over
+   the whole card and it takes `color: inherit`, so under ovr() the title reads in the
+   overlay's white ink instead of link blue on a photo. Docs: docs/card.md § cover */
+const placeName = (place, cover = false) => {
+	if (!cover) {
+		const name = `<strong itemprop="name">${esc(place.name)}</strong>`;
+		return place.url ? `<a itemprop="url" href="${esc(place.url)}">${name}</a>` : name;
+	}
+	const inner = place.url
+		? `<a data-part="cover" itemprop="url" href="${esc(place.url)}">${esc(place.name)}</a>`
+		: esc(place.name);
+	return `<strong data-part="headline" itemprop="name">${inner}</strong>`;
 };
 
-/* one office row — LocalBusiness and below, so the flat openingHours string is in domain */
-const officeItem = (place, type) => {
-	const contacts = [
-		place.telephone ? `<a itemprop="telephone" href="tel:${esc(String(place.telephone).replace(/\s/g, ''))}">${esc(place.telephone)}</a>` : '',
-		place.email ? `${meta('email', place.email)}<a href="mailto:${esc(place.email)}">${esc(place.email)}</a>` : '',
-		placeMapLink(place.geo)
-	].filter(Boolean);
-	return `<div${scope('item', type)}>${placeName(place)}${meta('branchCode', place.branchCode)}`
+/* Machine-only group. `hidden` must go on a BARE <div>, never on the parts themselves:
+   content.css gives [data-part="address"] display:flex and [data-part="hours"] display:grid,
+   and an author `display` beats the UA `[hidden] { display: none }` rule — the markup would
+   stay fully visible. A plain wrapper has no data-part, so nothing overrides it. This is the
+   same shape geoPart() already uses. */
+const machineOnly = (...parts) => {
+	const html = parts.filter(Boolean).join('');
+	return html ? `<div hidden>${html}</div>` : '';
+};
+
+/* one office — LocalBusiness and below, so the flat openingHours string is in domain.
+   COMPACT BY DESIGN: the visible line is the linked name (plus its locality when that
+   differs), and the address, phone, hours and map link stay fully marked up but `hidden`.
+   A reader gets them from the marker popup, which <ui-map> builds out of exactly these
+   nodes. Six offices then cost six lines instead of forty. Docs: docs/schema.md § Places */
+const officeBody = (place, type, cover = false) => {
+	const locality = place.address?.addressLocality;
+	const suffix = locality && locality !== place.name ? ` <small>${esc(locality)}</small>` : '';
+	return placeName(place, cover) + suffix + meta('branchCode', place.branchCode)
 		/* the SAME emitter the single-place card uses — <ui-map> reads these very metas */
 		+ geoPart(place.geo)
-		+ addressPart(place.address)
-		+ (contacts.length ? `<p data-part="meta">${contacts.join(' · ')}</p>` : '')
-		+ hoursPart(place.openingHours)
-		+ '</div>';
+		+ meta('telephone', place.telephone)
+		+ meta('email', place.email)
+		+ machineOnly(addressPart(place.address), hoursPart(place.openingHours), placeMapLink(place.geo));
 };
 
 /* one listing row — the facts use the same spellings as realestateSections(), so a portal
    card and the detail page it links to cannot spell one home two ways */
-const listingItem = (place, type) => {
+const listingBody = (place, type, cover = false) => {
 	const numbered = (prop, value, text) => value == null || value === '' ? null : `${meta(prop, value)}${text}`;
 	const plural = (n, word) => `${num(n)} ${word}${n === 1 ? '' : 's'}`;
 	const floorSize = place.floorSize == null ? null
@@ -1648,22 +1676,53 @@ const listingItem = (place, type) => {
 	/* geo and hasMap are Place properties — invalid on the listing (a WebPage), valid inside
 	   the residence scope, so they sit in mainEntity. Docs: docs/schema.md § Real estate */
 	const map = placeMapLink(place.geo);
-	return `<div${scope('item', 'RealEstateListing')}>${placeName(place)}${meta('datePosted', place.datePosted)}${price}`
+	return placeName(place, cover) + meta('datePosted', place.datePosted) + price
 		+ `<div${scope('mainEntity', type)}>`
 		+ geoPart(place.geo)
 		+ addressPart(place.address)
 		+ (facts.length ? `<p data-part="meta">${facts.join(' · ')}</p>` : '')
 		+ (map ? `<p data-part="meta">${map}</p>` : '')
-		+ '</div></div>';
+		+ '</div>';
 };
 
 /* one <li> — the ListItem owns only position + item; everything else hangs off `item` */
+/* never verbatim data — the value lands in an itemtype (docs/schema.md § Subtypes) */
+const placeType = (place, kind) => PLACE_ITEM_TYPES[kind].has(place.type) ? place.type : PLACE_FALLBACK[kind];
+/* a residence's ITEM is the listing; the Accommodation hangs off its mainEntity */
+const placeItemtype = (kind, type) => kind === 'residence' ? 'RealEstateListing' : type;
+const placeBody = (place, kind, type, cover = false) => kind === 'residence' ? listingBody(place, type, cover) : officeBody(place, type, cover);
+
+/* one <li> — the ListItem owns only position + item; everything else hangs off `item` */
 const placeRow = (place, kind, index) => {
-	const wanted = place.type;
-	const type = PLACE_ITEM_TYPES[kind].has(wanted) ? wanted : PLACE_FALLBACK[kind];
+	const type = placeType(place, kind);
 	return `<li${scope('itemListElement', 'ListItem')}>${meta('position', index + 1)}`
-		+ (kind === 'residence' ? listingItem(place, type) : officeItem(place, type))
+		+ `<div${scope('item', placeItemtype(kind, type))}>${placeBody(place, kind, type)}</div>`
 		+ '</li>';
+};
+
+/* one CARD slide — the same body, hosted by a nested <ui-card> inside the media frame, so
+   the carousel's slides ARE the itemListElement set and no separate <ol> is needed. The
+   nested card is a PROPERTY of the list (it carries itemprop), not a card of its own, which
+   is why the page's card counts skip it. <cq-box> holds the item scope so the photo and the
+   text sit inside one item. Docs: docs/schema.md § Places */
+const placeSlide = (place, kind, index, look = {}, cardId = null) => {
+	const type = placeType(place, kind);
+	/* a MINTED id (never author data): the slide is a scroll-snap child, so a plain
+	   `<a href="#id">` scrolls it into view with no JavaScript at all — which is how the
+	   map popup jumps to a home. Docs: docs/media.md § Places */
+	const id = cardId ? `${cardId}-place-${index + 1}` : null;
+	const photo = place.image
+		? `<ui-media><img${attrs({ src: place.image, alt: place.imageAlt || '', loading: 'lazy', decoding: 'async', itemprop: 'image' })}></ui-media>`
+		: '';
+	/* the slide's asr() MUST match the frame's, or the nested card's box overflows the
+	   slide and the scroller clips the overlay — the frame is the one with the height.
+	   Override both together via details.slide. Docs: docs/media.md § Places */
+	return `<ui-card${attrs({ id, variant: look.variant || 'ovr(bs)', media: look.media || 'asr(1/1) scm', content: look.content || 'scl(sm)' })}${scope('itemListElement', 'ListItem')}>`
+		+ meta('position', index + 1)
+		+ `<cq-box${scope('item', placeItemtype(kind, type))}>`
+		+ photo
+		+ `<ui-content>${placeBody(place, kind, type, true)}</ui-content>`
+		+ '</cq-box></ui-card>';
 };
 
 const DETAILS = {
@@ -2012,9 +2071,10 @@ const DETAILS = {
 		/* the region is VISIBLE TEXT ONLY: about / spatialCoverage / areaServed are all out
 		   of domain on an ItemList, so there is no property to hang it on */
 		if (d.regionDisplay) html += `<p data-part="meta">${esc(d.regionDisplay)}</p>`;
-		/* ordered by default — every row already carries a `position`, so an <ol>'s markers
-		   tell the truth; `details.ordered: false` opts out */
-		html += scopedList(items.map((place, index) => placeRow(place, kind, index)), d.ordered !== false);
+		/* with details.slides the media frame carries the places as card slides, so the
+		   list would be a second copy of the same itemListElement set — one property, one
+		   value. Otherwise: ordered by default, since every row carries a `position`. */
+		if (!d.slides) html += scopedList(items.map((place, index) => placeRow(place, kind, index)), d.ordered !== false);
 		return html;
 	},
 

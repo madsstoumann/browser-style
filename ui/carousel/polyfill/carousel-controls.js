@@ -43,7 +43,7 @@ const SEL = `ui-media${NAV}, :is(ui-card${NAV}, ui-reveal${NAV}) ui-media, lay-o
 // standalone behind a @supports gate. The copy is safe because drift is a build
 // error — ui/card/tokens.lint.js parses this literal and requires it to equal
 // shared.js's exactly (and the :not() list in media.carousel.css to be a subset).
-const NOT_SLIDE = /^(AUDIO|UI-BEACON|UI-CHIP|UI-LIGHTBOX|UI-MAP|UI-MARQUEE|UI-PLAY|UI-SAVE|UI-STICKER|UI-CAROUSEL-CONTROLS|LAY-OUT)$/;
+const NOT_SLIDE = /^(AUDIO|UI-BEACON|UI-CHIP|UI-LIGHTBOX|UI-MARQUEE|UI-PLAY|UI-SAVE|UI-STICKER|UI-CAROUSEL-CONTROLS|LAY-OUT)$/;
 
 // the effective media string — own attr, else the ui-card/ui-reveal host
 // (media= inheritance stops at the card)
