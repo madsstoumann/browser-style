@@ -37,7 +37,7 @@ the single-point map already has with `details.geo` (see
 | token | axis | args | aliases | bare | writes | md:/lg: | deprecated |
 |---|---|---|---|---|---|---|---|
 | `tiles()` | tiles | **provider** auto positron dark voyager osm topo sat | — | — | — | — | — |
-| `tint()` | tint | **look** vivid gray mono sepia invert warm cool soft | — | — | --ui-map-filter | — | — |
+| `tint()` | tint | **look** vivid blue gray mono sepia invert warm cool soft | — | — | --ui-map-filter | — | — |
 | `pin()` | pin | **look** dot pin label price | — | — | --ui-map-pin-size --ui-map-pin-bg --ui-map-pin-c --ui-map-cluster-size | — | — |
 | `cluster()` | cluster | **radius** sm md lg &lt;n&gt; | — | yes | — | — | — |
 | `zoom()` | zoom | **level** &lt;n&gt; | — | — | — | — | — |
@@ -50,7 +50,7 @@ the single-point map already has with `details.geo` (see
 | token | arg class | values | aliases |
 |---|---|---|---|
 | `tiles()` | **provider** | auto positron dark voyager osm topo sat | — |
-| `tint()` | **look** | vivid gray mono sepia invert warm cool soft | — |
+| `tint()` | **look** | vivid blue gray mono sepia invert warm cool soft | — |
 | `pin()` | **look** | dot pin label price | — |
 <!-- /tokens -->
 
@@ -114,6 +114,7 @@ layers and hiding one in CSS would double every tile request.
 | token | filter | reach for it when |
 |---|---|---|
 | `tint(vivid)` | `saturate(1.4) brightness(1.04)` | the map is the subject — the **only** value that adds colour |
+| `tint(blue)` | `sepia(1) hue-rotate(185deg) saturate(2.2)` | recolouring a basemap to one hue — with `tiles(dark)` this is the dark-navy look |
 | `tint(gray)` | `grayscale(1)` | the map is a backdrop and colour would compete |
 | `tint(mono)` | `grayscale(1) contrast(1.15)` | as `gray`, but the streets need to stay legible |
 | `tint(soft)` | `saturate(0.6) brightness(1.05)` | a light knock-back that keeps some hue |
@@ -121,6 +122,13 @@ layers and hiding one in CSS would double every tile request.
 | `tint(cool)` | `saturate(0.8) hue-rotate(15deg)` | the mirror of `warm` |
 | `tint(sepia)` | `sepia(0.6)` | an archival / historical look |
 | `tint(invert)` | `invert(1) hue-rotate(180deg) brightness(0.95)` | faking a dark basemap from a light one — but prefer real `tiles(dark)`, which is cartography rather than a filter |
+
+**Why `blue` starts with `sepia()`.** `hue-rotate()` rotates hue that is already present, and
+a dark basemap is effectively greyscale — there is nothing to rotate, so `hue-rotate()` alone
+does nothing at all. `sepia(1)` forces a uniform ~45° cast onto any image, which the rotation
+can then move; ~185° lands on blue and `saturate()` sets how strongly. That is also why there
+is no `tiles(darkblue)`: no keyless provider ships dark-blue cartography, so the colour has to
+be introduced rather than fetched.
 
 *Keep this table in sync with the arms in `ui-map.css` — the manifest records the arg names,
 not what each one does, so this is the only place the looks are written down.*

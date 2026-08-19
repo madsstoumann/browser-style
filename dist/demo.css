@@ -7769,6 +7769,9 @@
   :where(ui-map[map*="tint(vivid)"]) {
     --ui-map-filter: saturate(1.4) brightness(1.04);
   }
+  :where(ui-map[map*="tint(blue)"]) {
+    --ui-map-filter: sepia(1) hue-rotate(185deg) saturate(2.2);
+  }
   :where(ui-map[map*="tint(gray)"]) {
     --ui-map-filter: grayscale(1);
   }

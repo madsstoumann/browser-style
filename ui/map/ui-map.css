@@ -47,6 +47,9 @@
 	:where(ui-map) .leaflet-tile-pane { filter: var(--ui-map-filter); }
 
 	:where(ui-map[map*="tint(vivid)"])  { --ui-map-filter: saturate(1.4) brightness(1.04); }
+	/* sepia FIRST: hue-rotate() rotates hue that already exists, and a dark basemap is
+	   effectively greyscale — sepia forces a uniform cast the rotation can then move */
+	:where(ui-map[map*="tint(blue)"])   { --ui-map-filter: sepia(1) hue-rotate(185deg) saturate(2.2); }
 	:where(ui-map[map*="tint(gray)"])   { --ui-map-filter: grayscale(1); }
 	:where(ui-map[map*="tint(mono)"])   { --ui-map-filter: grayscale(1) contrast(1.15); }
 	:where(ui-map[map*="tint(sepia)"])  { --ui-map-filter: sepia(0.6); }
