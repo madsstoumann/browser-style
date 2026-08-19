@@ -100,6 +100,7 @@ Space-separated token strings; values flow down via CSS custom properties, so a 
 | `theme=` | `ui-card` / `ui-reveal` | shared theme axis (colour + `pale`/`muted`/`light`/`dark`) | `black dark` `red pale` `gray` | `../base/theme.md` |
 | `media=` | `ui-media` or its card host (also `lay-out[overflow]` for its own scroller) | media frame + **all carousel controls (media-token-only — the old `nav=`/`arrow=`/`dot=`/`vid=`/`ply=`/`eager` attributes are removed)** | `asr(16/9)` `md:asr(4/3)` `obf()` `obp(cc)` `flp(h)` `hov(zoom)` `scm` `nav(mrk)` `arw(drk)` `mrk(pll)` `axis(y)` `auto` `loop` `stagger` `chip(ts)` `sticker(red)` `beacon(sld)` `marquee(bot)` `vid()` `play(lg)` `lightbox(bs)` `open:grid(3c)` `load(eager)` | `docs/media.md`, `docs/carousel.md`, `docs/media.carousel.md` |
 | `content=` | `ui-content` (canonical) or ancestor | text column | `scl(lg)` `hl(3xl)` `eb(accent)` `tx(lgt)` `mt(med)` `pad(xl)` `lg:pbs(none)` `gap()` `rds(lg)` `scr` | `docs/content.md` |
+| `map=` | `ui-map` only (`@browser.style/map`) | the clustered map frame — basemap, tint, markers, controls | `tiles(voyager)` `tint(vivid)` `pin(dot)` `cluster(sm)` `zoom(12)` `ctl(non)` `fit` `scroll` | [`../map/readme.md`](../map/readme.md) |
 
 ## Container-query model (how cards respond)
 

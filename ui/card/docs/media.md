@@ -716,6 +716,10 @@ are one nested `<ui-card>` per place — ordinary `nav()` on the frame, no new t
 </ui-media>
 ```
 
+The `map=` vocabulary itself — `tiles()` for the basemap, `tint()` for its look, plus
+`pin()` / `cluster()` / `zoom()` / `ctl()` / `fit` / `scroll` — is documented in
+[`@browser.style/map`'s readme](../../map/readme.md), with a value-by-value table for each.
+
 Three things make it hold together:
 
 - **`<ui-map>` is a slide, not furniture.** It is deliberately absent from `NOT_SLIDE` and

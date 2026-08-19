@@ -111,10 +111,25 @@ layers and hiding one in CSS would double every tile request.
 `tint()` is **pure CSS** — one `filter` on `.leaflet-tile-pane` — so it composes with any
 `tiles()` value at no extra request.
 
-`tint(vivid)` is the odd one out: it **adds** colour (`saturate(1.4) brightness(1.04)`) where
-every other value desaturates or shifts hue. Pair it with `tiles(voyager)` — CARTO's
-colourful style — when a map should read as bright rather than as a backdrop; pair a muted
-value with `tiles(positron)` when the map is there to sit behind something else.
+| token | filter | reach for it when |
+|---|---|---|
+| `tint(vivid)` | `saturate(1.4) brightness(1.04)` | the map is the subject — the **only** value that adds colour |
+| `tint(gray)` | `grayscale(1)` | the map is a backdrop and colour would compete |
+| `tint(mono)` | `grayscale(1) contrast(1.15)` | as `gray`, but the streets need to stay legible |
+| `tint(soft)` | `saturate(0.6) brightness(1.05)` | a light knock-back that keeps some hue |
+| `tint(warm)` | `sepia(0.25) saturate(1.2) hue-rotate(-10deg)` | warming a cool basemap towards a brand palette |
+| `tint(cool)` | `saturate(0.8) hue-rotate(15deg)` | the mirror of `warm` |
+| `tint(sepia)` | `sepia(0.6)` | an archival / historical look |
+| `tint(invert)` | `invert(1) hue-rotate(180deg) brightness(0.95)` | faking a dark basemap from a light one — but prefer real `tiles(dark)`, which is cartography rather than a filter |
+
+*Keep this table in sync with the arms in `ui-map.css` — the manifest records the arg names,
+not what each one does, so this is the only place the looks are written down.*
+
+**Choosing a pair.** `tiles()` picks the cartography, `tint()` adjusts it. The two decisions
+compose, so the useful question is what the map is *for*: `tiles(voyager) tint(vivid)` when
+it is the thing you are looking at, `tiles(positron) tint(gray)` when it sits behind
+something else, `tiles(auto)` with no tint when it should just follow the page's colour
+scheme.
 
 It must never go on `.leaflet-tile-container`: `leaflet.css` gives `.leaflet-tile`
 `filter: inherit`, so a filter there is applied **twice**, and `invert(1)` twice is the
