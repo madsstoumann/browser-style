@@ -1863,6 +1863,39 @@ describe('inline markup allowlist', () => {
    Two halves, so "rely on the meta" is enforced instead of remembered:
    the renderer emits clean strings, and every page showing one declares the meta.
    Docs: docs/schema.md § Book */
+/* An icon marker is a data-icon whose value must exist in @browser.style/icon's
+   generated catalog — an unknown name is silently inert in the browser (the list
+   falls back to its normal marker), so it is caught here instead.
+   Docs: docs/content.md § Icon markers */
+describe('icon markers', () => {
+	const icons = new Set(
+		JSON.parse(readFileSync(new URL('../icon/icons.json', import.meta.url), 'utf8'))
+			.icons.map((n) => n.replace(/_/g, '-'))
+	);
+
+	test('every data-icon in the demo corpus names a real glyph', () => {
+		const dir = new URL('./data/', import.meta.url);
+		const presets = JSON.parse(readFileSync(new URL('./card.presets.demo.json', dir), 'utf8'));
+		const seen = new Set();
+		for (const file of readdirSync(dir).filter((f) => f.endsWith('.json'))) {
+			let ucf;
+			try { ucf = JSON.parse(readFileSync(new URL(file, dir), 'utf8')); } catch { continue; }
+			if (ucf?.model !== 'card') continue;
+			for (const [, name] of renderCard(ucf, presets).matchAll(/ data-icon="([^"]+)"/g)) seen.add(name);
+		}
+		for (const name of seen) assert.ok(icons.has(name), `data-icon="${name}" is not in ui/icon/icons.json`);
+		assert.ok(seen.size > 0, 'expected the corpus to exercise at least one icon marker');
+	});
+
+	test('the generated sheet defines every icon in the manifest', () => {
+		const css = readFileSync(new URL('../icon/icon-font.css', import.meta.url), 'utf8');
+		for (const name of icons) {
+			assert.match(css, new RegExp(`--icon-${name}:`), `--icon-${name} missing from icon-font.css`);
+			assert.match(css, new RegExp(`\\[data-icon="${name}"\\]`), `[data-icon="${name}"] missing from icon-font.css`);
+		}
+	});
+});
+
 describe('data detectors', () => {
 	/* U+00AD soft hyphen · U+200B-200D zero width · U+2060 word joiner · U+FEFF BOM */
 	const INVISIBLE = /[­​-‍⁠﻿]/;

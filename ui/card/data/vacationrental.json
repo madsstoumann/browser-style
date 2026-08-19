@@ -10,7 +10,7 @@
     "folder": "Cards/Property"
   },
   "fields": {
-    "internalName": "Demo — Vacation rental",
+    "internalName": "Demo \u2014 Vacation rental",
     "schemaType": "vacationrental",
     "preset": {
       "$ref": "card-preset/carousel"
@@ -57,12 +57,15 @@
       "additionalType": "HolidayVillageRental",
       "identifier": "MSL-2026-04",
       "brand": "Masseria Collective",
-      "priceRange": "€320–€540 per night",
+      "priceRange": "\u20ac320\u2013\u20ac540 per night",
       "checkin": "16:00:00+02:00",
       "checkinDisplay": "16:00",
       "checkout": "10:00:00+02:00",
       "checkoutDisplay": "10:00",
-      "languages": ["en-GB", "it-IT"],
+      "languages": [
+        "en-GB",
+        "it-IT"
+      ],
       "rating": {
         "value": 4.8,
         "count": 64,
@@ -89,8 +92,16 @@
         "rooms": 6,
         "sleeps": 6,
         "beds": [
-          { "count": 2, "type": "Queen" },
-          { "count": 2, "type": "Single" }
+          {
+            "count": 2,
+            "type": "Queen",
+            "icon": "king-bed"
+          },
+          {
+            "count": 2,
+            "type": "Single",
+            "icon": "bed"
+          }
         ]
       }
     }

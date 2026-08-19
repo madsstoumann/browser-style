@@ -382,6 +382,46 @@ direct — a `<p>` wrapper would break the row onto two lines. Knobs:
 `--ui-content-list-menu-ink` (description). Used by the `menu` type — see
 [schema.md § Menu](schema.md).
 
+#### Icon markers — `data-icon` on a list row
+
+A `<li data-icon="bed">` replaces the bullet with an icon glyph. It is the **marker**, not
+inserted content — so it inherits the row's `color` for free and never enters the accessible
+name (generated marker content is not announced, which is what you want for a decorative icon
+whose meaning is already in the text).
+
+```html
+<ul data-part="list">
+  <li data-icon="king-bed">2 × Queen</li>
+  <li data-icon="bathtub">2 bathrooms</li>
+</ul>
+```
+
+Requires the opt-in sheet — the glyphs live in `@browser.style/icon`, not in the card bundle:
+
+```html
+<link rel="stylesheet" href="…/@browser.style/icon/icon-font.css">
+```
+
+Without it the row falls back to its normal bullet; nothing breaks. Names come from
+[`ui/icon/icons.json`](../../icon/icons.json) in **kebab-case** (`square-foot`, not
+`square_foot`); an unknown name is inert in the browser, so `render.test.js` § *icon markers*
+fails the build on one instead. The same `--icon` property drives the `tel:` / `mailto:`
+icons, which are `::before` glyphs for the same reason — one vocabulary, two placements.
+
+Knobs: `--ui-content-list-icon-gap` (default `0.4em`, rides `letter-spacing` on the marker)
+and `--ui-content-list-marker-ink` (defaults to `currentColor`, i.e. the row's own colour).
+
+**Why a font here and masks elsewhere.** `::marker` accepts almost nothing: `mask` and
+`background` are dropped outright, an image `content:` can be neither tinted nor sized, and
+`vertical-align` / `transform` / `translate` are all ignored — measured in Chrome 150, not
+assumed. Only the font properties and `color` survive, so a text glyph is the only icon a
+marker can carry. That is the opposite of the `::before` case, where a `mask` + `currentColor`
+is strictly better; the contact icons moved to the font only so both placements share one
+catalog. The glyphs are **baseline-shifted at build time** (`baselineShiftEm` in
+`icons.json`) because Material Symbols centre their icon box at `+0.5em` above the baseline
+while text centres near `+0.33em` — and `::marker` has no lever to correct it. See
+[`ui/icon/readme.md` § Icon font](../../icon/readme.md).
+
 ### Structured parts — microdata scope + who uses them
 
 The eight later parts each carry a schema.org scope and were added for specific content

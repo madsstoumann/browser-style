@@ -629,9 +629,15 @@ const addressPart = (address, prop = 'address') => {
 	return `<address data-part="address"${scope(prop, 'PostalAddress')}>${lines}${country.length > 2 ? '' : meta('addressCountry', country)}</address>`;
 };
 
+/* an item is a plain string, or { text, icon } where `icon` names a glyph in
+   @browser.style/icon/icons.json — it rides data-icon and becomes the ::marker.
+   An unknown name is inert (the list falls back to its normal marker). */
 const listPart = (items, { ordered = false, itemprop = null, crossed = false } = {}) =>
 	items?.length
-		? `<${ordered ? 'ol' : 'ul'} data-part="list"${crossed ? ' data-variant="crossed"' : ''}${itemprop ? ` itemprop="${esc(itemprop)}"` : ''}>${items.map((item) => `<li>${esc(item)}</li>`).join('')}</${ordered ? 'ol' : 'ul'}>`
+		? `<${ordered ? 'ol' : 'ul'} data-part="list"${crossed ? ' data-variant="crossed"' : ''}${itemprop ? ` itemprop="${esc(itemprop)}"` : ''}>${items.map((item) => {
+			const { text, icon } = typeof item === 'object' && item !== null ? item : { text: item, icon: null };
+			return `<li${icon ? ` data-icon="${esc(icon)}"` : ''}>${esc(text)}</li>`;
+		}).join('')}</${ordered ? 'ol' : 'ul'}>`
 		: '';
 
 /* author image via @browser.style/avatar — initials fallback when no image */
@@ -1523,7 +1529,7 @@ export const vacationrentalSections = (d = {}, fields = {}) => {
 	   name is the visible text, so it is a <span itemprop>, not a second <meta> */
 	const beds = unit?.beds?.length
 		? `<ul data-part="list">${unit.beds.map((bed) =>
-			`<li${scope('bed', 'BedDetails')}>${meta('numberOfBeds', bed.count)}${num(bed.count)} × <span itemprop="typeOfBed">${esc(bed.type)}</span></li>`).join('')}</ul>`
+			`<li${bed.icon ? ` data-icon="${esc(bed.icon)}"` : ''}${scope('bed', 'BedDetails')}>${meta('numberOfBeds', bed.count)}${num(bed.count)} × <span itemprop="typeOfBed">${esc(bed.type)}</span></li>`).join('')}</ul>`
 		: '';
 
 	const stayBits = [
