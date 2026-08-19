@@ -14,7 +14,7 @@
     "cms/editors/*"
   ],
   "scripts": {
-    "build": "npm run build --workspaces",
+    "build": "npm run build -w @browser.style/base -w @browser.style/carousel -w @browser.style/card -w @browser.style/reveal -w @browser.style/layout",
     "build:demo-css": "node scripts/css-bundle.js . ui/card/demo/demo.css demo && node scripts/hash-asset.js dist/demo.min.css",
     "build:demo": "node ui/card/build.js && npm run build:demo-css && node scripts/inline-polyfill.js",
     "dev:demo": "node scripts/dev-demo.js",
@@ -22,6 +22,7 @@
     "publish-all": "read -p 'OTP: ' otp && node scripts/publish.js $otp",
     "test-packages": "node scripts/test-packages.js",
     "update-peers": "node scripts/update-peer-deps.js",
-    "version-all": "npm version patch --workspaces && node scripts/update-peer-deps.js"
+    "version-all": "npm version patch --workspaces && node scripts/update-peer-deps.js",
+    "build:docs": "npm run build -w @browser.style/baseline"
   }
 }
