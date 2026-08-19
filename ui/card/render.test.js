@@ -2330,3 +2330,25 @@ describe('places — actions', () => {
 		assert.ok(!noUrl.includes('data-part="actions"'), 'nothing to link to, no CTA');
 	});
 });
+
+describe('places — a screen-reader-only list', () => {
+	const OFFICE = { type: 'LocalBusiness', name: 'Copenhagen', url: '/offices/cph', geo: { latitude: 55.6761, longitude: 12.5683 }, address: { addressLocality: 'Copenhagen' } };
+	const card = (extra) => render({ schemaType: 'places', headline: 'Offices', details: { kind: 'business', items: [OFFICE], ...extra } });
+
+	test('details.list "sr" hides the list visually but keeps it in the a11y tree', () => {
+		const html = card({ list: 'sr' });
+		assert.match(html, /<ol data-part="list" data-sr>/);
+		/* NOT `hidden` — that would drop it from the accessibility tree too, leaving the
+		   map with no text alternative, and take the itemListElement set with it */
+		assert.ok(!/<ol data-part="list"[^>]*\shidden/.test(html), 'must not be `hidden`');
+		/* the set the count describes is still there, and so is the map's data source */
+		assert.match(html, /<meta itemprop="numberOfItems" content="1">/);
+		assert.match(html, /itemprop="itemListElement"/);
+		assert.match(html, /<meta itemprop="latitude" content="55.6761">/);
+		assert.match(html, /<a itemprop="url" href="\/offices\/cph">/);
+	});
+
+	test('the list is visible by default', () => {
+		assert.match(card({}), /<ol data-part="list">/);
+	});
+});

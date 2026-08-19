@@ -679,18 +679,28 @@ The item allowlist reuses `RESIDENCE_TYPES` **verbatim**. It excludes `Residence
 `numberOfRooms`, `numberOfBedrooms`, `numberOfBathroomsTotal` and `yearBuilt` are all out of
 domain on them — a listing typed `Residence` could state none of its own facts.
 
-**Two presentations, one content model.** A collection card is long by nature — six offices
-with address, phone and hours is forty lines of page — so neither shape prints everything.
+**Two presentations, one content model.** A collection card is long by nature — eight offices
+with address, phone and hours is fifty lines of page — so neither shape prints everything.
 
-*Compact rows (the default).* An office row shows the linked name and, when it differs, its
-locality — linked to its own office page, built by
+*Compact rows.* An office row shows the linked name and, when it differs, its locality —
+linked to its own office page, built by
 [`demo/offices/build.js`](../demo/offices/build.js). That page is the simplest of the four
 detail builders on purpose: real estate and rentals are banded because their subject spans
 two scopes, while an office is one `LocalBusiness`, so a single card states every property
-exactly once and there is nothing to split. All six rows point at the one page that exists,
+exactly once and there is nothing to split. Every row points at the one page that exists,
 the same demo convenience as the five homes. The address, hours and `hasMap` link stay fully marked up inside one bare
 `<div hidden>`, and the phone becomes a `<meta>`. A reader gets them from the map popup,
-which `<ui-map>` builds out of exactly those nodes. **The wrapper must be a bare `<div>`:**
+which `<ui-map>` builds out of exactly those nodes.
+
+**`details.list: "sr"`** goes further and takes the list off the visible card altogether,
+using [`data-sr`](../../base/core.css) rather than `hidden` — and that distinction is the
+whole point. The list cannot simply be deleted: it **is** the `itemListElement` set
+`numberOfItems` counts, it is where `<ui-map>` reads its points, and it is the map's text
+alternative, since the pins are `aria-hidden` decoration. `hidden` would take it out of the
+accessibility tree along with the page; `data-sr` takes it out of the page only. Sighted
+readers reach the same data by clicking a pin.
+
+**The `<div hidden>` wrapper inside a row must be a bare `<div>`:**
 `content.css` gives `[data-part="address"]` `display: flex` and `[data-part="hours"]`
 `display: grid`, and an author `display` beats the UA `[hidden] { display: none }` rule — put
 `hidden` on the parts themselves and they stay fully visible.

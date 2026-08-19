@@ -1363,8 +1363,10 @@ const slug = (text) => String(text ?? '').toLowerCase().replace(/[^a-z0-9]+/g, '
    and TV seasons ascend, so ordinal markers are true; podcast episodes descend,
    so markers would lie. The per-type default is the direction that type usually
    runs in — data always wins. */
-const scopedList = (rows, ordered) => rows.length
-	? `<${ordered ? 'ol' : 'ul'} data-part="list">${rows.join('')}</${ordered ? 'ol' : 'ul'}>`
+/* `sr` renders the list visually-hidden but still IN the accessibility tree ([data-sr],
+   ui/base/core.css) — not `hidden`, which would remove it from both. Docs: docs/content.md */
+const scopedList = (rows, ordered, sr = false) => rows.length
+	? `<${ordered ? 'ol' : 'ul'} data-part="list"${sr ? ' data-sr' : ''}>${rows.join('')}</${ordered ? 'ol' : 'ul'}>`
 	: '';
 
 /* one MenuItem row: name · label · price on one line, description under it. The row
@@ -2086,7 +2088,12 @@ const DETAILS = {
 		/* with details.slides the media frame carries the places as card slides, so the
 		   list would be a second copy of the same itemListElement set — one property, one
 		   value. Otherwise: ordered by default, since every row carries a `position`. */
-		if (!d.slides) html += scopedList(items.map((place, index) => placeRow(place, kind, index)), d.ordered !== false);
+		/* details.list: "sr" takes the list off the visible card while keeping it in the
+		   accessibility tree. It cannot simply be dropped: it IS the itemListElement set
+		   numberOfItems counts, it is where <ui-map> reads its points, and it is the map's
+		   text alternative — the pins are aria-hidden decoration. Sighted readers reach the
+		   same data through a marker popup. Docs: docs/schema.md § Places */
+		if (!d.slides) html += scopedList(items.map((place, index) => placeRow(place, kind, index)), d.ordered !== false, d.list === 'sr');
 		return html;
 	},
 

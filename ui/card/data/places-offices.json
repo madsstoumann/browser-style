@@ -17,22 +17,23 @@
     },
     "eyebrow": "Worldwide",
     "headline": "Where you'll find us",
-    "summary": "Six studios on three continents. Click a pin for the address, phone and opening hours \u2014 the list below is the same data, kept machine-readable.",
+    "summary": "Eight studios on four continents. Click a pin for the address, phone and opening hours \u2014 the list below is the same data, kept machine-readable.",
     "media": [
       {
         "mediaType": "places",
-        "alt": "Map of six studios worldwide",
+        "alt": "Map of eight studios worldwide",
         "map": "tiles(dark) tint(navy) cluster fit"
       }
     ],
     "details": {
       "kind": "business",
+      "list": "sr",
       "center": {
         "latitude": 30.0,
         "longitude": 5.0,
         "url": "https://www.google.com/maps/search/?api=1&query=30,5"
       },
-      "regionDisplay": "6 studios · 3 continents",
+      "regionDisplay": "8 studios · 4 continents",
       "order": "ItemListOrderAscending",
       "items": [
         {
@@ -77,12 +78,32 @@
         },
         {
           "type": "LocalBusiness",
+          "name": "Toronto",
+          "url": "offices/copenhagen.html",
+          "branchCode": "YYZ",
+          "geo": { "latitude": 43.6532, "longitude": -79.3832 },
+          "address": { "streetAddress": "36 Wellington Street East", "postalCode": "M5E 1C7", "addressLocality": "Toronto", "addressRegion": "ON", "addressCountry": "CA" },
+          "telephone": "+1 416 555 0192",
+          "openingHours": [{ "schema": "Mo-Fr 09:00-17:30" }]
+        },
+        {
+          "type": "LocalBusiness",
           "name": "Singapore",
           "url": "offices/copenhagen.html",
           "branchCode": "SIN",
           "geo": { "latitude": 1.3521, "longitude": 103.8198 },
           "address": { "streetAddress": "8 Marina View", "postalCode": "018960", "addressLocality": "Singapore", "addressCountry": "SG" },
           "telephone": "+65 6123 4567",
+          "openingHours": [{ "schema": "Mo-Fr 09:00-18:00" }]
+        },
+        {
+          "type": "LocalBusiness",
+          "name": "Kuala Lumpur",
+          "url": "offices/copenhagen.html",
+          "branchCode": "KUL",
+          "geo": { "latitude": 3.139, "longitude": 101.6869 },
+          "address": { "streetAddress": "Jalan Sultan Ismail 88", "postalCode": "50250", "addressLocality": "Kuala Lumpur", "addressCountry": "MY" },
+          "telephone": "+60 3 2712 3400",
           "openingHours": [{ "schema": "Mo-Fr 09:00-18:00" }]
         },
         {
