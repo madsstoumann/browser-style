@@ -15,10 +15,10 @@
 		/* AA muted ink — same block as demo/schema.html */
 		ui-content { --ui-content-muted: color-mix(in oklab, currentColor 85%, transparent); }
 		ui-chip[data-type] { --ui-chip-bg: hsl(0, 0%, 95%); --ui-chip-c: hsl(0, 0%, 13%); }
-		/* Page-scoped: generic stroked glyphs, not brand marks — <ui-icon> is not used
-		   because it forces fill:none/stroke on its SVG for line icons only. */
+		/* Page-scoped action glyphs. Apple is the app mark in /assets/svg; Google is a
+		   generic stroked pin. <ui-icon> is unused — it forces fill:none/stroke on its SVG. */
+		[data-part="actions"] :is(svg, img) { block-size: 1.25em; inline-size: auto; }
 		[data-part="actions"] svg {
-			block-size: 1.25em;
 			fill: none;
 			stroke: currentColor;
 			stroke-linecap: round;
@@ -74,7 +74,7 @@
 					</dl>
 					<ul data-part="list"><li data-icon="call"><a itemprop="telephone" href="tel:+4535551290">+45 35 55 12 90</a></li></ul>
 					<span data-part="tags"><ui-chip itemprop="keywords">Copenhagen</ui-chip><ui-chip itemprop="keywords">Studio</ui-chip></span>
-					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="https://www.google.com/maps/search/?api=1&amp;query=55.7076,12.5993" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>Google</a><a class="ui-button" data-variant="outline" href="https://maps.apple.com/?ll=55.7076,12.5993&amp;q=Nordhavn%20Studio" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4 3 6.5v13L9 17l6 3 6-2.5v-13L15 7 9 4z"/><path d="M9 4v13"/><path d="M15 7v13"/></svg>Apple</a></nav>
+					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="https://www.google.com/maps/search/?api=1&amp;query=55.7076,12.5993" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>Google</a><a class="ui-button" data-variant="outline" href="https://maps.apple.com/?ll=55.7076,12.5993&amp;q=Nordhavn%20Studio" target="_blank" rel="noopener"><img src="/assets/svg/apple.maps.svg" alt="" width="20" height="20">Apple</a></nav>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -107,7 +107,7 @@
 					</dl>
 					<ul data-part="list"><li data-icon="call"><a itemprop="telephone" href="tel:+4535551290">+45 35 55 12 90</a></li></ul>
 					<span data-part="tags"><ui-chip itemprop="keywords">Copenhagen</ui-chip><ui-chip itemprop="keywords">Studio</ui-chip></span>
-					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="https://www.google.com/maps/search/?api=1&amp;query=55.7076,12.5993" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>Google</a><a class="ui-button" data-variant="outline" href="https://maps.apple.com/?ll=55.7076,12.5993&amp;q=Nordhavn%20Studio" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4 3 6.5v13L9 17l6 3 6-2.5v-13L15 7 9 4z"/><path d="M9 4v13"/><path d="M15 7v13"/></svg>Apple</a></nav>
+					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="https://www.google.com/maps/search/?api=1&amp;query=55.7076,12.5993" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>Google</a><a class="ui-button" data-variant="outline" href="https://maps.apple.com/?ll=55.7076,12.5993&amp;q=Nordhavn%20Studio" target="_blank" rel="noopener"><img src="/assets/svg/apple.maps.svg" alt="" width="20" height="20">Apple</a></nav>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -140,7 +140,7 @@
 					</dl>
 					<ul data-part="list"><li data-icon="call"><a itemprop="telephone" href="tel:+4535551290">+45 35 55 12 90</a></li></ul>
 					<span data-part="tags"><ui-chip itemprop="keywords">Copenhagen</ui-chip><ui-chip itemprop="keywords">Studio</ui-chip></span>
-					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="https://www.google.com/maps/search/?api=1&amp;query=55.7076,12.5993" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>Google</a><a class="ui-button" data-variant="outline" href="https://maps.apple.com/?ll=55.7076,12.5993&amp;q=Nordhavn%20Studio" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4 3 6.5v13L9 17l6 3 6-2.5v-13L15 7 9 4z"/><path d="M9 4v13"/><path d="M15 7v13"/></svg>Apple</a></nav>
+					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="https://www.google.com/maps/search/?api=1&amp;query=55.7076,12.5993" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>Google</a><a class="ui-button" data-variant="outline" href="https://maps.apple.com/?ll=55.7076,12.5993&amp;q=Nordhavn%20Studio" target="_blank" rel="noopener"><img src="/assets/svg/apple.maps.svg" alt="" width="20" height="20">Apple</a></nav>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -173,7 +173,7 @@
 					</dl>
 					<ul data-part="list"><li data-icon="call"><a itemprop="telephone" href="tel:+4535551290">+45 35 55 12 90</a></li></ul>
 					<span data-part="tags"><ui-chip itemprop="keywords">Copenhagen</ui-chip><ui-chip itemprop="keywords">Studio</ui-chip></span>
-					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="https://www.google.com/maps/search/?api=1&amp;query=55.7076,12.5993" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>Google</a><a class="ui-button" data-variant="outline" href="https://maps.apple.com/?ll=55.7076,12.5993&amp;q=Nordhavn%20Studio" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4 3 6.5v13L9 17l6 3 6-2.5v-13L15 7 9 4z"/><path d="M9 4v13"/><path d="M15 7v13"/></svg>Apple</a></nav>
+					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="https://www.google.com/maps/search/?api=1&amp;query=55.7076,12.5993" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>Google</a><a class="ui-button" data-variant="outline" href="https://maps.apple.com/?ll=55.7076,12.5993&amp;q=Nordhavn%20Studio" target="_blank" rel="noopener"><img src="/assets/svg/apple.maps.svg" alt="" width="20" height="20">Apple</a></nav>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -206,7 +206,7 @@
 					</dl>
 					<ul data-part="list"><li data-icon="call"><a itemprop="telephone" href="tel:+4535551290">+45 35 55 12 90</a></li></ul>
 					<span data-part="tags"><ui-chip itemprop="keywords">Copenhagen</ui-chip><ui-chip itemprop="keywords">Studio</ui-chip></span>
-					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="https://www.google.com/maps/search/?api=1&amp;query=55.7076,12.5993" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>Google</a><a class="ui-button" data-variant="outline" href="https://maps.apple.com/?ll=55.7076,12.5993&amp;q=Nordhavn%20Studio" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4 3 6.5v13L9 17l6 3 6-2.5v-13L15 7 9 4z"/><path d="M9 4v13"/><path d="M15 7v13"/></svg>Apple</a></nav>
+					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="https://www.google.com/maps/search/?api=1&amp;query=55.7076,12.5993" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>Google</a><a class="ui-button" data-variant="outline" href="https://maps.apple.com/?ll=55.7076,12.5993&amp;q=Nordhavn%20Studio" target="_blank" rel="noopener"><img src="/assets/svg/apple.maps.svg" alt="" width="20" height="20">Apple</a></nav>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -239,7 +239,7 @@
 					</dl>
 					<ul data-part="list"><li data-icon="call"><a itemprop="telephone" href="tel:+4535551290">+45 35 55 12 90</a></li></ul>
 					<span data-part="tags"><ui-chip itemprop="keywords">Copenhagen</ui-chip><ui-chip itemprop="keywords">Studio</ui-chip></span>
-					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="https://www.google.com/maps/search/?api=1&amp;query=55.7076,12.5993" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>Google</a><a class="ui-button" data-variant="outline" href="https://maps.apple.com/?ll=55.7076,12.5993&amp;q=Nordhavn%20Studio" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4 3 6.5v13L9 17l6 3 6-2.5v-13L15 7 9 4z"/><path d="M9 4v13"/><path d="M15 7v13"/></svg>Apple</a></nav>
+					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="https://www.google.com/maps/search/?api=1&amp;query=55.7076,12.5993" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>Google</a><a class="ui-button" data-variant="outline" href="https://maps.apple.com/?ll=55.7076,12.5993&amp;q=Nordhavn%20Studio" target="_blank" rel="noopener"><img src="/assets/svg/apple.maps.svg" alt="" width="20" height="20">Apple</a></nav>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -277,7 +277,7 @@
 					</dl>
 					<ul data-part="list"><li data-icon="call"><a itemprop="telephone" href="tel:+4535551290">+45 35 55 12 90</a></li></ul>
 					<span data-part="tags"><ui-chip itemprop="keywords">Copenhagen</ui-chip><ui-chip itemprop="keywords">Studio</ui-chip></span>
-					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="https://www.google.com/maps/search/?api=1&amp;query=55.7076,12.5993" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>Google</a><a class="ui-button" data-variant="outline" href="https://maps.apple.com/?ll=55.7076,12.5993&amp;q=Nordhavn%20Studio" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4 3 6.5v13L9 17l6 3 6-2.5v-13L15 7 9 4z"/><path d="M9 4v13"/><path d="M15 7v13"/></svg>Apple</a></nav>
+					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="https://www.google.com/maps/search/?api=1&amp;query=55.7076,12.5993" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>Google</a><a class="ui-button" data-variant="outline" href="https://maps.apple.com/?ll=55.7076,12.5993&amp;q=Nordhavn%20Studio" target="_blank" rel="noopener"><img src="/assets/svg/apple.maps.svg" alt="" width="20" height="20">Apple</a></nav>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -310,7 +310,7 @@
 					</dl>
 					<ul data-part="list"><li data-icon="call"><a itemprop="telephone" href="tel:+4535551290">+45 35 55 12 90</a></li></ul>
 					<span data-part="tags"><ui-chip itemprop="keywords">Copenhagen</ui-chip><ui-chip itemprop="keywords">Studio</ui-chip></span>
-					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="https://www.google.com/maps/search/?api=1&amp;query=55.7076,12.5993" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>Google</a><a class="ui-button" data-variant="outline" href="https://maps.apple.com/?ll=55.7076,12.5993&amp;q=Nordhavn%20Studio" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4 3 6.5v13L9 17l6 3 6-2.5v-13L15 7 9 4z"/><path d="M9 4v13"/><path d="M15 7v13"/></svg>Apple</a></nav>
+					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="https://www.google.com/maps/search/?api=1&amp;query=55.7076,12.5993" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>Google</a><a class="ui-button" data-variant="outline" href="https://maps.apple.com/?ll=55.7076,12.5993&amp;q=Nordhavn%20Studio" target="_blank" rel="noopener"><img src="/assets/svg/apple.maps.svg" alt="" width="20" height="20">Apple</a></nav>
 				</ui-content>
 			</cq-box>
 		</ui-card>
