@@ -30,8 +30,9 @@
  *   H3  identity           id= / data-view= on the <ui-card> root are page-authoring
  *                          hooks — anchor targets, view-transition names, and the
  *                          selector this script uses to tell two cards of one type
- *                          apart. The renderer never emits either on the root, so
- *                          both are dropped. Nothing inside the card is touched.
+ *                          apart. Both are dropped on the root; data-view is dropped
+ *                          EVERYWHERE (a morphing card names its <img> too), while
+ *                          id= stays root-only — the renderer does emit ids deeper.
  *
  * Everything else — itemtypes, itemprops, nesting, order, attribute values, and the
  * difference between U+0020 and U+00A0 — is a real difference and is reported.

@@ -3,7 +3,10 @@
 		/* ── Design Tokens ── */
 
 		/* Colors — Semantic */
-		--color-accent: light-dark(hsl(211, 100%, 50%), hsl(211, 60%, 50%));
+		/* Light arms retuned for WCAG 2.1 AA on --color-surface (docs/performance.md § contrast).
+		   Dark arms of accent/info/error/success double as theme-bundle plates under white ink —
+		   see the ink note at --ui-theme-*-bg before changing them. */
+		--color-accent: light-dark(hsl(211, 100%, 38%), hsl(211, 60%, 50%));
 		--color-accent-dark: light-dark(hsl(211, 80%, 30%), hsl(211, 30%, 20%));
 		--color-accent-text: hsl(211, 100%, 95%);
 		--color-border: light-dark(hsl(0, 0%, 80%), hsl(0, 0%, 35%)); /* dark arm ≥35%: must stay visible on the #1f2937 card plate */
@@ -13,15 +16,15 @@
 		--color-surface-alt: light-dark(hsl(0, 0%, 95%), hsl(0, 0%, 15%));
 		--color-text: light-dark(hsl(0, 0%, 15%), hsl(0, 0%, 85%));
 		--color-field: light-dark(hsl(0, 0%, 97.5%), hsl(0, 0%, 2.5%));
-		--color-text-muted: light-dark(hsl(0, 0%, 60%), hsl(0, 0%, 40%));
+		--color-text-muted: light-dark(hsl(0, 0%, 42%), hsl(0, 0%, 65%));
 		--color-highlight: light-dark(hsl(211, 100%, 95%), hsl(211, 30%, 20%));
-		--color-link: light-dark(hsl(221, 100%, 73%), hsl(221, 70%, 70%));
+		--color-link: light-dark(hsl(221, 100%, 44%), hsl(221, 70%, 70%));
 		--color-mark: light-dark(hsl(61, 100%, 80%), hsl(61, 50%, 80%));
 		--color-mark-text: light-dark(hsl(60, 100%, 2%), hsl(60, 50%, 10%));
 		--color-link-visited: light-dark(hsl(264, 33%, 61%), hsl(264, 25%, 70%));
-		--color-info: light-dark(hsl(210, 60%, 46%), hsl(210, 30%, 46%));
-		--color-error: light-dark(hsl(360, 60%, 46%), hsl(360, 40%, 56%));
-		--color-success: light-dark(hsl(136, 41%, 41%), hsl(136, 21%, 51%));
+		--color-info: light-dark(hsl(210, 65%, 36%), hsl(210, 30%, 46%));
+		--color-error: light-dark(hsl(360, 65%, 41%), hsl(360, 40%, 56%));
+		--color-success: light-dark(hsl(136, 45%, 30%), hsl(136, 21%, 51%));
 		--color-warning: light-dark(hsl(33, 99%, 59%), hsl(33, 69%, 59%));
 		--color-overlay: color-mix(in srgb, CanvasText, transparent 50%);
 		--color-overlay-light: color-mix(in srgb, CanvasText 25%, transparent);
@@ -218,6 +221,11 @@
 		   transform the colors. Consumed by chip, sticker, card, layout via the
 		   resolver in theme.css. Color-name vocabulary, distinct from button's
 		   semantic .bg-* / `color=` axis. */
+		/* AA WARNING — the ink here is FIXED while the surface is a light-dark() pair, so
+		   lightening a dark arm lowers ink contrast. Measured on the dark arms today:
+		   red 4.16, green 3.17, accent 3.74 — all under 4.5. That is why the WCAG retune
+		   moved the LIGHT arms only. Fix the ink (contrast-color(), as tint.css already
+		   does) before lightening a dark arm. Tracked: docs/plans/open-items.md § 29. */
 		--ui-theme-red-bg:    var(--color-error);       --ui-theme-red-c:    hsl(0 0% 100%);
 		--ui-theme-orange-bg: var(--color-warning);     --ui-theme-orange-c: var(--color-text);
 		--ui-theme-green-bg:  var(--color-success);     --ui-theme-green-c:  hsl(0 0% 100%);

@@ -69,6 +69,50 @@ first; the other packages assume it.
 parallelise. `scripts/css-bundle.js` fails the build if a package inlines a foreign sheet.
 Leaf packages ship `index.css` + `ui-<name>.css` with no bundle.
 
+## Browser support baseline
+
+**Chrome 150+ and Safari 26.5+. Firefox is not a support target.**
+
+This is deliberately far ahead of the usual baseline — it is what lets the system be
+CSS-first: typed `attr()`, `@property`, container **style** queries, `corner-shape`,
+scroll-driven animation, `::scroll-marker` and `contrast-color()` are load-bearing, not
+progressive enhancement. Do not add a fallback for a feature both baseline engines support;
+do not ship a feature neither supports as the implementation.
+
+The baseline is two engines, not one, and they diverge in three places that already have
+handling — keep both arms working:
+
+| Feature | Chrome 150 | Safari 26.5 | Consequence |
+|---|---|---|---|
+| Typed `attr()` | yes | **no** | `attr-fallback.js` (both copies) is required, not optional — a missing value kills the consuming property at computed-value time |
+| `::scroll-marker` / `::scroll-button()` | yes | **no** | carousels need `/ui/carousel/polyfill/` for real DOM controls in Safari |
+| `display: grid-lanes` (masonry) | **no** | yes | both `@supports` arms in `layout/core/base.css` are live; they must agree on lane count |
+
+Feature-detect on a **real** property, never a custom property — `CSS.supports('--x',
+'attr(…)')` returns `true` in Safari even though the feature is absent.
+
+Per-package readmes carry "when did this land" tables for individual features. Those are
+history, not the support contract; this section is the contract.
+
+## Accessibility
+
+**WCAG 2.1 AA is the standard.** Concretely, and checked before a demo page ships:
+
+- **Contrast** ≥ 4.5:1 for body text, 3:1 for large text and UI boundaries. Watch for
+  *muted compounding* — an alpha mix applied inside an already-muted ancestor lands near
+  0.42 of the original and fails.
+- **Structure** — one `<main>` landmark, heading order without gaps, and a visible button
+  label contained in its `aria-label`.
+- **Motion** — every always-running or scroll-driven animation honours
+  `prefers-reduced-motion`.
+- **Direction** — logical properties only; `ui/card/demo/media.rtl.html` is the RTL
+  regression target.
+
+Lighthouse's accessibility category must be **100** on a demo page (`perf-pass` skill,
+definition of done). It is a floor, not proof: it cannot see pseudo-element hit targets,
+which is why the native `::scroll-marker` path has never been audited
+(`docs/plans/open-items.md`).
+
 ## Key docs & skills
 
 | Doc | What it carries |

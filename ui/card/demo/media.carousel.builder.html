@@ -6,12 +6,11 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="color-scheme" content="light dark">
 	<meta name="description" content="Interactive carousel designer — compose the media= token string live: frame aspect asr() and corners rds() (incl. squircles), thumbnail ratio tmb(), marker types (dots/pill/hybrid/bar/thumbnails/labels/system bar), 9-grid and band positions, arrow shapes/sets, tones, autoplay and loop.">
-	<!-- srcset uses absolute v4.browser.style CDN URLs; the zone's Hotlink Protection
-	     403s any cross-origin Referer (pages.dev, localhost) — no-referrer passes -->
+	<!-- no-referrer: the zone hotlink-protects CDN srcset. Docs: docs/performance.md -->
 	<meta name="referrer" content="no-referrer">
-	<!-- srcset origin: handshake in parallel with the CSS download -->
+	<!-- preconnect: CDN handshake parallel to the CSS download. Docs: docs/performance.md -->
 	<link rel="preconnect" href="https://v4.browser.style">
-	<link rel="stylesheet" href="/dist/demo.fc1719a9.min.css">
+	<link rel="stylesheet" href="/dist/demo.f83bd23b.min.css">
 	<style>
 		/* Builder chrome — controls left, stage right; stacks on narrow viewports */
 		.builder { display: grid; gap: var(--spacing-xl); align-items: start; }

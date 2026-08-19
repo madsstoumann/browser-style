@@ -297,18 +297,20 @@ chunked framing in the body and fakes corruption.
    loads unhashed `/ui/card/video.min.js` + `/ui/save/save.min.js`. Unhashed names, so
    `immutable` is unsafe; add `Cache-Control: public, max-age=600,
    stale-while-revalidate=86400`. Repeat-visit only — won't move a cold run.
-3. **Port the contrast retune into global tokens** — verified unshipped: `--color-link` in
-   `ui/base/tokens.css` still has the 73%-lightness light arm (2.53:1); demo pages still
-   carry the page-scoped override `<style>` block. Values to port (light/dark arm): link
-   `hsl(221,100%,44%)/hsl(221,70%,70%)`, accent `hsl(211,100%,38%)/hsl(211,70%,72%)`,
-   success `hsl(136,45%,30%)/hsl(136,25%,60%)`, error `hsl(360,65%,41%)/hsl(360,45%,62%)`,
-   text-muted `hsl(0,0%,42%)/hsl(0,0%,65%)`. Pale chips inherit the raw hue token as ink,
-   so darkening a hue fixes chip ink and white-on-solid together. Related: **muted
-   compounding** — `--ui-content-muted` is `color-mix(in oklab, currentColor 65%,
-   transparent)` (`ui/card/content.typography.css:41`) and dateline re-applies it inside
-   the already-muted byline (0.65² ≈ 0.42, the worst failures); the page override's 85%
-   survives one step, but the real fix is stopping the double application in
-   `ui/card/content.css`.
+3. **Contrast — light arms DONE 2026-08-19, dark arms blocked on a design decision.** The
+   six retuned values now live in `ui/base/tokens.css` and the `demo/schema.html` override
+   is gone; verified in-browser at 5.33–7.05 against `--color-surface`. The dark arms were
+   deliberately not ported: each hue doubles as a theme-bundle plate under fixed ink, and
+   in dark mode the two roles pull opposite ways (`--color-warning` has *no* lightness
+   satisfying both). Full measurements and the three options: `docs/plans/open-items.md`
+   § 29.1a.
+
+   Still open under it: **muted compounding** — `--ui-content-muted` is
+   `color-mix(in oklab, currentColor 65%, transparent)`
+   (`ui/card/content.typography.css:41`) and `dateline` re-applies it inside the
+   already-muted `byline` (0.65² ≈ 0.42, the worst failures on the page). The 85% page
+   override on `demo/schema.html` survives one step; the real fix is stopping the double
+   application in `ui/card/content.css`.
 4. **`ovr()` legibility shadow half-applied** — verified: `ui/card/ui-card.css:136-137`
    sets heading + eyebrow shadows only, while `content.css` also reads
    `--ui-content-body-text-shadow` and `--ui-content-meta-text-shadow`. Overlay summary,

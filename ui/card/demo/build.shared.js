@@ -13,21 +13,15 @@
    so a stable filename would let a shipped CSS change stay invisible behind a cached
    copy. This template is rewritten too because the articles/ and products/ builders
    emit it — miss it and the next build silently reverts five generated pages. */
-export const HEAD_COMMON = `<link rel="stylesheet" href="/dist/demo.fc1719a9.min.css">
-	<!-- srcset uses absolute v4.browser.style CDN URLs; the zone's Hotlink Protection
-	     403s any cross-origin Referer (pages.dev, localhost) — no-referrer passes -->
+export const HEAD_COMMON = `<link rel="stylesheet" href="/dist/demo.f83bd23b.min.css">
+	<!-- no-referrer: the zone hotlink-protects CDN srcset. Docs: docs/performance.md -->
 	<meta name="referrer" content="no-referrer">
 	<link rel="preconnect" href="https://v4.browser.style">`;
 
-/* page-scoped WCAG AA contrast overrides — same block as demo/schema.html */
+/* AA muted ink + demo type-chip look. The --color-* overrides that used to live here
+   were ported into ui/base/tokens.css on 2026-08-19 (light arms; dark arms deliberately
+   not — docs/plans/open-items.md § 29.1a). Docs: ui/card/docs/schema.md */
 export const CONTRAST_STYLE = `<style>
-		:root {
-			--color-link: light-dark(hsl(221, 100%, 44%), hsl(221, 70%, 70%));
-			--color-accent: light-dark(hsl(211, 100%, 38%), hsl(211, 70%, 72%));
-			--color-success: light-dark(hsl(136, 45%, 30%), hsl(136, 25%, 60%));
-			--color-error: light-dark(hsl(360, 65%, 41%), hsl(360, 45%, 62%));
-			--color-text-muted: light-dark(hsl(0, 0%, 42%), hsl(0, 0%, 65%));
-		}
 		ui-content { --ui-content-muted: color-mix(in oklab, currentColor 85%, transparent); }
 		ui-chip[data-type] { --ui-chip-bg: hsl(0, 0%, 95%); --ui-chip-c: hsl(0, 0%, 13%); }
 	</style>`;

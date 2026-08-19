@@ -884,15 +884,19 @@ For detailed build documentation, see [AGENTS.md § Build Commands](AGENTS.md#bu
 
 ## Browser Support
 
-- Chrome/Edge 89+
-- Firefox 88+
-- Safari 14.1+
+**Chrome 150+ and Safari 26.5+.** Firefox is not a support target.
 
-Requires CSS Grid and CSS Custom Properties support.
+The layout system is CSS-first and leans on modern primitives — typed `attr()`,
+`@property`, container style queries, scroll-driven animation — so it does not degrade
+gracefully to older engines. Masonry (`lanes(…)`) is Safari-only today; Chromium falls back
+to a `column-count` approximation automatically.
 
-### Safari/Firefox Polyfill
+### Safari polyfill (required)
 
-This layout system uses the enhanced `attr()` CSS function with type support, which is currently only supported in Chrome/Edge. For Safari and Firefox, include the polyfill:
+The layout system reads author values with the typed `attr()` CSS function, which **Safari
+does not implement**. Without the polyfill those attributes produce a *missing* value — not
+a wrong one — and the consuming property dies, so `bleed`, `columns`, `rows`, `max-width`,
+`self`, `size` and `lanes-min`/`lanes-max` silently stop working. Include it:
 
 **In HTML:**
 ```html

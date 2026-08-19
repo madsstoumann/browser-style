@@ -5,59 +5,27 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="color-scheme" content="light dark">
-	<!-- srcset uses absolute v4.browser.style CDN URLs; the zone's Hotlink Protection
-	     403s any cross-origin Referer (pages.dev, localhost) — no-referrer passes -->
+	<!-- Head rationale: docs/schema.md § Demo-page head and scripts -->
 	<meta name="referrer" content="no-referrer">
-	<!-- iOS data detectors read the book card's ISBN as a phone number; explicit tel: links keep working -->
 	<meta name="format-detection" content="telephone=no">
-	<!-- srcset origin: handshake in parallel with the CSS download (~3 RTTs off the
-	     eager LCP image on pages.dev/localhost; same-origin no-op on v4.browser.style) -->
 	<link rel="preconnect" href="https://v4.browser.style">
-	<!-- Counting rule: a "card" is a TOP-LEVEL <ui-card>/<ui-reveal> carrying an itemtype.
-	     The 4 nested <ui-card> Product tiles inside the ProductGroup collage's <ui-media>
-	     are not cards, and nested property scopes (AggregateRating, byline Person,
-	     Organization, ComicIssue, Occupation…) are not itemtypes "on the card hosts". -->
-	<meta name="description" content="58 cards covering 52 distinct schema.org itemtypes on the card hosts (Quiz runs three cards; Review, EventSeries, Place and Person two each) — re-created with the modern &lt;ui-card&gt; engine: inline microdata (itemscope/itemtype/itemprop), no JSON-LD. The job card carries a 53rd type as a second top-level item: EmployerAggregateRating. One optional script: video.js polyfills the media invoker commands behind the podcast play button.">
-	<!-- One bundle for every card-demo package (source list: ui/card/components.md).
-	     Build: npm run build:demo-css (entry demo.css, output /dist/demo.fc1719a9.min.css) -->
-	<link rel="stylesheet" href="/dist/demo.fc1719a9.min.css">
+	<meta name="description" content="58 cards covering 52 distinct schema.org itemtypes on the card hosts (Quiz runs three cards; Review, EventSeries, Place and Person two each) — re-created with the modern &lt;ui-card&gt; engine: inline microdata (itemscope/itemtype/itemprop), no JSON-LD. The job card carries a 53rd type as a second top-level item: EmployerAggregateRating. Two optional scripts: video.min.js polyfills the media invoker commands behind the podcast play button, save.min.js flips the save heart.">
+	<link rel="stylesheet" href="/dist/demo.f83bd23b.min.css">
 
 	<style>
-		/* Skip style + layout for OFF-SCREEN cards. The page was 57 cards / ~2,400
-		   elements, and PageSpeed's top diagnostic is Style & Layout — 1,670 ms of a
-		   2.4 s main thread. It is not script: Script Evaluation is 22 ms there, and 3 ms
-		   measured locally. Measured at an iPhone viewport, before → after:
-		   layout 550 → 132 ms, style recalc 230 → 77 ms, layout objects 2,945 → 459,
-		   CLS unchanged at 0. `auto` remembers each card's real size once rendered, and
-		   567px is the measured MEDIAN card height so the initial scrollbar starts close.
-		   Verified still working while contained: in-page anchors (#schema-music),
-		   carousel scroll-snap, <ui-reveal> disclosure, accordion <details>.
-		   Page-scoped deliberately — a lone card on a product page must NOT skip layout. */
+		/* Off-screen cards skip style+layout. Page-scoped on purpose; 567px is this page's
+		   median card height. Docs: docs/schema.md § Demo-page CSS */
 		main > lay-out > ui-card,
 		main > lay-out > ui-reveal {
 			content-visibility: auto;
 			contain-intrinsic-size: auto 567px;
 		}
-		/* Page-scoped WCAG AA contrast overrides — pending a token retune in ui/base/tokens.css.
-		   Unlayered on purpose: beats the bs-core layer. Pale chip ink = the raw hue token
-		   (theme.css pale chain), so darkening a hue fixes pale ink + white-on-solid together. */
-		:root {
-			--color-link: light-dark(hsl(221, 100%, 44%), hsl(221, 70%, 70%));
-			--color-accent: light-dark(hsl(211, 100%, 38%), hsl(211, 70%, 72%));
-			--color-success: light-dark(hsl(136, 45%, 30%), hsl(136, 25%, 60%));
-			--color-error: light-dark(hsl(360, 65%, 41%), hsl(360, 45%, 62%));
-			--color-text-muted: light-dark(hsl(0, 0%, 42%), hsl(0, 0%, 65%));
-			--color-info: light-dark(hsl(210, 65%, 36%), hsl(210, 40%, 62%));
-		}
-		ui-content {
-			/* 85%: double-application (byline > dateline) still clears 4.5:1, gray theme included */
-			--ui-content-muted: color-mix(in oklab, currentColor 85%, transparent);
-		}
+		/* AA muted ink — 85% survives the byline>dateline double-application. Docs: docs/schema.md */
+		ui-content { --ui-content-muted: color-mix(in oklab, currentColor 85%, transparent); }
 		/* type chips keep one look on themed cards too (the theme relay's #666 plate is 4.06:1) */
 		ui-chip[data-type] { --ui-chip-bg: hsl(0, 0%, 95%); --ui-chip-c: hsl(0, 0%, 13%); }
 		ui-chip[data-type=dark] { --ui-chip-bg: hsl(0, 0%, 25%); --ui-chip-c: hsl(0, 0%, 85%); }
-		/* media-less card (testimonial): pin the type chip to the card's top end, chip(te)-style.
-		   relative: the containing block is otherwise the lay-out (contain: layout) */
+		/* media-less card: pin the type chip top-end (relative — the containing block is the lay-out) */
 		ui-card:not(:has(ui-media)) { position: relative; }
 		ui-card:not(:has(ui-media)) > ui-chip[data-type] {
 			position: absolute;
@@ -66,21 +34,13 @@
 			z-index: 2;
 		}
 	</style>
-	<!-- Block first paint (and the incoming snapshot on Back) until the morphing
-	     article card is parsed. Docs: docs/card.md § Article pattern -->
 	<link rel="expect" href="#schema-product-variants" blocking="render">
-	<!-- Names the morph targets where typed attr() is unsupported (Safari). MUST be
-	     render-blocking in <head>: the incoming page is snapshotted at first paint,
-	     so a deferred script names the targets too late and the forward morph
-	     degrades to a cross-fade. Docs: ui/base/polyfills/readme.md -->
 	<!-- polyfill:start -->
 	<!-- Typed attr() polyfill, INLINE and CLASSIC on purpose: it must run before
 	     first paint (view-transition snapshot), and an inline module would defer.
 	     Generated by scripts/inline-polyfill.js — do not edit, do not add type=. -->
 	<script>(()=>{var l={"ui-avatar[ring]":{"--_ring":["ring","var(--color-accent)",["error","info","success","warning"]]},"ui-avatar-group[max]":{"--_max":["max","0"]},"ui-beacon[fill]":{"--ui-beacon-accent":["fill","var(--color-text)"]},"ui-beacon[ink]":{"--ui-beacon-c":["ink","hsl(0, 0%, 100%)"]},"ui-chip[fill]":{"--ui-chip-accent":["fill","var(--color-button)"]},"ui-chip[ink]":{"--ui-chip-c":["ink","hsl(0, 0%, 100%)"]},"ui-gradient-text":{"--_dir":["dir","90deg"],"--_dur":["duration","5s"],"--_gradient":["gradient","#0077ff, #00e7df, #0077ff"],"--_size":["size","150%"]},"high-light[fill]":{"--_fill":["fill","#82ffad",["green","yellow","orange","pink"]]},"high-light[ink]":{"--_ink":["ink","currentColor"]},"ui-marquee[fill]":{"--ui-marquee-bg":["fill","var(--color-surface)"]},"ui-marquee[ink]":{"--ui-marquee-c":["ink","hsl(0, 0%, 100%)"]},"mega-menu":{"--mega-menu-margin-inline":["margin-inline","0"],"--mega-menu-max-width":["max-width","none"],"--mega-menu-menubar-height":["menubar-height","3rem"],"--mega-menu-view-width":["mobile-view-width","60vw"],"--mega-menu-z-index":["z-index","1000"]},"ui-play[fill]":{"--ui-play-bg":["fill","rgb(0 0 0 / 0.55)"]},"ui-play[ink]":{"--ui-play-c":["ink","hsl(0 0% 100%)"]},".ui-rating":{"--min":["min","1"],"--max":["max","5"],"--value":["value","3"]},"ui-save[fill]":{"--ui-save-circle-bg":["fill","Canvas"]},"ui-save[ink]":{"--ui-save-c":["ink","var(--color-text)"]},':is(ui-timeline, .ui-timeline, [data-part="timeline"]) > li[data-fill]':{"--ui-timeline-dot":["data-fill","inherit"]},"[stagger-index]":{"--_stg-i":["stagger-index","1"]},"[data-stagger-index]":{"--_stg-i":["data-stagger-index","1"]},"[stagger-step]":{"--_stg-step":["stagger-step","var(--stagger-step, 0.07s)"]},"[data-stagger-step]":{"--_stg-step":["data-stagger-step","var(--stagger-step, 0.07s)"]},"ui-sticker":{"--ui-sticker-bg":["fill","var(--color-accent)"],"--ui-sticker-c":["ink","hsl(0, 0%, 100%)"],"--_angle":["angle","0deg"]},"[data-view]":{"view-transition-name":["data-view","none"]}};function c(){return CSS.supports("background-color","attr(x type(<color>), red)")}function s(t,i){for(let[e,[r,n,o]]of Object.entries(i)){let a=t.getAttribute(r);a!==null&&(o?.includes(a)?t.style.removeProperty(e):t.style.setProperty(e,a||n))}}function u(t=document){for(let[i,e]of Object.entries(l)){t.matches?.(i)&&s(t,e);for(let r of t.querySelectorAll?.(i)??[])s(r,e)}}function g(){let t=new Set;for(let i of Object.values(l))for(let[e]of Object.values(i))t.add(e);return[...t]}function f(){let t=new MutationObserver(i=>{for(let e of i)if(e.type==="childList")for(let r of e.addedNodes)r.nodeType===1&&u(r);else if(e.type==="attributes"&&e.target.nodeType===1)for(let[r,n]of Object.entries(l)){if(!e.target.matches(r)){for(let[o,[a]]of Object.entries(n))a===e.attributeName&&e.target.style.removeProperty(o);continue}s(e.target,n)}});return t.observe(document.documentElement,{attributeFilter:g(),attributes:!0,childList:!0,subtree:!0}),t}function d(){c()||(u(),f())}d();})();</script>
 	<!-- polyfill:end -->
-	<!-- Prerender the morph targets on hover — prerender + cross-document view
-	     transitions make the article morph instant. Chromium-only, inert elsewhere -->
 	<script type="speculationrules">
 	{
 		"prerender": [{ "urls": ["articles/article.html", "articles/news.html"], "eagerness": "moderate" }]
@@ -89,13 +49,7 @@
 
 </head>
 <body data-layout-root data-page-gap="2">
-	<!-- PAGE-LEVEL, not a card: WebSite describes the site this page belongs to, so it is
-	     one top-level item alongside the card grid rather than an item in it. That is why
-	     the page's card count and its validator item count differ (docs/schema.md).
-	     potentialAction is the sitelinks searchbox: the template variable is named by
-	     query-input's valueName, not by any form field — a consumer substitutes the user's
-	     term into urlTemplate. Google only honours it on a site's homepage; here it is the
-	     markup shape that is being demonstrated. -->
+	<!-- Page-level item, not a card — docs/schema.md § The page-level WebSite item -->
 	<div itemscope itemtype="https://schema.org/WebSite" hidden>
 		<meta itemprop="name" content="Browser.style">
 		<meta itemprop="alternateName" content="browser.style">
@@ -111,8 +65,7 @@
 		</div>
 	</div>
 	<header>
-	<!-- @browser.style/breadcrumbs, hand-authored CSS-only form so the page needs no script.
-	     The last crumb is this page and takes no `item` — ui/breadcrumbs/readme.md § Structured data -->
+	<!-- Hand-authored CSS-only breadcrumbs — ui/breadcrumbs/readme.md § Structured data -->
 	<nav aria-label="Breadcrumb">
 		<ol data-breadcrumbs itemscope itemtype="https://schema.org/BreadcrumbList">
 			<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
@@ -126,7 +79,6 @@
 		</ol>
 	</nav>
 	<h1>UI: Card — Schema.org</h1>
-	<!-- <p class="note">The matching CMS content model is <a href="../../../cms/baseline/models/card.schema.json"><code>cms/baseline/models/card.schema.json</code></a>: a structured envelope + <code>schemaType</code> discriminator + one <code>details</code> object per type. Type-by-type notes: <a href="../docs/schema.md"><code>docs/schema.md</code></a>. See also: <a href="cards.html">cards.html</a> · <a href="media.html">media.html</a> · <a href="content.html">content.html</a>.</p> -->
 
 	</header>
 
@@ -408,7 +360,6 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-		<!-- Testimonial = Review of an Organization/Service (no Testimonial type in schema.org) — docs/schema.md § Review -->
 		<ui-card variant="col" style="--ui-rating-c: #e75d26" itemscope itemtype="https://schema.org/Review">
 			<ui-chip data-type>Review</ui-chip>
 			<cq-box>
@@ -432,7 +383,6 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-		<!-- plain gray: `muted` washes ink 50% too — unreadable at card scale in dark mode -->
 		<ui-card variant="col" media="asr(16/9) chip(te)" theme="gray" itemscope itemtype="https://schema.org/Offer">
 			<cq-box>
 				<ui-media><img src="/assets/images/fittrackpro.png" alt="Fitness tracker on a wrist" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/fittrackpro.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/fittrackpro.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/fittrackpro.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/fittrackpro.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/fittrackpro.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>Offer</ui-chip></ui-media>
@@ -460,8 +410,6 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-		<!-- the loyalty SCHEME (tiers + benefits). The Offer card above is a subscription PRICE —
-		     both are "membership" in English, neither is the other. docs/schema.md § Loyalty -->
 		<ui-card variant="col" media="asr(16/9) chip(te)" itemscope itemtype="https://schema.org/MemberProgram">
 			<cq-box>
 				<ui-media><img src="/assets/images/slimfold.png" alt="Slim leather card wallet on a white surface" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/slimfold.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/slimfold.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/slimfold.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/slimfold.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/slimfold.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>MemberProgram</ui-chip></ui-media>
@@ -634,8 +582,6 @@
 	</lay-out>
 	<h2>Audio</h2>
 	<lay-out md="columns(2) items(start)">
-		<!-- the SERIES as card subject; the episode below is one instalment of it. No numberOfEpisodes: it is not a
-		     PodcastSeries property — the count is prose, the episodes are hasPart. docs/schema.md § Podcast series -->
 		<ui-card variant="col" media="asr(1/1) chip(te)" itemscope itemtype="https://schema.org/PodcastSeries">
 			<cq-box>
 				<ui-media><img src="/assets/images/podcast.png" alt="The Calm Mind podcast cover art" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=240/assets/images/podcast.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=320/assets/images/podcast.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=480/assets/images/podcast.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=720/assets/images/podcast.png 720w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>PodcastSeries</ui-chip></ui-media>
@@ -684,7 +630,6 @@
 				<ui-media><img src="/assets/images/band_dreampop.png" alt="Halvmørke — band portrait in violet light" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=240/assets/images/band_dreampop.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=320/assets/images/band_dreampop.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=480/assets/images/band_dreampop.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=720/assets/images/band_dreampop.png 720w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>MusicGroup</ui-chip></ui-media>
 				<ui-content>
 					<meta itemprop="foundingDate" content="2019">
-					<!-- the eyebrow carries the primary genre; these are the rest — genre is multi-valued -->
 					<meta itemprop="genre" content="Shoegaze">
 					<meta itemprop="genre" content="Ambient pop">
 					<meta itemprop="sameAs" content="https://halvmorke.bandcamp.example">
@@ -694,10 +639,7 @@
 					<h3 data-part="headline" itemprop="name">Halvmørke</h3>
 					<p data-part="summary" itemprop="description">Five players from the Copenhagen basement circuit, named for the hour when the light has gone but the dark has not arrived.</p>
 					<p data-part="meta">Formed in Copenhagen, 2019</p>
-					<!-- `member` supersedes both `members` and `musicGroupMember`; the instrument is an
-					     editorial label and stays OUTSIDE the Person scope, as in the comic credits -->
 					<p data-part="meta">Vocals <span itemprop="member" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Ida Krogh</span></span> · Guitar <span itemprop="member" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Jonas Riis</span></span> · Guitar <span itemprop="member" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Emil Damgaard</span></span> · Bass <span itemprop="member" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Sanne Bech</span></span> · Drums <span itemprop="member" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Villads Toft</span></span></p>
-					<!-- discography, newest first — descending, so an <ul>: ordinal markers would lie -->
 					<ul data-part="list">
 						<li itemprop="album" itemscope itemtype="https://schema.org/MusicAlbum"><meta itemprop="datePublished" content="2026-04-17"><meta itemprop="numTracks" content="4"><a itemprop="url" href="#schema-music"><span itemprop="name">Slow Weather</span></a> <small>EP · 2026</small></li>
 						<li itemprop="album" itemscope itemtype="https://schema.org/MusicAlbum"><meta itemprop="datePublished" content="2023-09-01"><meta itemprop="numTracks" content="9"><span itemprop="name">Nattevagt</span> <small>LP · 2023</small></li>
@@ -719,9 +661,6 @@
 					<p data-part="subheadline" itemprop="byArtist" itemscope itemtype="https://schema.org/MusicGroup"><a itemprop="url" href="#schema-musicgroup"><span itemprop="name">Halvmørke</span></a></p>
 					<p data-part="summary" itemprop="description">Four tracks recorded live to tape in a Bornholm chapel over one November week, with the doors open.</p>
 					<p data-part="meta">4 tracks · 19 min · released Apr 17, 2026</p>
-					<!-- every track restates byArtist: JSON-LD would reference the album's artist by
-					     `@id`, but microdata has no reference-by-id for a property VALUE, so each
-					     MusicRecording carries a name-only MusicGroup scope of its own -->
 					<ol data-part="list">
 						<li itemprop="track" itemscope itemtype="https://schema.org/MusicRecording"><meta itemprop="position" content="1"><meta itemprop="duration" content="PT4M12S"><span itemprop="byArtist" itemscope itemtype="https://schema.org/MusicGroup" hidden><meta itemprop="name" content="Halvmørke"></span><span itemprop="name">Slow Weather</span> <small>4:12</small></li>
 						<li itemprop="track" itemscope itemtype="https://schema.org/MusicRecording"><meta itemprop="position" content="2"><meta itemprop="duration" content="PT3M48S"><span itemprop="byArtist" itemscope itemtype="https://schema.org/MusicGroup" hidden><meta itemprop="name" content="Halvmørke"></span><span itemprop="name">Kastellet</span> <small>3:48</small></li>
@@ -837,7 +776,6 @@
 						<meta itemprop="courseWorkload" content="PT3H">
 						<span itemprop="instructor" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Calm Academy"></span>
 					</div>
-					<!-- Course.provider is REQUIRED by Google; the instructor above is the CourseInstance's -->
 					<span itemprop="provider" itemscope itemtype="https://schema.org/Organization" hidden><meta itemprop="name" content="Calm Academy"></span>
 					<small data-part="eyebrow" itemprop="about">Wellness</small>
 					<h3 data-part="headline" itemprop="name">Mindfulness Foundations</h3>
@@ -881,7 +819,6 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-		<!-- Google's Education Q&A feature is flashcards only: eduQuestionType lives on the QUESTION — docs/schema.md § Quiz -->
 		<ui-card variant="col" media="asr(16/9) chip(te)" itemscope itemtype="https://schema.org/Quiz">
 			<cq-box>
 				<ui-media><img src="/assets/images/quantum.png" alt="Stylised quantum processor" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/quantum.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/quantum.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/quantum.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/quantum.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/quantum.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>Quiz</ui-chip></ui-media>
@@ -919,9 +856,6 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-		<!-- the graded sibling of the flashcard deck above: several suggestedAnswer plus the
-		     acceptedAnswer, which Question accepts together. Valid schema.org with no live rich
-		     result — Google retired Practice Problems in January 2026. docs/schema.md § Quiz -->
 		<ui-card id="schema-quiz-mc" variant="col" media="asr(16/9) chip(te)" itemscope itemtype="https://schema.org/Quiz">
 			<cq-box>
 				<ui-media><img src="/assets/images/quantum.png" alt="Stylised quantum processor" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/quantum.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/quantum.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/quantum.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/quantum.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/quantum.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>Quiz</ui-chip></ui-media>
@@ -1199,7 +1133,6 @@
 							DKK 720,000–840,000 <small>annually</small>
 						</span>
 					</p>
-					<!-- separate top-level item (itemscope, no itemprop): the rating is of the COMPANY, and JobPosting has no aggregateRating — docs/schema.md § Employer rating -->
 					<div data-part="rating" itemscope itemtype="https://schema.org/EmployerAggregateRating">
 						<span itemprop="itemReviewed" itemscope itemtype="https://schema.org/Organization" hidden><meta itemprop="name" content="Nordlys ApS"><meta itemprop="sameAs" content="https://nordlys.example"></span>
 						<meta itemprop="ratingValue" content="4.3">
@@ -1388,7 +1321,6 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-		<!-- the café's menu. Menu/MenuSection are CreativeWorks; MenuItem is an Intangible — docs/schema.md § Menu -->
 		<ui-card variant="col" media="asr(16/9) chip(te)" itemscope itemtype="https://schema.org/Menu">
 			<cq-box>
 				<ui-media><img src="/assets/images/spicycurry.png" alt="Bowl of coconut chicken curry with mint and coriander" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/spicycurry.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/spicycurry.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/spicycurry.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/spicycurry.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/spicycurry.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>Menu</ui-chip></ui-media>
@@ -1678,7 +1610,6 @@
 							6:00–22:00
 						</dd>
 					</dl>
-					<!-- no aggregateRating: valid schema.org, but Google rejects Place as a review-snippet host — docs/schema.md § Place -->
 					<ul data-part="list">
 						<li>Free parking</li>
 						<li>Guided tours</li>
@@ -1690,10 +1621,6 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-		<!-- The map card: the media frame IS the map. An <iframe> needs no new element —
-		     media.css already sizes iframe like img/video, so the embed inherits asr(),
-		     the radius, the furniture and the carousel. Coordinates come from the same
-		     GeoCoordinates the card already carries — docs/media.md § Map -->
 		<ui-card id="schema-map" variant="col" media="asr(16/9) chip(ts)" itemscope itemtype="https://schema.org/Place">
 			<cq-box>
 				<ui-media><iframe src="https://www.openstreetmap.org/export/embed.html?bbox=12.596553,55.706053,12.602047,55.709147&amp;layer=mapnik&amp;marker=55.7076,12.5993" title="Map of Nordhavn Studio, Sundkaj 9, Copenhagen" loading="lazy" itemprop="hasMap"></iframe><ui-chip data-type>Place</ui-chip></ui-media>
@@ -1751,11 +1678,7 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-		<!-- RealEstateListing is a WebPage: the home is nested under mainEntity, and `offers` rides the
-		     LISTING because Accommodation/Place have no offers property — docs/schema.md § Real estate -->
-		<!-- Morph target for the detail page (realestate/havnegade-44.html). The ROOT only:
-		     schema.compare.js drops id=/data-view= on the card root, but not inside it, and
-		     this card IS compare-paired — naming the first <img> too would fail the gate. -->
+		<!-- Morph target for realestate/havnegade-44.html — docs/schema.md § Real estate -->
 		<ui-card variant="col" media="asr(16/9) nav(mrk) nav(arw) chip(te)" data-view="card-realestate-1" itemscope itemtype="https://schema.org/RealEstateListing">
 			<cq-box>
 				<ui-media tabindex="-1">
@@ -1770,11 +1693,7 @@
 				<ui-content><p data-part="meta"><ui-chip theme="pale green" radius="non">New</ui-chip><ui-chip theme="pale accent" radius="non">Open house</ui-chip></p><small data-part="eyebrow">For sale</small><h3 data-part="headline" itemprop="name"><a data-part="cover" href="realestate/havnegade-44.html">Top-floor apartment, Havnegade 44</a></h3><p data-part="summary" itemprop="description">Three bedrooms and a south-facing terrace over the canal, five minutes from Kongens Nytorv.</p><meta itemprop="datePosted" content="2026-07-18"><p data-part="price" itemprop="offers" itemscope itemtype="https://schema.org/Offer"><meta itemprop="priceCurrency" content="DKK"><meta itemprop="availability" content="https://schema.org/InStock"><meta itemprop="price" content="7250000">DKK 7,250,000 <small>DKK 61,441 per m²</small></p><div itemprop="mainEntity" itemscope itemtype="https://schema.org/Apartment"><meta itemprop="name" content="Top-floor apartment, Havnegade 44"><meta itemprop="floorLevel" content="5"><meta itemprop="petsAllowed" content="true"><p data-part="meta"><span itemprop="floorSize" itemscope itemtype="https://schema.org/QuantitativeValue"><meta itemprop="unitCode" content="MTK"><meta itemprop="value" content="118">118 m²</span> · <meta itemprop="numberOfBedrooms" content="3">3 bedrooms · <meta itemprop="numberOfBathroomsTotal" content="2">2 bathrooms · <meta itemprop="numberOfRooms" content="5">5 rooms · <meta itemprop="yearBuilt" content="2018">built 2018</p><address data-part="address" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress"><span><span itemprop="streetAddress">Havnegade 44, 5th floor</span></span><span><span itemprop="postalCode">1058</span> <span itemprop="addressLocality">Copenhagen</span></span><meta itemprop="addressCountry" content="DK"></address></div><p data-part="meta">Listed Jul 18, 2026 · Nordlys Estate · viewings Saturdays</p></ui-content>
 			</cq-box>
 		</ui-card>
-		<!-- VacationRental is a LodgingBusiness — an Organization AND a Place — so brand, the
-		     coordinates and knowsLanguage ride the root while the rooms hang off containsPlace.
-		     `offers` is out of domain here; the rate is priceRange — docs/schema.md § Vacation rental -->
-		<!-- Morph target for rentals/masseria-lucia.html. The ROOT only: the gate drops
-		     id=/data-view= there, but not inside it. -->
+		<!-- Morph target for rentals/masseria-lucia.html — docs/schema.md § Vacation rental -->
 		<ui-card variant="col" media="asr(16/9) nav(mrk) nav(arw) chip(te)" data-view="card-vacationrental-1" itemscope itemtype="https://schema.org/VacationRental">
 			<cq-box>
 				<ui-media tabindex="-1">
@@ -1923,7 +1842,6 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-		<!-- same schemaType as the card above, sharpened by details.subtype — docs/schema.md § Subtypes -->
 		<ui-card variant="col" media="asr(16/9) chip(te)" itemscope itemtype="https://schema.org/DiscussionForumPosting">
 			<cq-box>
 				<ui-media><img src="/assets/images/quickboil.png" alt="QuickBoil Plus kettle, matte black with copper trim" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/quickboil.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/quickboil.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/quickboil.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/quickboil.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/quickboil.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>DiscussionForumPosting</ui-chip></ui-media>
@@ -1997,7 +1915,6 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-		<!-- the reviewedBy byline is the E-E-A-T signal, so it is visible markup, never a hidden meta -->
 		<ui-card variant="col" media="asr(16/9) chip(te)" itemscope itemtype="https://schema.org/MedicalWebPage">
 			<cq-box>
 				<ui-media><img src="/assets/images/mindfulness.png" alt="Person sitting quietly under a tree in a forest" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/mindfulness.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/mindfulness.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/mindfulness.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/mindfulness.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/mindfulness.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>MedicalWebPage</ui-chip></ui-media>
@@ -2085,12 +2002,9 @@
 		</ui-card>
 	</lay-out>
 	</main>
-	<!-- optional: media invoker-command polyfill for the podcast <ui-play> button.
-	     The bundled build — the source's shared.js import adds a sequential request chain -->
+	<!-- optional — docs/schema.md § The two end-of-body scripts -->
 	<script type="module" src="../video.min.js"></script>
-	<!-- Fills the heart on click by flipping aria-pressed, the attribute ui-save.css
-	     keys its active state on: listens for the --save invoker command on each
-	     commandfor target, with a click fallback. Docs: /ui/save/readme.md § Toggling -->
+	<!-- optional — /ui/save/readme.md § Toggling -->
 	<script type="module" src="/ui/save/save.min.js"></script>
 </body>
 </html>

@@ -163,6 +163,14 @@ forever. Scroll the carousel and the slides arriving from the far side animate i
 normally (measured 0.988) while the initially-visible ones stay at 0. Confirmed
 Chromium 151.
 
+**Severity, re-read against the 2026-08-19 decisions (items 28–29):** Chromium 151 is
+inside the supported baseline (Chrome 150+), so this is a live bug in a supported engine,
+not a fringe case. And because the failure mode is *content invisible at rest* in
+right-to-left languages, it reads as a WCAG 2.1 AA problem (1.4.13 / content availability)
+rather than a missing flourish. The `prefers-reduced-motion` arm required by the new a11y
+policy also happens to be the cleanest workaround: if reduced-motion renders the end state
+statically, the same escape hatch can serve RTL until Chromium fixes the timeline.
+
 **Not the axis keyword and not the range.** `view(inline)`, `view(x)` and an explicit
 `animation-range: entry 0% cover 30%` all fail identically in RTL and all work in LTR.
 The timeline is UA-computed, so there is no CSS lever left.
@@ -652,6 +660,12 @@ generated `<sub>file:line</sub>` footers to the prose notes would end the class.
 
 Audit § G plus a 2026-08-19 finding; two halves of one decision.
 
+**Interim (2026-08-19):** `docs/v4.md` now defines the term for readers — "v5" is the
+**token-vocabulary generation**, not a branch or a release, and "removed in v5" marks a
+breaking token rename already landed on this branch. That stops a new session mistaking it
+for a future line; it does **not** settle the question below, which is whether the prose or
+the package versions should move.
+
 There is no released v5, yet **85 sites outside `docs/plans`** call the token-vocabulary
 sweep "v5" — "removed in v5", "the v5 alias batch", "the system's v5 vocabulary" — across
 `ui/card/readme.md`, `AGENTS.md`, `render.js`, nine `ui/card/docs/*` files and
@@ -735,10 +749,15 @@ renderer-side, none urgent; the shipped and rejected entries stay in git history
 41 pages: 22 in `layout/dist/`, 10 in `layout/src/pages/`, 2 in `layout/demo-assets/`,
 `layout/index.html`, `ui/card/index.html`, 4 in `ui/card/demo/`, and `ui/reveal/index.html`
 (a further 54 sit in the parked `content/card` build output). Every one 404s, so those
-pages run with **no typed-`attr()` fallback in Safari/Firefox** — per "What NOT to Do"
-#11 that means missing values and consuming properties dying at computed-value time, not
-wrong values. The 27 pages pointing at `/ui/base/polyfills/attr-fallback.min.js` are fine:
-that file exists and is built.
+pages run with **no typed-`attr()` fallback in Safari** — missing values, and consuming
+properties dying at computed-value time, not wrong values. The 27 pages pointing at
+`/ui/base/polyfills/attr-fallback.min.js` are fine: that file exists and is built.
+
+**Severity, re-read against the 2026-08-19 baseline decision (item 28):** Safari 26.5 is
+**half the supported matrix** and does not implement typed `attr()`. This is not a
+degraded-legacy-browser issue — it is `bleed`, `columns`, `rows`, `max-width`, `self`,
+`size` and `lanes-min`/`lanes-max` silently not working for half of supported users on
+~40 pages. Treat it as the highest-priority item in this file.
 
 Compounding it: `layout/polyfills/attr-fallback.js` (2.9 kB, untouched since Jul 19) has
 drifted from the actively maintained `ui/base/polyfills/attr-fallback.js` (8.5 kB, still
@@ -815,39 +834,67 @@ branch where a Cloudflare Pages rebuild is acceptable), or pin the minifier exac
 rebuild is a true no-op. The regeneration was reverted on the 2026-08-19 docs branch to
 keep that change docs-only.
 
-## 28. No stated browser-support baseline
+## 28. Browser-support baseline — DECIDED 2026-08-19
 
-2026-08-19 finding, from a fresh-session read of the orientation docs. The docs are full
-of dated engine specifics — "Safari 26 ships `display: grid-lanes`", "Chromium 145 has no
-masonry syntax", "scroll-triggered mode is Chrome 145+", "`::scroll-marker` is
-Chromium-only today" — but **nowhere states the support target**. Is Firefox supported?
-Is there a minimum version? Without a baseline there is no rule for deciding whether a
-new native feature ships as the implementation or as enhancement-only, and every dated
-claim above rots silently.
+**Chrome 150+ and Safari 26.5+; Firefox is not a support target.** Recorded in root
+`AGENTS.md` § Browser support baseline, with the three engine divergences the baseline
+implies (typed `attr()` absent in Safari, `::scroll-marker` absent in Safari, masonry
+absent in Chromium). `layout/readme.md` and `layout/AGENTS.md` — which both claimed
+"Chrome/Edge 89+, Firefox 88+, Safari 14.1+" — were corrected.
 
-`layout/readme.md` § Browser Support says "Chrome/Edge 89+, Firefox 88+, Safari 14.1+",
-which cannot be right for a system built on `@property`, container queries, `:has()`,
-typed `attr()` and scroll-driven animation — so the one number that exists is
-misleading.
+**Residual, not blocking:** ~40 per-package readmes carry "when did this land" feature
+tables (`:has()` Chrome 105+, `color-mix()` Safari 16.2+, …). They are history rather than
+a support claim and every entry sits below the baseline, so they were left alone. If they
+ever start reading as a contract, delete them rather than maintain them.
 
-**Direction:** state a baseline once (root `AGENTS.md` or `DESIGN.md`), phrase it as a
-policy rather than a version list ("Baseline Newly Available, minus X"), and say what the
-degradation contract is for the features that are ahead of it. Then fix
-`layout/readme.md`.
+## 29. Accessibility standard — DECIDED 2026-08-19
 
-## 29. Accessibility has no stated policy in the orientation layer
+**WCAG 2.1 AA.** Recorded in root `AGENTS.md` § Accessibility (contrast ratios, the muted-
+compounding trap, landmarks/heading order, `prefers-reduced-motion` on every always-running
+animation, RTL via logical properties) and wired into the gates in `docs/v4.md` § 6, with
+Lighthouse accessibility 100 as the demo-page floor in the `perf-pass` definition of done.
 
-2026-08-19 finding, same source. The system ships carousels, popovers, a lightbox that
-owns `inert` and back-button close, `<details>`-driven reveals, and several always-running
-scroll-driven animations — and the orientation docs carry **no a11y expectation, no
-reduced-motion policy, and no testing guidance**. RTL, by contrast, gets a dedicated
-regression demo (`ui/card/demo/media.rtl.html`) and its own sharp-edge entry. The
-asymmetry is conspicuous, and the perf playbook's a11y side-pass (contrast, landmarks,
-heading order, `aria-label` containing visible text) is the only place any of it is
-written down.
+**Known non-conformance under it, in priority order:**
 
-**Direction:** decide what the contract is — at minimum a `prefers-reduced-motion` rule
-for the animation engines and a statement of which axe rules the demo pages must pass —
-and give it a home next to the gates in `docs/v4.md`. Related: item 8 in this file
-(native `::scroll-marker` hit-size on the Chromium path was never audited, because axe
-cannot see pseudo-elements).
+1. **DONE 2026-08-19 for the light arms.** The six retuned values were ported from the
+   `demo/schema.html` override into `ui/base/tokens.css`, and the override deleted.
+   Verified in-browser on that page: link 7.05, error 6.84, info 6.91, accent 6.21,
+   success 6.11, text-muted 5.33 — all against `--color-surface`, all clearing 4.5.
+   **Only the light arms moved**, for the reason in 1a below.
+
+   **1a. One token cannot serve both roles — the blocking design decision.** Each
+   `--color-*` hue is simultaneously *text on the page* and *a theme-bundle plate under
+   fixed ink* (`--ui-theme-*-bg` with `--ui-theme-*-c`). In dark mode those pull opposite
+   ways, so porting the dark arms would have deepened an existing failure rather than
+   fixing one. Measured on today's dark arms as plates under white ink: red **4.16**,
+   green **3.17**, accent **3.74** — already under 4.5; the proposed lighter arms would
+   have taken them to 3.40 / 2.41 / 1.87, and blue from a passing 4.80 to **2.80**.
+
+   `--color-warning` proves it is structural, not a tuning miss: as pale-chip ink on white
+   it needs L ≤ 34% (4.76:1), as an orange plate under `--color-text` it needs L ≥ 42%
+   (4.61:1). **There is no overlap at any lightness.** Live on `demo/schema.html`, a
+   `theme="pale orange"` tag chip measures **2.03**. The old override comment claimed
+   "darkening a hue fixes pale ink + white-on-solid together" — true for the four hues
+   whose plates use white ink, false for orange, whose plate uses dark ink.
+
+   **Decide one of:** (a) derive bundle ink with `contrast-color(var(--ui-theme-*-bg))` —
+   the pattern `ui/base/tint.css` already uses, and `contrast-color()` is inside the
+   supported baseline — which frees every dark arm to be tuned for text; (b) split the
+   roles into `--color-*` (text) and a separate plate token; or (c) accept dark-mode
+   plates below AA and document it. (a) is the recommendation. Until then the ink warning
+   sits at `--ui-theme-*-bg` in `tokens.css`.
+
+   **Also still open:** the *muted-compounding* fix — `--ui-content-muted` is 65% and
+   `dateline` re-applies it inside an already-muted `byline` (0.65² ≈ 0.42).
+   `demo/schema.html` still carries an 85% page override; the real fix is stopping the
+   double application in `ui/card/content.css`. And accent's **dark arm as text on a dark
+   plate** measures **2.40** live (a `theme="black dark"` card's eyebrow) — the same
+   conflict seen from the text side.
+2. **`prefers-reduced-motion` is policy, not verified.** The arms have never been audited
+   across the animation engines (`ui/base/animate.css`, `stagger.css`, the beacon/marquee
+   always-running set). Related: item 5's RTL stagger failure, where a reduced-motion
+   static end state doubles as the workaround.
+3. **Native `::scroll-marker` hit-target size has never been audited** — axe cannot see
+   pseudo-elements, so nothing has ever checked it (item 8).
+
+(2) and (3) are work, not decisions; (1) is a bug.

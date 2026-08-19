@@ -576,11 +576,16 @@ npm run build:all     # Build everything
 
 ## Browser Support
 
-- Chrome/Edge 89+
-- Firefox 88+
-- Safari 14.1+
+**Chrome 150+ and Safari 26.5+; Firefox is not a support target.** Repo-wide contract and
+the three engine divergences that matter: root `AGENTS.md` § Browser support baseline.
 
-### Safari/Firefox Polyfill
+For this package specifically: `bleed`, `columns`, `rows`, `max-width`, `self`, `size`,
+`lanes-min` and `lanes-max` are typed `attr()` reads, which **Safari does not implement** —
+so the polyfill below is required across half the supported matrix, not a legacy nicety.
+Masonry runs the other way: `display: grid-lanes` is Safari-only and Chromium has no
+masonry syntax at all, so both `@supports` arms are live.
+
+### Safari polyfill (required)
 
 For enhanced `attr()` CSS function support:
 

@@ -6,12 +6,11 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="color-scheme" content="light dark">
 	<meta name="description" content="Direction regression target: every logical position family shown side by side under dir=ltr and dir=rtl — obp(), scm(), furniture, mrk() and arw(). An inline-start cell must resolve to the left edge on the left and the right edge on the right.">
-	<!-- srcset uses absolute v4.browser.style CDN URLs; the zone's Hotlink Protection
-	     403s any cross-origin Referer (pages.dev, localhost) — no-referrer passes -->
+	<!-- no-referrer: the zone hotlink-protects CDN srcset. Docs: docs/performance.md -->
 	<meta name="referrer" content="no-referrer">
-	<!-- srcset origin: handshake in parallel with the CSS download -->
+	<!-- preconnect: CDN handshake parallel to the CSS download. Docs: docs/performance.md -->
 	<link rel="preconnect" href="https://v4.browser.style">
-	<link rel="stylesheet" href="/dist/demo.fc1719a9.min.css">
+	<link rel="stylesheet" href="/dist/demo.f83bd23b.min.css">
 	<style>
 		/* two columns, one per direction — the whole point is reading them side by side */
 		.dirs { display: grid; gap: var(--spacing-xl); grid-template-columns: 1fr; }

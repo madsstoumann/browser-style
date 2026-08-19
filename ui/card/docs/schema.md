@@ -4,6 +4,12 @@
 > for every schema.org card type (the markup `render.js` reproduces). The intro prose, the
 > per-type notes and the structured-part vocabulary used to live inline on that page; they moved
 > here so the demo stays one card grid.
+>
+> **The matching CMS content model** is
+> [`cms/baseline/models/card.schema.json`](../../../cms/baseline/models/card.schema.json): a
+> structured envelope + a `schemaType` discriminator + one `details` object per type. Sibling
+> demo pages: [cards.html](../demo/cards.html) · [media.html](../demo/media.html) ·
+> [content.html](../demo/content.html).
 
 **Four counts, four different quantities — do not conflate them.** The page carries **58
 cards** with **52 distinct root itemtypes**; a structured-data validator reports **61 items**;
@@ -27,9 +33,16 @@ sitelinks-searchbox `potentialAction`, which describes the *site*, not any card 
 page-trail `BreadcrumbList` on the breadcrumb `<ol>` — 61. Nested scopes (`author` → `Person`,
 `offers` → `Offer`, …) are properties of their
 parent, not items, and are not counted. The `grep -c 'itemtype='` on the end of that command is
-load-bearing: without it the page's own `<meta name="description">` (and a comment spelling out
-the counting rule) are counted, because their text
-mentions "itemscope" — that is how a naive scan reports 63.
+load-bearing: without it the page's own `<meta name="description">` is counted too, because its
+text mentions "itemscope" — that is how a naive scan reports 62. (It read 63 while an HTML
+comment on the job card also spelled the word out; that comment is gone, but the guard is not
+about any one line — any future prose mentioning `itemscope` walks into the same trap.)
+
+**The count is of the card hosts, and only those.** A "card" is a **top-level**
+`<ui-card>`/`<ui-reveal>` carrying an `itemtype`: the four nested `<ui-card>` Product tiles
+inside the [ProductGroup collage](#the-collage-presentation)'s `<ui-media>` are not cards, and a
+nested property scope (`AggregateRating`, a byline `Person`, `Organization`, `ComicIssue`,
+`Occupation`, …) is not an itemtype *on a card host*.
 
 **Cards ≠ types.** `Quiz` runs three cards, and `Review`, `EventSeries`, `Place` and `Person`
 run two each — so 58 − 2 − 4 = 52. The `grep -v itemprop=` in those commands is load-bearing: the
@@ -55,10 +68,11 @@ v1.3 (organization, video, howto, qa, podcast, movie, book, dataset, claim), plu
 the modern engine: `<ui-card>` + `<ui-media>` + `<ui-content>`, with satellites `<ui-chip>`,
 `<ui-sticker>`, `<ui-save>`, `<ui-avatar>`, `<ui-quote>` and `<ui-accordion>`. Every card uses
 the same composition: media on top, text below. Structured data is inline **microdata**
-(`itemscope`/`itemtype`/`itemprop` + hidden `<meta>` values) — no JSON-LD. The single script on
-the page is optional: `video.js` polyfills the proposed media invoker commands
-(`command="--play-pause"`) behind the podcast play button; every card renders identically
-without it. Each media frame also carries a `<ui-chip data-type>` naming the card's schema.org
+(`itemscope`/`itemtype`/`itemprop` + hidden `<meta>` values) — no JSON-LD. Both end-of-body
+scripts are optional: `video.js` polyfills the proposed media invoker commands
+(`command="--play-pause"`) behind the podcast play button, and `save.js` flips `aria-pressed`
+on the save toggles; every card renders identically without either — see
+[Demo-page head and scripts](#demo-page-head-and-scripts). Each media frame also carries a `<ui-chip data-type>` naming the card's schema.org
 type — a demo affordance, emitted by `render.js` only when `renderCard` gets `{ typeChip: true }`.
 
 ## Page structure — eleven sections, and where the heading level comes from
@@ -519,6 +533,8 @@ Headline emits `title`. Salary → `MonetaryAmount` → `QuantitativeValue`; req
 
 `timeRequired`/`educationalLevel` metas; the teacher is `CourseInstance.instructor` → `Person` (`Course.provider` is the *organisation*, so naming the instructor there misdeclares both), `courseWorkload` rides the same instance; offer uses part `price`.
 
+⚠️ **`Course.provider` is REQUIRED by Google** — it is not the optional twin of the instructor. The card emits it as a hidden `Organization` scope on the course root, beside the `CourseInstance` that carries the instructor.
+
 ### Booking — `Reservation`
 
 Service → `reservationFor`, venue → `provider`, hourly rate with `totalPrice`/`priceCurrency` metas.
@@ -615,6 +631,8 @@ The property is **`hasMap`** — valid on `Place` and everything below it (`Loca
 ### Membership — `Offer`
 
 Dark theme, `PriceSpecification`, features as check-`list` with the excluded ones as a `crossed` list. `details.isPopular` renders the promotional chip — a state, so it keeps the eyebrow free for the actual category.
+
+The demo card takes plain `theme="gray"`, **not `gray muted`**: the `muted` modifier washes the ink by a further ~50%, which is unreadable at card scale in dark mode.
 
 ### Social — `SocialMediaPosting`
 
@@ -850,6 +868,16 @@ carousel via `card-preset/carousel`, two square status chips, the facts row) lin
 generated **detail page**, `demo/realestate/havnegade-44.html`, built by
 `demo/realestate/build.js`.
 
+**The teaser is a morph target.** It carries `data-view="card-realestate-1"`, matching the
+detail page's `<article>`, so a cross-document view transition grows the card into the page
+([card.md § Article pattern](card.md#article-pattern--teaser-card--full-page-view)). Only the
+card **root** is named on the grid: the detail page's hero `<img>` carries
+`data-view="hero-realestate-1"`, but the teaser's first `<img>` names nothing, so the box
+morphs and the image dissolves inside it rather than scaling. That is an authoring choice, not
+a gate constraint — `schema.compare.js`'s H3 normalisation drops `data-view` **everywhere**,
+not only on the card root, so naming the teaser's hero would not break the transcription pair.
+The same shape applies to the [vacation rental](#vacation-rental--vacationrental) teaser.
+
 **Two data files, deep-merged by the builder.** `data/realestate.json` is shared with the
 teaser and stays short; `demo/realestate/havnegade-44.json` carries what only the page has —
 the long sales copy, `amenities[]`, the coordinates behind the map band, the gallery invoker
@@ -962,6 +990,10 @@ amenity list, the map and the reviews. `factsRun` and `figures` are ALTERNATIVES
 both restates floorSize/numberOfBedrooms/… and fails *one property, one value*. The page also
 strips `address`, `checkin` and `checkout` from band 1's details, because its location band owns
 them.
+
+The teaser is a morph target the same way the real-estate one is:
+`data-view="card-vacationrental-1"` on the card **root** only, pairing with
+`demo/rentals/masseria-lucia.html` — see [Real estate](#real-estate--realestatelisting).
 
 Four traps, each one a property that had to move or go:
 
@@ -1156,7 +1188,7 @@ and an unfilled role emits nothing rather than an empty scope.
 
 **`isPartOf` is the link, and it only runs one way.** Its range is `CreativeWork | URL`, so the
 issue points up at the series through a **real anchor** rather than a hidden `<meta>` — only a
-link is crawlable, the same reasoning as the [ProductGroup variant URLs](#product--product).
+link is crawlable, the same reasoning as the [ProductGroup variant URLs](#product--product-subtype-productgroup).
 There is no inverse to walk back down: a `ComicSeries` cannot point at its issues except through
 `hasPart`, which this pair deliberately does not use.
 
@@ -1228,3 +1260,138 @@ immediately obvious to users that the page has rating content"), which is why th
 real star row rather than hidden `<meta>`s. Google states no explicit prohibition on nesting; the
 separate-item shape follows from its example and its property list, not from a rule.
 
+
+## Demo-page head and scripts
+
+Every line in `demo/schema.html`'s `<head>` is there for a measured reason. The page itself
+carries only one-line markers pointing here, per the repo's rule that prose belongs in the
+docs; the reasoning is below and the measurements behind it are in
+[`docs/performance.md`](../../../docs/performance.md).
+
+### Two metas
+
+```html
+<meta name="referrer" content="no-referrer">
+<meta name="format-detection" content="telephone=no">
+```
+
+- **`referrer`.** The page's `srcset` candidates are absolute `https://v4.browser.style/cdn-cgi/image/…`
+  URLs, and the zone's Hotlink Protection **403s any cross-origin `Referer`** — which is what a
+  page served from `pages.dev` or `localhost` sends. `no-referrer` passes. (A *CSS*-initiated
+  fetch uses the stylesheet's referrer policy, not the document's, so `/dist/*` needs the same
+  policy from `_headers` — see performance.md § Environments.)
+- **`format-detection`.** iOS Safari's data detectors read the [Book](#book--book) card's
+  hyphenated ISBN — and the [ComicSeries](#comic-series--comicseries) ISSN — as a phone number
+  and link them `tel:`. The page-level meta is the mechanism that stops them; explicit `tel:`
+  links elsewhere on the page keep working alongside it. Any page embedding those cards needs
+  it too.
+
+### Resource hints and the stylesheet
+
+- **`<link rel="preconnect" href="https://v4.browser.style">`** — the srcset origin. The
+  handshake runs in parallel with the CSS download, taking ~3 RTTs off the eager LCP image on
+  `pages.dev`/`localhost`; on the zone itself it is a same-origin no-op.
+- **One bundle for every card-demo package**, `/dist/demo.<hash>.min.css`. The source list is
+  [`ui/card/components.md`](../components.md); it is built by `npm run build:demo-css` from
+  `demo.css`. The filename hash is what makes the one-year `immutable` cache safe, so the link
+  is rewritten on every rebuild.
+- **`<link rel="expect" href="#schema-product-variants" blocking="render">`** blocks first
+  paint — *and the incoming snapshot on Back* — until the morphing card is parsed. See
+  [card.md § Article pattern](card.md#article-pattern--teaser-card--full-page-view).
+- **Speculation rules** prerender `articles/article.html` and `articles/news.html` at
+  `eagerness: "moderate"`. Prerender plus a cross-document view transition makes the article
+  morph instant; the feature is Chromium-only and inert everywhere else.
+
+### The typed-`attr()` polyfill block
+
+The polyfill names the view-transition morph targets where typed `attr()` is unsupported
+(Safari). It **must** be render-blocking in `<head>`: the incoming page is snapshotted at first
+paint, so a deferred script names the targets too late and the forward morph degrades to a
+cross-fade. See [`ui/base/polyfills/readme.md`](../../base/polyfills/readme.md).
+
+⚠️ **The `<!-- polyfill:start -->` / `<!-- polyfill:end -->` comments are functional, not
+documentation.** [`scripts/inline-polyfill.js`](../../../scripts/inline-polyfill.js) parses them
+and rewrites everything between from `ui/base/polyfills/attr-fallback.iife.min.js` on every
+`npm run build:demo` (`--check` fails CI if the copy is stale). Do not edit, move or reword the
+markers or the generated block between them — including the generated comment inside it, which
+the script emits verbatim. The emitted tag is a **classic** `<script>` on purpose: an inline
+`type="module"` is deferred by spec and would run after first paint, silently restoring the bug.
+
+### The page-level `WebSite` item
+
+A hidden `<div itemscope itemtype="https://schema.org/WebSite">` sits in `<body>` **beside** the
+card grid, not in it — it describes the site this page belongs to, so it is one of the three
+top-level items that are not cards (see *Items ≠ cards* at the top of this document).
+
+Its `potentialAction` is the **sitelinks searchbox**. The template variable is named by
+`query-input`'s `valueName`, **not by any form field on the page** — a consumer substitutes the
+user's term into `urlTemplate` itself. Google only honours the searchbox on a site's *homepage*;
+here it is the markup shape that is being demonstrated, nothing more.
+
+### The breadcrumb trail
+
+`@browser.style/breadcrumbs` in its **hand-authored CSS-only form**, so the page needs no
+script for it. The `<ol>` is the `BreadcrumbList` — the third non-card top-level item — and
+**the last crumb is this page, so it takes no `item`**: see
+[`ui/breadcrumbs/readme.md` § Structured data](../../breadcrumbs/readme.md).
+
+### The two end-of-body scripts
+
+Both are optional; every card renders identically without them.
+
+| Script | What it does |
+|---|---|
+| `../video.min.js` | Polyfills the proposed media invoker commands (`command="--play-pause"`) behind the podcast card's `<ui-play>` button. The **bundled** build, deliberately: the source module imports `shared.js`, which adds a sequential request chain. |
+| `/ui/save/save.min.js` | Fills the heart on click by flipping `aria-pressed` — the attribute `ui-save.css` keys its active state on. It listens for the `--save` invoker command on each `commandfor` target, with a delegated-click fallback: [`ui/save/readme.md` § Toggling](../../save/readme.md). |
+
+## Demo-page CSS
+
+`demo/schema.html` carries a small page-scoped `<style>` block. It is deliberately page
+CSS, not system CSS — the reasoning lives here, per the repo's one-line-marker rule for
+stylesheets.
+
+### Off-screen cards skip style and layout
+
+```css
+main > lay-out > ui-card,
+main > lay-out > ui-reveal { content-visibility: auto; contain-intrinsic-size: auto 567px; }
+```
+
+The page is ~58 cards / ~2,400 elements, and its top PageSpeed diagnostic was Style &
+Layout — 1,670 ms of a 2.4 s main thread (not script: Script Evaluation was 22 ms there,
+3 ms locally). Measured at an iPhone viewport, before → after: layout 550 → 132 ms, style
+recalc 230 → 77 ms, layout objects 2,945 → 459, CLS unchanged at 0. `auto` remembers each
+card's real size once rendered; **567px is this page's measured median card height**, so
+the initial scrollbar starts close to the truth.
+
+Verified still working while contained: in-page anchors (`#schema-music`), carousel
+scroll-snap, `<ui-reveal>` disclosure, and accordion `<details>`.
+
+**Why it is not in the card system.** A lone card on a product page must *not* skip
+layout, and the intrinsic size is per-page data. The layout package already exposes the
+same mechanism as a first-class attribute — `<lay-out size="…">` writes
+`content-visibility: auto` + `contain-intrinsic-size` (`layout/core/base.css`) — but it
+applies to the section, not to each card inside it. This page wants per-card granularity,
+which has no token today; see `docs/plans/open-items.md`.
+
+### Accessibility overrides
+
+```css
+ui-content { --ui-content-muted: color-mix(in oklab, currentColor 85%, transparent); }
+```
+
+The card default is 65%, and `dateline` re-applies muting inside an already-muted
+`byline` — 0.65² ≈ 0.42 of the original, which fails WCAG AA. 85% survives one
+double-application and still clears 4.5:1, gray theme included. The real fix is stopping
+the double application in `content.css`; tracked in `docs/plans/open-items.md`.
+
+The page previously also overrode six `--color-*` tokens. Those values were **ported into
+`ui/base/tokens.css`** on 2026-08-19 (light arms only — the dark arms of accent/info/
+error/success double as theme-bundle plates under fixed white ink, so lightening them
+lowers ink contrast). The override is gone; the tokens are global.
+
+### Demo-only styling
+
+`ui-chip[data-type]` and the media-less card's absolute chip placement are presentation
+for this gallery alone — a type label on every card is a demo affordance, not a card-system
+feature. They stay page-scoped.

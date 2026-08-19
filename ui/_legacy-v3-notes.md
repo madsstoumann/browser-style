@@ -1,3 +1,9 @@
+> **STALE — v3-era notes, deliberately not named `AGENTS.md` so no session auto-loads it.**
+> Renamed 2026-08-19. It documents pre-v4 conventions (Shadow DOM, `attachShadow`,
+> `::part()`, `content-card`, `layout` under `ui/`) that the v4 line does **not** follow.
+> Current architecture: root `AGENTS.md`; v4 working rules: `docs/v4.md`; component
+> conversion: the `convert-to-v4` skill. Kept only for historical reference — safe to delete.
+
 # UI Monorepo - Internal Architecture
 
 ## Overview

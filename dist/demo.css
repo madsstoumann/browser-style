@@ -1,7 +1,7 @@
 /* ui/base/tokens.css */
 @layer bs-core {
   :root {
-    --color-accent: light-dark(hsl(211, 100%, 50%), hsl(211, 60%, 50%));
+    --color-accent: light-dark(hsl(211, 100%, 38%), hsl(211, 60%, 50%));
     --color-accent-dark: light-dark(hsl(211, 80%, 30%), hsl(211, 30%, 20%));
     --color-accent-text: hsl(211, 100%, 95%);
     --color-border: light-dark(hsl(0, 0%, 80%), hsl(0, 0%, 35%));
@@ -11,15 +11,15 @@
     --color-surface-alt: light-dark(hsl(0, 0%, 95%), hsl(0, 0%, 15%));
     --color-text: light-dark(hsl(0, 0%, 15%), hsl(0, 0%, 85%));
     --color-field: light-dark(hsl(0, 0%, 97.5%), hsl(0, 0%, 2.5%));
-    --color-text-muted: light-dark(hsl(0, 0%, 60%), hsl(0, 0%, 40%));
+    --color-text-muted: light-dark(hsl(0, 0%, 42%), hsl(0, 0%, 65%));
     --color-highlight: light-dark(hsl(211, 100%, 95%), hsl(211, 30%, 20%));
-    --color-link: light-dark(hsl(221, 100%, 73%), hsl(221, 70%, 70%));
+    --color-link: light-dark(hsl(221, 100%, 44%), hsl(221, 70%, 70%));
     --color-mark: light-dark(hsl(61, 100%, 80%), hsl(61, 50%, 80%));
     --color-mark-text: light-dark(hsl(60, 100%, 2%), hsl(60, 50%, 10%));
     --color-link-visited: light-dark(hsl(264, 33%, 61%), hsl(264, 25%, 70%));
-    --color-info: light-dark(hsl(210, 60%, 46%), hsl(210, 30%, 46%));
-    --color-error: light-dark(hsl(360, 60%, 46%), hsl(360, 40%, 56%));
-    --color-success: light-dark(hsl(136, 41%, 41%), hsl(136, 21%, 51%));
+    --color-info: light-dark(hsl(210, 65%, 36%), hsl(210, 30%, 46%));
+    --color-error: light-dark(hsl(360, 65%, 41%), hsl(360, 40%, 56%));
+    --color-success: light-dark(hsl(136, 45%, 30%), hsl(136, 21%, 51%));
     --color-warning: light-dark(hsl(33, 99%, 59%), hsl(33, 69%, 59%));
     --color-overlay: color-mix(in srgb, CanvasText, transparent 50%);
     --color-overlay-light: color-mix(in srgb, CanvasText 25%, transparent);
