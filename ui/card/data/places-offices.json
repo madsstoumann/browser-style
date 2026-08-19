@@ -38,7 +38,7 @@
         {
           "type": "LocalBusiness",
           "name": "Copenhagen",
-          "url": "https://example.com/studios/copenhagen",
+          "url": "offices/copenhagen.html",
           "branchCode": "CPH",
           "geo": { "latitude": 55.7076, "longitude": 12.5993, "url": "https://www.google.com/maps/search/?api=1&query=55.7076,12.5993" },
           "address": { "streetAddress": "Sundkaj 9", "postalCode": "2150", "addressLocality": "Copenhagen", "addressCountry": "DK" },
@@ -48,7 +48,7 @@
         {
           "type": "LocalBusiness",
           "name": "Berlin",
-          "url": "https://example.com/studios/berlin",
+          "url": "offices/copenhagen.html",
           "branchCode": "BER",
           "geo": { "latitude": 52.52, "longitude": 13.405 },
           "address": { "streetAddress": "Torstraße 140", "postalCode": "10119", "addressLocality": "Berlin", "addressCountry": "DE" },
@@ -58,7 +58,7 @@
         {
           "type": "LocalBusiness",
           "name": "London",
-          "url": "https://example.com/studios/london",
+          "url": "offices/copenhagen.html",
           "branchCode": "LON",
           "geo": { "latitude": 51.5072, "longitude": -0.1276 },
           "address": { "streetAddress": "12 Rivington Street", "postalCode": "EC2A 3DU", "addressLocality": "London", "addressCountry": "GB" },
@@ -68,7 +68,7 @@
         {
           "type": "LocalBusiness",
           "name": "New York",
-          "url": "https://example.com/studios/new-york",
+          "url": "offices/copenhagen.html",
           "branchCode": "NYC",
           "geo": { "latitude": 40.7128, "longitude": -74.006 },
           "address": { "streetAddress": "45 Greenwich Avenue", "postalCode": "10014", "addressLocality": "New York", "addressRegion": "NY", "addressCountry": "US" },
@@ -78,7 +78,7 @@
         {
           "type": "LocalBusiness",
           "name": "Singapore",
-          "url": "https://example.com/studios/singapore",
+          "url": "offices/copenhagen.html",
           "branchCode": "SIN",
           "geo": { "latitude": 1.3521, "longitude": 103.8198 },
           "address": { "streetAddress": "8 Marina View", "postalCode": "018960", "addressLocality": "Singapore", "addressCountry": "SG" },
@@ -88,7 +88,7 @@
         {
           "type": "LocalBusiness",
           "name": "Sydney",
-          "url": "https://example.com/studios/sydney",
+          "url": "offices/copenhagen.html",
           "branchCode": "SYD",
           "geo": { "latitude": -33.8688, "longitude": 151.2093 },
           "address": { "streetAddress": "3 Kent Street", "postalCode": "2000", "addressLocality": "Sydney", "addressRegion": "NSW", "addressCountry": "AU" },

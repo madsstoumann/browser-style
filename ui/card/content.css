@@ -469,8 +469,10 @@
 
 		}
 		& ol[data-part="list"] { list-style-type: var(--ui-content-list-marker, decimal); }
-		/* block-content rows (qa answers): no marker — inside-position bullets wrap onto their own line */
-		& [data-part="list"]:has(> li > :is(p, ui-quote)) {
+		/* block-content rows (qa answers, places): no marker — inside-position bullets wrap
+		   onto their own line, so the marker sits alone above the row. [itemprop="item"] is
+		   the places list, whose rows are a block scope. */
+		& [data-part="list"]:has(> li > :is(p, ui-quote, [itemprop="item"])) {
 			--ui-content-list-marker: none;
 			gap: var(--ui-content-list-answers-gap, var(--spacing-md));
 		}

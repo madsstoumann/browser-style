@@ -1270,6 +1270,15 @@
       "element": "ui-card",
       "variant": "col",
       "media": "asr(1/1) nav"
+    },
+    "office-page": {
+      "name": "Office Page",
+      "description": "Full office view — the map is the media, beside the text column from the lg tier. The frame is the same single-point OpenStreetMap embed the map card uses: one office is one pin, so it needs no <ui-map>.",
+      "element": "ui-card",
+      "variant": "col lg:row lg:spl(1/1) shd(non)",
+      "media": "asr(4/3) rds(lg)",
+      "content": "scl(lg)",
+      "headingTag": "h2"
     }
   }
 }

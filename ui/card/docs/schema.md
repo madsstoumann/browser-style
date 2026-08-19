@@ -683,7 +683,12 @@ domain on them — a listing typed `Residence` could state none of its own facts
 with address, phone and hours is forty lines of page — so neither shape prints everything.
 
 *Compact rows (the default).* An office row shows the linked name and, when it differs, its
-locality. The address, hours and `hasMap` link stay fully marked up inside one bare
+locality — linked to its own office page, built by
+[`demo/offices/build.js`](../demo/offices/build.js). That page is the simplest of the four
+detail builders on purpose: real estate and rentals are banded because their subject spans
+two scopes, while an office is one `LocalBusiness`, so a single card states every property
+exactly once and there is nothing to split. All six rows point at the one page that exists,
+the same demo convenience as the five homes. The address, hours and `hasMap` link stay fully marked up inside one bare
 `<div hidden>`, and the phone becomes a `<meta>`. A reader gets them from the map popup,
 which `<ui-map>` builds out of exactly those nodes. **The wrapper must be a bare `<div>`:**
 `content.css` gives `[data-part="address"]` `display: flex` and `[data-part="hours"]`

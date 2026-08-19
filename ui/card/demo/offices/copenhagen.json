@@ -1,0 +1,43 @@
+{
+  "$schema": "../../../../cms/baseline/models/card.schema.json",
+  "id": "office-copenhagen",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-08-19T09:00:00Z",
+    "updatedAt": "2026-08-19T09:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Places"
+  },
+  "fields": {
+    "internalName": "Demo — Office page (Copenhagen)",
+    "schemaType": "business",
+    "preset": { "$ref": "card-preset/office-page" },
+    "eyebrow": "Studio",
+    "headline": "Copenhagen",
+    "summary": "Our first studio, on the quay at Sundkaj. Six floors of daylight, a workshop in the basement and a coffee machine that predates the company.",
+    "media": [
+      { "mediaType": "map", "alt": "Map of the Copenhagen studio, Sundkaj 9", "zoom": 15 }
+    ],
+    "details": {
+      "address": {
+        "streetAddress": "Sundkaj 9",
+        "postalCode": "2150",
+        "addressLocality": "Copenhagen",
+        "addressCountry": "DK"
+      },
+      "geo": {
+        "latitude": 55.7076,
+        "longitude": 12.5993,
+        "url": "https://www.google.com/maps/search/?api=1&query=55.7076,12.5993"
+      },
+      "openingHours": [
+        { "schema": "Mo-Fr 09:00-17:00" },
+        { "schema": "Sa 10:00-14:00" }
+      ],
+      "telephone": "+45 35 55 12 90",
+      "email": "copenhagen@example.com"
+    },
+    "tags": ["Copenhagen", "Studio"]
+  }
+}

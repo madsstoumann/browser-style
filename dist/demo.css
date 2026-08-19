@@ -12404,7 +12404,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     & ol[data-part=list] {
       list-style-type: var(--ui-content-list-marker, decimal);
     }
-    & [data-part=list]:has(> li > :is(p, ui-quote)) {
+    & [data-part=list]:has(> li > :is(p, ui-quote, [itemprop=item])) {
       --ui-content-list-marker: none;
       gap: var(--ui-content-list-answers-gap, var(--spacing-md));
     }
