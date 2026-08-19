@@ -142,7 +142,7 @@ The ticker's static twin: the same solid plate and trailing 3-dot loader, **with
 slide**. Use it where tickers would multiply (feeds, dashboards): the slide clock is the
 expensive part (a registered custom property driving `text-indent` — per-frame style +
 layout on the main thread, ~87 ms/2.5 s idle); the dot loader alone is paint-only
-(~37 ms/2.5 s). See `docs/gpu-performance.md` for the measured ladder.
+(~37 ms/2.5 s). See `docs/performance.md` for the measured ladder.
 
 ```html
 <ui-beacon variant="loader" theme="red">Live</ui-beacon>

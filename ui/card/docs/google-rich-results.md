@@ -1,8 +1,13 @@
-# Google rich results — coverage audit of the 49 card itemtypes
+# Google rich results — coverage audit of the card itemtypes
+
+> Moved here from `docs/plans/2026-08-15-google-rich-results-audit.md` on 2026-08-19 — the
+> living companion to [`schema.md`](schema.md) § Rich results vs. structured data.
 
 > **Report only. No code changed by this document.** Audited 2026-08-15 against `v4` at
-> `c42e63f`, and refreshed twice since: on 2026-08-15 when the `ComicIssue` card took the
-> inventory from 47 to 48, and on 2026-08-16 when `MusicGroup` took it to 49.
+> `c42e63f`, and refreshed since: on 2026-08-15 when the `ComicIssue` card took the
+> inventory from 47 to 48, on 2026-08-16 when `MusicGroup` took it to 49, and on
+> 2026-08-19 when `VacationRental` took it to 50 (51 `schemaType` keys; the demo page's
+> cards carry 52 distinct root itemtypes — the count bridge is at the top of `schema.md`).
 > The question: how many of the card system's schema.org types have a live Google rich
 > result, which do not, and is it worth adding or reshaping anything to close the gap.
 >
@@ -12,7 +17,7 @@
 > `/root/.ccr/README.md` is explicit: *"do not retry organization policy denials (403/407) —
 > report them instead."* Unlike the schema.org vocabulary — which has an open mirror at
 > `raw.githubusercontent.com/schemaorg/schemaorg`, the route recorded in
-> [`ui/card/docs/schema.md`](../../ui/card/docs/schema.md) — Google's search documentation is
+> [`ui/card/docs/schema.md`](schema.md) — Google's search documentation is
 > not published in any public repository. The one candidate checked,
 > `glitchdigital/structured-data-testing-tool`, ships a 2019-era *"common markup used by
 > Google"* preset, not the current gallery.
@@ -38,21 +43,21 @@ The inventory itself is generated, not transcribed:
 ```sh
 node --input-type=module -e "
 import { SCHEMA_TYPES } from './ui/card/render.js';
-console.log(new Set(Object.values(SCHEMA_TYPES)).size)"   # → 49
+console.log(new Set(Object.values(SCHEMA_TYPES)).size)"   # → 50
 ```
 
 ---
 
 ## 1. The headline answer
 
-Of **49 distinct itemtypes** across 50 `schemaType` keys (`profile` and `artist` both resolve
+Of **50 distinct itemtypes** across 51 `schemaType` keys (`profile` and `artist` both resolve
 to `Person`):
 
 | Bucket | Count | Meaning |
 |---|---|---|
 | **Live** | ~18 | A Google feature exists today and this type is its subject |
 | **Withdrawn** | 7 | A feature existed and Google retired or narrowed it |
-| **None** | ~24 | Valid schema.org, no Google feature ever |
+| **None** | ~25 | Valid schema.org, no Google feature ever |
 
 The counts are approximate *because* of the ⚠ rows — several types sit on a Live/None boundary
 that only the live gallery can settle (`SoftwareApplication`, `Book`, `MusicAlbum`, `TVSeries`,
@@ -73,9 +78,9 @@ These matter more than any individual row.
 
 ### 2.1 Rich results are page-level; cards are components
 
-`demo/schema.html` carries **56 top-level entities**. No page shaped like that is a rich-result
+`demo/schema.html` carries **61 top-level entities**. No page shaped like that is a rich-result
 candidate whatever markup it holds, because Google resolves *the page's* main entity. That is
-not a defect in the demo — it is a gallery, and a gallery of 56 subjects is what it is meant to
+not a defect in the demo — it is a gallery, and a gallery of 61 subjects is what it is meant to
 be.
 
 The real candidates already exist and are already shaped correctly:
@@ -117,7 +122,7 @@ Sorted by bucket, then alphabetically. `key` is the `schemaType` discriminator.
 |---|---|---|---|
 | `Article` | `article` | Article | ⚠ |
 | `NewsArticle` | `news` | Article | ⚠ |
-| `Product` | `product` | Product snippets / merchant listings; **Product variants** via the `ProductGroup` subtype | `repo` — [schema.md § Product](../../ui/card/docs/schema.md), incl. the distinct-URL requirement and price formatting |
+| `Product` | `product` | Product snippets / merchant listings; **Product variants** via the `ProductGroup` subtype | `repo` — [schema.md § Product](schema.md), incl. the distinct-URL requirement and price formatting |
 | `Recipe` | `recipe` | Recipe (and the surviving `HowTo` shape, nested as `recipeInstructions`) | `repo` — schema.md § Rich results, rider 1 |
 | `Event` | `event` | Event; ticket tiers as `Offer` scopes | `repo` — `render.js` DETAILS.event comment |
 | `JobPosting` | `job` | Job posting; `EmployerAggregateRating` as a second top-level item | `repo` — schema.md § Employer rating |
@@ -136,7 +141,7 @@ Sorted by bucket, then alphabetically. `key` is the `schemaType` discriminator.
 
 ### Withdrawn — kept deliberately
 
-Already narrated in [`schema.md` § Rich results vs. structured data](../../ui/card/docs/schema.md).
+Already narrated in [`schema.md` § Rich results vs. structured data](schema.md).
 Not restated here; the dates below are that section's, and it is the source of truth.
 
 | itemtype | key | What happened | Src |
@@ -172,6 +177,7 @@ off the page without asking whether Google would have drawn a box around it.
 | `EducationalOccupationalCredential` | `achievement` | — | ⚠ |
 | `Service` | `service` | — | ⚠ |
 | `RealEstateListing` | `realestate` | No Google real-estate result; *Vacation rental* is a separate feature and a different type (now shipped as `vacationrental`, also with no open result — it is a partner-programme feed) | ⚠ |
+| `VacationRental` | `vacationrental` | No open rich result — Google's *Vacation rental* feature is fed through its partner programme, not published markup ([§ 5](#5-what-not-to-chase)) | `repo` — schema.md § Vacation rental |
 | `Menu` | `menu` | Feeds local-business context, not its own result | ⚠ |
 | `MedicalWebPage` | `medical` | — | ⚠ |
 | `MusicAlbum` | `music` | Music actions exist for approved partners; not a general result | ⚠ |
@@ -231,7 +237,7 @@ because content needs expressing — is how a taxonomy rots.
 the `vacationrental` card type, because content needed expressing, not because the gallery lists
 it. The reasoning above still stands as the *test*, and the type still has no open rich result:
 Google's *Vacation rental* feature is fed through its partner programme, not by published markup.
-See [schema.md § Vacation rental](../../ui/card/docs/schema.md).
+See [schema.md § Vacation rental](schema.md).
 
 Note also that three of the four SUBTYPE families already cover vertical ground a naive reading
 would call missing: `product` allowlists `Vehicle`/`Car`/`Motorcycle`, `social` allowlists
@@ -255,6 +261,6 @@ would call missing: `product` allowlists `Vehicle`/`Car`/`Motorcycle`, `social` 
    pages in the repo where a pass/fail verdict means anything, and neither has been run through
    it. Any failure there is worth more than any row in § 3.
 3. **Re-derive the inventory** before trusting the row count — the one-liner at the top of this
-   document. 49 rows, no itemtype missing, none invented.
+   document. 50 rows, no itemtype missing, none invented.
 4. **Dates must agree with `schema.md` § Rich results.** If this table and that section
    disagree, that section wins.

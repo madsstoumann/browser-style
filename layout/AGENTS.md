@@ -17,14 +17,17 @@ layout/
 ├── package.json          # NPM package configuration
 ├── core/                 # Core CSS files
 │   ├── base.css          # Base styles
-│   └── animations.css    # Animation utilities
+│   ├── group.css         # <lay-out-group> section-header styles
+│   └── animations.css    # Animation utilities (stack(reveal) redirect)
 ├── layouts/              # Layout JSON definitions
 │   ├── columns.json      # Equal column layouts
 │   ├── grid.json         # Advanced grid patterns
 │   ├── bento.json        # Bento box layouts
 │   ├── mosaic.json       # Mosaic patterns
-│   ├── asym.json         # Asymmetric layouts
+│   ├── asymmetrical.json # Asymmetric layouts
 │   ├── ratios.json       # Aspect ratio layouts
+│   ├── autofit.json      # Auto-fit/fill layouts
+│   ├── stack.json        # Overlapping-layer layouts
 │   └── lanes.json        # Masonry/lanes layouts (CSS grid-lanes)
 ├── dist/                 # Built output
 │   ├── layout.css        # Complete CSS bundle
@@ -35,9 +38,8 @@ layout/
 │   └── srcsets.js        # Srcset generation utilities
 ├── polyfills/
 │   └── attr-fallback.js  # Safari/Firefox polyfill
-└── docs/
-    ├── BUILD.md          # Build documentation
-    └── RUN.md            # Command reference
+└── docs/                 # Proposals & integration notes (build docs: § Build Commands below)
+    └── card-integration.md
 ```
 
 ## Usage
@@ -121,7 +123,7 @@ Two things to know when touching this:
 - **Safari 26 ships `display: grid-lanes`; Chromium does not** (verified — Chromium 145 supports no masonry syntax at all, and neither engine has `item-flow`/`grid-template-rows: masonry`). So both arms of the `@supports` are live in the wild and must agree. The fallback's `column-count` maths mirrors `repeat(auto-fill, minmax(lanes-min, 1fr))` — `floor((W + gap) / (min + gap))` — including the `10rem` default, which must stay in sync with the track list in `layouts/lanes.json`.
 - **Lane items carry `min-inline-size: 0`.** As grid items their automatic minimum is min-content, so anything with an `aspect-ratio` or a definite `min-block-size` transfers that into a minimum *width* and overflows its lane. The column-count fallback never needed this (block boxes just fill the column), which is why it only surfaced when Safari shipped grid-lanes.
 
-Config note: `lanes` is generated for `sm`/`md`/`lg` only (`layout.config.json`), but the static `@supports` selector matches all six breakpoints — so `xl="lanes(3)"` flips on `display: grid-lanes` with no track list and collapses to one lane. Add the breakpoint to the config before using it.
+Config note: `lanes` is generated for `sm`/`md`/`lg` only (`layout.config.json`), but the static `@supports` selectors match all six breakpoints — so `xl="lanes(4)"` flips masonry on with no track list, and **the two engines then disagree**: measured, Safari renders **1 lane** and Chromium **4 columns**. `--layout-gtc` is always declared (its typed-`attr()` default is `1fr`), so the `var(--layout-gtc, repeat(var(--_ci, 4), 1fr))` fallback on the grid-lanes arm is dead code and Safari gets a one-track list; the fallback arm reads `column-count: var(--_ci, 4)`, where `--_ci` really is unset. Developing in Chrome the token looks correct and ships broken to Safari. A preceding token also leaks in: `lg="columns(3)" xl="lanes(4)"` gives 3 lanes, because `columns(3)` set `--_ci: 3`. Add the breakpoint to the config before using it.
 
 #### Stack (Overlapping Layers)
 ```html
@@ -138,7 +140,7 @@ For a badge or label over an image, prefer `<ui-media>` furniture (`ui-chip`/`ui
 
 ### Breakpoint Spacing Tokens
 
-Spacing is **token-only** — card-style tokens embedded alongside layout tokens in the breakpoint attributes. **There are no bare `pad-inline` / `pad-top` / `col-gap` etc. attributes** (removed in v4); every spacing value lives inside a breakpoint attribute. Tokens are multipliers of `--layout-space-unit` in two spellings: **numbers** (`0`–`4`, e.g. `cg(2)`) and **word sizes** on the content-DSL ladder — `2xs` 0.125 · `xs` 0.25 · `sm` 0.5 · `md` 1 · `lg` 1.5 · `xl` 2 · `2xl` 3 (`cg(2xs)` = a 2px hairline at the default 1rem unit; the collision-safe needle includes the closing paren, so `cg(2)` never matches `cg(2xs)`). Both write the `--layout-*` custom props that `base.css`/`group.css` compose into padding/margin/gap. Tokens are generated at the breakpoints in the `spacing.breakpoints` allowlist — shipped config: `["xs","lg"]` (`xs` = the mobile-first base) — so gaps can change per allowlisted breakpoint: `xs="columns(2) cg(sm)" lg="grid(3a) cg(2xs)"`. Add a breakpoint (e.g. `xl` for mosaic tiers) to the allowlist to author spacing there.
+Spacing is **token-only** — card-style tokens embedded alongside layout tokens in the breakpoint attributes. **There are no bare `pad-inline` / `pad-top` / `col-gap` etc. attributes** (removed in v4); every spacing value lives inside a breakpoint attribute. Tokens are multipliers of `--layout-space-unit` in two spellings: **numbers** (`0`–`4`, e.g. `cg(2)`) and **word sizes** on the content-DSL ladder — `3xs` 0.0625 · `2xs` 0.125 · `xs` 0.25 · `sm` 0.5 · `md` 1 · `lg` 1.5 · `xl` 2 · `2xl` 3 (`cg(2xs)` = a 2px hairline — and `cg(3xs)` a 1px one — at the default 1rem unit; the collision-safe needle includes the closing paren, so `cg(2)` never matches `cg(2xs)`). Both write the `--layout-*` custom props that `base.css`/`group.css` compose into padding/margin/gap. Tokens are generated at the breakpoints in the `spacing.breakpoints` allowlist — shipped config: `["xs","lg"]` (`xs` = the mobile-first base) — so gaps can change per allowlisted breakpoint: `xs="columns(2) cg(sm)" lg="grid(3a) cg(2xs)"`. Add a breakpoint (e.g. `xl` for mosaic tiers) to the allowlist to author spacing there.
 
 | Token | CSS Custom Property(ies) | CSS Property |
 |-------|-------------------|--------------|
@@ -476,10 +478,13 @@ Provides:
 | `breakpoints` | Define breakpoints and included layouts; omit `min`/`max` on the lowest to make it the un-media-queried mobile-first base |
 | `breakpoints.<bp>.spacing` | Per-breakpoint override of the token list (array; `[]` disables spacing tokens for that breakpoint) |
 
-**No `include` option any more** — the layout package no longer bundles base CSS
-(`animations.css`, `stagger.css`) or the carousel controls. Load `@browser.style/base`
-alongside `layout.css` for the animation `@keyframes` and the `stagger` engine, and
-`@browser.style/carousel` for the `media=` carousel controls (`nav()`/`arw()`/`mrk()`).
+**The `include` option is deprecated** — it is absent from the shipped config, but the
+builder still honours it for project-local configs (`loadIncludeFiles` in
+`src/builder.js`, called with `config.include || []`). The layout package itself no
+longer bundles base CSS (`animations.css`, `stagger.css`) or the carousel controls.
+Load `@browser.style/base` alongside `layout.css` for the animation `@keyframes` and
+the `stagger` engine, and `@browser.style/carousel` for the `media=` carousel controls
+(`nav()`/`arw()`/`mrk()`).
 
 ### The dependency contract (declared since 2026-08-03)
 
@@ -701,7 +706,7 @@ Phase 4).
 ## Performance
 
 Rendering-performance policy — which properties composite, the `will-change` rules and
-the measured cost of the scroll-fade mask and `stack(reveal)`: `docs/gpu-performance.md`
+the measured cost of the scroll-fade mask and `stack(reveal)`: `docs/performance.md`
 (repo root).
 
 - **Zero JavaScript**: Pure CSS, no runtime overhead
@@ -868,8 +873,11 @@ layout/
 ├── layout.config.json    # Build configuration
 ├── core/
 │   ├── base.css          # Base grid styles
-│   ├── base.md           # Base documentation
-│   └── animations.css    # Animation utilities
+│   ├── base.md           # Base documentation (attribute reference)
+│   ├── group.css         # <lay-out-group> section-header styles
+│   ├── animations.css    # stack(reveal) redirect (engine lives in @browser.style/base)
+│   ├── animations.md     # Animation engine documentation
+│   └── conveyor.md       # Conveyor notes
 ├── layouts/
 │   ├── columns.json      # Equal columns (1-6)
 │   ├── grid.json         # Grid patterns (19 variants)
@@ -878,6 +886,7 @@ layout/
 │   ├── asymmetrical.json # Asymmetric (6 variants)
 │   ├── ratios.json       # Ratio-based (9 variants)
 │   ├── autofit.json      # Auto-fit/fill (2 variants)
+│   ├── stack.json        # Overlapping layers (stack(<name>))
 │   └── lanes.json        # Masonry/lanes (6 variants)
 ├── src/
 │   ├── builder.js        # LayoutBuilder class (~329 lines)
@@ -896,9 +905,12 @@ layout/
 │   ├── layout.css        # Built CSS bundle
 │   └── *.html            # Demo pages
 └── docs/
-    ├── BUILD.md          # Build documentation
-    └── RUN.md            # Run commands
+    ├── card-integration.md          # Card/SSR integration plan
+    ├── grid.animations.proposal.md  # Proposal
+    └── header.proposal.md           # Proposal
 ```
+
+Build documentation lives in this file (§ Build Commands / § LayoutBuilder Class).
 
 ## Browser quirks & workarounds
 
@@ -972,10 +984,16 @@ pair are live in the wild** — they must agree. Two things keep them in sync:
   default, which must match the track list in `layouts/lanes.json`. Getting either
   wrong makes the engines disagree on lane count at the same width.
 
-**Config gap:** `lanes` is generated for `sm`/`md`/`lg` only, but the static
-`@supports` selector matches all six breakpoints — so `xl="lanes(3)"` flips on
-`display: grid-lanes` with no track list and collapses to one lane. Add the
-breakpoint to `layout.config.json` before using it.
+**Config gap — and the engines disagree about it.** `lanes` is generated for
+`sm`/`md`/`lg` only, but the static `@supports` selectors match all six breakpoints,
+so `xl="lanes(4)"` flips masonry on with no track list. Measured: **Safari 1 lane,
+Chromium 4 columns.** `--layout-gtc` is always declared (typed-`attr()` default
+`1fr`), so `var(--layout-gtc, repeat(var(--_ci, 4), 1fr))` on the grid-lanes arm can
+never reach its fallback and Safari gets one track; the fallback arm reads
+`column-count: var(--_ci, 4)` where `--_ci` really is unset. So the bug is invisible
+in Chrome and ships to Safari. Add the breakpoint to `layout.config.json` before
+using it. (Open item: gate the selectors to the generated breakpoints, or drop the
+dead `var()` fallback so both arms at least fail the same way.)
 
 ### Typed `attr()` has no fallback in Safari/Firefox
 

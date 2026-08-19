@@ -5,49 +5,53 @@
 > per-type notes and the structured-part vocabulary used to live inline on that page; they moved
 > here so the demo stays one card grid.
 
-**Four counts, four different quantities — do not conflate them.** The page carries **57
-cards** with **51 distinct root itemtypes**; a structured-data validator reports **59 items**;
-the renderer knows **50 `schemaType` keys**.
+**Four counts, four different quantities — do not conflate them.** The page carries **58
+cards** with **52 distinct root itemtypes**; a structured-data validator reports **61 items**;
+the renderer knows **51 `schemaType` keys**.
 
 | Count | What it measures | Reproduce it |
 |---|---|---|
-| **57** | card hosts on the page — `<ui-card>` plus the one `<ui-reveal>` | `grep -oE '<ui-(card\|reveal)[^>]*itemtype="[^"]*"' ui/card/demo/schema.html \| grep -vc 'itemprop='` |
-| **59** | top-level microdata items — **what schema.org's validator reports** | `grep -o '<[a-z-]*[^<>]*itemscope[^<>]*>' ui/card/demo/schema.html \| grep -v 'itemprop=' \| grep -c 'itemtype='` |
-| **51** | distinct root `itemtype` values | `grep -oE '<ui-(card\|reveal)[^>]*itemtype="[^"]*"' ui/card/demo/schema.html \| grep -v 'itemprop=' \| grep -o 'itemtype="[^"]*"' \| sort -u \| wc -l` |
-| **50** | `schemaType` keys `render.js` supports (`SCHEMA_TYPES`) | `node -e "import('./ui/card/render.js').then(m => console.log(Object.keys(m.SCHEMA_TYPES).length))"` |
+| **58** | card hosts on the page — `<ui-card>` plus the one `<ui-reveal>` | `grep -oE '<ui-(card\|reveal)[^>]*itemtype="[^"]*"' ui/card/demo/schema.html \| grep -vc 'itemprop='` |
+| **61** | top-level microdata items — **what schema.org's validator reports** | `grep -o '<[a-z-]*[^<>]*itemscope[^<>]*>' ui/card/demo/schema.html \| grep -v 'itemprop=' \| grep -c 'itemtype='` |
+| **52** | distinct root `itemtype` values | `grep -oE '<ui-(card\|reveal)[^>]*itemtype="[^"]*"' ui/card/demo/schema.html \| grep -v 'itemprop=' \| grep -o 'itemtype="[^"]*"' \| sort -u \| wc -l` |
+| **51** | `schemaType` keys `render.js` supports (`SCHEMA_TYPES`) | `node -e "import('./ui/card/render.js').then(m => console.log(Object.keys(m.SCHEMA_TYPES).length))"` |
 
 The flashcard Quiz is the page's one **`<ui-reveal>`** host rather than a `<ui-card>` — a
 question on the front face, its answer on the flipside, which is what a flashcard actually is.
 It counts identically in every column below; only the element differs.
 
 **Items ≠ cards.** A validator counts every *top-level* item — an `itemscope` with no `itemprop`
-of its own — so it sees the 57 cards plus **two items that are not cards**: the standalone
-`EmployerAggregateRating` on the job card, and the page-level `WebSite` (site identity plus the
-sitelinks-searchbox `potentialAction`, which describes the *site*, not any card on it) — 59. Nested scopes (`author` → `Person`, `offers` → `Offer`, …) are properties of their
+of its own — so it sees the 58 cards plus **three items that are not cards**: the standalone
+`EmployerAggregateRating` on the job card, the page-level `WebSite` (site identity plus the
+sitelinks-searchbox `potentialAction`, which describes the *site*, not any card on it), and the
+page-trail `BreadcrumbList` on the breadcrumb `<ol>` — 61. Nested scopes (`author` → `Person`,
+`offers` → `Offer`, …) are properties of their
 parent, not items, and are not counted. The `grep -c 'itemtype='` on the end of that command is
-load-bearing: without it the page's own `<meta name="description">` is counted, because its text
-mentions "itemscope/itemtype" — that is how a naive scan reports 57.
+load-bearing: without it the page's own `<meta name="description">` (and a comment spelling out
+the counting rule) are counted, because their text
+mentions "itemscope" — that is how a naive scan reports 63.
 
 **Cards ≠ types.** `Quiz` runs three cards, and `Review`, `EventSeries`, `Place` and `Person`
-run two each — so 57 − 2 − 4 = 51. The `grep -v itemprop=` in those commands is load-bearing: the
+run two each — so 58 − 2 − 4 = 52. The `grep -v itemprop=` in those commands is load-bearing: the
 collage `ProductGroup` nests a `<ui-card>` per variant, and a nested card is a **property** of
 its parent item, not a card of its own. Note the second `grep` in that command: **reduce to the `itemtype=`
 substring before `sort -u`**. Uniquing the whole `<ui-card …>` match counts one type twice
 whenever its two cards differ in any other attribute (an `id`, a `style`) — that is how this
 count once read 50.
 
-**Types ≠ renderer keys.** The 51 is the **49** distinct base itemtypes behind the 50
+**Types ≠ renderer keys.** The 52 is the **50** distinct base itemtypes behind the 51
 `schemaType` keys (`profile` and `artist` both resolve to `Person`), minus `LocalBusiness` (never
 shown plain — the business card is always sharpened), plus the three sharpened [subtypes](#subtypes)
 `ProductGroup`, `CafeOrCoffeeShop` and `DiscussionForumPosting`, which `details.subtype` produces
-with no key of their own. Two further types appear as **top-level items that are not cards**
+with no key of their own. Three further types appear as **top-level items that are not cards**
 (`itemscope`, no `itemprop`) and so are outside all three card counts: `EmployerAggregateRating`
-on the job card, and the page-level `WebSite`. Neither has a renderer key — `WebSite` is authored
-markup only, because it describes the page's site rather than any content instance.
+on the job card, the page-level `WebSite`, and the page-trail `BreadcrumbList`. None has a
+renderer key — `WebSite` and the breadcrumb trail are authored
+markup only, because they describe the page rather than any content instance.
 
 Every card type from the legacy `content/card` package — plus the nine types added in model
-v1.3 (organization, video, howto, qa, podcast, movie, book, dataset, claim), plus the eleven
-[authored markup-first](#types-authored-markup-first) — re-created with
+v1.3 (organization, video, howto, qa, podcast, movie, book, dataset, claim), plus the
+[authored markup-first](#types-authored-markup-first) additions — re-created with
 the modern engine: `<ui-card>` + `<ui-media>` + `<ui-content>`, with satellites `<ui-chip>`,
 `<ui-sticker>`, `<ui-save>`, `<ui-avatar>`, `<ui-quote>` and `<ui-accordion>`. Every card uses
 the same composition: media on top, text below. Structured data is inline **microdata**
@@ -57,14 +61,17 @@ the page is optional: `video.js` polyfills the proposed media invoker commands
 without it. Each media frame also carries a `<ui-chip data-type>` naming the card's schema.org
 type — a demo affordance, emitted by `render.js` only when `renderCard` gets `{ typeChip: true }`.
 
-## Page structure — ten sections, and where the heading level comes from
+## Page structure — eleven sections, and where the heading level comes from
 
-The page groups its 57 cards into **eleven sections by what the thing *is*** — Editorial &
+The page groups its 58 cards into **eleven sections by what the thing *is*** — Editorial &
 journalism · Commerce & offers · Screen · Audio · Page & picture · Learning & reference ·
 People, work & history · Food & drink · Places, events & property · Community & support ·
 Data, health & operations. Each section is a bare `<h2>` followed by its own
-`<lay-out md="columns(2) items(start)">`. Rationale, and the card-by-card allocation:
-[`docs/plans/2026-08-16-schema-card-sections.md`](../../../docs/plans/2026-08-16-schema-card-sections.md).
+`<lay-out md="columns(2) items(start)">`. The sectioning groups by what the thing *is*
+(the subject), never by schema.org type family — the allocation is the page itself. The
+questions the 2026-08-16 reorder parked (the episode→series linking convention, and whether
+the grid should ever go 3-column) live in
+[`docs/plans/open-items.md`](../../../docs/plans/open-items.md), item 12.
 
 ⚠️ **No card hardcodes its heading tag.** The level is `preset.headingTag`, whose default is
 declared in [`card-preset.schema.json`](../../../cms/baseline/models/card-preset.schema.json) as
@@ -77,17 +84,16 @@ That is the whole mechanism: sections own `<h2>`, cards render whatever their pr
 ## Rich results vs. structured data
 
 > **The full cross-map lives in
-> [`docs/plans/2026-08-15-google-rich-results-audit.md`](../../../docs/plans/2026-08-15-google-rich-results-audit.md)** —
-> all 49 itemtypes against the Google gallery, bucketed Live / Withdrawn / None, with a
+> [`google-rich-results.md`](google-rich-results.md)** —
+> every itemtype in the system (50 distinct behind the 51 renderer keys) against the Google gallery, bucketed Live / Withdrawn / None, with a
 > per-row marker saying whether each Google claim was researched here or is unverified model
 > knowledge. This section stays the source of truth for the withdrawn dates below; that
 > document defers to it.
 >
-> A companion document,
-> [`docs/plans/2026-08-16-schema-card-sections.md`](../../../docs/plans/2026-08-16-schema-card-sections.md),
-> is the rationale for the page's **ten sections** — why the cards are grouped as they are, why
-> 57 cards and 59 validator items are both correct, and the inconsistencies the grouping
-> surfaced.
+> The rationale for the page's **sections** — why the cards are grouped as they are, and why
+> the card and validator-item counts are both correct — is summarised under
+> [Page structure](#page-structure--eleven-sections-and-where-the-heading-level-comes-from)
+> above; the counting rules live at the top of this document.
 
 Google has withdrawn or narrowed the search feature behind six of the types on this page.
 `FAQPage` results stopped appearing on **2026-05-07** and the documentation was removed on
@@ -668,7 +674,7 @@ The verdict chip leads — it is the answer (`reviewRating` → `Rating`, `alter
 
 ## Types authored markup-first
 
-The fourteen types below — plus `EmployerAggregateRating` on the job card — were authored **markup
+The types below — plus `EmployerAggregateRating` on the job card — were authored **markup
 first**: `demo/schema.html` was the specification and `render.js` was written to reproduce it, not
 the other way round. They now have a `schemaType` key, a `DETAILS` renderer and an instance in
 `data/`, and the transcription was verified by a mechanical comparator rather than by eye.
@@ -693,7 +699,7 @@ on every card: the page hoists `media=` onto `<ui-card>` where the renderer emit
 it after the summary (`DETAILS` runs after the envelope and has no hook to reorder). The comparator
 normalises both on both sides; nothing else is allowed to differ.
 Run it with `node ui/card/schema.compare.js` ([`schema.compare.js`](../schema.compare.js)); all
-22 mapped cards are an exact match.
+27 mapped cards are an exact match.
 
 **A card with an `id=` must be keyed by it.** The comparator's bare form is
 `<ui-card(?![^>]*\bid=)…>` — it deliberately matches only cards *without* an id, so that a bare
@@ -927,7 +933,7 @@ Three structural traps, all worth knowing before writing a renderer:
 `SingleFamilyResidence` descends from `House` → `Accommodation`, **not** from `Residence`.
 
 **There is no Google rich result for `RealEstateListing`** — see the
-[rich-results audit](../../../docs/plans/2026-08-15-google-rich-results-audit.md). The markup
+[rich-results audit](google-rich-results.md). The markup
 is valid, complete schema.org that any consumer can read; the page's Google-eligible surface is
 its `BreadcrumbList` and its images, not a listing card.
 
@@ -984,7 +990,7 @@ is legal precisely because `additionalType` takes `Text|URL`; it would not be le
 **No open rich result.** Google's *Vacation rental* feature is fed through its vacation-rental
 **partner programme**, not by markup a site publishes on its own — so, as with `RealEstateListing`,
 what ships here is valid, complete schema.org plus a `BreadcrumbList` and images. The
-[rich-results audit](../../../docs/plans/2026-08-15-google-rich-results-audit.md) previously listed
+[rich-results audit](google-rich-results.md) previously listed
 this type as *not to build*; it exists now because content needed expressing, and that note has
 been corrected rather than left contradicting the code.
 
@@ -1093,7 +1099,7 @@ row can carry `url`, which renders a real crawlable `<a itemprop="url">` — on 
 points at the album card, whose `artistUrl` points back.
 
 ⚠️ **No Google feature.** `MusicAlbum` and `MusicGroup` are both *vocabulary only* — see
-[the rich-results cross-map](../../../docs/plans/2026-08-15-google-rich-results-audit.md).
+[the rich-results cross-map](google-rich-results.md).
 
 ### Glossary — `DefinedTermSet`
 

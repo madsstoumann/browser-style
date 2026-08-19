@@ -7,7 +7,7 @@
  * targets and a degraded cross-fade. That is why pages loaded it with blocking="render".
  * But in Chrome the polyfill feature-detects and does nothing, so the page paid a full
  * render-blocking round trip for a no-op. Inlining removes the request entirely and keeps
- * the before-paint guarantee for free. Docs: docs/performance-review.md § 2
+ * the before-paint guarantee for free. Docs: docs/performance.md § JavaScript and the polyfill
  *
  * TWO THINGS THAT MUST NOT DRIFT
  *   1. The emitted tag is a CLASSIC <script>. An inline `type="module"` is deferred by

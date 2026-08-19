@@ -2,7 +2,7 @@
 
 A CSS-first **disclosure** built on native `<details>` / `<summary>`, composed over the same card engine as `<ui-card>`. The `<summary>` is the trigger face; the revealed panel is `::details-content` (everything after `</summary>`). Four reveal animations — `exp`, `flp`, `sld`, `grw` — plus a full-card trigger (`trg(card)`) and an expand-to-popup mode (`pop`), all configured through the same `variant=` token attribute `<ui-card>` uses. No JavaScript required.
 
-`<ui-reveal>` `@import`s `ui-card.css`, so it shares the card primitives and DSLs verbatim: the **`media=`** frame ([media.md](../card/docs/media.md)), the **`content=`** text column ([content.md](../card/docs/content.md)), and the **`variant=`** arrangement / overlay / theme / corners ([ui-card-tokens.md](../card/docs/ui-card-tokens.md)). This package adds only the reveal-specific parts: the `<details>` / `<summary>` wiring, `<ui-icon>`, `<ui-face>`, and the reveal `variant=` tokens (`exp`, `flp()`, `sld()`, `grw()`, `ico()`, …) that drive the animations.
+`<ui-reveal>` builds on the card engine loaded as a **peer** — `ui-reveal.css` deliberately contains no `@import`; the page loads base → card → icon → reveal side by side — so it shares the card primitives and DSLs verbatim: the **`media=`** frame ([media.md](../card/docs/media.md)), the **`content=`** text column ([content.md](../card/docs/content.md)), and the **`variant=`** arrangement / overlay / theme / corners ([ui-card-tokens.md](../card/docs/ui-card-tokens.md)). This package adds only the reveal-specific parts: the `<details>` / `<summary>` wiring, `<ui-icon>`, `<ui-face>`, and the reveal `variant=` tokens (`exp`, `flp()`, `sld()`, `grw()`, `ico()`, …) that drive the animations.
 
 > The grow-morph animation is spelled **`grw()`**. The old `scl` / `scl(ts|te|bs|be)` / `lg:scl` / `lg:scl(ts|te|bs|be)` spellings were **removed in v5** — migrate them to `grw` / `grw(ts|te|bs|be)` / `lg:grw` / `lg:grw(ts|te|bs|be)`. `scl()` is `content=`'s type-scale token, and one spelling should mean one thing even across attributes.
 
@@ -29,8 +29,12 @@ npm install @browser.style/base @browser.style/card @browser.style/icon
 ```css
 @import '@browser.style/base';
 @import '@browser.style/card/style';
-@import '@browser.style/reveal/style';   /* pulls in @browser.style/icon */
+@import '@browser.style/icon/style';
+@import '@browser.style/reveal/style';
 ```
+
+The four sheets are peers — no sheet `@import`s another package's CSS (the peer-exclusive
+bundle rule), so the page loads each one itself, in dependency order.
 
 ---
 
@@ -277,7 +281,7 @@ Scoped to `:where(ui-reveal)` — low specificity, easy to override.
 
 ## Shared DSL — inherited from the card engine
 
-`<ui-reveal>` `@import`s the card engine, so it carries the **exact same** primitives and token strings. They are documented once on the card side — link, don't duplicate:
+`<ui-reveal>` runs on the card engine (loaded by the page as a peer stylesheet — nothing is `@import`ed), so it carries the **exact same** primitives and token strings. They are documented once on the card side — link, don't duplicate:
 
 | DSL | On | Documents | Reference |
 |---|---|---|---|

@@ -8,7 +8,7 @@ A CSS-first **card engine**. `<ui-card>` is a thin **composition** over two prim
 > consistently say *text area* / *text column* and keep "content" for the element and
 > attribute spellings.)
 
-> **Status:** shipped (v4). `<ui-card>` composes the `<ui-media>` + `<ui-content>` primitives per `docs/plans/2026-06-20-ui-media-content-split-design.md`. This documents the implemented API.
+> **Status:** shipped (v4). `<ui-card>` composes the `<ui-media>` + `<ui-content>` primitives. This documents the implemented API.
 
 The three docs this file links to are authoritative for their surfaces:
 

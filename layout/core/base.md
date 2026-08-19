@@ -69,8 +69,8 @@ attributes instead — e.g. `col-gap="2"` → `xs="cg(2)"`, `pad-inline="1"` →
 
 ### max-width
 - Type: <length> | <percentage>
-- Default: `100vw`
-- Description: Sets the layout's maximum inline size (mapped to `--layout-mw`).
+- Default: `100%`
+- Description: Sets the layout's maximum inline size (mapped to `--layout-mw`). `[bleed]` overrides it to `100dvi`.
 - Examples: `max-width="80rem"`, `max-width="90%"`
 
 ### self
@@ -91,11 +91,13 @@ attributes instead — e.g. `col-gap="2"` → `xs="cg(2)"`, `pad-inline="1"` →
 - Description: Used with `contain-intrinsic-size` / `content-visibility`. Accepts CSS lengths (e.g., `300px`, `20rem`) or identifiers like `auto`.
 - Example: `size="300px"` or `size="auto"`
 
-### gap
-- Type: boolean/presence
-- Default: false (when absent)
-- Description: When present, enables column/row rules (visual separators) controlled by supporting CSS variables.
-- Example: `gap` (just include the attribute)
+### gap-decorations
+- Type: token list (space-separated tokens)
+- Accepted tokens: `cols`, `rows`
+- Default: not present
+- Description: Draws rules (visual separators) in the grid gaps, via the CSS gap-decorations properties. `cols` enables `column-rule` (+ `column-rule-outset`), `rows` enables `row-rule` (+ `row-rule-outset`). Combine both for a full lattice. Styled via custom properties — shared: `--layout-rule-w` (default `1px`), `--layout-rule-s` (`solid`), `--layout-rule-c` (`#CCC`), `--layout-rule-o` (outset, `0%`); per-axis overrides: `--layout-col-rule-w/-s/-c/-o` and `--layout-row-rule-w/-s/-c/-o`.
+- Examples: `gap-decorations="cols"`, `gap-decorations="cols rows"` (demo: `dist/gapdeco.html`)
+- Note: there is **no bare `gap` attribute** — gaps themselves are set with the spacing tokens `cg(N)` / `rg(N)` in the breakpoint attributes.
 
 ### overflow
 - Type: token list (space-separated tokens)
@@ -125,8 +127,10 @@ attributes instead — e.g. `col-gap="2"` → `xs="cg(2)"`, `pad-inline="1"` →
 - Default: not present (an `overflow` carousel without `media=` is a plain scroller with no controls)
 - Description: Configures the controls of an `overflow` carousel. **Replaces the individual `nav`, `arrow=`, `dot=`, `pages`, `auto=` and carousel `loop` attributes, all removed in v4.** Accepted tokens:
   - `nav` (bare) — enable default controls; `nav(mrk|arw|blw|abv)` — dots only / arrows only / reserved control band below / above the scroller
-  - `arw(arr|sm|lg|xl|sqr|sft|hid|lgt|drk|bare|set|ts|tc|te|cs|cc|ce|bs|bc|be|blw|abv)` — arrow style, size, ink and placement modifiers (one modifier per `arw()` token; repeat the token to combine)
-  - `mrk(sm|md|lg|xl|pll|hyb|tmb|non|lgt|drk|ts…be|blw|abv)` — dot style (pills, hybrid, thumbnails), size, ink and placement modifiers
+  - `arw(arr|sm|lg|xl|sqr|sft|hid|lgt|drk|bare|set|rev|ts|tc|te|cs|cc|bs|bc|be|blw|abv)` — arrow style, size, ink and placement modifiers (one modifier per `arw()` token; repeat the token to combine)
+  - `mrk(sm|md|lg|xl|pll|hyb|tmb|bar|lbl|non|lgt|drk|ts…be|blw|abv)` — dot style (pills, hybrid, thumbnails, bar, labels), size, ink and placement modifiers; `tmb(<ratio>)` (e.g. `tmb(16/9)`) sets the thumbnail aspect ratio
+  - **The two placement grids differ by one cell**: `mrk()` has all nine (`ts tc te cs cc ce bs bc be`); `arw()` has **eight** — there is no `arw(ce)`, that cell is `arw(set)`'s own default
+  - **Not available on `<lay-out overflow>`:** `axis(y)` (the layout scroller is always inline-axis) and therefore `mrk(rail)`, which requires `axis(y)` + `mrk(tmb)` — both `<ui-media>`-only
   - `pages` (bare token, `~=` matched) — snap + one dot per *page* of items instead of per item
   - `auto` / `auto(4s)` — autoplay; `loop` — seamless infinite wrap (JS progressive enhancement, see the `overflow` entry above)
 - **Scoping rule:** `media=` on a `<lay-out>` configures **only the lay-out's own scroller** — it never inherits into descendant `<ui-media>` inside cards (`media=` inheritance stops at the nearest `ui-card`/`ui-reveal` host). `content=`, by contrast, flows down freely via custom-property inheritance.
@@ -157,6 +161,18 @@ attributes instead — e.g. `col-gap="2"` → `xs="cg(2)"`, `pad-inline="1"` →
 - Description: Enables scroll-driven item animations. Creates a named `view-timeline` on the container; all direct children animate using that timeline as they enter the viewport. Children stagger via nth-child `animation-range` offsets (20% per child, up to 6 children). In browsers supporting `sibling-index()`, stagger scales to any number of children automatically. Full engine docs: `core/animations.md` (the engine itself lives in `@browser.style/base`).
 - Examples: `animate="fade-up()"`, `animate="zoom-in() deep"`, `animate="slide-down() clip slow exit"`
 
+### subgrid
+- Type: <integer> (global attribute) + `subgrid` breakpoint token
+- Default: 1 (row count, read via `attr(subgrid type(<integer>), 1)` into `--_sg` by builder-generated CSS)
+- Description: Two spellings that work together. The **breakpoint token** `subgrid` (e.g. `md="columns(3) subgrid"`, `~=` matched, generated `md`+ only) flips the non-inheriting `--_subgrid` flag; the per-child body in `base.css` (`@container style(--_subgrid: on)`) then makes each direct child adopt N shared rows (`grid-template-rows: subgrid`). **N comes from the global `subgrid="N"` attribute** — one value, not per-breakpoint. One-way by design: there is no off token. Full reference (incl. the `<ui-card variant="sub">` wrapper-flattening pattern): `layout/AGENTS.md` § Subgrid.
+- Example: `<lay-out subgrid="4" md="columns(1)" lg="columns(3) subgrid">`
+
+### data-layout-root / data-page-gap (page wrapper, not `<lay-out>`)
+- Type: `data-layout-root` boolean/presence; `data-page-gap` <number>
+- Default: `data-page-gap` 1 (× `--layout-space-unit`, falling back to `1rem`)
+- Description: Set on the element that **directly contains** the top-level `<lay-out>` sections (usually `<body>`, sometimes `<main>`). Makes it a single-column grid whose `row-gap` spaces the stacked sections; nested `<lay-out>`s are untouched. `data-*` prefixed because the root is a native element; a bare `page-gap` attribute is still read as a legacy fallback.
+- Example: `<body data-layout-root data-page-gap="2">`
+
 ---
 
 ### Example usage (HTML)
@@ -165,7 +181,7 @@ attributes instead — e.g. `col-gap="2"` → `xs="cg(2)"`, `pad-inline="1"` →
 <lay-out
   columns="repeat(3, 1fr)"
   xs="cg(2) pi(1)"
-  gap
+  gap-decorations="cols"
   overflow="preview"
   width="md"
   bleed="10"
@@ -212,7 +228,7 @@ attributes instead — e.g. `col-gap="2"` → `xs="cg(2)"`, `pad-inline="1"` →
 ```
 
 ### Notes and hints
-- Spacing is token-only: the multiplier in the breakpoint spacing tokens (e.g., `cg(2)`, `pi(1)`, `mbe(3)`) is multiplied by the component's `--layout-space-unit` CSS variable. Provide numbers (unitless) not lengths.
+- Spacing is token-only: the argument in the breakpoint spacing tokens (e.g., `cg(2)`, `pi(1)`, `mbe(3)`, `cg(2xs)`) is a multiplier of the component's `--layout-space-unit` CSS variable. Provide unitless numbers or the word sizes (`3xs`…`2xl`) — never lengths.
 - Attributes typed as `<length>` should include units (px, rem, vw, etc.) unless using percentage where allowed.
 - `overflow` is parsed as a token list (space-separated). Use `~=` matching in CSS selectors (e.g., `[overflow~="none"]`).
 - The implementation relies on `attr()` to copy attribute values into CSS custom properties. Keep attribute names and value syntax compatible with the types listed above.
@@ -222,7 +238,7 @@ attributes instead — e.g. `col-gap="2"` → `xs="cg(2)"`, `pad-inline="1"` →
 
 ## Breakpoint Spacing Tokens
 
-Spacing is **token-only** (the bare spacing attributes were removed in v4 — see above). Tokens are embedded in breakpoint attributes alongside layout tokens. They use a **multiplier** (0–4) applied to `--layout-space-unit`, writing the `--layout-*` custom properties that `base.css` composes into padding/margin/gap.
+Spacing is **token-only** (the bare spacing attributes were removed in v4 — see above). Tokens are embedded in breakpoint attributes alongside layout tokens. They take a **multiplier** applied to `--layout-space-unit` — a number (`0`–`4`) or a word size (`3xs`…`2xl`, see below) — writing the `--layout-*` custom properties that `base.css` composes into padding/margin/gap.
 
 ### Available tokens
 
@@ -238,7 +254,9 @@ Spacing is **token-only** (the bare spacing attributes were removed in v4 — se
 | `cg(N)` | `--layout-colmg` | `column-gap` | 1 |
 | `rg(N)` | `--layout-rg` | `row-gap` | 1 |
 
-**N** = 0, 1, 2, 3, or 4 (default steps; configurable via `spacing.steps`).
+**N** is a step from `spacing.steps` in `layout.config.json` — the shipped config generates the numbers **0, 1, 2, 3, 4** *and* the word sizes **`3xs` 0.0625 · `2xs` 0.125 · `xs` 0.25 · `sm` 0.5 · `md` 1 · `lg` 1.5 · `xl` 2 · `2xl` 3** (each a named multiplier of `--layout-space-unit`; `cg(2xs)` = a 2px hairline at the default 1rem unit). Both spellings are one ladder — matching is collision-safe because the needle includes the closing paren, so `cg(2)` never matches `cg(2xs)`.
+
+Tokens are only generated at the breakpoints in the `spacing.breakpoints` allowlist — shipped config: `["xs","lg"]` (`xs` = the mobile-first base). Add a breakpoint to the allowlist before authoring spacing there.
 
 ### Mobile-first base
 
@@ -247,8 +265,8 @@ The lowest breakpoint (`xs` in the default config, which has no `min`) emits its
 ### Example usage (Breakpoint Spacing)
 
 ```html
-<!-- Responsive padding and gaps -->
-<lay-out md="columns(2) pi(1) pbs(1) pbe(1)" lg="columns(4) pi(4) pbs(2) pbe(2)">
+<!-- Responsive padding and gaps (spacing tokens only at the allowlisted xs/lg) -->
+<lay-out xs="pi(1) pbs(1) pbe(1)" md="columns(2)" lg="columns(4) pi(4) pbs(2) pbe(2)">
   <div>Item 1</div>
   <div>Item 2</div>
   <div>Item 3</div>
@@ -260,8 +278,8 @@ The lowest breakpoint (`xs` in the default config, which has no `min`) emits its
   <!-- pi(1) is the base; at lg, pi overrides to 3 -->
 </lay-out>
 
-<!-- Gap control -->
-<lay-out md="columns(2) cg(1) rg(2)" lg="columns(4) cg(2) rg(1)">
+<!-- Gap control (word sizes for sub-1 gutters) -->
+<lay-out xs="cg(sm) rg(2)" md="columns(2)" lg="columns(4) cg(2) rg(1)">
   ...
 </lay-out>
 ```
@@ -273,7 +291,7 @@ The lowest breakpoint (`xs` in the default config, which has no `min`) emits its
 These properties allow styling layouts without writing custom selectors. Set them on `lay-out` or a parent element.
 
 ### --layout-bg
-- Default: `transparent`
+- Default: `transparent` (via the fallback chain `var(--layout-bg, var(--_theme-bg, #0000))` — a `theme=` band's `--_theme-bg` wins when no explicit value is set)
 - Description: Background color of the layout.
 - Example: `--layout-bg: hsl(220 100% 95%);`
 
@@ -283,7 +301,7 @@ These properties allow styling layouts without writing custom selectors. Set the
 - Example: `--layout-bdrs: 8px;`
 
 ### --layout-c
-- Default: `inherit`
+- Default: `inherit` (via `var(--layout-c, var(--_theme-c, inherit))` — theme ink wins when no explicit value is set)
 - Description: Text color within the layout.
 - Example: `--layout-c: #333;`
 
@@ -298,11 +316,11 @@ These properties allow styling layouts without writing custom selectors. Set the
 - Example: `--layout-preview-size: 80px;`
 
 ### --layout-preview-xs-size
-- Default: `25px`
+- Default: `40px`
 - Description: Extra small preview size (used with `overflow="preview-xs"`).
 
 ### --layout-preview-sm-size
-- Default: `50px`
+- Default: `60px`
 - Description: Small preview size (used with `overflow="preview-sm"`).
 
 ### --layout-preview-lg-size

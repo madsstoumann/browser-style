@@ -365,7 +365,7 @@ Rebrand the static scale in one place by overriding `--font-size-*` globally —
 - **`poster` is gone** — write `hl(3xl)`. Same clamp, regular name.
 - **No `scl(2xl)` / `tx(2xl)`.** The body ramp's `2xl` stop is ladder headroom only — you reach it when `scl(lg)`/`scl(xl)` shift `tx(lg)`/`tx(xl)` up.
 - **Group sizes have no `md:` forms — by design.** Don't look for `md:tx(lg)`; write `tx(lg)` and let `md:scl()` move it.
-- **`ch` widths, `cqi` values and animation endpoints are not tokens** — content-relative values stay literal (see *What NOT to Do* in [docs/design-system-agent.md](../../../docs/design-system-agent.md)).
+- **`ch` widths, `cqi` values and animation endpoints are not tokens** — content-relative values stay literal (see *Do's and don'ts* in [DESIGN.md](../../../DESIGN.md)).
 - **`scl(fix)`/`scl(fluid)` are modes, not steps** — no `md:` forms, and the nearest mode token wins in nesting, with one asymmetry: an explicit `scl(fluid)` can't be re-fixed further down its subtree.
 - **`scl(fix)` changes rendered sizes slightly** vs. the fluid clamps at most widths — the static values are the global scale's round numbers, not frozen snapshots of the clamps. That's the point: designers get the sizes they spec'd.
 

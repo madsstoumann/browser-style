@@ -161,7 +161,9 @@
 | Medium | `--shadow-md` | `--shadow-md` | `--shadow-2` |
 | Large | `--shadow-lg` | `--shadow-lg` | `--shadow-3` |
 | XL | `--shadow-xl` | `--shadow-xl` | `--shadow-4` |
-| *(none)* | | `--shadow-2xl` | `--shadow-5`, `--shadow-6` |
+| 2XL | `--shadow-2xl` | `--shadow-2xl` | `--shadow-5`, `--shadow-6` |
+
+**Note:** `--shadow-2xl` was added after the original four — an em-based ambient glow using `color-mix` on `CanvasText`, so it scales with font size and adapts to color scheme (Tailwind's is a fixed px/rgb value).
 
 ---
 
@@ -172,7 +174,7 @@
 | Fast | `--duration-fast` (100ms) | `--duration-100` | *(none — uses animation props)* |
 | Normal | `--duration-normal` (200ms) | `--duration-200` | *(none)* |
 | Slow | `--duration-slow` (300ms) | `--duration-300` | *(none)* |
-| Slower | `--duration-slower` (400ms) | `--duration-500` | *(none)* |
+| Slower | `--duration-slower` (500ms) | `--duration-500` | *(none)* |
 
 **Note:** Tailwind uses numeric ms values as names. Open Props bundles duration into animation shorthand props.
 
@@ -274,6 +276,21 @@
 | 4XL | `--font-size-fluid-4xl` | *(none)* | *(none)* |
 
 **Note:** Tailwind does not offer fluid font sizes. Open Props provides 4 steps. browser.style provides 8 steps using `clamp()` for smooth scaling without breakpoints.
+
+---
+
+## Families Added After This Comparison
+
+Token families introduced in `tokens.css` since the tables above were written:
+
+| Family | What it is | vs Tailwind v4 / Open Props |
+|--------|-----------|------------------------------|
+| `--size-{1-15}` | Element-dimension scale (0.25rem–30rem) for icons, avatars, widgets | Names **and** values match Open Props' 15-step `--size-*` scale exactly. Tailwind has no separate size scale — its numeric `--spacing-*` doubles for sizing |
+| `--font-size-3xs`, `--font-size-2xs` | 0.5rem / 0.625rem micro steps below `xs` | Tailwind's scale stops at `xs`; Open Props reaches 0.5rem via `--font-size-00`. browser.style extends the t-shirt naming downward instead |
+| `--ui-theme-{hue}-bg/-c` | Nine surface + paired-ink bundles (`red orange green blue accent black white gray slate`) behind the cross-component `theme=` attribute axis, plus `--ui-theme-glass-*` material tokens | No equivalent in either — Tailwind and Open Props stop at raw color palettes; a bundled surface/ink pair resolved by an attribute axis is browser.style-specific |
+| `--radius-{sm,md,lg,xl}-sq` + `--squircle-{sm,md,lg,xl}` | Squircle radii paired with superellipse exponents for `corner-shape: superellipse()` | Neither Tailwind nor Open Props tokenizes squircles — `corner-shape` is too new for both |
+| `--stagger-*` (+ `--stagger-shimmer-*`) | Knobs for the shared stagger-reveal engine (begin, distance, duration, easing, step) | No equivalent — Tailwind has no animation-engine tokens; Open Props' `--animation-*` are one-shot shorthands, not cascade knobs |
+| `--border-width-xl` (4px), `--border-width-2xl` (6px) | Extends the border scale for the theme axis' `border(<size>)` modifier | Comparable to Tailwind's `--border-4`/`--border-8` numeric names; browser.style keeps t-shirt sizes |
 
 ---
 

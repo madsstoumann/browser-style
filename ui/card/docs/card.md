@@ -3,10 +3,11 @@
 One content model, one preset model, one renderer — recreating all 25 schema.org card
 types from the legacy `content/card` package with the modern v4 card engine
 (`<ui-card>` + `<ui-media>` + `<ui-content>`), full inline microdata included — and
-extending the taxonomy with nine additional high-usage types (organization, video,
-howto, qa, podcast, movie, book, dataset, claim; model v1.3, 35 `schemaType` values).
-Rationale + the web-usage research behind the picks:
-[`docs/plans/2026-08-05-card-schema-coverage.md`](../../../docs/plans/2026-08-05-card-schema-coverage.md).
+extending the taxonomy in rounds since: nine high-usage types in model v1.3
+(organization, video, howto, qa, podcast, movie, book, dataset, claim), then the
+markup-first additions, to **51 `schemaType` values** today.
+(The web-usage research behind the v1.3 picks lived in a coverage plan, removed
+2026-08-19 — recover via `git log --diff-filter=D -- docs/plans`.)
 
 ```
 ┌─────────────────────────┐     ┌──────────────────────────────┐
@@ -41,12 +42,12 @@ never had.
 
 | File | Role |
 |------|------|
-| [`cms/baseline/models/card.schema.json`](../../../cms/baseline/models/card.schema.json) | **Content model** (UCM). Structured envelope + `schemaType` select (46 values) + `preset` reference + one `details` object per type |
+| [`cms/baseline/models/card.schema.json`](../../../cms/baseline/models/card.schema.json) | **Content model** (UCM). Structured envelope + `schemaType` select (51 values) + `preset` reference + one `details` object per type |
 | [`cms/baseline/models/card-preset.schema.json`](../../../cms/baseline/models/card-preset.schema.json) | **Preset model** (UCM). The attributes on the host element itself |
-| [`data/card.presets.json`](../data/card.presets.json) | Preset instances — **25** named looks |
-| [`data/*.json`](../data) | 37 UCF card instances (one per schemaType + two presentation-only blocks) + [`index.json`](../data/index.json) manifest |
+| [`data/card.presets.json`](../data/card.presets.json) | Preset instances — **28** named looks |
+| [`data/*.json`](../data) | 63 UCF card instances (at least one per schemaType — the product and quiz families run several — plus two presentation-only blocks) + [`index.json`](../data/index.json) manifest |
 | [`render.js`](../render.js) | Rendering engine: UCF + presets → DOM with microdata |
-| [`render.html`](../demo/render.html) | Live demo — the 52 cards of `data/index.json` rendered from data |
+| [`render.html`](../demo/render.html) | Live demo — the 61 cards of `data/index.json` rendered from data |
 | [`schema.html`](../demo/schema.html) | Hand-authored reference markup for every type (the spec render.js follows) |
 | [`content.css`](../content.css) | `<ui-content>` parts — all parts styled (incl. the 8 once-proposed structured parts) |
 
@@ -60,7 +61,7 @@ lives in one `details` object discriminated by `schemaType`.
 | Field | Type | Notes |
 |-------|------|-------|
 | `internalName` | string | CMS editor label (required, invariant) |
-| `schemaType` | select | 46 values — drives itemtype + microdata mapping |
+| `schemaType` | select | 51 values — drives itemtype + microdata mapping |
 | `preset` | reference → `card-preset` | The look & feel. Swap to restyle |
 | `chip` | `{ text, theme }` | Status flag at the very TOP of the text column, above the eyebrow — "New", "Sold". `theme` is a ui-chip theme string, default `pale accent`. **Not** `furniture.chip`, which is overlaid on the media: a frame gets one chip family, so a furniture chip suppresses the `<ui-chip data-type>` type label |
 | `eyebrow` | string | Kicker; → `articleSection`/`category`/`recipeCategory`/`about`/`genre` (unmarked on `job` — `details.industry` owns `industry`) |
@@ -476,11 +477,11 @@ emission in [`content/card/dist/`](../../../content/card/dist)):
 
 ## Structured `data-part` vocabulary
 
-Eleven parts added for the typed cards, all styled in [`content.css`](../content.css):
+Twelve parts added for the typed cards, all styled in [`content.css`](../content.css):
 
 | part | Element | Used by |
 |------|---------|---------|
-| `price` | `<p>` + `<data>`/`<del>`/`<small>` | product, course, booking, membership, software, job, book |
+| `price` | `<p>` + `<meta itemprop="price">` with the formatted price as its plain **text node** — plus display-only `<del>` (struck original), `<ui-chip>` (discount) and `<small>` (note); never `<data>` — see [schema.md § Price](schema.md#price) | product, course, booking, membership, software, job, book |
 | `rating` | `<div>` + decorative `<input class="ui-rating">` + `[data-sr]` label + visible count | product, review, software, business, movie, book |
 | `list` | `<ul>` check / `<ol>` ordered; `data-variant="crossed"` = muted ✗ rows (excluded items). Marker themes via `--ui-content-list-marker` (any `list-style-type` string, e.g. `"→ "`; `none` for block-content rows) + `--ui-content-list-marker-ink` (`::marker` color) — string markers ride `list-style-type` because `::marker` `content` never shipped in Safari | recipe, job, course, booking, location, membership, howto, qa, dataset |
 | `links` | `<ul>` of plain related-link rows (default bullet, hairline dividers) — the envelope `links[]` field; deliberately not buttons, no itemprop. Emitted **before** `actions`: the CTA row always closes the text column. Marker via `--ui-content-links-marker` (e.g. `'"→ "'`), ink via `--ui-content-links-mark` | any type |
@@ -491,6 +492,7 @@ Eleven parts added for the typed cards, all styled in [`content.css`](../content
 | `timeline` | `<ol>` of `<time>` + text | timeline |
 | `quote` | `<ui-quote>` wrapping `<blockquote>` + `<cite>` | quote, review, social, claim, qa |
 | `options` | `<ul>` of `<label>` + `<progress>` | poll, comparison |
+| `cover` | `<a>` inside the headline whose `::after` covers the whole card — the clickable-card link: one link, no nested anchors (see the Article pattern below) | article, news, realestate |
 
 Everything else reuses existing parts: `meta` (salaries, hours, dates), `tags`
 (skills, hashtags), `byline` (people), `footer` (totals, recommendations).
@@ -502,10 +504,8 @@ byline right after the summary instead of in the tail; qa sorts the accepted
 answer first, claim leads with the verdict chip, product/movie lead with the
 rating.
 
-Two parts are already **implemented** in content.css: the gradient-headline `b`
-rule, and `cover` — an `<a data-part="cover">` inside the headline whose
-`::after` covers the whole card (the clickable-card link; see the Article
-pattern below).
+One further piece is implemented in content.css without being a part of its
+own: the gradient-headline `b` rule.
 
 ## Sub-components — which packages the typed cards reuse
 
@@ -520,15 +520,13 @@ peers** of `@browser.style/card` — pages link only the sheets their types need
 | any card with `authors[]`, review | [`ui/avatar`](../../avatar/) | `<ui-avatar><img></ui-avatar>` in byline rows, `<abbr>` initials fallback when no image. The card sets **no** avatar size — the package's own `--ui-avatar-size` (4em, `em`-relative so it tracks the byline font-size) governs; a preset overrides it per look via `styles` (see `prose-article`) |
 | poll, comparison | [`ui/progress`](../../progress/) | bare `<progress>` — the package styles the native element, no markup contract |
 | faq/recipe/job summaries, reveal toggles | [`ui/icon`](../../icon/) | `<ui-icon type="plus-minus">` etc. |
+| product, review, software, business, movie, book | [`ui/rating`](../../rating/) (v4) | the display-only star row — `ratingPart()` emits `<input class="ui-rating" disabled aria-hidden>` masked symbols + a `[data-sr]` label + visible count; the package owns the symbol rendering |
+| timeline | [`ui/timeline`](../../timeline/) (v4) | the milestone rail — `<ol data-part="timeline">`; content.css only bridges `--ui-timeline-*` knobs, the rail/dots styling is the package's |
 
-**Deliberate non-goals** (card-local `data-part` styling stays):
+**Deliberate non-goal** (card-local `data-part` styling stays):
 
-- `rating` — the star row stays hand-rolled (`ratingPart()`); legacy `ui/rating`
-  is a pre-v4 range-input form control, the wrong tool for read-only display.
-  Follow-up: a v4 display-mode `ui-rating` rewrite, then delegate.
 - `table` for comparison/nutrition — wrong density at card widths; the
   `options` progress list is the card-scale rendering.
-- `timeline` — legacy `.ui-timeline` is pre-v4; the card-local `timeline` part stays.
 
 ## Navigation models and ui-accordion / ui-tabs (assessment)
 
@@ -771,8 +769,8 @@ navigation; `prefers-reduced-motion` keeps default timing.
 
 | Page | Shows |
 |------|-------|
-| [`schema.html`](../demo/schema.html) | Hand-authored reference — 54 cards, 48 distinct itemtypes, with microdata ([counting rule](schema.md)) |
-| [`render.html`](../demo/render.html) | The 52 cards of [`data/index.json`](../data/index.json) rendered by `render.js` from UCF data + presets |
+| [`schema.html`](../demo/schema.html) | Hand-authored reference — 58 cards, 52 distinct itemtypes, with microdata ([counting rule](schema.md)) |
+| [`render.html`](../demo/render.html) | The 61 cards of [`data/index.json`](../data/index.json) rendered by `render.js` from UCF data + presets |
 | [`carousel.render.html`](../demo/carousel.render.html) · [`video.render.html`](../demo/video.render.html) | The original demo pages recreated data-driven: presets from [`data/card.presets.demo.json`](../data/card.presets.demo.json) (129 presets extracted from the originals) + UCF instances in [`data/demo/`](../data/demo). Each page lists its not-expressible demos in a bottom note. The `media` and `reveal` twins were dropped — [`media.html`](../demo/media.html) and [`../reveal/index.html`](../../reveal/index.html) are the better pages |
 | [`article.render.html`](../demo/article.render.html) + [`articles/`](../demo/articles/) | The article pattern above, live and **fully static** (pre-rendered by `articles/build.js`): teaser cards with stretched-link headlines → cross-document view transition morphs the whole card into the per-article page and back (`card-{id}` + nested `hero-{id}` names via `data-view` + CSS `attr()`), body-instead-of-summary via the `prose` preset, plain `<a>` navigation, zero runtime JS |
 | [`products/`](../demo/products/) | The same pattern for commerce, pre-rendered by `products/build.js`: `schema.html`'s ProductGroup collage links to one page per colourway, each a `mrk(rail)` thumbnail carousel + lightbox with the rounded size picker (`variants.control: "buttons"`); the plain Product card links to `aurasound-pro.html`, the same shell on the `product-page-solo` preset (one photo, no rail). The transition behaviour is **pure name matching** — a page carries only its own colourway's `data-view` names, so collage→page pairs (morph) while page→page does not (fade). Deliberately no page-scoped view-transition CSS: the incoming document drives a cross-document transition, so a blanket fade rule would kill the morph too |
@@ -792,7 +790,7 @@ python3 -m http.server 8000 -d .
 - [x] Video/YouTube/Vimeo media items + `VideoObject` microdata
 - [x] `body` → `articleBody`, gradient headlines, blockquote composition
 - [x] Style the structured parts in `content.css`; sub-component alignment (quote wrapper, SSR accordion cq-box, avatar bylines, progress package, preset `parts=`)
-- [x] Taxonomy extension v1.3 — nine new types (organization, video, howto, qa, podcast, movie, book, dataset, claim) + LocalBusiness depth (subtype itemtype, `OpeningHoursSpecification`, priceRange, aggregateRating). Analysis: [`docs/plans/2026-08-05-card-schema-coverage.md`](../../../docs/plans/2026-08-05-card-schema-coverage.md)
+- [x] Taxonomy extension v1.3 — nine new types (organization, video, howto, qa, podcast, movie, book, dataset, claim) + LocalBusiness depth (subtype itemtype, `OpeningHoursSpecification`, priceRange, aggregateRating)
 - [ ] Sync models to a CMS via [UCM](../../../cms/baseline) (`cd cms/unified-content-model && npm run validate`)
 - [ ] `editor-card` widget update for the new `details` shapes
 - [ ] `renderNavigation()` if the navigation → accordion/tabs mapping gets adopted

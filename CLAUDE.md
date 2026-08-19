@@ -1,2 +1,2 @@
 @AGENTS.md
-@docs/design-system-agent.md
+@docs/v4.md

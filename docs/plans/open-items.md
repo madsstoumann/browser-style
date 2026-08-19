@@ -1,15 +1,22 @@
 # Open items — v4 card / layout line
 
-> What is **actually still open**, extracted from the implementation ledger in
-> [`2026-07-26-v4-card-system-architecture-analysis.md`](./2026-07-26-v4-card-system-architecture-analysis.md)
-> (now an archive — read it for the *why* behind any F-xx/R-xx, not for what to do next).
-> Seven open items plus one closed decision on record. Each open one is waiting on a
-> decision or on coordination, not on typing.
+> What is **actually still open** on the v4 line. **This is the only file in
+> `docs/plans/` by design** — implemented plans are deleted rather than archived, and
+> their rationale lives in git history (`git log --diff-filter=D -- docs/plans`).
+> Settled decisions of record are summarised in `ui/card/AGENTS.md`.
 >
-> Everything else from that report is implemented and machine-verified: the v5 alias
+> Items 1–7 came from the 2026-07-26 architecture ledger; 8–12 were added as they
+> surfaced. **Items 13–29 (2026-08-19) absorb what was still live from the deleted
+> plan docs** — the 2026-08-15 consistency audit, the 2026-08-16 schema-card-sections
+> note and the 2026-08-10 feature-gap ledger. Every absorbed finding was re-verified
+> against the working tree on 2026-08-19. Most items wait on a decision or
+> coordination; the audit residue in items 13–14 is plain typing.
+>
+> Everything else from that ledger is implemented and machine-verified: the v5 alias
 > batch, R-13 (tokens manifest), R-14 (self arms + the partial style()-flag migration,
-> minus the reverted `tnt`/`hov(tint)` — see the archive), R-15 (generated doc tables),
-> F-35/36/37, F-38 (`variant="sub"`) and F-40 (marquee furniture) are all done.
+> minus the reverted `tnt`/`hov(tint)` — the guardrail lives in `ui/card/media.tint.css`),
+> R-15 (generated doc tables), F-35/36/37, F-38 (`variant="sub"`) and F-40 (marquee
+> furniture) are all done.
 
 ---
 
@@ -100,7 +107,7 @@ Run `npm pack --dry-run` per package and read the file list before any v4 publis
 just not done yet.
 
 **Update (2026-08-03) — partly addressed.** The card/reveal/base/carousel packages were
-audited and repaired (`2026-08-03-card-system-structure-decision.md`, work item B): the
+audited and repaired (the 2026-08-03 structure decision, work item B): the
 card tarball was missing `media.lightbox.css` while `ui-card.css` `@import`ed it, so the
 published CSS chain 404'd; `lightbox.js` shipped but was blocked by `exports`; `ui/reveal`
 peer-depended on an unsatisfiable `icon ^1.0.11`. A dry-run gate is still worth running
@@ -187,7 +194,7 @@ to confirm the two adapters produce the same visual result.
 
 **Where:** `ui/card/carousel.js` + `ui/card/shared.js` vs `ui/carousel/`
 
-Work item C (`2026-08-03-card-system-structure-decision.md`) extracted the carousel
+Work item C of the 2026-08-03 structure decision extracted the carousel
 **controls** — `ui/base/carousel.css` plus the polyfill — into `@browser.style/carousel`.
 The **engine** stayed behind: `carousel.js` (seamless-loop clones, autoplay,
 `initCarousels`/`scanCarousels`, `CAROUSEL_SEL`) is still a card module, even though its
@@ -308,8 +315,7 @@ What it costs is one line of teachability — a reader of `card-preset.schema.js
 tell from `parts` alone which grammar a given part expects.
 
 **Related, and separately logged:** `ui/highlight` has no `package.json` at all, so it
-cannot be a declared peer of `ui/card` despite being emitted by `render.js` — see the
-audit's § B1 ([`2026-08-15-v4-consistency-audit.md`](./2026-08-15-v4-consistency-audit.md)).
+cannot be a declared peer of `ui/card` despite being emitted by `render.js` — see item 14.
 `ui/button-group` was the other half of that item and is now resolved: it ships a manifest
 at `4.1.0` and is a declared optional peer.
 
@@ -367,7 +373,7 @@ so it takes no `media=` token: there is no `buttonGroup()` stem to mint, and the
 
 ## 10. Three Google features with no card type — and one is cheap
 
-From the [Google rich-results audit](./2026-08-15-google-rich-results-audit.md). Coverage of
+From the [Google rich-results audit](../../ui/card/docs/google-rich-results.md). Coverage of
 the live gallery is already high; these are the only gaps worth recording, and **none of them
 is a new card type** — all three are page-level furniture.
 
@@ -398,8 +404,8 @@ row by row. Walk the ⚠ rows before acting on any of this.
 Recorded so it is not rediscovered as an open question. The proposal was to rename
 `<ui-content>` (the text area) to `<ui-text>`, recycle `<ui-content>` for the host, move
 the system to a root `content/` project, and split the primitives into `ui/media` +
-`ui/text`. **All four parts were rejected.** Full reasoning and the measurements:
-`docs/plans/2026-08-03-card-system-structure-decision.md`.
+`ui/text`. **All four parts were rejected** (2026-08-03 structure decision; the full
+reasoning and measurements are in git history — `git log --diff-filter=D -- docs/plans`).
 
 The short version, with the numbers that decided it:
 
@@ -431,7 +437,8 @@ the actual defect — see the same plan, work items B-F.
 
 The page is now eleven sections, each a bare `<h2>` followed by its own
 `<lay-out md="columns(2) items(start)">`, grouped by what the thing *is*. Rationale and the
-card-by-card allocation: [card-sections](./2026-08-16-schema-card-sections.md).
+card-by-card allocation: the 2026-08-16 card-sections plan (deleted 2026-08-19 — git
+history; its still-open measurements are inlined below).
 
 Two of the three inconsistencies that document surfaced were fixed by the reorder: **podcast is
 no longer ordered part-then-container**, and **the two `Person` cards now sit side by side**.
@@ -443,10 +450,18 @@ no longer ordered part-then-container**, and **the two `Person` cards now sit si
   `partOfSeries` as a hidden, name-only scope with no url. Now that the sibling card is
   *directly adjacent*, the gap is starker. A `render.js` change, so it was out of scope for a
   reorder.
-- **Three columns / page width stays parked.** The measurements are recorded in the same
-  document: `--layout-bleed-mw` is 1024px, `--layout-mi` (1rem) already equals the 16px column
-  gap, and a third column would put cells at 331px — below the card engine's own 400px `md:`
-  tier.
+- **Three columns / page width stays parked.** The measurements, inlined here since the
+  source document is deleted: `--layout-bleed-mw` is 1024px, `--layout-mi` (1rem) already
+  equals the 16px column gap, and a third column would put cells at 504px → 331px —
+  below the card engine's first container tier (`md:` = 25rem = 400px),
+  viewport-independent above ~1080px because of the 1024 cap. Nothing breaks today — the
+  page writes *zero* `md:`/`lg:` tokens — but any `md:` token added to a card later would
+  silently never arm. Two more findings decide a revisit: the ProductGroup collage's
+  nested `<lay-out xs="cg(3xs) rg(3xs)" md="columns(2)">` uses *viewport* breakpoints
+  (md = 540px), so it would stay two columns inside a 331px cell — roughly 160px tiles;
+  and `items(start)` is load-bearing — without it cards stretch to the tallest in their
+  row (measured first six: 676·576·509·523·747·681 natural vs 676·676·523·523·747·747
+  stretched).
 
 **How the heading level was solved, since it will come up again:** no card hardcodes a heading
 tag. `headingTag` defaults to `h3` in `card-preset.schema.json`, so the fifteen grid presets
@@ -455,6 +470,384 @@ dropped their redundant `"headingTag": "h2"` and inherit it, while `prose-articl
 no `<h1>` above the card.
 
 **Unrelated, still open:** `ui/card/demo.layout.css` sets
-`--layout-space-unit: var(--spacing-lg, 1.5rem)` for page-level lay-outs, but that shim is **not
-in `dist/demo.min.css`** and `demo/schema.html` links only the bundle — so page gaps are 16px
-where the shim intends 24px. Either the shim belongs in the bundle or the page should link it.
+`--layout-space-unit: var(--spacing-lg, 1.5rem)` for page-level lay-outs, but that shim is
+**not in the built demo bundle** (now the hashed `/dist/demo.fc1719a9.min.css` — verified
+2026-08-19: the bundle carries only layout's 1rem default) and `demo/schema.html` links only
+the bundle — so page gaps are 16px where the shim intends 24px. Either the shim belongs in
+the bundle or the page should link it.
+
+---
+
+## 13. Four audit bugs — behaviour is wrong today
+
+From the deleted 2026-08-15 consistency audit § A; each re-verified 2026-08-19. These are
+typing, not decisions — recorded so the delete loses nothing.
+
+- **`--_theme-bs` is the one theme variable that leaks.** `ui/base/theme.css:5-17`
+  registers thirteen `--_theme-*` properties with `inherits: false`; `--_theme-bs` —
+  written `:105-107`, read `:88` — is not among them, so it inherits:
+  `theme="red border(dashed)"` on a container gives a dashed border to every descendant
+  that reads it, the exact opposite of `ui/base/theme.md`'s "an un-themed child does not
+  pick up an ancestor's theme". One line — register it beside its siblings.
+- **`ui/rating` declares three unprefixed inheriting globals.** `ui/rating/ui-rating.css:9-11`
+  (and again `:20-22`) declare `--min`, `--max`, `--value` — the three most obvious names
+  in CSS, inheriting into every descendant. Rename to `--ui-rating-*` (or `--_*`).
+- **Unnamespaced `@keyframes`.** `ui/progress/ui-progress.css:66-67` (`progress`,
+  `progress-rtl`) and `ui/gradient-text/ui-gradient-text.css:16` (`move-bg`). `@keyframes`
+  is document-global and last-declared wins — a page defining `@keyframes progress`
+  silently takes over the indeterminate bar. `gradient-text` uses both conventions in one
+  file (`ui-slide-bg`/`ui-breathe-bg` at `:68-69` are correct), the tell that this is
+  drift, not a decision.
+- **Two accordion variant words are unreachable from a preset.** `ui/accordion/ui-accordion.css`
+  implements eight variant words; `ui/card/tokens.lint.js:218` allows six. `breakout` and
+  `hide-summary` ship and are documented in `ui/accordion/readme.md`, yet a preset naming
+  them fails lint as "dead in the browser". The durable fix: `PART_VARIANTS` is a
+  hand-typed literal while its neighbours `lintSlideLists`/`lintSubtypes` *parse* their
+  counterpart files — make it parse the component sheets and this class of drift cannot
+  recur.
+
+## 14. Packaging truth — highlight, badge, and a cross-package `@import` nothing gates
+
+Audit § B, re-verified 2026-08-19. The gate half has since been fixed; the rest stands.
+
+- **`ui/highlight` is not a package.** No `package.json` — yet it sits under a **Package**
+  column in `ui/card/components.md` and `render.js` emits `<high-light>`. With no manifest
+  it joins no workspace, is never versioned or published, and cannot be the declared peer
+  every other emitted sub-component is. (Referenced from item 7; `ui/button-group`, the
+  other half of the original finding, resolved at `4.1.0`.)
+- **`<ui-badge>` is emitted, peer-declared, and styled nowhere a demo can see.**
+  `render.js:841` emits it whenever `furniture.chip.badge` is set; `@browser.style/badge`
+  is a declared peer of `ui/card`; but `badge` appears in neither `components.md` nor
+  `demo/demo.css`, and **zero data instances set `chip.badge`** — a demo-coverage hole
+  hiding a bundling one.
+- **`ui/accordion/ui-accordion.css:15` does `@import '../icon/index.css';`** — a live
+  violation of "no package may `@import` another package's CSS" (`ui/card/AGENTS.md`). The
+  bundle gate in `scripts/css-bundle.js` has been fixed since the audit — it now rejects
+  any esbuild input outside the package dir — but accordion has no bundle build, so
+  nothing ever runs the gate over it. A `<link>` consumer of `@browser.style/accordion`
+  silently pulls in the icon package, breaking the peer-exclusive promise.
+
+## 15. The vocabulary pass — mode asymmetry and naming, one decision batch
+
+Audit §§ C/D/E, re-verified 2026-08-19. Every entry needs a "which spelling wins" call, so
+batch them into one deliberate pass rather than fixing piecemeal.
+
+**Mode asymmetry** (standalone `theme=`/`variant=` vs furniture `media="chip(…)"`). The hue
+matrix itself is clean — all nine hues in both modes in all seven furniture families — the
+asymmetry is in the modifiers and the words:
+
+- **`muted` computes a different ink per mode**: standalone is faded
+  (`ui/base/theme.css:42-45`, 50 % toward transparent), furniture is opaque
+  (`ui/chip/ui-chip.css:46`, likewise sticker/beacon/marquee). Same documented modifier,
+  different label opacity.
+- **`pale muted` composes standalone, drops `pale` as furniture**: the standalone chain is
+  base → pale → tone → bg, but `chip(pale)` and `chip(muted)` both write `--_theme-bg` at
+  identical zero specificity (`ui-chip.css:45-46`), so whichever is later in source —
+  `muted` — wins and `pale` vanishes with no signal.
+- **Variant words are spelled differently per mode; sizes and corners are not**:
+  `light`/`lgt`, `outline`/`out`, beacon `none`/`non`, `pill`/`pll`, sticker
+  `speech(l)`/`spl`. One divergence is deliberate and documented — marquee
+  `variant="loop"` ↔ `marquee(rpt)` avoids colliding with the carousel's `loop`
+  (`ui-marquee.css:92`) — the rest have no stated rule.
+- **One word, several meanings**: `non` is a radius value (chip/sticker/marquee), "hide
+  the disc" (save/lightbox), and "stop the animation" (beacon). `pll` on a beacon is the
+  pill *face* as furniture (`ui-beacon.css:103`) and the pill *radius* standalone
+  (`:255`) — four lines below the comment at `:251-253` saying `pll`/`non`/`crc` are
+  deliberately *not* corner-axis members. Interlocks with item 4 (the `disc` merge class).
+- **Size ladders diverge between families**: chip and beacon agree exactly
+  (0.625/1/1.15/1.4 em); marquee is the same ladder shifted one rung
+  (`ui-marquee.css:127-130` — 0.75/1.15/1.4/1.75), so `lg` on a marquee equals `xl` on a
+  chip; save/lightbox run a third scale.
+
+**Naming** (the stated rule: `--ui-{component}-{property}`, full readable names, no
+PascalCase in new code):
+
+- **Abbreviated public tokens** across sticker/play/save/lightbox/chip/beacon/marquee/
+  progress/timeline. The sharp edge is `-sz` vs `-size` — spelled out in
+  beacon/marquee/icon, abbreviated in sticker/play/save/lightbox;
+  `ui/sticker/ui-sticker.css` has `-fs` one line from `-font-family`.
+- **Two words for one property, both live**: `--ui-avatar-background` /
+  `--ui-progress-bg`; `--ui-avatar-color` / `--ui-timeline-time-ink`.
+- **`--_o` does two jobs in one sheet**: drop-shadow offset
+  (`ui/sticker/ui-sticker.css:163-168`) and text-outline width (`:269-272`) — reachable
+  together (`variant="text"` plus an `off()` shadow). Compare beacon's namespaced
+  `--_bcn-*` privates, which nothing else follows.
+- **PascalCase is still referenced in live code**: ~19 sites in `ui/base/utility.css`,
+  3 in `webcomponents.css`. Worse, `ui/gradient-text/ui-gradient-text.css:27,:63` reads
+  **`--GradientText`, defined nowhere in the repo** — the component's documented theming
+  hook does not exist (the literal fallback keeps it painting).
+- **`play` sizes are declared twice**: `ui/play/ui-play.css:88-90` (`sm lg xl`; `md` =
+  the default) vs `ui/card/media.video.css:23-26` (`sm md lg xl`). Values agree today —
+  two owners, kept equal by hand. The audit's mechanical cross-check found this the
+  *only* furniture token declared in the card but not in its own package.
+
+## 16. Card DSL vs layout DSL — one false equivalence, four traps
+
+Audit § K, re-verified 2026-08-19. The first is a one-line doc fix; the rest want either
+the vocabulary pass (item 15) or a documented decision.
+
+- **`ui/card/docs/content.md:168` is factually wrong**: *"The stems match the layout
+  package's spacing vocabulary **exactly** (`pb pbs pbe pi pis pie`)"*. Layout's real
+  stems (`layout/src/builder.js`, `TOKEN_PROPS`) are `p pi pb pbs pbe mbs mbe cg rg` —
+  **no `pis`, no `pie`**. Four of the six stems the sentence names as proof are shared;
+  two do not exist on the layout side.
+- **The two spacing ladders agree only at the default unit.** Layout's words are
+  multipliers of `--layout-space-unit`; the card's are the fixed `--spacing-*` steps. Set
+  the unit to anything but `1rem` and `lay-out lg="pi(md)"` and
+  `ui-content content="pi(md)"` silently stop agreeing. Layout also defines `2xs` (0.125)
+  and now `3xs` (0.0625) with no `--spacing-2xs`/`-3xs` in base and no card twin — and
+  `layout/AGENTS.md:143` reinforces the false equivalence by calling layout's words "the
+  content-DSL ladder".
+- **Three spellings of zero, and `xxl` vs `2xl` inside one config**: `p(0)` (layout
+  numeric), `pad(none)`/`gap(none)` (card, `content.css:10,:68`), `rds(non)` (card,
+  `:98`) — `content="pad(non)"` and `content="rds(none)"` both silently no-op. And
+  `layout/layout.config.json` spells "2× large" both ways in one file: breakpoint `xxl`
+  (`:146`) vs spacing step `2xl` (`:52`).
+- **Same spelling, different meaning across the two systems**: `md`/`lg` (viewport
+  attribute names, 540/720px, vs container token prefixes, 400/704px), `media=`
+  (overlapping but unequal token sets), `pages` (math paging vs wrapper dissolve),
+  `stagger` (attribute vs token), `col` vs `columns(N)` (*one* column vs two) — plus
+  `flp()` inside the card itself (`media="flp(h)"` image mirror vs `variant="flp(top)"`
+  reveal flip). Nothing to fix mechanically; the call is what to document as permanent
+  (as `ui/card/AGENTS.md` already does for `md`/`lg`) and what to respell.
+
+## 17. Docs that are wrong about the code — one clause or one number each
+
+Audit §§ F1–F3 / H / L, re-verified 2026-08-19. **Most of this batch was fixed the same
+day** during the docs consolidation — `docs/design-system-agent.md` (the auto-loaded doc
+that carried five of these errors) was deleted and its durable content absorbed into
+`DESIGN.md` and the `convert-to-v4` skill, with the alias location corrected to
+`ui/base/tokens.css`; the card doc counts, the reveal `@import` claim, the `<data>` price
+shape and the registration wording were all corrected in place.
+
+What is left:
+
+| Doc says | Reality |
+|---|---|
+| `DESIGN.md` / `ui/base` docs — no inventory of what `index.css` actually pulls in | `ui/base/index.css` imports **14** files; `theme.css`, `tint.css`, `scroll.css`, `stagger.css` are undocumented as part of the entry point |
+| `ui/card/AGENTS.md:156` — "see `demo/index.html`" | no such file (20 demo pages, none named index) — the one broken doc path the audit found |
+| `layout/AGENTS.md:61`, `layout/readme.md:248`, `ui/card/AGENTS.md:151` — "`xs` — 240px" is a breakpoint | the `xs` config entry has no `min`, only `"srcsetMin": "240px"`; built CSS has media queries at 380/540/720/920/1140 — no 240. `layout/AGENTS.md:143` states it correctly, contradicting `:61` in the same file |
+| `ui/card/components.md:44` — `ui/icon` in the furniture table | there is no `icon(…)` token and no `[media*="icon("]` selector anywhere; `ui-icon` is only ever a child of save/play/lightbox or the target of reveal's `ico()` |
+
+Direction: fix each in place. `docs/schema.md`'s counts — each published with the `grep`
+that reproduces it — are the house style every countable claim should copy; the recurring
+lesson from this batch is that hand-maintained numbers rot, so generate or grep-document
+them.
+
+## 18. The manifest's `sources` line references have rotted
+
+Audit § F4 + L8, re-verified 2026-08-19: `ui/card/data/tokens.json` cites
+`media.css:219-255` in a **232-line file**, and the audit's mechanical sweep found 20+
+references beyond end-of-file plus in-range ones pointing at the wrong lines
+(`ui-card.css:80` for a rule actually at `:59`, `ui-beacon.css:130` for `:103`,
+`ui-sticker.css:231` for `:200`). Because `tokens.build.js` copies `notes` verbatim into
+`tokens.data.js` **and** `docs/tokens.md`, every wrong line is published three times, and
+the manifest's claim to be anchored to source is not currently checkable.
+
+**Direction:** drop line numbers from `sources` (file-level refs do not rot), or add a
+range/content check to `tokens.lint.js` — it already parses these files. Extending the
+generated `<sub>file:line</sub>` footers to the prose notes would end the class.
+
+## 19. "v5" — rename the prose or cut the major. Decide once
+
+Audit § G plus a 2026-08-19 finding; two halves of one decision.
+
+There is no released v5, yet **85 sites outside `docs/plans`** call the token-vocabulary
+sweep "v5" — "removed in v5", "the v5 alias batch", "the system's v5 vocabulary" — across
+`ui/card/readme.md`, `AGENTS.md`, `render.js`, nine `ui/card/docs/*` files and
+`ui/card/data/tokens.json` (17 references there, copied verbatim into `tokens.data.js` and
+`docs/tokens.md` by the build). Meanwhile `ui/card/package.json` and
+`ui/reveal/package.json` both still say **4.0.0**, although that sweep shipped breaking
+removals (reveal's `type`/`from`/`to`/`trigger`/`scroll`/`icon` attributes, the `scl()`
+spellings, the alias batch) — major-version changes went out with no major bump.
+
+**The call to make:** either (a) the sweep is v4 — rewrite the batch prose and system
+prose to v4 and leave per-package semver (`ui/marquee@5.1.0`, `ui/accordion@5.0.0`)
+untouched, or (b) it really was v5 — bump card and reveal to 5.0.0 and let the prose
+stand. Either way the rewrite **must start at `tokens.json` and regenerate** — editing the
+generated copies is reverted by the next `node ui/card/tokens.build.js`.
+
+## 20. `@version` headers — 5 wrong, 22 missing. Generate or drop
+
+Audit § I, re-verified 2026-08-19. Nine CSS files across `/layout` + `ui/card` + `ui/base`
+carry a `@version` header; four match their package (4.0.0), five do not:
+`ui/card/media.css`, `media.hover.css`, `media.shapes.css` say **1.0.0** and
+`media.tint.css` **1.1.0** against a 4.0.0 package, and `ui/base/scroll.css` says
+**2.0.0** — *ahead* of base's 1.0.11. Twenty-two files have no header at all (15 of 16 in
+`ui/base`, all of `layout/core/`). `media.css` is the sheet it matters most on — the
+largest in the package, holding the flag registry and host boundary. A convention followed
+by 4 files of 31 misinforms: either generate the header at build time
+(`tokens.build.js` already writes generated headers) or delete the convention.
+
+## 21. Cascade layers — the documented order is enforced by nothing
+
+Audit § J, re-verified 2026-08-19. Three parts; the first is the cheap one.
+
+- **No `@layer` order statement exists in `ui/base` or `ui/card`** — not in `index.css`,
+  not in the dist bundles (both open directly with `@layer bs-core {` /
+  `@layer bs-component {`). Layer order is therefore first-appearance, i.e. `<link>`
+  order: a page linking `card.css` before `base.css` sorts `bs-component` first, and
+  every `bs-core` rule in base then outranks the card engine. `ui/card/AGENTS.md`
+  mandates the load order in prose only. A one-line `@layer bs-core, bs-component;` at
+  the top of `ui/base/index.css` and the card bundle makes it order-independent — which
+  is what layout already does. Highest value-per-character in the audit.
+- **`layout.demo` is missing from layout's own order statement.**
+  `layout/dist/layout.css:1` lists nine layers; `layout/demo.css:1` declares a tenth,
+  `layout.demo`, which is therefore ordered by appearance and outranks every `layout.*`
+  layer purely because demo pages link it last. Also worth a comment: `layout.reset`
+  sorts *above* `layout.base` in the statement, inverting the usual reading of those two
+  names.
+- **The disjoint-layers claim needs a caveat.** `ui/card/AGENTS.md:154` says layout and
+  card "don't collide … disjoint cascade layers (`layout.*` vs `bs-component`)" — true of
+  the layered rules only. `ui/card` ships ten unlayered rules plus an unlayered
+  `demo.layout.css`, and `media.carousel.css` has one *precisely because* it must beat
+  `@layer layout.base` (its comment says so). Unlayered with no justifying comment:
+  `ui/base/theme.css:5-17`, `ui/base/tint.css:36-46`, the `media.lightbox.css`
+  `@keyframes`; and `media.lightbox.css:206`'s justification is truncated mid-sentence —
+  `/* … UNLAYERED: the polyfill sheet is */`.
+
+## 22. Card feature gaps — the remainder of the 2026-08-10 ledger
+
+What was still open in the deleted feature-gap ledger, re-verified 2026-08-19. All
+renderer-side, none urgent; the shipped and rejected entries stay in git history.
+
+- **Per-breakpoint format + quality ladder.** The SSR image path applies one
+  `quality: 80` to every width (`render.js:262`, `IMG_DEFAULTS`); `format=auto` lets
+  Cloudflare negotiate avif/webp per request, which covers most of the ladder's win, but
+  a per-width quality ramp remains unbuilt.
+- **`width`/`height` on frame images.** The frame `<img>` emission (`render.js:964`)
+  sets srcset/sizes/loading/priority but no `width`/`height`; it needs UCF model fields.
+  CLS is already 0 via `asr()`, so this is a nicety, not a defect. (Avatars and
+  comparison thumbs already get fixed-size 1x/2x pairs.)
+- **Renderer i18n.** ~20 hardcoded English strings ("Director:", "Updated", "Requires",
+  "Serves", …) block localized consumers. UCF already carries `meta.locale`; the fix is
+  one exported `STRINGS` table overridable per `renderCard` call.
+- **Smaller, same tier:** an `attr(col-gap)`-derived internal gap (layout coupling —
+  wants its own design pass); legacy `timeline` item `location`/`endDate` are rendered
+  but never demoed; `statistic` trend-direction styling hooks; a default aspect-ratio
+  when the layout declares none; the provider-abstracted transform builder (obsolete
+  unless multi-CDN becomes a goal).
+
+## 23. `layout/polyfills/attr-fallback.min.js` does not exist — ~40 live pages 404 on it
+
+2026-08-19 finding. `layout/polyfills/` contains `attr-fallback.js` and
+`attr-fallback.css` — **no `attr-fallback.min.js`** — yet the v4 surface requests it from
+41 pages: 22 in `layout/dist/`, 10 in `layout/src/pages/`, 2 in `layout/demo-assets/`,
+`layout/index.html`, `ui/card/index.html`, 4 in `ui/card/demo/`, and `ui/reveal/index.html`
+(a further 54 sit in the parked `content/card` build output). Every one 404s, so those
+pages run with **no typed-`attr()` fallback in Safari/Firefox** — per "What NOT to Do"
+#11 that means missing values and consuming properties dying at computed-value time, not
+wrong values. The 27 pages pointing at `/ui/base/polyfills/attr-fallback.min.js` are fine:
+that file exists and is built.
+
+Compounding it: `layout/polyfills/attr-fallback.js` (2.9 kB, untouched since Jul 19) has
+drifted from the actively maintained `ui/base/polyfills/attr-fallback.js` (8.5 kB, still
+moving). **Direction:** add a minify step to layout's build (esbuild, as ui/base does) or
+point the tags at the unminified file — or retire the layout copy and point everything at
+the maintained `ui/base` build.
+
+## 24. `mosaic(photo)` writes a dead property — the tight gutter never applies
+
+2026-08-19 finding. `layout/layouts/mosaic.json:36` sets
+`--layout-spacing-unit: 0.25rem` on the photo mosaic. The property the system reads is
+**`--layout-space-unit`** (no "spacing"), so the declaration is inert and the intended
+4px gutter silently stays at the 1rem default. One-word fix in the JSON plus a rebuild;
+worth a quick sweep of the other layout JSONs for the same misspelling while there.
+
+## 25. `lanes` at `xl`/`xxl` — config-gate the static selector, or accept the documented trap
+
+2026-08-19 finding, documented as a caveat in `layout/AGENTS.md` ("Config gap").
+`layout.config.json` generates `lanes` for `sm`/`md`/`lg` only, but the static
+`@supports` rules in `core/base.css` (`:183` and `:198`) match **all six** breakpoint
+attributes (`[xs*="lanes("] … [xxl*="lanes("]`) — so `xl="lanes(4)"` flips masonry on
+with no generated track list.
+
+**Measured 2026-08-19 in both engines, and they disagree: Safari renders 1 lane,
+Chromium renders 4 columns.** The cause is a **dead fallback**: `core/base.css:67`
+declares `--layout-gtc: attr(columns type(<length> | <custom-ident>), 1fr)`, so the
+property always computes — `1fr` when the attribute is absent. The grid-lanes arm's
+`grid-template-columns: var(--layout-gtc, repeat(var(--_ci, 4), 1fr))` therefore can
+**never** reach its fallback, and Safari gets a one-track list. The
+`@supports not` arm reads `column-count: var(--_ci, 4)`, where `--_ci` genuinely is
+unset, so Chromium lands on 4. Two more measured cases: `lg="lanes(2)" xl="lanes(4)"`
+→ 2 lanes at xl in both engines (the `lg` value persists, `min-width` being
+cumulative); `lg="columns(3)" xl="lanes(4)"` → 3 lanes, inheriting `--_ci: 3` from
+`columns(3)`.
+
+**Why this one matters more than a silent no-op:** in Chrome the ungenerated token
+*looks correct*, so it ships broken to Safari only.
+
+**The call to make:** (a) generate the `@supports` selectors from the same config
+allowlist (breakpoint-accurate, slightly more builder surface); and/or (b) drop the
+dead `var(--layout-gtc, …)` fallback so both arms fail identically instead of
+diverging. Either makes the failure consistent; (a) makes it disappear.
+
+## 26. `layout/polyfills/attr-fallback.css` targets an attribute that no longer exists
+
+2026-08-19 finding. The no-typed-`attr()` fallback sheet's animation block
+(`attr-fallback.css:22-35`) selects **`[animation]`** — an attribute removed in v4; the
+live spellings are `animate=`/`animate-self=`, and the engine those `--_dg`/`--_tx`/…
+parameters feed now lives in `ui/base/animations.css`, not in this package. The block
+styles nothing. Separately, `:9` declares `--layout-mw: 100vw` where `core/base.css:70`'s
+own fallback is `100%` — under a space-taking scrollbar the two disagree by the scrollbar
+width, the exact reference mismatch the Safari bleed workaround in `core/base.css` exists
+for.
+
+**Direction:** decide whether this sheet still has a job now that
+`ui/base/polyfills/attr-fallback.js` writes per-element values back — then either update
+it to the v4 vocabulary (`[animate]`/`[animate-self]`, `100%`) or delete it and its
+references. Coordinates with item 23, which touches the same directory.
+
+## 27. `layout/dist/layout.min.css` is stale relative to the installed minifier
+
+2026-08-19 finding. `cd layout && npm run build` reproduces `dist/layout.css`
+**byte-identically** but emits a `dist/layout.min.css` that differs from the committed
+one — same length, one declaration reordered (`animation-timeline` moves ahead of
+`animation-range` inside the scroll-fade rule; both sit after the `animation` shorthand,
+so the two are semantically identical). Three consecutive builds agree with each other,
+so the current toolchain is deterministic: the committed artifact was simply produced by
+an older `cssnano-preset-advanced` (declared `^7.0.7`, installed 7.0.8).
+
+Harmless today, but it means "is `dist/` up to date?" cannot be answered by rebuilding
+and diffing — the check that would catch a genuinely stale bundle is exactly the one this
+noise defeats. **Direction:** rebuild and commit the artifact once (deliberately, on a
+branch where a Cloudflare Pages rebuild is acceptable), or pin the minifier exactly so a
+rebuild is a true no-op. The regeneration was reverted on the 2026-08-19 docs branch to
+keep that change docs-only.
+
+## 28. No stated browser-support baseline
+
+2026-08-19 finding, from a fresh-session read of the orientation docs. The docs are full
+of dated engine specifics — "Safari 26 ships `display: grid-lanes`", "Chromium 145 has no
+masonry syntax", "scroll-triggered mode is Chrome 145+", "`::scroll-marker` is
+Chromium-only today" — but **nowhere states the support target**. Is Firefox supported?
+Is there a minimum version? Without a baseline there is no rule for deciding whether a
+new native feature ships as the implementation or as enhancement-only, and every dated
+claim above rots silently.
+
+`layout/readme.md` § Browser Support says "Chrome/Edge 89+, Firefox 88+, Safari 14.1+",
+which cannot be right for a system built on `@property`, container queries, `:has()`,
+typed `attr()` and scroll-driven animation — so the one number that exists is
+misleading.
+
+**Direction:** state a baseline once (root `AGENTS.md` or `DESIGN.md`), phrase it as a
+policy rather than a version list ("Baseline Newly Available, minus X"), and say what the
+degradation contract is for the features that are ahead of it. Then fix
+`layout/readme.md`.
+
+## 29. Accessibility has no stated policy in the orientation layer
+
+2026-08-19 finding, same source. The system ships carousels, popovers, a lightbox that
+owns `inert` and back-button close, `<details>`-driven reveals, and several always-running
+scroll-driven animations — and the orientation docs carry **no a11y expectation, no
+reduced-motion policy, and no testing guidance**. RTL, by contrast, gets a dedicated
+regression demo (`ui/card/demo/media.rtl.html`) and its own sharp-edge entry. The
+asymmetry is conspicuous, and the perf playbook's a11y side-pass (contrast, landmarks,
+heading order, `aria-label` containing visible text) is the only place any of it is
+written down.
+
+**Direction:** decide what the contract is — at minimum a `prefers-reduced-motion` rule
+for the animation engines and a statement of which axe rules the demo pages must pass —
+and give it a home next to the gates in `docs/v4.md`. Related: item 8 in this file
+(native `::scroll-marker` hit-size on the Chromium path was never audited, because axe
+cannot see pseudo-elements).

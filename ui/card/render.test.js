@@ -1719,7 +1719,7 @@ describe('one property, one value', () => {
 	/* Live collisions of the same class, found BY this check, deferred because their
 	   precedence runs the other way per site — demo/schema.html gives the envelope value
 	   for SpecialAnnouncement.datePosted and the media item's for VideoObject.uploadDate.
-	   docs/plans/2026-08-13-schema-type-expansion.md § Follow-ups */
+	   docs/plans/open-items.md */
 	const KNOWN = new Set(['SpecialAnnouncement·datePosted', 'VideoObject·uploadDate']);
 
 	/* attributes a property to the nearest enclosing itemscope — an element carrying both

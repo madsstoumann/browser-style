@@ -20,9 +20,9 @@ A CSS-first **universal card system**: one set of primitives renders articles, p
 reads like the container to a newcomer, which is the one genuinely confusing thing
 about these names, so the docs say **text area / text column** and reserve "content"
 for the attribute and element spellings. Renaming it to `<ui-text>` was evaluated
-and rejected — see `docs/plans/2026-08-03-card-system-structure-decision.md`
-(~3,900 edits and a major version to buy a nicer word, while nothing else in the
-system wants the name). What would reopen it: a second host that composes media +
+and rejected on 2026-08-03 (~3,900 edits and a major version to buy a nicer word,
+while nothing else in the system wants the name — full rationale doc removed
+2026-08-19, recoverable via `git log --diff-filter=D -- docs/plans`). What would reopen it: a second host that composes media +
 text but is not a card. `<ui-reveal>` is not one — it *is* a card plus a flipside,
 which is why it builds on the card engine instead of competing with it.
 
@@ -132,7 +132,7 @@ Shape: `{ element, variant, media, content, text?, parts?{quote, accordion, butt
 
 ## ui/reveal — the sibling
 
-`<ui-reveal>` (`ui/reveal/ui-reveal.css`) composes the **same engine** over native `<details>/<summary>` — it `@import`s `../card/ui-card.css`, so all three DSLs work unchanged. Front face lives in `<summary>` (wrapped in `<ui-face>` for flip/scale/slide), the revealed panel is the one element after `</summary>` (usually `<ui-content>`), animated via `::details-content`. Reveal-specific config is **`variant=` tokens** (the old `type`/`type-lg`/`from`/`to`/`trigger`/`scroll`/`icon`/`icon-close` attributes are removed): `exp` · `flp(top|btm|lft|rgt)` · `sld(top|btm|lft|rgt)` · `grw(ts|te|bs|be)` (the animation token carries its own direction/origin; type+from fold into one — the old `scl()`/`lg:scl` spellings were removed in v5), `lg:grw` (container-tier swap, was `type-lg`; **`grw` is the only animation with an `lg:` form**), `pop` (popup mode, was `to=`), `trg(card)`, `scr`, `ico(ts|te|bs|be|drk|sem|sm|lg)` one token per word, `icc(…)` same words for the open-state icon; native `<details name>` still handles exclusivity. Interactive furniture (`ui-save`/`ui-play`) is **invalid inside `<summary>`**; markers (`ui-chip`/`ui-sticker`/`ui-beacon`) are fine. Details: `ui/reveal/readme.md`, design rationale: `ui/reveal/plan.md`.
+`<ui-reveal>` (`ui/reveal/ui-reveal.css`) composes the **same engine** over native `<details>/<summary>` — the card engine is a **peer stylesheet loaded by the page** (`ui-reveal.css` contains no `@import`; see *Packages and load order* above), so all three DSLs work unchanged. Front face lives in `<summary>` (wrapped in `<ui-face>` for flip/scale/slide), the revealed panel is the one element after `</summary>` (usually `<ui-content>`), animated via `::details-content`. Reveal-specific config is **`variant=` tokens** (the old `type`/`type-lg`/`from`/`to`/`trigger`/`scroll`/`icon`/`icon-close` attributes are removed): `exp` · `flp(top|btm|lft|rgt)` · `sld(top|btm|lft|rgt)` · `grw(ts|te|bs|be)` (the animation token carries its own direction/origin; type+from fold into one — the old `scl()`/`lg:scl` spellings were removed in v5), `lg:grw` (container-tier swap, was `type-lg`; **`grw` is the only animation with an `lg:` form**), `pop` (popup mode, was `to=`), `trg(card)`, `scr`, `ico(ts|te|bs|be|drk|sem|sm|lg)` one token per word, `icc(…)` same words for the open-state icon; native `<details name>` still handles exclusivity. Interactive furniture (`ui-save`/`ui-play`) is **invalid inside `<summary>`**; markers (`ui-chip`/`ui-sticker`/`ui-beacon`) are fine. Details: `ui/reveal/readme.md`.
 
 ## Layout integration (section layout comes from /layout)
 
@@ -197,6 +197,17 @@ Variant guidance for card lists: all `columns(N)` and `grid(N…)` variants are 
 10. **`open:` is a whole-token STATE prefix, not a cq tier.** The family (`open:grid()`, bare `open:furniture`) arms only under `ui-media[popover]:popover-open` (the `<ui-lightbox>` lightbox, `media.lightbox.css`), is whole-matched, and lives in the manifest under names that *include* the prefix — deliberately not the `cqPrefixes` machinery. Never mint an `open:` spelling containing a substring-matched stem (`open:nav` would arm every closed carousel — fullscreen carousel is simply a `nav` frame's default open presentation). The popover's closed state relies on author-origin-beats-UA; do not "restore" `display` there. Native scroll-control pseudos do NOT follow a popover frame into the top layer (Chromium) — popover carousels get the /ui/carousel/polyfill/carousel-controls.js DOM controls via ui/card/lightbox.js, with the native pseudos suppressed on those frames only. The open state can switch into ANY existing nav style via the companion `media-open=` ATTRIBUTE (same element as media=) — an attribute precisely because the control stems are substring-matched; lightbox.js swaps only the control words of the media string on toggle and restores on close (JS-optional: without it the open lightbox keeps the closed nav style).
 11. **Visible identifiers ship RAW; the page carries the meta.** iOS Safari's data detectors read a hyphenated identifier (the Book card's ISBN, the ComicSeries ISSN) as a phone number and link it `tel:`. The fix is the page-level `<meta name="format-detection" content="telephone=no">` — **not** invisible characters spliced into the text, which is what the ISBN did until v5 (U+2060 word joiners after each hyphen: they broke the transcription gate, since renderer and reference markup then spelled the same ISBN differently). **A page embedding a card with a visible ISBN/ISSN must declare the meta** — that includes consumer pages, which no gate here can reach. Two tests in `render.test.js` § *data detectors* hold the repo's side: no rendered card may contain an invisible formatting character, and no demo page may show an ISBN/ISSN without the meta. Detail: [docs/schema.md § Book](docs/schema.md).
 
+## Decisions of record
+
+Settled — do not re-litigate without new facts:
+
+- **Naming (2026-08-03):** `<ui-card>` / `<ui-content>` / `<ui-media>` are the names. The `<ui-text>` rename was evaluated and rejected (see *Naming* above).
+- **Carousel extraction:** the carousel engine is `@browser.style/carousel` (`ui/carousel/`), not `ui/base/carousel.css`.
+- **Peer-exclusive dist bundles:** no package's bundle may inline another package's CSS — `scripts/css-bundle.js` fails the build on a violation (see *Packages and load order*).
+- **Furniture placement:** every placed family uses the one logical grid `ts tc te · cs cc ce · bs bc be` (pitfall 7) — no per-family position vocabularies.
+
+The full rationale docs behind these were removed 2026-08-19; they live in git history (`git log --diff-filter=D -- docs/plans`).
+
 ## Doc map — read this when…
 
 | Doc | Read when… |
@@ -207,12 +218,12 @@ Variant guidance for card lists: all `columns(N)` and `grid(N…)` variants are 
 | `docs/media.carousel.md` | working on carousel internals (scroll-markers, dots, arrows) |
 | `docs/stagger.md` | working on the stagger reveal engine (details / snap-carousel / scroll-driven adapters) |
 | `docs/animations.md` | working on the keyframe library or the `[animate]`/`animate-self` scroll API |
-| `/docs/gpu-performance.md` | adding a transition, a keyframe or a `will-change` — the CPU/GPU split, the four de-optimisations, and the measured cost of every always-running animation |
+| `/docs/performance.md` | adding a transition, a keyframe or a `will-change` — the CPU/GPU split, the four de-optimisations, and the measured cost of every always-running animation |
 | `docs/content.md` | working on the text column, `scl()`, `data-part`s, tag choice |
 | `docs/typography.md` | you want to *use* the type system — use-case guide to `scl()`, the relational size ladder, group sizes, fonts |
 | `docs/ui-card-tokens.md` | you need the `variant=` token / custom-property reference |
 | `docs/video.md` | integrating video providers / posters / facades |
-| `../reveal/readme.md` + `../reveal/plan.md` | working on `<ui-reveal>` |
+| `../reveal/readme.md` | working on `<ui-reveal>` |
 | `../../layout/AGENTS.md` | working on the layout system itself |
 | `../../layout/docs/card-integration.md` | placing cards in layouts, srcset bridge, section presets |
 | `../../cms/baseline/models/` | changing card / preset / layout-config schemas |

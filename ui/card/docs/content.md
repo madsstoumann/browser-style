@@ -1,6 +1,6 @@
 # @browser.style/content
 
-> **Status:** shipped (v4). `<ui-content>` is the CSS-first content primitive extracted from the `ui-card` monolith into `ui/card/content.css`, per `docs/plans/2026-06-20-ui-media-content-split-design.md` (§5). This documents the implemented API.
+> **Status:** shipped (v4). `<ui-content>` is the CSS-first content primitive extracted from the `ui-card` monolith into `ui/card/content.css`, per the 2026-06-20 media/content split design (plan doc removed 2026-08-19 — git history). This documents the implemented API.
 
 A CSS-first **content (text) primitive** — a vertical flex column that styles a card's textual parts (eyebrow, headline, summary, byline, tags, actions, …) from a single inherited token namespace. It works **standalone** or **nested inside any host** (`<ui-card>`, `<ui-reveal>`, or your own layout), with no descendant-selector coupling to a parent.
 
@@ -165,7 +165,7 @@ Padding has three granularities. All seven tokens share the **same value set** �
 | one axis | `pb()` block · `pi()` inline | `--ui-content-pb` / `--ui-content-pi` |
 | one side | `pbs()` `pbe()` `pis()` `pie()` | `--ui-content-pbs` / `-pbe` / `-pis` / `-pie` |
 
-The stems match the layout package's spacing vocabulary exactly (`pb pbs pbe pi pis pie`); only the value system differs — content uses the named `--spacing-*` steps, layout uses numeric multiples of its own unit.
+The stems overlap the layout package's spacing vocabulary (`p pi pb pbs pbe` are shared) but not one-to-one: layout has no per-inline-side `pis`/`pie` — its set continues with `mbs mbe cg rg` instead. The value systems differ too — content uses the named `--spacing-*` steps, layout uses multiples of its own `--layout-space-unit`.
 
 #### Precedence: side beats axis beats all-sides
 
@@ -359,7 +359,7 @@ Content parts are **semantic children** marked with `data-part`. They are auto-s
 | `tags` | `<ul data-part="tags">` | Tag list — flex-wrap. Children are either **plain links** (default pill) or **`<ui-chip>`** (full colour palette) — see below |
 | `actions` | `<div data-part="actions">` | Button / link row — flex-wrap with action gap. The accent (primary) CTA goes **last**, so it reads at the inline-end of the row and mirrors under `dir="rtl"`; `render.js` reorders it there whatever order the data declares |
 | `footer` | `<footer data-part="footer">` | Trailing muted meta row — flex-wrap |
-| `price` | `<p data-part="price">` | **Body group** (prominent) — large current price; `<del>` struck original, `<small>` accent discount |
+| `price` | `<p data-part="price">` | **Body group** (prominent) — large current price; `<del>` struck original, `<small>` accent note; a discount rides an inline `<ui-chip>` |
 | `stat` | `<p data-part="stat">` | **Body group** (prominent) — big `<data>` number + `<small>` unit; muted trend |
 | `list` | `<ul>`/`<ol data-part="list">` | **Body group** — feature / step list; flex column. Two `data-variant`s: `crossed` (excluded items, ✗ marker) and `menu` (priced rows — see below) |
 | `address` | `<address data-part="address">` | **Body group** — postal block, no avatar (distinct from byline) |
@@ -390,7 +390,7 @@ only structural essentials — visuals stay token-driven.
 
 | Part | Markup | Microdata | Used by |
 |---|---|---|---|
-| `price` | `<p>` + `<data>` current, `<del>` original, `<small>` discount | `Offer` / `PriceSpecification` / `MonetaryAmount` | product, course, booking, membership, software, job (salary) |
+| `price` | `<p>` + `<meta itemprop="price">` carrying the machine number, the formatted current price as the plain **text node** beside it; display-only `<del>` original, `<ui-chip>` discount, `<small>` note — never `<data itemprop>` (see [schema.md § Price](schema.md#price)) | `Offer` / `PriceSpecification` / `MonetaryAmount` | product, course, booking, membership, software, job (salary) |
 | `rating` | `<div>` + `<input class="ui-rating" disabled aria-hidden>` masked stars, `[data-sr]` full label, visible `<span aria-hidden>` count | `AggregateRating` / `Rating` | product, review, software |
 | `list` | `<ul>` check-list / `<ol>` ordered | — | recipe, job, course, booking, location, membership |
 | `address` | `<address>` block (no avatar — that's `byline`) | `PostalAddress` | business, location, event, contact |

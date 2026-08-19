@@ -44,7 +44,7 @@ Semantic color roles using `light-dark()` for automatic light/dark adaptation.
 
 ### UI chrome
 
-- **Border** (`--color-border`): `light-dark(hsl(0, 0%, 80%), hsl(0, 0%, 20%))` — Borders, dividers, separators
+- **Border** (`--color-border`): `light-dark(hsl(0, 0%, 80%), hsl(0, 0%, 35%))` — Borders, dividers, separators (dark arm stays ≥35% so borders remain visible on dark card plates)
 - **Button** (`--color-button`): `light-dark(hsl(0, 0%, 90%), hsl(0, 0%, 40%))` — Button backgrounds
 - **Button Text** (`--color-button-text`): `light-dark(hsl(0, 0%, 40%), hsl(0, 0%, 60%))` — Button label text
 - **Highlight** (`--color-highlight`): `light-dark(hsl(211, 100%, 95%), hsl(211, 30%, 20%))` — Selection highlights
@@ -65,6 +65,58 @@ Semantic color roles using `light-dark()` for automatic light/dark adaptation.
 
 ---
 
+## Theme bundles — the `theme=` axis
+
+A shared, cross-component color axis: nine named bundles, each a surface (`--ui-theme-{name}-bg`) plus a paired ink (`--ui-theme-{name}-c`). Bundles live in `ui/base/tokens.css`; the resolver and modifiers live in `ui/base/theme.css`. Full documentation: `ui/base/theme.md`.
+
+The vocabulary is **concrete color names** (red, slate…), not semantic words — deliberately distinct from button's semantic `.bg-*` / `color=` axis.
+
+| Bundle | Surface (`-bg`) | Ink (`-c`) |
+|--------|-----------------|------------|
+| `--ui-theme-red-*` | `var(--color-error)` | `hsl(0 0% 100%)` |
+| `--ui-theme-orange-*` | `var(--color-warning)` | `var(--color-text)` |
+| `--ui-theme-green-*` | `var(--color-success)` | `hsl(0 0% 100%)` |
+| `--ui-theme-blue-*` | `var(--color-info)` | `hsl(0 0% 100%)` |
+| `--ui-theme-accent-*` | `var(--color-accent)` | `var(--color-accent-text)` |
+| `--ui-theme-white-*` | `light-dark(hsl(0 0% 100%), hsl(0 0% 90%))` | `light-dark(hsl(0 0% 15%), hsl(0 0% 10%))` |
+| `--ui-theme-gray-*` | `light-dark(hsl(0 0% 93%), hsl(0 0% 84%))` | `light-dark(hsl(0 0% 15%), hsl(0 0% 10%))` |
+| `--ui-theme-slate-*` | `var(--ui-card-muted-bg, light-dark(hsl(215 19% 27%), hsl(215 16% 38%)))` | `light-dark(hsl(0 0% 96%), hsl(0 0% 88%))` |
+| `--ui-theme-black-*` | `var(--ui-card-dark-bg, light-dark(hsl(215 28% 17%), hsl(215 22% 27%)))` | `light-dark(hsl(0 0% 96%), hsl(0 0% 88%))` |
+
+The neutrals form a light→dark ramp (`white` < `gray` < `slate` < `black`) and stay true to their names in both schemes — a `white` theme is still a light surface in dark mode; the `light-dark()` pair only softens the shade.
+
+### Attribute convention
+
+`theme=` is a space-separated token list: exactly one color token plus any number of modifiers. Use `theme=` on custom elements and `data-theme=` on native elements (a bare `theme` attribute is invalid HTML on built-ins) — every resolver rule in `theme.css` is a pair, so both spellings resolve identically:
+
+```html
+<ui-card theme="black dark">…</ui-card>
+<ui-chip theme="red pale">soft</ui-chip>
+<section data-theme="slate glass">…</section>
+```
+
+### Modifiers
+
+- **`pale`** — tinted surface: `color-mix` of the color with `--color-surface` (80%), ink becomes the color itself. The pastel version.
+- **`muted`** — fades surface and ink via `color-mix(… transparent 50%)`. Alpha only — no element `opacity`, so descendant content is not dimmed. Composes with `pale`: `theme="green pale muted"`.
+- **`ink`** — applies the paired text color (themes set only the background by default).
+- **`light` / `dark`** — set `color-scheme`, picking the `light-dark()` arm and re-toning descendants.
+- **`border`** — outline in the solid base color, transparent fill; `border(<side>)` / `border(sm…2xl)` / `border(dashed|dotted|double)` variants.
+- **`glass`** — translucent material with backdrop blur + saturation, configured by `--ui-theme-glass-bg`, `--ui-theme-glass-edge`, `--ui-theme-glass-fade` (62%), `--ui-theme-glass-blur` (`var(--blur-md)`), `--ui-theme-glass-saturate` (180%).
+
+### Gotcha: bundles resolve at `:root`
+
+The five color-hue bundles reference `--color-*` tokens **and are declared at `:root`** — the `var()` substitution happens there, so descendants inherit the already-resolved color, not the reference. A page skin that sets a brand `--color-accent` on `body` will therefore **not** change `theme="accent"` surfaces. Either set the brand color on `:root` itself, or re-declare the bundle alongside the skin:
+
+```css
+body {
+	--color-accent: light-dark(#4f46e5, #6366f1);
+	--ui-theme-accent-bg: var(--color-accent); /* re-resolve against body's value */
+}
+```
+
+---
+
 ## Typography
 
 ### Font families
@@ -79,6 +131,8 @@ Semantic color roles using `light-dark()` for automatic light/dark adaptation.
 
 | Token | Size | Typical use |
 |-------|------|-------------|
+| `--font-size-3xs` | 0.5rem (8px) | Micro labels, dense data displays |
+| `--font-size-2xs` | 0.625rem (10px) | Tags, eyebrows, tiny meta text |
 | `--font-size-xs` | 0.75rem (12px) | Fine print, badges |
 | `--font-size-sm` | 0.875rem (14px) | Captions, labels, meta text |
 | `--font-size-base` | 1rem (16px) | Body text |
@@ -159,6 +213,32 @@ A 6-step scale based on `rem` units:
 
 ---
 
+## Sizes
+
+A 15-step scale for **element dimensions** — icon boxes, avatars, rating stars, clock faces. Distinct from `--spacing-*` (gaps, padding) and `--width-*` (content container max-widths):
+
+| Token | Value | Use |
+|-------|-------|-----|
+| `--size-1` | 0.25rem (4px) | Dots, hairline indicators |
+| `--size-2` | 0.5rem (8px) | Small dots, beacon markers |
+| `--size-3` | 1rem (16px) | Small icons, badge dots |
+| `--size-4` | 1.25rem (20px) | Compact icons |
+| `--size-5` | 1.5rem (24px) | Default icon size, badges, small ratings |
+| `--size-6` | 1.75rem (28px) | Medium icons |
+| `--size-7` | 2rem (32px) | Large icons, small avatars |
+| `--size-8` | 3rem (48px) | Touch targets, medium avatars |
+| `--size-9` | 4rem (64px) | Large avatars, small widgets |
+| `--size-10` | 5rem (80px) | XL avatars |
+| `--size-11` | 7.5rem (120px) | 2XL avatars, medium widgets |
+| `--size-12` | 10rem (160px) | Thumbnails |
+| `--size-13` | 15rem (240px) | Large widgets (e.g. clock faces) |
+| `--size-14` | 20rem (320px) | Small panels |
+| `--size-15` | 30rem (480px) | Large panels |
+
+Numeric keys (not t-shirt sizes) because this is a dimension ramp, not a semantic scale — components map their own `size="sm|md|lg"` attributes onto steps of it (e.g. `ui-avatar[size="md"]` → `--size-8`).
+
+---
+
 ## Border
 
 ### Width
@@ -168,6 +248,10 @@ A 6-step scale based on `rem` units:
 | `--border-width` | 1px | Default borders, dividers |
 | `--border-width-thick` | 2px | Emphasis borders, active states |
 | `--border-width-heavy` | 3px | Strong visual weight |
+| `--border-width-xl` | 4px | Theme `border(xl)` modifier |
+| `--border-width-2xl` | 6px | Theme `border(2xl)` modifier |
+
+The `xl`/`2xl` steps extend the scale for the theme axis' `border(<size>)` modifier — its `sm`/`md`/`lg` steps reuse `--border-width` / `-thick` / `-heavy`.
 
 ### Radius
 
@@ -184,6 +268,24 @@ A 6-step scale based on `rem` units:
 | `--radius-circle` | 50% | Avatars, circular elements |
 | `--radius-pill` | calc(infinity * 1px) | Fully rounded pill shape |
 
+### Squircle corners
+
+Squircles pair a **bespoke radius** with a **superellipse exponent** — the radius values are deliberately larger than the `--radius-*` scale because `corner-shape: superellipse()` flattens the curve. Consumed as a pair by every `rds(*-sq)` variant (`ui-card variant=`, `ui-media media=`, `ui-content content=`):
+
+| Radius token | Value | Exponent token | Value |
+|--------------|-------|----------------|-------|
+| `--radius-sm-sq` | 1.25rem | `--squircle-sm` | 1.5 |
+| `--radius-md-sq` | 2rem | `--squircle-md` | 1.7 |
+| `--radius-lg-sq` | 2.8rem | `--squircle-lg` | 1.8 |
+| `--radius-xl-sq` | 3.5rem | `--squircle-xl` | 2 |
+
+```css
+border-radius: var(--radius-md-sq);
+corner-shape: superellipse(var(--squircle-md));
+```
+
+Browsers without `corner-shape` fall back gracefully to the plain rounded corner.
+
 ---
 
 ## Shadows
@@ -194,6 +296,7 @@ A 6-step scale based on `rem` units:
 | `--shadow-md` | `0 4px 6px -1px rgb(0 0 0 / 0.1)` | Hover state, dropdowns |
 | `--shadow-lg` | `0 10px 15px -3px rgb(0 0 0 / 0.1)` | Modals, popovers |
 | `--shadow-xl` | `0 20px 25px -5px rgb(0 0 0 / 0.1)` | High-prominence overlays |
+| `--shadow-2xl` | `0 1em 4em color-mix(in srgb, CanvasText 10%, transparent)` | Large soft ambient glow — em-based (scales with font size), CanvasText-based (adapts to color scheme) |
 
 ---
 
@@ -206,7 +309,7 @@ A 6-step scale based on `rem` units:
 | `--duration-fast` | 100ms | Micro-interactions, hover color changes |
 | `--duration-normal` | 200ms | Standard transitions |
 | `--duration-slow` | 300ms | Expand/collapse, accordion open |
-| `--duration-slower` | 400ms | Complex animations, page transitions |
+| `--duration-slower` | 500ms | Complex animations, page transitions |
 
 ### Easing
 
@@ -216,6 +319,32 @@ A 6-step scale based on `rem` units:
 | `--ease-in` | `cubic-bezier(0.4, 0, 1, 1)` | Elements entering view |
 | `--ease-out` | `cubic-bezier(0, 0, 0.2, 1)` | Elements leaving view |
 | `--ease-in-out` | `cubic-bezier(0.4, 0, 0.2, 1)` | Symmetric transitions |
+
+### Stagger
+
+Knobs for the shared stagger-reveal engine (`ui/base/stagger.css`) — direct children of a `stagger=` / `data-stagger=` host cascade in one after another. Per-child delay = `--stagger-begin + (index − 1) × --stagger-step`, where index defaults to `sibling-index()` and can be overridden per child via `stagger-index=` / `stagger-step=`:
+
+| Token | Value | Use |
+|-------|-------|-----|
+| `--stagger-begin` | 0s | Delay before the first child starts |
+| `--stagger-distance` | 5rem | Travel distance for the `rise`/`fall`/`lft`/`rgt` vectors |
+| `--stagger-duration` | 0.75s | Per-child animation duration |
+| `--stagger-easing` | `cubic-bezier(0.16, 1, 0.3, 1)` | Reveal curve (pronounced ease-out) |
+| `--stagger-step` | 0.07s | Delay between consecutive children |
+
+The `shimmer` stagger (a `background-clip: text` sweep rather than a box vector) has its own token set — notably its own step, paced off the sweep duration itself (1s sweeps 0.07s apart would all run at once):
+
+| Token | Value |
+|-------|-------|
+| `--stagger-shimmer-angle` | 90deg |
+| `--stagger-shimmer-sweep-angle` | 110deg |
+| `--stagger-shimmer-color` | `var(--color-accent)` |
+| `--stagger-shimmer-duration` | 1s |
+| `--stagger-shimmer-ink` | `CanvasText` |
+| `--stagger-shimmer-spread` | 12ch |
+| `--stagger-shimmer-step` | `calc(var(--stagger-shimmer-duration) * 0.6)` |
+
+`--stagger-shimmer-ghost` is deliberately **not** declared at `:root` — it defaults to 15% of the ink at the use site. Declared globally it would resolve `var(--stagger-shimmer-ink)` against `:root` and inherit that one frozen color, so a card overriding the ink would keep a black ghost. Set it explicitly only to break the 15% relationship.
 
 ---
 
@@ -328,6 +457,38 @@ Only add hardcoded fallbacks for component-specific values that don't come from 
 border-radius: var(--ui-chip-bdrs, 3ch);
 ```
 
+### Token architecture and naming
+
+Two tiers — a component token references a global semantic token:
+
+```
+Component token       Global semantic token
+--ui-card-bg     -->  var(--color-surface)
+```
+
+Naming rules:
+
+- **Tailwind v4 compatible** — global token names match Tailwind where a convention exists
+- **Component prefix** — component tokens are `--ui-{component}-{property}` (e.g. `--ui-accordion-border-width`)
+- **Full readable names** — never abbreviations: `--ui-accordion-border-width`, not `--ui-accordion-bdw`
+- **No PascalCase** — legacy `--AccentColor` etc. are aliased but never used in new code
+
+### Legacy aliases
+
+The bottom of `ui/base/tokens.css` carries 20 PascalCase color aliases (`--AccentColor`, `--Canvas`, `--GrayText`, …) plus five `--ff-*` font-family aliases, all pointing at the new token names. Components still referencing them get migrated as they are converted — replace PascalCase references with the new names, but do **not** remove the aliases from `tokens.css` until every component is migrated.
+
+### Typed `attr()` fallback
+
+Typed `attr()` has **no working fallback in Safari/Firefox**: `--x: attr(fill type(<color>), red)` does NOT fall back to `red`. A custom property parses any token stream, so `--x` holds the literal `attr(…)` text; it is never guaranteed-invalid, so a `var(--x, …)` fallback doesn't fire either — and the *consuming* property dies at computed-value time (no background, no ring, empty rating). Declaring a real value first doesn't help; the `attr()` declaration still wins.
+
+Therefore:
+
+- Every component using typed `attr()` ships an `@supports not (background-color: attr(x type(<color>), red))` block restoring the defaults
+- Pages load `ui/base/polyfills/attr-fallback.js` to restore per-element values
+- Feature-detect on a **real** property — `CSS.supports('--x', 'attr(…)')` returns `true` in Safari and lies
+
+See `ui/base/polyfills/readme.md`.
+
 ---
 
 ## Do's and Don'ts
@@ -339,7 +500,14 @@ border-radius: var(--ui-chip-bdrs, 3ch);
 - Do keep body text at `--line-height-normal` (1.5) for readability
 - Don't tokenize `ch` units — they are already content-relative by design
 - Don't tokenize CSS keywords like `smaller`, `larger` — they are already semantic
-- Don't tokenize animation endpoints (`opacity: 0`, `opacity: 1`)
+- Don't tokenize animation endpoints (`opacity: 0`, `opacity: 1`) — they have no semantic meaning as tokens
+- Don't tokenize `cqi` values — container-query units must stay component-level
+- Don't tokenize domain-specific colors — planet colors, mood emoji colors, periodic-table element colors stay as component-level custom properties
 - Don't use Shadow DOM for new components — light DOM for framework compatibility
+- Don't use `innerHTML` with attribute/user values — XSS risk; use `createElement` + `textContent`
+- Don't use `querySelectorAll` without scoping — it leaks into nested components; use `:scope >` or iterate `this.children`
+- Don't define variant tokens in multiple selectors — consolidate class-based and attribute-based into one rule
 - Don't mix rounded and sharp corners within the same component variant
 - Don't use PascalCase token names in new code — legacy aliases exist but are deprecated
+- Don't remove the legacy aliases from `tokens.css` — they stay until all components are migrated
+- Don't trust typed `attr()`'s fallback value — see [Typed `attr()` fallback](#typed-attr-fallback)

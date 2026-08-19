@@ -17,13 +17,13 @@
 	     The 4 nested <ui-card> Product tiles inside the ProductGroup collage's <ui-media>
 	     are not cards, and nested property scopes (AggregateRating, byline Person,
 	     Organization, ComicIssue, Occupation…) are not itemtypes "on the card hosts". -->
-	<meta name="description" content="57 cards covering 51 distinct schema.org itemtypes on the card hosts (Quiz runs three cards; Review, EventSeries, Place and Person two each) — re-created with the modern &lt;ui-card&gt; engine: inline microdata (itemscope/itemtype/itemprop), no JSON-LD. The job card carries a 51st type as a second top-level item: EmployerAggregateRating. One optional script: video.js polyfills the media invoker commands behind the podcast play button.">
+	<meta name="description" content="58 cards covering 52 distinct schema.org itemtypes on the card hosts (Quiz runs three cards; Review, EventSeries, Place and Person two each) — re-created with the modern &lt;ui-card&gt; engine: inline microdata (itemscope/itemtype/itemprop), no JSON-LD. The job card carries a 53rd type as a second top-level item: EmployerAggregateRating. One optional script: video.js polyfills the media invoker commands behind the podcast play button.">
 	<!-- One bundle for every card-demo package (source list: ui/card/components.md).
 	     Build: npm run build:demo-css (entry demo.css, output /dist/demo.fc1719a9.min.css) -->
 	<link rel="stylesheet" href="/dist/demo.fc1719a9.min.css">
 
 	<style>
-		/* Skip style + layout for OFF-SCREEN cards. This page is 57 cards / ~2,400
+		/* Skip style + layout for OFF-SCREEN cards. The page was 57 cards / ~2,400
 		   elements, and PageSpeed's top diagnostic is Style & Layout — 1,670 ms of a
 		   2.4 s main thread. It is not script: Script Evaluation is 22 ms there, and 3 ms
 		   measured locally. Measured at an iPhone viewport, before → after:

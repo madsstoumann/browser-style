@@ -2,7 +2,7 @@
 
 A CSS-first **media primitive** — an image/video frame with overlay furniture (label, beacon, sticker, favorite, play). It works **standalone** or **nested inside** `<ui-card>` / `<ui-reveal>`, and it is configured entirely through a compact `media=` token string that can sit on the element *itself* or on its **`<ui-card>` / `<ui-reveal>` host** (the configuration inherits down through custom properties — but stops at the card: a `media=` on any other ancestor, e.g. a `<lay-out>`, configures that element's own scroller and never leaks into a nested `<ui-media>`).
 
-> **Status:** shipped (v4). `<ui-media>` is the media primitive extracted from `ui-card.css` into `ui/card/media.css`, per `docs/plans/2026-06-20-ui-media-content-split-design.md`. This documents the implemented API.
+> **Status:** shipped (v4). `<ui-media>` is the media primitive extracted from `ui-card.css` into `ui/card/media.css`, per the 2026-06-20 media/content split design (plan doc removed 2026-08-19 — git history). This documents the implemented API.
 
 ## Features
 
@@ -168,7 +168,7 @@ What each one is *for*:
 |-------|----------|
 | `asr()` | aspect-ratio (or any ratio via `style="--ui-media-ar"`) |
 | `rds()` | corners (**standalone only**) — plain steps plus `-sq` squircles |
-| `obp()` | object-position (9-grid). Logical **and** physical spellings are supported and neither is deprecated — see below |
+| `obp()` | object-position (9-grid), logical cells only (`ts tc te · cs cc ce · bs bc be`) — the physical `tl…br` spellings were **removed in v5**; see below |
 | `obf()` | object-fit |
 | `flp()` | flip / mirror the image |
 | `shp()` | clip the frame to one of the shared `--shape-*` glyphs (`ui/base/shapes.css`) |

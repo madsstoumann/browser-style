@@ -366,9 +366,10 @@ named multiplier:
 | Argument | Multiplier | Argument | Multiplier |
 |---|---|---|---|
 | `0` `1` `2` `3` `4` | itself | `md` | 1 |
-| `2xs` | 0.125 | `lg` | 1.5 |
-| `xs` | 0.25 | `xl` | 2 |
-| `sm` | 0.5 | `2xl` | 3 |
+| `3xs` | 0.0625 | `lg` | 1.5 |
+| `2xs` | 0.125 | `xl` | 2 |
+| `xs` | 0.25 | `2xl` | 3 |
+| `sm` | 0.5 | | |
 
 So `cg(sm)` is `0.5rem` and `cg(1)` is `1rem` at the default unit. The word sizes exist
 because the integer ladder starts too coarse for gutters — `cg(xs)` (0.25) and `cg(2xs)`
@@ -632,6 +633,7 @@ small.
 ```json
 "spacing": {
   "steps": [0, 1, 2, 3, 4,
+    {"label": "3xs", "value": 0.0625},
     {"label": "2xs", "value": 0.125},
     {"label": "xs",  "value": 0.25},
     {"label": "sm",  "value": 0.5},
@@ -821,7 +823,7 @@ npm run build:icons   # Generate SVG icons
 npm run build:all     # Build everything
 ```
 
-For detailed build documentation, see [docs/BUILD.md](docs/BUILD.md)
+For detailed build documentation, see [AGENTS.md § Build Commands](AGENTS.md#build-commands)
 
 ---
 
@@ -922,8 +924,8 @@ The polyfill:
 
 ## Documentation
 
-- [BUILD.md](docs/BUILD.md) - Build system documentation
-- [RUN.md](docs/RUN.md) - Command reference
+- [AGENTS.md](AGENTS.md) - Architecture, build system & command reference
+- [core/base.md](core/base.md) - `<lay-out>` attribute reference
 - [demos/](dist/index.html) - Visual examples
 
 ---
