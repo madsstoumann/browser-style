@@ -1,0 +1,47 @@
+{
+  "_comment": "Source of truth for the generated icon font. Run: npm run build:icons (see readme.md \u00a7 Icon font).",
+  "source": {
+    "font": "https://raw.githubusercontent.com/google/material-design-icons/master/variablefont/MaterialSymbolsOutlined%5BFILL%2CGRAD%2Copsz%2Cwght%5D.ttf",
+    "codepoints": "https://raw.githubusercontent.com/google/material-design-icons/master/variablefont/MaterialSymbolsOutlined%5BFILL%2CGRAD%2Copsz%2Cwght%5D.codepoints",
+    "license": "Apache-2.0",
+    "axes": {
+      "wght": 300,
+      "FILL": 0,
+      "GRAD": 0,
+      "opsz": 24
+    }
+  },
+  "baselineShiftEm": 0.17,
+  "icons": [
+    "call",
+    "mail",
+    "location_on",
+    "schedule",
+    "language",
+    "public",
+    "bed",
+    "king_bed",
+    "bathtub",
+    "square_foot",
+    "meeting_room",
+    "groups",
+    "pets",
+    "pool",
+    "wifi",
+    "ac_unit",
+    "local_parking",
+    "kitchen",
+    "elevator",
+    "balcony",
+    "outdoor_grill",
+    "local_laundry_service",
+    "calendar_month",
+    "directions_car",
+    "accessible",
+    "smoke_free",
+    "check",
+    "close",
+    "star",
+    "favorite"
+  ]
+}

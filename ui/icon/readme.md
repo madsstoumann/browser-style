@@ -348,6 +348,61 @@ Horizontally-directional icons mirror automatically under `[dir="rtl"]` so they 
 
 ---
 
+## Icon font
+
+`icon-font.css` is a **separate, opt-in sheet** — it is not pulled in by `index.css`, so
+`<ui-icon>` users pay nothing for it.
+
+```html
+<link rel="stylesheet" href="…/@browser.style/icon/icon-font.css">
+```
+
+It ships 30 subset [Material Symbols](https://github.com/google/material-design-icons)
+glyphs (Apache-2.0) as an inline base64 `@font-face` — **7,823 B of CSS, zero extra
+requests** — plus a catalog:
+
+```css
+:root { --ui-icon-font: 'ui-icons'; --icon-bed: "\efdf"; … }
+:where([data-icon="bed"]) { --icon: var(--icon-bed); }
+```
+
+So `--icon` resolves from a `data-icon` attribute, and consumers read it wherever they like:
+
+```css
+li[data-icon] { list-style-type: var(--icon); }          /* a ::marker */
+a[href^="tel:"]::before { content: var(--icon); }        /* generated content */
+```
+
+Both inherit `color` from their element, since a glyph is text. Used by
+`@browser.style/card` for list markers and the `tel:` / `mailto:` icons —
+[content.md § Icon markers](../card/docs/content.md).
+
+### Why the glyphs are baseline-shifted
+
+Material Symbols centre their icon box at `+0.5em` above the baseline; text centres near
+`+0.33em`. Inline, you would correct that with `vertical-align` — but `::marker` **ignores**
+`vertical-align`, `transform` and `translate` (measured, Chrome 150), and accepts only font
+properties and `color`. So the correction is baked into the outlines at build time
+(`baselineShiftEm`, default `0.17`), which measured out at **−5.0px → −0.5px** against the
+text's optical centre. A side benefit: the font needs no `vertical-align` in `::before`
+either.
+
+Inlining as base64 is also what keeps the font out of `scripts/css-bundle.js`'s way — a
+`url()` to a real `.woff2` is a binary asset the bundler will not follow.
+
+### Adding an icon
+
+Edit `icons.json`, then regenerate (`icon-font.css` is committed — consumers never run this):
+
+```bash
+python3 -m pip install fonttools brotli
+cd ui/icon && npm run build:icons
+```
+
+The source font and codepoint table are cached in `.cache/` (gitignored) after the first run.
+Names are Material's own, written **kebab-case** in markup (`square_foot` → `square-foot`).
+`ui/card/render.test.js` § *icon markers* fails if a card emits a name this sheet lacks.
+
 ## Accessibility
 
 - Icons are decorative by default — pair with visible text labels
