@@ -185,7 +185,7 @@ by name rather than repeating the fields.
 |---|---|---|
 | **rating** | `{value, max (default 5), count}` | `ratingPart()` |
 | **price** | `{current, original, currency, discountText}` — variants per type | — |
-| **geo** | `{latitude, longitude, url}` | `geoPart()` |
+| **geo** | `{latitude, longitude, url, links[]}` — `links` is the external-map row: provider ids (`google` `apple` `osm`) or `{provider, label?, url?}`, allowlisted | `geoPart()` / `mapLinks()` |
 | **address** | `{streetAddress, postalCode, addressLocality, addressRegion, addressCountry}` | `addressPart()` |
 | **openingHours** | `[{schema: "Mo-Fr 09:00-17:00", days, time, display}]` | `hoursPart()` |
 | **contacts** | `[{type: email\|phone\|url, value, label}]` | `contactLink()` |
@@ -447,7 +447,7 @@ ignores a display twin. Do not go hunting for a mapping that does not exist.
 |---|---|---|---|
 | `subtype` | select | select | SUBTYPES.location (21) |
 | `address` | object | fieldset | → address |
-| `geo` | object | geopoint | → geo; also feeds the map frame and the Open-in-Maps CTA |
+| `geo` | object | geopoint | → geo; also feeds the map frame and the external-map link row ([card.md § External map links](./card.md#external-map-links)) |
 | `openingHours` | array | repeater | → openingHours |
 | `hours` | string | text | plain-string alternative to openingHours |
 | `contact` | string | text |  |

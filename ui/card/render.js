@@ -503,10 +503,42 @@ const mapUrl = (geo) => geo?.url || (geo?.latitude != null && geo?.longitude != 
 	? `geo:${geo.latitude},${geo.longitude}`
 	: null);
 
+/* External map links — one set of coordinates, several providers. An ALLOWLIST, the same
+   discipline as SUBTYPES and OSM_LAYERS: an unknown id is dropped rather than guessed at,
+   because a provider name is not something to interpolate into a URL. Every entry is
+   unmarked — hasMap is declared once, on the frame. Docs: docs/card.md § External map links */
+const MAP_LINKS = {
+	google: { label: 'Google Maps', url: ({ lat, lon }) => `https://www.google.com/maps/search/?api=1&query=${lat},${lon}` },
+	apple: { label: 'Apple Maps', url: ({ lat, lon, name }) => `https://maps.apple.com/?ll=${lat},${lon}${name ? `&q=${encodeURIComponent(name)}` : ''}` },
+	osm: { label: 'OpenStreetMap', url: ({ lat, lon }) => `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=17/${lat}/${lon}` }
+};
+
+/* coordinates reach a URL as NUMBERS or not at all — esc() is the second layer, never the
+   first, exactly as mapCoords() does it for the embed */
+const mapLinks = (geo, name) => {
+	const entries = Array.isArray(geo?.links) ? geo.links : [];
+	if (!entries.length) return null;
+	const lat = Number(geo.latitude);
+	const lon = Number(geo.longitude);
+	const valid = Number.isFinite(lat) && Number.isFinite(lon) && Math.abs(lat) <= 90 && Math.abs(lon) <= 180;
+	return entries.map((entry) => {
+		const { provider, label, url } = typeof entry === 'string' ? { provider: entry } : (entry || {});
+		const known = MAP_LINKS[provider];
+		if (!known) return '';
+		const href = url || (valid ? known.url({ lat, lon, name }) : null);
+		if (!href) return '';
+		return `<a class="ui-button" href="${esc(href)}" target="_blank" rel="noopener">${esc(label || known.label)}</a>`;
+	}).filter(Boolean).join('');
+};
+
 /* the derived "Open in Maps" CTA. Unmarked on purpose: hasMap is declared once, on the
    map frame — docs/schema.md § One property, one value. Emitted through DETAILS_ACTIONS
    so it closes the text column AFTER the tags, like every other CTA row. */
-const mapCta = (geo) => {
+const mapCta = (geo, fields = {}) => {
+	/* details.geo.links wins: an explicit provider list is a stronger statement than the
+	   single derived CTA, and both in one row would say the same thing twice */
+	const links = mapLinks(geo, plain(fields.headline));
+	if (links) return `<nav data-part="actions">${links}</nav>`;
 	const link = mapUrl(geo);
 	return link
 		? `<nav data-part="actions"><a class="ui-button" data-variant="accent" href="${esc(link)}"${/^geo:/.test(link) ? '' : ' target="_blank" rel="noopener"'}>Open in Maps</a></nav>`
@@ -1502,7 +1534,7 @@ export const realestateSections = (d = {}, fields = {}) => {
 		frame: mapItem && geo
 			? mapFrame(mapItem, { headline: fields.headline, details: { geo, map: d.map } }, 'realestate', true)
 			: '',
-		action: mapCta(geo)
+		action: mapCta(geo, fields)
 	};
 
 	const bits = [
@@ -1623,7 +1655,7 @@ export const vacationrentalSections = (d = {}, fields = {}) => {
 			frame: mapItem && geo
 				? mapFrame(mapItem, { headline: fields.headline, details: { geo, map: d.map } }, 'vacationrental', true)
 				: '',
-			action: mapCta(geo)
+			action: mapCta(geo, fields)
 		},
 		/* one guest review each, through the shared emitter. contentReferenceTime is
 		   DROPPED: its range is DateTime and a stay is known only to the month, so the
@@ -2772,7 +2804,7 @@ const BYLINE_EARLY = new Set(['book']);
 
 /* `places` has NO card-level CTA: the map is the affordance, and each place carries its own
    (a "See More" on a slide). details.center still feeds the no-JS fallback frame. */
-const DETAILS_ACTIONS = { location: (d) => mapCta(d.geo) };
+const DETAILS_ACTIONS = { location: (d, fields) => mapCta(d.geo, fields) };
 
 /* full content column for a card (envelope + details + trailers) */
 /* `itemtype` is the bare schema.org name ACTUALLY WRITTEN on the enclosing scope —

@@ -34,7 +34,7 @@
       "geo": {
         "latitude": 55.7076,
         "longitude": 12.5993,
-        "url": "https://www.google.com/maps/search/?api=1&query=55.7076,12.5993"
+        "links": ["google", "apple"]
       },
       "openingHours": [
         {

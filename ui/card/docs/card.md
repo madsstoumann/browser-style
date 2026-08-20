@@ -347,6 +347,46 @@ const ucf = await (await fetch('data/product.json')).json();
 grid.insertAdjacentHTML('beforeend', renderCard(ucf, presets));
 ```
 
+### External map links
+
+`details.geo.links` is the row of "open this place elsewhere" buttons. One set of
+coordinates, several providers, each link built from the numbers already on the card:
+
+```json
+"geo": { "latitude": 55.7076, "longitude": 12.5993, "links": ["google", "apple"] }
+```
+
+| Provider | Opens |
+|---|---|
+| `google` | `google.com/maps/search/?api=1&query=<lat>,<lon>` |
+| `apple` | `maps.apple.com/?ll=<lat>,<lon>&q=<headline>` — the card's headline labels the pin |
+| `osm` | `openstreetmap.org/?mlat=…&mlon=…#map=17/…` |
+
+The long form overrides a label, or supplies a ready-made href for a provider the
+allowlist has no builder for:
+
+```json
+"links": [{ "provider": "google", "label": "Directions" }]
+```
+
+**It is an allowlist, not a pass-through** — an unknown provider is dropped rather than
+guessed at, the same discipline as `SUBTYPES` and `OSM_LAYERS`. A provider name is not
+something to interpolate into a URL.
+
+Three rules worth knowing:
+
+- **`links` replaces the single `Open in Maps` CTA**, it does not join it — both rows would
+  state the same thing twice. Without `links`, `geo.url` (or the `geo:` fallback) still
+  renders that one button exactly as before.
+- **Every link is unmarked.** `hasMap` is declared once, on the frame, so an action link
+  carrying it would declare the property twice —
+  [schema.md § One property, one value](./schema.md#one-property-one-value).
+- **Coordinates are validated as numbers first.** A non-finite or out-of-range value builds
+  **no link at all** rather than a broken one — `esc()` is the second layer, never the first,
+  exactly as `mapCoords()` treats the embed.
+
+Adding a provider is one entry in `MAP_LINKS` in `render.js` plus a row above.
+
 ### Schema mode
 
 `options.schema` decides whether the markup carries schema.org structured data.

@@ -2567,3 +2567,67 @@ describe('schema modes', () => {
 		}
 	});
 });
+
+/* External map links: several providers for one set of coordinates, unmarked so the card
+   still declares hasMap exactly once. Docs: docs/card.md § External map links */
+describe('map links', () => {
+	const NORDHAVN = { latitude: 55.7076, longitude: 12.5993 };
+	const card = (geo, extra = {}) => render({
+		schemaType: 'location', headline: 'Nordhavn Studio', details: { geo, ...extra }
+	});
+
+	test('with no links the single Open in Maps CTA is unchanged', () => {
+		const html = card({ ...NORDHAVN, url: 'https://example.com/m' });
+		assert.match(html, />Open in Maps</);
+	});
+
+	test('a provider id becomes a labelled link built from the coordinates', () => {
+		const html = card({ ...NORDHAVN, links: ['google'] });
+		assert.match(html, /href="https:\/\/www\.google\.com\/maps\/search\/\?api=1&amp;query=55\.7076,12\.5993"/);
+		assert.match(html, />Google Maps</);
+	});
+
+	test('several providers render in order', () => {
+		const html = card({ ...NORDHAVN, links: ['google', 'apple'] });
+		assert.ok(html.indexOf('Google Maps') < html.indexOf('Apple Maps'));
+		assert.match(html, /maps\.apple\.com/);
+	});
+
+	test('apple carries the place name so the pin is labelled', () => {
+		assert.match(card({ ...NORDHAVN, links: ['apple'] }), /&amp;q=Nordhavn%20Studio/);
+	});
+
+	test('external links open in a new tab safely', () => {
+		const html = card({ ...NORDHAVN, links: ['google'] });
+		assert.match(html, /target="_blank" rel="noopener"/);
+	});
+
+	test('a map link is never microdata — hasMap is declared once, on the frame', () => {
+		const html = card({ ...NORDHAVN, links: ['google', 'apple'] });
+		const actions = html.match(/<nav data-part="actions">[\s\S]*?<\/nav>/)[0];
+		assert.doesNotMatch(actions, /itemprop/);
+	});
+
+	test('an unknown provider is dropped, not guessed at', () => {
+		const html = card({ ...NORDHAVN, links: ['google', 'nonsense'] });
+		assert.match(html, />Google Maps</);
+		assert.doesNotMatch(html, /nonsense/);
+	});
+
+	test('the object form overrides the label and the url', () => {
+		const html = card({ ...NORDHAVN, links: [{ provider: 'google', label: 'Directions' }] });
+		assert.match(html, />Directions</);
+		const html2 = card({ ...NORDHAVN, links: [{ provider: 'google', url: 'https://example.com/x' }] });
+		assert.match(html2, /href="https:\/\/example\.com\/x"/);
+	});
+
+	test('coordinates are validated as numbers before they reach a url', () => {
+		const html = card({ latitude: '"><script>', longitude: 0, links: ['google'] });
+		assert.doesNotMatch(html, /<script>/);
+		assert.doesNotMatch(html, /google\.com\/maps/, 'a bad coordinate builds no link at all');
+	});
+
+	test('links work without an author-supplied geo.url', () => {
+		assert.match(card({ ...NORDHAVN, links: ['osm'] }), /openstreetmap\.org/);
+	});
+});
