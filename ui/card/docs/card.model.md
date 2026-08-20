@@ -199,6 +199,27 @@ stays schema-ready (`PT15M`, ISO dates, raw numbers); the `*Display` twin exists
 formatting is not derivable. An editor should treat the twin as optional and never as the
 source of truth.
 
+**The `*Display` suffix is load-bearing, not a habit.** It is the one marker that separates
+presentation from schema data inside `details`, so a structured-data serializer needs exactly
+one rule — skip any key ending `Display`. Measured over the shipped corpus, the 24 keys that
+emit no microdata at all are *precisely* the `*Display` twins. Keep the convention when adding
+a field; moving the twins into a separate object was evaluated and rejected
+([open-items.md § 34](../../../docs/plans/open-items.md)) because it would split one fact
+across two places for no gain.
+
+### Three kinds of key live in `details`
+
+| Kind | How to recognise it | Share of the corpus |
+|---|---|---|
+| **Schema-bearing** | changes the emitted microdata | 73% |
+| **Display twin** | ends in `Display`; a pre-formatted string beside a machine value | 8% |
+| **Unmapped content** | real card content with no schema.org property — `amenities`, `prerequisites`, `venue`, `capacity`, `note`, `disclaimer` | 16% |
+
+The third kind is the one that surprises people. It is **not** a gap to be fixed: those facts
+are shown to readers and simply have no property in the vocabulary that would be in domain.
+They belong in `details` as ordinary content, and a serializer ignores them the same way it
+ignores a display twin. Do not go hunting for a mapping that does not exist.
+
 ---
 
 ## Per-type `details`

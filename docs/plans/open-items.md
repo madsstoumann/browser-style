@@ -1184,3 +1184,40 @@ is a rare thing; it is the strongest argument for doing this one before the grap
 property already emitted — `rating` → `aggregateRating`, `website` → `url`, `servings` →
 `recipeYield`, `instructions` → `recipeInstructions`, `company` → `hiringOrganization`. Those
 shrink the mapping table without costing authoring ergonomics.
+
+### Moving the presentation keys out — MEASURED, then REJECTED
+
+The paragraph above proposed moving the non-schema keys into a sibling object. Measuring it
+properly killed it. Every key in a shipped instance was removed and the card re-rendered in
+both modes; a key is schema-bearing if the asserted `(itemprop, value)` pairs change:
+
+| | keys | share |
+|---|---|---|
+| schema-bearing | 215 | 73% |
+| emit no microdata at all | 70 | 24% |
+| removing them changes nothing | 9 | 3% |
+
+Two things came out of that, and both argue against the move:
+
+1. **The 70 split 24 / 46**, and only the 24 are presentation. The other 46 — `amenities`,
+   `prerequisites`, `venue`, `capacity`, `note`, `disclaimer` — are real card **content** that
+   simply has no schema.org mapping. Moving those into a `display` object would be a misnomer:
+   they are not formatting, they are facts nobody has mapped.
+2. **The 24 are all `*Display` twins, and the suffix already is the separator.** A serializer
+   needs one line — `key.endsWith('Display')` → skip. Moving them buys nothing over that rule
+   and costs real ergonomics: `duration` and `durationDisplay` would live in different objects,
+   so one fact would be edited in two places.
+
+The earlier bucket sketch was also simply wrong on names: `subtype`, `order`, `kind` and
+`format` were filed as control flags, but all four are schema-bearing — they select the
+emitted `@type` or an enumeration member.
+
+**What actually helps a serializer** is therefore already true and only needs stating: `details`
+holds schema data, `*Display` marks the pre-formatted twin of a machine value, and a key with
+no schema.org mapping stays in `details` as ordinary content. Documented in
+[card.model.md](../../ui/card/docs/card.model.md).
+
+**One real find, fixed:** `membership.planName` and `social.hashtags` were in shipped instances
+and in the model's prose, and `render.js` reads neither. Deleted; the SSR snapshot stayed
+byte-identical, which is the proof they were dead. (`social`'s hashtags duplicate the envelope
+`tags`, which is where they belong.)
