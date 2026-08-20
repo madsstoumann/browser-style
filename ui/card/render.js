@@ -528,11 +528,20 @@ const mapCoords = (geo, item = {}) => {
 
 /* bbox is (west, south, east, north); the latitude cosine keeps the box square on the
    ground rather than in degrees, which otherwise flattens it towards the poles */
-const osmEmbed = ({ lat, lon, zoom }) => {
+/* The basemap. OSM's switcher lists eight, but embed_definitions() selects on canEmbed and
+   embed.js resolves an unknown id as `layers[layerId] || layers.mapnik` — so a value off this
+   list is SILENTLY the default, never an error. That is why it is an allowlist and not a
+   pass-through, exactly like SUBTYPES. tracestracktopo and openmaptiles_osm are deliberately
+   absent: they are in the switcher and carry no canEmbed flag.
+   Docs: docs/media.md § Basemap layer */
+const OSM_LAYERS = new Set(['mapnik', 'cyclosm', 'cyclemap', 'transportmap', 'hot', 'shortbread']);
+
+const osmEmbed = ({ lat, lon, zoom }, layer) => {
 	const lonHalf = 180 / 2 ** zoom;
 	const latHalf = lonHalf * Math.cos(lat * Math.PI / 180);
 	const box = [lon - lonHalf, lat - latHalf, lon + lonHalf, lat + latHalf].map((n) => n.toFixed(6));
-	return `https://www.openstreetmap.org/export/embed.html?bbox=${box.join(',')}&layer=mapnik&marker=${lat},${lon}`;
+	const basemap = OSM_LAYERS.has(layer) ? layer : 'mapnik';
+	return `https://www.openstreetmap.org/export/embed.html?bbox=${box.join(',')}&layer=${basemap}&marker=${lat},${lon}`;
 };
 
 /* google needs an API key, apple a MapKit JWT — neither can be built from coordinates
@@ -540,7 +549,7 @@ const osmEmbed = ({ lat, lon, zoom }) => {
 const googleEmbed = ({ lat, lon, zoom }, key) =>
 	key ? `https://www.google.com/maps/embed/v1/place?key=${encodeURIComponent(key)}&q=${lat},${lon}&zoom=${zoom}` : null;
 
-const MAP_PROVIDERS = { osm: (c) => osmEmbed(c), google: (c, options) => googleEmbed(c, options.key) };
+const MAP_PROVIDERS = { osm: (c, options, item) => osmEmbed(c, item?.layer), google: (c, options) => googleEmbed(c, options.key) };
 
 /* hasMap is a Place property — emit it only where the resolved itemtype descends from
    Place. Other types still get the frame, just unmarked. Docs: docs/schema.md § Map */
@@ -550,7 +559,7 @@ const HAS_MAP_TYPES = new Set(['business', 'location']);
    scope descends from Place (the realestate mainEntity) passes it explicitly. */
 const mapFrame = (item, fields, type, hasMap = HAS_MAP_TYPES.has(type)) => {
 	const coords = mapCoords(fields.details?.geo, item);
-	const src = item.src || (coords && (MAP_PROVIDERS[item.provider]?.(coords, fields.details?.map || {}) || osmEmbed(coords)));
+	const src = item.src || (coords && (MAP_PROVIDERS[item.provider]?.(coords, fields.details?.map || {}, item) || osmEmbed(coords, item.layer)));
 	if (!src) return '';
 	const title = item.alt || `Map of ${plain(fields.headline) || 'this location'}`;
 	return `<iframe${attrs({ src, title, loading: 'lazy', itemprop: hasMap ? 'hasMap' : null })}></iframe>`;

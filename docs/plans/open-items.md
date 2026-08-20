@@ -994,7 +994,7 @@ honour at the top of the scaling range.
 
 ---
 
-## 32. Map cards cannot choose a basemap — `layer` is missing from the data model
+## 32. Map cards cannot choose a basemap — DONE 2026-08-20
 
 **Where:** `ui/card/render.js` (`osmEmbed`, `mapFrame`), `cms/baseline/models/card.schema.json`
 
@@ -1002,10 +1002,13 @@ honour at the top of the scaling range.
 return `https://www.openstreetmap.org/export/embed.html?bbox=${box.join(',')}&layer=mapnik&marker=${lat},${lon}`;
 ```
 
-The OSM embed takes a `layer=` string that picks the basemap style — Standard, CyclOSM,
-Cycle Map, Transport Map, Humanitarian, Shortbread. `osmEmbed()` hardcodes `mapnik`, so a
-**map card rendered from content is always the Standard basemap**; only hand-authored
-markup can pick another. `ui/card/demo/schema.place.html` is the eight-card reference for
+**Shipped.** A media item takes `layer`, allowlisted to the six OSM can embed
+(`OSM_LAYERS` in `render.js`); anything else renders `mapnik`, matching what the embed itself
+does with an unknown id. `tracestracktopo` and `openmaptiles_osm` stay unspellable on purpose.
+
+**No `bbox` field was needed** — it derives from `zoom`, and a test asserts all eight frames
+on `demo/schema.place.html` are reproducible from `layer` + `zoom` + `details.geo`, so the
+model has no remaining gap for that page. `ui/card/demo/schema.place.html` is the eight-card reference for
 what the other five look like, and the vocabulary table is
 [media.md § Basemap layer](../../ui/card/docs/media.md#basemap-layer--the-one-map-field-the-data-model-does-not-carry).
 

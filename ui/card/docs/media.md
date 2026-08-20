@@ -676,20 +676,18 @@ A card with coordinates can make the **map** its media, instead of a photo of th
 | `latitude` / `longitude` | `details.geo` | per-item override, for a map that must point somewhere else (a parking entrance) |
 | `alt` | `Map of {headline}` | becomes the iframe `title` — an iframe needs one |
 | `src` | — | an explicit embed URL, bypassing the builder entirely |
-| `layer` | `mapnik` | **NOT IMPLEMENTED** — the basemap style. See § Basemap layer |
+| `layer` | `mapnik` | the basemap style — allowlisted. See § Basemap layer |
 
 `itemprop="hasMap"` is gated to the `business` and `location` types, because `hasMap` is a
 `Place` property. A caller that KNOWS its enclosing scope descends from `Place` — the
 real-estate detail page's map band, which sits inside `mainEntity` → `Apartment` — passes
 `hasMap` to `mapFrame()` explicitly instead. Docs: [schema.md § Real estate](./schema.md#real-estate--realestatelisting).
 
-### Basemap layer — the one map field the data model does not carry
+### Basemap layer
 
 The OSM embed takes a **`layer=` string** that picks the basemap style: the same list the
-layer switcher on openstreetmap.org offers. `osmEmbed()` hardcodes `mapnik`, so a card
-rendered **from content cannot choose one** — only hand-authored markup can, which is what
-[`demo/schema.place.html`](../demo/schema.place.html) does. Closing that is
-[open-items.md § 32](../../../docs/plans/open-items.md).
+layer switcher on openstreetmap.org offers. Set it per media item —
+`{ "mediaType": "map", "layer": "cyclosm" }` — and it defaults to `mapnik`.
 
 | `layer=` | OSM's name | Tiles | In an embed |
 |---|---|---|---|
@@ -705,9 +703,11 @@ rendered **from content cannot choose one** — only hand-authored markup can, w
 **Two of the eight are in the switcher but not in an embed.** OpenStreetMap's
 `config/layers.yml` marks each entry `canEmbed`, `MapLayers::embed_definitions` selects on
 that flag, and `embed.js` resolves the parameter as `layers[layerId] || layers.mapnik` — so
-an unlisted value is not an error, it is silently the Standard basemap. A `layer` field
-therefore needs an **allowlist of the six**, the same discipline as `SUBTYPES`
-([schema.md § Subtypes](./schema.md#subtypes)): validate, never interpolate.
+an unlisted value is not an error, it is silently the Standard basemap. **That is why
+`OSM_LAYERS` is an allowlist, not a pass-through** — the same discipline as `SUBTYPES`
+([schema.md § Subtypes](./schema.md#subtypes)). `tracestracktopo` and `openmaptiles_osm` are
+deliberately unspellable: offering a value that quietly does nothing is worse than refusing
+it. Anything off the list renders `mapnik`.
 
 ### Zoom is a bbox, not a parameter
 
@@ -716,6 +716,11 @@ builder computes — `osmEmbed()` derives a half-span of `180 / 2 ** zoom` and s
 latitude half by `cos(latitude)`. That is why a wide subject needs a *lower* number:
 `demo/schema.place.html` frames the Colosseum at 17 (~230 m across) and Kansai's artificial
 island at 13 (~4 km).
+
+**There is no `bbox` field and there should not be.** `layer` plus `zoom` express every map
+on that page: `render.test.js` § map asserts all eight of its frames are reproducible from
+`{ mediaType: 'map', layer, zoom }` + `details.geo`, so a hand-written bbox would only be a
+second way to say the same thing — and one that could disagree with the coordinates.
 
 ### Providers — only one is keyless
 

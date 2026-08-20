@@ -1466,6 +1466,63 @@ describe('map — the frame as an embedded map', () => {
 	const place = (geo, media = MAP, extra = {}) =>
 		render({ schemaType: 'location', headline: 'Nordhavn Studio', media, details: { geo, ...extra } });
 
+	/* the layer= string picks the basemap. Six of OSM's eight switcher entries are
+	   embeddable; the other two carry no canEmbed flag and the embed silently renders
+	   Standard. Docs: docs/media.md § Basemap layer */
+	test('the basemap defaults to mapnik', () => {
+		assert.match(place({ latitude: 0, longitude: 0 }), /;layer=mapnik&amp;/);
+	});
+
+	test('an embeddable layer is written through', () => {
+		const html = place({ latitude: 0, longitude: 0 }, [{ mediaType: 'map', layer: 'cyclosm' }]);
+		assert.match(html, /;layer=cyclosm&amp;/);
+	});
+
+	test('every embeddable layer is spellable', () => {
+		for (const layer of ['mapnik', 'cyclosm', 'cyclemap', 'transportmap', 'hot', 'shortbread']) {
+			assert.match(place({ latitude: 0, longitude: 0 }, [{ mediaType: 'map', layer }]),
+				new RegExp(`;layer=${layer}&amp;`), layer);
+		}
+	});
+
+	test('a layer OSM cannot embed is refused, not passed through', () => {
+		/* tracestracktopo and openmaptiles_osm are in the switcher but carry no canEmbed
+		   flag — passing them through would ship a value that silently does nothing */
+		for (const layer of ['tracestracktopo', 'openmaptiles_osm', 'nonsense']) {
+			assert.match(place({ latitude: 0, longitude: 0 }, [{ mediaType: 'map', layer }]),
+				/;layer=mapnik&amp;/, layer);
+		}
+	});
+
+	test('a layer value never reaches the URL unescaped', () => {
+		const html = place({ latitude: 0, longitude: 0 }, [{ mediaType: 'map', layer: 'a"&onerror=x' }]);
+		assert.doesNotMatch(html, /onerror/);
+	});
+
+	test('every map on demo/schema.place.html is expressible as data', () => {
+		/* the page is hand-authored; this asserts the MODEL could produce it — layer plus
+		   the existing zoom, with the bbox derived. If it fails, the model has a gap. */
+		const page = readFileSync(new URL('./demo/schema.place.html', import.meta.url), 'utf8');
+		const frames = [...page.matchAll(/embed\.html\?bbox=([^&]+)&amp;layer=([a-z_]+)&amp;marker=([-\d.]+),([-\d.]+)/g)];
+		assert.equal(frames.length, 8, 'expected the eight layer cards');
+		for (const [, bbox, layer, lat, lon] of frames) {
+			const built = place({ latitude: +lat, longitude: +lon },
+				[{ mediaType: 'map', layer, zoom: zoomFor(+lat, +lon, bbox) }]);
+			assert.match(built, new RegExp(`bbox=${bbox.replace(/\./g, '\\.')}&amp;layer=${layer}&amp;`),
+				`${layer} at ${lat},${lon}`);
+		}
+	});
+
+	/* the zoom whose derived bbox matches the page's — proves the bbox needs no field */
+	const zoomFor = (lat, lon, bbox) => {
+		for (let z = 1; z <= 20; z++) {
+			const lonHalf = 180 / 2 ** z, latHalf = lonHalf * Math.cos(lat * Math.PI / 180);
+			const box = [lon - lonHalf, lat - latHalf, lon + lonHalf, lat + latHalf].map((n) => n.toFixed(6)).join(',');
+			if (box === bbox) return z;
+		}
+		throw new Error(`no zoom derives ${bbox}`);
+	};
+
 	test('details.geo builds the OSM bbox + marker', () => {
 		const html = place({ latitude: 55.7076, longitude: 12.5993 });
 		/* zoom 16 → lonHalf 180/2**16 = 0.002747; latHalf scaled by cos(55.7076°) */

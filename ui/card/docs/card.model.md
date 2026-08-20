@@ -852,6 +852,7 @@ extra fields.
 | `caption` | string | text | all | |
 | `provider` | select | select | map | `osm` (default) · `google`; Google needs `details.map.key` or it falls back to OSM |
 | `zoom` | number | number | map | **1–20, default 16** |
+| `layer` | select | select | map | `mapnik` (default) · `cyclosm` · `cyclemap` · `transportmap` · `hot` · `shortbread` — allowlisted; anything else renders `mapnik` |
 | `latitude` / `longitude` | number | geopoint | map | per-item override of `details.geo` |
 | `map` | string | text | places | the `map=` token string for `<ui-map>` |
 | `uploadDate` | datetime | datetime | video | |
@@ -862,10 +863,11 @@ extra fields.
 `bbox` half-span of `180 / 2 ** zoom`, latitude-corrected. A *wider* subject therefore takes a
 *lower* number. See [media.md § Zoom is a bbox](./media.md#zoom-is-a-bbox-not-a-parameter).
 
-**The basemap `layer` is missing from the model.** `osmEmbed()` hardcodes `mapnik`, so a
-map card rendered from content is always the Standard basemap. The vocabulary and the field
-design are in [media.md § Basemap layer](./media.md#basemap-layer--the-one-map-field-the-data-model-does-not-carry)
-and open item 32.
+**`layer` picks the basemap** and is allowlisted to the six OSM can actually embed — an
+unlisted value is silently Standard in the embed, so the renderer refuses it rather than
+passing it through. There is **no `bbox` field**: it is derived from `zoom`, and every map on
+`demo/schema.place.html` is reproducible from `layer` + `zoom` + `geo` alone.
+[media.md § Basemap layer](./media.md#basemap-layer).
 
 > ⚠️ **`details.center` vs `details.map`.** On a `places` card, `center` is the map's centre
 > point (a geo shape) and `map` is the *provider options* object (`{key}`). Two unrelated
