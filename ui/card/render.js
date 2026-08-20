@@ -268,6 +268,11 @@ const setImages = (images) => {
 /* demo affordance (options.typeChip): a <ui-chip data-type> naming the card's resolved
    schema.org type on each frame — top end unless other furniture already claims te */
 let TYPE_CHIP = false;
+/* provider id -> brand-mark URL for details.geo.links. A render OPTION, not content: the
+   mark is invariant per provider but its path is a property of the deployment, exactly like
+   images.cdnBase. Unset = text labels, so a consumer never gets an invented asset path.
+   Docs: docs/card.md § External map links */
+let MAP_ICONS = null;
 /* same eligibility as ui-media-srcset.js #eligible(): ROOT-relative local paths only —
    a page-relative src would transform into the wrong zone path (404, no src fallback) */
 const cdnEligible = (src) => !!(IMG && src && src.startsWith('/') && !src.startsWith('//'));
@@ -527,7 +532,21 @@ const mapLinks = (geo, name) => {
 		if (!known) return '';
 		const href = url || (valid ? known.url({ lat, lon, name }) : null);
 		if (!href) return '';
-		return `<a class="ui-button" href="${esc(href)}" target="_blank" rel="noopener">${esc(label || known.label)}</a>`;
+		const text = label || known.label;
+		const icon = MAP_ICONS?.[provider];
+		/* icon-only: the mark carries no accessible name of its own, so the link takes one */
+		/* alt="" is written out, not passed through attrs(): an empty value is skipped there,
+		   and a decorative mark MUST carry the empty alt or its filename gets announced */
+		const inner = icon
+			? `<img src="${esc(icon)}" alt="" width="40" height="40">`
+			: esc(text);
+		return `<a${attrs({
+			class: icon ? null : 'ui-button',
+			href,
+			target: '_blank',
+			rel: 'noopener',
+			'aria-label': icon ? `Open ${plain(name) || 'this location'} in ${text}` : null
+		})}>${inner}</a>`;
 	}).filter(Boolean).join('');
 };
 
@@ -3007,6 +3026,7 @@ export function renderCard(ucf, presets = {}, cards = {}, options = null) {
 	setSchemaMode(options?.schema);
 	setImages(options?.images);
 	TYPE_CHIP = !!options?.typeChip;
+	MAP_ICONS = options?.mapIcons || null;
 	return stripSchema(renderCardHtml(ucf, presets, cards));
 }
 

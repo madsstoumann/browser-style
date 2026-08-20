@@ -72,7 +72,8 @@
 		/* render.js returns an HTML string (SSR engine — all data escaped at
 		   interpolation); parse it into a fragment for the DOM append sites below */
 		const frag = (html) => document.createRange().createContextualFragment(html);
-		const renderCard = (ucf, presetMap, cardMap) => frag(renderCardHtml(ucf, presetMap, cardMap, { images, typeChip: true }));
+		const mapIcons = { google: '/assets/svg/google.maps.svg', apple: '/assets/svg/apple.maps.svg' };
+		const renderCard = (ucf, presetMap, cardMap) => frag(renderCardHtml(ucf, presetMap, cardMap, { images, typeChip: true, mapIcons }));
 
 		const main = document.querySelector('main');
 		const presets = await loadPresets('../data/card.presets.json');

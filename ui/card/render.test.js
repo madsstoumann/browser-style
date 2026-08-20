@@ -2630,4 +2630,47 @@ describe('map links', () => {
 	test('links work without an author-supplied geo.url', () => {
 		assert.match(card({ ...NORDHAVN, links: ['osm'] }), /openstreetmap\.org/);
 	});
+
+	/* the brand mark is invariant per provider but its PATH varies per deployment, so it
+	   is a render option like images.cdnBase — never per-card content */
+	const ICONS = { google: '/assets/svg/google.maps.svg', apple: '/assets/svg/apple.maps.svg' };
+	const iconCard = (geo) => renderCard(
+		{ fields: { schemaType: 'location', headline: 'Nordhavn Studio', details: { geo } } },
+		{}, {}, { mapIcons: ICONS }
+	);
+
+	test('without the option the links stay text — no asset path is invented', () => {
+		assert.match(card({ ...NORDHAVN, links: ['google'] }), />Google Maps</);
+		assert.doesNotMatch(card({ ...NORDHAVN, links: ['google'] }), /<img/);
+	});
+
+	test('with the option a link renders its mark instead of its text', () => {
+		const html = iconCard({ ...NORDHAVN, links: ['google'] });
+		assert.match(html, /<img src="\/assets\/svg\/google\.maps\.svg" alt="" width="40" height="40">/);
+		assert.doesNotMatch(html, />Google Maps</);
+	});
+
+	test('an icon link is named for assistive tech', () => {
+		const html = iconCard({ ...NORDHAVN, links: ['apple'] });
+		assert.match(html, /aria-label="Open Nordhavn Studio in Apple Maps"/);
+	});
+
+	test('a provider with no icon configured keeps its text label', () => {
+		const html = iconCard({ ...NORDHAVN, links: ['google', 'osm'] });
+		assert.match(html, /<img src="\/assets\/svg\/google\.maps\.svg"/);
+		assert.match(html, />OpenStreetMap</);
+	});
+
+	test('a custom label renames the accessible name too', () => {
+		const html = iconCard({ ...NORDHAVN, links: [{ provider: 'google', label: 'Directions' }] });
+		assert.match(html, /aria-label="Open Nordhavn Studio in Directions"/);
+	});
+
+	test('an icon path is escaped', () => {
+		const html = renderCard(
+			{ fields: { schemaType: 'location', headline: 'X', details: { geo: { ...NORDHAVN, links: ['google'] } } } },
+			{}, {}, { mapIcons: { google: '"><script>bad()</script>' } }
+		);
+		assert.doesNotMatch(html, /<script>bad/);
+	});
 });

@@ -52,6 +52,7 @@ const page = readFileSync(join(root, 'ui/card/demo/schema.html'), 'utf8');
 
 /* the same render options demo/render.html uses — srcset on, type chip on */
 const images = { cdnBase: 'https://v4.browser.style', sizes: '(min-width: 540px) min(50vw, 512px), 100vw' };
+const mapIcons = { google: '/assets/svg/google.maps.svg', apple: '/assets/svg/apple.maps.svg' };
 
 /* itemtype → the data instance that must reproduce it */
 const PAIRS = [
@@ -263,7 +264,7 @@ for (const [itemtype, file] of PAIRS) {
 	if (only && only !== itemtype) continue;
 	let d;
 	try {
-		d = diff(canon(referenceCard(itemtype)), canon(renderCard(load(file), presets, {}, { images, typeChip: true })));
+		d = diff(canon(referenceCard(itemtype)), canon(renderCard(load(file), presets, {}, { images, typeChip: true, mapIcons })));
 	} catch (error) {
 		console.log(`ERROR  ${itemtype.padEnd(22)} ${error.message}`);
 		mismatched++;

@@ -385,7 +385,28 @@ Three rules worth knowing:
   **no link at all** rather than a broken one — `esc()` is the second layer, never the first,
   exactly as `mapCoords()` treats the embed.
 
-Adding a provider is one entry in `MAP_LINKS` in `render.js` plus a row above.
+#### Brand marks
+
+By default the links are **text** — a package must not invent an asset path a consumer does
+not have. Supply the marks and they become icon buttons instead:
+
+```js
+renderCard(ucf, presets, cards, {
+  mapIcons: { google: '/assets/svg/google.maps.svg', apple: '/assets/svg/apple.maps.svg' }
+});
+```
+
+**It is a render option, not content and not a preset.** The mark is invariant per provider —
+it never varies by card, and never by look — but *where it is served from* is a property of
+the deployment. That is the same argument as `images.cdnBase`, and it sits beside it.
+
+An icon link is **named for assistive tech**: the mark carries no accessible name, so the
+anchor takes `aria-label="Open {headline} in {label}"`, and the `<img>` carries the empty
+`alt` that keeps its filename from being announced. A provider with no configured icon keeps
+its text label, so the two forms mix in one row.
+
+Adding a provider is one entry in `MAP_LINKS` in `render.js` plus a row above; adding its
+mark is one more key in `mapIcons`.
 
 ### Schema mode
 

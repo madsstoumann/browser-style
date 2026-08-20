@@ -185,7 +185,7 @@ by name rather than repeating the fields.
 |---|---|---|
 | **rating** | `{value, max (default 5), count}` | `ratingPart()` |
 | **price** | `{current, original, currency, discountText}` — variants per type | — |
-| **geo** | `{latitude, longitude, url, links[]}` — `links` is the external-map row: provider ids (`google` `apple` `osm`) or `{provider, label?, url?}`, allowlisted | `geoPart()` / `mapLinks()` |
+| **geo** | `{latitude, longitude, url, links[]}` — `links` is the external-map row: provider ids (`google` `apple` `osm`) or `{provider, label?, url?}`, allowlisted. The brand marks are **not** content: they come from the `mapIcons` render option | `geoPart()` / `mapLinks()` |
 | **address** | `{streetAddress, postalCode, addressLocality, addressRegion, addressCountry}` | `addressPart()` |
 | **openingHours** | `[{schema: "Mo-Fr 09:00-17:00", days, time, display}]` | `hoursPart()` |
 | **contacts** | `[{type: email\|phone\|url, value, label}]` | `contactLink()` |
