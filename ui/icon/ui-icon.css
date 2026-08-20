@@ -1,7 +1,7 @@
 /**
  * ui-icon
  * CSS-only icon component using pseudo-elements.
- * @version 4.0.0
+ * @version 4.1.0
  * @author Mads Stoumann
  */
 @import '../base/shapes-glyphs.css'; /* --shape-* glyph/badge catalog (opt-in, not in base's default chain) */
@@ -22,6 +22,7 @@
 
 		background: var(--ui-icon-bg);
 		border-radius: var(--ui-icon-radius);
+		corner-shape: var(--ui-icon-corner, round);
 		direction: ltr;
 		display: inline-grid;
 		font-size: var(--ui-icon-size);
@@ -48,11 +49,17 @@
 			transition: var(--ui-icon-duration) var(--ui-icon-easing);
 		}
 
-		/* variant="border" */
-		&[variant~="border"] {
-			border: var(--ui-icon-border-width, var(--ui-icon-stroke)) solid var(--ui-icon-border-color);
+		/* Plate — the box behind the glyph, shared by variant="border" and theme=.
+		   content-box so padding/border grow the box OUTWARD and leave the 1em glyph
+		   intact. Docs: readme.md § Plate */
+		&:is([variant~="border"], [theme], [data-theme]) {
 			box-sizing: content-box;
 			padding: var(--ui-icon-padding, 0.3em);
+		}
+
+		/* variant="border" — the ring, in currentColor */
+		&[variant~="border"] {
+			border: var(--ui-icon-border-width, var(--ui-icon-stroke)) solid var(--ui-icon-border-color);
 		}
 
 		/* Arrow, Check, Chevron (Common: Cross, Menu, Plus) */
@@ -175,6 +182,26 @@
 		&[stroke=md] { --ui-icon-stroke: 3px; --ui-icon-svg-stroke: 1.5; }
 		&[stroke=lg] { --ui-icon-stroke: 4px; --ui-icon-svg-stroke: 2; }
 		&[stroke=xl] { --ui-icon-stroke: 6px; --ui-icon-svg-stroke: 2.5; }
+
+		/* theme= — the shared cross-component colour axis paints the plate. Badge role
+		   (chip/sticker precedent): the ink falls back to --_theme-ink, so `theme="gray"`
+		   reads without needing the `ink` modifier. `pale`/`muted`/`light`/`dark` fall out
+		   of the resolver, `glass` from the backdrop-filter that base sets on the element,
+		   and `border` from base's universal border rule — DON'T pair that last one with
+		   variant="border", whose shorthand out-ranks it. Docs: ../base/theme.md */
+		&:is([theme], [data-theme]) {
+			--ui-icon-bg: var(--_theme-bg, transparent);
+			color: var(--_theme-c, var(--_theme-ink));
+		}
+
+		/* Corner — non sharp · rnd rounded · pll pill · crc circle (default) · sqr squircle.
+		   The plate is always a 1:1 box, so `sqr` builds on 50% (the sticker/play spelling)
+		   and `pll` is equivalent to `crc` unless --ui-icon-padding is made asymmetric. */
+		&[radius~="non"] { --ui-icon-radius: 0; }
+		&[radius~="rnd"] { --ui-icon-radius: var(--radius-md); }
+		&[radius~="pll"] { --ui-icon-radius: var(--radius-pill); }
+		&[radius~="crc"] { --ui-icon-radius: var(--radius-circle); }
+		&[radius~="sqr"] { --ui-icon-radius: var(--radius-circle); --ui-icon-corner: superellipse(var(--squircle-md)); }
 
 
 		/* Shape — glyphs (ar-tuned) + full-frame badge silhouettes (from shapes.css) */

@@ -13,6 +13,17 @@
 	<link rel="stylesheet" href="../tabs/ui-tabs.css">
 	<link rel="stylesheet" href="../tabs/tabs-demo.css">
 	<link rel="stylesheet" href="../auto-morph/auto-morph.css">
+	<style>
+		/* Demo-page only — the Google-style FAQ. A roomier plate than the 0.3em default. */
+		.google-faq {
+			--ui-accordion-summary-font-weight: 400;
+			max-inline-size: 46rem;
+		}
+		.google-faq ui-icon[theme] {
+			--ui-icon-padding: .55em;
+			--ui-icon-stroke: 1.5px;
+		}
+	</style>
 </head>
 <body>
 	<h1>UI: Accordion</h1>
@@ -1154,6 +1165,35 @@
 	<br>
 	<h2>Icon Variants</h2>
 	<p>The <code>&lt;ui-icon&gt;</code> in each <code>&lt;summary&gt;</code> animates automatically when its parent <code>&lt;details&gt;</code> opens. See the <a href="/ui/icon/">icon component</a> for the full set of state-transition icons (<code>plus-minus</code>, <code>plus-cross</code>, <code>chevron down</code>, and more).</p>
+
+	<h2>Google style &mdash; a themed icon plate</h2>
+	<p>
+		The familiar &ldquo;Google FAQ&rdquo; look is <code>variant="divided"</code> for the hairline rows plus a
+		<code>theme=</code> on the <code>&lt;ui-icon&gt;</code>, which paints a plate behind the glyph. No accordion CSS is
+		involved &mdash; see <a href="/ui/icon/#plate">Plate</a> in the icon docs. The disc is sized with
+		<code>--ui-icon-padding</code>, and swapping <code>theme="gray"</code> for any other hue (or adding
+		<code>radius="rnd"</code>) restyles it.
+	</p>
+	<ui-accordion variant="divided" class="google-faq">
+		<cq-box>
+			<details name="google-faq">
+				<summary>Hvorfor forsvinder beskeder p&aring; iPhone?<ui-icon type="chevron down" theme="gray"></ui-icon></summary>
+				<div>Beskeder kan forsvinde, hvis de er blevet slettet manuelt, hvis <em>Behold beskeder</em> st&aring;r til 30 dage eller 1 &aring;r, eller hvis enheden er gendannet fra en &aelig;ldre sikkerhedskopi.</div>
+			</details>
+			<details name="google-faq">
+				<summary>Kan man finde slettede SMS'er p&aring; en iPhone?<ui-icon type="chevron down" theme="gray"></ui-icon></summary>
+				<div>Ja &mdash; i op til 30 dage ligger de under <em>Beskeder &rsaquo; Filtre &rsaquo; Slettet for nylig</em>. Derefter er de kun tilg&aelig;ngelige via en sikkerhedskopi i iCloud eller p&aring; en computer.</div>
+			</details>
+			<details name="google-faq">
+				<summary>Kan man finde slettede SMS'er igen?<ui-icon type="chevron down" theme="gray"></ui-icon></summary>
+				<div>Hvis 30-dages vinduet er udl&oslash;bet, skal du gendanne fra en sikkerhedskopi fra f&oslash;r sletningen. Det overskriver enhedens nuv&aelig;rende indhold, s&aring; tag en frisk sikkerhedskopi f&oslash;rst.</div>
+			</details>
+			<details name="google-faq">
+				<summary>Hvad g&oslash;r jeg, hvis beskederne stadig mangler?<ui-icon type="chevron down" theme="gray"></ui-icon></summary>
+				<div>Kontroll&eacute;r at du er logget ind med det rette Apple-id, og at <em>Beskeder i iCloud</em> er sl&aring;et til p&aring; alle enheder.</div>
+			</details>
+		</cq-box>
+	</ui-accordion>
 
 
 	<!-- optional responsive-image upgrade (host-gated Cloudflare srcset) -->

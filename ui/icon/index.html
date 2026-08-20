@@ -21,6 +21,33 @@
 		.icon-grid button[data-variant="icon"] {
 			min-width: 2.5em;
 		}
+		.icon-plates {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 1.5ch;
+			margin-block: 1ch;
+		}
+		.icon-plates figure {
+			display: grid;
+			gap: .75ch;
+			justify-items: center;
+			margin: 0;
+			min-width: 8ch;
+		}
+		.icon-plates ui-icon {
+			font-size: 200%;
+			--ui-icon-padding: .45em;
+		}
+		.icon-plates figcaption {
+			color: var(--color-text-muted, GrayText);
+			font-size: smaller;
+		}
+		.icon-plates--onimage {
+			background: linear-gradient(115deg, #e8590c, #c2255c 45%, #1971c2);
+			border-radius: var(--radius-lg);
+			padding: 1.5ch;
+		}
+		.icon-plates--onimage figcaption { color: #fff; }
 	</style>
 </head>
 <body>
@@ -227,6 +254,70 @@
 		<ui-icon type="pause" variant="border"></ui-icon>
 		<ui-icon type="stop" variant="border"></ui-icon>
 	</div>
+
+	<!-- Plate: theme= -->
+	<h3 id="plate">Plate: <code>theme=</code></h3>
+	<p>
+		Adding <code>theme=</code> turns the icon into a plate &mdash; a coloured box behind the glyph &mdash; using the shared
+		<a href="/ui/base/theme.md">cross-component colour axis</a>. Pick one of the nine hues; the paired ink comes with it,
+		and both sides adapt to <code>color-scheme</code>. Size the plate with <code>--ui-icon-padding</code> (default <code>0.3em</code>).
+	</p>
+	<div class="icon-plates">
+		<figure><ui-icon type="chevron down" theme="gray"></ui-icon><figcaption>gray</figcaption></figure>
+		<figure><ui-icon type="chevron down" theme="red"></ui-icon><figcaption>red</figcaption></figure>
+		<figure><ui-icon type="chevron down" theme="orange"></ui-icon><figcaption>orange</figcaption></figure>
+		<figure><ui-icon type="chevron down" theme="green"></ui-icon><figcaption>green</figcaption></figure>
+		<figure><ui-icon type="chevron down" theme="blue"></ui-icon><figcaption>blue</figcaption></figure>
+		<figure><ui-icon type="chevron down" theme="accent"></ui-icon><figcaption>accent</figcaption></figure>
+		<figure><ui-icon type="chevron down" theme="white"></ui-icon><figcaption>white</figcaption></figure>
+		<figure><ui-icon type="chevron down" theme="slate"></ui-icon><figcaption>slate</figcaption></figure>
+		<figure><ui-icon type="chevron down" theme="black"></ui-icon><figcaption>black</figcaption></figure>
+	</div>
+
+	<p>
+		<code>white</code> is a light surface, so its plate only shows against a darker backdrop &mdash; switch the page to
+		dark mode to see it. Like every other badge in the system, <code>&lt;ui-icon&gt;</code> always applies the theme's paired
+		ink, so the <code>ink</code> modifier is a no-op here.
+	</p>
+	<p>The <code>pale</code>, <code>muted</code>, <code>border</code> and <code>glass</code> modifiers all compose:</p>
+	<div class="icon-plates">
+		<figure><ui-icon type="plus" theme="gray pale"></ui-icon><figcaption>pale</figcaption></figure>
+		<figure><ui-icon type="plus" theme="red pale"></ui-icon><figcaption>red pale</figcaption></figure>
+		<figure><ui-icon type="plus" theme="red muted"></ui-icon><figcaption>muted</figcaption></figure>
+		<figure><ui-icon type="plus" theme="blue border"></ui-icon><figcaption>border</figcaption></figure>
+		<figure><ui-icon type="plus" theme="green pale border"></ui-icon><figcaption>pale + border</figcaption></figure>
+		<figure><ui-icon type="plus" theme="black muted"></ui-icon><figcaption>black muted</figcaption></figure>
+	</div>
+
+	<p>
+		<code>glass</code> is a material rather than a colour, so it needs something behind it:
+	</p>
+	<div class="icon-plates icon-plates--onimage">
+		<figure><ui-icon type="play" theme="glass"></ui-icon><figcaption>glass</figcaption></figure>
+		<figure><ui-icon type="play" theme="blue pale glass"></ui-icon><figcaption>blue pale glass</figcaption></figure>
+		<figure><ui-icon type="play" theme="glass border"></ui-icon><figcaption>glass border</figcaption></figure>
+	</div>
+
+	<!-- Corners: radius= -->
+	<h3 id="corners">Corners: <code>radius=</code></h3>
+	<p>
+		The plate's shape follows the same five-word corner vocabulary as <code>&lt;ui-chip&gt;</code> and <code>&lt;ui-sticker&gt;</code>.
+		Because the plate is always a 1:1 box, <code>pll</code> and <code>crc</code> look identical unless you make
+		<code>--ui-icon-padding</code> asymmetric.
+	</p>
+	<div class="icon-plates">
+		<figure><ui-icon type="check" theme="gray" radius="non"></ui-icon><figcaption>sharp</figcaption></figure>
+		<figure><ui-icon type="check" theme="gray" radius="rnd"></ui-icon><figcaption>rounded</figcaption></figure>
+		<figure><ui-icon type="check" theme="gray" radius="pll"></ui-icon><figcaption>pill</figcaption></figure>
+		<figure><ui-icon type="check" theme="gray" radius="crc"></ui-icon><figcaption>circle (default)</figcaption></figure>
+		<figure><ui-icon type="check" theme="gray" radius="sqr"></ui-icon><figcaption>squircle</figcaption></figure>
+	</div>
+	<p>
+		<strong>Note:</strong> the <code>[open]</code> state rotates the whole icon, plate included. That is invisible at
+		90&deg;/180&deg; (<code>chevron</code>, <code>arrow</code>, <code>plus-minus</code>), but a non-circular plate will
+		visibly turn on <code>cross</code>, the diagonal arrows, and on open for <code>kebab</code>, <code>meatball</code>,
+		<code>plus-cross</code> and <code>grid</code>. Keep the default <code>crc</code> for those.
+	</p>
 
 	<!-- Opposite color-scheme -->
 	<h3>Opposite color-scheme</h3>
