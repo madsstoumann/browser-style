@@ -13,6 +13,13 @@
 	<link rel="stylesheet" href="../tabs/ui-tabs.css">
 	<link rel="stylesheet" href="../tabs/tabs-demo.css">
 	<link rel="stylesheet" href="../auto-morph/auto-morph.css">
+	<style>
+		/* Demo-page only — the Google-style FAQ. A roomier plate than the 0.3em default. */
+		.icon-theme ui-icon[theme] {
+			--ui-icon-padding: .55em;
+			--ui-icon-stroke: 1.5px;
+		}
+	</style>
 </head>
 <body>
 	<h1>UI: Accordion</h1>
@@ -1154,6 +1161,33 @@
 	<br>
 	<h2>Icon Variants</h2>
 	<p>The <code>&lt;ui-icon&gt;</code> in each <code>&lt;summary&gt;</code> animates automatically when its parent <code>&lt;details&gt;</code> opens. See the <a href="/ui/icon/">icon component</a> for the full set of state-transition icons (<code>plus-minus</code>, <code>plus-cross</code>, <code>chevron down</code>, and more).</p>
+
+	<h2>With themed icon plate</h2>
+	<p>
+		Using <code>theme=</code> on the <code>&lt;ui-icon&gt;</code>, which paints a plate behind the glyph.  &mdash; see <a href="/ui/icon/#plate">Plate</a> in the icon docs. The disc is sized with
+		<code>--ui-icon-padding</code>, and swapping <code>theme="gray"</code> for any other hue (or adding
+		<code>radius="rnd"</code>) restyles it.
+	</p>
+	<ui-accordion variant="divided" class="icon-theme">
+		<cq-box>
+			<details name="icon-theme">
+				<summary>Why do messages disappear on iPhone?<ui-icon type="chevron down" theme="gray"></ui-icon></summary>
+				<div>Messages can disappear if they were deleted manually, if <em>Keep Messages</em> is set to 30 days or 1 year, or if the device was restored from an older backup.</div>
+			</details>
+			<details name="icon-theme">
+				<summary>Can you find deleted texts on an iPhone?<ui-icon type="chevron down" theme="gray"></ui-icon></summary>
+				<div>Yes &mdash; for up to 30 days they sit under <em>Messages &rsaquo; Filters &rsaquo; Recently Deleted</em>. After that they are only available from a backup in iCloud or on a computer.</div>
+			</details>
+			<details name="icon-theme">
+				<summary>Can deleted texts be recovered later?<ui-icon type="chevron down" theme="gray"></ui-icon></summary>
+				<div>If the 30-day window has expired, you have to restore from a backup made before the deletion. That overwrites the device&rsquo;s current contents, so take a fresh backup first.</div>
+			</details>
+			<details name="icon-theme">
+				<summary>What if the messages are still missing?<ui-icon type="chevron down" theme="gray"></ui-icon></summary>
+				<div>Check that you are signed in with the right Apple ID, and that <em>Messages in iCloud</em> is turned on across all devices.</div>
+			</details>
+		</cq-box>
+	</ui-accordion>
 
 
 	<!-- optional responsive-image upgrade (host-gated Cloudflare srcset) -->

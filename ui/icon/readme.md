@@ -10,6 +10,8 @@ A CSS-first icon component built entirely with pseudo-elements and CSS transform
 - Configurable stroke width and size via attributes
 - SVG support — wrap any SVG inside `<ui-icon>` for consistent sizing and stroke
 - `rounded` attribute for soft line caps on dot-based icons
+- Themeable **plate** behind the glyph via `theme=` — nine hues plus `pale`/`muted`/`border`/`glass`
+- Plate shape via `radius=` — sharp, rounded, pill, circle or squircle
 - Works inline with text, buttons, and flex layouts
 - Light/dark mode compatible (inherits `currentColor`)
 - Works without JavaScript (CSS-only mode)
@@ -264,6 +266,8 @@ Use the CSS-only approach — no client JavaScript needed:
 | `size` | string | Size preset: `xs`, `sm`, `md`, `lg`, `xl`, `2xl` |
 | `stroke` | string | Stroke weight: `xs`, `sm`, `md`, `lg`, `xl` |
 | `variant` | string | `border` draws a ring/badge around the glyph (e.g. a circled `+`) |
+| `theme` | string | Paints a **plate** behind the glyph using the shared color axis — one hue (`red orange green blue accent white gray slate black`) plus any modifiers (`pale muted border glass light dark`). See [Plate](#plate-theme) |
+| `radius` | string | Plate shape: `non` sharp, `rnd` rounded, `pll` pill, `crc` circle (default), `sqr` squircle |
 | `rounded` | boolean | Rounded line caps on dot-based icons (kebab, grid, etc.) |
 | `state` | string | Explicit open animation: `flip`, `flip-x`, `flip-y` |
 | `open` | boolean | Manually trigger the open/animated state |
@@ -288,9 +292,19 @@ Use the CSS-only approach — no client JavaScript needed:
 ui-icon {
   --ui-icon-stroke: 0.1em;
   --ui-icon-size: 150%;
-  --ui-icon-bg: light-dark(hsl(0, 0%, 90%), hsl(0, 0%, 30%));
-  --ui-icon-padding: 0.25em;
-  --ui-icon-radius: 5%;
+}
+```
+
+`--ui-icon-bg`, `--ui-icon-padding`, `--ui-icon-radius` and `--ui-icon-corner` describe the
+**plate** — the box behind the glyph. The plate only takes up space when it is switched on,
+by `theme=` or `variant="border"`; without one of those the icon is exactly `1em` and the
+padding has nothing to grow. To hand-roll a plate without the theme axis, pair the tokens
+with `variant="border"` and a transparent border, or just set `theme=` and override:
+
+```css
+ui-icon[theme] {
+  --ui-icon-padding: 0.55em;   /* a roomier disc */
+  --ui-icon-radius: var(--radius-md);
 }
 ```
 
@@ -313,6 +327,81 @@ The solid `clip-path` icons (`play`, `pause`, `stop`, `triangle`, `play-pause`) 
 ```
 
 It resizes the glyph's box rather than scaling it with a transform, so the shape stays crisp at any value (a `scale` would rasterize then resample and blur).
+
+### Plate (`theme=`)
+
+Adding `theme=` paints a **plate** behind the glyph — a filled disc, the "Google style" look:
+
+```html
+<ui-icon type="chevron down" theme="gray"></ui-icon>
+<ui-icon type="plus"         theme="accent"></ui-icon>
+<ui-icon type="check"        theme="green pale"></ui-icon>
+```
+
+`theme=` is the shared cross-component color axis, the same one `<ui-card>`, `<ui-chip>` and
+`<lay-out>` use — see [theme.md](../base/theme.md) for the full vocabulary. Pick **one hue**:
+
+`red` · `orange` · `green` · `blue` · `accent` · `white` · `gray` · `slate` · `black`
+
+and add any **modifiers**:
+
+| Modifier | Effect on the plate |
+|---|---|
+| `pale` | Tinted fill, hue-as-ink glyph |
+| `muted` | Fill and glyph faded 50% |
+| `border` | Transparent fill, hue-colored ring, hue-colored glyph |
+| `glass` | Translucent fill plus a backdrop blur — needs something behind it |
+| `light` / `dark` | Pins `color-scheme` for the plate |
+
+Every bundle is a `light-dark()` pair, so a `theme="gray"` disc is `hsl(0 0% 93%)` on a light
+page and `hsl(0 0% 84%)` on a dark one, with the paired ink following. Use `data-theme=` instead
+of `theme=` if you need the markup to validate as a plain attribute.
+
+**Sizing.** The plate is the glyph's `1em` box grown outward by `--ui-icon-padding` (default
+`0.3em`, via `box-sizing: content-box` — so the glyph never shrinks). Raise it for a roomier
+disc:
+
+```css
+ui-accordion ui-icon[theme] { --ui-icon-padding: .55em; }
+```
+
+**Ink.** Like every other badge in the system (`<ui-chip>`, `<ui-sticker>`), `<ui-icon>` always
+applies the theme's paired ink — so the `ink` modifier is a no-op here, and `theme="red"` is
+already a white glyph on red.
+
+**`white` needs a backdrop.** `white` is a light surface in both schemes, so its plate is
+invisible on a white page. That is the axis behaving as documented, not a bug.
+
+**Don't combine `theme="… border"` with `variant="border"`.** Both draw a ring, and the
+`variant` shorthand out-ranks the theme's border width. Pick one: `variant="border"` for a
+`currentColor` ring, `theme="blue border"` for a hue-colored one.
+
+### Corners (`radius=`)
+
+The plate's shape follows the same five-word vocabulary as `<ui-chip>` and `<ui-sticker>`:
+
+| Value | Shape |
+|---|---|
+| `non` | Sharp — no radius |
+| `rnd` | Rounded (`--radius-md`) |
+| `pll` | Pill |
+| `crc` | Circle — **the default** |
+| `sqr` | Squircle (`corner-shape: superellipse()`) |
+
+```html
+<ui-icon type="check" theme="gray" radius="rnd"></ui-icon>
+<ui-icon type="check" theme="gray" radius="sqr"></ui-icon>
+```
+
+Because the plate is always a 1:1 box, `pll` and `crc` render identically unless you make
+`--ui-icon-padding` asymmetric. `sqr` needs `corner-shape` (Chrome 135+) and degrades to a
+plain circle elsewhere.
+
+> **The plate rotates with the glyph.** The `[open]` state and the directional `type=` words
+> rotate the whole element. At 90°/180° that is invisible on a square plate, so `chevron`,
+> `arrow` and `plus-minus` are safe with any `radius=`. It *is* visible at 45°/135° — `cross`,
+> the diagonal arrows (`upleft`/`upright`/`downleft`/`downright`), and on `[open]` for `kebab`,
+> `meatball`, `plus-cross` and `grid`. Keep the default `crc` for those.
 
 ### Direction (RTL)
 
@@ -340,8 +429,9 @@ Horizontally-directional icons mirror automatically under `[dir="rtl"]` so they 
 | `--ui-icon-glyph-size` | `1em` | Inner glyph box size for the solid `clip-path` icons (`play`, `pause`, `stop`, `triangle`, `play-pause`). Shrink (e.g. `.8em`) to give the glyph breathing room inside `variant="border"` without resizing the ring |
 | `--ui-icon-duration` | `var(--duration-slow, .3s)` | Transition duration |
 | `--ui-icon-easing` | `var(--ease-default, cubic-bezier(0.4, 0, 0.2, 1))` | Transition easing |
-| `--ui-icon-padding` | `0.3em` (under `variant="border"`) | Ring inner padding |
-| `--ui-icon-radius` | `var(--radius-circle, 50%)` | Ring/shape radius — circle by default |
+| `--ui-icon-padding` | `0.3em` (under `variant="border"` or `theme=`) | Plate inner padding — grows the box outward, leaving the `1em` glyph intact |
+| `--ui-icon-radius` | `var(--radius-circle, 50%)` | Plate radius — circle by default; set by `radius=` |
+| `--ui-icon-corner` | `round` | Plate `corner-shape` — set to `superellipse()` by `radius="sqr"` |
 | `--ui-icon-size` | `100%` | Icon size (relative to parent font-size) |
 | `--ui-icon-stroke` | `var(--border-width-thick, 2px)` | Stroke / line thickness |
 | `--ui-icon-svg-stroke` | `1.25` | `stroke-width` for SVG children (set by `stroke=*`) |
