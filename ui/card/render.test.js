@@ -1944,6 +1944,12 @@ describe('icon markers', () => {
 		assert.ok(seen.size > 0, 'expected the corpus to exercise at least one icon marker');
 	});
 
+	test('icons.data.js mirrors the manifest exactly, in order', () => {
+		const js = readFileSync(new URL('../icon/icons.data.js', import.meta.url), 'utf8');
+		const mirrored = [...js.matchAll(/'([a-z0-9-]+)'/g)].map((m) => m[1]);
+		assert.deepStrictEqual(mirrored, [...icons], 'run `cd ui/icon && npm run build:icons`');
+	});
+
 	test('the generated sheet defines every icon in the manifest', () => {
 		const css = readFileSync(new URL('../icon/icon-font.css', import.meta.url), 'utf8');
 		for (const name of icons) {

@@ -12,6 +12,7 @@ HERE = pathlib.Path(__file__).parent
 CACHE = HERE / '.cache'
 CFG = json.loads((HERE / 'icons.json').read_text())
 OUT_CSS = HERE / 'icon-font.css'
+OUT_JS = HERE / 'icons.data.js'
 FAMILY = 'ui-icons'
 
 
@@ -92,6 +93,13 @@ def main():
         shifted += 1
     print(f'  baseline shift {CFG["baselineShiftEm"]}em = {dy} units on {shifted} glyphs')
 
+    # fontTools rewrites head.modified to "now" on save() while recalcTimestamp is on (its
+    # default), which lands inside the compressed stream and makes every rebuild a
+    # byte-different committed artifact. Pin the stamp AND turn the recalc off — either
+    # alone is not enough. Docs: readme.md § Icon font
+    font.recalcTimestamp = False
+    font['head'].modified = font['head'].created = 3155673600
+
     font.flavor = 'woff2'
     woff2 = HERE / '.cache' / 'subset.woff2'
     font.save(woff2)
@@ -127,6 +135,18 @@ def main():
 """
     OUT_CSS.write_text(css)
     print(f'\n  -> {OUT_CSS.relative_to(HERE.parent.parent)} ({len(css):,} B)')
+
+    # ── ES-module mirror of the vocabulary, for editors and other JS consumers
+    kebab = [n.replace('_', '-') for n in wanted]
+    js = ('/* GENERATED from icons.json by icons.build.py — do not edit.\n'
+          ' * ES-module mirror of the icon vocabulary in its data-icon (kebab-case) spelling,\n'
+          ' * so an editor can import it without JSON import attributes.\n'
+          ' * Docs: readme.md § Icon font */\n'
+          'export const ICON_NAMES = [\n'
+          + ''.join(f"\t'{n}',\n" for n in kebab)
+          + '];\n')
+    OUT_JS.write_text(js)
+    print(f'  -> {OUT_JS.relative_to(HERE.parent.parent)} ({len(js):,} B, {len(kebab)} names)')
 
 
 if __name__ == '__main__':

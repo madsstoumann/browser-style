@@ -1,3 +1,22 @@
+import { ICON_NAMES } from '@browser.style/icon/icons.data.js';
+
+/* A list row the renderer accepts as `{text, icon}` — the icon names a glyph in
+   @browser.style/icon and becomes the row's ::marker. The vocabulary is GENERATED from
+   icons.json, so the dropdown can never drift from the shipped font subset. Rows that do
+   not differ in kind (features, qualifications, outcomes) stay plain strings and take a
+   list-level ✓/✗ mark instead — see ui/card/docs/content.md § Icon markers. */
+const iconRow = (placeholder, itemTitle = 'Item') => ({
+	type: 'array',
+	itemTitle,
+	items: {
+		type: 'object',
+		properties: {
+			text: { type: 'string', title: 'Text', placeholder },
+			icon: { type: 'string', title: 'Icon', enum: ICON_NAMES }
+		}
+	}
+});
+
 export const cardTypes = [
 	'achievement', 'announcement', 'article', 'booking', 'business',
 	'comparison', 'contact', 'course', 'event', 'faq', 'gallery',
@@ -85,7 +104,7 @@ export const schemas = {
 							currency: { type: 'string', title: 'Currency', placeholder: 'USD' }
 						}
 					},
-					amenities: { type: 'array', title: 'Amenities', itemTitle: 'Amenity', items: { type: 'string', placeholder: 'Projector' } },
+					amenities: { ...iconRow('Projector', 'Amenity'), title: 'Amenities' },
 					cancellationPolicy: { type: 'string', title: 'Cancellation Policy', placeholder: 'Free cancellation up to 24 hours before' }
 				}
 			}
@@ -320,7 +339,7 @@ export const schemas = {
 							addressCountry: { type: 'string', title: 'Country', placeholder: 'US' }
 						}
 					},
-					amenities: { type: 'array', title: 'Amenities', itemTitle: 'Amenity', items: { type: 'string', placeholder: 'Visitor Center' } }
+					amenities: { ...iconRow('Visitor Center', 'Amenity'), title: 'Amenities' }
 				}
 			}
 		}

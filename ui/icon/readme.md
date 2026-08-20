@@ -493,6 +493,32 @@ The source font and codepoint table are cached in `.cache/` (gitignored) after t
 Names are Material's own, written **kebab-case** in markup (`square_foot` → `square-foot`).
 `ui/card/render.test.js` § *icon markers* fails if a card emits a name this sheet lacks.
 
+**The build is deterministic — a no-op rebuild is a no-op diff.** fontTools rewrites
+`head.modified` to the current time on `save()` while `recalcTimestamp` is on (its default),
+and that stamp sits inside the compressed stream, so every run used to produce a
+byte-different committed `icon-font.css`. The build pins the stamp *and* turns the recalc
+off; either alone is not enough. Run it twice and `git status` stays clean.
+
+### The vocabulary as a dropdown
+
+Two artifacts are generated from `icons.json`, and both are committed:
+
+| File | For |
+|---|---|
+| `icon-font.css` | the browser — `@font-face`, the `--icon-*` customs, the `[data-icon]` mappings |
+| `icons.data.js` | JS consumers — `export const ICON_NAMES`, kebab-case, in manifest order |
+
+`icons.data.js` exists for the same reason `ui/card/data/tokens.data.js` does: an ES module
+imports without JSON import attributes. It is what turns the icon field in a CMS into a
+`<select>` rather than free text — a typo'd name is **silently inert** in the browser (the row
+falls back to a normal bullet), so a closed list at authoring time is the only place to catch
+it. `cms/editors/card` imports it and builds the enum from it, so the dropdown cannot drift
+from the shipped subset; `render.test.js` asserts the mirror matches the manifest.
+
+```js
+import { ICON_NAMES } from '@browser.style/icon/icons.data.js';
+```
+
 ## Accessibility
 
 - Icons are decorative by default — pair with visible text labels
