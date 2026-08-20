@@ -453,11 +453,55 @@ mark lands in the body font.
 `data-part="links"` takes the ✓ glyph as its **default** marker (same fallback), on the same
 reasoning — override per card with `--ui-content-links-marker`.
 
-Ink: `--ui-content-list-checked-mark` (defaults to `--color-success`),
-`--ui-content-list-crossed-mark` (`--color-error`), `--ui-content-links-mark`
-(`currentColor`). The gap is the shared `--ui-content-list-icon-gap`.
-
 In `render.js`, `listPart(items, { checked: true })` / `{ crossed: true }` emit the variant.
+
+##### Mark colour — global semantic tokens, and where they run out
+
+The green ✓ and red ✗ are **not** demo-page styling. They come from the global semantic
+tokens in `ui/base/tokens.css`, through two per-part knobs:
+
+| Knob | Default | Resolves to |
+|---|---|---|
+| `--ui-content-list-checked-mark` | `--color-success` | `light-dark(hsl(136 45% 30%), hsl(136 21% 51%))` |
+| `--ui-content-list-crossed-mark` | `--color-error` | `light-dark(hsl(360 65% 41%), hsl(360 40% 56%))` |
+| `--ui-content-links-mark` | `currentColor` | the row's own ink |
+
+`--color-success` / `--color-error` are the same tokens that produce `theme="green"` and
+`theme="red"` — one palette, used for both a surface and a mark.
+
+**They are page tokens, not theme tokens, and that is the sharp edge.** `theme=` swaps the
+card's surface; the semantic colours do not follow it. Measured on the membership card,
+`::marker` against the surface behind it (Chrome 150):
+
+| Context | ✓ checked | ✗ crossed |
+|---|---|---|
+| light, card surface | 5.22:1 | 5.85:1 |
+| dark (`prefers-color-scheme`) | 4.62:1 | 3.54:1 |
+| `theme="black"` | 2.40:1 | 2.14:1 |
+| `theme="green"` | **1.00:1 — invisible** | 1.12:1 |
+
+Only the light row clears 4.5:1 on both marks. Dark mode passes on ✓ and lands at 3.54:1 on
+✗ — above the 3:1 UI-boundary floor, below the body-text one. Under `theme=` both fail, and
+`theme="green"` puts the success green on a success-green surface.
+
+This matters because the mark is the **only** carrier of the included/excluded distinction —
+the row text does not say "included", so an invisible mark is lost meaning, not lost
+decoration.
+
+Until the marks are theme-aware, a themed card must set them itself:
+
+```css
+ui-card[theme] {
+  --ui-content-list-checked-mark: currentColor;
+  --ui-content-list-crossed-mark: currentColor;
+}
+```
+
+`contrast-color()` is in both baseline engines and is the obvious systematic fix; it is not
+wired up here yet. Tracked in `docs/plans/open-items.md`.
+
+The gap between mark and text is the shared `--ui-content-list-icon-gap` (`0.4em`,
+`letter-spacing` on the marker).
 
 ### Structured parts — microdata scope + who uses them
 
