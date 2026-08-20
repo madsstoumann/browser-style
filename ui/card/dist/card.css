@@ -1897,8 +1897,16 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
         grid-column: 1 / -1;
       }
     }
+    & [data-part=list]:is([data-variant=checked], [data-variant=crossed]) li::marker {
+      font-family: var(--ui-icon-font);
+      letter-spacing: var(--ui-content-list-icon-gap, 0.4em);
+    }
+    & [data-part=list][data-variant=checked] {
+      --ui-content-list-marker: var(--icon-check, "\2713");
+      --ui-content-list-marker-ink: var(--ui-content-list-checked-mark, var(--color-success, currentColor));
+    }
     & [data-part=list][data-variant=crossed] {
-      --ui-content-list-marker: "\2717   ";
+      --ui-content-list-marker: var(--icon-close, "\2717");
       --ui-content-list-marker-ink: var(--ui-content-list-crossed-mark, var(--color-error, currentColor));
       & li {
         color: var(--ui-content-list-crossed-ink, var(--ui-content-muted));
@@ -1907,7 +1915,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     & [data-part=links] {
       font-size: var(--ui-content-links-fs, var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))));
       list-style-position: inside;
-      list-style-type: var(--ui-content-links-marker, disc);
+      list-style-type: var(--ui-content-links-marker, var(--icon-check, "\2713"));
       margin: 0;
       padding: 0;
       & li {
@@ -1917,6 +1925,8 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
         }
         &::marker {
           color: var(--ui-content-links-mark, currentColor);
+          font-family: var(--ui-icon-font);
+          letter-spacing: var(--ui-content-list-icon-gap, 0.4em);
         }
       }
       & a {

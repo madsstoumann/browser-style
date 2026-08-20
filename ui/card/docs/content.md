@@ -361,7 +361,7 @@ Content parts are **semantic children** marked with `data-part`. They are auto-s
 | `footer` | `<footer data-part="footer">` | Trailing muted meta row — flex-wrap |
 | `price` | `<p data-part="price">` | **Body group** (prominent) — large current price; `<del>` struck original, `<small>` accent note; a discount rides an inline `<ui-chip>` |
 | `stat` | `<p data-part="stat">` | **Body group** (prominent) — big `<data>` number + `<small>` unit; muted trend |
-| `list` | `<ul>`/`<ol data-part="list">` | **Body group** — feature / step list; flex column. Two `data-variant`s: `crossed` (excluded items, ✗ marker) and `menu` (priced rows — see below) |
+| `list` | `<ul>`/`<ol data-part="list">` | **Body group** — feature / step list; flex column. Three `data-variant`s: `checked` (included items, ✓ marker), `crossed` (excluded items, ✗ marker) and `menu` (priced rows — see below) |
 | `address` | `<address data-part="address">` | **Body group** — postal block, no avatar (distinct from byline) |
 | `timeline` | `<ol data-part="timeline">` | **Body group** — dated entries; muted `<time>` |
 | `quote` | `<ui-quote data-part="quote">` wrapping `<blockquote>` | **Body group** — indented; composes with `@browser.style/quote` via `variant` |
@@ -430,6 +430,34 @@ catalog. The glyphs are **baseline-shifted at build time** (`baselineShiftEm` in
 `icons.json`) because Material Symbols centre their icon box at `+0.5em` above the baseline
 while text centres near `+0.33em` — and `::marker` has no lever to correct it. See
 [`ui/icon/readme.md` § Icon font](../../icon/readme.md).
+
+#### Checked and crossed lists — one mark for the whole list
+
+Where the rows do **not** differ in kind — a feature list, a set of excluded items, related
+links — the mark belongs to the list, not to each row, and `data-icon` is the wrong tool.
+Two list-level variants carry it:
+
+```html
+<ul data-part="list" data-variant="checked">…</ul>   <!-- included -->
+<ul data-part="list" data-variant="crossed">…</ul>   <!-- excluded, muted rows -->
+```
+
+Both marks are icon-font glyphs — `--icon-check` and `--icon-close` — set on
+`--ui-content-list-marker`, so they sit in the same catalog and at the same optical weight as
+the per-row `data-icon` glyphs above. Each falls back to a **text** ✓/✗ when
+`icon-font.css` is not linked: the `--icon-*` customs are then undefined and the `var()`
+fallback fires, unlike the typed-`attr()` case in `docs/v4.md` where the property holds
+literal text and no fallback ever fires. `font-family` degrades the same way, so the text
+mark lands in the body font.
+
+`data-part="links"` takes the ✓ glyph as its **default** marker (same fallback), on the same
+reasoning — override per card with `--ui-content-links-marker`.
+
+Ink: `--ui-content-list-checked-mark` (defaults to `--color-success`),
+`--ui-content-list-crossed-mark` (`--color-error`), `--ui-content-links-mark`
+(`currentColor`). The gap is the shared `--ui-content-list-icon-gap`.
+
+In `render.js`, `listPart(items, { checked: true })` / `{ crossed: true }` emit the variant.
 
 ### Structured parts — microdata scope + who uses them
 

@@ -723,15 +723,17 @@ const addressPart = (address, prop = 'address') => {
 	return `<address data-part="address"${scope(prop, 'PostalAddress')}>${lines}${country.length > 2 ? '' : meta('addressCountry', country)}</address>`;
 };
 
-/* an item is a plain string, or { text, icon, href, itemprop } where `icon` names a
+/* `crossed`/`checked` mark the whole list (excluded vs included items) — one repeated
+   ::marker glyph, NOT a per-row data-icon: the rows do not differ in kind.
+   an item is a plain string, or { text, icon, href, itemprop } where `icon` names a
    glyph in @browser.style/icon/icons.json — it rides data-icon and becomes the ::marker.
    An unknown name is inert (the list falls back to its normal marker). `href` makes the
    row a link; the marker keeps the row's body colour while the link takes link colour,
    which is what lets a contact row sit in the same list as plain ones. There is NO raw
    markup escape hatch here — every part is escaped. */
-const listPart = (items, { ordered = false, itemprop = null, crossed = false } = {}) =>
+const listPart = (items, { ordered = false, itemprop = null, crossed = false, checked = false } = {}) =>
 	items?.length
-		? `<${ordered ? 'ol' : 'ul'} data-part="list"${crossed ? ' data-variant="crossed"' : ''}${itemprop ? ` itemprop="${esc(itemprop)}"` : ''}>${items.map((item) => {
+		? `<${ordered ? 'ol' : 'ul'} data-part="list"${crossed ? ' data-variant="crossed"' : checked ? ' data-variant="checked"' : ''}${itemprop ? ` itemprop="${esc(itemprop)}"` : ''}>${items.map((item) => {
 			const { text, icon, href, itemprop: rowProp } = typeof item === 'object' && item !== null ? item : { text: item };
 			const body = href
 				? `<a${rowProp ? ` itemprop="${esc(rowProp)}"` : ''} href="${esc(href)}">${esc(text)}</a>`
@@ -2217,7 +2219,7 @@ const DETAILS = {
 		if (d.price) {
 			html += `<p data-part="price"${scope('priceSpecification', 'PriceSpecification')}>${meta('priceCurrency', d.price.currency)}${priceValue(d.price.currency, d.price.monthly)}/mo ${d.price.yearly ? `<small>or ${fmtPrice(d.price.currency, d.price.yearly)}/yr${d.price.savings ? ` — ${esc(d.price.savings)}` : ''}</small>` : ''}</p>`;
 		}
-		html += listPart(d.features, { itemprop: 'includesObject' });
+		html += listPart(d.features, { itemprop: 'includesObject', checked: true });
 		html += listPart(d.limitations, { crossed: true });
 		if (d.trialText) html += `<p data-part="meta">${esc(d.trialText)}</p>`;
 		return html;

@@ -8921,6 +8921,7 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
     --_cosh: calc(1em * cos(45deg));
     background: var(--ui-icon-bg);
     border-radius: var(--ui-icon-radius);
+    corner-shape: var(--ui-icon-corner, round);
     direction: ltr;
     display: inline-grid;
     font-size: var(--ui-icon-size);
@@ -8942,10 +8943,12 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
       display: block;
       transition: var(--ui-icon-duration) var(--ui-icon-easing);
     }
-    &[variant~=border] {
-      border: var(--ui-icon-border-width, var(--ui-icon-stroke)) solid var(--ui-icon-border-color);
+    &:is([variant~=border], [theme], [data-theme]) {
       box-sizing: content-box;
       padding: var(--ui-icon-padding, 0.3em);
+    }
+    &[variant~=border] {
+      border: var(--ui-icon-border-width, var(--ui-icon-stroke)) solid var(--ui-icon-border-color);
     }
     &:is([type*=arrow], [type=check], [type*=chevron])::after {
       border-color: currentColor;
@@ -9127,6 +9130,26 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
     &[stroke=xl] {
       --ui-icon-stroke: 6px;
       --ui-icon-svg-stroke: 2.5;
+    }
+    &:is([theme], [data-theme]) {
+      --ui-icon-bg: var(--_theme-bg, transparent);
+      color: var(--_theme-c, var(--_theme-ink));
+    }
+    &[radius~=non] {
+      --ui-icon-radius: 0;
+    }
+    &[radius~=rnd] {
+      --ui-icon-radius: var(--radius-md);
+    }
+    &[radius~=pll] {
+      --ui-icon-radius: var(--radius-pill);
+    }
+    &[radius~=crc] {
+      --ui-icon-radius: var(--radius-circle);
+    }
+    &[radius~=sqr] {
+      --ui-icon-radius: var(--radius-circle);
+      --ui-icon-corner: superellipse(var(--squircle-md));
     }
     &[shape=bookmark] {
       --_shape: var(--ui-icon-shape-bookmark);
@@ -12588,8 +12611,16 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
         grid-column: 1 / -1;
       }
     }
+    & [data-part=list]:is([data-variant=checked], [data-variant=crossed]) li::marker {
+      font-family: var(--ui-icon-font);
+      letter-spacing: var(--ui-content-list-icon-gap, 0.4em);
+    }
+    & [data-part=list][data-variant=checked] {
+      --ui-content-list-marker: var(--icon-check, "\2713");
+      --ui-content-list-marker-ink: var(--ui-content-list-checked-mark, var(--color-success, currentColor));
+    }
     & [data-part=list][data-variant=crossed] {
-      --ui-content-list-marker: "\2717   ";
+      --ui-content-list-marker: var(--icon-close, "\2717");
       --ui-content-list-marker-ink: var(--ui-content-list-crossed-mark, var(--color-error, currentColor));
       & li {
         color: var(--ui-content-list-crossed-ink, var(--ui-content-muted));
@@ -12598,7 +12629,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     & [data-part=links] {
       font-size: var(--ui-content-links-fs, var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))));
       list-style-position: inside;
-      list-style-type: var(--ui-content-links-marker, disc);
+      list-style-type: var(--ui-content-links-marker, var(--icon-check, "\2713"));
       margin: 0;
       padding: 0;
       & li {
@@ -12608,6 +12639,8 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
         }
         &::marker {
           color: var(--ui-content-links-mark, currentColor);
+          font-family: var(--ui-icon-font);
+          letter-spacing: var(--ui-content-list-icon-gap, 0.4em);
         }
       }
       & a {

@@ -515,9 +515,19 @@
 			}
 		}
 
-		/* crossed list — excluded items (membership limitations) */
+		/* checked / crossed lists — included vs excluded items. The mark is an icon-font
+		   glyph, falling back to a text one when icon-font.css is not linked (the --icon-*
+		   customs are then undefined). Docs: docs/content.md § Checked and crossed lists */
+		& [data-part="list"]:is([data-variant="checked"], [data-variant="crossed"]) li::marker {
+			font-family: var(--ui-icon-font);
+			letter-spacing: var(--ui-content-list-icon-gap, 0.4em);
+		}
+		& [data-part="list"][data-variant="checked"] {
+			--ui-content-list-marker: var(--icon-check, '✓');
+			--ui-content-list-marker-ink: var(--ui-content-list-checked-mark, var(--color-success, currentColor));
+		}
 		& [data-part="list"][data-variant="crossed"] {
-			--ui-content-list-marker: '✗  ';
+			--ui-content-list-marker: var(--icon-close, '✗');
 			--ui-content-list-marker-ink: var(--ui-content-list-crossed-mark, var(--color-error, currentColor));
 			& li { color: var(--ui-content-list-crossed-ink, var(--ui-content-muted)); }
 		}
@@ -526,13 +536,17 @@
 		& [data-part="links"] {
 			font-size: var(--ui-content-links-fs, var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))));
 			list-style-position: inside;
-			list-style-type: var(--ui-content-links-marker, disc);
+			list-style-type: var(--ui-content-links-marker, var(--icon-check, '✓'));
 			margin: 0;
 			padding: 0;
 			& li {
 				padding-block: var(--ui-content-links-pb, var(--spacing-xs));
 				&:not(:last-child) { border-block-end: var(--border-width) solid var(--ui-content-links-border, var(--color-border)); }
-				&::marker { color: var(--ui-content-links-mark, currentColor); }
+				&::marker {
+					color: var(--ui-content-links-mark, currentColor);
+					font-family: var(--ui-icon-font);
+					letter-spacing: var(--ui-content-list-icon-gap, 0.4em);
+				}
 			}
 			& a {
 				color: var(--ui-content-links-ink, inherit);
