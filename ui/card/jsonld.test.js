@@ -3,7 +3,7 @@
  * already emits, so jsonld mode cannot drift from micro mode. Docs: docs/card.md § Schema mode */
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { microdataToJsonLd, jsonLdGraph, jsonLdScript } from './jsonld.js';
 
 describe('microdataToJsonLd — a single item', () => {
@@ -199,6 +199,46 @@ describe('the shipped pages', () => {
 			const markup = page.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/, '');
 			assert.doesNotMatch(markup, / itemprop="/, `${name} still has itemprop`);
 			assert.doesNotMatch(markup, / itemscope[ >]/, `${name} still has itemscope`);
+		}
+	});
+});
+
+/* The extractor implements the microdata subset render.js actually emits. These guard the
+   boundary: if the corpus starts using a feature it does not handle, this fails HERE rather
+   than silently dropping data from the @graph. Docs: docs/card.md § JSON-LD */
+describe('the limits of the extractor', () => {
+	const demo = new URL('./demo/', import.meta.url);
+	const pages = readdirSync(demo).filter((f) => f.endsWith('.html'))
+		.map((f) => [f, readFileSync(new URL(f, demo), 'utf8')]);
+
+	test('the corpus is there to check', () => {
+		assert.ok(pages.length > 5, `expected the demo pages, got ${pages.length}`);
+	});
+
+	test('no page uses itemref — the parser resolves nesting by tree position only', () => {
+		for (const [file, html] of pages) assert.doesNotMatch(html, /\sitemref=/, file);
+	});
+
+	test('no page uses itemid — nothing becomes an @id', () => {
+		for (const [file, html] of pages) assert.doesNotMatch(html, /\sitemid=/, file);
+	});
+
+	test('no itemtype declares more than one type', () => {
+		/* @type would need to become an array, and the split(/) shortcut would mangle it */
+		for (const [file, html] of pages) {
+			for (const m of html.matchAll(/\sitemtype="([^"]*)"/g)) {
+				assert.doesNotMatch(m[1].trim(), /\s/, `${file}: ${m[1]}`);
+			}
+		}
+	});
+
+	test('no itemprop declares more than one property name', () => {
+		/* the spec allows "a b"; the parser would take the pair as a single key */
+		for (const [file, html] of pages) {
+			for (const m of html.matchAll(/\sitemprop="([^"]*)"/g)) {
+				if (/[|[\]]/.test(m[1])) continue;   // build scripts embed regex sources
+				assert.doesNotMatch(m[1].trim(), /\s/, `${file}: ${m[1]}`);
+			}
 		}
 	});
 });

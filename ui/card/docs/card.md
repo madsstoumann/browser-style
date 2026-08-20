@@ -481,6 +481,13 @@ both** `schema.html` and `schema.jsonld.html`, and PageSpeed scores identically 
 extraction is lossless and the block costs nothing.
 [google-rich-results.md § 2.3](./google-rich-results.md) has the full table.
 
+**What the extractor does not implement**, because `render.js` never emits it: `itemref`
+(nesting is resolved by tree position only), `itemid` (nothing becomes an `@id`), a
+multi-valued `itemtype` (`@type` would have to become an array), and a multi-name `itemprop`
+(`"a b"` would be taken as one key). `jsonld.test.js` § *the limits of the extractor* sweeps
+every demo page for all four, so adding one to the markup fails there rather than silently
+dropping data from the `@graph`.
+
 The extractor follows the HTML microdata rules for where a property takes its value —
 `content` on `<meta>`, `href` on `<a>`/`<link>`, `src` on `<img>`, `datetime` on `<time>`,
 `value` on `<data>`, text otherwise — collapses a repeated property into an array, and
