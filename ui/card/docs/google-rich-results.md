@@ -121,6 +121,36 @@ The objection in this section is against a serializer built from the **fields** 
 re-mapped by hand, guaranteed to drift. That remains something not to build. See
 [card.md § JSON-LD](./card.md#json-ld).
 
+### 2.3 Measured, 2026-08-20 — both syntaxes, on the deployed pages
+
+The ⛔ at the top of this document still stands for the *gallery*: `developers.google.com` is
+an egress policy denial in the agent session, so the feature table below remains part-⚠. But
+the **validators were run by hand** on the two shipped pages, and those numbers are real:
+
+| Tool | `schema.html` (microdata) | `schema.jsonld.html` (JSON-LD) |
+|---|---|---|
+| schema.org validator | 63 items | 63 items |
+| Google Rich Results | 71 valid items | 73 valid items |
+| PageSpeed, mobile | 98 / 100 / 100 / 100 · 3/3 | 98 / 100 / 100 / 100 · 3/3 |
+| PageSpeed, desktop | 100 / 100 / 100 / 100 · 3/3 | 100 / 100 / 100 / 100 · 3/3 |
+
+Three things follow.
+
+**The extractor is correct.** The schema.org validator reads **63 items from both**, and the
+JSON-LD page carries no microdata at all — so the graph `jsonld.js` reads back out of the
+microdata is neither lossy nor inventive. That is the property the whole approach rests on,
+and it is now externally confirmed rather than only asserted by our own tests.
+
+**JSON-LD costs nothing in performance.** Identical scores on both, mobile and desktop, with
+an 80 KB `@graph` inline in `<head>`. Consistent with it being a data block the parser skips
+— and a direct answer to anyone proposing `blocking="render"` on it.
+
+**Google counts 2 more items from JSON-LD (73 vs 71), and that is unexplained.** Both pages
+assert the same graph, so the difference is in how Google parses, not in what we state.
+Recorded as [open-items.md § 36](../../../docs/plans/open-items.md) — a curiosity rather than
+a defect, but if microdata is losing two items to a scoping quirk, that is worth knowing,
+because microdata is still the default mode.
+
 ---
 
 ## 3. The table

@@ -414,6 +414,12 @@ crawlers read. Google accepts it anywhere in `<head>` or `<body>`, even injected
 `jsonLdScript()` escapes `<` as `\u003c` so a text value containing `</script>` cannot close
 the tag early.
 
+**Verified externally.** On the deployed pages the schema.org validator reads **63 items from
+both** `schema.html` and `schema.jsonld.html`, and PageSpeed scores identically for the two
+(98/100/100/100 mobile, 100 across desktop) with the `@graph` inline in `<head>` — so the
+extraction is lossless and the block costs nothing.
+[google-rich-results.md § 2.3](./google-rich-results.md) has the full table.
+
 The extractor follows the HTML microdata rules for where a property takes its value —
 `content` on `<meta>`, `href` on `<a>`/`<link>`, `src` on `<img>`, `datetime` on `<time>`,
 `value` on `<data>`, text otherwise — collapses a repeated property into an array, and
