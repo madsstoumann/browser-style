@@ -12905,7 +12905,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     & ui-media :is(ui-chip, ui-sticker, ui-beacon):not(:has(a, button)) {
       pointer-events: none;
     }
-    &:is([media*=nav], :has(ui-media[media*=nav])) ui-content {
+    &:is([media*=nav], :has(ui-media[media*=nav])) ui-content:not(:where(ui-media *)) {
       position: relative;
     }
     :where(ui-media:where([media*=nav], :is(ui-card, ui-reveal)[media*=nav] *)) > & [data-part~=cover]::after {
