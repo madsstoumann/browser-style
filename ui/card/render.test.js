@@ -1930,18 +1930,26 @@ describe('icon markers', () => {
 			.icons.map((n) => n.replace(/_/g, '-'))
 	);
 
+	/* the DETAIL-page instances (demo/realestate, demo/rentals) carry icons too, and an
+	   unknown name is silently inert in the browser — walk them as well as data/ */
 	test('every data-icon in the demo corpus names a real glyph', () => {
 		const dir = new URL('./data/', import.meta.url);
 		const presets = JSON.parse(readFileSync(new URL('./card.presets.demo.json', dir), 'utf8'));
+		const roots = [dir, new URL('./demo/realestate/', import.meta.url), new URL('./demo/rentals/', import.meta.url)];
 		const seen = new Set();
-		for (const file of readdirSync(dir).filter((f) => f.endsWith('.json'))) {
-			let ucf;
-			try { ucf = JSON.parse(readFileSync(new URL(file, dir), 'utf8')); } catch { continue; }
-			if (ucf?.model !== 'card') continue;
-			for (const [, name] of renderCard(ucf, presets).matchAll(/ data-icon="([^"]+)"/g)) seen.add(name);
+		let files = 0;
+		for (const root of roots) {
+			for (const file of readdirSync(root).filter((f) => f.endsWith('.json'))) {
+				let ucf;
+				try { ucf = JSON.parse(readFileSync(new URL(file, root), 'utf8')); } catch { continue; }
+				if (ucf?.model !== 'card') continue;
+				files++;
+				for (const [, name] of renderCard(ucf, presets).matchAll(/ data-icon="([^"]+)"/g)) seen.add(name);
+			}
 		}
 		for (const name of seen) assert.ok(icons.has(name), `data-icon="${name}" is not in ui/icon/icons.json`);
 		assert.ok(seen.size > 0, 'expected the corpus to exercise at least one icon marker');
+		assert.ok(files > 30, `expected the walk to reach every instance, saw ${files}`);
 	});
 
 	test('icons.data.js mirrors the manifest exactly, in order', () => {

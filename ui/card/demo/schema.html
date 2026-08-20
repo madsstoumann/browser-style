@@ -12,7 +12,7 @@
 	<link rel="preconnect" href="https://v4.browser.style">
 	<meta name="description" content="60 cards covering 52 distinct schema.org itemtypes on the card hosts (Quiz and ItemList run three cards each; Review, EventSeries, Place and Person two each) — re-created with the modern &lt;ui-card&gt; engine: inline microdata (itemscope/itemtype/itemprop), no JSON-LD. The job card carries a 53rd type as a second top-level item: EmployerAggregateRating. Two optional scripts: video.min.js polyfills the media invoker commands behind the podcast play button, save.min.js flips the save heart.">
 	<link rel="alternate" type="text/markdown" href="/ui/card/docs/schema.md">
-	<link rel="stylesheet" href="/dist/demo.f67e7698.min.css">
+	<link rel="stylesheet" href="/dist/demo.a96cc369.min.css">
 
 	<style>
 		/* Off-screen cards skip style+layout. Page-scoped on purpose; 567px is this page's
@@ -353,7 +353,7 @@
 					<ui-quote data-part="quote"><blockquote itemprop="reviewBody"><q>Astonishing bass for a speaker this small. Battery easily lasts a weekend trip — the app is the only weak point.</q></blockquote></ui-quote>
 					<address data-part="byline" itemprop="author" itemscope itemtype="https://schema.org/Person">
 						<ui-avatar><img src="https://assets.stoumann.dk/img/avatar3.webp" alt="" loading="lazy" decoding="async"></ui-avatar>
-						<span data-part="byline-who"><span itemprop="name">Alex Chen</span><span>✓ Verified purchase</span></span><small data-part="dateline"><time datetime="2026-05-14">May 14, 2026</time></small>
+						<span data-part="byline-who"><span itemprop="name">Alex Chen</span><span data-part="verified">Verified purchase</span></span><small data-part="dateline"><time datetime="2026-05-14">May 14, 2026</time></small>
 					</address>
 					<meta itemprop="datePublished" content="2026-05-14">
 					<div itemprop="itemReviewed" itemscope itemtype="https://schema.org/Product" hidden>
@@ -475,9 +475,9 @@
 					<p data-part="meta"><span itemprop="provider" itemscope itemtype="https://schema.org/Organization"><span itemprop="name">Brew &amp; Bean</span></span> · Capacity 8 · Min. 1 hour · Free cancellation up to 24 h</p>
 					<p data-part="price">$45/hour</p>
 					<ul data-part="list">
-						<li>4K display + HDMI/USB-C</li>
-						<li>Whiteboard wall</li>
-						<li>Coffee &amp; water included</li>
+						<li data-icon="monitor">4K display + HDMI/USB-C</li>
+						<li data-icon="draw">Whiteboard wall</li>
+						<li data-icon="local-cafe">Coffee &amp; water included</li>
 					</ul>
 					<footer data-part="footer">Tell us about allergies or accessibility needs when booking.</footer>
 					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="#">Check availability</a></nav>
@@ -789,13 +789,13 @@
 						<meta itemprop="price" content="89">$89 <del>$129</del>
 					</p>
 					<ul data-part="list" itemprop="teaches">
-						<li>Sustain attention for 20 minutes</li>
-						<li>Build a daily sitting habit</li>
-						<li>Apply body scans to stress</li>
+						<li data-icon="timer">Sustain attention for 20 minutes</li>
+						<li data-icon="calendar-month">Build a daily sitting habit</li>
+						<li data-icon="self-improvement">Apply body scans to stress</li>
 					</ul>
 					<ul data-part="list">
-						<li>No prior experience needed</li>
-						<li>10 minutes a day</li>
+						<li data-icon="check">No prior experience needed</li>
+						<li data-icon="schedule">10 minutes a day</li>
 					</ul>
 					<span data-part="tags"><ui-chip itemprop="keywords">Mindfulness</ui-chip><ui-chip itemprop="keywords">Wellbeing</ui-chip></span>
 					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="#">Enroll</a></nav>

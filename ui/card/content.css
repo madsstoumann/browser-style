@@ -311,6 +311,16 @@
 			& [data-part="jobTitle"], & [itemprop="jobTitle"] {
 				color: var(--ui-content-byline-role-ink, var(--ui-content-muted));
 			}
+			/* verified marker — a glyph, never a literal ✓ in the text node: the `/ ""` arm
+			   keeps the codepoint out of the accessible name. Docs: docs/content.md § Key rows */
+			& [data-part="verified"] {
+				color: var(--ui-content-byline-verified-ink, var(--ui-content-muted));
+				&::before {
+					content: var(--icon-check, '✓') / "";
+					font-family: var(--ui-icon-font);
+					margin-inline-end: var(--ui-content-verified-icon-gap, 0.35em);
+				}
+			}
 			& [data-part="dateline"] {
 				color: var(--ui-content-dateline-ink, var(--ui-content-muted));
 				font-size: inherit;

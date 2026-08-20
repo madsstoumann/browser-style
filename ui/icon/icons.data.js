@@ -35,4 +35,11 @@ export const ICON_NAMES = [
 	'favorite',
 	'tour',
 	'landscape',
+	'monitor',
+	'draw',
+	'local-cafe',
+	'self-improvement',
+	'timer',
+	'thermostat',
+	'crib',
 ];

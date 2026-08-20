@@ -44,9 +44,18 @@
         "currency": "USD"
       },
       "amenities": [
-        "4K display + HDMI/USB-C",
-        "Whiteboard wall",
-        "Coffee & water included"
+        {
+          "text": "4K display + HDMI/USB-C",
+          "icon": "monitor"
+        },
+        {
+          "text": "Whiteboard wall",
+          "icon": "draw"
+        },
+        {
+          "text": "Coffee & water included",
+          "icon": "local-cafe"
+        }
       ],
       "cancellationPolicy": "Free cancellation up to 24 h",
       "specialRequests": "Tell us about allergies or accessibility needs when booking."

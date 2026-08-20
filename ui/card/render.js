@@ -742,6 +742,16 @@ const listPart = (items, { ordered = false, itemprop = null, crossed = false, ch
 		}).join('')}</${ordered ? 'ol' : 'ul'}>`
 		: '';
 
+/* amenity rows — LocationFeatureSpecification scopes, so NOT listPart(): each row is a
+   nested item, not a plain string. Takes the same `{text, icon}` shape all the same, so an
+   amenity can carry a ::marker glyph. Docs: docs/content.md § Icon markers */
+const amenityList = (items) => items?.length
+	? `<ul data-part="list">${items.map((item) => {
+		const { text, icon } = typeof item === 'object' && item !== null ? item : { text: item };
+		return `<li${icon ? ` data-icon="${esc(icon)}"` : ''}${scope('amenityFeature', 'LocationFeatureSpecification')}>${meta('value', 'true')}<span itemprop="name">${esc(text)}</span></li>`;
+	}).join('')}</ul>`
+	: '';
+
 /* author image via @browser.style/avatar — initials fallback when no image */
 const initials = (name) => {
 	const parts = (name || '').trim().split(/\s+/).filter(Boolean);
@@ -1584,10 +1594,7 @@ export const realestateSections = (d = {}, fields = {}) => {
 		factsRun: facts.length ? `<p data-part="meta">${facts.join(' · ')}</p>` : '',
 		figures,
 		address: addressPart(home?.address),
-		amenities: home?.amenities?.length
-			? `<ul data-part="list">${home.amenities.map((amenity) =>
-				`<li${scope('amenityFeature', 'LocationFeatureSpecification')}>${meta('value', 'true')}<span itemprop="name">${esc(amenity)}</span></li>`).join('')}</ul>`
-			: '',
+		amenities: amenityList(home?.amenities),
 		place,
 		footer: bits ? `<p data-part="meta">${bits}</p>` : ''
 	};
@@ -1671,10 +1678,7 @@ export const vacationrentalSections = (d = {}, fields = {}) => {
 		factsRun: facts.length ? `<p data-part="meta">${facts.join(' · ')}</p>` : '',
 		figures,
 		beds,
-		amenities: unit?.amenities?.length
-			? `<ul data-part="list">${unit.amenities.map((amenity) =>
-				`<li${scope('amenityFeature', 'LocationFeatureSpecification')}>${meta('value', 'true')}<span itemprop="name">${esc(amenity)}</span></li>`).join('')}</ul>`
-			: '',
+		amenities: amenityList(unit?.amenities),
 		address: addressPart(d.address),
 		stay: stayBits ? `<p data-part="meta">${stayBits}</p>` : '',
 		place: {
@@ -1931,7 +1935,7 @@ const DETAILS = {
 			html += quotePart(fields.summary, { itemprop: 'reviewBody', variant: parts.quote || null });
 		}
 		if (d.reviewer?.name) {
-			html += `<address data-part="byline"${scope('author', 'Person')}>${avatarPart(d.reviewer)}<span data-part="byline-who"><span itemprop="name">${esc(d.reviewer.name)}</span>${d.reviewer.title ? `<span itemprop="jobTitle">${esc(d.reviewer.title)}</span>` : ''}${d.reviewer.verified ? '<span>✓ Verified purchase</span>' : ''}</span>${d.reviewDate ? `<small data-part="dateline"><time datetime="${esc(d.reviewDate)}">${esc(d.reviewDateDisplay || d.reviewDate)}</time></small>` : ''}</address>`;
+			html += `<address data-part="byline"${scope('author', 'Person')}>${avatarPart(d.reviewer)}<span data-part="byline-who"><span itemprop="name">${esc(d.reviewer.name)}</span>${d.reviewer.title ? `<span itemprop="jobTitle">${esc(d.reviewer.title)}</span>` : ''}${d.reviewer.verified ? `<span data-part="verified">${esc(d.reviewerVerifiedText || 'Verified purchase')}</span>` : ''}</span>${d.reviewDate ? `<small data-part="dateline"><time datetime="${esc(d.reviewDate)}">${esc(d.reviewDateDisplay || d.reviewDate)}</time></small>` : ''}</address>`;
 			/* the visible time sits inside the Person scope, so the machine-readable
 			   date rides a meta on the Review itself */
 			if (d.reviewDate) html += meta('datePublished', d.reviewDate);

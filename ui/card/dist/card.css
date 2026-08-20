@@ -1699,6 +1699,14 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       & [itemprop=jobTitle] {
         color: var(--ui-content-byline-role-ink, var(--ui-content-muted));
       }
+      & [data-part=verified] {
+        color: var(--ui-content-byline-verified-ink, var(--ui-content-muted));
+        &::before {
+          content: var(--icon-check, "\2713") / "";
+          font-family: var(--ui-icon-font);
+          margin-inline-end: var(--ui-content-verified-icon-gap, 0.35em);
+        }
+      }
       & [data-part=dateline] {
         color: var(--ui-content-dateline-ink, var(--ui-content-muted));
         font-size: inherit;
