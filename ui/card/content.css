@@ -732,8 +732,10 @@
 		   hides this: the dots and arrows are scroll-control pseudos at z-index 3, above
 		   the cover, so the arrows work while the swipe is dead. Positioning the text
 		   column re-anchors the same ::after to it, no second rule needed.
-		   Tapping the photo stops navigating; the headline link still does. Docs: docs/card.md § cover */
-		&:is([media*="nav"], :has(ui-media[media*="nav"])) ui-content { position: relative; }
+		   Tapping the photo stops navigating; the headline link still does.
+		   The :not() is the COLLAGE BOUNDARY — :has() matches ancestors, so a frame full of
+		   nested cards drags this rule onto their text columns too. Docs: docs/card.md § cover */
+		&:is([media*="nav"], :has(ui-media[media*="nav"])) ui-content:not(:where(ui-media *)) { position: relative; }
 
 		/* A card that IS a slide keeps its swipe. Two reasons the re-anchor above cannot help
 		   here: the scroller is the PARENT frame, not this card's own media, so the selector

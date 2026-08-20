@@ -8921,6 +8921,7 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
     --_cosh: calc(1em * cos(45deg));
     background: var(--ui-icon-bg);
     border-radius: var(--ui-icon-radius);
+    corner-shape: var(--ui-icon-corner, round);
     direction: ltr;
     display: inline-grid;
     font-size: var(--ui-icon-size);
@@ -8942,10 +8943,12 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
       display: block;
       transition: var(--ui-icon-duration) var(--ui-icon-easing);
     }
-    &[variant~=border] {
-      border: var(--ui-icon-border-width, var(--ui-icon-stroke)) solid var(--ui-icon-border-color);
+    &:is([variant~=border], [theme], [data-theme]) {
       box-sizing: content-box;
       padding: var(--ui-icon-padding, 0.3em);
+    }
+    &[variant~=border] {
+      border: var(--ui-icon-border-width, var(--ui-icon-stroke)) solid var(--ui-icon-border-color);
     }
     &:is([type*=arrow], [type=check], [type*=chevron])::after {
       border-color: currentColor;
@@ -9127,6 +9130,26 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
     &[stroke=xl] {
       --ui-icon-stroke: 6px;
       --ui-icon-svg-stroke: 2.5;
+    }
+    &:is([theme], [data-theme]) {
+      --ui-icon-bg: var(--_theme-bg, transparent);
+      color: var(--_theme-c, var(--_theme-ink));
+    }
+    &[radius~=non] {
+      --ui-icon-radius: 0;
+    }
+    &[radius~=rnd] {
+      --ui-icon-radius: var(--radius-md);
+    }
+    &[radius~=pll] {
+      --ui-icon-radius: var(--radius-pill);
+    }
+    &[radius~=crc] {
+      --ui-icon-radius: var(--radius-circle);
+    }
+    &[radius~=sqr] {
+      --ui-icon-radius: var(--radius-circle);
+      --ui-icon-corner: superellipse(var(--squircle-md));
     }
     &[shape=bookmark] {
       --_shape: var(--ui-icon-shape-bookmark);
@@ -12780,7 +12803,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     & ui-media :is(ui-chip, ui-sticker, ui-beacon):not(:has(a, button)) {
       pointer-events: none;
     }
-    &:is([media*=nav], :has(ui-media[media*=nav])) ui-content {
+    &:is([media*=nav], :has(ui-media[media*=nav])) ui-content:not(:where(ui-media *)) {
       position: relative;
     }
     :where(ui-media:where([media*=nav], :is(ui-card, ui-reveal)[media*=nav] *)) > & [data-part~=cover]::after {
