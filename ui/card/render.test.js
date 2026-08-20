@@ -2408,3 +2408,98 @@ describe('places — carousel validation requirements', () => {
 		assert.equal(new Set(urls).size, urls.length, 'each entry must be distinguishable by url');
 	});
 });
+
+/* ── schema modes ──────────────────────────────────────────────────────────
+   `micro` (default) emits microdata; `''` emits none. The corpus sweep is the real
+   gate — the whole point is that raw mode is complete, not that it works on one card.
+   Docs: docs/card.md § Schema mode */
+describe('schema modes', () => {
+	const VOID = new Set(['meta', 'link', 'img', 'br', 'hr', 'input', 'source', 'area', 'base',
+		'col', 'embed', 'param', 'track', 'wbr', 'path', 'circle', 'rect', 'line', 'polyline',
+		'polygon', 'ellipse', 'use', 'stop']);
+	/* hidden subtrees never rendered, so text inside them is not visible content */
+	const dropHidden = (h) => {
+		for (;;) {
+			const open = /<(div|span)[^>]*\shidden[^>]*>/.exec(h);
+			if (!open) return h;
+			const re = new RegExp(`<(/?)${open[1]}\\b[^>]*>`, 'g');
+			re.lastIndex = open.index + open[0].length;
+			let depth = 1, close;
+			while ((close = re.exec(h))) { depth += close[1] ? -1 : 1; if (!depth) break; }
+			h = h.slice(0, open.index) + (close ? h.slice(close.index + close[0].length) : '');
+		}
+	};
+	const visible = (h) => dropHidden(h).replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+	const unbalanced = (h) => {
+		const seen = {};
+		for (const m of h.matchAll(/<(\/?)([a-z][a-z0-9-]*)/gi)) {
+			const tag = m[2].toLowerCase();
+			if (!VOID.has(tag)) seen[tag] = (seen[tag] || 0) + (m[1] ? -1 : 1);
+		}
+		return Object.entries(seen).filter(([, n]) => n !== 0);
+	};
+
+	/* the same corpus render.snapshot.js walks — both preset collections, data/ + data/demo/ */
+	const DIR = new URL('./data/', import.meta.url);
+	const PRESETS = {
+		...JSON.parse(readFileSync(new URL('card.presets.json', DIR), 'utf8')).presets,
+		...JSON.parse(readFileSync(new URL('card.presets.demo.json', DIR), 'utf8')).presets
+	};
+	const cards = [
+		...readdirSync(DIR).filter((f) => f.endsWith('.json') && !f.startsWith('card.presets') && f !== 'index.json' && f !== 'tokens.json').map((f) => new URL(f, DIR)),
+		...readdirSync(new URL('demo/', DIR)).filter((f) => f.endsWith('.json')).map((f) => new URL(`demo/${f}`, DIR))
+	].map((file) => {
+		const ucf = JSON.parse(readFileSync(file, 'utf8'));
+		return {
+			file: file.pathname.split('/').pop(),
+			micro: renderCard(ucf, PRESETS, {}, { schema: 'micro' }),
+			raw: renderCard(ucf, PRESETS, {}, { schema: '' }),
+			ucf
+		};
+	});
+
+	test('the corpus is the one the snapshot renders', () => {
+		assert.ok(cards.length > 100, `expected the full corpus, got ${cards.length}`);
+	});
+
+	test('raw mode emits no microdata anywhere in the corpus', () => {
+		for (const { file, raw } of cards) {
+			assert.doesNotMatch(raw, /itemprop/, `${file} still carries itemprop`);
+			assert.doesNotMatch(raw, /itemscope/, `${file} still carries itemscope`);
+			assert.doesNotMatch(raw, /itemtype/, `${file} still carries itemtype`);
+		}
+	});
+
+	test('raw mode leaves no machine-only residue', () => {
+		for (const { file, raw } of cards) {
+			assert.doesNotMatch(raw, /<(div|span)[^>]*\shidden/, `${file} kept a crawler-only wrapper`);
+			assert.doesNotMatch(raw, /<(div|span)>\s*<\/(div|span)>/, `${file} kept an emptied wrapper`);
+		}
+	});
+
+	test('raw mode loses no visible content', () => {
+		for (const { file, micro, raw } of cards) {
+			assert.equal(visible(raw), visible(micro), `${file} lost visible text`);
+		}
+	});
+
+	test('raw mode keeps the markup balanced', () => {
+		/* floorSize() returns an UNCLOSED <span> its caller closes — deleting annotated
+		   elements instead of stripping their attributes would break this. */
+		for (const { file, raw } of cards) {
+			assert.deepEqual(unbalanced(raw), [], `${file} is unbalanced in raw mode`);
+		}
+	});
+
+	test('micro is the default and is unaffected by the option', () => {
+		const { micro, ucf } = cards[0];
+		assert.equal(renderCard(ucf, PRESETS), micro, 'no options must equal schema:"micro"');
+		assert.equal(renderCard(ucf, PRESETS, {}, {}), micro, 'an empty options bag must equal schema:"micro"');
+	});
+
+	test('an unknown mode throws rather than silently emitting microdata', () => {
+		const { ucf } = cards[0];
+		assert.throws(() => renderCard(ucf, PRESETS, {}, { schema: 'jsonld' }), /jsonld/);
+		assert.throws(() => renderCard(ucf, PRESETS, {}, { schema: 'nope' }), /unknown schema mode/);
+	});
+});

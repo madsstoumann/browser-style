@@ -302,6 +302,40 @@ const meta = (prop, content) =>
 const scope = (prop, type) =>
 	` itemprop="${esc(prop)}" itemscope itemtype="${SCHEMA + type}"`;
 
+/* ── schema mode ─────────────────────────────────────────────────────────
+   'micro' (default) emits microdata; '' emits none. Set from options.schema on
+   renderCard(), module-level like IMG/TYPE_CHIP — the call tree is 7 hops deep and
+   threading a parameter through ~150 functions would buy nothing.
+   Docs: docs/card.md § Schema mode */
+const SCHEMA_MODES = new Set(['micro', '']);
+let SCHEMA_MODE = 'micro';
+export const setSchemaMode = (mode) => {
+	const next = mode ?? 'micro';
+	/* 'jsonld' is reserved, not implemented — open-items.md § 34 */
+	if (!SCHEMA_MODES.has(next)) throw new Error(`renderCard: unknown schema mode "${next}" (expected "micro" or ""; jsonld is open-items.md § 34)`);
+	SCHEMA_MODE = next;
+};
+const micro = () => SCHEMA_MODE === 'micro';
+
+/* Strips microdata from finished markup. SAFE BY CONSTRUCTION: esc() turns every `"` in
+   content into &quot;, so a bare `"` can only come from a renderer-authored attribute —
+   these patterns cannot match text. Attributes are removed, elements are NOT: floorSize()
+   returns an UNCLOSED <span> its caller closes, so deleting annotated elements would
+   unbalance the string. Docs: docs/card.md § Schema mode */
+const SCHEMA_ELEMENT = /<(?:meta|link)\b[^>]*\sitemprop="[^"]*"[^>]*>/g;
+const SCHEMA_ATTR = / itemprop="[^"]*"| itemscope(?=[ />])| itemtype="[^"]*"/g;
+const EMPTY_HIDDEN = /<(div|span) hidden>\s*<\/\1>/g;
+/* a stripped scope wrapper leaves <span></span> — attribute-less and empty, so it carried
+   nothing but the microdata that was just removed */
+const EMPTY_BARE = /<(div|span)>\s*<\/\1>/g;
+export const stripSchema = (html) => {
+	if (micro()) return html;
+	let out = String(html).replace(SCHEMA_ELEMENT, '').replace(SCHEMA_ATTR, '');
+	/* the wrappers nest, so sweep both shapes until stable */
+	for (let prev; prev !== out; ) { prev = out; out = out.replace(EMPTY_BARE, '').replace(EMPTY_HIDDEN, ''); }
+	return out;
+};
+
 /* Inline-rich text: plain string or UCF richtext object. Escapes everything, then
    re-allows an ALLOWLIST: <b>/<em>/<code> (attribute-free, so an escaped
    `<em onmouseover=…>` can never match) and <ui-gradient-text>
@@ -1655,6 +1689,7 @@ const placeName = (place, cover = false) => {
    stay fully visible. A plain wrapper has no data-part, so nothing overrides it. This is the
    same shape geoPart() already uses. */
 const machineOnly = (...parts) => {
+	if (!micro()) return '';
 	const html = parts.filter(Boolean).join('');
 	return html ? `<div hidden>${html}</div>` : '';
 };
@@ -2928,8 +2963,14 @@ export async function loadPresets(url) {
  * @returns {string} HTML for <ui-card>, <ui-reveal>, or a bare primitive
  */
 export function renderCard(ucf, presets = {}, cards = {}, options = null) {
+	setSchemaMode(options?.schema);
 	setImages(options?.images);
 	TYPE_CHIP = !!options?.typeChip;
+	return stripSchema(renderCardHtml(ucf, presets, cards));
+}
+
+/* the renderer proper — always emits microdata; renderCard() strips it per mode */
+function renderCardHtml(ucf, presets = {}, cards = {}) {
 	const fields = ucf?.fields ?? ucf ?? {};
 	const cardId = ucf?.id || null;
 	const type = baseType(fields);

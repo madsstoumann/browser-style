@@ -110,6 +110,14 @@ forever, and the first time they disagree the page ships two contradictory answe
 **Recommendation: keep microdata-only.** Recorded here so it reads as a decision rather than an
 oversight the next time a Lighthouse audit suggests otherwise.
 
+**Update.** The renderer now takes a `schema` mode ([card.md § Schema mode](./card.md#schema-mode)):
+`"micro"` (the default, unchanged) and `""`, which emits no structured data at all. That does
+**not** re-open the decision above — raw mode is *subtractive*, derived from the microdata by
+stripping it, so there is no second source of truth to disagree with. A `"jsonld"` mode is
+reserved and deliberately unimplemented for exactly the reason this section gives; the design
+and the equivalence gate that would answer the objection are in
+[open-items.md § 34](../../../docs/plans/open-items.md).
+
 ---
 
 ## 3. The table

@@ -5,7 +5,7 @@
 > their rationale lives in git history (`git log --diff-filter=D -- docs/plans`).
 > Settled decisions of record are summarised in `ui/card/AGENTS.md`.
 >
-> Items 1–7 came from the 2026-07-26 architecture ledger; 8–12 and 30–33 were added as they
+> Items 1–7 came from the 2026-07-26 architecture ledger; 8–12 and 30–34 were added as they
 > surfaced. **Items 13–29 (2026-08-19) absorb what was still live from the deleted
 > plan docs** — the 2026-08-15 consistency audit, the 2026-08-16 schema-card-sections
 > note and the 2026-08-10 feature-gap ledger. Every absorbed finding was re-verified
@@ -1097,3 +1097,42 @@ Shipped as `2647630`, reverted. The local request-count proxy and the real page 
 here, so the count of embeds inside the lazy threshold is **not** a usable stand-in for
 Lighthouse on this page: measure the deployed host or do not claim an improvement. The
 facade below remains the only lever with evidence behind it.
+
+---
+
+## 34. `jsonld` schema mode — reserved, not implemented
+
+**Where:** `ui/card/render.js` (`setSchemaMode`), `ui/card/docs/google-rich-results.md` § 2.2
+
+`renderCard(ucf, presets, cards, { schema })` takes `"micro"` (default) and `""` today.
+`"jsonld"` throws. The intent is clean markup **plus** a JSON-LD block, and the two pieces
+that are already settled:
+
+- **One page-level `@graph`**, not one script per card — fewer nodes, validates as a whole,
+  and the shape Google's tooling reads most predictably.
+- **Not render-blocking.** `<script type="application/ld+json">` is a *data block*: the HTML
+  spec never executes a script with an unrecognised type, so `blocking="render"` has nothing
+  to wait on. Google reads it anywhere in `<head>` or `<body>`, even injected later. Plain
+  inline in `<head>`, no `blocking` attribute.
+
+**Why it is waiting.** § 2.2 of google-rich-results.md records a decision against a JSON-LD
+emitter, and the reason still stands: the renderer has **no intermediate representation** —
+it goes straight from `fields` to HTML strings — so a serializer would re-implement the
+schema mapping for all 48 types and become a parallel source of truth. Raw mode did not hit
+this, because subtracting from the microdata needs no second mapping.
+
+**What would answer the objection: an equivalence gate.** Build the graph from `fields`, then
+have a test extract the microdata from `"micro"` output and assert it equals the graph. The
+two then cannot silently disagree — which is precisely what § 2.2 asks for. That extractor is
+the real work: the repo has **zero dependencies** at any level, so it means a purpose-built
+microdata reader rather than a DOM library. It is tractable because the input is our own
+regular output, and it lives in tests, not in the shipped renderer.
+
+The reusable half of the mapping already exists: `resolveItemtype()` gives `@type`,
+`envelopeProps()` gives the envelope's claimed properties, and the property maps
+(`HEADLINE_PROP`, `SUMMARY_PROP`, `EYEBROW_PROP`, `PUBLISHED_PROP`, `TAGS_PROP`) are data.
+The `DETAILS` half — the majority — exists only as literals inside 48 template-literal
+functions and has no data form.
+
+**Also waiting on this:** `demo/schema.jsonld.html`, the third twin next to `schema.html`
+(micro) and `schema.raw.html` (raw).
