@@ -1,87 +1,58 @@
 /**
- * SSR build for demo/schema.raw.html — the no-structured-data twin of schema.html.
+ * SSR build for demo/schema.raw.html — schema.html with the structured data removed.
  *
  *   node ui/card/demo/schema.raw.build.js
  *
- * Renders the same corpus demo/render.html drives (data/index.json → cards[]) with
- * `schema: ''`, so every card comes out with no itemscope/itemtype/itemprop and no
- * crawler-only <meta>/<link>/hidden wrapper. The page exists to make raw mode
- * inspectable: view source next to schema.html and the only difference is the
- * structured data.
+ * It reads demo/schema.html and runs the renderer's own stripSchema() over it, which is
+ * exactly what `renderCard(…, { schema: '' })` does to its output. So the two pages are
+ * identical by construction — same sections, same 2-column layout, same cards in the same
+ * order — and the ONLY difference is the microdata. That is the point: view source side by
+ * side and every remaining difference is structured data.
  *
- * Static, not a client-side driver like render.html, because a static file can be
- * grepped — render.test.js § schema modes asserts the shipped file carries zero
- * itemprop, which a runtime-rendered page could not offer.
+ * It deliberately does NOT re-render from data/index.json. That corpus is render.html's
+ * ("every content type, one preset each") and differs from this page: it carries the four
+ * standalone product-variant pages schema.html has no section for, and picks different
+ * presets. Rendering it produced a page that looked nothing like its supposed twin.
  *
  * Docs: docs/card.md § Schema mode
  */
 import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { renderCard, resolveItemtype } from '../render.js';
-import { CONTRAST_STYLE, HEAD_COMMON, esc } from './build.shared.js';
+import { setSchemaMode, stripSchema } from '../render.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
-const data = (file) => JSON.parse(readFileSync(join(here, '../data', file), 'utf8'));
+const source = join(here, 'schema.html');
+const out = join(here, 'schema.raw.html');
 
-const presets = { ...data('card.presets.json').presets, ...data('card.presets.demo.json').presets };
-const manifest = data('index.json');
-const cards = Object.fromEntries([...manifest.cards, ...manifest.shared]
-	.map((id) => [id, data(`${id}.json`)]));
-
-const images = { cdnBase: 'https://v4.browser.style', sizes: '(min-width: 540px) min(50vw, 512px), 100vw' };
-
-const sections = manifest.cards.map((id) => {
-	const ucf = cards[id];
-	const html = renderCard(ucf, presets, cards, { schema: '', images, typeChip: true });
-	const preset = ucf.fields?.preset?.$ref?.split('/').pop() || 'stack';
-	return `	<h2>${esc(ucf.fields?.internalName || id)} — <code>${esc(resolveItemtype(ucf.fields))} · ${esc(preset)}</code></h2>
-	<lay-out md="columns(2) items(start)">${html}</lay-out>`;
-}).join('\n');
+/* stripSchema() is a no-op in micro mode — arm the mode first */
+setSchemaMode('');
+let page = stripSchema(readFileSync(source, 'utf8'));
+setSchemaMode('micro');
 
 const TITLE = 'UI: Card — Schema mode: raw';
-const DESCRIPTION = `The ${manifest.cards.length} cards of demo/render.html rendered with schema="" — no itemscope, itemtype or itemprop, and none of the hidden <meta> blocks that carry machine values in microdata mode. The visible output is identical to the microdata build; only the structured data is gone. Compare with demo/schema.html.`;
+const DESCRIPTION = 'demo/schema.html with the structured data removed — the same 60 cards, the same sections and the same layout, rendered with schema="" so there is no itemscope, itemtype or itemprop and none of the hidden meta blocks that carry machine values. Every difference between this page and schema.html is structured data.';
 
-const page = `<!DOCTYPE html>
-<html lang="en-US" dir="ltr">
-<head>
-	<title>${esc(TITLE)}</title>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-	<meta name="text-scale" content="scale">
-	<meta name="color-scheme" content="light dark">
-	<!-- the Book card prints an ISBN; iOS data detectors read it as a phone number.
-	     Docs: docs/schema.md § Book -->
-	<meta name="format-detection" content="telephone=no">
-	<meta name="description" content="${esc(DESCRIPTION)}">
-	<link rel="alternate" type="text/markdown" href="/ui/card/docs/card.md">
-	${HEAD_COMMON}
-	<style>
-		/* Off-screen cards skip style+layout — same block as demo/render.html */
-		main > lay-out > ui-card,
-		main > lay-out > ui-reveal { content-visibility: auto; contain-intrinsic-size: auto 567px; }
-	</style>
-	${CONTRAST_STYLE}
-</head>
-<body data-layout-root data-page-gap="2">
-	<h1>${esc(TITLE)}</h1>
-	<p>Every card below is rendered with <code>schema=&quot;&quot;</code> — the renderer emits no
-	<code>itemscope</code>, <code>itemtype</code> or <code>itemprop</code>, and the hidden
-	<code>&lt;meta&gt;</code> blocks that carry machine values in microdata mode are gone with them.
-	The visible output is byte-for-byte the same content as the default build; only the structured
-	data differs. The microdata version is <a href="schema.html">demo/schema.html</a>.</p>
-	<p class="note">Generated by <code>node ui/card/demo/schema.raw.build.js</code> — do not edit by hand.</p>
+const swap = (from, to) => {
+	if (!page.includes(from)) throw new Error(`schema.raw.build: source no longer contains ${JSON.stringify(from.slice(0, 60))}`);
+	page = page.replace(from, to);
+};
 
-	<main data-layout-root data-page-gap="2">
-${sections}
-	</main>
-</body>
-</html>
-`;
+swap('<title>UI: Card — Schema.org</title>', `<title>${TITLE}</title>`);
+swap('<h1>UI: Card — Schema.org</h1>', `<h1>${TITLE}</h1>
+	<p>This is <a href="schema.html">demo/schema.html</a> rendered with <code>schema=&quot;&quot;</code>.
+	Same cards, same sections, same layout — every difference between the two pages is structured
+	data. Generated by <code>node ui/card/demo/schema.raw.build.js</code>; do not edit by hand.</p>`);
+swap('<span>Schema.org</span>', '<span>Schema mode: raw</span>');   // breadcrumb leaf — itemprop already stripped
+page = page.replace(/<meta name="description" content="[^"]*">/, `<meta name="description" content="${DESCRIPTION}">`);
+page = page.replace('<link rel="alternate" type="text/markdown" href="/ui/card/docs/schema.md">',
+	'<link rel="alternate" type="text/markdown" href="/ui/card/docs/card.md">');
 
-const out = join(here, 'schema.raw.html');
 writeFileSync(out, page);
-/* attribute forms only — the prose above deliberately names the attributes in <code> */
+
+/* attribute forms only — the prose above names the attributes in <code> */
 const leftover = (page.match(/ itemprop="| itemscope[ >]| itemtype="/g) || []).length;
-console.log(`schema.raw.html ← ${manifest.cards.length} cards · microdata attributes: ${leftover}`);
+const cards = (page.match(/<ui-card\b/g) || []).length;
+const lays = (page.match(/<lay-out\b/g) || []).length;
+console.log(`schema.raw.html ← schema.html · ${cards} cards in ${lays} lay-outs · microdata attributes: ${leftover}`);
 if (leftover) { console.error('FAILED: raw page still carries structured data'); process.exit(1); }
