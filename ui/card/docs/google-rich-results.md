@@ -145,11 +145,13 @@ and it is now externally confirmed rather than only asserted by our own tests.
 an 80 KB `@graph` inline in `<head>`. Consistent with it being a data block the parser skips
 — and a direct answer to anyone proposing `blocking="render"` on it.
 
-**Google counts 2 more items from JSON-LD (73 vs 71), and that is unexplained.** Both pages
-assert the same graph, so the difference is in how Google parses, not in what we state.
-Recorded as [open-items.md § 36](../../../docs/plans/open-items.md) — a curiosity rather than
-a defect, but if microdata is losing two items to a scoping quirk, that is worth knowing,
-because microdata is still the default mode.
+**The 73-vs-71 gap is Google's, not ours — resolved.** Diffing the two reports, the delta is
+one category and nothing else: Local businesses 12 → 14. Our documents hold **471 nodes each
+with an identical type histogram**, and the page has exactly **twelve** LocalBusiness-family
+nodes (eight via `item`, two via `department`, two top-level). So the microdata run is exactly
+right and the JSON-LD run over-counts by two — most likely the two `department` nodes
+enumerated twice under `@graph`, which flat addressability allows and tree nesting does not.
+No action; details in [open-items.md § 36](../../../docs/plans/open-items.md).
 
 ---
 
