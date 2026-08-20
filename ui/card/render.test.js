@@ -2499,7 +2499,14 @@ describe('schema modes', () => {
 
 	test('an unknown mode throws rather than silently emitting microdata', () => {
 		const { ucf } = cards[0];
-		assert.throws(() => renderCard(ucf, PRESETS, {}, { schema: 'jsonld' }), /jsonld/);
 		assert.throws(() => renderCard(ucf, PRESETS, {}, { schema: 'nope' }), /unknown schema mode/);
+	});
+
+	test('jsonld mode emits the same clean markup as raw', () => {
+		/* the structured data leaves the markup and becomes a page-level @graph;
+		   the two modes must not differ in what they render */
+		for (const { file, raw, ucf } of cards) {
+			assert.equal(renderCard(ucf, PRESETS, {}, { schema: 'jsonld' }), raw, file);
+		}
 	});
 });

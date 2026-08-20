@@ -1100,13 +1100,22 @@ facade below remains the only lever with evidence behind it.
 
 ---
 
-## 34. `jsonld` schema mode — reserved, not implemented
+## 34. `jsonld` schema mode — DONE 2026-08-20
 
 **Where:** `ui/card/render.js` (`setSchemaMode`), `ui/card/docs/google-rich-results.md` § 2.2
 
-`renderCard(ucf, presets, cards, { schema })` takes `"micro"` (default) and `""` today.
-`"jsonld"` throws. The intent is clean markup **plus** a JSON-LD block, and the two pieces
-that are already settled:
+**Shipped.** `renderCard(…, { schema: 'jsonld' })` renders the same clean markup as `""`,
+and [`ui/card/jsonld.js`](../../ui/card/jsonld.js) reads the structured data back out of the
+**microdata** as a page-level `@graph`. There is one source of structured data, not two, so
+the objection in § 2.2 of google-rich-results.md never applies — no mapping was
+re-implemented, and no equivalence gate is needed because the graph is *derived*, not
+authored. `demo/schema.jsonld.html` ships as the third twin (63 nodes, 55 distinct types).
+
+The extraction route made the "restructure the content models" question moot too: nothing in
+`details` had to move, because the mapping is read from the emitted markup rather than from
+the field names.
+
+What was settled up front and held:
 
 - **One page-level `@graph`**, not one script per card — fewer nodes, validates as a whole,
   and the shape Google's tooling reads most predictably.
@@ -1115,27 +1124,16 @@ that are already settled:
   to wait on. Google reads it anywhere in `<head>` or `<body>`, even injected later. Plain
   inline in `<head>`, no `blocking` attribute.
 
-**Why it is waiting.** § 2.2 of google-rich-results.md records a decision against a JSON-LD
-emitter, and the reason still stands: the renderer has **no intermediate representation** —
-it goes straight from `fields` to HTML strings — so a serializer would re-implement the
-schema mapping for all 48 types and become a parallel source of truth. Raw mode did not hit
-this, because subtracting from the microdata needs no second mapping.
+**Why it looked hard, and why it was not.** § 2.2 of google-rich-results.md records a
+decision against a JSON-LD emitter, because a serializer built from `fields` would
+re-implement the schema mapping for all 48 types and become a parallel source of truth. That
+reasoning is sound — and it only applies to a serializer built from the *fields*. Reading the
+*rendered microdata* instead sidesteps it completely: the renderer stays the single mapping,
+and the extractor is ~90 lines of tokenising with no dependencies.
 
-**What would answer the objection: an equivalence gate.** Build the graph from `fields`, then
-have a test extract the microdata from `"micro"` output and assert it equals the graph. The
-two then cannot silently disagree — which is precisely what § 2.2 asks for. That extractor is
-the real work: the repo has **zero dependencies** at any level, so it means a purpose-built
-microdata reader rather than a DOM library. It is tractable because the input is our own
-regular output, and it lives in tests, not in the shipped renderer.
-
-The reusable half of the mapping already exists: `resolveItemtype()` gives `@type`,
-`envelopeProps()` gives the envelope's claimed properties, and the property maps
-(`HEADLINE_PROP`, `SUMMARY_PROP`, `EYEBROW_PROP`, `PUBLISHED_PROP`, `TAGS_PROP`) are data.
-The `DETAILS` half — the majority — exists only as literals inside 48 template-literal
-functions and has no data form.
-
-**Also waiting on this:** `demo/schema.jsonld.html`, the third twin next to `schema.html`
-(micro) and `schema.raw.html` (raw).
+**Shipped with it:** `demo/schema.jsonld.html`, the third twin next to `schema.html` (micro)
+and `schema.raw.html` (raw); all three are generated from `schema.html` by
+`demo/schema.modes.build.js`.
 
 ### Would restructuring the content models make this easier? — Partly, and not the way it looks
 

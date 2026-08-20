@@ -70,7 +70,7 @@
     "build": "node build.js",
     "build:tokens": "node tokens.build.js",
     "lint:tokens": "node tokens.lint.js",
-    "test": "node --test render.test.js"
+    "test": "node --test render.test.js jsonld.test.js"
   },
   "devDependencies": {
     "esbuild": "^0.28.1"

@@ -348,20 +348,20 @@ grid.insertAdjacentHTML('beforeend', renderCard(ucf, presets));
 
 `options.schema` decides whether the markup carries schema.org structured data.
 
-| Value | Emits |
-|---|---|
-| `"micro"` | **the default** — inline microdata: `itemscope` / `itemtype` / `itemprop`, plus the hidden `<meta>` / `<link>` blocks that carry machine values |
-| `""` | nothing. No microdata attributes, no crawler-only elements |
+| Value | Markup | Structured data |
+|---|---|---|
+| `"micro"` | inline microdata — `itemscope` / `itemtype` / `itemprop` plus the hidden `<meta>` / `<link>` machine values | in the markup |
+| `""` | clean | none |
+| `"jsonld"` | clean — **identical to `""`** | a page-level `@graph`, emitted by the page |
 
 ```js
-renderCard(ucf, presets, cards, { schema: '' });     // clean markup
-renderCard(ucf, presets, cards);                     // micro, unchanged
+renderCard(ucf, presets, cards, { schema: '' });       // clean markup
+renderCard(ucf, presets, cards, { schema: 'jsonld' }); // same markup; page adds the @graph
+renderCard(ucf, presets, cards);                       // micro, unchanged
 ```
 
-Any other value **throws** — including `"jsonld"`, which is reserved and not
-implemented ([open-items.md § 34](../../../docs/plans/open-items.md)). Failing loudly is
-deliberate: a typo that silently fell back to microdata would ship structured data a
-consumer explicitly asked not to have.
+Any other value **throws**. Failing loudly is deliberate: a typo that silently fell back to
+microdata would ship structured data a consumer explicitly asked not to have.
 
 **How it works, and why that matters.** Raw mode is **subtractive** — the renderer always
 builds microdata, and `stripSchema()` removes it from the finished string. So raw output is
@@ -384,13 +384,50 @@ exports that bypass `renderCard` — `reviewItems`, `realestateSections`,
 `vacationrentalSections` — read the same state; set it with `setSchemaMode(mode)` and strip
 their composed output with `stripSchema(html)`.
 
+### JSON-LD
+
+`"jsonld"` renders the same clean markup as `""`; the structured data moves to one
+`<script type="application/ld+json">` in `<head>`. **It is read back out of the microdata**
+by [`jsonld.js`](../jsonld.js) — `microdataToJsonLd()` / `jsonLdGraph()` / `jsonLdScript()` —
+so there is one source of structured data, not two, and the modes cannot disagree. That is
+what makes this safe where a second emitter was
+[rejected](./google-rich-results.md#22-microdata-is-supported-json-ld-is-a-preference).
+
+```js
+import { jsonLdScript } from '@browser.style/card/jsonld.js';
+const html = cards.map((c) => renderCard(c, presets, all, { schema: 'micro' })).join('');
+page.head += jsonLdScript(html);      // one @graph for the whole page
+page.body = renderAll({ schema: 'jsonld' });
+```
+
+**One `@graph` for the page, not a block per card** — fewer nodes and it validates as a
+whole. Top-level items become graph nodes, so a card that emits two (a job posting and its
+`EmployerAggregateRating`) contributes two.
+
+**Never mark it render-blocking.** `<script type="application/ld+json">` is a *data block*:
+the HTML spec never executes a script with an unrecognised type, so `blocking="render"` has
+nothing to wait on — inert at best, and at worst it delays first paint for bytes only
+crawlers read. Google accepts it anywhere in `<head>` or `<body>`, even injected later.
+`jsonLdScript()` escapes `<` as `\u003c` so a text value containing `</script>` cannot close
+the tag early.
+
+The extractor follows the HTML microdata rules for where a property takes its value —
+`content` on `<meta>`, `href` on `<a>`/`<link>`, `src` on `<img>`, `datetime` on `<time>`,
+`value` on `<data>`, text otherwise — collapses a repeated property into an array, and
+blanks comments and `<script>`/`<style>` bodies before tokenising, since those are raw text
+full of `<` and `"`.
+
 Rendered reference: [`demo/schema.raw.html`](../demo/schema.raw.html). It is
 `demo/schema.html` with `stripSchema()` run over it — the same function the mode itself
 uses — so the two pages are identical **by construction**: 68 cards, 12 `<lay-out>`s, the
 same 11 sections, byte-identical visible text, and 471 `itemscope` against 0. Every
 remaining difference between them is structured data.
 
-Regenerate with `node ui/card/demo/schema.raw.build.js` after editing `schema.html`.
+Its JSON-LD twin is [`demo/schema.jsonld.html`](../demo/schema.jsonld.html) — the same
+markup plus a 63-node `@graph`.
+
+Regenerate both with `node ui/card/demo/schema.modes.build.js` after editing `schema.html`;
+`jsonld.test.js` fails if the shipped graph no longer matches.
 It deliberately does **not** re-render from `data/index.json` — that is `render.html`'s
 corpus, which carries the four standalone product-variant pages this page has no section
 for and picks different presets.

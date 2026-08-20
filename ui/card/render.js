@@ -303,16 +303,16 @@ const scope = (prop, type) =>
 	` itemprop="${esc(prop)}" itemscope itemtype="${SCHEMA + type}"`;
 
 /* ── schema mode ─────────────────────────────────────────────────────────
-   'micro' (default) emits microdata; '' emits none. Set from options.schema on
+   'micro' (default) emits microdata; '' and 'jsonld' emit none in the MARKUP — jsonld
+   moves it to a page-level @graph, built by jsonld.js from the micro output. Set from options.schema on
    renderCard(), module-level like IMG/TYPE_CHIP — the call tree is 7 hops deep and
    threading a parameter through ~150 functions would buy nothing.
    Docs: docs/card.md § Schema mode */
-const SCHEMA_MODES = new Set(['micro', '']);
+const SCHEMA_MODES = new Set(['micro', '', 'jsonld']);
 let SCHEMA_MODE = 'micro';
 export const setSchemaMode = (mode) => {
 	const next = mode ?? 'micro';
-	/* 'jsonld' is reserved, not implemented — open-items.md § 34 */
-	if (!SCHEMA_MODES.has(next)) throw new Error(`renderCard: unknown schema mode "${next}" (expected "micro" or ""; jsonld is open-items.md § 34)`);
+	if (!SCHEMA_MODES.has(next)) throw new Error(`renderCard: unknown schema mode "${next}" (expected "micro", "" or "jsonld")`);
 	SCHEMA_MODE = next;
 };
 const micro = () => SCHEMA_MODE === 'micro';

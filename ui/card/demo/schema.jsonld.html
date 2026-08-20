@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-US" dir="ltr">
 <head>
-	<title>UI: Card — Schema mode: raw</title>
+	<title>UI: Card — Schema mode: JSON-LD</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="text-scale" content="scale">
@@ -10,8 +10,3034 @@
 	<meta name="referrer" content="no-referrer">
 	<meta name="format-detection" content="telephone=no">
 	<link rel="preconnect" href="https://v4.browser.style">
-	<meta name="description" content="demo/schema.html with the structured data removed — the same cards, sections and layout, rendered with schema="" so there is no itemscope, itemtype or itemprop and none of the hidden meta blocks that carry machine values.">
+	<meta name="description" content="demo/schema.html rendered with schema="jsonld": the markup carries no microdata, and the same structured data is emitted once as a page-level @graph of 63 nodes in the document head.">
 	<link rel="alternate" type="text/markdown" href="/ui/card/docs/card.md">
+	<script type="application/ld+json">{
+	"@context": "https://schema.org",
+	"@graph": [
+		{
+			"@type": "WebSite",
+			"name": "Browser.style",
+			"alternateName": "browser.style",
+			"url": "https://browser.style/",
+			"potentialAction": {
+				"@type": "SearchAction",
+				"target": {
+					"@type": "EntryPoint",
+					"urlTemplate": "https://browser.style/search?q={search_term_string}"
+				},
+				"query-input": {
+					"@type": "PropertyValueSpecification",
+					"valueRequired": "https://schema.org/True",
+					"valueName": "search_term_string"
+				}
+			}
+		},
+		{
+			"@type": "BreadcrumbList",
+			"itemListElement": [
+				{
+					"@type": "ListItem",
+					"item": "/ui/card/",
+					"name": "Card",
+					"position": "1"
+				},
+				{
+					"@type": "ListItem",
+					"name": "Schema.org",
+					"position": "2"
+				}
+			]
+		},
+		{
+			"@type": "CreativeWork",
+			"image": "/assets/images/popovers.png",
+			"genre": "Design",
+			"name": "A generic piece of content",
+			"description": "Anything without a dedicated schema type renders as CreativeWork — headline, summary, tags and actions straight from the envelope.",
+			"keywords": [
+				"generic",
+				"fallback"
+			],
+			"url": "#"
+		},
+		{
+			"@type": "Article",
+			"image": "/assets/images/quantum.png",
+			"articleSection": "Science",
+			"dateModified": "2026-06-21T09:00:00Z",
+			"headline": "Quantum computing reaches a practical milestone",
+			"description": "Researchers demonstrate error-corrected logical qubits running a chemistry simulation faster than any classical supercomputer.",
+			"author": {
+				"@type": "Person",
+				"name": "Jane Smith",
+				"jobTitle": "Science Editor"
+			},
+			"datePublished": "2026-06-20T14:30:00Z",
+			"interactionStatistic": {
+				"@type": "InteractionCounter",
+				"interactionType": "https://schema.org/LikeAction",
+				"userInteractionCount": "892"
+			}
+		},
+		{
+			"@type": "NewsArticle",
+			"image": "/assets/images/government.png",
+			"articleSection": "Politics",
+			"datePublished": "2026-07-01T06:15:00Z",
+			"dateModified": "2026-07-01T08:40:00Z",
+			"headline": "Coalition agrees on sweeping climate package",
+			"description": "The agreement includes a carbon border tariff and a national retrofit programme, ending months of negotiation.",
+			"author": {
+				"@type": "Person",
+				"name": "Thomas Berg",
+				"jobTitle": "Newsroom"
+			}
+		},
+		{
+			"@type": "Quotation",
+			"image": "/assets/images/quote.png",
+			"text": "Simplicity is the ultimate sophistication — every element you remove makes the remaining ones stronger.Maria Lindgren",
+			"creator": {
+				"@type": "Person",
+				"name": "Maria Lindgren",
+				"jobTitle": "Design Director"
+			}
+		},
+		{
+			"@type": "ClaimReview",
+			"image": "/assets/images/government.png",
+			"datePublished": "2026-07-28",
+			"name": "Did the harbour bridge cost twice its budget?",
+			"description": "Public records show the final cost came in 18% over the approved budget — high, but nowhere near double.",
+			"reviewRating": {
+				"@type": "Rating",
+				"ratingValue": "2",
+				"bestRating": "5",
+				"worstRating": "1",
+				"alternateName": "Mostly false"
+			},
+			"claimReviewed": "The new harbour bridge cost twice its approved budget.Social media posts"
+		},
+		{
+			"@type": "Product",
+			"image": "/assets/images/aurasoundpro.png",
+			"sku": "WH-1000XM5",
+			"category": "Electronics",
+			"name": "AuraSound Pro Wireless Headphones",
+			"description": "Industry-leading noise cancellation, 30-hour battery and multipoint pairing.",
+			"aggregateRating": {
+				"@type": "AggregateRating",
+				"ratingValue": "4.5",
+				"ratingCount": "1247",
+				"bestRating": "5",
+				"worstRating": "1"
+			},
+			"offers": {
+				"@type": "Offer",
+				"priceCurrency": "USD",
+				"availability": "https://schema.org/InStock",
+				"itemCondition": "https://schema.org/NewCondition",
+				"priceValidUntil": "2026-08-01",
+				"price": "279"
+			},
+			"keywords": [
+				"Wireless",
+				"Noise Cancelling"
+			]
+		},
+		{
+			"@type": "ProductGroup",
+			"hasVariant": [
+				{
+					"@type": "Product",
+					"image": "/assets/images/silkgown-indigo.png",
+					"name": "Persistence Silk Gown — Indigo Floral",
+					"sku": "PSG-IND",
+					"color": "Indigo Floral",
+					"offers": {
+						"@type": "Offer",
+						"priceCurrency": "USD",
+						"price": "249",
+						"availability": "https://schema.org/InStock"
+					},
+					"url": "products/silk-gown-indigo.html"
+				},
+				{
+					"@type": "Product",
+					"image": "/assets/images/silkgown-crimson.png",
+					"name": "Persistence Silk Gown — Crimson Paisley",
+					"sku": "PSG-CRI",
+					"color": "Crimson Paisley",
+					"offers": {
+						"@type": "Offer",
+						"priceCurrency": "USD",
+						"price": "249",
+						"availability": "https://schema.org/InStock"
+					},
+					"url": "products/silk-gown-crimson.html"
+				},
+				{
+					"@type": "Product",
+					"image": "/assets/images/silkgown-emerald.png",
+					"name": "Persistence Silk Gown — Emerald Palm",
+					"sku": "PSG-EME",
+					"color": "Emerald Palm",
+					"offers": {
+						"@type": "Offer",
+						"priceCurrency": "USD",
+						"price": "249",
+						"availability": "https://schema.org/InStock"
+					},
+					"url": "products/silk-gown-emerald.html"
+				},
+				{
+					"@type": "Product",
+					"image": "/assets/images/silkgown-onyx.png",
+					"name": "Persistence Silk Gown — Onyx Deco",
+					"sku": "PSG-ONX",
+					"color": "Onyx Deco",
+					"offers": {
+						"@type": "Offer",
+						"priceCurrency": "USD",
+						"price": "249",
+						"availability": "https://schema.org/InStock"
+					},
+					"url": "products/silk-gown-onyx.html"
+				}
+			],
+			"productGroupID": "PSG-2026",
+			"variesBy": "https://schema.org/color",
+			"name": "Persistence Silk Gown",
+			"description": "Four colourways, each its own variant with its own URL — pick one to go straight to it.",
+			"offers": {
+				"@type": "Offer",
+				"priceCurrency": "USD",
+				"price": "249",
+				"availability": "https://schema.org/InStock"
+			}
+		},
+		{
+			"@type": "SoftwareApplication",
+			"image": "/assets/images/game_01.png",
+			"applicationCategory": "GameApplication",
+			"operatingSystem": [
+				"macOS",
+				"Windows",
+				"Switch"
+			],
+			"name": "Pixel Raiders",
+			"softwareVersion": "2.1",
+			"description": "Co-op dungeon crawling for up to four raiders — new Sky Fortress season, cross-play everywhere.",
+			"author": {
+				"@type": "Organization",
+				"name": "Bitburrow Studio",
+				"url": "https://bitburrow.example"
+			},
+			"offers": {
+				"@type": "Offer",
+				"priceCurrency": "USD",
+				"availability": "https://schema.org/InStock",
+				"price": "29"
+			},
+			"softwareRequirements": "Apple M1 or Intel i5 · 8 GB RAM · 4 GB free",
+			"keywords": [
+				"Game",
+				"Co-op"
+			]
+		},
+		{
+			"@type": "ItemList",
+			"image": "/assets/images/speakers.png",
+			"numberOfItems": "3",
+			"name": "Portable speakers compared",
+			"itemListElement": [
+				{
+					"@type": "ListItem",
+					"position": "1",
+					"image": "/assets/images/speakers-1.png",
+					"name": "SoundWave Mini"
+				},
+				{
+					"@type": "ListItem",
+					"position": "2",
+					"image": "/assets/images/speakers-2.png",
+					"name": "AuraSound Go"
+				},
+				{
+					"@type": "ListItem",
+					"position": "3",
+					"image": "/assets/images/speakers-3.png",
+					"name": "QuickBoom 2"
+				}
+			]
+		},
+		{
+			"@type": "Review",
+			"reviewRating": {
+				"@type": "Rating",
+				"ratingValue": "4",
+				"bestRating": "5",
+				"worstRating": "1"
+			},
+			"reviewBody": "Astonishing bass for a speaker this small. Battery easily lasts a weekend trip — the app is the only weak point.",
+			"author": {
+				"@type": "Person",
+				"name": "Alex Chen"
+			},
+			"datePublished": "2026-05-14",
+			"itemReviewed": {
+				"@type": "Product",
+				"name": "SoundWave Mini",
+				"image": "/assets/images/soundwavemini.png",
+				"aggregateRating": {
+					"@type": "AggregateRating",
+					"ratingValue": "4.6",
+					"ratingCount": "1847",
+					"bestRating": "5",
+					"worstRating": "1"
+				},
+				"offers": {
+					"@type": "Offer",
+					"priceCurrency": "USD",
+					"price": "279",
+					"availability": "https://schema.org/InStock"
+				}
+			}
+		},
+		{
+			"@type": "Review",
+			"reviewRating": {
+				"@type": "Rating",
+				"ratingValue": "5",
+				"bestRating": "5",
+				"worstRating": "1"
+			},
+			"reviewBody": "Our conversion rates increased by 15% after switching to this UI system.",
+			"author": {
+				"@type": "Person",
+				"name": "David Smith",
+				"jobTitle": "Marketing Lead"
+			},
+			"itemReviewed": {
+				"@type": "Organization",
+				"name": "browser.style UI system"
+			}
+		},
+		{
+			"@type": "Offer",
+			"image": "/assets/images/fittrackpro.png",
+			"eligibleDuration": {
+				"@type": "QuantitativeValue",
+				"value": "14",
+				"unitCode": "DAY"
+			},
+			"name": "FitTrack Pro",
+			"description": "Unlimited workouts, personal coaching and priority support.",
+			"priceSpecification": {
+				"@type": "PriceSpecification",
+				"priceCurrency": "USD",
+				"price": "19"
+			},
+			"includesObject": "Unlimited workout library 1:1 coaching sessions Advanced sleep analytics"
+		},
+		{
+			"@type": "MemberProgram",
+			"image": "/assets/images/slimfold.png",
+			"name": "Nordlys Rewards",
+			"description": "Earn points on everything you buy, unlock member prices as you climb, and keep your points as long as the account stays active.",
+			"hostingOrganization": {
+				"@type": "Organization",
+				"name": "Nordlys Retail"
+			},
+			"hasTiers": [
+				{
+					"@type": "MemberProgramTier",
+					"name": "Blue",
+					"membershipPointsEarned": "1",
+					"hasTierRequirement": "free, no minimum spend",
+					"hasTierBenefit": [
+						"https://schema.org/TierBenefitLoyaltyPoints",
+						"https://schema.org/TierBenefitLoyaltyReturns"
+					]
+				},
+				{
+					"@type": "MemberProgramTier",
+					"name": "Silver",
+					"membershipPointsEarned": "2",
+					"hasTierRequirement": {
+						"@type": "MonetaryAmount",
+						"currency": "EUR",
+						"value": "500"
+					},
+					"hasTierBenefit": [
+						"https://schema.org/TierBenefitLoyaltyPoints",
+						"https://schema.org/TierBenefitLoyaltyPrice",
+						"https://schema.org/TierBenefitLoyaltyShipping",
+						"https://schema.org/TierBenefitLoyaltyReturns"
+					]
+				},
+				{
+					"@type": "MemberProgramTier",
+					"name": "Gold",
+					"membershipPointsEarned": "3",
+					"hasTierRequirement": {
+						"@type": "MonetaryAmount",
+						"currency": "EUR",
+						"value": "2000"
+					},
+					"hasTierBenefit": [
+						"https://schema.org/TierBenefitLoyaltyPoints",
+						"https://schema.org/TierBenefitLoyaltyPrice",
+						"https://schema.org/TierBenefitLoyaltyShipping",
+						"https://schema.org/TierBenefitLoyaltyReturns"
+					]
+				}
+			],
+			"url": "#"
+		},
+		{
+			"@type": "Reservation",
+			"image": "/assets/images/brewandbean.png",
+			"totalPrice": "45",
+			"priceCurrency": "USD",
+			"reservationFor": {
+				"@type": "Service",
+				"name": "Meeting Room Rental"
+			},
+			"name": "Book the Loft meeting room",
+			"description": "A quiet 8-person room above the café — whiteboard wall, 4K display and bottomless filter coffee.",
+			"provider": {
+				"@type": "Organization",
+				"name": "Brew & Bean"
+			}
+		},
+		{
+			"@type": "Movie",
+			"image": "/assets/images/movie_01.png",
+			"duration": "PT2H14M",
+			"contentRating": "PG-13",
+			"dateCreated": "2026-02-12",
+			"genre": "Science fiction",
+			"name": "Echoes of Tomorrow",
+			"description": "A signal from a decommissioned satellite starts predicting tomorrow's news — one broadcast at a time.",
+			"aggregateRating": {
+				"@type": "AggregateRating",
+				"ratingValue": "4.2",
+				"ratingCount": "8817",
+				"bestRating": "5",
+				"worstRating": "1"
+			},
+			"director": {
+				"@type": "Person",
+				"name": "Sofia Lindqvist"
+			},
+			"actor": [
+				{
+					"@type": "Person",
+					"name": "Jonas Beck"
+				},
+				{
+					"@type": "Person",
+					"name": "Amara Okafor"
+				}
+			]
+		},
+		{
+			"@type": "TVSeries",
+			"image": "/assets/images/techpeople.png",
+			"numberOfSeasons": "3",
+			"numberOfEpisodes": "24",
+			"startDate": "2023-09-14",
+			"contentRating": "15",
+			"genre": "Science fiction",
+			"name": "Nordlight",
+			"description": "A Copenhagen research lab wakes something in the aurora — and the people who built it have to decide what the world gets told.",
+			"aggregateRating": {
+				"@type": "AggregateRating",
+				"ratingValue": "4.4",
+				"ratingCount": "12904",
+				"bestRating": "5",
+				"worstRating": "1"
+			},
+			"director": {
+				"@type": "Person",
+				"name": "Freja Nyholm"
+			},
+			"actor": [
+				{
+					"@type": "Person",
+					"name": "Ingrid Solberg"
+				},
+				{
+					"@type": "Person",
+					"name": "Mattias Vogel"
+				}
+			],
+			"containsSeason": [
+				{
+					"@type": "TVSeason",
+					"seasonNumber": "1",
+					"numberOfEpisodes": "8",
+					"name": "First Light"
+				},
+				{
+					"@type": "TVSeason",
+					"seasonNumber": "2",
+					"numberOfEpisodes": "8",
+					"name": "The Quiet Band"
+				},
+				{
+					"@type": "TVSeason",
+					"seasonNumber": "3",
+					"numberOfEpisodes": "8",
+					"name": "Terminus"
+				}
+			],
+			"keywords": [
+				"Nordic noir",
+				"Sci-fi"
+			]
+		},
+		{
+			"@type": "TVEpisode",
+			"image": "/assets/images/techpeople.png",
+			"episodeNumber": "4",
+			"duration": "PT58M",
+			"datePublished": "2026-03-05",
+			"partOfSeries": {
+				"@type": "TVSeries",
+				"name": "Nordlight"
+			},
+			"partOfSeason": {
+				"@type": "TVSeason",
+				"seasonNumber": "3",
+				"name": "Terminus"
+			},
+			"name": "The Long Dark Between",
+			"description": "Ingrid takes the array offline for ninety seconds. It is enough.",
+			"director": {
+				"@type": "Person",
+				"name": "Freja Nyholm"
+			},
+			"actor": [
+				{
+					"@type": "Person",
+					"name": "Ingrid Solberg"
+				},
+				{
+					"@type": "Person",
+					"name": "Mattias Vogel"
+				}
+			]
+		},
+		{
+			"@type": "VideoObject",
+			"contentUrl": "/assets/video/river.mp4",
+			"thumbnailUrl": "/assets/images/river.png",
+			"uploadDate": "2026-05-14T10:00:00Z",
+			"duration": "PT3M24S",
+			"genre": "Documentary",
+			"name": "The River, Slowly",
+			"description": "A quiet study of a lowland river through one summer — shot at water level.",
+			"creator": {
+				"@type": "Person",
+				"name": "Nørre Films"
+			},
+			"interactionStatistic": {
+				"@type": "InteractionCounter",
+				"interactionType": "https://schema.org/WatchAction",
+				"userInteractionCount": "48211"
+			}
+		},
+		{
+			"@type": "PodcastSeries",
+			"image": "/assets/images/podcast.png",
+			"startDate": "2022-01-11",
+			"name": "The Calm Mind",
+			"description": "A fortnightly conversation about attention, rest, and the parts of modern life that quietly eat both.",
+			"webFeed": "https://calmmind.example/feed.xml",
+			"author": {
+				"@type": "Person",
+				"name": "Ida Månsson",
+				"jobTitle": "Host"
+			},
+			"hasPart": [
+				{
+					"@type": "PodcastEpisode",
+					"episodeNumber": "42",
+					"duration": "PT2M49S",
+					"name": "Digital minimalism, revisited"
+				},
+				{
+					"@type": "PodcastEpisode",
+					"episodeNumber": "41",
+					"duration": "PT48M10S",
+					"name": "The four-day week, two years on"
+				},
+				{
+					"@type": "PodcastEpisode",
+					"episodeNumber": "40",
+					"duration": "PT39M2S",
+					"name": "What silence does to a room"
+				}
+			],
+			"keywords": [
+				"Wellbeing",
+				"Attention"
+			]
+		},
+		{
+			"@type": "PodcastEpisode",
+			"image": "/assets/images/podcast.png",
+			"associatedMedia": {
+				"@type": "AudioObject",
+				"contentUrl": "/assets/audio/podcast.m4a",
+				"name": "Digital minimalism, revisited — Episode 42"
+			},
+			"episodeNumber": "42",
+			"duration": "PT2M49S",
+			"partOfSeries": {
+				"@type": "PodcastSeries",
+				"name": "The Calm Mind"
+			},
+			"name": "Digital minimalism, revisited",
+			"description": "What actually stuck three years after the digital-declutter wave — with researcher Ida Månsson.",
+			"datePublished": "2026-07-30T06:00:00Z"
+		},
+		{
+			"@type": "MusicGroup",
+			"image": "/assets/images/band_dreampop.png",
+			"foundingDate": "2019",
+			"genre": [
+				"Shoegaze",
+				"Ambient pop",
+				"Dream pop"
+			],
+			"sameAs": [
+				"https://halvmorke.bandcamp.example",
+				"https://instagram.com/halvmorke"
+			],
+			"foundingLocation": {
+				"@type": "Place",
+				"name": "Copenhagen"
+			},
+			"name": "Halvmørke",
+			"description": "Five players from the Copenhagen basement circuit, named for the hour when the light has gone but the dark has not arrived.",
+			"member": [
+				{
+					"@type": "Person",
+					"name": "Ida Krogh"
+				},
+				{
+					"@type": "Person",
+					"name": "Jonas Riis"
+				},
+				{
+					"@type": "Person",
+					"name": "Emil Damgaard"
+				},
+				{
+					"@type": "Person",
+					"name": "Sanne Bech"
+				},
+				{
+					"@type": "Person",
+					"name": "Villads Toft"
+				}
+			],
+			"album": [
+				{
+					"@type": "MusicAlbum",
+					"datePublished": "2026-04-17",
+					"numTracks": "4",
+					"url": "#schema-music",
+					"name": "Slow Weather"
+				},
+				{
+					"@type": "MusicAlbum",
+					"datePublished": "2023-09-01",
+					"numTracks": "9",
+					"name": "Nattevagt"
+				}
+			],
+			"keywords": [
+				"Dream pop",
+				"Copenhagen"
+			]
+		},
+		{
+			"@type": "MusicAlbum",
+			"image": "/assets/images/album_slowweather.jpg",
+			"numTracks": "4",
+			"datePublished": "2026-04-17",
+			"albumProductionType": "https://schema.org/StudioAlbum",
+			"albumReleaseType": "https://schema.org/EPRelease",
+			"genre": "Dream pop",
+			"name": "Slow Weather",
+			"byArtist": {
+				"@type": "MusicGroup",
+				"url": "#schema-musicgroup",
+				"name": "Halvmørke"
+			},
+			"description": "Four tracks recorded live to tape in a Bornholm chapel over one November week, with the doors open.",
+			"track": [
+				{
+					"@type": "MusicRecording",
+					"position": "1",
+					"duration": "PT4M12S",
+					"byArtist": {
+						"@type": "MusicGroup",
+						"name": "Halvmørke"
+					},
+					"name": "Slow Weather"
+				},
+				{
+					"@type": "MusicRecording",
+					"position": "2",
+					"duration": "PT3M48S",
+					"byArtist": {
+						"@type": "MusicGroup",
+						"name": "Halvmørke"
+					},
+					"name": "Kastellet"
+				},
+				{
+					"@type": "MusicRecording",
+					"position": "3",
+					"duration": "PT6M5S",
+					"byArtist": {
+						"@type": "MusicGroup",
+						"name": "Halvmørke"
+					},
+					"name": "Everything Kept Falling"
+				},
+				{
+					"@type": "MusicRecording",
+					"position": "4",
+					"duration": "PT4M31S",
+					"byArtist": {
+						"@type": "MusicGroup",
+						"name": "Halvmørke"
+					},
+					"name": "November, Open Doors"
+				}
+			],
+			"keywords": [
+				"Dream pop",
+				"Live to tape"
+			]
+		},
+		{
+			"@type": "Book",
+			"image": "/assets/images/gastronomy.png",
+			"isbn": "978-87-12345-67-8",
+			"numberOfPages": "312",
+			"bookFormat": "https://schema.org/Hardcover",
+			"genre": "Cookbook",
+			"name": "The Nordic Pantry",
+			"description": "120 recipes built on what a northern larder actually holds — rye, root vegetables, brine and smoke.",
+			"author": {
+				"@type": "Person",
+				"name": "Mette Holm"
+			},
+			"aggregateRating": {
+				"@type": "AggregateRating",
+				"ratingValue": "4.6",
+				"ratingCount": "923",
+				"bestRating": "5",
+				"worstRating": "1"
+			},
+			"offers": {
+				"@type": "Offer",
+				"priceCurrency": "EUR",
+				"availability": "https://schema.org/InStock",
+				"price": "34"
+			},
+			"publisher": {
+				"@type": "Organization",
+				"name": "Kbh Press"
+			}
+		},
+		{
+			"@type": "ComicSeries",
+			"image": "/assets/images/cssman-cover-1.png",
+			"issn": "2634-0011",
+			"startDate": "2026-08-01",
+			"genre": "Superhero",
+			"name": "CSS Man",
+			"description": "Faster than a keystroke, more powerful than preprocessors, able to stylize a world — with a utility belt and the power of separation of concerns.",
+			"publisher": {
+				"@type": "Organization",
+				"name": "Web Comics Group"
+			},
+			"keywords": [
+				"Silver Age",
+				"Dark Mode",
+				"Web comics"
+			]
+		},
+		{
+			"@type": "ComicIssue",
+			"image": "/assets/images/cssman-cover-2.png",
+			"issueNumber": "2",
+			"datePublished": "2026-09-01",
+			"variantCover": "Newsstand edition",
+			"pagination": "32",
+			"genre": "Superhero",
+			"name": "Dark Mode Rising",
+			"description": "Jayess kills the stylesheet and the city goes dark. CSS Man has one cascade left — and the brace signal is still burning over the rooftops.",
+			"isPartOf": {
+				"@type": "ComicSeries",
+				"issn": "2634-0011",
+				"url": "#schema-comicseries",
+				"name": "CSS Man"
+			},
+			"artist": {
+				"@type": "Person",
+				"name": "Milton Stanley"
+			},
+			"penciler": {
+				"@type": "Person",
+				"name": "Milton Stanley"
+			},
+			"inker": {
+				"@type": "Person",
+				"name": "Rosa Vega"
+			},
+			"letterer": {
+				"@type": "Person",
+				"name": "Artie Kemp"
+			},
+			"colorist": {
+				"@type": "Person",
+				"name": "Dot Halliday"
+			},
+			"offers": {
+				"@type": "Offer",
+				"priceCurrency": "USD",
+				"availability": "https://schema.org/InStock",
+				"price": "4.99"
+			},
+			"keywords": [
+				"Silver Age",
+				"Dark Mode"
+			]
+		},
+		{
+			"@type": "ImageGallery",
+			"image": [
+				{
+					"@type": "ImageObject",
+					"contentUrl": "/assets/images/spring.jpg",
+					"caption": "Blooming cherry trees in spring",
+					"creditText": "browser.style",
+					"copyrightNotice": "© 2026 browser.style",
+					"license": "https://creativecommons.org/licenses/by/4.0/",
+					"acquireLicensePage": "https://browser.style/license",
+					"creator": {
+						"@type": "Person",
+						"name": "Mads Stoumann"
+					}
+				},
+				{
+					"@type": "ImageObject",
+					"contentUrl": "/assets/images/summer.jpg",
+					"caption": "Sunlit meadow in summer",
+					"creditText": "browser.style",
+					"copyrightNotice": "© 2026 browser.style",
+					"license": "https://creativecommons.org/licenses/by/4.0/",
+					"acquireLicensePage": "https://browser.style/license",
+					"creator": {
+						"@type": "Person",
+						"name": "Mads Stoumann"
+					}
+				},
+				{
+					"@type": "ImageObject",
+					"contentUrl": "/assets/images/autumn.jpg",
+					"caption": "Golden forest in autumn",
+					"creditText": "browser.style",
+					"copyrightNotice": "© 2026 browser.style",
+					"license": "https://creativecommons.org/licenses/by/4.0/",
+					"acquireLicensePage": "https://browser.style/license",
+					"creator": {
+						"@type": "Person",
+						"name": "Mads Stoumann"
+					}
+				},
+				{
+					"@type": "ImageObject",
+					"contentUrl": "/assets/images/winter.jpg",
+					"caption": "Snow-covered pines in winter",
+					"creditText": "browser.style",
+					"copyrightNotice": "© 2026 browser.style",
+					"license": "https://creativecommons.org/licenses/by/4.0/",
+					"acquireLicensePage": "https://browser.style/license",
+					"creator": {
+						"@type": "Person",
+						"name": "Mads Stoumann"
+					}
+				}
+			],
+			"name": "Four seasons",
+			"description": "One year, one forest — 4 of 48 photos.",
+			"keywords": [
+				"nature",
+				"seasons"
+			]
+		},
+		{
+			"@type": "Course",
+			"image": "/assets/images/mindfulness.png",
+			"timeRequired": "P6W",
+			"educationalLevel": "Beginner",
+			"hasCourseInstance": {
+				"@type": "CourseInstance",
+				"courseMode": "Online",
+				"courseWorkload": "PT3H",
+				"instructor": {
+					"@type": "Person",
+					"name": "Calm Academy"
+				}
+			},
+			"provider": {
+				"@type": "Organization",
+				"name": "Calm Academy"
+			},
+			"about": "Wellness",
+			"name": "Mindfulness Foundations",
+			"description": "A six-week guided programme: attention training, body scans and everyday practice.",
+			"offers": {
+				"@type": "Offer",
+				"priceCurrency": "USD",
+				"availability": "https://schema.org/InStock",
+				"price": "89"
+			},
+			"teaches": "Sustain attention for 20 minutes Build a daily sitting habit Apply body scans to stress",
+			"keywords": [
+				"Mindfulness",
+				"Wellbeing"
+			]
+		},
+		{
+			"@type": "EducationalOccupationalCredential",
+			"image": "/assets/images/a11y.png",
+			"dateCreated": "2026-03-12",
+			"expires": "2029-03-12",
+			"educationalLevel": "Advanced",
+			"identifier": "AWA-2026-8841",
+			"name": "Advanced Web Accessibility",
+			"description": "Demonstrated expertise in WCAG 2.2, ARIA patterns and assistive technology testing.",
+			"recognizedBy": {
+				"@type": "Organization",
+				"name": "IAAP"
+			}
+		},
+		{
+			"@type": "Quiz",
+			"image": "/assets/images/quantum.png",
+			"learningResourceType": "Flashcard",
+			"educationalAlignment": {
+				"@type": "AlignmentObject",
+				"alignmentType": "educationalSubject",
+				"targetName": "Quantum computing"
+			},
+			"name": "Quantum computing — flashcards",
+			"description": "Three cards on the vocabulary every explainer assumes you already know. Open a card to check yourself.",
+			"about": {
+				"@type": "Thing",
+				"name": "Quantum computing"
+			},
+			"hasPart": [
+				{
+					"@type": "Question",
+					"text": "What is a qubit?",
+					"eduQuestionType": "Flashcard",
+					"acceptedAnswer": {
+						"@type": "Answer",
+						"text": "The quantum unit of information. Unlike a bit it can hold a superposition of 0 and 1, and only collapses to one of them when measured."
+					}
+				},
+				{
+					"@type": "Question",
+					"text": "What does quantum entanglement mean?",
+					"eduQuestionType": "Flashcard",
+					"acceptedAnswer": {
+						"@type": "Answer",
+						"text": "Two or more qubits share a single state, so measuring one instantly fixes the outcome of the others — however far apart they are."
+					}
+				},
+				{
+					"@type": "Question",
+					"text": "Why does a quantum computer need error correction?",
+					"eduQuestionType": "Flashcard",
+					"acceptedAnswer": {
+						"@type": "Answer",
+						"text": "Physical qubits decohere in microseconds. Many of them are combined into one logical qubit whose errors can be detected and corrected faster than they accumulate."
+					}
+				}
+			],
+			"keywords": [
+				"Flashcards",
+				"Physics"
+			]
+		},
+		{
+			"@type": "Quiz",
+			"image": "/assets/images/quantum.png",
+			"learningResourceType": "Practice problem",
+			"educationalAlignment": {
+				"@type": "AlignmentObject",
+				"alignmentType": "educationalSubject",
+				"targetName": "Quantum computing"
+			},
+			"name": "Quantum computing — check yourself",
+			"description": "The same three ideas as the flashcards, graded. Pick an answer and it tells you whether you were right.",
+			"about": {
+				"@type": "Thing",
+				"name": "Quantum computing"
+			},
+			"hasPart": [
+				{
+					"@type": "Question",
+					"text": "What can a qubit hold that a classical bit cannot?",
+					"eduQuestionType": "Multiple choice",
+					"suggestedAnswer": [
+						{
+							"@type": "Answer",
+							"position": "1",
+							"text": "Two values at once, permanently"
+						},
+						{
+							"@type": "Answer",
+							"position": "3",
+							"text": "Any number between 0 and 1, read back exactly"
+						},
+						{
+							"@type": "Answer",
+							"position": "4",
+							"text": "Nothing — a qubit is a bit with a faster clock"
+						}
+					],
+					"acceptedAnswer": {
+						"@type": "Answer",
+						"position": "2",
+						"text": "A superposition of 0 and 1 that collapses when measured"
+					}
+				},
+				{
+					"@type": "Question",
+					"text": "Two entangled qubits are separated by a kilometre. What happens when one is measured?",
+					"eduQuestionType": "Multiple choice",
+					"acceptedAnswer": {
+						"@type": "Answer",
+						"position": "1",
+						"text": "The other's outcome is fixed in the same instant"
+					},
+					"suggestedAnswer": [
+						{
+							"@type": "Answer",
+							"position": "2",
+							"text": "A signal travels between them at the speed of light"
+						},
+						{
+							"@type": "Answer",
+							"position": "3",
+							"text": "The other qubit is destroyed"
+						},
+						{
+							"@type": "Answer",
+							"position": "4",
+							"text": "Nothing; entanglement does not survive separation"
+						}
+					]
+				},
+				{
+					"@type": "Question",
+					"text": "Why does a quantum computer need error correction?",
+					"eduQuestionType": "Multiple choice",
+					"suggestedAnswer": [
+						{
+							"@type": "Answer",
+							"position": "1",
+							"text": "Because its output is random and must be averaged"
+						},
+						{
+							"@type": "Answer",
+							"position": "3",
+							"text": "Because superposition cannot be measured twice"
+						},
+						{
+							"@type": "Answer",
+							"position": "4",
+							"text": "It does not — quantum states are exact"
+						}
+					],
+					"acceptedAnswer": {
+						"@type": "Answer",
+						"position": "2",
+						"text": "Because physical qubits decohere in microseconds"
+					}
+				}
+			],
+			"keywords": [
+				"Practice problems",
+				"Physics"
+			]
+		},
+		{
+			"@type": "Quiz",
+			"name": "Quantum computing — flashcard",
+			"learningResourceType": "Flashcard",
+			"about": {
+				"@type": "Thing",
+				"name": "Quantum computing"
+			},
+			"educationalAlignment": {
+				"@type": "AlignmentObject",
+				"alignmentType": "educationalSubject",
+				"targetName": "Quantum computing"
+			},
+			"hasPart": {
+				"@type": "Question",
+				"image": "/assets/images/quantum.png",
+				"text": "What is a qubit?",
+				"eduQuestionType": "Flashcard",
+				"acceptedAnswer": {
+					"@type": "Answer",
+					"text": "The quantum unit of information. Unlike a bit it can hold a superposition of 0 and 1, and only collapses to one of them when measured."
+				}
+			}
+		},
+		{
+			"@type": "HowTo",
+			"image": "/assets/images/howto.png",
+			"totalTime": "PT10M",
+			"estimatedCost": {
+				"@type": "MonetaryAmount",
+				"currency": "EUR",
+				"value": "5"
+			},
+			"name": "Bleed a radiator in four steps",
+			"description": "Cold at the top, warm at the bottom? Trapped air. Ten minutes and a radiator key fix it.",
+			"supply": [
+				{
+					"@type": "HowToSupply",
+					"name": "Cloth"
+				},
+				{
+					"@type": "HowToSupply",
+					"name": "Small bowl"
+				}
+			],
+			"tool": {
+				"@type": "HowToTool",
+				"name": "Radiator key"
+			},
+			"step": [
+				{
+					"@type": "HowToStep",
+					"name": "Turn the heating off",
+					"position": "1",
+					"text": "Switch the central heating off and let the radiator cool completely."
+				},
+				{
+					"@type": "HowToStep",
+					"name": "Open the bleed valve",
+					"position": "2",
+					"text": "Hold the bowl under the valve and turn the key counter-clockwise a quarter turn — you'll hear a hiss."
+				},
+				{
+					"@type": "HowToStep",
+					"name": "Wait for water",
+					"position": "3",
+					"text": "When the hissing stops and a steady trickle of water appears, all the air is out."
+				},
+				{
+					"@type": "HowToStep",
+					"name": "Close and check pressure",
+					"position": "4",
+					"text": "Close the valve, turn the heating back on and top up the boiler pressure if it dropped below 1 bar."
+				}
+			]
+		},
+		{
+			"@type": "DefinedTermSet",
+			"image": "/assets/images/popovers.png",
+			"about": {
+				"@type": "Thing",
+				"name": "Design systems"
+			},
+			"name": "Design-system glossary",
+			"description": "The words this documentation uses in a specific sense, so a sentence means the same thing on every page. Four of them below.",
+			"hasDefinedTerm": [
+				{
+					"@type": "DefinedTerm",
+					"name": "Design token",
+					"termCode": "design-token",
+					"description": "A named value — a colour, a spacing step, a duration — stored once and referenced everywhere, so a change lands in one place instead of two hundred."
+				},
+				{
+					"@type": "DefinedTerm",
+					"name": "Container query",
+					"termCode": "container-query",
+					"description": "A style rule that reacts to the width of an element's own container rather than the viewport, which is what lets one card work as a hero and as a sidebar item."
+				},
+				{
+					"@type": "DefinedTerm",
+					"name": "Cascade layer",
+					"termCode": "cascade-layer",
+					"description": "An explicit priority band in the cascade. Rules in a later layer beat earlier ones regardless of specificity, which removes most reasons to write !important."
+				},
+				{
+					"@type": "DefinedTerm",
+					"name": "Light DOM component",
+					"termCode": "light-dom-component",
+					"description": "A custom element that keeps its children in the ordinary document tree instead of a shadow root, so page CSS, form submission and search engines all still see them."
+				}
+			]
+		},
+		{
+			"@type": "Person",
+			"image": "/assets/images/janesmith.png",
+			"name": "Jane Smith",
+			"jobTitle": "Chief Political Correspondent",
+			"worksFor": {
+				"@type": "Organization",
+				"name": "The Daily Ledger"
+			},
+			"description": "Covers elections and policy across Europe. Two decades on the beat, one Pulitzer nomination.",
+			"address": "Copenhagen, Denmark",
+			"knowsAbout": [
+				"Elections",
+				"EU policy",
+				"Data journalism"
+			],
+			"sameAs": "https://www.linkedin.com/in/jane-doe-journalist",
+			"url": "#",
+			"email": "jane@dailyledger.example"
+		},
+		{
+			"@type": "Person",
+			"image": "/assets/images/mstanley.png",
+			"name": "Milton Stanley",
+			"jobTitle": "Comic Artist",
+			"worksFor": {
+				"@type": "Organization",
+				"name": "Web Comics Group"
+			},
+			"description": "Pencils and inks every issue of CSS Man at the same drawing board he started on. Keeps a sign above it reading “Comics are the poetry of the people!”",
+			"address": "New York, NY",
+			"hasOccupation": {
+				"@type": "Occupation",
+				"occupationalCategory": "27-1013.00",
+				"name": "Comic book artist"
+			},
+			"award": "Eisner nominee — Best Cover Artist, 2026",
+			"sameAs": "https://webcomicsgroup.example/artists/m-stanley",
+			"knowsAbout": [
+				"Pencils",
+				"Inking",
+				"Lettering"
+			]
+		},
+		{
+			"@type": "Organization",
+			"image": "/assets/images/coorperation.png",
+			"foundingDate": "1998-03-01",
+			"sameAs": [
+				"https://www.linkedin.com/company/northwind-group",
+				"https://x.com/northwindgroup"
+			],
+			"numberOfEmployees": {
+				"@type": "QuantitativeValue",
+				"value": "1240"
+			},
+			"name": "Northwind Group",
+			"description": "Engineering and design consultancy — headquartered in Copenhagen, with local offices across Northern Europe.",
+			"location": {
+				"@type": "Place",
+				"geo": {
+					"@type": "GeoCoordinates",
+					"latitude": "55.6759",
+					"longitude": "12.5926"
+				}
+			},
+			"address": {
+				"@type": "PostalAddress",
+				"streetAddress": "Havnegade 44",
+				"postalCode": "1058",
+				"addressLocality": "Copenhagen",
+				"addressCountry": "DK"
+			},
+			"email": "contact@northwind.example",
+			"department": [
+				{
+					"@type": "LocalBusiness",
+					"name": "Aarhus office",
+					"geo": {
+						"@type": "GeoCoordinates",
+						"latitude": "56.1567",
+						"longitude": "10.2108"
+					},
+					"address": {
+						"@type": "PostalAddress",
+						"streetAddress": "Åboulevarden 21",
+						"addressLocality": "Aarhus",
+						"addressCountry": "DK"
+					},
+					"telephone": "tel:+4586123456",
+					"email": "aarhus@northwind.example",
+					"openingHours": [
+						"Mo-We 09:00-17:00",
+						"Th 09:00-16:00",
+						"Fr 09:00-14:00"
+					],
+					"openingHoursSpecification": [
+						{
+							"@type": "OpeningHoursSpecification",
+							"dayOfWeek": [
+								"https://schema.org/Monday",
+								"https://schema.org/Tuesday",
+								"https://schema.org/Wednesday"
+							],
+							"opens": "09:00",
+							"closes": "17:00"
+						},
+						{
+							"@type": "OpeningHoursSpecification",
+							"dayOfWeek": "https://schema.org/Thursday",
+							"opens": "09:00",
+							"closes": "16:00"
+						},
+						{
+							"@type": "OpeningHoursSpecification",
+							"dayOfWeek": "https://schema.org/Friday",
+							"opens": "09:00",
+							"closes": "14:00"
+						}
+					]
+				},
+				{
+					"@type": "LocalBusiness",
+					"name": "Berlin office",
+					"geo": {
+						"@type": "GeoCoordinates",
+						"latitude": "52.5296",
+						"longitude": "13.4062"
+					},
+					"address": {
+						"@type": "PostalAddress",
+						"streetAddress": "Torstraße 140",
+						"addressLocality": "Berlin",
+						"addressCountry": "DE"
+					},
+					"telephone": "tel:+4930901820",
+					"email": "berlin@northwind.example",
+					"openingHours": [
+						"Mo-Th 08:30-17:00",
+						"Fr 08:30-15:00"
+					],
+					"openingHoursSpecification": [
+						{
+							"@type": "OpeningHoursSpecification",
+							"dayOfWeek": [
+								"https://schema.org/Monday",
+								"https://schema.org/Tuesday",
+								"https://schema.org/Wednesday",
+								"https://schema.org/Thursday"
+							],
+							"opens": "08:30",
+							"closes": "17:00"
+						},
+						{
+							"@type": "OpeningHoursSpecification",
+							"dayOfWeek": "https://schema.org/Friday",
+							"opens": "08:30",
+							"closes": "15:00"
+						}
+					]
+				}
+			]
+		},
+		{
+			"@type": "JobPosting",
+			"image": "/assets/images/jobposting.png",
+			"industry": "Software",
+			"datePosted": "2026-06-15",
+			"validThrough": "2026-08-15",
+			"employmentType": "FULL_TIME",
+			"title": "Senior Frontend Engineer",
+			"description": "Own the design system of a product used by two million people. CSS depth valued over framework trivia.",
+			"hiringOrganization": {
+				"@type": "Organization",
+				"name": "Nordlys ApS"
+			},
+			"jobLocation": {
+				"@type": "Place",
+				"address": {
+					"@type": "PostalAddress",
+					"addressLocality": "Copenhagen",
+					"addressCountry": "DK"
+				}
+			},
+			"baseSalary": {
+				"@type": "MonetaryAmount",
+				"currency": "DKK",
+				"value": {
+					"@type": "QuantitativeValue",
+					"minValue": "720000",
+					"maxValue": "840000",
+					"unitText": "YEAR"
+				}
+			},
+			"qualifications": "5+ years building accessible web UI Deep modern CSS (container queries, layers, scroll-driven animation) Web components in production",
+			"jobBenefits": "6 weeks vacation Hardware budget Conference travel"
+		},
+		{
+			"@type": "EmployerAggregateRating",
+			"itemReviewed": {
+				"@type": "Organization",
+				"name": "Nordlys ApS",
+				"sameAs": "https://nordlys.example"
+			},
+			"ratingValue": "4.3",
+			"ratingCount": "268",
+			"bestRating": "5",
+			"worstRating": "1"
+		},
+		{
+			"@type": "EventSeries",
+			"image": "/assets/images/world.png",
+			"name": "A decade of browser.style",
+			"subEvent": [
+				{
+					"@type": "Event",
+					"startDate": "2016",
+					"eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",
+					"location": {
+						"@type": "VirtualLocation",
+						"url": "https://browser.style"
+					},
+					"name": "First CSS-only component published."
+				},
+				{
+					"@type": "Event",
+					"startDate": "2021",
+					"eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",
+					"location": {
+						"@type": "VirtualLocation",
+						"url": "https://browser.style"
+					},
+					"name": "Design token system and 100th component."
+				},
+				{
+					"@type": "Event",
+					"startDate": "2018",
+					"eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",
+					"location": {
+						"@type": "VirtualLocation",
+						"url": "https://browser.style"
+					},
+					"name": "Container queries land; the layout system is rebuilt."
+				},
+				{
+					"@type": "Event",
+					"startDate": "2023",
+					"eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",
+					"location": {
+						"@type": "VirtualLocation",
+						"url": "https://browser.style"
+					},
+					"name": "Cascade layers adopted across every component."
+				},
+				{
+					"@type": "Event",
+					"startDate": "2026",
+					"eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",
+					"location": {
+						"@type": "VirtualLocation",
+						"url": "https://browser.style"
+					},
+					"name": "v4: the unified card engine ships."
+				}
+			]
+		},
+		{
+			"@type": "EventSeries",
+			"image": "/assets/images/world.png",
+			"name": "Horizontal — variant=\"horizontal\"",
+			"subEvent": [
+				{
+					"@type": "Event",
+					"startDate": "2016",
+					"eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",
+					"location": {
+						"@type": "VirtualLocation",
+						"url": "https://browser.style"
+					},
+					"name": "First CSS-only component published."
+				},
+				{
+					"@type": "Event",
+					"startDate": "2021",
+					"eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",
+					"location": {
+						"@type": "VirtualLocation",
+						"url": "https://browser.style"
+					},
+					"name": "Design token system and 100th component."
+				},
+				{
+					"@type": "Event",
+					"startDate": "2018",
+					"eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",
+					"location": {
+						"@type": "VirtualLocation",
+						"url": "https://browser.style"
+					},
+					"name": "Container queries land; the layout system is rebuilt."
+				},
+				{
+					"@type": "Event",
+					"startDate": "2023",
+					"eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",
+					"location": {
+						"@type": "VirtualLocation",
+						"url": "https://browser.style"
+					},
+					"name": "Cascade layers adopted across every component."
+				},
+				{
+					"@type": "Event",
+					"startDate": "2026",
+					"eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",
+					"location": {
+						"@type": "VirtualLocation",
+						"url": "https://browser.style"
+					},
+					"name": "v4: the unified card engine ships."
+				}
+			]
+		},
+		{
+			"@type": "CafeOrCoffeeShop",
+			"image": "/assets/images/brewandbean.png",
+			"url": "https://brewandbean.example",
+			"priceRange": "$",
+			"foundingDate": "2015-05-01",
+			"sameAs": "https://instagram.com/brewandbean",
+			"geo": {
+				"@type": "GeoCoordinates",
+				"latitude": "55.6761",
+				"longitude": "12.5683"
+			},
+			"name": "Brew & Bean",
+			"description": "Specialty coffee, fresh pastry and the city’s calmest workspace corner.",
+			"address": {
+				"@type": "PostalAddress",
+				"streetAddress": "Kaffegade 12",
+				"postalCode": "1455",
+				"addressLocality": "Copenhagen",
+				"addressCountry": "DK"
+			},
+			"aggregateRating": {
+				"@type": "AggregateRating",
+				"ratingValue": "4.7",
+				"ratingCount": "412",
+				"bestRating": "5",
+				"worstRating": "1"
+			},
+			"openingHours": [
+				"Mo-Fr 07:00-18:00",
+				"Sa-Su 08:00-16:00"
+			],
+			"openingHoursSpecification": [
+				{
+					"@type": "OpeningHoursSpecification",
+					"dayOfWeek": [
+						"https://schema.org/Monday",
+						"https://schema.org/Tuesday",
+						"https://schema.org/Wednesday",
+						"https://schema.org/Thursday",
+						"https://schema.org/Friday"
+					],
+					"opens": "07:00",
+					"closes": "18:00"
+				},
+				{
+					"@type": "OpeningHoursSpecification",
+					"dayOfWeek": [
+						"https://schema.org/Saturday",
+						"https://schema.org/Sunday"
+					],
+					"opens": "08:00",
+					"closes": "16:00"
+				}
+			],
+			"keywords": [
+				"Coffee",
+				"Bakery"
+			],
+			"telephone": "tel:+4533221100",
+			"email": "hello@brewandbean.example"
+		},
+		{
+			"@type": "Menu",
+			"image": "/assets/images/spicycurry.png",
+			"name": "Brew & Bean kitchen",
+			"description": "Served 17:00–21:30, Wednesday to Sunday. Everything is cooked to order, so allow a little time. Prices in DKK.",
+			"hasMenuSection": [
+				{
+					"@type": "MenuSection",
+					"name": "Starters",
+					"hasMenuItem": [
+						{
+							"@type": "MenuItem",
+							"name": "Charred hispi cabbage",
+							"offers": {
+								"@type": "Offer",
+								"priceCurrency": "DKK",
+								"price": "85"
+							},
+							"description": "Brown butter, toasted hazelnut and aged pecorino.",
+							"suitableForDiet": [
+								"https://schema.org/VegetarianDiet",
+								"https://schema.org/GlutenFreeDiet"
+							]
+						},
+						{
+							"@type": "MenuItem",
+							"name": "Cured trout, rye crisp",
+							"offers": {
+								"@type": "Offer",
+								"priceCurrency": "DKK",
+								"price": "95"
+							},
+							"description": "Beetroot, horseradish cream and dill oil."
+						},
+						{
+							"@type": "MenuItem",
+							"name": "Smoked beetroot tartare",
+							"offers": {
+								"@type": "Offer",
+								"priceCurrency": "DKK",
+								"price": "80"
+							},
+							"description": "Capers, mustard seed and puffed buckwheat.",
+							"suitableForDiet": [
+								"https://schema.org/VeganDiet",
+								"https://schema.org/VegetarianDiet"
+							]
+						},
+						{
+							"@type": "MenuItem",
+							"name": "Chicken liver parfait",
+							"offers": {
+								"@type": "Offer",
+								"priceCurrency": "DKK",
+								"price": "90"
+							},
+							"description": "Rhubarb compote and grilled sourdough."
+						},
+						{
+							"@type": "MenuItem",
+							"name": "Hand-peeled shrimp",
+							"offers": {
+								"@type": "Offer",
+								"priceCurrency": "DKK",
+								"price": "110"
+							},
+							"description": "Lemon mayonnaise, chives and toasted rye."
+						}
+					]
+				},
+				{
+					"@type": "MenuSection",
+					"name": "Mains",
+					"hasMenuItem": [
+						{
+							"@type": "MenuItem",
+							"name": "Coconut chicken curry",
+							"offers": {
+								"@type": "Offer",
+								"priceCurrency": "DKK",
+								"price": "145"
+							},
+							"description": "Mild, with mint, coriander and steamed basmati.",
+							"suitableForDiet": "https://schema.org/GlutenFreeDiet",
+							"nutrition": {
+								"@type": "NutritionInformation",
+								"calories": "620 calories",
+								"proteinContent": "42 g",
+								"servingSize": "1 bowl"
+							}
+						},
+						{
+							"@type": "MenuItem",
+							"name": "Barley risotto, wild mushroom",
+							"offers": {
+								"@type": "Offer",
+								"priceCurrency": "DKK",
+								"price": "135"
+							},
+							"description": "Pearl barley, chanterelle, thyme and a hazelnut crumb.",
+							"suitableForDiet": [
+								"https://schema.org/VeganDiet",
+								"https://schema.org/VegetarianDiet"
+							],
+							"nutrition": {
+								"@type": "NutritionInformation",
+								"calories": "540 calories",
+								"servingSize": "1 bowl"
+							}
+						},
+						{
+							"@type": "MenuItem",
+							"name": "Braised lamb shank",
+							"offers": {
+								"@type": "Offer",
+								"priceCurrency": "DKK",
+								"price": "195"
+							},
+							"description": "Slow-cooked in dark beer with root vegetables and mash.",
+							"nutrition": {
+								"@type": "NutritionInformation",
+								"calories": "780 calories",
+								"proteinContent": "48 g",
+								"servingSize": "1 plate"
+							}
+						},
+						{
+							"@type": "MenuItem",
+							"name": "Pan-fried cod, brown butter",
+							"offers": {
+								"@type": "Offer",
+								"priceCurrency": "DKK",
+								"price": "175"
+							},
+							"description": "New potatoes, capers and parsley.",
+							"suitableForDiet": "https://schema.org/GlutenFreeDiet",
+							"nutrition": {
+								"@type": "NutritionInformation",
+								"calories": "520 calories",
+								"proteinContent": "41 g",
+								"servingSize": "1 plate"
+							}
+						},
+						{
+							"@type": "MenuItem",
+							"name": "Dry-aged beef burger",
+							"offers": {
+								"@type": "Offer",
+								"priceCurrency": "DKK",
+								"price": "165"
+							},
+							"description": "Aged cheddar, pickles and hand-cut fries.",
+							"nutrition": {
+								"@type": "NutritionInformation",
+								"calories": "890 calories",
+								"proteinContent": "45 g",
+								"servingSize": "1 burger"
+							}
+						}
+					]
+				},
+				{
+					"@type": "MenuSection",
+					"name": "Desserts",
+					"hasMenuItem": [
+						{
+							"@type": "MenuItem",
+							"name": "Rhubarb trifle",
+							"offers": {
+								"@type": "Offer",
+								"priceCurrency": "DKK",
+								"price": "75"
+							},
+							"description": "Vanilla custard, macerated rhubarb and almond crumble.",
+							"suitableForDiet": "https://schema.org/VegetarianDiet"
+						},
+						{
+							"@type": "MenuItem",
+							"name": "Dark chocolate mousse",
+							"offers": {
+								"@type": "Offer",
+								"priceCurrency": "DKK",
+								"price": "80"
+							},
+							"description": "Sea salt, cold-pressed olive oil and a rye tuile.",
+							"suitableForDiet": "https://schema.org/VegetarianDiet"
+						},
+						{
+							"@type": "MenuItem",
+							"name": "Blackcurrant sorbet",
+							"offers": {
+								"@type": "Offer",
+								"priceCurrency": "DKK",
+								"price": "65"
+							},
+							"description": "Sea buckthorn, lemon verbena and toasted oats.",
+							"suitableForDiet": [
+								"https://schema.org/VeganDiet",
+								"https://schema.org/VegetarianDiet",
+								"https://schema.org/GlutenFreeDiet"
+							]
+						},
+						{
+							"@type": "MenuItem",
+							"name": "Æbleskiver, three pieces",
+							"offers": {
+								"@type": "Offer",
+								"priceCurrency": "DKK",
+								"price": "70"
+							},
+							"description": "Warm apple doughnuts, icing sugar and blackberry jam.",
+							"suitableForDiet": "https://schema.org/VegetarianDiet"
+						},
+						{
+							"@type": "MenuItem",
+							"name": "Danish cheese plate",
+							"offers": {
+								"@type": "Offer",
+								"priceCurrency": "DKK",
+								"price": "95"
+							},
+							"description": "Three cheeses, honeycomb and rye crispbread.",
+							"suitableForDiet": "https://schema.org/VegetarianDiet"
+						}
+					]
+				},
+				{
+					"@type": "MenuSection",
+					"name": "Soft drinks, coffee & tea",
+					"hasMenuItem": [
+						{
+							"@type": "MenuItem",
+							"name": "Still water, 50 cl",
+							"offers": {
+								"@type": "Offer",
+								"priceCurrency": "DKK",
+								"price": "30"
+							},
+							"description": "Filtered and chilled — refills are free."
+						},
+						{
+							"@type": "MenuItem",
+							"name": "Sparkling water, 50 cl",
+							"offers": {
+								"@type": "Offer",
+								"priceCurrency": "DKK",
+								"price": "35"
+							},
+							"description": "Carbonated in house, served with lemon."
+						},
+						{
+							"@type": "MenuItem",
+							"name": "Apple & elderflower",
+							"offers": {
+								"@type": "Offer",
+								"priceCurrency": "DKK",
+								"price": "45"
+							},
+							"description": "Pressed Danish apples, lightly sparkling."
+						},
+						{
+							"@type": "MenuItem",
+							"name": "Filter coffee",
+							"offers": {
+								"@type": "Offer",
+								"priceCurrency": "DKK",
+								"price": "35"
+							},
+							"description": "Single origin, roasted a few streets away."
+						},
+						{
+							"@type": "MenuItem",
+							"name": "Loose-leaf tea",
+							"offers": {
+								"@type": "Offer",
+								"priceCurrency": "DKK",
+								"price": "35"
+							},
+							"description": "Green, black or herbal — ask for today's selection."
+						}
+					]
+				},
+				{
+					"@type": "MenuSection",
+					"name": "Beer & wine",
+					"hasMenuItem": [
+						{
+							"@type": "MenuItem",
+							"name": "House lager, 40 cl",
+							"offers": {
+								"@type": "Offer",
+								"priceCurrency": "DKK",
+								"price": "65"
+							},
+							"description": "Crisp pilsner from a small brewery in Nørrebro."
+						},
+						{
+							"@type": "MenuItem",
+							"name": "Session IPA, 40 cl",
+							"offers": {
+								"@type": "Offer",
+								"priceCurrency": "DKK",
+								"price": "75"
+							},
+							"description": "Citrus-forward and light on the bitterness."
+						},
+						{
+							"@type": "MenuItem",
+							"name": "House red, 15 cl",
+							"offers": {
+								"@type": "Offer",
+								"priceCurrency": "DKK",
+								"price": "75"
+							},
+							"description": "Grenache from the southern Rhône, served cool."
+						},
+						{
+							"@type": "MenuItem",
+							"name": "House white, 15 cl",
+							"offers": {
+								"@type": "Offer",
+								"priceCurrency": "DKK",
+								"price": "75"
+							},
+							"description": "Dry Riesling from the Mosel."
+						},
+						{
+							"@type": "MenuItem",
+							"name": "Crémant rosé, 12 cl",
+							"offers": {
+								"@type": "Offer",
+								"priceCurrency": "DKK",
+								"price": "85"
+							},
+							"description": "Brut, from the Loire — dry and bright."
+						}
+					]
+				}
+			]
+		},
+		{
+			"@type": "Recipe",
+			"image": "/assets/images/carbonara.png",
+			"recipeCategory": "Pasta",
+			"prepTime": "PT15M",
+			"cookTime": "PT20M",
+			"recipeYield": "4",
+			"name": "Classic Spaghetti Carbonara",
+			"description": "The Roman original — guanciale, pecorino, eggs and pepper. No cream.",
+			"recipeIngredient": [
+				"400 g spaghetti",
+				"150 g guanciale",
+				"4 egg yolks",
+				"80 g pecorino romano"
+			],
+			"recipeInstructions": {
+				"@type": "ItemList",
+				"itemListElement": [
+					{
+						"@type": "HowToStep",
+						"position": "1",
+						"text": "Crisp the guanciale in a dry pan."
+					},
+					{
+						"@type": "HowToStep",
+						"position": "2",
+						"text": "Whisk yolks with grated pecorino and pepper."
+					},
+					{
+						"@type": "HowToStep",
+						"position": "3",
+						"text": "Toss hot pasta with guanciale, then the egg mixture, off the heat."
+					}
+				]
+			},
+			"keywords": [
+				"Pasta",
+				"Italian",
+				"Quick"
+			]
+		},
+		{
+			"@type": "Place",
+			"image": "/assets/images/hammershus.png",
+			"geo": {
+				"@type": "GeoCoordinates",
+				"latitude": "55.0603",
+				"longitude": "14.7009"
+			},
+			"name": "Hammershus Point",
+			"description": "Northern Europe’s largest castle ruin, perched on Bornholm’s granite cliffs.",
+			"address": {
+				"@type": "PostalAddress",
+				"addressLocality": "Allinge",
+				"addressCountry": "Denmark"
+			},
+			"openingHoursSpecification": {
+				"@type": "OpeningHoursSpecification",
+				"dayOfWeek": [
+					"https://schema.org/Monday",
+					"https://schema.org/Tuesday",
+					"https://schema.org/Wednesday",
+					"https://schema.org/Thursday",
+					"https://schema.org/Friday",
+					"https://schema.org/Saturday",
+					"https://schema.org/Sunday"
+				],
+				"opens": "06:00",
+				"closes": "22:00"
+			},
+			"telephone": "tel:+4556482401",
+			"keywords": [
+				"Bornholm",
+				"Landmark"
+			]
+		},
+		{
+			"@type": "Place",
+			"hasMap": "https://www.openstreetmap.org/export/embed.html?bbox=12.596553,55.706053,12.602047,55.709147&amp;layer=mapnik&amp;marker=55.7076,12.5993",
+			"geo": {
+				"@type": "GeoCoordinates",
+				"latitude": "55.7076",
+				"longitude": "12.5993"
+			},
+			"name": "Nordhavn Studio",
+			"description": "The media frame is the map: an OpenStreetMap embed drawn from the same coordinates the GeoCoordinates scope carries.",
+			"address": {
+				"@type": "PostalAddress",
+				"streetAddress": "Sundkaj 9",
+				"postalCode": "2150",
+				"addressLocality": "Copenhagen",
+				"addressCountry": "DK"
+			},
+			"openingHoursSpecification": {
+				"@type": "OpeningHoursSpecification",
+				"dayOfWeek": [
+					"https://schema.org/Monday",
+					"https://schema.org/Tuesday",
+					"https://schema.org/Wednesday",
+					"https://schema.org/Thursday",
+					"https://schema.org/Friday"
+				],
+				"opens": "09:00",
+				"closes": "17:00"
+			},
+			"telephone": "tel:+4535551290",
+			"keywords": [
+				"Copenhagen",
+				"Studio"
+			]
+		},
+		{
+			"@type": "ItemList",
+			"numberOfItems": "8",
+			"itemListOrder": "https://schema.org/ItemListOrderAscending",
+			"name": "Where you'll find us",
+			"description": "Eight studios on four continents. Click a pin for the address, phone and opening hours — the list below is the same data, kept machine-readable.",
+			"itemListElement": [
+				{
+					"@type": "ListItem",
+					"position": "1",
+					"name": "Copenhagen",
+					"item": {
+						"@type": "LocalBusiness",
+						"url": "offices/copenhagen.html?studio=copenhagen",
+						"name": "Copenhagen",
+						"branchCode": "CPH",
+						"geo": {
+							"@type": "GeoCoordinates",
+							"latitude": "55.7076",
+							"longitude": "12.5993"
+						},
+						"telephone": "+45 35 55 12 90",
+						"address": {
+							"@type": "PostalAddress",
+							"streetAddress": "Sundkaj 9",
+							"postalCode": "2150",
+							"addressLocality": "Copenhagen",
+							"addressCountry": "DK"
+						},
+						"openingHours": "Mo-Fr 09:00-17:00",
+						"openingHoursSpecification": {
+							"@type": "OpeningHoursSpecification",
+							"dayOfWeek": [
+								"https://schema.org/Monday",
+								"https://schema.org/Tuesday",
+								"https://schema.org/Wednesday",
+								"https://schema.org/Thursday",
+								"https://schema.org/Friday"
+							],
+							"opens": "09:00",
+							"closes": "17:00"
+						},
+						"hasMap": "https://www.google.com/maps/search/?api=1&amp;query=55.7076,12.5993"
+					}
+				},
+				{
+					"@type": "ListItem",
+					"position": "2",
+					"name": "Berlin",
+					"item": {
+						"@type": "LocalBusiness",
+						"url": "offices/copenhagen.html?studio=berlin",
+						"name": "Berlin",
+						"branchCode": "BER",
+						"geo": {
+							"@type": "GeoCoordinates",
+							"latitude": "52.52",
+							"longitude": "13.405"
+						},
+						"telephone": "+49 30 1234 5678",
+						"address": {
+							"@type": "PostalAddress",
+							"streetAddress": "Torstraße 140",
+							"postalCode": "10119",
+							"addressLocality": "Berlin",
+							"addressCountry": "DE"
+						},
+						"openingHours": "Mo-Fr 09:00-18:00",
+						"openingHoursSpecification": {
+							"@type": "OpeningHoursSpecification",
+							"dayOfWeek": [
+								"https://schema.org/Monday",
+								"https://schema.org/Tuesday",
+								"https://schema.org/Wednesday",
+								"https://schema.org/Thursday",
+								"https://schema.org/Friday"
+							],
+							"opens": "09:00",
+							"closes": "18:00"
+						},
+						"hasMap": "geo:52.52,13.405"
+					}
+				},
+				{
+					"@type": "ListItem",
+					"position": "3",
+					"name": "London",
+					"item": {
+						"@type": "LocalBusiness",
+						"url": "offices/copenhagen.html?studio=london",
+						"name": "London",
+						"branchCode": "LON",
+						"geo": {
+							"@type": "GeoCoordinates",
+							"latitude": "51.5072",
+							"longitude": "-0.1276"
+						},
+						"telephone": "+44 20 7946 0102",
+						"address": {
+							"@type": "PostalAddress",
+							"streetAddress": "12 Rivington Street",
+							"postalCode": "EC2A 3DU",
+							"addressLocality": "London",
+							"addressCountry": "GB"
+						},
+						"openingHours": "Mo-Fr 09:00-17:30",
+						"openingHoursSpecification": {
+							"@type": "OpeningHoursSpecification",
+							"dayOfWeek": [
+								"https://schema.org/Monday",
+								"https://schema.org/Tuesday",
+								"https://schema.org/Wednesday",
+								"https://schema.org/Thursday",
+								"https://schema.org/Friday"
+							],
+							"opens": "09:00",
+							"closes": "17:30"
+						},
+						"hasMap": "geo:51.5072,-0.1276"
+					}
+				},
+				{
+					"@type": "ListItem",
+					"position": "4",
+					"name": "New York",
+					"item": {
+						"@type": "LocalBusiness",
+						"url": "offices/copenhagen.html?studio=new-york",
+						"name": "New York",
+						"branchCode": "NYC",
+						"geo": {
+							"@type": "GeoCoordinates",
+							"latitude": "40.7128",
+							"longitude": "-74.006"
+						},
+						"telephone": "+1 212 555 0148",
+						"address": {
+							"@type": "PostalAddress",
+							"streetAddress": "45 Greenwich Avenue",
+							"postalCode": "10014",
+							"addressLocality": "New York",
+							"addressRegion": "NY",
+							"addressCountry": "US"
+						},
+						"openingHours": "Mo-Fr 09:00-18:00",
+						"openingHoursSpecification": {
+							"@type": "OpeningHoursSpecification",
+							"dayOfWeek": [
+								"https://schema.org/Monday",
+								"https://schema.org/Tuesday",
+								"https://schema.org/Wednesday",
+								"https://schema.org/Thursday",
+								"https://schema.org/Friday"
+							],
+							"opens": "09:00",
+							"closes": "18:00"
+						},
+						"hasMap": "geo:40.7128,-74.006"
+					}
+				},
+				{
+					"@type": "ListItem",
+					"position": "5",
+					"name": "Toronto",
+					"item": {
+						"@type": "LocalBusiness",
+						"url": "offices/copenhagen.html?studio=toronto",
+						"name": "Toronto",
+						"branchCode": "YYZ",
+						"geo": {
+							"@type": "GeoCoordinates",
+							"latitude": "43.6532",
+							"longitude": "-79.3832"
+						},
+						"telephone": "+1 416 555 0192",
+						"address": {
+							"@type": "PostalAddress",
+							"streetAddress": "36 Wellington Street East",
+							"postalCode": "M5E 1C7",
+							"addressLocality": "Toronto",
+							"addressRegion": "ON",
+							"addressCountry": "CA"
+						},
+						"openingHours": "Mo-Fr 09:00-17:30",
+						"openingHoursSpecification": {
+							"@type": "OpeningHoursSpecification",
+							"dayOfWeek": [
+								"https://schema.org/Monday",
+								"https://schema.org/Tuesday",
+								"https://schema.org/Wednesday",
+								"https://schema.org/Thursday",
+								"https://schema.org/Friday"
+							],
+							"opens": "09:00",
+							"closes": "17:30"
+						},
+						"hasMap": "geo:43.6532,-79.3832"
+					}
+				},
+				{
+					"@type": "ListItem",
+					"position": "6",
+					"name": "Singapore",
+					"item": {
+						"@type": "LocalBusiness",
+						"url": "offices/copenhagen.html?studio=singapore",
+						"name": "Singapore",
+						"branchCode": "SIN",
+						"geo": {
+							"@type": "GeoCoordinates",
+							"latitude": "1.3521",
+							"longitude": "103.8198"
+						},
+						"telephone": "+65 6123 4567",
+						"address": {
+							"@type": "PostalAddress",
+							"streetAddress": "8 Marina View",
+							"postalCode": "018960",
+							"addressLocality": "Singapore",
+							"addressCountry": "SG"
+						},
+						"openingHours": "Mo-Fr 09:00-18:00",
+						"openingHoursSpecification": {
+							"@type": "OpeningHoursSpecification",
+							"dayOfWeek": [
+								"https://schema.org/Monday",
+								"https://schema.org/Tuesday",
+								"https://schema.org/Wednesday",
+								"https://schema.org/Thursday",
+								"https://schema.org/Friday"
+							],
+							"opens": "09:00",
+							"closes": "18:00"
+						},
+						"hasMap": "geo:1.3521,103.8198"
+					}
+				},
+				{
+					"@type": "ListItem",
+					"position": "7",
+					"name": "Kuala Lumpur",
+					"item": {
+						"@type": "LocalBusiness",
+						"url": "offices/copenhagen.html?studio=kuala-lumpur",
+						"name": "Kuala Lumpur",
+						"branchCode": "KUL",
+						"geo": {
+							"@type": "GeoCoordinates",
+							"latitude": "3.139",
+							"longitude": "101.6869"
+						},
+						"telephone": "+60 3 2712 3400",
+						"address": {
+							"@type": "PostalAddress",
+							"streetAddress": "Jalan Sultan Ismail 88",
+							"postalCode": "50250",
+							"addressLocality": "Kuala Lumpur",
+							"addressCountry": "MY"
+						},
+						"openingHours": "Mo-Fr 09:00-18:00",
+						"openingHoursSpecification": {
+							"@type": "OpeningHoursSpecification",
+							"dayOfWeek": [
+								"https://schema.org/Monday",
+								"https://schema.org/Tuesday",
+								"https://schema.org/Wednesday",
+								"https://schema.org/Thursday",
+								"https://schema.org/Friday"
+							],
+							"opens": "09:00",
+							"closes": "18:00"
+						},
+						"hasMap": "geo:3.139,101.6869"
+					}
+				},
+				{
+					"@type": "ListItem",
+					"position": "8",
+					"name": "Sydney",
+					"item": {
+						"@type": "LocalBusiness",
+						"url": "offices/copenhagen.html?studio=sydney",
+						"name": "Sydney",
+						"branchCode": "SYD",
+						"geo": {
+							"@type": "GeoCoordinates",
+							"latitude": "-33.8688",
+							"longitude": "151.2093"
+						},
+						"telephone": "+61 2 8123 4567",
+						"address": {
+							"@type": "PostalAddress",
+							"streetAddress": "3 Kent Street",
+							"postalCode": "2000",
+							"addressLocality": "Sydney",
+							"addressRegion": "NSW",
+							"addressCountry": "AU"
+						},
+						"openingHours": "Mo-Fr 09:00-17:00",
+						"openingHoursSpecification": {
+							"@type": "OpeningHoursSpecification",
+							"dayOfWeek": [
+								"https://schema.org/Monday",
+								"https://schema.org/Tuesday",
+								"https://schema.org/Wednesday",
+								"https://schema.org/Thursday",
+								"https://schema.org/Friday"
+							],
+							"opens": "09:00",
+							"closes": "17:00"
+						},
+						"hasMap": "geo:-33.8688,151.2093"
+					}
+				}
+			]
+		},
+		{
+			"@type": "ItemList",
+			"itemListElement": [
+				{
+					"@type": "ListItem",
+					"position": "1",
+					"name": "Havnegade 44",
+					"item": {
+						"@type": "RealEstateListing",
+						"image": "/assets/images/real_01.jpg",
+						"url": "realestate/havnegade-44.html?home=havnegade-44",
+						"name": "Havnegade 44",
+						"datePosted": "2026-08-02",
+						"offers": {
+							"@type": "Offer",
+							"priceCurrency": "DKK",
+							"availability": "https://schema.org/InStock",
+							"price": "7950000"
+						},
+						"mainEntity": {
+							"@type": "Apartment",
+							"geo": {
+								"@type": "GeoCoordinates",
+								"latitude": "55.6761",
+								"longitude": "12.5911"
+							},
+							"address": {
+								"@type": "PostalAddress",
+								"streetAddress": "Havnegade 44",
+								"postalCode": "1058",
+								"addressLocality": "Copenhagen",
+								"addressCountry": "DK"
+							},
+							"floorSize": {
+								"@type": "QuantitativeValue",
+								"unitCode": "MTK",
+								"value": "118"
+							},
+							"numberOfBedrooms": "2",
+							"numberOfRooms": "4",
+							"yearBuilt": "1932",
+							"hasMap": "https://www.google.com/maps/search/?api=1&amp;query=55.6761,12.5911"
+						}
+					}
+				},
+				{
+					"@type": "ListItem",
+					"position": "2",
+					"name": "Strandgade 8",
+					"item": {
+						"@type": "RealEstateListing",
+						"image": "/assets/images/real_02.jpg",
+						"url": "realestate/havnegade-44.html?home=strandgade-8",
+						"name": "Strandgade 8",
+						"datePosted": "2026-07-28",
+						"offers": {
+							"@type": "Offer",
+							"priceCurrency": "DKK",
+							"availability": "https://schema.org/InStock",
+							"price": "6250000"
+						},
+						"mainEntity": {
+							"@type": "Apartment",
+							"geo": {
+								"@type": "GeoCoordinates",
+								"latitude": "55.6738",
+								"longitude": "12.5946"
+							},
+							"address": {
+								"@type": "PostalAddress",
+								"streetAddress": "Strandgade 8",
+								"postalCode": "1401",
+								"addressLocality": "Copenhagen",
+								"addressCountry": "DK"
+							},
+							"floorSize": {
+								"@type": "QuantitativeValue",
+								"unitCode": "MTK",
+								"value": "94"
+							},
+							"numberOfBedrooms": "2",
+							"numberOfRooms": "3",
+							"yearBuilt": "1907",
+							"hasMap": "geo:55.6738,12.5946"
+						}
+					}
+				},
+				{
+					"@type": "ListItem",
+					"position": "3",
+					"name": "Overgaden Neden Vandet 21",
+					"item": {
+						"@type": "RealEstateListing",
+						"image": "/assets/images/real_03.jpg",
+						"url": "realestate/havnegade-44.html?home=overgaden-neden-vandet-21",
+						"name": "Overgaden Neden Vandet 21",
+						"datePosted": "2026-08-11",
+						"offers": {
+							"@type": "Offer",
+							"priceCurrency": "DKK",
+							"availability": "https://schema.org/InStock",
+							"price": "9400000"
+						},
+						"mainEntity": {
+							"@type": "Apartment",
+							"geo": {
+								"@type": "GeoCoordinates",
+								"latitude": "55.6721",
+								"longitude": "12.5928"
+							},
+							"address": {
+								"@type": "PostalAddress",
+								"streetAddress": "Overgaden Neden Vandet 21",
+								"postalCode": "1414",
+								"addressLocality": "Copenhagen",
+								"addressCountry": "DK"
+							},
+							"floorSize": {
+								"@type": "QuantitativeValue",
+								"unitCode": "MTK",
+								"value": "142"
+							},
+							"numberOfBedrooms": "3",
+							"numberOfRooms": "5",
+							"yearBuilt": "1888",
+							"hasMap": "geo:55.6721,12.5928"
+						}
+					}
+				},
+				{
+					"@type": "ListItem",
+					"position": "4",
+					"name": "Christianshavns Voldgade 3",
+					"item": {
+						"@type": "RealEstateListing",
+						"image": "/assets/images/real_04.jpg",
+						"url": "realestate/havnegade-44.html?home=christianshavns-voldgade-3",
+						"name": "Christianshavns Voldgade 3",
+						"datePosted": "2026-06-19",
+						"offers": {
+							"@type": "Offer",
+							"priceCurrency": "DKK",
+							"availability": "https://schema.org/InStock",
+							"price": "14750000"
+						},
+						"mainEntity": {
+							"@type": "House",
+							"geo": {
+								"@type": "GeoCoordinates",
+								"latitude": "55.6746",
+								"longitude": "12.5989"
+							},
+							"address": {
+								"@type": "PostalAddress",
+								"streetAddress": "Christianshavns Voldgade 3",
+								"postalCode": "1424",
+								"addressLocality": "Copenhagen",
+								"addressCountry": "DK"
+							},
+							"floorSize": {
+								"@type": "QuantitativeValue",
+								"unitCode": "MTK",
+								"value": "211"
+							},
+							"numberOfBedrooms": "4",
+							"numberOfRooms": "7",
+							"yearBuilt": "1874",
+							"hasMap": "geo:55.6746,12.5989"
+						}
+					}
+				},
+				{
+					"@type": "ListItem",
+					"position": "5",
+					"name": "Nyhavn 17",
+					"item": {
+						"@type": "RealEstateListing",
+						"image": "/assets/images/real_05.jpg",
+						"url": "realestate/havnegade-44.html?home=nyhavn-17",
+						"name": "Nyhavn 17",
+						"datePosted": "2026-08-15",
+						"offers": {
+							"@type": "Offer",
+							"priceCurrency": "DKK",
+							"availability": "https://schema.org/InStock",
+							"price": "5100000"
+						},
+						"mainEntity": {
+							"@type": "Apartment",
+							"geo": {
+								"@type": "GeoCoordinates",
+								"latitude": "55.6797",
+								"longitude": "12.5896"
+							},
+							"address": {
+								"@type": "PostalAddress",
+								"streetAddress": "Nyhavn 17",
+								"postalCode": "1051",
+								"addressLocality": "Copenhagen",
+								"addressCountry": "DK"
+							},
+							"floorSize": {
+								"@type": "QuantitativeValue",
+								"unitCode": "MTK",
+								"value": "71"
+							},
+							"numberOfBedrooms": "1",
+							"numberOfRooms": "2",
+							"yearBuilt": "1921",
+							"hasMap": "geo:55.6797,12.5896"
+						}
+					}
+				}
+			],
+			"numberOfItems": "5",
+			"name": "Five homes on the harbour",
+			"description": "Swipe from the map to the homes. Each slide is its own listing card — a RealEstateListing wrapping an Apartment or House, which is the only shape that lets a price exist at all."
+		},
+		{
+			"@type": "Event",
+			"image": "/assets/images/websummit.png",
+			"eventStatus": "https://schema.org/EventScheduled",
+			"eventAttendanceMode": "https://schema.org/MixedEventAttendanceMode",
+			"startDate": "2026-11-09T09:00:00+00:00",
+			"endDate": "2026-11-12T18:00:00+00:00",
+			"name": "Web Summit 2026",
+			"description": "Four days of talks on the future of the web platform.",
+			"location": {
+				"@type": "Place",
+				"name": "Altice Arena",
+				"address": {
+					"@type": "PostalAddress",
+					"addressLocality": "Lisbon"
+				}
+			},
+			"organizer": {
+				"@type": "Organization",
+				"name": "Web Summit Ltd."
+			},
+			"offers": [
+				{
+					"@type": "Offer",
+					"priceCurrency": "EUR",
+					"availability": "https://schema.org/InStock",
+					"validThrough": "2026-09-01",
+					"name": "Early bird",
+					"price": "299"
+				},
+				{
+					"@type": "Offer",
+					"priceCurrency": "EUR",
+					"availability": "https://schema.org/InStock",
+					"name": "Standard",
+					"price": "449"
+				}
+			]
+		},
+		{
+			"@type": "RealEstateListing",
+			"image": [
+				"/assets/images/real_01.jpg",
+				"/assets/images/real_02.jpg",
+				"/assets/images/real_03.jpg",
+				"/assets/images/real_04.jpg",
+				"/assets/images/real_05.jpg",
+				"/assets/images/real_06.jpg"
+			],
+			"name": "Top-floor apartment, Havnegade 44",
+			"description": "Three bedrooms and a south-facing terrace over the canal, five minutes from Kongens Nytorv.",
+			"datePosted": "2026-07-18",
+			"offers": {
+				"@type": "Offer",
+				"priceCurrency": "DKK",
+				"availability": "https://schema.org/InStock",
+				"price": "7250000"
+			},
+			"mainEntity": {
+				"@type": "Apartment",
+				"name": "Top-floor apartment, Havnegade 44",
+				"floorLevel": "5",
+				"petsAllowed": "true",
+				"floorSize": {
+					"@type": "QuantitativeValue",
+					"unitCode": "MTK",
+					"value": "118"
+				},
+				"numberOfBedrooms": "3",
+				"numberOfBathroomsTotal": "2",
+				"numberOfRooms": "5",
+				"yearBuilt": "2018",
+				"address": {
+					"@type": "PostalAddress",
+					"streetAddress": "Havnegade 44, 5th floor",
+					"postalCode": "1058",
+					"addressLocality": "Copenhagen",
+					"addressCountry": "DK"
+				}
+			}
+		},
+		{
+			"@type": "VacationRental",
+			"image": [
+				"/assets/images/rental_01.jpg",
+				"/assets/images/rental_02.jpg",
+				"/assets/images/rental_03.jpg",
+				"/assets/images/rental_04.jpg"
+			],
+			"name": "Masseria Lucia",
+			"description": "A restored stone farmhouse in an olive grove outside Ostuni, with a walled garden and a heated pool.",
+			"additionalType": "HolidayVillageRental",
+			"identifier": "MSL-2026-04",
+			"latitude": "40.7297",
+			"longitude": "17.5794",
+			"knowsLanguage": [
+				"en-GB",
+				"it-IT"
+			],
+			"aggregateRating": {
+				"@type": "AggregateRating",
+				"ratingValue": "4.8",
+				"ratingCount": "64",
+				"bestRating": "5",
+				"worstRating": "1"
+			},
+			"priceRange": "€320–€540 per night",
+			"containsPlace": {
+				"@type": "Accommodation",
+				"additionalType": "EntirePlace",
+				"name": "The whole farmhouse",
+				"petsAllowed": "true",
+				"floorSize": {
+					"@type": "QuantitativeValue",
+					"unitCode": "MTK",
+					"value": "180"
+				},
+				"numberOfBedrooms": "3",
+				"numberOfBathroomsTotal": "2",
+				"numberOfRooms": "6",
+				"occupancy": {
+					"@type": "QuantitativeValue",
+					"value": "6"
+				},
+				"bed": [
+					{
+						"@type": "BedDetails",
+						"numberOfBeds": "2",
+						"typeOfBed": "Queen"
+					},
+					{
+						"@type": "BedDetails",
+						"numberOfBeds": "2",
+						"typeOfBed": "Single"
+					}
+				]
+			},
+			"address": {
+				"@type": "PostalAddress",
+				"streetAddress": "Contrada Lamacoppa 12",
+				"postalCode": "72017",
+				"addressLocality": "Ostuni",
+				"addressRegion": "Apulia",
+				"addressCountry": "IT"
+			},
+			"checkinTime": "16:00:00+02:00",
+			"checkoutTime": "10:00:00+02:00",
+			"brand": {
+				"@type": "Brand",
+				"name": "Masseria Collective"
+			}
+		},
+		{
+			"@type": "FAQPage",
+			"image": "/assets/images/faq.png",
+			"name": "Frequently asked questions",
+			"mainEntity": [
+				{
+					"@type": "Question",
+					"name": "How do I reset my password?",
+					"acceptedAnswer": {
+						"@type": "Answer",
+						"text": "Use “Forgot password” on the sign-in page. The reset link is valid for one hour."
+					}
+				},
+				{
+					"@type": "Question",
+					"name": "Can I change my plan later?",
+					"acceptedAnswer": {
+						"@type": "Answer",
+						"text": "Yes — upgrades apply immediately, downgrades at the next billing cycle."
+					}
+				},
+				{
+					"@type": "Question",
+					"name": "Do you offer refunds?",
+					"acceptedAnswer": {
+						"@type": "Answer",
+						"text": "Full refund within 30 days, no questions asked."
+					}
+				}
+			]
+		},
+		{
+			"@type": "QAPage",
+			"image": "/assets/images/qa.png",
+			"name": "How do I center a div in 2026?",
+			"description": "Community answers, ranked by votes.",
+			"mainEntity": {
+				"@type": "Question",
+				"name": "How do I center a div in 2026?",
+				"answerCount": "2",
+				"upvoteCount": "312",
+				"acceptedAnswer": {
+					"@type": "Answer",
+					"upvoteCount": "481",
+					"text": "Give the parent display: grid with place-items: center — two lines, handles both axes, works everywhere.",
+					"author": {
+						"@type": "Person",
+						"name": "Lena Fischer"
+					}
+				},
+				"suggestedAnswer": {
+					"@type": "Answer",
+					"upvoteCount": "217",
+					"text": "If it's a single item, margin: auto inside a flex or grid parent also centers on both axes.",
+					"author": {
+						"@type": "Person",
+						"name": "Tomás Rivera"
+					}
+				}
+			}
+		},
+		{
+			"@type": "Question",
+			"image": "/assets/images/csspoll.png",
+			"answerCount": "3",
+			"name": "Which CSS feature changed your workflow the most?",
+			"suggestedAnswer": [
+				{
+					"@type": "Answer",
+					"text": "Container queries"
+				},
+				{
+					"@type": "Answer",
+					"text": ":has()"
+				},
+				{
+					"@type": "Answer",
+					"text": "Cascade layers"
+				}
+			]
+		},
+		{
+			"@type": "ContactPoint",
+			"contactType": "customer support",
+			"hoursAvailable": "Mo-Fr 09:00-17:00",
+			"availableLanguage": [
+				"English",
+				"Danish",
+				"German"
+			],
+			"name": "Talk to a human",
+			"description": "Real people, no phone trees. Average response under 2 hours.",
+			"telephone": "tel:+4570203040",
+			"email": "support@example.com"
+		},
+		{
+			"@type": "SocialMediaPosting",
+			"image": "/assets/images/elephants.png",
+			"datePublished": "2026-06-28T16:20:00Z",
+			"publisher": {
+				"@type": "Organization",
+				"name": "Chirper"
+			},
+			"name": "Waterhole crossing",
+			"text": "Waited four hours at the waterhole for this crossing. Worth every minute. 🐘",
+			"author": {
+				"@type": "Person",
+				"name": "@wildlifewatch"
+			},
+			"keywords": [
+				"#wildlife",
+				"#safari",
+				"#photography"
+			],
+			"interactionStatistic": [
+				{
+					"@type": "InteractionCounter",
+					"interactionType": "https://schema.org/LikeAction",
+					"userInteractionCount": "3200"
+				},
+				{
+					"@type": "InteractionCounter",
+					"interactionType": "https://schema.org/ShareAction",
+					"userInteractionCount": "410"
+				},
+				{
+					"@type": "InteractionCounter",
+					"interactionType": "https://schema.org/CommentAction",
+					"userInteractionCount": "87"
+				}
+			]
+		},
+		{
+			"@type": "DiscussionForumPosting",
+			"image": "/assets/images/quickboil.png",
+			"headline": "QuickBoil Plus stopped heating after a descale — fixable?",
+			"text": "Ran a vinegar descale, now the element clicks on for a second and cuts out. Continuity across the thermal fuse reads open. Has anyone swapped one on this model?",
+			"datePublished": "2026-07-02T08:15:00Z",
+			"publisher": {
+				"@type": "Organization",
+				"name": "FixItForum"
+			},
+			"author": {
+				"@type": "Person",
+				"name": "Rune Halvorsen",
+				"jobTitle": "Moderator"
+			},
+			"keywords": [
+				"kettle",
+				"thermal-fuse",
+				"repair"
+			],
+			"interactionStatistic": [
+				{
+					"@type": "InteractionCounter",
+					"interactionType": "https://schema.org/CommentAction",
+					"userInteractionCount": "143"
+				},
+				{
+					"@type": "InteractionCounter",
+					"interactionType": "https://schema.org/ViewAction",
+					"userInteractionCount": "12400"
+				}
+			]
+		},
+		{
+			"@type": "Observation",
+			"image": "/assets/images/finance.png",
+			"name": "Monthly active users",
+			"value": {
+				"@type": "QuantitativeValue",
+				"name": "Monthly active users",
+				"value": "2400000"
+			}
+		},
+		{
+			"@type": "Dataset",
+			"image": "/assets/images/hubble.png",
+			"license": "https://creativecommons.org/licenses/by/4.0/",
+			"temporalCoverage": "2019-01/2025-12",
+			"spatialCoverage": "Kepler field",
+			"variableMeasured": [
+				"Transit depth",
+				"Orbital period",
+				"Stellar magnitude"
+			],
+			"name": "Exoplanet transit observations 2019–2025",
+			"description": "Light-curve measurements for 1,142 confirmed exoplanet transits, cleaned and de-trended.",
+			"distribution": [
+				{
+					"@type": "DataDownload",
+					"encodingFormat": "JSON",
+					"contentUrl": "https://data.example.com/exoplanets.json"
+				},
+				{
+					"@type": "DataDownload",
+					"encodingFormat": "CSV",
+					"contentUrl": "https://data.example.com/exoplanets.csv"
+				}
+			]
+		},
+		{
+			"@type": "MedicalWebPage",
+			"image": "/assets/images/mindfulness.png",
+			"specialty": "https://schema.org/PrimaryCare",
+			"lastReviewed": "2026-05-02",
+			"medicalAudience": {
+				"@type": "Patient",
+				"name": "Adults with persistent sleep problems"
+			},
+			"name": "Chronic insomnia: what actually helps",
+			"description": "Why sleeping tablets are no longer first-line treatment, and what a course of CBT-I involves week by week.",
+			"about": {
+				"@type": "MedicalCondition",
+				"name": "Chronic insomnia",
+				"signOrSymptom": [
+					{
+						"@type": "MedicalSignOrSymptom",
+						"name": "Trouble falling asleep three or more nights a week, for three months or longer"
+					},
+					{
+						"@type": "MedicalSignOrSymptom",
+						"name": "Waking in the early hours and being unable to get back to sleep"
+					}
+				],
+				"riskFactor": {
+					"@type": "MedicalRiskFactor",
+					"name": "Shift work, chronic pain, anxiety, late caffeine"
+				},
+				"possibleTreatment": {
+					"@type": "MedicalTherapy",
+					"name": "Cognitive behavioural therapy for insomnia (CBT-I), 6–8 weeks"
+				}
+			},
+			"reviewedBy": {
+				"@type": "Person",
+				"name": "Dr Astrid Hovgaard",
+				"jobTitle": "Consultant in sleep medicine"
+			}
+		},
+		{
+			"@type": "SpecialAnnouncement",
+			"image": "/assets/images/maintainance.png",
+			"datePosted": "2026-07-01",
+			"datePublished": "2026-07-01",
+			"expires": "2026-07-06",
+			"spatialCoverage": "Global",
+			"name": "Scheduled maintenance — July 5",
+			"text": "The API will be unavailable Saturday July 5, 02:00–04:00 UTC while we migrate the primary database.",
+			"audience": {
+				"@type": "Audience",
+				"audienceType": "API customers"
+			}
+		},
+		{
+			"@type": "Service",
+			"image": "/assets/images/maintainance.png",
+			"serviceType": "Managed cloud hosting",
+			"name": "Always-On Managed Hosting",
+			"description": "Monitored infrastructure with hourly backups, security patching inside 24 hours and a one-hour incident response — every day of the year.",
+			"provider": {
+				"@type": "Organization",
+				"name": "Northwind Group"
+			},
+			"areaServed": {
+				"@type": "Place",
+				"name": "Denmark, Sweden and Norway"
+			},
+			"hasOfferCatalog": {
+				"@type": "OfferCatalog",
+				"name": "Hosting plans",
+				"itemListElement": [
+					{
+						"@type": "Offer",
+						"priceCurrency": "EUR",
+						"itemOffered": {
+							"@type": "Service",
+							"name": "Managed Kubernetes"
+						},
+						"price": "450"
+					},
+					{
+						"@type": "Offer",
+						"priceCurrency": "EUR",
+						"itemOffered": {
+							"@type": "Service",
+							"name": "Backup & restore"
+						},
+						"price": "120"
+					},
+					{
+						"@type": "Offer",
+						"priceCurrency": "EUR",
+						"itemOffered": {
+							"@type": "Service",
+							"name": "24/7 incident response"
+						},
+						"price": "900"
+					}
+				]
+			},
+			"availableChannel": {
+				"@type": "ServiceChannel",
+				"availableLanguage": [
+					"English",
+					"Danish"
+				],
+				"processingTime": "PT1H",
+				"servicePhone": {
+					"@type": "ContactPoint",
+					"contactType": "technical support",
+					"telephone": "tel:+4570809000"
+				},
+				"serviceUrl": "#"
+			}
+		}
+	]
+}</script>
 	<link rel="stylesheet" href="/dist/demo.c160558b.min.css">
 
 	<style>
@@ -62,15 +3088,17 @@
 				
 			</li>
 			<li>
-				<span>Schema mode: raw</span>
+				<span>Schema mode: JSON-LD</span>
 				
 			</li>
 		</ol>
 	</nav>
-	<h1>UI: Card — Schema mode: raw</h1>
-	<p>This is <a href="schema.html">demo/schema.html</a> rendered with <code>schema=&quot;&quot;</code>.
-	Same cards, same sections, same layout — every difference between the two pages is structured data.
-	See also <a href="schema.jsonld.html">schema.jsonld.html</a>, which puts that data back as JSON-LD.
+	<h1>UI: Card — Schema mode: JSON-LD</h1>
+	<p>This is <a href="schema.html">demo/schema.html</a> rendered with <code>schema=&quot;jsonld&quot;</code>.
+	The markup is identical to <a href="schema.raw.html">schema.raw.html</a> — no <code>itemscope</code>,
+	<code>itemtype</code> or <code>itemprop</code> — and the same structured data is emitted once in
+	<code>&lt;head&gt;</code> as a single <code>@graph</code> of 63 nodes. It is read back out of the
+	microdata by <code>jsonld.js</code>, so it cannot disagree with <a href="schema.html">schema.html</a>.
 	Generated by <code>node ui/card/demo/schema.modes.build.js</code>; do not edit by hand.</p>
 
 	</header>
