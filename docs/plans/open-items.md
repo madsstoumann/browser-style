@@ -1136,3 +1136,51 @@ functions and has no data form.
 
 **Also waiting on this:** `demo/schema.jsonld.html`, the third twin next to `schema.html`
 (micro) and `schema.raw.html` (raw).
+
+### Would restructuring the content models make this easier? — Partly, and not the way it looks
+
+Measured against the schema.org 30.0 vocabulary and against what the renderer actually emits,
+over all 323 `details` keys:
+
+| | share |
+|---|---|
+| key name is already a valid schema.org property, in domain | 44% |
+| key name **equals the `itemprop` the renderer emits** | 35% |
+| display twin (`*Display`) | 8% |
+| renamed **or restructured** on the way to markup | **57%** |
+
+**So aligning key names would not unlock JSON-LD.** The majority of the mapping is not a
+rename — it is a structural transform, one key expanding into a nested typed node
+(`salaryRange` → `baseSalary`/`MonetaryAmount`/`QuantitativeValue`, `property` →
+`containsPlace`, `verdict` → `reviewRating`, `sections` → `hasMenuSection`). A rename cannot
+express that, so the mapping table survives the restructure largely intact.
+
+**Storing `details` in schema.org shape instead is rejected.** It would make JSON-LD close to
+an identity function, but it breaks all 67 instances, `card.schema.json`, the editor and every
+`DETAILS` reader at once — and it makes authoring worse, which is the reason `details` is
+friendly in the first place. `card.model.md` exists to keep the friendly shape documented, not
+to migrate away from it.
+
+**The restructure that does pay: get non-schema data out of `details`.** 21% of the keys are
+not schema data at all and are today indistinguishable from the keys that are:
+
+| Bucket | Keys | Examples |
+|---|---|---|
+| display twins | 30 | `*Display` — a pre-formatted string beside a machine value |
+| renderer control flags | 20 | `subtype`, `kind`, `order`, `ordered`, `list`, `slides`, `slide`, `format`, `map`, `mapMedia` |
+| presentation-only text | 18 | `note`, `recommendation`, `viewings`, `pace`, `cadence`, `trialText`, `joinText`, `reviewedLabel`, `disclaimer` |
+
+Move those 68 to siblings — `display: {}` and a renderer-config object — and `details` becomes
+**by definition** the schema data. A serializer's input stops being ambiguous, and the
+equivalence gate above gets something exact to check. That is the change that makes the JSON-LD
+mode maintainable; name alignment is cosmetic next to it.
+
+**And it is verifiable with a gate that already exists.** Moving a key changes only where the
+renderer reads it, never what it emits — so the SSR snapshot must stay **byte-identical across
+all 144 renders** through the whole migration. A restructure with a byte-exact regression gate
+is a rare thing; it is the strongest argument for doing this one before the graph, not after.
+
+**Cheap subset worth taking either way:** the renames where the key is a pure alias for the
+property already emitted — `rating` → `aggregateRating`, `website` → `url`, `servings` →
+`recipeYield`, `instructions` → `recipeInstructions`, `company` → `hiringOrganization`. Those
+shrink the mapping table without costing authoring ergonomics.
