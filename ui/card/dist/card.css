@@ -2076,6 +2076,10 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     font-weight: var(--ui-content-meta-weight, inherit);
     text-shadow: var(--ui-content-meta-text-shadow, none);
   }
+  :where(ui-content, ui-media) [data-part=key] {
+    color: var(--ui-content-key-ink, inherit);
+    font-weight: var(--ui-content-key-weight, 600);
+  }
   :where(ui-content) [data-part=meta]:has(> ui-chip + ui-chip) {
     display: flex;
     flex-wrap: wrap;

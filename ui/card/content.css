@@ -712,6 +712,12 @@
 		text-shadow: var(--ui-content-meta-text-shadow, none);
 	}
 
+	/* key rows — the <strong> label half of a "key: value" pair. Docs: docs/content.md § Key rows */
+	:where(ui-content, ui-media) [data-part="key"] {
+		color: var(--ui-content-key-ink, inherit);
+		font-weight: var(--ui-content-key-weight, 600);
+	}
+
 	/* status-chip row — the only meta row carrying more than one chip. Docs: docs/content.md */
 	:where(ui-content) [data-part="meta"]:has(> ui-chip + ui-chip) {
 		display: flex;

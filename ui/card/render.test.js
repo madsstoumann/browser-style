@@ -917,13 +917,13 @@ describe('tvseries / tvepisode', () => {
 		assert.match(html, /<div itemprop="partOfSeries" itemscope itemtype="https:\/\/schema\.org\/TVSeries" hidden><meta itemprop="name" content="Nordlight"><\/div>/);
 		assert.match(html, /<div itemprop="partOfSeason" itemscope itemtype="https:\/\/schema\.org\/TVSeason" hidden><meta itemprop="seasonNumber" content="3"><meta itemprop="name" content="Terminus"><\/div>/);
 		assert.match(html, /<p data-part="meta">Season 3, episode 4 · 58 min · Mar 5, 2026<\/p>/);
-		assert.match(html, /<p data-part="meta" itemprop="director" itemscope itemtype="https:\/\/schema\.org\/Person">Directed by <span itemprop="name">Freja Nyholm<\/span><\/p>/);
+		assert.match(html, /<p data-part="meta" itemprop="director" itemscope itemtype="https:\/\/schema\.org\/Person"><strong data-part="key">Directed by:<\/strong> <span itemprop="name">Freja Nyholm<\/span><\/p>/);
 	});
 
 	/* the shared credits helper must not have moved movie's wording */
 	test('a film still says "Director:"', () => {
 		assert.match(render({ schemaType: 'movie', headline: 'M', details: { director: { name: 'Sofia Lindqvist' } } }),
-			/itemprop="director" itemscope itemtype="https:\/\/schema\.org\/Person">Director: <span itemprop="name">Sofia Lindqvist</);
+			/itemprop="director" itemscope itemtype="https:\/\/schema\.org\/Person"><strong data-part="key">Director:<\/strong> <span itemprop="name">Sofia Lindqvist</);
 	});
 });
 
@@ -1042,7 +1042,7 @@ describe('musicgroup — MusicGroup', () => {
 	});
 
 	test('members use `member`, with the instrument outside the Person scope', () => {
-		assert.match(band(), /<p data-part="meta">Vocals <span itemprop="member" itemscope itemtype="https:\/\/schema\.org\/Person"><span itemprop="name">Ida Krogh<\/span><\/span><\/p>/);
+		assert.match(band(), /<p data-part="meta"><strong data-part="key">Vocals:<\/strong> <span itemprop="member" itemscope itemtype="https:\/\/schema\.org\/Person"><span itemprop="name">Ida Krogh<\/span><\/span><\/p>/);
 		assert.ok(!band().includes('musicGroupMember') && !band().includes('itemprop="members"'), 'both superseded spellings');
 		assert.ok(!band({ members: [{ role: 'Vocals' }] }).includes('itemprop="member"'), 'a nameless member is not a member');
 	});

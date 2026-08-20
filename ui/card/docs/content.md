@@ -359,6 +359,7 @@ Content parts are **semantic children** marked with `data-part`. They are auto-s
 | `tags` | `<ul data-part="tags">` | Tag list — flex-wrap. Children are either **plain links** (default pill) or **`<ui-chip>`** (full colour palette) — see below |
 | `actions` | `<div data-part="actions">` | Button / link row — flex-wrap with action gap. The accent (primary) CTA goes **last**, so it reads at the inline-end of the row and mirrors under `dir="rtl"`; `render.js` reorders it there whatever order the data declares |
 | `footer` | `<footer data-part="footer">` | Trailing muted meta row — flex-wrap |
+| `key` | `<strong data-part="key">` | **Meta group** — the label half of a `key: value` pair inside a meta run; bold, colon included |
 | `price` | `<p data-part="price">` | **Body group** (prominent) — large current price; `<del>` struck original, `<small>` accent note; a discount rides an inline `<ui-chip>` |
 | `stat` | `<p data-part="stat">` | **Body group** (prominent) — big `<data>` number + `<small>` unit; muted trend |
 | `list` | `<ul>`/`<ol data-part="list">` | **Body group** — feature / step list; flex column. Three `data-variant`s: `checked` (included items, ✓ marker), `crossed` (excluded items, ✗ marker) and `menu` (priced rows — see below) |
@@ -502,6 +503,36 @@ wired up here yet. Tracked in `docs/plans/open-items.md`.
 
 The gap between mark and text is the shared `--ui-content-list-icon-gap` (`0.4em`,
 `letter-spacing` on the marker).
+
+#### Key rows — `key: value` inside a meta run
+
+Several meta rows are really key/value pairs read as one dot-joined line — band members,
+comic credits, recipe times, screen credits. The label is marked up, the value is not:
+
+```html
+<p data-part="meta">
+  <strong data-part="key">Vocals:</strong> <span itemprop="member" …>Ida Krogh</span> ·
+  <strong data-part="key">Guitar:</strong> <span itemprop="member" …>Jonas Riis</span>
+</p>
+```
+
+**Every key carries a colon.** `render.js` normalises it — `keyed()` strips a trailing colon
+from the label and adds exactly one back, so an author-supplied label (the screen-credit
+`director.label`, which may be "Created and directed by") can spell it either way and still
+lands consistent.
+
+**The label is outside the microdata scope.** `Vocals` is editorial, `Ida Krogh` is the datum,
+so the `itemprop` sits on the value's span and the key is plain text. Same shape everywhere.
+
+Knobs: `--ui-content-key-weight` (default `600`) and `--ui-content-key-ink` (default
+`inherit` — the key stays in the meta row's muted colour, and only weight separates it).
+
+Emitted by `keyed()` at nine sites: musicgroup members, the five comic credits, recipe
+prep/cook/serves, screen credits (director + starring), course instructor, achievement
+issuer/expiry/id, software requirements.
+
+Not key rows, deliberately: prose runs ("Formed in Copenhagen, 2019", "Check-in from 16:00"),
+value+unit runs ("180 m² · 3 bedrooms") and bare value lists ("macOS · Windows · Switch").
 
 ### Structured parts — microdata scope + who uses them
 

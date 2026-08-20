@@ -191,6 +191,7 @@ by name rather than repeating the fields.
 | **contacts** | `[{type: email\|phone\|url, value, label}]` | `contactLink()` |
 | **person** | `{name, role, avatar}` | `avatarPart()` / `byline()` |
 | **list item** | string **or** `{text, icon, href, itemprop}` | `listPart()` |
+| **key row** | a `key: value` pair in a meta run — the label is emitted as `<strong data-part="key">`, colon normalised; the value keeps the `itemprop` | `keyed()` |
 | **accordion** | `[{summary, body}]` | `accordion()` |
 
 **Machine value + display twin.** Many types carry both a machine value and a pre-formatted

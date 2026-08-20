@@ -761,13 +761,18 @@ const byline = (authors, prop = 'author', dateline = '') =>
 		<span data-part="byline-who"><span itemprop="name">${esc(author.name)}</span>${author.role ? `<span itemprop="jobTitle">${esc(author.role)}</span>` : ''}</span>${index === 0 ? dateline : ''}
 	</address>`).join('');
 
+/* key row in a meta run — the label half of a "key: value" pair. The colon is part of the
+   key, and is normalised so an author-supplied label may spell it either way.
+   Docs: docs/content.md § Key rows */
+const keyed = (label) => `<strong data-part="key">${esc(String(label).replace(/:\s*$/, ''))}:</strong> `;
+
 /* screen credits — director row + one actor scope per name. Shared by movie/
    tvseries/tvepisode; the label carries its own punctuation because a series is
    "Created and directed by" where a film is "Director:". `actor` accepts a Person
    OR a PerformingGroup; Person is the safe default for a bare name. */
 const creditsPart = (d) =>
-	(d.director?.name ? `<p data-part="meta"${scope('director', 'Person')}>${esc(d.director.label || 'Director:')} <span itemprop="name">${esc(d.director.name)}</span></p>` : '')
-	+ (d.actors?.length ? `<p data-part="meta">Starring: ${d.actors.map((name) => `<span${scope('actor', 'Person')}><span itemprop="name">${esc(name)}</span></span>`).join(', ')}</p>` : '');
+	(d.director?.name ? `<p data-part="meta"${scope('director', 'Person')}>${keyed(d.director.label || 'Director')}<span itemprop="name">${esc(d.director.name)}</span></p>` : '')
+	+ (d.actors?.length ? `<p data-part="meta">${keyed('Starring')}${d.actors.map((name) => `<span${scope('actor', 'Person')}><span itemprop="name">${esc(name)}</span></span>`).join(', ')}</p>` : '');
 
 /* comic credits — one Person scope per filled role, as a visible meta row. All five are
    ComicIssue's OWN properties (shared with ComicStory) and a ComicSeries carries none of
@@ -776,7 +781,7 @@ const creditsPart = (d) =>
 const COMIC_ROLES = [['artist', 'Art'], ['penciler', 'Pencils'], ['inker', 'Inks'], ['letterer', 'Letters'], ['colorist', 'Colours']];
 const comicCredits = (d) => {
 	const rows = COMIC_ROLES.filter(([key]) => d[key])
-		.map(([key, label]) => `${label} <span${scope(key, 'Person')}><span itemprop="name">${esc(d[key])}</span></span>`);
+		.map(([key, label]) => `${keyed(label)}<span${scope(key, 'Person')}><span itemprop="name">${esc(d[key])}</span></span>`);
 	return rows.length ? `<p data-part="meta">${rows.join(' · ')}</p>` : '';
 };
 
@@ -1901,7 +1906,7 @@ const DETAILS = {
 
 	recipe(d, fields, parts = {}) {
 		let html = meta('prepTime', d.prepTime) + meta('cookTime', d.cookTime) + meta('recipeYield', d.servings);
-		html += `<p data-part="meta">Prep ${esc(duration(d.prepTime))} · Cook ${esc(duration(d.cookTime))} · Serves ${esc(d.servings)}</p>`;
+		html += `<p data-part="meta">${keyed('Prep')}${esc(duration(d.prepTime))} · ${keyed('Cook')}${esc(duration(d.cookTime))} · ${keyed('Serves')}${esc(d.servings)}</p>`;
 		if (d.ingredients?.length) {
 			html += `<ul data-part="list">${d.ingredients.map((item) => `<li itemprop="recipeIngredient">${esc(item)}</li>`).join('')}</ul>`;
 		}
@@ -1985,7 +1990,7 @@ const DETAILS = {
 			+ `<div${scope('hasCourseInstance', 'CourseInstance')} hidden>${meta('courseMode', 'Online')}${meta('courseWorkload', d.courseWorkload)}${d.instructor?.name ? `<span${scope('instructor', 'Person')}>${meta('name', d.instructor.name)}</span>` : ''}</div>`
 			+ (d.provider ? `<span${scope('provider', 'Organization')} hidden>${meta('name', d.provider)}</span>` : '');
 		const facts = [d.duration ? duration(d.duration) : null, d.difficultyLevel, d.courseWorkload ? duration(d.courseWorkload) + ' of study' : null].filter(Boolean).join(' · ');
-		html += `<p data-part="meta">${esc(facts)}${d.instructor?.name ? ` · Instructor: ${esc(d.instructor.name)}${d.instructor.title ? `, ${esc(d.instructor.title)}` : ''}` : ''}</p>`;
+		html += `<p data-part="meta">${esc(facts)}${d.instructor?.name ? ` · ${keyed('Instructor')}${esc(d.instructor.name)}${d.instructor.title ? `, ${esc(d.instructor.title)}` : ''}` : ''}</p>`;
 		if (d.price) {
 			html += `<p data-part="price"${scope('offers', 'Offer')}>${meta('priceCurrency', d.price.currency)}${meta('availability', SCHEMA + 'InStock')}${priceValue(d.price.currency, d.price.current)}${d.price.original ? ` <del>${fmtPrice(d.price.currency, d.price.original)}</del>` : ''}</p>`;
 		}
@@ -2101,7 +2106,7 @@ const DETAILS = {
 		let html = d.status ? `<p data-part="meta"><ui-chip theme="pale green">${esc(d.status)}</ui-chip></p>` : '';
 		html += meta('dateCreated', d.dateEarned) + meta('expires', d.expirationDate)
 			+ meta('educationalLevel', d.skillLevel) + meta('identifier', d.credentialId);
-		html += `<p data-part="meta">Issued by <span${scope('recognizedBy', 'Organization')}><span itemprop="name">${esc(d.issuingOrganization)}</span></span>${d.dateEarnedDisplay ? ` · ${esc(d.dateEarnedDisplay)}` : ''}${d.expirationDateDisplay ? ` · Expires ${esc(d.expirationDateDisplay)}` : ''}${d.credentialId ? ` · ID ${esc(d.credentialId)}` : ''}</p>`;
+		html += `<p data-part="meta">${keyed('Issued by')}<span${scope('recognizedBy', 'Organization')}><span itemprop="name">${esc(d.issuingOrganization)}</span></span>${d.dateEarnedDisplay ? ` · ${esc(d.dateEarnedDisplay)}` : ''}${d.expirationDateDisplay ? ` · ${keyed('Expires')}${esc(d.expirationDateDisplay)}` : ''}${d.credentialId ? ` · ${keyed('ID')}${esc(d.credentialId)}` : ''}</p>`;
 		if (d.verificationUrl) html += `<nav data-part="actions"><a class="ui-button" href="${esc(d.verificationUrl)}" target="_blank" rel="noopener">Verify credential</a></nav>`;
 		return html;
 	},
@@ -2251,7 +2256,7 @@ const DETAILS = {
 		if (req) {
 			/* softwareRequirements is free text in schema.org — one readable line */
 			const line = typeof req === 'string' ? req : [req.processor, req.ram ? `${req.ram} RAM` : null, req.storage ? `${req.storage} free` : null].filter(Boolean).join(' · ');
-			if (line) html += meta('softwareRequirements', line) + `<p data-part="meta">Requires ${esc(line)}</p>`;
+			if (line) html += meta('softwareRequirements', line) + `<p data-part="meta">${keyed('Requires')}${esc(line)}</p>`;
 		}
 		if (d.price) {
 			html += `<p data-part="price"${scope('offers', 'Offer')}>${meta('priceCurrency', d.price.currency)}${meta('availability', SCHEMA + 'InStock')}${priceValue(d.price.currency, d.price.current)}${d.price.note ? ` <small>${esc(d.price.note)}</small>` : ''}</p>`;
@@ -2658,7 +2663,7 @@ const DETAILS = {
 		/* one row of members, role label OUTSIDE the Person scope — the same shape
 		   comicCredits() uses, because the label is editorial and the name is the datum */
 		const members = (d.members || []).filter((member) => member?.name).map((member) =>
-			`${member.role ? `${esc(member.role)} ` : ''}<span${scope('member', 'Person')}><span itemprop="name">${esc(member.name)}</span></span>`);
+			`${member.role ? keyed(member.role) : ''}<span${scope('member', 'Person')}><span itemprop="name">${esc(member.name)}</span></span>`);
 		if (members.length) html += `<p data-part="meta">${members.join(' · ')}</p>`;
 		/* discography, newest first — a descending list must NOT get ordinal markers */
 		html += scopedList((d.albums || []).map((album) => {
