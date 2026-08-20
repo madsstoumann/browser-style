@@ -326,6 +326,16 @@
 				font-size: inherit;
 				margin-inline-start: auto;
 				text-align: end;
+
+				/* date + reading time each take a glyph — the `/ ""` arm keeps the codepoint
+				   out of the accessible name. Docs: docs/content.md § Icon markers */
+				& > :is(time, [data-part="reading-time"])::before {
+					content: var(--icon) / "";
+					font-family: var(--ui-icon-font);
+					margin-inline-end: var(--ui-content-dateline-icon-gap, 0.35em);
+				}
+				& > time { --icon: var(--icon-calendar-month); }
+				& > [data-part="reading-time"] { --icon: var(--icon-schedule); }
 			}
 		}
 
@@ -480,13 +490,14 @@
 			/* icon markers — the glyph rides list-style-type as a STRING (Baseline);
 			   ::marker takes no vertical-align, so centring is baked into the font.
 			   Needs @browser.style/icon/icon-font.css. Docs: docs/content.md § Icon markers */
-			& li[data-icon] {
-				list-style-type: var(--icon);
-				&::marker {
-					font-family: var(--ui-icon-font);
-					letter-spacing: var(--ui-content-list-icon-gap, 0.4em);
-				}
+			&[data-icon] { --ui-content-list-marker: var(--icon); }
+			&[data-icon] > li::marker,
+			& li[data-icon]::marker {
+				font-family: var(--ui-icon-font);
+				letter-spacing: var(--ui-content-list-icon-gap, 0.4em);
 			}
+			/* a row overrides the list — same attribute, nearer subject */
+			& li[data-icon] { list-style-type: var(--icon); }
 		}
 		& ol[data-part="list"] { list-style-type: var(--ui-content-list-marker, decimal); }
 		/* block-content rows (qa answers, places): no marker — inside-position bullets wrap
@@ -720,6 +731,14 @@
 		font-size: var(--ui-content-meta-fs, calc(var(--ui-content-meta-base, var(--ui-content-fs, var(--ui-content-fs-md))) * 0.75));
 		font-weight: var(--ui-content-meta-weight, inherit);
 		text-shadow: var(--ui-content-meta-text-shadow, none);
+	}
+
+	/* counter rows — an inline count with its own glyph. `data-icon` sets --icon through the
+	   icon sheet; the `/ ""` arm keeps the codepoint out of the accessible name. */
+	:where(ui-content, ui-media) [data-part="count"]::before {
+		content: var(--icon) / "";
+		font-family: var(--ui-icon-font);
+		margin-inline-end: var(--ui-content-count-icon-gap, 0.35em);
 	}
 
 	/* key rows — the <strong> label half of a "key: value" pair. Docs: docs/content.md § Key rows */

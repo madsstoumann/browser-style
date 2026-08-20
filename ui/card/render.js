@@ -1274,7 +1274,7 @@ const datelinePart = (fields) => {
 		? `<time datetime="${esc(fields.published)}">${new Date(fields.published).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</time>`
 		: '';
 	return date || fields.readingTime
-		? `<small data-part="dateline">${date}${fields.readingTime ? `<span>${esc(fields.readingTime)}</span>` : ''}</small>`
+		? `<small data-part="dateline">${date}${fields.readingTime ? `<span data-part="reading-time">${esc(fields.readingTime)}</span>` : ''}</small>`
 		: '';
 };
 
@@ -1328,11 +1328,15 @@ const buildTail = (fields, type) => {
 			if (eng[key] == null) continue;
 			html += `<div${scope('interactionStatistic', 'InteractionCounter')} hidden>${meta('interactionType', SCHEMA + action)}${meta('userInteractionCount', eng[key])}</div>`;
 		}
+		/* each counter is its own element so it can carry a glyph — data-icon sets --icon
+		   through the icon sheet, and the ::before arm draws it. Docs: docs/content.md */
+		const count = (icon, value, word) => value == null ? null
+			: `<span data-part="count" data-icon="${icon}">${num(value)} ${word}</span>`;
 		const summary = [
-			eng.viewCount != null ? `${num(eng.viewCount)} views` : null,
-			eng.likeCount != null ? `${num(eng.likeCount)} likes` : null,
-			eng.shareCount != null ? `${num(eng.shareCount)} shares` : null,
-			eng.commentCount != null ? `${num(eng.commentCount)} comments` : null
+			count('visibility', eng.viewCount, 'views'),
+			count('favorite', eng.likeCount, 'likes'),
+			count('share', eng.shareCount, 'shares'),
+			count('mode-comment', eng.commentCount, 'comments')
 		].filter(Boolean).join(' · ');
 		if (summary) html += `<footer data-part="footer">${summary}</footer>`;
 	}
@@ -1488,8 +1492,10 @@ const slug = (text) => String(text ?? '').toLowerCase().replace(/[^a-z0-9]+/g, '
    runs in — data always wins. */
 /* `sr` renders the list visually-hidden but still IN the accessibility tree ([data-sr],
    ui/base/core.css) — not `hidden`, which would remove it from both. Docs: docs/content.md */
-const scopedList = (rows, ordered, sr = false) => rows.length
-	? `<${ordered ? 'ol' : 'ul'} data-part="list"${sr ? ' data-sr' : ''}>${rows.join('')}</${ordered ? 'ol' : 'ul'}>`
+/* `icon` marks the WHOLE list — rows that do not differ in kind take one repeated glyph,
+   not a per-row data-icon. Docs: docs/content.md § Icon markers */
+const scopedList = (rows, ordered, sr = false, icon = null) => rows.length
+	? `<${ordered ? 'ol' : 'ul'} data-part="list"${sr ? ' data-sr' : ''}${icon ? ` data-icon="${esc(icon)}"` : ''}>${rows.join('')}</${ordered ? 'ol' : 'ul'}>`
 	: '';
 
 /* one MenuItem row: name · label · price on one line, description under it. The row
@@ -2312,7 +2318,7 @@ const DETAILS = {
 		const bits = [d.totalTime ? `Takes ${esc(duration(d.totalTime))}` : null, d.estimatedCost ? `~${fmtPrice(d.estimatedCost.currency, d.estimatedCost.value)}` : null, d.difficulty ? esc(d.difficulty) : null].filter(Boolean).join(' · ');
 		if (bits) html += `<p data-part="meta">${bits}</p>`;
 		if (d.supplies?.length || d.tools?.length) {
-			html += `<ul data-part="list">${(d.supplies || []).map((item) => `<li${scope('supply', 'HowToSupply')}><span itemprop="name">${esc(item)}</span></li>`).join('')}${(d.tools || []).map((item) => `<li${scope('tool', 'HowToTool')}><span itemprop="name">${esc(item)}</span></li>`).join('')}</ul>`;
+			html += `<ul data-part="list" data-variant="checked">${(d.supplies || []).map((item) => `<li${scope('supply', 'HowToSupply')}><span itemprop="name">${esc(item)}</span></li>`).join('')}${(d.tools || []).map((item) => `<li${scope('tool', 'HowToTool')}><span itemprop="name">${esc(item)}</span></li>`).join('')}</ul>`;
 		}
 		if (d.steps?.length) {
 			const steps = accordion('howto-step', d.steps.map((step, index) => ({
@@ -2505,7 +2511,7 @@ const DETAILS = {
 		const catalog = d.catalog;
 		if (catalog?.items?.length) {
 			html += `<div${scope('hasOfferCatalog', 'OfferCatalog')}>${meta('name', catalog.name)}<ul data-part="list">${catalog.items.map((item) =>
-				`<li${scope('itemListElement', 'Offer')}>${meta('priceCurrency', item.currency)}<span${scope('itemOffered', 'Service')}><span itemprop="name">${esc(item.name)}</span></span> — ${priceValue(item.currency, item.price)}${catalog.period ? `/${esc(catalog.period)}` : ''}</li>`
+				`<li${item.icon ? ` data-icon="${esc(item.icon)}"` : ''}${scope('itemListElement', 'Offer')}>${meta('priceCurrency', item.currency)}<span${scope('itemOffered', 'Service')}><span itemprop="name">${esc(item.name)}</span></span> — ${priceValue(item.currency, item.price)}${catalog.period ? `/${esc(catalog.period)}` : ''}</li>`
 			).join('')}</ul></div>`;
 		}
 		const channel = d.channel;
@@ -2604,7 +2610,7 @@ const DETAILS = {
 			const aspects = (d.about.aspects || [])
 				.filter((aspect) => Object.hasOwn(MEDICAL_ASPECTS, aspect.type))
 				.map((aspect) => `<li${scope(aspect.type, MEDICAL_ASPECTS[aspect.type])}><span itemprop="name">${esc(aspect.text)}</span></li>`).join('');
-			html += `<div${scope('about', MEDICAL_ABOUT_TYPES.has(d.about.type) ? d.about.type : 'MedicalCondition')}>${meta('name', d.about.name)}${aspects ? `<ul data-part="list">${aspects}</ul>` : ''}</div>`;
+			html += `<div${scope('about', MEDICAL_ABOUT_TYPES.has(d.about.type) ? d.about.type : 'MedicalCondition')}>${meta('name', d.about.name)}${aspects ? `<ul data-part="list" data-variant="checked">${aspects}</ul>` : ''}</div>`;
 		}
 		if (d.reviewedBy?.name) {
 			const dateline = d.lastReviewed
@@ -2675,7 +2681,7 @@ const DETAILS = {
 			return `<li${scope('album', 'MusicAlbum')}>${meta('datePublished', album.datePublished)}${meta('numTracks', album.numTracks)}`
 				+ (album.url ? `<a itemprop="url" href="${esc(album.url)}">${name}</a>` : name)
 				+ `${album.display ? ` <small>${esc(album.display)}</small>` : ''}</li>`;
-		}), d.ordered ?? false);
+		}), d.ordered ?? false, false, 'album');
 		if (d.note) html += `<footer data-part="footer">${esc(d.note)}</footer>`;
 		return html;
 	},
@@ -2713,7 +2719,7 @@ const DETAILS = {
 		/* newest first by convention — descending rows must NOT get ordinal markers */
 		html += scopedList((d.episodes || []).map((episode) =>
 			`<li${scope('hasPart', 'PodcastEpisode')}>${meta('episodeNumber', episode.episodeNumber)}${meta('duration', episode.duration)}<span itemprop="name">${esc(episode.name)}</span>${episode.durationDisplay ? ` <small>${esc(episode.durationDisplay)}</small>` : ''}</li>`
-		), d.ordered ?? false);
+		), d.ordered ?? false, false, 'podcasts');
 		if (d.note) html += `<footer data-part="footer">${esc(d.note)}</footer>`;
 		return html;
 	},

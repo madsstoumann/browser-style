@@ -12,7 +12,9 @@
   "fields": {
     "internalName": "Demo — Service",
     "schemaType": "service",
-    "preset": { "$ref": "card-preset/stack" },
+    "preset": {
+      "$ref": "card-preset/stack"
+    },
     "eyebrow": "Managed hosting",
     "headline": "Always-On Managed Hosting",
     "summary": "Monitored infrastructure with hourly backups, security patching inside 24 hours and a one-hour incident response — every day of the year.",
@@ -31,13 +33,31 @@
         "name": "Hosting plans",
         "period": "month",
         "items": [
-          { "name": "Managed Kubernetes", "price": 450, "currency": "EUR" },
-          { "name": "Backup & restore", "price": 120, "currency": "EUR" },
-          { "name": "24/7 incident response", "price": 900, "currency": "EUR" }
+          {
+            "name": "Managed Kubernetes",
+            "price": 450,
+            "currency": "EUR",
+            "icon": "deployed-code"
+          },
+          {
+            "name": "Backup & restore",
+            "price": 120,
+            "currency": "EUR",
+            "icon": "backup"
+          },
+          {
+            "name": "24/7 incident response",
+            "price": 900,
+            "currency": "EUR",
+            "icon": "support-agent"
+          }
         ]
       },
       "channel": {
-        "languages": ["English", "Danish"],
+        "languages": [
+          "English",
+          "Danish"
+        ],
         "processingTime": "PT1H",
         "url": "#",
         "urlText": "Request a quote",

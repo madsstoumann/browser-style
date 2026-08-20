@@ -42,4 +42,12 @@ export const ICON_NAMES = [
 	'timer',
 	'thermostat',
 	'crib',
+	'podcasts',
+	'deployed-code',
+	'backup',
+	'support-agent',
+	'album',
+	'visibility',
+	'share',
+	'mode-comment',
 ];

@@ -360,6 +360,9 @@ Content parts are **semantic children** marked with `data-part`. They are auto-s
 | `actions` | `<div data-part="actions">` | Button / link row — flex-wrap with action gap. The accent (primary) CTA goes **last**, so it reads at the inline-end of the row and mirrors under `dir="rtl"`; `render.js` reorders it there whatever order the data declares |
 | `footer` | `<footer data-part="footer">` | Trailing muted meta row — flex-wrap |
 | `key` | `<strong data-part="key">` | **Meta group** — the label half of a `key: value` pair inside a meta run; bold, colon included |
+| `count` | `<span data-part="count" data-icon="…">` | **Meta group** — one engagement counter (views / likes / shares / comments); the `data-icon` names its glyph |
+| `reading-time` | `<span data-part="reading-time">` | inside `dateline` — takes the clock glyph, as the sibling `<time>` takes the calendar |
+| `verified` | `<span data-part="verified">` | inside `byline-who` — a verified-purchase mark; the ✓ is a `::before` glyph, never a character in the text node |
 | `price` | `<p data-part="price">` | **Body group** (prominent) — large current price; `<del>` struck original, `<small>` accent note; a discount rides an inline `<ui-chip>` |
 | `stat` | `<p data-part="stat">` | **Body group** (prominent) — big `<data>` number + `<small>` unit; muted trend |
 | `list` | `<ul>`/`<ol data-part="list">` | **Body group** — feature / step list; flex column. Three `data-variant`s: `checked` (included items, ✓ marker), `crossed` (excluded items, ✗ marker) and `menu` (priced rows — see below) |
@@ -411,6 +414,19 @@ icons, which are `::before` glyphs for the same reason — one vocabulary, two p
 
 Knobs: `--ui-content-list-icon-gap` (default `0.4em`, rides `letter-spacing` on the marker)
 and `--ui-content-list-marker-ink` (defaults to `currentColor`, i.e. the row's own colour).
+
+**`data-icon` on the `<ul>` marks the whole list** — one repeated glyph, for rows that do not
+differ in kind (a discography, an episode list). A row-level `data-icon` still wins, so a list
+default can be overridden per row:
+
+```html
+<ul data-part="list" data-icon="album">…</ul>   <!-- every row gets the record glyph -->
+```
+
+**Partial coverage renders mixed markers.** A `li[data-icon]` sets `list-style-type` while a
+sibling without one falls through to the list's `disc`, so a list is all-or-nothing: either
+every row carries a glyph, or the mark belongs on the list. That is why a list with only one
+honestly-matching glyph takes none — or takes a list-level one instead.
 
 **Prefer the marker over `::before` on a link.** Generated content on an element lands in that
 element's *accessible name* — a private-use icon codepoint in front of a phone number,

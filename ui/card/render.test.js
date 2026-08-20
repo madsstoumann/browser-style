@@ -1048,10 +1048,10 @@ describe('musicgroup — MusicGroup', () => {
 	});
 
 	test('the discography is descending, so unordered, and each album can link out', () => {
-		assert.match(band(), /<ul data-part="list"><li itemprop="album" itemscope itemtype="https:\/\/schema\.org\/MusicAlbum"><meta itemprop="datePublished" content="2026-04-17"><meta itemprop="numTracks" content="4"><a itemprop="url" href="#schema-music"><span itemprop="name">Slow Weather<\/span><\/a> <small>EP · 2026<\/small><\/li><\/ul>/);
+		assert.match(band(), /<ul data-part="list" data-icon="album"><li itemprop="album" itemscope itemtype="https:\/\/schema\.org\/MusicAlbum"><meta itemprop="datePublished" content="2026-04-17"><meta itemprop="numTracks" content="4"><a itemprop="url" href="#schema-music"><span itemprop="name">Slow Weather<\/span><\/a> <small>EP · 2026<\/small><\/li><\/ul>/);
 		assert.ok(!band().includes('itemprop="albums"'), 'the superseded spelling');
 		assert.match(band({ albums: [{ name: 'Nattevagt' }] }), /<li itemprop="album"[^>]*><span itemprop="name">Nattevagt<\/span><\/li>/, 'no url, no anchor');
-		assert.match(band({ ordered: true }), /<ol data-part="list"><li itemprop="album"/, 'an ascending discography opts in');
+		assert.match(band({ ordered: true }), /<ol data-part="list" data-icon="album"><li itemprop="album"/, 'an ascending discography opts in');
 	});
 
 	test('escapes hostile input', () => {
@@ -1089,8 +1089,8 @@ describe('podcastseries — PodcastSeries', () => {
 
 	/* episodes descend (newest first) — ordinal markers would lie */
 	test('the episode list is unordered by default, and the switch is data', () => {
-		assert.match(card(), /<ul data-part="list"><li itemprop="hasPart"/);
-		assert.match(card({ ordered: true }), /<ol data-part="list"><li itemprop="hasPart"/);
+		assert.match(card(), /<ul data-part="list" data-icon="podcasts"><li itemprop="hasPart"/);
+		assert.match(card({ ordered: true }), /<ol data-part="list" data-icon="podcasts"><li itemprop="hasPart"/);
 	});
 
 	test('the host is a visible author byline', () => {
@@ -1636,7 +1636,7 @@ describe('reference-page reconciliation — contact, course, place, social', () 
 	   410 ShareActions are shares, and 3200 is 3,200 */
 	test('the engagement footer reads off the counters it emits', () => {
 		const html = render({ schemaType: 'social', headline: 'X', engagement: { likeCount: 3200, shareCount: 410, commentCount: 87 }, details: { platform: 'Chirper' } });
-		assert.match(html, /<footer data-part="footer">3,200 likes · 410 shares · 87 comments<\/footer>/);
+		assert.match(html, /<footer data-part="footer"><span data-part="count" data-icon="favorite">3,200 likes<\/span> · <span data-part="count" data-icon="share">410 shares<\/span> · <span data-part="count" data-icon="mode-comment">87 comments<\/span><\/footer>/);
 		assert.match(html, /<meta itemprop="interactionType" content="https:\/\/schema\.org\/ShareAction"><meta itemprop="userInteractionCount" content="410">/);
 	});
 });
