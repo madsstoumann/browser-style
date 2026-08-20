@@ -84,6 +84,16 @@ All schemas follow JSON Schema Draft 7 with Unified Content Model extensions:
 | `color` | Color values |
 | `geopoint` | Geographic coordinates |
 
+### Composite Types
+
+| Type | Description |
+|------|-------------|
+| `link` | A link: `{ url, text }`, plus an optional `ariaLabel` where the field renders a control. `options` takes `allowInternal` / `allowExternal`. Used by `card.schema.json` for `links[]` and for `actions[].link` — an action whose `link.url` is empty renders a real `<button>` instead of an anchor |
+
+`demo.schema.json` and `demo.widgets.schema.json` additionally use `blocks`, `markdown` and
+`tab`. Those are **showcase-only** — do not use them in a site model without documenting them
+here first.
+
 ## Field Properties
 
 ### Validation

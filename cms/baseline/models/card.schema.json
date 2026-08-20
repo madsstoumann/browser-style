@@ -5,7 +5,7 @@
   "description": "A universal, schema.org-driven card. One structured envelope (headline, summary, media, authors, actions, engagement…) shared by every card, a `schemaType` discriminator covering 52 schema.org types (50 distinct itemtypes — `profile` and `artist` both resolve to Person, `comparison` and `places` both to ItemList), and a single `details` object for type-specific data. Presentation (variant/media/content tokens for <ui-card>/<ui-reveal>) deliberately lives OUTSIDE this model — in a referenced card-preset — so the same card can render as hero, grid item, overlay or flip by swapping one reference.",
   "metadata": {
     "localized": true,
-    "version": "1.7.1",
+    "version": "1.8.0",
     "lastModified": "2026-08-20",
     "displayField": "internalName"
   },
@@ -260,6 +260,21 @@
             "title": "Map Zoom",
             "description": "Map only — 1–20, default 16"
           },
+          "layer": {
+            "type": "select",
+            "title": "Map Basemap",
+            "localized": false,
+            "default": "mapnik",
+            "description": "Map only — the OpenStreetMap embed's layer= string. Allowlisted to the six basemaps OSM can embed; anything else renders Standard, which is what the embed itself does with an unknown id. tracestracktopo and openmaptiles_osm are in the OSM switcher but carry no canEmbed flag, so they are deliberately not offered.",
+            "options": [
+              { "value": "mapnik", "label": "Standard" },
+              { "value": "cyclosm", "label": "CyclOSM" },
+              { "value": "cyclemap", "label": "Cycle Map" },
+              { "value": "transportmap", "label": "Transport Map" },
+              { "value": "hot", "label": "Humanitarian" },
+              { "value": "shortbread", "label": "Shortbread" }
+            ]
+          },
           "latitude": {
             "type": "number",
             "title": "Map Latitude",
@@ -279,6 +294,37 @@
             "type": "string",
             "title": "Caption",
             "description": "Optional visible caption (data-part=\"caption\")"
+          },
+          "poster": {
+            "type": "media",
+            "title": "Poster",
+            "localized": false,
+            "description": "Video/audio only — the still shown before playback, and the visual an audio item keeps in the frame",
+            "options": { "accept": ["image/*"] }
+          },
+          "controls": {
+            "type": "boolean",
+            "title": "Native Controls",
+            "localized": false,
+            "description": "Video only — show the browser's own controls"
+          },
+          "autoplay": {
+            "type": "boolean",
+            "title": "Autoplay",
+            "localized": false,
+            "description": "Video only — implies muted; the renderer also sets playsinline"
+          },
+          "muted": {
+            "type": "boolean",
+            "title": "Muted",
+            "localized": false,
+            "description": "Video only — forced on when autoplay is set"
+          },
+          "loop": {
+            "type": "boolean",
+            "title": "Loop",
+            "localized": false,
+            "description": "Video only"
           },
           "uploadDate": {
             "type": "datetime",

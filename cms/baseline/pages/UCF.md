@@ -8,7 +8,7 @@ Version 1.0.0
 
 ## Overview
 
-The Unified Content Format (UCF) is a portable JSON schema for representing content instances across multiple CMS platforms. While the Unified Content Model (UDM) defines content *types* (schemas), UCF defines content *instances* (the actual data).
+The Unified Content Format (UCF) is a portable JSON schema for representing content instances across multiple CMS platforms. While the Unified Content Model (UCM) defines content *types* (schemas), UCF defines content *instances* (the actual data).
 
 UCF enables:
 - **Cross-platform content migration** - Move content between CMS platforms
@@ -771,9 +771,9 @@ Content files should:
 
 ---
 
-## Comparison: UCF vs UDM
+## Comparison: UCF vs UCM
 
-| Aspect | UDM (Models) | UCF (Content) |
+| Aspect | UCM (Models) | UCF (Content) |
 |--------|--------------|---------------|
 | Purpose | Define content structure | Store content instances |
 | Location | `models/*.schema.json` | `.ucm/content/{model}/*.json` |

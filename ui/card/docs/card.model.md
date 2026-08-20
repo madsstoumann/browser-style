@@ -1093,21 +1093,23 @@ add any number of modifiers.
 
 ## Known drift
 
-Where the sources disagree today. Listed so an editor author is not surprised; none of these
-is fixed by this document.
+Where the sources still disagree. Everything here was re-verified on 2026-08-20; the rows that
+were fixed that day are listed underneath so they are not re-reported.
 
 | Drift | Detail |
 |---|---|
-| `details` has no machine schema | The only complete contract is `render.js`. `card.schema.json` describes it in prose. |
+| `details` has no machine schema | The only complete contract is `render.js`. `card.schema.json` describes it in prose. **The cheapest route in is now the jsonld extractor** — it proves the mapping is readable from the rendered output, so `oneOf` / `$defs` could be generated rather than hand-written. |
 | Renderer-only `details` keys | `format` (quiz), `variants.control`/`.tile`/`.layout`, `slides`/`slide`/`list` (places), `mapMedia`, `hours` (location's string form), `reviews[]` (product) and others are read by the renderer but absent from the schema prose. |
-| Renderer-only envelope keys | `modifiedDisplay`, `actions[].ariaLabel`, `links[].text`/`.url`, and `tags[]` in its `{name, url}` object form. |
-| Media keys not in the schema | `poster`, `width`, `height`, `controls`, `autoplay`, `muted`, `loop`, `map`, per-item `creditText`/`copyrightNotice`. |
-| `51` vs `52` | `card.md` prose says 51 schemaTypes; `SCHEMA_TYPES` and the schema select both have 52. |
-| `cover` | In `card.schema.json`, absent from `card.md`'s envelope table. |
-| `media-open` / `reveal.name` | `media-open` is in the preset schema but not `card.md`; `reveal.name` is in the renderer but not the schema. |
-| UCM vs UDM | `UCF.md` calls the model side "UDM" twice; `UCM.md` and `cms/baseline/CLAUDE.md` say "UCM". |
-| Stale architecture note | `cms/baseline/CLAUDE.md` still describes only `content-card`, not the current `card` + `card-preset` pair. |
-| Bedroom naming split | `places` residence items use `numberOfBedrooms`/`numberOfRooms`; `realestate.details.property` uses `bedrooms`/`bathrooms`/`rooms`. |
+| Renderer-only envelope keys | `modifiedDisplay`, and `tags[]` in its `{name, url}` object form. |
+| Media keys not in the schema | `width`, `height`, `map`, per-item `creditText`/`copyrightNotice`. |
+| Bedroom naming split | `places` residence items use `numberOfBedrooms`/`numberOfRooms`; `realestate.details.property` uses `bedrooms`/`bathrooms`/`rooms` — 12 call sites. A rename would be gated by the SSR snapshot staying byte-identical. |
+
+**Closed 2026-08-20:** `51` vs `52` (card.md said 51 in three places) · `cover` and `modified`
+missing from card.md's envelope table · `media-open` missing from its preset table ·
+`reveal.name`, which turned out to be declared after all · `card.schema.json` not declaring
+`layer`, `poster`, `controls`, `autoplay`, `muted`, `loop` · the composite `link` type being
+undocumented in the UCM format spec · `cms/baseline/CLAUDE.md` describing only `content-card` ·
+`UCF.md` calling the model side "UDM".
 
 ---
 

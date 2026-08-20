@@ -78,7 +78,12 @@ Special: `slug`, `tags`, `color`, `geopoint`
 - `page` — slug, SEO fields, robots directives, canonical URL, layout references
 - `layout` — content container on a page (hero, grid, feature list)
 - `layout-config` — responsive breakpoints with integrated spacing tokens, 63+ layout patterns from browser-style. Spacing is per-breakpoint (e.g. `"columns(3) pi(2) pbs(1) cg(2)"`), not separate fields.
-- `content-card` — polymorphic card model (article, product, event, faq, etc.)
+- `card` — the current polymorphic card model: a shared envelope plus one `details` object per
+  `schemaType` (52 types). Presentation lives outside it, in a referenced `card-preset`
+- `card-preset` — the look: `element` + the `variant`/`media`/`content`/`theme` token strings
+- `content-card` — SUPERSEDED by `card` + `card-preset`. Still present: it is the 25-type model
+  the `<editor-card>` web component and the Contentful/Umbraco wrappers bind, and it is the one
+  that calls the type-specific field `data` where `card` calls it `details`
 
 ## Key Decisions
 
@@ -105,7 +110,11 @@ Documentation and implementation plans cover multiple deployment targets:
 ## Gotchas
 
 - `contentTree` as a string will fail validation — always use the object form
-- The `/models/cards/` directory in UCM is OBSOLETE — all cards are in `content-card.schema.json`
+- The `/models/cards/` directory in UCM is OBSOLETE — cards are in `card.schema.json` (+
+  `card-preset.schema.json`); `content-card.schema.json` is the superseded 25-type model
+- `card.schema.json` declares its envelope properly but leaves `details` an opaque object whose
+  whole per-type contract is one prose `description`. The editor-facing transcription of it is
+  [`ui/card/docs/card.model.md`](../../ui/card/docs/card.model.md)
 - `demo.schema.json` and `demo.widgets.schema.json` are test/showcase models, not site models
 - All doc pages are flat in `pages/` — do NOT create subdirectories like `pages/content/` or `pages/guides/`
 - `docs/` is generated output — do NOT edit files there manually

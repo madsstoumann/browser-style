@@ -5,7 +5,7 @@ types from the legacy `content/card` package with the modern v4 card engine
 (`<ui-card>` + `<ui-media>` + `<ui-content>`), full inline microdata included — and
 extending the taxonomy in rounds since: nine high-usage types in model v1.3
 (organization, video, howto, qa, podcast, movie, book, dataset, claim), then the
-markup-first additions, to **51 `schemaType` values** today.
+markup-first additions, to **52 `schemaType` values** today.
 (The web-usage research behind the v1.3 picks lived in a coverage plan, removed
 2026-08-19 — recover via `git log --diff-filter=D -- docs/plans`.)
 
@@ -42,7 +42,7 @@ never had.
 
 | File | Role |
 |------|------|
-| [`cms/baseline/models/card.schema.json`](../../../cms/baseline/models/card.schema.json) | **Content model** (UCM). Structured envelope + `schemaType` select (51 values) + `preset` reference + one `details` object per type |
+| [`cms/baseline/models/card.schema.json`](../../../cms/baseline/models/card.schema.json) | **Content model** (UCM). Structured envelope + `schemaType` select (52 values) + `preset` reference + one `details` object per type |
 | [`cms/baseline/models/card-preset.schema.json`](../../../cms/baseline/models/card-preset.schema.json) | **Preset model** (UCM). The attributes on the host element itself |
 | [`data/card.presets.json`](../data/card.presets.json) | Preset instances — **28** named looks |
 | [`data/*.json`](../data) | 63 UCF card instances (at least one per schemaType — the product and quiz families run several — plus two presentation-only blocks) + [`index.json`](../data/index.json) manifest |
@@ -61,8 +61,9 @@ lives in one `details` object discriminated by `schemaType`.
 | Field | Type | Notes |
 |-------|------|-------|
 | `internalName` | string | CMS editor label (required, invariant) |
-| `schemaType` | select | 51 values — drives itemtype + microdata mapping |
+| `schemaType` | select | 52 values — drives itemtype + microdata mapping |
 | `preset` | reference → `card-preset` | The look & feel. Swap to restyle |
+| `cover` | url | Makes the whole card a link — an `<a>` in the headline whose `::after` covers the card, so there is one link and no nested anchors |
 | `chip` | `{ text, theme }` | Status flag at the very TOP of the text column, above the eyebrow — "New", "Sold". `theme` is a ui-chip theme string, default `pale accent`. **Not** `furniture.chip`, which is overlaid on the media: a frame gets one chip family, so a furniture chip suppresses the `<ui-chip data-type>` type label |
 | `eyebrow` | string | Kicker; → `articleSection`/`category`/`recipeCategory`/`about`/`genre` (unmarked on `job` — `details.industry` owns `industry`) |
 | `headline` | string | → `headline` (article/news), `title` (job), `name` (rest) |
@@ -70,6 +71,7 @@ lives in one `details` object discriminated by `schemaType`.
 | `summary` | text | → `description` — or `reviewBody` (review), `text` (quote/announcement/social) |
 | `body` | richtext | Long-form |
 | `published` / `modified` | datetime | → `datePublished`/`dateModified` — `datePosted` for job/announcement. `modifiedDisplay` adds a visible "Updated …" line |
+| `modified` | datetime | Last-updated timestamp; the renderer also takes a `modifiedDisplay` twin for the visible string |
 | `readingTime` | string | |
 | `media` | array | `{asset\|src, mediaType: image\|video\|audio\|youtube\|vimeo, alt, caption}` — more than one item ⇒ carousel. Video items also take `{autoplay, muted, loop, controls, poster}`; an `audio` item is a chromeless `<audio>` in the frame (poster image stays the visual; `furniture.play` drives it, scoped `associatedMedia` → `AudioObject`); youtube/vimeo items set `provider`/`video` lite-embed attributes on the frame |
 | `authors` | array | `{name, role, avatar}` → byline, `author`/`creator` → Person |
@@ -232,6 +234,7 @@ Demos in [`media.furniture.html`](../demo/media.furniture.html) and
 | `theme` | both | shared theme axis — colour + `pale`/`muted`/`light`/`dark` (see [base/theme.md](../../base/theme.md)) |
 | `media` | both | `asr() obf() obp() flp() rds() shp() hov() tnt() scm clip hug …` — plus **all carousel controls as tokens, the only form** (`nav`/`nav()`, `arw()`, `mrk()`, `axis(y)`, `auto`, `loop`, `stagger`, `load()`; the schema has no `nav`/`arrow`/`dot` fields) and the furniture look tokens (`chip/sticker/save/play` position/hue/size/shape). The renderer appends each furniture item's optional `style=` override after these |
 | `content` | both | `scl() hl() gap() scr` · padding `pad() pb() pi() pbs() pbe() pis() pie()` · `rds()` — plus their `md:`/`lg:` forms |
+| `media-open` | both | the media token string to swap in while a `<ui-media popover>` lightbox is OPEN — an attribute, not an `open:` token, because the control stems are substring-matched. `lightbox.js` swaps only the control words and restores them on close; without the script the open lightbox keeps its closed nav style |
 | `text` | both | which long text the text column shows: `summary` (teaser — default), `body` (full view — body **instead of** summary, with the summary kept as a hidden `description` meta), `both`. Reveal back panels always render both |
 | `headingTag` | both | headline element — `h2`–`h5`, default `h3`; lets a card fit the host page's outline. Heading level is **placement**, which is why it lives here and not in content. An `ovr()` overlay always renders `<strong>` instead (an overlay headline is a label, not a section heading) |
 | `byline` | both | `tail` (default, the teaser shape) or `lede` — the byline moves above the body carrying the dateline, and the tail then renders neither. The `book` type places its byline early by type regardless |
