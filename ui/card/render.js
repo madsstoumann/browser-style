@@ -58,6 +58,7 @@ export const SCHEMA_TYPES = {
 	contact: 'ContactPoint',
 	location: 'Place',
 	places: 'ItemList',
+	filelist: 'ItemList',
 	membership: 'Offer',
 	social: 'SocialMediaPosting',
 	software: 'SoftwareApplication',
@@ -215,7 +216,7 @@ const ROOT_VIDEO_TYPES = new Set(['video']);
 /* Person has no keywords property. Intangible-rooted types (JobPosting, Offer,
    Reservation, ContactPoint, ItemList, Observation, MemberProgram, Service) have
    none either — null = visible chips only, no itemprop */
-const TAGS_PROP = { profile: 'knowsAbout', artist: 'knowsAbout', job: null, membership: null, booking: null, contact: null, comparison: null, places: null, statistic: null, loyalty: null, service: null };
+const TAGS_PROP = { profile: 'knowsAbout', artist: 'knowsAbout', job: null, membership: null, booking: null, contact: null, comparison: null, places: null, filelist: null, statistic: null, loyalty: null, service: null };
 /* byline itemprop — a quote's people are its creators, everyone else's are authors */
 const bylineProp = (type) => type === 'quote' ? 'creator' : 'author';
 
@@ -1734,6 +1735,21 @@ const DEFAULT_PLACE_CTA = 'See More';
 /* the complete schema.org ItemListOrderType member set */
 const ITEM_LIST_ORDERS = new Set(['ItemListOrderAscending', 'ItemListOrderDescending', 'ItemListUnordered']);
 
+/* ── filelist: a downloadable-file collection — root ItemList (like comparison/places),
+   each file a complete MediaObject: name, contentUrl, contentSize, encodingFormat.
+   The file KIND is this closed allowlist, because it lands in two machine surfaces —
+   the ::marker glyph (a name in ui/icon/icons.json) and the encodingFormat MIME type —
+   and neither may ever interpolate author data. An unknown kind falls back to the
+   generic `draft` glyph and emits NO encodingFormat: every row still carries a glyph,
+   since a partially-iconed list renders mixed markers. Docs: docs/schema.md § File list ── */
+const FILE_TYPES = {
+	pdf: { icon: 'picture-as-pdf', mime: 'application/pdf', label: 'PDF' },
+	excel: { icon: 'table-view', mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', label: 'Excel' },
+	word: { icon: 'description', mime: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', label: 'Word' },
+	txt: { icon: 'text-snippet', mime: 'text/plain', label: 'Text' },
+	zip: { icon: 'folder-zip', mime: 'application/zip', label: 'ZIP' }
+};
+
 /* the per-place map link, and the ONE place hasMap is declared. On the single-place card
    hasMap rides the <iframe> and the CTA stays bare; here the frame's enclosing scope is an
    ItemList, which is not a Place, so the property moves DOWN onto the item's own link. */
@@ -2225,6 +2241,34 @@ const DETAILS = {
 		   text alternative — the pins are aria-hidden decoration. Sighted readers reach the
 		   same data through a marker popup. Docs: docs/schema.md § Places */
 		if (!d.slides) html += scopedList(items.map((place, index) => placeRow(place, kind, index)), d.ordered !== false, d.list === 'sr');
+		return html;
+	},
+
+	/* A collection of downloadable files. Rows DIFFER IN KIND, so each carries its own
+	   data-icon (docs/content.md § Icon markers) — the glyph and the MIME type both come
+	   from the FILE_TYPES allowlist, never from data. Always a <ul>: the glyph rides
+	   list-style-type, so ordinal markers and file icons cannot coexist — which is also
+	   why there is no `ordered` switch and no per-row `position`. The `download`
+	   attribute carries the download name (the served filename wins when it is absent
+	   or the file is cross-origin — an HTML rule, not a schema one). */
+	filelist(d, fields, parts = {}, itemtype = null, owned = NO_PROPS) {
+		const files = (d.files || []).filter((file) => file?.name);
+		let html = meta('numberOfItems', files.length || null)
+			/* the envelope summary owns `description` whenever it is filled — this is the
+			   fallback only. Docs: docs/schema.md § One property, one value */
+			+ (owned.has('description') ? '' : meta('description', d.description));
+		html += scopedList(files.map((file) => {
+			const kind = Object.hasOwn(FILE_TYPES, file.type) ? FILE_TYPES[file.type] : null;
+			const name = `<span itemprop="name">${esc(file.name)}</span>`;
+			const facts = [kind?.label, file.size].filter(Boolean).map(esc).join(' · ');
+			return `<li data-icon="${kind ? kind.icon : 'draft'}"${scope('itemListElement', 'MediaObject')}>`
+				+ (kind ? meta('encodingFormat', kind.mime) : '')
+				+ meta('contentSize', file.size)
+				+ (file.url ? `<a itemprop="contentUrl" href="${esc(file.url)}"${file.download ? ` download="${esc(file.download)}"` : ' download'}>${name}</a>` : name)
+				+ (facts ? ` <small>${facts}</small>` : '')
+				+ '</li>';
+		}), false);
+		if (d.note) html += `<footer data-part="footer">${esc(d.note)}</footer>`;
 		return html;
 	},
 

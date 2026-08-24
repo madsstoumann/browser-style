@@ -107,7 +107,9 @@ const PAIRS = [
 	/* the two collection cards. Both are keyed by id: the page's bare ItemList is the
 	   comparison card, which has none, and the bare form matches only an id-less card */
 	['ItemList#schema-places-offices', 'ui/card/data/places-offices.json'],
-	['ItemList#schema-places-homes', 'ui/card/data/places-homes.json']
+	['ItemList#schema-places-homes', 'ui/card/data/places-homes.json'],
+	/* the fourth ItemList card — the downloadable-file collection */
+	['ItemList#schema-filelist', 'ui/card/data/filelist.json']
 ];
 
 /* ── minimal HTML tree parser ── */

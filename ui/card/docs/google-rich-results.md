@@ -7,7 +7,9 @@
 > `c42e63f`, and refreshed since: on 2026-08-15 when the `ComicIssue` card took the
 > inventory from 47 to 48, on 2026-08-16 when `MusicGroup` took it to 49, and on
 > 2026-08-19 when `VacationRental` took it to 50 (51 `schemaType` keys; the demo page's
-> cards carry 52 distinct root itemtypes — the count bridge is at the top of `schema.md`).
+> cards carry 52 distinct root itemtypes — the count bridge is at the top of `schema.md`),
+> and on 2026-08-24 when the `filelist` card joined — no new itemtype, a fourth `ItemList`
+> (53 keys).
 > The question: how many of the card system's schema.org types have a live Google rich
 > result, which do not, and is it worth adding or reshaping anything to close the gap.
 >
@@ -50,8 +52,8 @@ console.log(new Set(Object.values(SCHEMA_TYPES)).size)"   # → 50
 
 ## 1. The headline answer
 
-Of **50 distinct itemtypes** across 52 `schemaType` keys (`profile` and `artist` both resolve
-to `Person`):
+Of **50 distinct itemtypes** across 53 `schemaType` keys (`profile` and `artist` both resolve
+to `Person`; `comparison`, `places` and `filelist` all to `ItemList`):
 
 | Bucket | Count | Meaning |
 |---|---|---|
@@ -209,6 +211,7 @@ off the page without asking whether Google would have drawn a box around it.
 | `Person` | `profile`, `artist` | The *feature* is Profile page, which wants a `ProfilePage` **host** — see [§ 4](#4-gaps--live-features-with-no-card-type) | ⚠ |
 | `Place` | `location` | `LocalBusiness` is the feature; bare `Place` is not | ⚠ |
 | `ItemList` | `places` | Google's host carousel takes `ItemList` only in combination with Course list, Movie, Recipe or Restaurant — a list of offices or of homes is none of those, and there is no real-estate result at all | ✓ |
+| `ItemList` | `filelist` | Same subject-not-host caveat; the per-file `MediaObject` rows are components, not a feature subject | ⚠ |
 | `Offer` | `membership` | A component of the Product/Event features, not a subject | `dump` |
 | `Question` | `poll` | `QAPage` is the feature; a bare `Question` is not | ⚠ |
 | `Reservation` | `booking` | — | ⚠ |

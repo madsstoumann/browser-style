@@ -11,30 +11,30 @@
 > demo pages: [cards.html](../demo/cards.html) · [media.html](../demo/media.html) ·
 > [content.html](../demo/content.html).
 
-**Four counts, four different quantities — do not conflate them.** The page carries **60
-cards** with **52 distinct root itemtypes**; a structured-data validator reports **63 items**;
-the renderer knows **52 `schemaType` keys**.
+**Four counts, four different quantities — do not conflate them.** The page carries **61
+cards** with **52 distinct root itemtypes**; a structured-data validator reports **64 items**;
+the renderer knows **53 `schemaType` keys**.
 
 | Count | What it measures | Reproduce it |
 |---|---|---|
-| **60** | card hosts on the page — `<ui-card>` plus the one `<ui-reveal>` | `grep -oE '<ui-(card\|reveal)[^>]*itemtype="[^"]*"' ui/card/demo/schema.html \| grep -vc 'itemprop='` |
-| **63** | top-level microdata items — **what schema.org's validator reports** | `grep -o '<[a-z-]*[^<>]*itemscope[^<>]*>' ui/card/demo/schema.html \| grep -v 'itemprop=' \| grep -c 'itemtype='` |
+| **61** | card hosts on the page — `<ui-card>` plus the one `<ui-reveal>` | `grep -oE '<ui-(card\|reveal)[^>]*itemtype="[^"]*"' ui/card/demo/schema.html \| grep -vc 'itemprop='` |
+| **64** | top-level microdata items — **what schema.org's validator reports** | `grep -o '<[a-z-]*[^<>]*itemscope[^<>]*>' ui/card/demo/schema.html \| grep -v 'itemprop=' \| grep -c 'itemtype='` |
 | **52** | distinct root `itemtype` values | `grep -oE '<ui-(card\|reveal)[^>]*itemtype="[^"]*"' ui/card/demo/schema.html \| grep -v 'itemprop=' \| grep -o 'itemtype="[^"]*"' \| sort -u \| wc -l` |
-| **52** | `schemaType` keys `render.js` supports (`SCHEMA_TYPES`) | `node -e "import('./ui/card/render.js').then(m => console.log(Object.keys(m.SCHEMA_TYPES).length))"` |
+| **53** | `schemaType` keys `render.js` supports (`SCHEMA_TYPES`) | `node -e "import('./ui/card/render.js').then(m => console.log(Object.keys(m.SCHEMA_TYPES).length))"` |
 
 The flashcard Quiz is the page's one **`<ui-reveal>`** host rather than a `<ui-card>` — a
 question on the front face, its answer on the flipside, which is what a flashcard actually is.
 It counts identically in every column below; only the element differs.
 
 **Items ≠ cards.** A validator counts every *top-level* item — an `itemscope` with no `itemprop`
-of its own — so it sees the 60 cards plus **three items that are not cards**: the standalone
+of its own — so it sees the 61 cards plus **three items that are not cards**: the standalone
 `EmployerAggregateRating` on the job card, the page-level `WebSite` (site identity plus the
 sitelinks-searchbox `potentialAction`, which describes the *site*, not any card on it), and the
-page-trail `BreadcrumbList` on the breadcrumb `<ol>` — 61. Nested scopes (`author` → `Person`,
+page-trail `BreadcrumbList` on the breadcrumb `<ol>` — 64. Nested scopes (`author` → `Person`,
 `offers` → `Offer`, …) are properties of their
 parent, not items, and are not counted. The `grep -c 'itemtype='` on the end of that command is
 load-bearing: without it the page's own `<meta name="description">` is counted too, because its
-text mentions "itemscope" — that is how a naive scan reports 62. (It read 63 while an HTML
+text mentions "itemscope" — that is how a naive scan reports 65. (It read 63 while an HTML
 comment on the job card also spelled the word out; that comment is gone, but the guard is not
 about any one line — any future prose mentioning `itemscope` walks into the same trap.)
 
@@ -45,15 +45,16 @@ nested property scope (`AggregateRating`, a byline `Person`, `Organization`, `Co
 `Occupation`, …) is not an itemtype *on a card host*.
 
 **Cards ≠ types.** `Quiz` runs three cards, and `Review`, `EventSeries`, `Place` and `Person`
-run two each, and ItemList three (the comparison card plus the two collection cards) — so 60 − 2 − 2 − 4 = 52. The `grep -v itemprop=` in those commands is load-bearing: the
+run two each, and ItemList four (the comparison card, the two collection cards, and the file
+list) — so 61 − 2 − 4 − 3 = 52. The `grep -v itemprop=` in those commands is load-bearing: the
 collage `ProductGroup` nests a `<ui-card>` per variant, and a nested card is a **property** of
 its parent item, not a card of its own. Note the second `grep` in that command: **reduce to the `itemtype=`
 substring before `sort -u`**. Uniquing the whole `<ui-card …>` match counts one type twice
 whenever its two cards differ in any other attribute (an `id`, a `style`) — that is how this
 count once read 50.
 
-**Types ≠ renderer keys.** The 52 is the **50** distinct base itemtypes behind the 52
-`schemaType` keys (`profile` and `artist` both resolve to `Person`, `comparison` and `places` both to `ItemList`), minus `LocalBusiness` (never
+**Types ≠ renderer keys.** The 52 is the **50** distinct base itemtypes behind the 53
+`schemaType` keys (`profile` and `artist` both resolve to `Person`; `comparison`, `places` and `filelist` all to `ItemList`), minus `LocalBusiness` (never
 shown plain — the business card is always sharpened), plus the three sharpened [subtypes](#subtypes)
 `ProductGroup`, `CafeOrCoffeeShop` and `DiscussionForumPosting`, which `details.subtype` produces
 with no key of their own. Three further types appear as **top-level items that are not cards**
@@ -77,7 +78,7 @@ type — a demo affordance, emitted by `render.js` only when `renderCard` gets `
 
 ## Page structure — eleven sections, and where the heading level comes from
 
-The page groups its 60 cards into **eleven sections by what the thing *is*** — Editorial &
+The page groups its 61 cards into **eleven sections by what the thing *is*** — Editorial &
 journalism · Commerce & offers · Screen · Audio · Page & picture · Learning & reference ·
 People, work & history · Food & drink · Places, events & property · Community & support ·
 Data, health & operations. Each section is a bare `<h2>` followed by its own
@@ -99,7 +100,7 @@ That is the whole mechanism: sections own `<h2>`, cards render whatever their pr
 
 > **The full cross-map lives in
 > [`google-rich-results.md`](google-rich-results.md)** —
-> every itemtype in the system (50 distinct behind the 51 renderer keys) against the Google gallery, bucketed Live / Withdrawn / None, with a
+> every itemtype in the system (50 distinct behind the 53 renderer keys) against the Google gallery, bucketed Live / Withdrawn / None, with a
 > per-row marker saying whether each Google claim was researched here or is unverified model
 > knowledge. This section stays the source of truth for the withdrawn dates below; that
 > document defers to it.
@@ -810,6 +811,29 @@ License, temporal/spatial coverage and `variableMeasured` metas; each download i
 ### Fact check — `ClaimReview`
 
 The verdict chip leads — it is the answer (`reviewRating` → `Rating`, `alternateName` visible, hue from the rating value); the quoted claim (`claimReviewed`) follows.
+
+### File list — `ItemList`
+
+A collection of downloadable files — a press kit, report annexes, a resource pack. The root is
+the same Intangible `ItemList` the comparison and places cards use (`numberOfItems`, no
+`keywords` on tags); each file is `itemListElement` → `MediaObject` carrying `name`,
+`contentUrl`, `contentSize` and `encodingFormat` — all four in domain on `MediaObject`, which
+is why the rows are not `DigitalDocument` (a plain CreativeWork: no `contentUrl`, no
+`contentSize`). The visible row is a real download link — `<a itemprop="contentUrl" download>`
+with the suggested filename in the `download` attribute value (`details.files[].download`);
+absent, the bare attribute keeps the served filename, and cross-origin the browser ignores it
+either way — an HTML rule, not a schema one.
+
+The file **kind** (`pdf` | `excel` | `word` | `txt` | `zip`) is a closed allowlist in
+`render.js` (`FILE_TYPES`), because it lands in two machine surfaces at once: the row's
+`data-icon` ::marker glyph (a name in `ui/icon/icons.json` — `picture-as-pdf`, `table-view`,
+`description`, `text-snippet`, `folder-zip`) and the `encodingFormat` MIME type. An unknown
+kind gets the generic `draft` glyph and **no** `encodingFormat` — author data never reaches
+either surface, and every row still carries a glyph because a partially-iconed list renders
+mixed markers ([content.md § Icon markers](content.md)). The size is one human string
+("2.4 MB") emitted verbatim as `contentSize`, whose range is Text — no display/machine split.
+Always an unordered `<ul>`: the glyphs ride `list-style-type`, so ordinal markers cannot
+coexist with them — no `ordered` switch, no per-row `position`.
 
 ## Types authored markup-first
 

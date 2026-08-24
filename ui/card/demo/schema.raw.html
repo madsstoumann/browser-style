@@ -12,7 +12,7 @@
 	<link rel="preconnect" href="https://v4.browser.style">
 	<meta name="description" content="demo/schema.html with the structured data removed — the same cards, sections and layout, rendered with schema="" so there is no itemscope, itemtype or itemprop and none of the hidden meta blocks that carry machine values.">
 	<link rel="alternate" type="text/markdown" href="/ui/card/docs/card.md">
-	<link rel="stylesheet" href="/dist/demo.bca53ad6.min.css">
+	<link rel="stylesheet" href="/dist/demo.8cd1d286.min.css">
 
 	<style>
 		/* Off-screen cards skip style+layout. Page-scoped on purpose; 567px is this page's
@@ -1868,6 +1868,25 @@
 						<span><a class="ui-button" href="https://data.example.com/exoplanets.json">JSON</a></span>
 						<span><a class="ui-button" data-variant="accent" href="https://data.example.com/exoplanets.csv">CSV</a></span>
 					</nav>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card id="schema-filelist" variant="col" media="asr(16/9) chip(te)">
+			<cq-box>
+				<ui-media><img src="/assets/images/coorperation.png" alt="Northwind Group team at the Copenhagen headquarters" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/coorperation.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/coorperation.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/coorperation.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/coorperation.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/coorperation.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>ItemList</ui-chip></ui-media>
+				<ui-content>
+					
+					<small data-part="eyebrow">Downloads</small>
+					<h3 data-part="headline">Northwind press kit</h3>
+					<p data-part="summary">Logos, guidelines and figures — everything an editor needs, ready to download.</p>
+					<ul data-part="list">
+						<li data-icon="picture-as-pdf"><a href="/files/brand-guidelines.pdf" download="northwind-brand-guidelines.pdf"><span>Brand guidelines</span></a> <small>PDF · 2.4 MB</small></li>
+						<li data-icon="folder-zip"><a href="/files/logo-pack.zip" download="northwind-logos.zip"><span>Logo pack</span></a> <small>ZIP · 18.1 MB</small></li>
+						<li data-icon="description"><a href="/files/press-release-q2-2026.docx" download="northwind-press-release-q2-2026.docx"><span>Press release — Q2 2026</span></a> <small>Word · 148 kB</small></li>
+						<li data-icon="table-view"><a href="/files/key-figures-2025.xlsx" download="northwind-key-figures-2025.xlsx"><span>Key figures 2025</span></a> <small>Excel · 96 kB</small></li>
+						<li data-icon="text-snippet"><a href="/files/licence.txt" download><span>Licence terms</span></a> <small>Text · 4 kB</small></li>
+					</ul>
+					<footer data-part="footer">All assets may be used in editorial coverage of Northwind Group.</footer>
 				</ui-content>
 			</cq-box>
 		</ui-card>

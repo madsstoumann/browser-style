@@ -1,0 +1,68 @@
+{
+  "$schema": "../../../cms/baseline/models/card.schema.json",
+  "id": "filelist-1",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-08-24T12:00:00Z",
+    "updatedAt": "2026-08-24T12:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Data"
+  },
+  "fields": {
+    "internalName": "Demo — File list",
+    "schemaType": "filelist",
+    "preset": {
+      "$ref": "card-preset/stack"
+    },
+    "eyebrow": "Downloads",
+    "headline": "Northwind press kit",
+    "summary": "Logos, guidelines and figures — everything an editor needs, ready to download.",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/coorperation.png",
+        "alt": "Northwind Group team at the Copenhagen headquarters"
+      }
+    ],
+    "details": {
+      "files": [
+        {
+          "name": "Brand guidelines",
+          "url": "/files/brand-guidelines.pdf",
+          "download": "northwind-brand-guidelines.pdf",
+          "size": "2.4 MB",
+          "type": "pdf"
+        },
+        {
+          "name": "Logo pack",
+          "url": "/files/logo-pack.zip",
+          "download": "northwind-logos.zip",
+          "size": "18.1 MB",
+          "type": "zip"
+        },
+        {
+          "name": "Press release — Q2 2026",
+          "url": "/files/press-release-q2-2026.docx",
+          "download": "northwind-press-release-q2-2026.docx",
+          "size": "148 kB",
+          "type": "word"
+        },
+        {
+          "name": "Key figures 2025",
+          "url": "/files/key-figures-2025.xlsx",
+          "download": "northwind-key-figures-2025.xlsx",
+          "size": "96 kB",
+          "type": "excel"
+        },
+        {
+          "name": "Licence terms",
+          "url": "/files/licence.txt",
+          "size": "4 kB",
+          "type": "txt"
+        }
+      ],
+      "note": "All assets may be used in editorial coverage of Northwind Group."
+    }
+  }
+}

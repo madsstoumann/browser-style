@@ -1273,6 +1273,49 @@ describe('statistic — Observation', () => {
 	});
 });
 
+describe('filelist — ItemList of files', () => {
+	const details = {
+		files: [
+			{ name: 'Brand guidelines', url: '/files/brand-guidelines.pdf', download: 'northwind-brand-guidelines.pdf', size: '2.4 MB', type: 'pdf' },
+			{ name: 'Logo pack', url: '/files/logo-pack.zip', size: '18 MB', type: 'zip' }
+		]
+	};
+	const card = (extra = {}) => render({ schemaType: 'filelist', headline: 'Press kit', summary: 'Everything you need.', details: { ...details, ...extra } });
+
+	test('the root is an ItemList and each file a complete MediaObject', () => {
+		const html = card();
+		assert.match(html, /itemtype="https:\/\/schema\.org\/ItemList"/);
+		assert.match(html, /<meta itemprop="numberOfItems" content="2">/);
+		assert.match(html, /<li data-icon="picture-as-pdf" itemprop="itemListElement" itemscope itemtype="https:\/\/schema\.org\/MediaObject"><meta itemprop="encodingFormat" content="application\/pdf"><meta itemprop="contentSize" content="2.4 MB">/);
+		assert.match(html, /<a itemprop="contentUrl" href="\/files\/brand-guidelines\.pdf" download="northwind-brand-guidelines\.pdf"><span itemprop="name">Brand guidelines<\/span><\/a> <small>PDF · 2\.4 MB<\/small>/);
+	});
+
+	test('the file kind is an allowlist — it picks the glyph and the MIME type', () => {
+		const html = card();
+		assert.match(html, /<li data-icon="folder-zip" itemprop="itemListElement"[^>]*><meta itemprop="encodingFormat" content="application\/zip">/);
+		/* no download name given → the bare attribute keeps the served filename */
+		assert.match(html, /<a itemprop="contentUrl" href="\/files\/logo-pack\.zip" download><span itemprop="name">Logo pack<\/span><\/a> <small>ZIP · 18 MB<\/small>/);
+	});
+
+	test('an unknown kind gets the generic glyph and NO encodingFormat', () => {
+		const html = card({ files: [{ name: 'Mystery blob', url: '/files/blob.bin', size: '1 MB', type: 'exe"><script>' }] });
+		assert.match(html, /<li data-icon="draft" itemprop="itemListElement"/);
+		assert.ok(!html.includes('encodingFormat'), 'an unknown kind must never reach a machine value');
+		assert.ok(!html.includes('<script>'), 'the kind is never interpolated');
+	});
+
+	test('a hostile display name comes out escaped', () => {
+		const html = card({ files: [{ name: '<img src=x onerror=alert(1)>', url: '/files/x.txt', size: '1 kB', type: 'txt' }] });
+		assert.match(html, /<span itemprop="name">&lt;img src=x onerror=alert\(1\)&gt;<\/span>/);
+		assert.match(html, /<li data-icon="text-snippet"/);
+	});
+
+	test('keywords stay visible chips only — ItemList is an Intangible', () => {
+		const html = render({ schemaType: 'filelist', headline: 'Press kit', tags: ['brand'], details });
+		assert.ok(!html.includes('itemprop="keywords"'), 'no keywords property on an Intangible');
+	});
+});
+
 describe('job — EmployerAggregateRating', () => {
 	const base = { company: 'Nordlys ApS', location: 'Copenhagen' };
 	const rated = { ...base, employerRating: { value: 4.3, count: 268, max: 5, organization: 'Nordlys ApS', sameAs: 'https://nordlys.example' } };

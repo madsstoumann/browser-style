@@ -136,11 +136,11 @@ how it looks. Each accepts a free-string `style` token override.
 ## The discriminator
 
 `schemaType` selects the itemtype, the microdata mapping, and which `details` shape applies.
-**52 values, 50 distinct itemtypes** — `profile`/`artist` both emit `Person`,
-`comparison`/`places` both emit `ItemList`.
+**53 values, 50 distinct itemtypes** — `profile`/`artist` both emit `Person`,
+`comparison`/`places`/`filelist` all emit `ItemList`.
 
-`subtype` narrows it. **Only 8 of the 52 types have a subtype allowlist**, so the control is
-conditional on `schemaType` and must be absent for the other 44:
+`subtype` narrows it. **Only 8 of the 53 types have a subtype allowlist**, so the control is
+conditional on `schemaType` and must be absent for the other 45:
 
 | schemaType | Base itemtype | Values |
 |---|---|---|
@@ -1118,7 +1118,7 @@ undocumented in the UCM format spec · `cms/baseline/CLAUDE.md` describing only 
 
 **Conditional rules that must be honoured.** These are the only places the form changes shape:
 
-1. `subtype` is visible for exactly 8 of the 52 types, and its options depend on which.
+1. `subtype` is visible for exactly 8 of the 53 types, and its options depend on which.
 2. The whole `details` panel swaps on `schemaType`; 4 types have no panel at all.
 3. `media[]` item fields branch on `mediaType` — `zoom`/`provider`/`latitude`/`longitude` only
    for `map`, `map` only for `places`, `uploadDate`/`duration`/`description` only for `video`.

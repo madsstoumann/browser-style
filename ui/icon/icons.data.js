@@ -50,4 +50,10 @@ export const ICON_NAMES = [
 	'visibility',
 	'share',
 	'mode-comment',
+	'picture-as-pdf',
+	'table-view',
+	'description',
+	'text-snippet',
+	'folder-zip',
+	'draft',
 ];

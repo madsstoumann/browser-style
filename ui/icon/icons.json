@@ -59,6 +59,12 @@
     "album",
     "visibility",
     "share",
-    "mode_comment"
+    "mode_comment",
+    "picture_as_pdf",
+    "table_view",
+    "description",
+    "text_snippet",
+    "folder_zip",
+    "draft"
   ]
 }

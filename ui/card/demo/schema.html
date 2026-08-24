@@ -10,9 +10,9 @@
 	<meta name="referrer" content="no-referrer">
 	<meta name="format-detection" content="telephone=no">
 	<link rel="preconnect" href="https://v4.browser.style">
-	<meta name="description" content="60 cards covering 52 distinct schema.org itemtypes on the card hosts (Quiz and ItemList run three cards each; Review, EventSeries, Place and Person two each) — re-created with the modern &lt;ui-card&gt; engine: inline microdata (itemscope/itemtype/itemprop), no JSON-LD. The job card carries a 53rd type as a second top-level item: EmployerAggregateRating. Two optional scripts: video.min.js polyfills the media invoker commands behind the podcast play button, save.min.js flips the save heart.">
+	<meta name="description" content="61 cards covering 52 distinct schema.org itemtypes on the card hosts (ItemList runs four cards; Quiz three; Review, EventSeries, Place and Person two each) — re-created with the modern &lt;ui-card&gt; engine: inline microdata (itemscope/itemtype/itemprop), no JSON-LD. The job card carries a 53rd type as a second top-level item: EmployerAggregateRating. Two optional scripts: video.min.js polyfills the media invoker commands behind the podcast play button, save.min.js flips the save heart.">
 	<link rel="alternate" type="text/markdown" href="/ui/card/docs/schema.md">
-	<link rel="stylesheet" href="/dist/demo.bca53ad6.min.css">
+	<link rel="stylesheet" href="/dist/demo.8cd1d286.min.css">
 
 	<style>
 		/* Off-screen cards skip style+layout. Page-scoped on purpose; 567px is this page's
@@ -1964,6 +1964,25 @@
 						<span itemprop="distribution" itemscope itemtype="https://schema.org/DataDownload"><meta itemprop="encodingFormat" content="JSON"><a class="ui-button" itemprop="contentUrl" href="https://data.example.com/exoplanets.json">JSON</a></span>
 						<span itemprop="distribution" itemscope itemtype="https://schema.org/DataDownload"><meta itemprop="encodingFormat" content="CSV"><a class="ui-button" data-variant="accent" itemprop="contentUrl" href="https://data.example.com/exoplanets.csv">CSV</a></span>
 					</nav>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card id="schema-filelist" variant="col" media="asr(16/9) chip(te)" itemscope itemtype="https://schema.org/ItemList">
+			<cq-box>
+				<ui-media><img src="/assets/images/coorperation.png" alt="Northwind Group team at the Copenhagen headquarters" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/coorperation.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/coorperation.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/coorperation.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/coorperation.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/coorperation.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>ItemList</ui-chip></ui-media>
+				<ui-content>
+					<meta itemprop="numberOfItems" content="5">
+					<small data-part="eyebrow">Downloads</small>
+					<h3 data-part="headline" itemprop="name">Northwind press kit</h3>
+					<p data-part="summary" itemprop="description">Logos, guidelines and figures — everything an editor needs, ready to download.</p>
+					<ul data-part="list">
+						<li data-icon="picture-as-pdf" itemprop="itemListElement" itemscope itemtype="https://schema.org/MediaObject"><meta itemprop="encodingFormat" content="application/pdf"><meta itemprop="contentSize" content="2.4 MB"><a itemprop="contentUrl" href="/files/brand-guidelines.pdf" download="northwind-brand-guidelines.pdf"><span itemprop="name">Brand guidelines</span></a> <small>PDF · 2.4 MB</small></li>
+						<li data-icon="folder-zip" itemprop="itemListElement" itemscope itemtype="https://schema.org/MediaObject"><meta itemprop="encodingFormat" content="application/zip"><meta itemprop="contentSize" content="18.1 MB"><a itemprop="contentUrl" href="/files/logo-pack.zip" download="northwind-logos.zip"><span itemprop="name">Logo pack</span></a> <small>ZIP · 18.1 MB</small></li>
+						<li data-icon="description" itemprop="itemListElement" itemscope itemtype="https://schema.org/MediaObject"><meta itemprop="encodingFormat" content="application/vnd.openxmlformats-officedocument.wordprocessingml.document"><meta itemprop="contentSize" content="148 kB"><a itemprop="contentUrl" href="/files/press-release-q2-2026.docx" download="northwind-press-release-q2-2026.docx"><span itemprop="name">Press release — Q2 2026</span></a> <small>Word · 148 kB</small></li>
+						<li data-icon="table-view" itemprop="itemListElement" itemscope itemtype="https://schema.org/MediaObject"><meta itemprop="encodingFormat" content="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"><meta itemprop="contentSize" content="96 kB"><a itemprop="contentUrl" href="/files/key-figures-2025.xlsx" download="northwind-key-figures-2025.xlsx"><span itemprop="name">Key figures 2025</span></a> <small>Excel · 96 kB</small></li>
+						<li data-icon="text-snippet" itemprop="itemListElement" itemscope itemtype="https://schema.org/MediaObject"><meta itemprop="encodingFormat" content="text/plain"><meta itemprop="contentSize" content="4 kB"><a itemprop="contentUrl" href="/files/licence.txt" download><span itemprop="name">Licence terms</span></a> <small>Text · 4 kB</small></li>
+					</ul>
+					<footer data-part="footer">All assets may be used in editorial coverage of Northwind Group.</footer>
 				</ui-content>
 			</cq-box>
 		</ui-card>
