@@ -79,7 +79,7 @@ Special: `slug`, `tags`, `color`, `geopoint`
 - `layout` — content container on a page (hero, grid, feature list)
 - `layout-config` — responsive breakpoints with integrated spacing tokens, 63+ layout patterns from browser-style. Spacing is per-breakpoint (e.g. `"columns(3) pi(2) pbs(1) cg(2)"`), not separate fields.
 - `card` — the current polymorphic card model: a shared envelope plus one `details` object per
-  `schemaType` (52 types). Presentation lives outside it, in a referenced `card-preset`
+  `schemaType` (53 types). Presentation lives outside it, in a referenced `card-preset`
 - `card-preset` — the look: `element` + the `variant`/`media`/`content`/`theme` token strings
 - `content-card` — SUPERSEDED by `card` + `card-preset`. Still present: it is the 25-type model
   the `<editor-card>` web component and the Contentful/Umbraco wrappers bind, and it is the one
