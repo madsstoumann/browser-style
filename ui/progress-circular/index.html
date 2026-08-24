@@ -32,6 +32,50 @@
 	</ui-progress-circular>
 
 	<br>
+	<h2>Sizes</h2>
+	<p>The <code>size=</code> attribute steps the diameter: <code>sm</code> (6em), default (10em), <code>lg</code> (13em), <code>xl</code> (16em).</p>
+	<ui-progress-circular size="sm" style="--ui-progress-circular-value: 25">
+		<progress value="25" max="100"></progress>
+		<span>25%</span>
+	</ui-progress-circular>
+	<ui-progress-circular style="--ui-progress-circular-value: 50">
+		<progress value="50" max="100"></progress>
+		<span>50%</span>
+	</ui-progress-circular>
+	<ui-progress-circular size="lg" style="--ui-progress-circular-value: 75">
+		<progress value="75" max="100"></progress>
+		<span>75%</span>
+	</ui-progress-circular>
+	<ui-progress-circular size="xl" style="--ui-progress-circular-value: 90">
+		<progress value="90" max="100"></progress>
+		<span>90%</span>
+	</ui-progress-circular>
+
+	<br>
+	<h2>Theme</h2>
+	<p>The shared <code>theme=</code> axis colours the <em>arc</em>, not the box — the wrapper stays transparent and the label keeps the page ink.</p>
+	<ui-progress-circular size="sm" theme="green" style="--ui-progress-circular-value: 100">
+		<progress value="5" max="5"></progress>
+		<span>100%</span>
+	</ui-progress-circular>
+	<ui-progress-circular size="sm" theme="red" style="--ui-progress-circular-value: 35">
+		<progress value="35" max="100"></progress>
+		<span>35%</span>
+	</ui-progress-circular>
+	<ui-progress-circular size="sm" theme="orange" style="--ui-progress-circular-value: 60">
+		<progress value="60" max="100"></progress>
+		<span>60%</span>
+	</ui-progress-circular>
+	<ui-progress-circular size="sm" theme="slate" style="--ui-progress-circular-value: 80">
+		<progress value="80" max="100"></progress>
+		<span>80%</span>
+	</ui-progress-circular>
+	<ui-progress-circular size="sm" theme="pale blue" style="--ui-progress-circular-value: 45">
+		<progress value="45" max="100"></progress>
+		<span>45%</span>
+	</ui-progress-circular>
+
+	<br>
 	<h2>Token customization</h2>
 	<ui-progress-circular style="--ui-progress-circular-value: 75; --ui-progress-circular-size: 6em; --ui-progress-circular-track-size: .5em; --ui-progress-circular-fill: var(--color-success); --ui-progress-circular-label-fs: 150%">
 		<progress value="3" max="4"></progress>

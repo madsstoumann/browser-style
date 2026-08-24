@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/progress-circular",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "description": "CSS-first circular ring around the native <progress> element",
   "type": "module",
   "style": "index.css",

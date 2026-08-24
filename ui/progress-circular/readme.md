@@ -62,6 +62,38 @@ Any direct child other than the `<progress>` is stacked in the center of the rin
 
 ---
 
+## Sizes
+
+The `size=` attribute steps the ring diameter, chip-style:
+
+```html
+<ui-progress-circular size="sm" …>  <!-- 6em -->
+<ui-progress-circular …>            <!-- default, 10em -->
+<ui-progress-circular size="lg" …>  <!-- 13em -->
+<ui-progress-circular size="xl" …>  <!-- 16em -->
+```
+
+Any other diameter: set `--ui-progress-circular-size` directly.
+
+---
+
+## Theme
+
+The shared `theme=` axis (nine hues + `pale`/`muted` modifiers, from `@browser.style/base`) colours the **arc**, not the box — the component opts out of the resolver's universal paint, so the wrapper stays transparent and the label keeps the page ink:
+
+```html
+<ui-progress-circular theme="green" style="--ui-progress-circular-value: 100">
+	<progress value="5" max="5"></progress>
+	<span>100%</span>
+</ui-progress-circular>
+
+<ui-progress-circular theme="pale red" …>  <!-- washed-out arc via the pale modifier -->
+```
+
+The track stays `--color-border` under every theme.
+
+---
+
 ## Customization
 
 | Token | Default | Description |

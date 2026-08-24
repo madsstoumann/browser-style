@@ -1,6 +1,6 @@
 /**
  * ui-progress-circular — CSS-only ring around the native <progress> element. Docs: readme.md
- * @version 4.0.0
+ * @version 4.1.0
  * @date 2026-08-24
  * @author Mads Stoumann
  */
@@ -38,5 +38,17 @@
 			font-size: var(--ui-progress-circular-label-fs, 200%);
 			font-weight: var(--ui-progress-circular-label-fw, var(--font-weight-bold));
 		}
+
+		/* theme= colours the ARC, not the box — opt out of universal paint (base/theme.css). Docs: readme.md */
+		&[theme] {
+			background-color: transparent;
+			color: inherit;
+			--ui-progress-circular-fill: var(--_theme-bg, var(--color-accent));
+		}
+
+		/* sizes */
+		&[size~="sm"] { --ui-progress-circular-size: 6em; }
+		&[size~="lg"] { --ui-progress-circular-size: 13em; }
+		&[size~="xl"] { --ui-progress-circular-size: 16em; }
 	}
 }

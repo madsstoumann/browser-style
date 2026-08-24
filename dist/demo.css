@@ -10404,6 +10404,20 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
       font-size: var(--ui-progress-circular-label-fs, 200%);
       font-weight: var(--ui-progress-circular-label-fw, var(--font-weight-bold));
     }
+    &[theme] {
+      background-color: transparent;
+      color: inherit;
+      --ui-progress-circular-fill: var(--_theme-bg, var(--color-accent));
+    }
+    &[size~=sm] {
+      --ui-progress-circular-size: 6em;
+    }
+    &[size~=lg] {
+      --ui-progress-circular-size: 13em;
+    }
+    &[size~=xl] {
+      --ui-progress-circular-size: 16em;
+    }
   }
 }
 
