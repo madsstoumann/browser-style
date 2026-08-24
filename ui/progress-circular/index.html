@@ -52,6 +52,26 @@
 	</ui-progress-circular>
 
 	<br>
+	<h2>Track thickness</h2>
+	<p>The <code>track=</code> attribute steps the line thickness with the same names as <code>size=</code>: <code>sm</code> (0.5em, thin), default (1em), <code>lg</code> (1.5em, heavy), <code>xl</code> (2em).</p>
+	<ui-progress-circular size="sm" track="sm" style="--ui-progress-circular-value: 65">
+		<progress value="65" max="100"></progress>
+		<span>65%</span>
+	</ui-progress-circular>
+	<ui-progress-circular size="sm" style="--ui-progress-circular-value: 65">
+		<progress value="65" max="100"></progress>
+		<span>65%</span>
+	</ui-progress-circular>
+	<ui-progress-circular size="sm" track="lg" style="--ui-progress-circular-value: 65">
+		<progress value="65" max="100"></progress>
+		<span>65%</span>
+	</ui-progress-circular>
+	<ui-progress-circular size="sm" track="xl" style="--ui-progress-circular-value: 65">
+		<progress value="65" max="100"></progress>
+		<span>65%</span>
+	</ui-progress-circular>
+
+	<br>
 	<h2>Theme</h2>
 	<p>The shared <code>theme=</code> axis colours the <em>arc</em>, not the box — the wrapper stays transparent and the label keeps the page ink.</p>
 	<ui-progress-circular size="sm" theme="green" style="--ui-progress-circular-value: 100">

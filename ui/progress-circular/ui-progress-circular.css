@@ -33,9 +33,9 @@
 			&::-moz-progress-bar { opacity: 0; }
 		}
 
-		/* center label — real, author-supplied text; see readme.md § Label */
+		/* center label — real, author-supplied text, scaled to the HOLE so it fits any size/track combo */
 		& > :not(progress) {
-			font-size: var(--ui-progress-circular-label-fs, 200%);
+			font-size: var(--ui-progress-circular-label-fs, calc((var(--ui-progress-circular-size) - 2 * var(--ui-progress-circular-track-size)) / 4));
 			font-weight: var(--ui-progress-circular-label-fw, var(--font-weight-bold));
 		}
 
@@ -50,5 +50,10 @@
 		&[size~="sm"] { --ui-progress-circular-size: 6em; }
 		&[size~="lg"] { --ui-progress-circular-size: 13em; }
 		&[size~="xl"] { --ui-progress-circular-size: 16em; }
+
+		/* track thickness — same sm/lg/xl step names as size= */
+		&[track~="sm"] { --ui-progress-circular-track-size: 0.5em; }
+		&[track~="lg"] { --ui-progress-circular-track-size: 1.5em; }
+		&[track~="xl"] { --ui-progress-circular-track-size: 2em; }
 	}
 }

@@ -77,6 +77,21 @@ Any other diameter: set `--ui-progress-circular-size` directly.
 
 ---
 
+## Track thickness
+
+The `track=` attribute steps the ring's line thickness, using the same step names as `size=` (thin → `sm`, normal → default, heavy → `lg`/`xl`):
+
+```html
+<ui-progress-circular track="sm" …>  <!-- 0.5em — thin -->
+<ui-progress-circular …>             <!-- default, 1em -->
+<ui-progress-circular track="lg" …>  <!-- 1.5em — heavy -->
+<ui-progress-circular track="xl" …>  <!-- 2em -->
+```
+
+`size=` and `track=` combine freely; any other thickness: set `--ui-progress-circular-track-size` directly.
+
+---
+
 ## Theme
 
 The shared `theme=` axis (nine hues + `pale`/`muted` modifiers, from `@browser.style/base`) colours the **arc**, not the box — the component opts out of the resolver's universal paint, so the wrapper stays transparent and the label keeps the page ink:
@@ -103,7 +118,7 @@ The track stays `--color-border` under every theme.
 | `--ui-progress-circular-value` | `0` | Percent of the circle filled (0–100), set inline per instance |
 | `--ui-progress-circular-fill` | `var(--color-accent)` | Arc color |
 | `--ui-progress-circular-track` | `var(--color-border)` | Remaining-track color |
-| `--ui-progress-circular-label-fs` | `200%` | Center label font size |
+| `--ui-progress-circular-label-fs` | `calc((size − 2·track) / 4)` | Center label font size — scales with the ring's hole, so it fits any `size=`/`track=` combination |
 | `--ui-progress-circular-label-fw` | `var(--font-weight-bold)` | Center label font weight |
 
 ```html
