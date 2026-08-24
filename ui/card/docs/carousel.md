@@ -76,7 +76,7 @@ inventory cannot drift from the CSS. The prose tables under it explain what the 
 | token | axis | args | aliases | bare | writes | md:/lg: | deprecated |
 |---|---|---|---|---|---|---|---|
 | `nav()` | carousel | **mode** mrk arw blw abv non | — | yes | --ui-media-bg --ui-carousel-* | — | — |
-| `arw()` | arrows | **variant** arr bare sqr sft lgt drk hid rev set · **size** sm lg xl · **pos** ts tc te cs cc bs bc be · **mode** blw abv | — | — | --ui-carousel-arrow-glyph --ui-carousel-arrow-size --ui-carousel-arrow-radius --ui-carousel-arrow-bg --ui-carousel-arrow-bg-hover --ui-carousel-arrow-color --ui-carousel-arrow-color-hover --ui-carousel-arrow-ink --ui-carousel-arrow-ink-hover --ui-carousel-arrow-plate --ui-carousel-arrow-plate-hover --ui-carousel-arrow-shadow --ui-carousel-arrow-hover-ring --ui-carousel-arrow-nudge --ui-carousel-arrow-disabled-opacity --ui-carousel-arrow-top --_arw-rot --_arw-scale | — | — |
+| `arw()` | arrows | **variant** arr bare sqr sft lgt drk hid rev set · **size** sm lg xl · **pos** ts tc te cs cc bs bc be · **mode** blw abv out | — | — | --ui-carousel-arrow-glyph --ui-carousel-arrow-size --ui-carousel-arrow-radius --ui-carousel-arrow-bg --ui-carousel-arrow-bg-hover --ui-carousel-arrow-color --ui-carousel-arrow-color-hover --ui-carousel-arrow-ink --ui-carousel-arrow-ink-hover --ui-carousel-arrow-plate --ui-carousel-arrow-plate-hover --ui-carousel-arrow-shadow --ui-carousel-arrow-hover-ring --ui-carousel-arrow-nudge --ui-carousel-arrow-disabled-opacity --ui-carousel-arrow-top --_arw-rot --_arw-scale | — | — |
 | `mrk()` | markers | **variant** pll hyb bar tmb tml rail non lgt drk sbr lbl · **size** sm md lg xl · **pos** ts tc te cs cc ce bs bc be · **mode** blw abv | — | — | --ui-carousel-marker-size --ui-carousel-marker-bg --ui-carousel-marker-active --ui-carousel-marker-inset --ui-carousel-pill-width --ui-carousel-pill-height --ui-carousel-pill-track --ui-carousel-pill-fill --ui-carousel-thumb-size --ui-carousel-bar-* --ui-carousel-band --ui-carousel-rail --ui-carousel-sbr-* --ui-carousel-label-* --ui-carousel-tml-* | — | — |
 | `tmb()` | thumbs | **ratio** 1/1 4/3 3/4 16/9 3/2 2/3 | — | — | --ui-carousel-thumb-ratio --ui-carousel-thumb-ratio-n | — | — |
 | `axis()` | carousel | **value** y | — | — | — | — | — |
@@ -138,6 +138,7 @@ slash-ratio vocabulary.
 | `arw(ts)` `arw(tc)` `arw(te)` `arw(cs)` `arw(cc)` `arw(bs)` `arw(bc)` `arw(be)` | **Placement cell.** The eight cells `arw()` implements — there is no `arw(ce)` (the inline-end column is `arw(set)`'s default) and no `arw(top)`/`arw(mid)`/`arw(bot)`. For **split** arrows only the block row is read: `tc` top · `cc` centered (**default**) · `bc` bottom. The inline letter matters for `arw(set)` and under `axis(y)` |
 | `arw(cs)` | `axis(y)`: a start-inline cell moves the up/down arrows (and marker column) to the inline-**start** edge (default is inline-end) |
 | `arw(blw)` `arw(abv)` | Arrows **alone** in a reserved band below / above the media — markers keep their on-media position/ink; the arrow ink follows the band (see *Automatic band ink*) |
+| `arw(out)` | Arrows **outside** the media, flanking both inline sides, vertically centered — the frame **shrinks** (`inline-size` + auto margins) to make room; gap = `--ui-carousel-outside-gap`. Keeps the default disc (compose `arw(bare)`/`arw(lgt)`/`arw(drk)` to restyle). `<ui-media>` frames only, horizontal only; markers keep their position (`mrk(blw)`/`mrk(abv)` band them). Undefined with `nav(blw|abv)`/`arw(blw|abv)`/`arw(set)` |
 
 > **Default look:** the overlay circle is Instagram-style — a frosted semi-transparent-white
 > circle, dark chevron, soft shadow. `arw(lgt)` = that light theme; `arw(drk)` = the dark
@@ -602,6 +603,7 @@ All optional — sensible defaults baked in. Set via `style="--token: value"` on
 | `--ui-carousel-arrow-hover-ring` | = `--ui-carousel-arrow-shadow` | Circle `box-shadow` on hover — `arw(drk)` sets a light ring (`0 0 0 2px rgb(255 255 255 / 0.5)`) |
 | `--ui-carousel-arrow-hover-scale` | `1.18` | Scale of a **bare** glyph on hover / `:focus-visible` |
 | `--ui-carousel-arrow-gap` | `0.5rem` | Gap between the two arrows in `arw(set)` |
+| `--ui-carousel-outside-gap` | `var(--spacing-sm, 0.5rem)` | Gap between an **outside** arrow (`arw(out)`) and the media edge — also the amount the frame shrinks per side (plus the arrow size) |
 | `--ui-carousel-arrow-disabled-opacity` | `0.4` | Dimming of a dead-end arrow (`arw(hid)` sets `0`) |
 | `--ui-carousel-arrow-color` | `#fff` (over image) / `--ui-carousel-controls-ink` at 80% (in band) | **Bare** glyph ink — used by `arw(bare)` **and by every band arrow**, which paints its own glyph (the circle ignores it) |
 | `--ui-carousel-arrow-color-hover` | = arrow-color | Bare glyph ink on hover (bands go to the full ink) |

@@ -22,6 +22,7 @@
       --ui-carousel-marker-border: 0;
       --ui-carousel-marker-gap: 0.5rem;
       --ui-carousel-marker-size: 0.6rem;
+      --ui-carousel-outside-gap: var(--spacing-sm, 0.5rem);
       --ui-carousel-overlay-gap: 0.75rem;
       --ui-carousel-pill-fill: #fff;
       --ui-carousel-pill-height: 0.35rem;
@@ -697,6 +698,14 @@
     :where(ui-card, ui-reveal):where([media*="nav(abv)"][media*="arw(set)"]) :where(ui-media)::scroll-button(inline-start),
     :where(ui-media, lay-out[overflow]):where([media*="nav(abv)"][media*="arw(set)"])::scroll-button(inline-start) {
       inset-inline-end: calc(anchor(self-end) + var(--ui-carousel-arrow-size) + var(--ui-carousel-arrow-gap));
+    }
+    :where(ui-card, ui-reveal):where([media*="arw(out)"]) :where(ui-media)::scroll-button(inline-start),
+    ui-media:where([media*="arw(out)"])::scroll-button(inline-start) {
+      inset-inline-start: calc(anchor(self-start) - var(--ui-carousel-outside-gap, 0.5rem) - var(--ui-carousel-arrow-size));
+    }
+    :where(ui-card, ui-reveal):where([media*="arw(out)"]) :where(ui-media)::scroll-button(inline-end),
+    ui-media:where([media*="arw(out)"])::scroll-button(inline-end) {
+      inset-inline-end: calc(anchor(self-end) - var(--ui-carousel-outside-gap, 0.5rem) - var(--ui-carousel-arrow-size));
     }
     :where(ui-card, ui-reveal):where([media*="arw(bare)"]) :where(ui-media),
     :where(ui-media, lay-out[overflow]):where([media*="arw(bare)"]),

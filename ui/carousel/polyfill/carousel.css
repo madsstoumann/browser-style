@@ -333,6 +333,13 @@ ui-media:where([media*="nav(abv)"][media*="arw(set)"]) > ui-carousel-controls [d
 	inset-inline-end: calc(var(--ui-carousel-arrow-size) + var(--ui-carousel-arrow-gap));
 }
 
+/* arw(out) is NOT mirrored here — deliberately. The DOM controls live INSIDE the
+   scroller, so buttons shifted past its border box are clipped by the scroll
+   container (verified; unlike mrk(rail), whose layer only extends into the
+   scroller's own reservation padding — native ::scroll-button boxes escape that
+   clip, real elements can't). Graceful degradation: the frame still shrinks
+   (media.carousel.css), the buttons keep the standard overlay insets above. */
+
 /* arw(bare) — drop the circle, paint the glyph as a recolourable shape */
 :where(ui-card, ui-reveal):where([media*="arw(bare)"]) ui-media ui-carousel-controls [data-nav],
 ui-media:where([media*="arw(bare)"]) > ui-carousel-controls [data-nav] {
