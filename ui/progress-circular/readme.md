@@ -56,9 +56,19 @@ Or via CSS `@import`:
 
 > Deriving the arc from the attributes via typed `attr(value type(<number>))` is a possible future enhancement — Safari and Firefox currently have no working fallback for typed `attr()`, so the explicit custom property is the portable contract.
 
-### Label
+### Value and label
 
-Any direct child other than the `<progress>` is stacked in the center of the ring (`grid-area: 1 / 1`). Use real text — `68%`, `7 / 12` — not a CSS counter; it participates in the accessibility tree and can say anything the design needs.
+Direct children other than the `<progress>` stack as centered rows inside the ring (the `<progress>` itself is absolutely positioned). The **value** is any child — use real text (`68%`, `7 / 12`), not a CSS counter; it participates in the accessibility tree. An optional **label** is a `<small>` placed before the value — a muted, uppercase caption line above the number, with its own tokens:
+
+```html
+<ui-progress-circular size="sm" style="--ui-progress-circular-value: 68">
+	<progress value="5400" max="8000"></progress>
+	<small>Steps</small>
+	<span>68%</span>
+</ui-progress-circular>
+```
+
+Source order is reading order — put the `<small>` after the value to caption below the number instead. Both font sizes default to a ratio of the ring's *hole* (`size − 2·track`), so any `size=`/`track=` combination keeps the text inside the ring; override with the `-fs`/`-fw` tokens below.
 
 ---
 
@@ -118,8 +128,11 @@ The track stays `--color-border` under every theme.
 | `--ui-progress-circular-value` | `0` | Percent of the circle filled (0–100), set inline per instance |
 | `--ui-progress-circular-fill` | `var(--color-accent)` | Arc color |
 | `--ui-progress-circular-track` | `var(--color-border)` | Remaining-track color |
-| `--ui-progress-circular-label-fs` | `calc((size − 2·track) / 4)` | Center label font size — scales with the ring's hole, so it fits any `size=`/`track=` combination |
-| `--ui-progress-circular-label-fw` | `var(--font-weight-bold)` | Center label font weight |
+| `--ui-progress-circular-value-fs` | `calc((size − 2·track) / 4)` | Value font size — scales with the ring's hole, so it fits any `size=`/`track=` combination |
+| `--ui-progress-circular-value-fw` | `var(--font-weight-bold)` | Value font weight |
+| `--ui-progress-circular-label-fs` | `calc((size − 2·track) / 9)` | Label (`<small>`) font size — hole-scaled like the value |
+| `--ui-progress-circular-label-fw` | `var(--font-weight-medium)` | Label font weight |
+| `--ui-progress-circular-label-c` | `var(--color-text-muted)` | Label ink |
 
 ```html
 <ui-progress-circular style="--ui-progress-circular-value: 40; --ui-progress-circular-size: 6em; --ui-progress-circular-fill: var(--color-success)">

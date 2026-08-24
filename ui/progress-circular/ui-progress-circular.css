@@ -10,12 +10,12 @@
 		--ui-progress-circular-track-size: 1em;
 		--ui-progress-circular-value: 0;
 		--_mask: radial-gradient(circle farthest-side at center, transparent calc(99% - var(--ui-progress-circular-track-size)), #FFF calc(100% - var(--ui-progress-circular-track-size)));
+		align-content: center;
 		aspect-ratio: 1;
 		display: grid;
 		inline-size: var(--ui-progress-circular-size);
-		place-items: center;
-
-		& > * { grid-area: 1 / 1; }
+		justify-items: center;
+		position: relative;
 
 		& progress {
 			background: conic-gradient(
@@ -26,17 +26,28 @@
 			border: 0;
 			border-radius: var(--radius-circle);
 			inline-size: 100%;
+			inset: 0;
 			mask: var(--_mask);
 			-webkit-mask: var(--_mask);
+			position: absolute;
 			&::-webkit-progress-bar { background: transparent; }
 			&::-webkit-progress-inner-element { display: none; }
 			&::-moz-progress-bar { opacity: 0; }
 		}
 
-		/* center label — real, author-supplied text, scaled to the HOLE so it fits any size/track combo */
-		& > :not(progress) {
-			font-size: var(--ui-progress-circular-label-fs, calc((var(--ui-progress-circular-size) - 2 * var(--ui-progress-circular-track-size)) / 4));
-			font-weight: var(--ui-progress-circular-label-fw, var(--font-weight-bold));
+		/* center value — real, author-supplied text, scaled to the HOLE so it fits any size/track combo */
+		& > :not(progress, small) {
+			font-size: var(--ui-progress-circular-value-fs, calc((var(--ui-progress-circular-size) - 2 * var(--ui-progress-circular-track-size)) / 4));
+			font-weight: var(--ui-progress-circular-value-fw, var(--font-weight-bold));
+		}
+
+		/* label — a <small> line above (or below) the value. Docs: readme.md § Label */
+		& > small {
+			color: var(--ui-progress-circular-label-c, var(--color-text-muted));
+			font-size: var(--ui-progress-circular-label-fs, calc((var(--ui-progress-circular-size) - 2 * var(--ui-progress-circular-track-size)) / 9));
+			font-weight: var(--ui-progress-circular-label-fw, var(--font-weight-medium));
+			letter-spacing: var(--tracking-wide);
+			text-transform: uppercase;
 		}
 
 		/* theme= colours the ARC, not the box — opt out of universal paint (base/theme.css). Docs: readme.md */

@@ -96,8 +96,27 @@
 	</ui-progress-circular>
 
 	<br>
+	<h2>Label</h2>
+	<p>An optional <code>&lt;small&gt;</code> before the value renders as a muted, uppercase caption above the number — after the value, it captions below. Font size, weight and ink ride the <code>--ui-progress-circular-label-*</code> tokens.</p>
+	<ui-progress-circular style="--ui-progress-circular-value: 68">
+		<progress value="5400" max="8000"></progress>
+		<small>Steps</small>
+		<span>68%</span>
+	</ui-progress-circular>
+	<ui-progress-circular theme="green" style="--ui-progress-circular-value: 100">
+		<progress value="5" max="5"></progress>
+		<span>100%</span>
+		<small>Done</small>
+	</ui-progress-circular>
+	<ui-progress-circular size="sm" style="--ui-progress-circular-value: 45; --ui-progress-circular-label-fw: var(--font-weight-bold); --ui-progress-circular-label-c: var(--color-accent)">
+		<progress value="45" max="100"></progress>
+		<small>Saved</small>
+		<span>45%</span>
+	</ui-progress-circular>
+
+	<br>
 	<h2>Token customization</h2>
-	<ui-progress-circular style="--ui-progress-circular-value: 75; --ui-progress-circular-size: 6em; --ui-progress-circular-track-size: .5em; --ui-progress-circular-fill: var(--color-success); --ui-progress-circular-label-fs: 150%">
+	<ui-progress-circular style="--ui-progress-circular-value: 75; --ui-progress-circular-size: 6em; --ui-progress-circular-track-size: .5em; --ui-progress-circular-fill: var(--color-success); --ui-progress-circular-value-fs: 150%">
 		<progress value="3" max="4"></progress>
 		<span>3/4</span>
 	</ui-progress-circular>
