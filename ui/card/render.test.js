@@ -1459,6 +1459,70 @@ describe('product page — variant picker + carousel thumbnails', () => {
 	});
 });
 
+/* parts.accordion `popover` — a MODE word: accordion() swaps <details>/<summary> for
+   <button popovertarget> + <div popover> pairs (native Popover API, no JS). The word is
+   stripped from the emitted variant=; ids are `${ucf.id}-${group}-${n}`. Docs: docs/card.md */
+describe('parts.accordion popover mode', () => {
+	const FAQ = { items: [
+		{ question: 'How do I reset my password?', answer: 'Use the reset link.' },
+		{ question: 'Can I export my data?', answer: 'Yes, as JSON.' }
+	] };
+	const faq = (accordion, id) => renderCard(
+		{ id, fields: { schemaType: 'faq', headline: 'FAQ', preset: { $ref: 'card-preset/p' }, details: FAQ } },
+		{ p: { element: 'ui-card', parts: { accordion } } }
+	);
+
+	test('popover word swaps details for button + popover pairs and leaves the chrome words', () => {
+		const html = faq('bordered rounded popover', 'faq-x');
+		assert.match(html, /<ui-accordion group="faq-render" variant="bordered rounded">/, 'popover stripped from variant=');
+		assert.ok(!html.includes('<details'), 'no details in popover mode');
+		assert.match(html, /<button type="button" popovertarget="faq-x-faq-render-1">/);
+		assert.match(html, /<div popover id="faq-x-faq-render-1">/);
+		assert.match(html, /<ui-icon type="arrow upright"><\/ui-icon><\/button>/, 'trigger carries the top-right arrow');
+		assert.match(html, /<button type="button" popovertarget="faq-x-faq-render-1" popovertargetaction="hide"><ui-icon type="cross"><\/ui-icon><\/button>/, 'panel header carries a native close button');
+	});
+
+	test('a bare popover word drops the variant attribute entirely', () => {
+		const html = faq('popover', 'faq-x');
+		assert.match(html, /<ui-accordion group="faq-render">/);
+	});
+
+	test('item scopes wrap button + popover as one microdata scope, name claimed once', () => {
+		const html = faq('popover', 'faq-x');
+		assert.match(html, /<div itemprop="mainEntity" itemscope itemtype="https:\/\/schema\.org\/Question"><button type="button" popovertarget="faq-x-faq-render-1">/);
+		/* the header repeats the label visually only — tags and their itemprops are stripped */
+		assert.equal(count(html, 'itemprop="name">How do I reset my password?'), 1, 'one name per Question');
+		assert.match(html, /<header><span>How do I reset my password\?<\/span>/);
+	});
+
+	test('without a ucf id the ids fall back to group-index', () => {
+		const html = faq('popover');
+		assert.match(html, /popovertarget="faq-render-1"/);
+		assert.match(html, /<div popover id="faq-render-2">/);
+	});
+
+	test('recipe: the outer wrapper becomes the popover, the inner steps accordion is untouched', () => {
+		const html = renderCard(
+			{ id: 'recipe-x', fields: { schemaType: 'recipe', headline: 'X', preset: { $ref: 'card-preset/p' }, details: { instructions: ['Chop.', 'Cook.'] } } },
+			{ p: { element: 'ui-card', parts: { accordion: 'bordered rounded popover' } } }
+		);
+		assert.match(html, /<button type="button" popovertarget="recipe-x-recipe-acc-1">Instructions</);
+		/* outer item carries no scope — no wrapper div around the pair */
+		assert.ok(!html.includes('<div itemscope'), 'outer pair stays unwrapped');
+		/* the panel body is the inner accordion, exactly as in accordion mode */
+		assert.match(html, /<ui-accordion group="recipe-step" variant="divided" itemprop="recipeInstructions" itemscope itemtype="https:\/\/schema\.org\/ItemList">/);
+		assert.equal(count(html, '<details name="recipe-step"'), 2, 'inner steps stay details');
+		assert.equal(count(html, 'itemtype="https://schema.org/HowToStep"'), 2);
+	});
+
+	test('without the word the details form renders unchanged', () => {
+		const html = faq('divided', 'faq-x');
+		assert.match(html, /<ui-accordion group="faq-render" variant="divided">/);
+		assert.equal(count(html, '<details name="faq-render"'), 2);
+		assert.ok(!html.includes('popovertarget'), 'no popover artifacts in accordion mode');
+	});
+});
+
 /* The map frame: a mediaType the renderer builds a URL for rather than passing through,
    so every assert here is about what may reach that URL. Docs: docs/media.md § Map */
 describe('map — the frame as an embedded map', () => {

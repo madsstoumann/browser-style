@@ -273,6 +273,10 @@ let TYPE_CHIP = false;
    images.cdnBase. Unset = text labels, so a consumer never gets an invented asset path.
    Docs: docs/card.md § External map links */
 let MAP_ICONS = null;
+/* current card's ucf.id — set per renderCard() call, module-level like IMG/SCHEMA_MODE
+   (see the schema-mode note below on why nothing threads through the call tree);
+   consumed by accordion() popover mode to mint popovertarget ids */
+let CARD_ID = null;
 /* same eligibility as ui-media-srcset.js #eligible(): ROOT-relative local paths only —
    a page-relative src would transform into the wrong zone path (404, no src fallback) */
 const cdnEligible = (src) => !!(IMG && src && src.startsWith('/') && !src.startsWith('//'));
@@ -799,14 +803,41 @@ const comicCredits = (d) => {
 const quotePart = (text, { itemprop = 'text', variant = null, cite = null } = {}) =>
 	`<ui-quote data-part="quote"${attrs({ variant })}><blockquote itemprop="${esc(itemprop)}"><q>${esc(text)}</q>${cite ? `<cite>${esc(cite)}</cite>` : ''}</blockquote></ui-quote>`;
 
-/* nested <ui-accordion> — cq-box is hand-authored so the CSS-only form styles without JS */
-const accordion = (group, items, variant = null, hostAttrs = '') =>
-	`<ui-accordion${attrs({ group, variant })}${hostAttrs}><cq-box>${items.map(({ summary, body, scopeAttrs = '', icon = 'plus-minus' }) =>
-		`<details name="${esc(group)}"${scopeAttrs}>
+/* nested <ui-accordion> — cq-box is hand-authored so the CSS-only form styles without JS.
+   The parts.accordion word `popover` swaps <details>/<summary> for <button popovertarget>
+   + <div popover> pairs (native Popover API — CSS/HTML only, light-dismiss, no JS). The
+   word is STRIPPED from the emitted variant=; remaining words keep the chrome, restated
+   for button rows in ui-accordion.css § Popover mode. Ids are deterministic:
+   `${cardId}-${group}-${n}`, falling back to `${group}-${n}` when the UCF has no id —
+   two id-less cards of one type on one page then share targets (ui/accordion/readme.md) */
+const accordion = (group, items, variant = null, hostAttrs = '') => {
+	const words = String(variant || '').trim().split(/\s+/).filter(Boolean);
+	const popover = words.includes('popover');
+	const hostVariant = words.filter((word) => word !== 'popover').join(' ') || null;
+	const inner = popover
+		? items.map(({ summary, body, scopeAttrs = '' }, index) => {
+			const id = esc(`${CARD_ID ? `${CARD_ID}-` : ''}${group}-${index + 1}`);
+			/* the panel header repeats the label VISUALLY only — tags (and the itemprops/
+			   metas they carry) are stripped so no property is claimed twice; summary is
+			   already-escaped HTML, so removing tags cannot un-escape anything */
+			const label = summary.replace(/<[^>]+>/g, '');
+			const pair = `<button type="button" popovertarget="${id}">${summary}<ui-icon type="arrow upright"></ui-icon></button>
+			<div popover id="${id}">
+				<header><span>${label}</span><button type="button" popovertarget="${id}" popovertargetaction="hide"><ui-icon type="cross"></ui-icon></button></header>
+				${body}
+			</div>`;
+			/* an item's microdata scope must span name (button) and body (popover) — one
+			   wrapper, only when the item carries a scope; ui-accordion.css flattens it */
+			return scopeAttrs ? `<div${scopeAttrs}>${pair}</div>` : pair;
+		}).join('')
+		: items.map(({ summary, body, scopeAttrs = '', icon = 'plus-minus' }) =>
+			`<details name="${esc(group)}"${scopeAttrs}>
 			<summary>${summary}<ui-icon type="${esc(icon)}"></ui-icon></summary>
 			${body}
 		</details>`
-	).join('')}</cq-box></ui-accordion>`;
+		).join('');
+	return `<ui-accordion${attrs({ group, variant: hostVariant })}${hostAttrs}><cq-box>${inner}</cq-box></ui-accordion>`;
+};
 
 /* VideoObject metas for a native <video> item (placed INSIDE the element — valid fallback content) */
 const videoMetas = (item, src) =>
@@ -3051,6 +3082,7 @@ export function renderCard(ucf, presets = {}, cards = {}, options = null) {
 function renderCardHtml(ucf, presets = {}, cards = {}) {
 	const fields = ucf?.fields ?? ucf ?? {};
 	const cardId = ucf?.id || null;
+	CARD_ID = cardId;
 	const type = baseType(fields);
 	/* resolved ONCE: schemaType is what gets written, and what DETAILS renderers gate on */
 	const schemaType = resolveItemtype(fields);

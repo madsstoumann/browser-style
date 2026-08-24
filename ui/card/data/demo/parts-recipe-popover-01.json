@@ -1,0 +1,50 @@
+{
+ "$schema": "../../../../cms/baseline/models/card.schema.json",
+ "id": "parts-demo-recipe-popover-1",
+ "model": "card",
+ "meta": {
+  "createdAt": "2026-07-04T12:00:00Z",
+  "updatedAt": "2026-07-05T09:00:00Z",
+  "locale": "en-US",
+  "status": "published",
+  "folder": "Cards/Demo"
+ },
+ "fields": {
+  "internalName": "Parts Demo — Recipe (steps popover)",
+  "schemaType": "recipe",
+  "preset": {
+   "$ref": "card-preset/parts-steps-popover"
+  },
+  "eyebrow": "Pasta",
+  "headline": "Classic Spaghetti Carbonara",
+  "summary": "The Roman original — guanciale, pecorino, eggs and pepper. No cream.",
+  "media": [
+   {
+    "mediaType": "image",
+    "src": "/assets/images/carbonara.png",
+    "alt": "Plate of spaghetti carbonara"
+   }
+  ],
+  "details": {
+   "prepTime": "PT15M",
+   "cookTime": "PT20M",
+   "servings": 4,
+   "ingredients": [
+    "400 g spaghetti",
+    "150 g guanciale",
+    "4 egg yolks",
+    "80 g pecorino romano"
+   ],
+   "instructions": [
+    "Crisp the guanciale in a dry pan.",
+    "Whisk yolks with grated pecorino and pepper.",
+    "Toss hot pasta with guanciale, then the egg mixture, off the heat."
+   ]
+  },
+  "tags": [
+   "Pasta",
+   "Italian",
+   "Quick"
+  ]
+ }
+}
