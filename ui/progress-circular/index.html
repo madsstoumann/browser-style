@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="color-scheme" content="light dark">
-	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="description" content="CSS-first circular ring around the native progress element — conic-gradient fill, real text label, no JavaScript.">
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/ui/base/index.css">
 	<link rel="stylesheet" href="ui-progress-circular.css">
@@ -15,36 +15,46 @@
 
 	<h2>Progress — Circular</h2>
 	<p>
-		<strong>Progress — Circular</strong> is a component that displays a circular progress bar. It is used to show the progress of a task or action. The <code>value</code> attribute specifies how much of the task has been completed. The <code>max</code> attribute specifies the total amount of work required to complete the task.
+		<strong>Progress — Circular</strong> draws a ring around the native <code>&lt;progress&gt;</code> element. The <code>--ui-progress-circular-value</code> custom property (0–100) drives the drawn arc, while the <code>value</code>/<code>max</code> attributes carry the raw pair for assistive technology. The center label is real, author-supplied text.
 	</p>
 
-	<label class="ui-progress-circular" style="--value:40;">
-		Progress — Circular
+	<ui-progress-circular style="--ui-progress-circular-value: 40">
 		<progress value="40" max="100"></progress>
-	</label>
+		<span>40%</span>
+	</ui-progress-circular>
+
+	<br>
+	<h2>Non-percent values</h2>
+	<p>The ring shows the ratio; the <code>&lt;progress&gt;</code> keeps the true numbers — no <code>max="100"</code> assumption.</p>
+	<ui-progress-circular style="--ui-progress-circular-value: 68">
+		<progress value="5400" max="8000"></progress>
+		<span>68%</span>
+	</ui-progress-circular>
+
+	<br>
+	<h2>Token customization</h2>
+	<ui-progress-circular style="--ui-progress-circular-value: 75; --ui-progress-circular-size: 6em; --ui-progress-circular-track-size: .5em; --ui-progress-circular-fill: var(--color-success); --ui-progress-circular-label-fs: 150%">
+		<progress value="3" max="4"></progress>
+		<span>3/4</span>
+	</ui-progress-circular>
 
 	<br>
 	<h2>With opposite color-scheme</h2>
 	<div class="bdrs-md cs-opposite pb-3 pi-3">
-		<label class="ui-progress-circular" style="--value:40;">
-			Progress — Circular
+		<ui-progress-circular style="--ui-progress-circular-value: 40">
 			<progress value="40" max="100"></progress>
-		</label>
+			<span>40%</span>
+		</ui-progress-circular>
 	</div>
 
 	<br>
 	<h2>With right-to-left</h2>
 	<p>Please note that clockwise indicators should not be flipped when the text direction is right-to-left.</p>
 	<div dir="rtl">
-		<label class="ui-progress-circular" style="--value:40;">
-			Progress — Circular
+		<ui-progress-circular style="--ui-progress-circular-value: 40">
 			<progress value="40" max="100"></progress>
-		</label>
+			<span>40%</span>
+		</ui-progress-circular>
 	</div>
-
-	<script type="module">
-		import { common, init } from './../../assets/js/common.js';
-		common();
-	</script>
 </body>
 </html>

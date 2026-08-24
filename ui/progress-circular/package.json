@@ -1,0 +1,40 @@
+{
+  "name": "@browser.style/progress-circular",
+  "version": "4.0.0",
+  "description": "CSS-first circular ring around the native <progress> element",
+  "type": "module",
+  "style": "index.css",
+  "exports": {
+    ".": {
+      "style": "./index.css"
+    },
+    "./style": "./index.css",
+    "./index.css": "./index.css"
+  },
+  "files": [
+    "index.css",
+    "ui-progress-circular.css"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "browser.style",
+    "progress",
+    "circular",
+    "ring",
+    "css-first"
+  ],
+  "author": "Mads Stoumann",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/progress-circular"
+  },
+  "homepage": "https://browser.style/ui/progress-circular",
+  "peerDependencies": {
+    "@browser.style/base": "^1.0.11"
+  }
+}

@@ -1,32 +1,42 @@
+/**
+ * ui-progress-circular — CSS-only ring around the native <progress> element. Docs: readme.md
+ * @version 4.0.0
+ * @date 2026-08-24
+ * @author Mads Stoumann
+ */
 @layer bs-component {
-	:where(.ui-progress-circular) {
-		--meter-progress-bs: 10em;
-		--progress-bdw: 1em;
-		--_mask: radial-gradient(circle farthest-side at center, transparent calc(99% - var(--progress-bdw)), #FFF calc(100% - var(--progress-bdw)));
-		position: relative;
-		width: var(--meter-progress-bs);
+	:where(ui-progress-circular) {
+		--ui-progress-circular-size: 10em;
+		--ui-progress-circular-track-size: 1em;
+		--ui-progress-circular-value: 0;
+		--_mask: radial-gradient(circle farthest-side at center, transparent calc(99% - var(--ui-progress-circular-track-size)), #FFF calc(100% - var(--ui-progress-circular-track-size)));
+		aspect-ratio: 1;
+		display: grid;
+		inline-size: var(--ui-progress-circular-size);
+		place-items: center;
 
-		&::after {
-			counter-reset: val var(--value);
-			content: counter(val) "%";
-			font-size: 200%;
-			font-weight: 700;
-			margin-top: 1.25ch;
-			place-self: center;
-			position: absolute;
-		}
+		& > * { grid-area: 1 / 1; }
+
 		& progress {
 			background: conic-gradient(
-				var(--AccentColor) 0%,
-				var(--AccentColor) calc(1% * var(--value)) 0,
-				var(--ButtonBorder) calc(1% * var(--value))
+				var(--ui-progress-circular-fill, var(--color-accent)) calc(1% * var(--ui-progress-circular-value)),
+				var(--ui-progress-circular-track, var(--color-border)) 0
 			);
-			border-radius: 50%;
-			height: var(--meter-progress-bs);
+			block-size: 100%;
+			border: 0;
+			border-radius: var(--radius-circle);
+			inline-size: 100%;
 			mask: var(--_mask);
 			-webkit-mask: var(--_mask);
+			&::-webkit-progress-bar { background: transparent; }
 			&::-webkit-progress-inner-element { display: none; }
 			&::-moz-progress-bar { opacity: 0; }
+		}
+
+		/* center label — real, author-supplied text; see readme.md § Label */
+		& > :not(progress) {
+			font-size: var(--ui-progress-circular-label-fs, 200%);
+			font-weight: var(--ui-progress-circular-label-fw, var(--font-weight-bold));
 		}
 	}
 }

@@ -46,6 +46,7 @@ grouped by role. Paths are relative to `ui/`, matching how the demos link them
 | `ui/highlight` | `<high-light>` — pen-marker highlight on inline text. **No `package.json` yet** — repo-only; it cannot be npm-installed and is not a declared peer | `highlight/ui-highlight.css` |
 | `ui/icon` | `<ui-icon>` — reveal + accordion toggles | `icon/index.css` |
 | `ui/progress` | bare `<progress>` — poll / comparison parts | `progress/ui-progress.css` |
+| `ui/progress-circular` | `<ui-progress-circular>` — goal rings on `demo/schema.goals.html` | `progress-circular/ui-progress-circular.css` |
 | `ui/quote` | `<ui-quote>`, `data-part="quote"` | `quote/ui-quote.css` |
 | `ui/rating` | `.ui-rating`, `data-part="rating"` | `rating/ui-rating.css` |
 | `ui/timeline` | `data-part="timeline"` on an `<ol>` | `timeline/ui-timeline.css` |

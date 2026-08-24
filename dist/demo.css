@@ -10364,6 +10364,49 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
   }
 }
 
+/* ui/progress-circular/ui-progress-circular.css */
+@layer bs-component {
+  :where(ui-progress-circular) {
+    --ui-progress-circular-size: 10em;
+    --ui-progress-circular-track-size: 1em;
+    --ui-progress-circular-value: 0;
+    --_mask:
+      radial-gradient(
+        circle farthest-side at center,
+        transparent calc(99% - var(--ui-progress-circular-track-size)),
+        #FFF calc(100% - var(--ui-progress-circular-track-size)));
+    aspect-ratio: 1;
+    display: grid;
+    inline-size: var(--ui-progress-circular-size);
+    place-items: center;
+    & > * {
+      grid-area: 1 / 1;
+    }
+    & progress {
+      background: conic-gradient(var(--ui-progress-circular-fill, var(--color-accent)) calc(1% * var(--ui-progress-circular-value)), var(--ui-progress-circular-track, var(--color-border)) 0);
+      block-size: 100%;
+      border: 0;
+      border-radius: var(--radius-circle);
+      inline-size: 100%;
+      mask: var(--_mask);
+      -webkit-mask: var(--_mask);
+      &::-webkit-progress-bar {
+        background: transparent;
+      }
+      &::-webkit-progress-inner-element {
+        display: none;
+      }
+      &::-moz-progress-bar {
+        opacity: 0;
+      }
+    }
+    & > :not(progress) {
+      font-size: var(--ui-progress-circular-label-fs, 200%);
+      font-weight: var(--ui-progress-circular-label-fw, var(--font-weight-bold));
+    }
+  }
+}
+
 /* ui/rating/ui-rating.css */
 @layer bs-component {
   :where(ui-rating, .ui-rating) {
