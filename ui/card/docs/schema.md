@@ -9,7 +9,11 @@
 > [`cms/baseline/models/card.schema.json`](../../../cms/baseline/models/card.schema.json): a
 > structured envelope + a `schemaType` discriminator + one `details` object per type. Sibling
 > demo pages: [cards.html](../demo/cards.html) · [media.html](../demo/media.html) ·
-> [content.html](../demo/content.html).
+> [content.html](../demo/content.html). Satellite pages hand-authored **outside** the
+> comparator gate: [schema.place.html](../demo/schema.place.html) (the Place card across the
+> OpenStreetMap embed layers) and [schema.goals.html](../demo/schema.goals.html) (personal
+> goals as `AchieveAction` — target and progress as `object`/`result` `QuantitativeValue`
+> scopes, a `<progress>` bar or `<ui-progress-circular>` ring as the visible face).
 
 **Four counts, four different quantities — do not conflate them.** The page carries **61
 cards** with **52 distinct root itemtypes**; a structured-data validator reports **64 items**;
