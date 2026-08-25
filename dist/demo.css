@@ -13873,6 +13873,9 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
   :where([variant*="ovr("]) .ui-button:not([data-variant]) {
     color: var(--color-text, hsl(0, 0%, 15%));
   }
+  :where([variant*="ovr("]) ui-progress-circular {
+    --ui-progress-circular-label-c: currentColor;
+  }
   :where([variant*="ovr("]) :is(cq-box, summary) > ui-media {
     inline-size: 100%;
     min-block-size: 100%;
