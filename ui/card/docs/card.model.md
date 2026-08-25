@@ -136,11 +136,11 @@ how it looks. Each accepts a free-string `style` token override.
 ## The discriminator
 
 `schemaType` selects the itemtype, the microdata mapping, and which `details` shape applies.
-**53 values, 50 distinct itemtypes** — `profile`/`artist` both emit `Person`,
+**54 values, 51 distinct itemtypes** — `profile`/`artist` both emit `Person`,
 `comparison`/`places`/`filelist` all emit `ItemList`.
 
-`subtype` narrows it. **Only 8 of the 53 types have a subtype allowlist**, so the control is
-conditional on `schemaType` and must be absent for the other 45:
+`subtype` narrows it. **Only 8 of the 54 types have a subtype allowlist**, so the control is
+conditional on `schemaType` and must be absent for the other 46:
 
 | schemaType | Base itemtype | Values |
 |---|---|---|
@@ -393,6 +393,21 @@ ignores a display twin. Do not go hunting for a mapping that does not exist.
 | `skillLevel` | string | text |  |
 | `credentialId` | string | text |  |
 | `verificationUrl` | url | url |  |
+
+### `goal` — AchieveAction
+
+| Key | Type | Control | Lookup / notes |
+|---|---|---|---|
+| `status` | string | select | `active` `completed` `failed` `potential` — mapped to ActionStatusType URLs; anything else emits no actionStatus |
+| `startDate` | date | date |  |
+| `endDate` | date | date |  |
+| `dateRangeDisplay` | string | text | display twin for the span |
+| `agentName` | string | text | agent → Person |
+| `target` | object | fieldset | {name, value, unitText} — object → QuantitativeValue (the goal) |
+| `current` | object | fieldset | {value, unitText} — result → QuantitativeValue (progress so far) |
+| `progressLabel` | string | text | the ring's small caption |
+| `progressDisplay` | string | text | human line, e.g. "6 of 10 minutes" |
+| `hue` | string | select | ring theme — the nine-hue allowlist; unknown values drop the attribute |
 
 ### `announcement` — SpecialAnnouncement
 
@@ -1118,7 +1133,7 @@ undocumented in the UCM format spec · `cms/baseline/CLAUDE.md` describing only 
 
 **Conditional rules that must be honoured.** These are the only places the form changes shape:
 
-1. `subtype` is visible for exactly 8 of the 53 types, and its options depend on which.
+1. `subtype` is visible for exactly 8 of the 54 types, and its options depend on which.
 2. The whole `details` panel swaps on `schemaType`; 4 types have no panel at all.
 3. `media[]` item fields branch on `mediaType` — `zoom`/`provider`/`latitude`/`longitude` only
    for `map`, `map` only for `places`, `uploadDate`/`duration`/`description` only for `video`.

@@ -66,6 +66,7 @@ const PAIRS = [
 	/* pairable since the visible ISBN dropped its U+2060 word joiners (docs/schema.md § Book):
 	   the two sides used to spell the same ISBN differently and could never match */
 	['Book', 'ui/card/data/book.json'],
+	['AchieveAction', 'ui/card/data/goal.json'],
 	['Service', 'ui/card/data/service.json'],
 	['RealEstateListing', 'ui/card/data/realestate.json'],
 	['VacationRental', 'ui/card/data/vacationrental.json'],

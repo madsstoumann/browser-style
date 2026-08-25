@@ -10,7 +10,7 @@
 	<meta name="referrer" content="no-referrer">
 	<meta name="format-detection" content="telephone=no">
 	<link rel="preconnect" href="https://v4.browser.style">
-	<meta name="description" content="61 cards covering 52 distinct schema.org itemtypes on the card hosts (ItemList runs four cards; Quiz three; Review, EventSeries, Place and Person two each) — re-created with the modern &lt;ui-card&gt; engine: inline microdata (itemscope/itemtype/itemprop), no JSON-LD. The job card carries a 53rd type as a second top-level item: EmployerAggregateRating. Two optional scripts: video.min.js polyfills the media invoker commands behind the podcast play button, save.min.js flips the save heart.">
+	<meta name="description" content="62 cards covering 53 distinct schema.org itemtypes on the card hosts (ItemList runs four cards; Quiz three; Review, EventSeries, Place and Person two each) — re-created with the modern &lt;ui-card&gt; engine: inline microdata (itemscope/itemtype/itemprop), no JSON-LD. The job card carries a 54th type as a second top-level item: EmployerAggregateRating. Two optional scripts: video.min.js polyfills the media invoker commands behind the podcast play button, save.min.js flips the save heart.">
 	<link rel="alternate" type="text/markdown" href="/ui/card/docs/schema.md">
 	<link rel="stylesheet" href="/dist/demo.ecb6a7ad.min.css">
 
@@ -818,6 +818,24 @@
 					<p data-part="meta"><ui-chip theme="pale green">Certified</ui-chip></p>
 					<p data-part="meta"><strong data-part="key">Issued by:</strong> <span itemprop="recognizedBy" itemscope itemtype="https://schema.org/Organization"><span itemprop="name">IAAP</span></span> · Mar 2026 · <strong data-part="key">Expires:</strong> Mar 2029 · <strong data-part="key">ID:</strong> AWA-2026-8841</p>
 					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="#">Verify credential</a></nav>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="ovr(ts)" media="asr(1/1) hov(blur) scm(lg) chip(te)" itemscope itemtype="https://schema.org/AchieveAction">
+			<cq-box>
+				<ui-media><img src="/assets/images/mindfulness.png" alt="Calm illustration of a meditating figure" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=240/assets/images/mindfulness.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=320/assets/images/mindfulness.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=480/assets/images/mindfulness.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=720/assets/images/mindfulness.png 720w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>AchieveAction</ui-chip></ui-media>
+				<ui-content content="eb(inv)">
+					<meta itemprop="actionStatus" content="https://schema.org/ActiveActionStatus">
+					<meta itemprop="startTime" content="2026-01-01">
+					<meta itemprop="endTime" content="2026-12-31">
+					<span itemprop="agent" itemscope itemtype="https://schema.org/Person" hidden><meta itemprop="name" content="Alex Winther"></span>
+					<span itemprop="object" itemscope itemtype="https://schema.org/QuantitativeValue" hidden><meta itemprop="name" content="Daily meditation target"><meta itemprop="value" content="10"><meta itemprop="unitText" content="minutes"></span>
+					<span itemprop="result" itemscope itemtype="https://schema.org/QuantitativeValue" hidden><meta itemprop="value" content="6"><meta itemprop="unitText" content="minutes"></span>
+					<small data-part="eyebrow">Mindfulness</small>
+					<strong data-part="headline" itemprop="name">Meditate 10 minutes daily</strong>
+					<span data-part="summary" itemprop="description">Before the first coffee — breathe in, phone off.</span>
+					<ui-progress-circular size="lg" theme="green" style="--ui-progress-circular-value: 60"><progress max="10" value="6"></progress><small>Minutes</small><span>60%</span></ui-progress-circular>
+					<p data-part="meta">6 of 10 minutes · Jan 1 – Dec 31, 2026</p>
 				</ui-content>
 			</cq-box>
 		</ui-card>

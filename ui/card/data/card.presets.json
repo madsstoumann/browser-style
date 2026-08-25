@@ -151,6 +151,14 @@
       "media": "asr(4/3) scm",
       "content": "scl(lg)"
     },
+    "goal": {
+      "name": "Goal Preset",
+      "description": "Overlay goal card — square blurred frame, dark scrim from the top-start, big progress ring",
+      "element": "ui-card",
+      "variant": "ovr(ts)",
+      "media": "asr(1/1) hov(blur) scm(lg) chip(te)",
+      "content": "eb(inv)"
+    },
     "poster": {
       "name": "Poster Preset",
       "description": "Tall 3:4 overlay card with scrim and a display-size headline — destinations, covers",

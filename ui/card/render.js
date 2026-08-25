@@ -52,6 +52,7 @@ export const SCHEMA_TYPES = {
 	gallery: 'ImageGallery',
 	statistic: 'Observation',
 	achievement: 'EducationalOccupationalCredential',
+	goal: 'AchieveAction',
 	announcement: 'SpecialAnnouncement',
 	business: 'LocalBusiness',
 	comparison: 'ItemList',
@@ -216,7 +217,7 @@ const ROOT_VIDEO_TYPES = new Set(['video']);
 /* Person has no keywords property. Intangible-rooted types (JobPosting, Offer,
    Reservation, ContactPoint, ItemList, Observation, MemberProgram, Service) have
    none either — null = visible chips only, no itemprop */
-const TAGS_PROP = { profile: 'knowsAbout', artist: 'knowsAbout', job: null, membership: null, booking: null, contact: null, comparison: null, places: null, filelist: null, statistic: null, loyalty: null, service: null };
+const TAGS_PROP = { profile: 'knowsAbout', artist: 'knowsAbout', job: null, membership: null, booking: null, contact: null, comparison: null, places: null, filelist: null, statistic: null, loyalty: null, service: null, goal: null };
 /* byline itemprop — a quote's people are its creators, everyone else's are authors */
 const bylineProp = (type) => type === 'quote' ? 'creator' : 'author';
 
@@ -2134,6 +2135,27 @@ const DETAILS = {
 			+ meta('educationalLevel', d.skillLevel) + meta('identifier', d.credentialId);
 		html += `<p data-part="meta">${keyed('Issued by')}<span${scope('recognizedBy', 'Organization')}><span itemprop="name">${esc(d.issuingOrganization)}</span></span>${d.dateEarnedDisplay ? ` · ${esc(d.dateEarnedDisplay)}` : ''}${d.expirationDateDisplay ? ` · ${keyed('Expires')}${esc(d.expirationDateDisplay)}` : ''}${d.credentialId ? ` · ${keyed('ID')}${esc(d.credentialId)}` : ''}</p>`;
 		if (d.verificationUrl) html += `<nav data-part="actions"><a class="ui-button" href="${esc(d.verificationUrl)}" target="_blank" rel="noopener">Verify credential</a></nav>`;
+		return html;
+	},
+
+	goal(d) {
+		/* target rides `object`, progress rides `result` — both QuantitativeValue; the ring is
+		   presentation only, machine numbers stay on the metas. Docs: docs/schema.md § Goal */
+		const STATUS = { active: 'ActiveActionStatus', completed: 'CompletedActionStatus', failed: 'FailedActionStatus', potential: 'PotentialActionStatus' };
+		const HUES = new Set(['red', 'orange', 'green', 'blue', 'accent', 'black', 'white', 'gray', 'slate']);
+		let html = meta('actionStatus', STATUS[d.status] ? SCHEMA + STATUS[d.status] : null)
+			+ meta('startTime', d.startDate) + meta('endTime', d.endDate);
+		if (d.agentName) html += `<span${scope('agent', 'Person')} hidden>${meta('name', d.agentName)}</span>`;
+		if (d.target) html += `<span${scope('object', 'QuantitativeValue')} hidden>${meta('name', d.target.name)}${meta('value', d.target.value)}${meta('unitText', d.target.unitText)}</span>`;
+		if (d.current) html += `<span${scope('result', 'QuantitativeValue')} hidden>${meta('value', d.current.value)}${meta('unitText', d.current.unitText)}</span>`;
+		const target = Number(d.target?.value), current = Number(d.current?.value);
+		if (target > 0 && Number.isFinite(current)) {
+			const pct = Math.round(Math.min(100, Math.max(0, current / target * 100)));
+			const hue = HUES.has(d.hue) ? ` theme="${d.hue}"` : '';
+			html += `<ui-progress-circular size="lg"${hue} style="--ui-progress-circular-value: ${pct}"><progress max="${esc(d.target.value)}" value="${esc(d.current.value)}"></progress>${d.progressLabel ? `<small>${esc(d.progressLabel)}</small>` : ''}<span>${pct}%</span></ui-progress-circular>`;
+		}
+		const foot = [d.progressDisplay, d.dateRangeDisplay].filter(Boolean).join(' · ');
+		if (foot) html += `<p data-part="meta">${esc(foot)}</p>`;
 		return html;
 	},
 

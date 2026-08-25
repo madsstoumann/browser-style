@@ -2731,3 +2731,71 @@ describe('map links', () => {
 		assert.doesNotMatch(html, /<script>bad/);
 	});
 });
+
+describe('goal — AchieveAction', () => {
+	const card = (details = {}) => render({
+		schemaType: 'goal',
+		eyebrow: 'Mindfulness',
+		headline: 'Meditate 10 minutes daily',
+		summary: 'Before the first coffee — breathe in, phone off.',
+		details: {
+			status: 'active',
+			startDate: '2026-01-01',
+			endDate: '2026-12-31',
+			dateRangeDisplay: 'Jan 1 – Dec 31, 2026',
+			agentName: 'Alex Winther',
+			target: { name: 'Daily meditation target', value: 10, unitText: 'minutes' },
+			current: { value: 6, unitText: 'minutes' },
+			progressLabel: 'Minutes',
+			progressDisplay: '6 of 10 minutes',
+			hue: 'green',
+			...details
+		}
+	});
+
+	test('the root is an AchieveAction with status and time span as metas', () => {
+		const html = card();
+		assert.match(html, /itemtype="https:\/\/schema\.org\/AchieveAction"/);
+		assert.match(html, /<meta itemprop="actionStatus" content="https:\/\/schema\.org\/ActiveActionStatus">/);
+		assert.match(html, /<meta itemprop="startTime" content="2026-01-01">/);
+		assert.match(html, /<meta itemprop="endTime" content="2026-12-31">/);
+	});
+
+	test('target and current ride object/result QuantitativeValue scopes; the agent is a Person', () => {
+		const html = card();
+		assert.match(html, /itemprop="object" itemscope itemtype="https:\/\/schema\.org\/QuantitativeValue"/);
+		assert.match(html, /itemprop="result" itemscope itemtype="https:\/\/schema\.org\/QuantitativeValue"/);
+		assert.match(html, /<meta itemprop="value" content="10"><meta itemprop="unitText" content="minutes">/);
+		assert.match(html, /<meta itemprop="value" content="6"><meta itemprop="unitText" content="minutes">/);
+		assert.match(html, /itemprop="agent" itemscope itemtype="https:\/\/schema\.org\/Person"/);
+		assert.match(html, /<meta itemprop="name" content="Alex Winther">/);
+	});
+
+	test('the ring shows the computed ratio and carries NO microdata of its own', () => {
+		const html = card();
+		assert.match(html, /<ui-progress-circular size="lg" theme="green" style="--ui-progress-circular-value: 60">/);
+		assert.match(html, /<progress max="10" value="6"><\/progress>/);
+		assert.match(html, /<small>Minutes<\/small>/);
+		assert.match(html, /<span>60%<\/span>/);
+		assert.ok(!/<ui-progress-circular[^>]*itemprop/.test(html), 'ring is presentation only');
+		assert.ok(!/<progress[^>]*itemprop/.test(html), 'the machine numbers ride the metas');
+	});
+
+	test('a completed goal maps to CompletedActionStatus', () => {
+		const html = card({ status: 'completed', current: { value: 10, unitText: 'minutes' } });
+		assert.match(html, /<meta itemprop="actionStatus" content="https:\/\/schema\.org\/CompletedActionStatus">/);
+		assert.match(html, /--ui-progress-circular-value: 100/);
+	});
+
+	test('the hue is an allowlist, never verbatim data', () => {
+		const html = card({ hue: '"><script>bad()</script>' });
+		assert.doesNotMatch(html, /<script>bad/);
+		assert.ok(!/theme="/.test(html.split('<ui-progress-circular')[1]?.split('>')[0] || ''), 'unknown hue drops the theme attribute');
+	});
+
+	test('a hostile display string comes out escaped', () => {
+		const html = card({ progressDisplay: '<img src=x onerror=alert(1)>' });
+		assert.ok(!html.includes('<img src=x'), 'escaped');
+		assert.match(html, /&lt;img src=x/);
+	});
+});

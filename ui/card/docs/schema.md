@@ -15,26 +15,26 @@
 > goals as `AchieveAction` — target and progress as `object`/`result` `QuantitativeValue`
 > scopes, a `<progress>` bar or `<ui-progress-circular>` ring as the visible face).
 
-**Four counts, four different quantities — do not conflate them.** The page carries **61
-cards** with **52 distinct root itemtypes**; a structured-data validator reports **64 items**;
-the renderer knows **53 `schemaType` keys**.
+**Four counts, four different quantities — do not conflate them.** The page carries **62
+cards** with **53 distinct root itemtypes**; a structured-data validator reports **65 items**;
+the renderer knows **54 `schemaType` keys**.
 
 | Count | What it measures | Reproduce it |
 |---|---|---|
-| **61** | card hosts on the page — `<ui-card>` plus the one `<ui-reveal>` | `grep -oE '<ui-(card\|reveal)[^>]*itemtype="[^"]*"' ui/card/demo/schema.html \| grep -vc 'itemprop='` |
-| **64** | top-level microdata items — **what schema.org's validator reports** | `grep -o '<[a-z-]*[^<>]*itemscope[^<>]*>' ui/card/demo/schema.html \| grep -v 'itemprop=' \| grep -c 'itemtype='` |
-| **52** | distinct root `itemtype` values | `grep -oE '<ui-(card\|reveal)[^>]*itemtype="[^"]*"' ui/card/demo/schema.html \| grep -v 'itemprop=' \| grep -o 'itemtype="[^"]*"' \| sort -u \| wc -l` |
-| **53** | `schemaType` keys `render.js` supports (`SCHEMA_TYPES`) | `node -e "import('./ui/card/render.js').then(m => console.log(Object.keys(m.SCHEMA_TYPES).length))"` |
+| **62** | card hosts on the page — `<ui-card>` plus the one `<ui-reveal>` | `grep -oE '<ui-(card\|reveal)[^>]*itemtype="[^"]*"' ui/card/demo/schema.html \| grep -vc 'itemprop='` |
+| **65** | top-level microdata items — **what schema.org's validator reports** | `grep -o '<[a-z-]*[^<>]*itemscope[^<>]*>' ui/card/demo/schema.html \| grep -v 'itemprop=' \| grep -c 'itemtype='` |
+| **53** | distinct root `itemtype` values | `grep -oE '<ui-(card\|reveal)[^>]*itemtype="[^"]*"' ui/card/demo/schema.html \| grep -v 'itemprop=' \| grep -o 'itemtype="[^"]*"' \| sort -u \| wc -l` |
+| **54** | `schemaType` keys `render.js` supports (`SCHEMA_TYPES`) | `node -e "import('./ui/card/render.js').then(m => console.log(Object.keys(m.SCHEMA_TYPES).length))"` |
 
 The flashcard Quiz is the page's one **`<ui-reveal>`** host rather than a `<ui-card>` — a
 question on the front face, its answer on the flipside, which is what a flashcard actually is.
 It counts identically in every column below; only the element differs.
 
 **Items ≠ cards.** A validator counts every *top-level* item — an `itemscope` with no `itemprop`
-of its own — so it sees the 61 cards plus **three items that are not cards**: the standalone
+of its own — so it sees the 62 cards plus **three items that are not cards**: the standalone
 `EmployerAggregateRating` on the job card, the page-level `WebSite` (site identity plus the
 sitelinks-searchbox `potentialAction`, which describes the *site*, not any card on it), and the
-page-trail `BreadcrumbList` on the breadcrumb `<ol>` — 64. Nested scopes (`author` → `Person`,
+page-trail `BreadcrumbList` on the breadcrumb `<ol>` — 65. Nested scopes (`author` → `Person`,
 `offers` → `Offer`, …) are properties of their
 parent, not items, and are not counted. The `grep -c 'itemtype='` on the end of that command is
 load-bearing: without it the page's own `<meta name="description">` is counted too, because its
@@ -82,7 +82,7 @@ type — a demo affordance, emitted by `render.js` only when `renderCard` gets `
 
 ## Page structure — eleven sections, and where the heading level comes from
 
-The page groups its 61 cards into **eleven sections by what the thing *is*** — Editorial &
+The page groups its 62 cards into **eleven sections by what the thing *is*** — Editorial &
 journalism · Commerce & offers · Screen · Audio · Page & picture · Learning & reference ·
 People, work & history · Food & drink · Places, events & property · Community & support ·
 Data, health & operations. Each section is a bare `<h2>` followed by its own
@@ -604,6 +604,10 @@ abbreviation (`M`, `k`, `bn`) belongs in `displayValue`, because `unitText: "M"`
 ### Achievement — `EducationalOccupationalCredential`
 
 Status `<ui-chip>` (a burst sticker clips long words), issuer → `recognizedBy`, hidden `dateCreated`/`expires`/`identifier` metas.
+
+### Goal — `AchieveAction`
+
+schema.org has no `Goal` type; a personal goal with progress is an `AchieveAction` — "an incremental achievement". `actionStatus` is an **allowlist** (`active`/`completed`/`failed`/`potential` → `ActionStatusType` URLs; anything else emits nothing), the time span rides `startTime`/`endTime` metas, `agent` → `Person`. The two numbers are two hidden `QuantitativeValue` scopes: **`object` carries the target** (the thing being worked toward), **`result` the current value** (what the effort has produced so far). The `<ui-progress-circular>` ring is **presentation only** — no itemprop anywhere on it, and its arc percent is *computed* from `current/target` (clamped 0–100), so the drawn progress can never contradict the machine numbers; `details.hue` themes the ring through the nine-hue allowlist. Tag chips emit no `keywords` — out of domain on an Action. The `goal` preset is the overlay treatment: `ovr(ts)`, rest-blurred frame (`hov(blur)`), `scm(lg)` dark scrim, `eb(inv)` eyebrow. The satellite page [schema.goals.html](../demo/schema.goals.html) runs six hand-authored variations of the same shape.
 
 ### Announcement — `SpecialAnnouncement`
 
