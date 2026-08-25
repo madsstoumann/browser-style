@@ -218,7 +218,9 @@ const OPEN_STEMS = /^(?:md:|lg:)?(?:asr|spl|auto|tmb)\([\d/.:a-z%]+\)$/;
    ui/accordion/ui-accordion.css and ui/button-group/ui-button-group.css */
 const PART_VARIANTS = {
 	quote: new Set(['bigquote', 'breaker', 'code']),
-	accordion: new Set(['bordered', 'divided', 'rounded', 'pill', 'separate', 'filled']),
+	/* `popover` is a MODE word, not chrome: render.js strips it and emits <button
+	   popovertarget> + <div popover> pairs instead of <details> (readme.md § Popover mode) */
+	accordion: new Set(['bordered', 'divided', 'rounded', 'pill', 'separate', 'filled', 'popover']),
 	buttonGroup: new Set(['inline', 'rounded', 'border', 'outline']),
 	/* the control's other two axes are its own documented API, not card DSL: font-size
 	   utilities from base, and the shared nine-hue theme axis with pale/muted */

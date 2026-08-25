@@ -1,7 +1,7 @@
 /**
  * ui-accordion
- * @version 4.4.0
- * @date 2026-07-30
+ * @version 4.5.0
+ * @date 2026-08-24
  * @author Mads Stoumann
  *
  * Private custom properties (--_*)
@@ -38,6 +38,11 @@
 		--ui-accordion-padding-block: 1.25ch;
 		--ui-accordion-padding-inline: 1.5ch;
 		--ui-accordion-pill-open-radius: var(--radius-3xl);
+		--ui-accordion-popover-backdrop: oklch(0 0 0 / 0.45);
+		--ui-accordion-popover-bg: light-dark(var(--color-surface), var(--color-surface-alt));
+		--ui-accordion-popover-block-size: 44rem;
+		--ui-accordion-popover-inline-size: 65ch;
+		--ui-accordion-popover-shadow: 0 1rem 3rem -0.5rem oklch(0 0 0 / 0.35);
 		--ui-accordion-split-gap: var(--ui-accordion-gap, var(--spacing-xl));
 
 		--_bd: var(--ui-accordion-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
@@ -264,6 +269,155 @@
 				--ui-accordion-bg-hover: linear-gradient(90deg, #0000, var(--tint-overlay) 10% 90%, #0000);
 				background: var(--tint-bg, var(--_tint));
 				color: var(--tint-fg, contrast-color(var(--_tint)));
+			}
+
+			/* === Popover mode — <button popovertarget> + <div popover> pairs instead of
+			   <details>; emitted by ui/card render.js when parts.accordion carries the
+			   word `popover` (stripped before variant=). The Popover API owns open/close
+			   and light-dismiss — no JS. Readme § Popover mode === */
+
+			/* microdata scope wrapper → transparent to layout; rows join the grid.
+			   Keyed on structure, never [itemscope] — schema modes strip it */
+			& cq-box > :not(details, button, [popover]):has(> button[popovertarget]) {
+				display: contents;
+			}
+
+			/* row button = the summary row, restated for <button> */
+			& cq-box > button[popovertarget],
+			& cq-box > :not(details, [popover]) > button[popovertarget] {
+				align-items: center;
+				appearance: none;
+				background: var(--ui-accordion-bg, inherit);
+				border: 0;
+				color: inherit;
+				cursor: pointer;
+				display: flex;
+				font: inherit;
+				font-size: var(--ui-accordion-summary-font-size, 1em);
+				font-weight: var(--ui-accordion-summary-font-weight, 500);
+				justify-content: space-between;
+				padding-block: var(--ui-accordion-padding-block);
+				padding-inline: 0;
+				text-align: start;
+				transition: background var(--duration-normal) var(--ease-in-out);
+				user-select: none;
+				&:hover { background: var(--ui-accordion-bg-hover); }
+				/* ring parity with details:has(> summary:focus-visible) — the button IS the row */
+				&:focus-visible {
+					outline: var(--ring-width) solid var(--ring-color);
+					outline-offset: calc(-1 * var(--ring-width));
+				}
+			}
+
+			/* variant chrome twins — group border/radius already ride cq-box (bordered/
+			   rounded); only the details-scoped pieces are restated for button rows */
+			&[variant~="bordered"] cq-box {
+				& > button[popovertarget],
+				& > :not(details, [popover]) > button[popovertarget] {
+					padding-inline: var(--ui-accordion-padding-inline);
+				}
+			}
+			&[variant~="separate"] cq-box {
+				& > button[popovertarget],
+				& > :not(details, [popover]) > button[popovertarget] {
+					padding-inline: var(--ui-accordion-padding-inline-separate, 2.25ch);
+				}
+			}
+			&[variant~="bordered"][variant~="separate"] cq-box {
+				& > button[popovertarget],
+				& > :not(details, [popover]) > button[popovertarget] { border: var(--_bd); }
+			}
+			/* divided — "every row but the last"; :last-of-type cannot see past the
+			   interleaved [popover] siblings / scope wrappers, hence the ~ probes */
+			&:is([variant~="bordered"], [variant~="divided"]) cq-box {
+				& > button[popovertarget]:has(~ button[popovertarget]),
+				& > :has(> button[popovertarget]):has(~ :has(> button[popovertarget])) > button[popovertarget] {
+					border-block-end: var(--_bd);
+				}
+			}
+			&[variant~="rounded"][variant~="separate"] cq-box {
+				& > button[popovertarget],
+				& > :not(details, [popover]) > button[popovertarget] {
+					border-radius: var(--ui-accordion-border-radius);
+				}
+			}
+			&[variant~="pill"] cq-box {
+				& > button[popovertarget],
+				& > :not(details, [popover]) > button[popovertarget] {
+					border-radius: var(--radius-pill);
+				}
+			}
+			&[variant~="filled"] cq-box {
+				& > button[popovertarget],
+				& > :not(details, [popover]) > button[popovertarget] {
+					--ui-accordion-bg: var(--color-surface-alt);
+				}
+			}
+
+			/* the panel — centered top-layer card. UA popover reset owns display,
+			   position:fixed, inset:0 + margin:auto centering; never re-declare
+			   display here (cf. ui/card/media.lightbox.css) */
+			& cq-box [popover] {
+				background: var(--ui-accordion-popover-bg);
+				border: var(--_bd);
+				border-radius: var(--ui-accordion-border-radius);
+				box-shadow: var(--ui-accordion-popover-shadow);
+				color: inherit;
+				inline-size: min(90dvi, var(--ui-accordion-popover-inline-size));
+				max-block-size: min(80dvb, var(--ui-accordion-popover-block-size));
+				overflow: auto;
+				overscroll-behavior: contain;
+				padding: var(--ui-accordion-padding-block) var(--ui-accordion-padding-inline);
+				> header {
+					align-items: center;
+					display: flex;
+					font-size: var(--ui-accordion-summary-font-size, 1em);
+					font-weight: var(--ui-accordion-summary-font-weight, 500);
+					gap: 1ch;
+					justify-content: space-between;
+					margin-block-end: var(--ui-accordion-padding-block);
+					button {
+						appearance: none;
+						background: none;
+						border: 0;
+						border-radius: var(--ui-accordion-border-radius);
+						color: inherit;
+						cursor: pointer;
+						display: flex;
+						padding: 0.5ch;
+						&:hover { background: light-dark(var(--color-field), var(--color-surface-alt)); }
+						&:focus-visible { outline: var(--ring-width) solid var(--ring-color); }
+					}
+				}
+				/* panel body edge-trim — same intent as the ::details-content trim above */
+				> :not(header) {
+					margin-block: 0;
+					> :first-child { margin-block-start: 0; }
+					> :last-child { margin-block-end: 0; }
+				}
+			}
+			& cq-box [popover]::backdrop {
+				background: var(--ui-accordion-popover-backdrop);
+			}
+			@media (prefers-reduced-motion: no-preference) {
+				& cq-box [popover] {
+					opacity: 0;
+					translate: 0 0.5rem;
+					transition:
+						opacity var(--ui-accordion-duration) var(--ease-in-out),
+						translate var(--ui-accordion-duration) var(--ease-in-out),
+						display var(--ui-accordion-duration) allow-discrete,
+						overlay var(--ui-accordion-duration) allow-discrete;
+					&:popover-open { opacity: 1; translate: 0 0; }
+				}
+				& cq-box [popover]::backdrop {
+					opacity: 0;
+					transition:
+						opacity var(--ui-accordion-duration) var(--ease-in-out),
+						display var(--ui-accordion-duration) allow-discrete,
+						overlay var(--ui-accordion-duration) allow-discrete;
+				}
+				& cq-box [popover]:popover-open::backdrop { opacity: 1; }
 			}
 
 			/* === type: slide === */
@@ -526,6 +680,16 @@
 	/* web component item — renders inline (light DOM) */
 	:where(ui-accordion-item) {
 		display: contents;
+	}
+
+	/* popover-mode panel entry — standalone on purpose: a NESTED @starting-style
+	   does not re-fire (cf. ui/card/media.lightbox.css) */
+	@media (prefers-reduced-motion: no-preference) {
+		@starting-style {
+			ui-accordion cq-box [popover]:popover-open,
+			ui-accordion cq-box [popover]:popover-open::backdrop { opacity: 0; }
+			ui-accordion cq-box [popover]:popover-open { translate: 0 0.5rem; }
+		}
 	}
 
 	@keyframes accordion-media-in {

@@ -574,7 +574,9 @@ card-side hook is for card-scoped overrides only.
 In rendered cards the wrapper's variant is **preset-authored**: the preset's
 `parts.quote` value is written verbatim to the emitted `<ui-quote>` (the quote type
 defaults to `bigquote`, review/social to none), and `parts.accordion` does the same
-for the `<ui-accordion>` emitted by faq/recipe/job. `byline` avatars render through
+for the `<ui-accordion>` emitted by faq/recipe/job (its reserved word `popover`
+switches the emitted markup to `<button popovertarget>`/`<div popover>` pairs
+instead of `<details>` — native Popover API, no JS). `byline` avatars render through
 `@browser.style/avatar` (`<ui-avatar>` with an `<abbr>` initials fallback — the card
 sets no avatar styling at all; size it with the component's own `size=` attribute or
 `--ui-avatar-size`), and the `options`

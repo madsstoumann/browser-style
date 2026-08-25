@@ -3106,7 +3106,7 @@
 		}
 	]
 }</script>
-	<link rel="stylesheet" href="/dist/demo.295fd26a.min.css">
+	<link rel="stylesheet" href="/dist/demo.9c3e4082.min.css">
 
 	<style>
 		/* Off-screen cards skip style+layout. Page-scoped on purpose; 567px is this page's
@@ -3999,8 +3999,9 @@
 						<li><span>Radiator key</span></li>
 					</ul>
 					<ui-accordion variant="bordered rounded divided" group="howto-acc"><cq-box>
-						<details name="howto-acc">
-							<summary>Steps<ui-icon type="plus-minus"></ui-icon></summary>
+						<button type="button" popovertarget="howto-1-howto-acc-1">Steps<ui-icon type="arrow upright"></ui-icon></button>
+						<div popover id="howto-1-howto-acc-1">
+							<header><span>Steps</span><button type="button" popovertarget="howto-1-howto-acc-1" popovertargetaction="hide"><ui-icon type="cross"></ui-icon></button></header>
 							<ui-accordion variant="divided" group="howto-step"><cq-box>
 									<details name="howto-step">
 										<summary><span>Turn the heating off</span><ui-icon type="chevron right"></ui-icon></summary>
@@ -4019,7 +4020,7 @@
 										<div><p>Close the valve, turn the heating back on and top up the boiler pressure if it dropped below 1 bar.</p></div>
 									</details>
 							</cq-box></ui-accordion>
-						</details>
+						</div>
 					</cq-box></ui-accordion>
 				</ui-content>
 			</cq-box>

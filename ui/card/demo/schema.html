@@ -12,7 +12,7 @@
 	<link rel="preconnect" href="https://v4.browser.style">
 	<meta name="description" content="62 cards covering 53 distinct schema.org itemtypes on the card hosts (ItemList runs four cards; Quiz three; Review, EventSeries, Place and Person two each) — re-created with the modern &lt;ui-card&gt; engine: inline microdata (itemscope/itemtype/itemprop), no JSON-LD. The job card carries a 54th type as a second top-level item: EmployerAggregateRating. Two optional scripts: video.min.js polyfills the media invoker commands behind the podcast play button, save.min.js flips the save heart.">
 	<link rel="alternate" type="text/markdown" href="/ui/card/docs/schema.md">
-	<link rel="stylesheet" href="/dist/demo.295fd26a.min.css">
+	<link rel="stylesheet" href="/dist/demo.9c3e4082.min.css">
 
 	<style>
 		/* Off-screen cards skip style+layout. Page-scoped on purpose; 567px is this page's
@@ -931,8 +931,9 @@
 						<li itemprop="tool" itemscope itemtype="https://schema.org/HowToTool"><span itemprop="name">Radiator key</span></li>
 					</ul>
 					<ui-accordion variant="bordered rounded divided" group="howto-acc"><cq-box>
-						<details name="howto-acc">
-							<summary>Steps<ui-icon type="plus-minus"></ui-icon></summary>
+						<button type="button" popovertarget="howto-1-howto-acc-1">Steps<ui-icon type="arrow upright"></ui-icon></button>
+						<div popover id="howto-1-howto-acc-1">
+							<header><span>Steps</span><button type="button" popovertarget="howto-1-howto-acc-1" popovertargetaction="hide"><ui-icon type="cross"></ui-icon></button></header>
 							<ui-accordion variant="divided" group="howto-step"><cq-box>
 									<details name="howto-step" itemprop="step" itemscope itemtype="https://schema.org/HowToStep">
 										<summary><span itemprop="name">Turn the heating off</span><meta itemprop="position" content="1"><ui-icon type="chevron right"></ui-icon></summary>
@@ -951,7 +952,7 @@
 										<div><p itemprop="text">Close the valve, turn the heating back on and top up the boiler pressure if it dropped below 1 bar.</p></div>
 									</details>
 							</cq-box></ui-accordion>
-						</details>
+						</div>
 					</cq-box></ui-accordion>
 				</ui-content>
 			</cq-box>

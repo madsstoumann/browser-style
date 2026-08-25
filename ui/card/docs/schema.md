@@ -790,7 +790,7 @@ The card ROOT is the VideoObject, so media facts (`contentUrl`, `thumbnailUrl`, 
 
 ### How-to — `HowTo`
 
-Recipe's sibling: supplies/tools as part `list` (`HowToSupply`/`HowToTool`), steps as a nested `<ui-accordion>` of `HowToStep`, plus `totalTime` and `estimatedCost` → `MonetaryAmount`.
+Recipe's sibling: supplies/tools as part `list` (`HowToSupply`/`HowToTool`), steps as a nested `<ui-accordion>` of `HowToStep`, plus `totalTime` and `estimatedCost` → `MonetaryAmount`. The demo card opens its steps as a popover (preset `stack-accordion-popover`, the `parts.accordion` word `popover`) — same microdata, the outer Steps wrapper is a `<button popovertarget>` + `<div popover>` pair instead of a `<details>`; this pair is guarded by the `schema.compare.js` transcription gate.
 
 ### Q&A — `QAPage`
 

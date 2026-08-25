@@ -114,6 +114,16 @@
         "accordion": "bordered rounded divided"
       }
     },
+    "stack-accordion-popover": {
+      "name": "Stack Accordion Popover Preset",
+      "description": "Stack Accordion, but the outer accordion opens as a centered popover panel — the inner steps accordion stays a divided accordion inside it",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(16/9)",
+      "parts": {
+        "accordion": "bordered rounded divided popover"
+      }
+    },
     "stack-square": {
       "name": "Stack Square Preset",
       "description": "Column card with a square media frame — album covers, podcast artwork, anything whose artwork is 1:1",

@@ -65,6 +65,10 @@ const PAIRS = [
 	['ui-reveal:Quiz', 'ui/card/data/quiz-flashcard.json'],
 	/* pairable since the visible ISBN dropped its U+2060 word joiners (docs/schema.md § Book):
 	   the two sides used to spell the same ISBN differently and could never match */
+	/* paired when the popover mode landed — the outer Steps wrapper renders as a
+	   button + popover pair (preset stack-accordion-popover); pairing keeps the two
+	   spellings one spelling */
+	['HowTo', 'ui/card/data/howto.json'],
 	['Book', 'ui/card/data/book.json'],
 	['AchieveAction', 'ui/card/data/goal.json'],
 	['Service', 'ui/card/data/service.json'],
