@@ -1241,16 +1241,6 @@
         "accordion": "bordered divided"
       }
     },
-    "parts-steps-popover": {
-      "name": "Parts Demo — Steps Popover",
-      "description": "Column card whose outer accordion opens as a centered popover panel (parts.accordion popover); the inner steps accordion stays a divided accordion inside the panel",
-      "element": "ui-card",
-      "variant": "col",
-      "media": "asr(16/9)",
-      "parts": {
-        "accordion": "bordered rounded popover"
-      }
-    },
     "reveal-slide-right": {
       "name": "Reveal Demo — Slide (media right)",
       "description": "Reversed row slide reveal, 2:3 media trailing, pan hover, grey surface",

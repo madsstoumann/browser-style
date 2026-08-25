@@ -13,7 +13,7 @@
   "internalName": "Parts Demo — Recipe (steps popover)",
   "schemaType": "recipe",
   "preset": {
-   "$ref": "card-preset/parts-steps-popover"
+   "$ref": "card-preset/stack-accordion-popover"
   },
   "eyebrow": "Pasta",
   "headline": "Classic Spaghetti Carbonara",

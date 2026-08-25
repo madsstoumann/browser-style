@@ -107,7 +107,7 @@
 
 		/* preset parts= — sub-component variants (demo presets + demo data) */
 		const demoPresets = { ...presets, ...(await loadPresets('../data/card.presets.demo.json')) };
-		const partsDocs = await Promise.all(['parts-quote-01', 'parts-faq-01', 'parts-recipe-popover-01', 'parts-howto-popover-01']
+		const partsDocs = await Promise.all(['parts-quote-01', 'parts-faq-01', 'parts-recipe-popover-01']
 			.map(async (name) => [name, await (await fetch(`../data/demo/${name}.json`)).json()]));
 		for (const [name, ucf] of partsDocs) {
 			const heading = document.createElement('h2');
