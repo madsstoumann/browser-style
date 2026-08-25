@@ -8,7 +8,7 @@
 	<meta name="color-scheme" content="light dark">
 	<meta name="description" content="Six personal goals as schema.org AchieveAction cards — lose weight, walk 8,000 steps, run 100 km, read 12 books, save DKK 10,000 and one completed 5K. Each card pairs a visible progress bar or ring with hidden QuantitativeValue scopes: object carries the target, result the current value, actionStatus the state.">
 	<link rel="alternate" type="text/markdown" href="/ui/card/docs/schema.md">
-	<link rel="stylesheet" href="/dist/demo.a1e4a8b0.min.css">
+	<link rel="stylesheet" href="/dist/demo.eeefff83.min.css">
 	<style>
 		/* Off-screen cards skip style+layout — page-scoped, as on demo/schema.html.
 		   265px is THIS page's measured median card height (media-less cards run shorter than schema.html's 567). */
@@ -24,11 +24,7 @@
 			inset-inline-end: var(--ui-media-overlay-gap, 0.75rem);
 			z-index: 2;
 		}
-		/* goal rings sit centered in the content column — size comes from the size= axis */
-		ui-content > ui-progress-circular { align-self: center; }
-		/* themed cards: eyebrow and bar fill take the theme's AA hue ink instead of the accent default */
-		ui-card[theme] { --ui-content-eyebrow-ink: currentColor; }
-		ui-card[theme] progress { --ui-progress-fill: currentColor; }
+		/* ring centering + themed-host eyebrow/bar-fill relays moved to ui/card/content.css */
 	</style>
 </head>
 <body data-layout-root data-page-gap="2">
@@ -213,6 +209,38 @@
 					</ul>
 					<p data-part="meta">Jan 1 – Dec 31, 2026</p>
 					<span data-part="tags"><ui-chip theme="pale green">Yearly</ui-chip><ui-chip theme="pale green">Money</ui-chip></span>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+
+		<ui-card id="goal-meditate" variant="ovr(ts)" media="asr(1/1) hov(blur) chip(te)" itemscope itemtype="https://schema.org/AchieveAction">
+			<cq-box>
+				<ui-media><img src="/assets/images/mindfulness.png" alt="Calm illustration of a meditating figure" loading="lazy" decoding="async"><ui-chip data-type>AchieveAction</ui-chip></ui-media>
+				<ui-content theme="white muted">
+					<meta itemprop="actionStatus" content="https://schema.org/ActiveActionStatus">
+					<meta itemprop="startTime" content="2026-01-01">
+					<meta itemprop="endTime" content="2026-12-31">
+					<div itemprop="agent" itemscope itemtype="https://schema.org/Person" hidden>
+						<meta itemprop="name" content="Alex Winther">
+					</div>
+					<div itemprop="object" itemscope itemtype="https://schema.org/QuantitativeValue" hidden>
+						<meta itemprop="name" content="Daily meditation target">
+						<meta itemprop="value" content="10">
+						<meta itemprop="unitText" content="minutes">
+					</div>
+					<div itemprop="result" itemscope itemtype="https://schema.org/QuantitativeValue" hidden>
+						<meta itemprop="value" content="6">
+						<meta itemprop="unitText" content="minutes">
+					</div>
+					<small data-part="eyebrow">Mindfulness</small>
+					<h3 data-part="headline" itemprop="name">Meditate 10 minutes daily</h3>
+					<p data-part="summary" itemprop="description">Before the first coffee — breathe in, phone off.</p>
+					<ui-progress-circular size="lg" style="--ui-progress-circular-value: 60">
+						<progress max="10" value="6"></progress>
+						<small>Minutes</small>
+						<span>60%</span>
+					</ui-progress-circular>
+					<p data-part="meta">6 of 10 minutes · Jan 1 – Dec 31, 2026</p>
 				</ui-content>
 			</cq-box>
 		</ui-card>

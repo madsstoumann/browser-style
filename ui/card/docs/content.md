@@ -831,6 +831,8 @@ Host themes come from the shared `theme=` axis ([base/theme.md](../../base/theme
 | `--ui-content-eyebrow-ink` | eyebrow | theme |
 | `--ui-content-tag-bg` | tags pills | theme |
 
+On a themed card (`ui-card[theme]`) two of those follow the theme ink by default (`content.css` § themed-host relays): the **eyebrow** takes `currentColor` instead of the accent, and a bare `<progress>` bar's fill (`--ui-progress-fill`, from `@browser.style/progress`) does the same — so a pale-plate goal card's bar paints in its own hue ink. An explicit token write on the card or page still overrides both.
+
 ```css
 :where([theme~="black"]) {
   --ui-content-muted: color-mix(in oklab, currentColor 60%, transparent);
