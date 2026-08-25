@@ -3001,6 +3001,9 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
   :where([variant*="ovr("]) .ui-button:not([data-variant]) {
     color: var(--color-text, hsl(0, 0%, 15%));
   }
+  :where([variant*="ovr("]) :is(cq-box, summary) > ui-media {
+    min-block-size: 100%;
+  }
   :where(ui-card[theme]) {
     --ui-card-bg: var(--_theme-bg, light-dark(var(--color-surface), var(--ui-card-dark-bg, #1f2937)));
     color: var(--_theme-c, var(--_theme-ink, var(--color-text)));
