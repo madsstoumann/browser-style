@@ -26,8 +26,9 @@
 		}
 		/* goal rings sit centered in the content column — size comes from the size= axis */
 		ui-content > ui-progress-circular { align-self: center; }
-		/* themed cards: eyebrow takes the theme's AA hue ink instead of the accent default */
+		/* themed cards: eyebrow and bar fill take the theme's AA hue ink instead of the accent default */
 		ui-card[theme] { --ui-content-eyebrow-ink: currentColor; }
+		ui-card[theme] progress { --ui-progress-fill: currentColor; }
 	</style>
 </head>
 <body data-layout-root data-page-gap="2">
