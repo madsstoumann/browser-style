@@ -10369,10 +10369,6 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
   :where(ui-progress-circular) {
     --ui-progress-circular-size: 10em;
     --ui-progress-circular-track-size: 1em;
-    --ui-progress-circular-value: attr(value type(<number>), 0);
-    @supports not (background-color: attr(x type(<color>), red)) {
-      --ui-progress-circular-value: 0;
-    }
     --_mask:
       radial-gradient(
         circle farthest-side at center,
@@ -10385,7 +10381,13 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
     justify-items: center;
     position: relative;
     & progress {
-      background: conic-gradient(var(--ui-progress-circular-fill, var(--color-accent)) calc(1% * var(--ui-progress-circular-value)), var(--ui-progress-circular-track, var(--color-border)) 0);
+      --_pc-v: attr(value type(<number>), 0);
+      --_pc-m: attr(max type(<number>), 100);
+      @supports not (background-color: attr(x type(<color>), red)) {
+        --_pc-v: 0;
+        --_pc-m: 100;
+      }
+      background: conic-gradient(var(--ui-progress-circular-fill, var(--color-accent)) calc(1% * var(--ui-progress-circular-value, calc(100 * var(--_pc-v) / var(--_pc-m)))), var(--ui-progress-circular-track, var(--color-border)) 0);
       block-size: 100%;
       border: 0;
       border-radius: var(--radius-circle);

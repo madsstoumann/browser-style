@@ -6,7 +6,7 @@
 
 Load it on any page that uses a component reading author values from attributes —
 `ui-sticker fill=`, `ui-chip ink=`, `ui-avatar ring=`, `high-light fill=`,
-`ui-rating value=`, `ui-progress-circular value=`, `mega-menu menubar-height=`, `ui-gradient-text gradient=`,
+`ui-rating value=`, `ui-progress-circular > progress value=/max=`, `mega-menu menubar-height=`, `ui-gradient-text gradient=`,
 `[data-view]`, and the stagger per-child overrides `stagger-index=` /
 `stagger-step=` (+ their `data-` forms). It is a **no-op** where typed `attr()`
 is supported, so it is safe to load unconditionally.
@@ -42,7 +42,7 @@ duplicate and neither replaces the other — they cover **disjoint** attribute s
 
 | | `ui/base/polyfills/attr-fallback.js` | `layout/polyfills/attr-fallback.js` |
 |---|---|---|
-| Covers | component attributes — `ui-sticker fill=`, `ui-chip ink=`, `ui-avatar ring=`, `high-light fill=`, `ui-rating value=`, `ui-progress-circular value=`, `mega-menu menubar-height=`, `ui-gradient-text gradient=`, `[data-view]`, `stagger-index=`/`stagger-step=` (+ `data-` forms) | `<lay-out>` attributes — exactly `bleed=`, `columns=`, `rows=`, `max-width=`, `self=`, `size=` |
+| Covers | component attributes — `ui-sticker fill=`, `ui-chip ink=`, `ui-avatar ring=`, `high-light fill=`, `ui-rating value=`, `ui-progress-circular > progress value=/max=`, `mega-menu menubar-height=`, `ui-gradient-text gradient=`, `[data-view]`, `stagger-index=`/`stagger-step=` (+ `data-` forms) | `<lay-out>` attributes — exactly `bleed=`, `columns=`, `rows=`, `max-width=`, `self=`, `size=` |
 | Shape | ES module (documented `ATTR_MAP`, exports nothing) | IIFE body, still loaded as `type="module"` (it resolves its stylesheet via `import.meta.url`) |
 | Companion CSS | none | yes — injects `attr-fallback.css` |
 | Maps to | one CSS custom property **per selector** | one custom property **per attribute name** |

@@ -77,7 +77,7 @@ export const ATTR_MAP = {
 	},
 	'ui-play[fill]': { '--ui-play-bg': ['fill', 'rgb(0 0 0 / 0.55)'] },
 	'ui-play[ink]': { '--ui-play-c': ['ink', 'hsl(0 0% 100%)'] },
-	'ui-progress-circular[value]': { '--ui-progress-circular-value': ['value', '0'] },
+	'ui-progress-circular > progress': { '--_pc-v': ['value', '0'], '--_pc-m': ['max', '100'] },
 	'.ui-rating': { '--min': ['min', '1'], '--max': ['max', '5'], '--value': ['value', '3'] },
 	'ui-save[fill]': { '--ui-save-circle-bg': ['fill', 'Canvas'] },
 	'ui-save[ink]': { '--ui-save-c': ['ink', 'var(--color-text)'] },

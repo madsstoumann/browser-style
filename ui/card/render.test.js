@@ -2773,7 +2773,7 @@ describe('goal — AchieveAction', () => {
 
 	test('the ring shows the computed ratio and carries NO microdata of its own', () => {
 		const html = card();
-		assert.match(html, /<ui-progress-circular size="lg" theme="green" value="60">/);
+		assert.match(html, /<ui-progress-circular size="lg" theme="green">/);
 		assert.match(html, /<progress max="10" value="6"><\/progress>/);
 		assert.match(html, /<small>Minutes<\/small>/);
 		assert.match(html, /<span>60%<\/span>/);
@@ -2784,7 +2784,7 @@ describe('goal — AchieveAction', () => {
 	test('a completed goal maps to CompletedActionStatus', () => {
 		const html = card({ status: 'completed', current: { value: 10, unitText: 'minutes' } });
 		assert.match(html, /<meta itemprop="actionStatus" content="https:\/\/schema\.org\/CompletedActionStatus">/);
-		assert.match(html, /<ui-progress-circular size="lg" theme="green" value="100">/);
+		assert.match(html, /<ui-progress-circular size="lg" theme="green">/);
 	});
 
 	test('the hue is an allowlist, never verbatim data', () => {

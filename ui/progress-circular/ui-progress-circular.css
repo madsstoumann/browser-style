@@ -8,11 +8,6 @@
 	:where(ui-progress-circular) {
 		--ui-progress-circular-size: 10em;
 		--ui-progress-circular-track-size: 1em;
-		--ui-progress-circular-value: attr(value type(<number>), 0);
-		/* typed attr() has NO fallback in Safari/FF — restore the literal; ../base/polyfills/attr-fallback.js upgrades. Docs: ../base/polyfills/readme.md */
-		@supports not (background-color: attr(x type(<color>), red)) {
-			--ui-progress-circular-value: 0;
-		}
 		--_mask: radial-gradient(circle farthest-side at center, transparent calc(99% - var(--ui-progress-circular-track-size)), #FFF calc(100% - var(--ui-progress-circular-track-size)));
 		align-content: center;
 		aspect-ratio: 1;
@@ -22,8 +17,16 @@
 		position: relative;
 
 		& progress {
+			/* the arc reads the progress element's OWN value/max — one source of truth */
+			--_pc-v: attr(value type(<number>), 0);
+			--_pc-m: attr(max type(<number>), 100);
+			/* typed attr() has NO fallback in Safari/FF — restore the literals; ../base/polyfills/attr-fallback.js upgrades. Docs: ../base/polyfills/readme.md */
+			@supports not (background-color: attr(x type(<color>), red)) {
+				--_pc-v: 0;
+				--_pc-m: 100;
+			}
 			background: conic-gradient(
-				var(--ui-progress-circular-fill, var(--color-accent)) calc(1% * var(--ui-progress-circular-value)),
+				var(--ui-progress-circular-fill, var(--color-accent)) calc(1% * var(--ui-progress-circular-value, calc(100 * var(--_pc-v) / var(--_pc-m)))),
 				var(--ui-progress-circular-track, var(--color-border)) 0
 			);
 			block-size: 100%;

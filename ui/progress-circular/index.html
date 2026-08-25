@@ -9,7 +9,7 @@
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/ui/base/index.css">
 	<link rel="stylesheet" href="ui-progress-circular.css">
-	<!-- typed attr() — the value= attribute; Safari/FF need the fallback -->
+	<!-- typed attr() — the ring reads <progress> value/max; Safari/FF need the fallback -->
 	<script type="module" src="/ui/base/polyfills/attr-fallback.min.js" blocking="render"></script>
 </head>
 <body>
@@ -17,10 +17,10 @@
 
 	<h2>Progress — Circular</h2>
 	<p>
-		<strong>Progress — Circular</strong> draws a ring around the native <code>&lt;progress&gt;</code> element. The <code>--ui-progress-circular-value</code> custom property (0–100) drives the drawn arc, while the <code>value</code>/<code>max</code> attributes carry the raw pair for assistive technology. The center label is real, author-supplied text.
+		<strong>Progress — Circular</strong> draws a ring around the native <code>&lt;progress&gt;</code> element. The arc is computed from the element's own <code>value</code>/<code>max</code> attributes via typed <code>attr()</code> — one source of truth for assistive technology and the drawing. The center label is real, author-supplied text.
 	</p>
 
-	<ui-progress-circular value="40">
+	<ui-progress-circular>
 		<progress value="40" max="100"></progress>
 		<span>40%</span>
 	</ui-progress-circular>
@@ -28,7 +28,7 @@
 	<br>
 	<h2>Non-percent values</h2>
 	<p>The ring shows the ratio; the <code>&lt;progress&gt;</code> keeps the true numbers — no <code>max="100"</code> assumption.</p>
-	<ui-progress-circular value="68">
+	<ui-progress-circular>
 		<progress value="5400" max="8000"></progress>
 		<span>68%</span>
 	</ui-progress-circular>
@@ -36,19 +36,19 @@
 	<br>
 	<h2>Sizes</h2>
 	<p>The <code>size=</code> attribute steps the diameter: <code>sm</code> (6em), default (10em), <code>lg</code> (13em), <code>xl</code> (16em).</p>
-	<ui-progress-circular size="sm" value="25">
+	<ui-progress-circular size="sm">
 		<progress value="25" max="100"></progress>
 		<span>25%</span>
 	</ui-progress-circular>
-	<ui-progress-circular value="50">
+	<ui-progress-circular>
 		<progress value="50" max="100"></progress>
 		<span>50%</span>
 	</ui-progress-circular>
-	<ui-progress-circular size="lg" value="75">
+	<ui-progress-circular size="lg">
 		<progress value="75" max="100"></progress>
 		<span>75%</span>
 	</ui-progress-circular>
-	<ui-progress-circular size="xl" value="90">
+	<ui-progress-circular size="xl">
 		<progress value="90" max="100"></progress>
 		<span>90%</span>
 	</ui-progress-circular>
@@ -56,19 +56,19 @@
 	<br>
 	<h2>Track thickness</h2>
 	<p>The <code>track=</code> attribute steps the line thickness with the same names as <code>size=</code>: <code>sm</code> (0.5em, thin), default (1em), <code>lg</code> (1.5em, heavy), <code>xl</code> (2em).</p>
-	<ui-progress-circular size="sm" track="sm" value="65">
+	<ui-progress-circular size="sm" track="sm">
 		<progress value="65" max="100"></progress>
 		<span>65%</span>
 	</ui-progress-circular>
-	<ui-progress-circular size="sm" value="65">
+	<ui-progress-circular size="sm">
 		<progress value="65" max="100"></progress>
 		<span>65%</span>
 	</ui-progress-circular>
-	<ui-progress-circular size="sm" track="lg" value="65">
+	<ui-progress-circular size="sm" track="lg">
 		<progress value="65" max="100"></progress>
 		<span>65%</span>
 	</ui-progress-circular>
-	<ui-progress-circular size="sm" track="xl" value="65">
+	<ui-progress-circular size="sm" track="xl">
 		<progress value="65" max="100"></progress>
 		<span>65%</span>
 	</ui-progress-circular>
@@ -76,23 +76,23 @@
 	<br>
 	<h2>Theme</h2>
 	<p>The shared <code>theme=</code> axis colours the <em>arc</em>, not the box — the wrapper stays transparent and the label keeps the page ink.</p>
-	<ui-progress-circular size="sm" theme="green" value="100">
+	<ui-progress-circular size="sm" theme="green">
 		<progress value="5" max="5"></progress>
 		<span>100%</span>
 	</ui-progress-circular>
-	<ui-progress-circular size="sm" theme="red" value="35">
+	<ui-progress-circular size="sm" theme="red">
 		<progress value="35" max="100"></progress>
 		<span>35%</span>
 	</ui-progress-circular>
-	<ui-progress-circular size="sm" theme="orange" value="60">
+	<ui-progress-circular size="sm" theme="orange">
 		<progress value="60" max="100"></progress>
 		<span>60%</span>
 	</ui-progress-circular>
-	<ui-progress-circular size="sm" theme="slate" value="80">
+	<ui-progress-circular size="sm" theme="slate">
 		<progress value="80" max="100"></progress>
 		<span>80%</span>
 	</ui-progress-circular>
-	<ui-progress-circular size="sm" theme="pale blue" value="45">
+	<ui-progress-circular size="sm" theme="pale blue">
 		<progress value="45" max="100"></progress>
 		<span>45%</span>
 	</ui-progress-circular>
@@ -100,17 +100,17 @@
 	<br>
 	<h2>Label</h2>
 	<p>An optional <code>&lt;small&gt;</code> before the value renders as a muted, uppercase caption above the number — after the value, it captions below. Font size, weight and ink ride the <code>--ui-progress-circular-label-*</code> tokens.</p>
-	<ui-progress-circular value="68">
+	<ui-progress-circular>
 		<progress value="5400" max="8000"></progress>
 		<small>Steps</small>
 		<span>68%</span>
 	</ui-progress-circular>
-	<ui-progress-circular theme="green" value="100">
+	<ui-progress-circular theme="green">
 		<progress value="5" max="5"></progress>
 		<span>100%</span>
 		<small>Done</small>
 	</ui-progress-circular>
-	<ui-progress-circular size="sm" value="45" style="--ui-progress-circular-label-fw: var(--font-weight-bold); --ui-progress-circular-label-c: var(--color-accent)">
+	<ui-progress-circular size="sm" style="--ui-progress-circular-label-fw: var(--font-weight-bold); --ui-progress-circular-label-c: var(--color-accent)">
 		<progress value="45" max="100"></progress>
 		<small>Saved</small>
 		<span>45%</span>
@@ -118,7 +118,7 @@
 
 	<br>
 	<h2>Token customization</h2>
-	<ui-progress-circular value="75" style="--ui-progress-circular-size: 6em; --ui-progress-circular-track-size: .5em; --ui-progress-circular-fill: var(--color-success); --ui-progress-circular-value-fs: 150%">
+	<ui-progress-circular style="--ui-progress-circular-size: 6em; --ui-progress-circular-track-size: .5em; --ui-progress-circular-fill: var(--color-success); --ui-progress-circular-value-fs: 150%">
 		<progress value="3" max="4"></progress>
 		<span>3/4</span>
 	</ui-progress-circular>
@@ -126,7 +126,7 @@
 	<br>
 	<h2>With opposite color-scheme</h2>
 	<div class="bdrs-md cs-opposite pb-3 pi-3">
-		<ui-progress-circular value="40">
+		<ui-progress-circular>
 			<progress value="40" max="100"></progress>
 			<span>40%</span>
 		</ui-progress-circular>
@@ -136,7 +136,7 @@
 	<h2>With right-to-left</h2>
 	<p>Please note that clockwise indicators should not be flipped when the text direction is right-to-left.</p>
 	<div dir="rtl">
-		<ui-progress-circular value="40">
+		<ui-progress-circular>
 			<progress value="40" max="100"></progress>
 			<span>40%</span>
 		</ui-progress-circular>

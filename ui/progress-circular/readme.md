@@ -37,7 +37,7 @@ npm install @browser.style/base
 <link rel="stylesheet" href="@browser.style/base/index.css">
 <link rel="stylesheet" href="@browser.style/progress-circular/index.css">
 
-<ui-progress-circular value="68">
+<ui-progress-circular>
 	<progress value="5400" max="8000"></progress>
 	<span>68%</span>
 </ui-progress-circular>
@@ -52,16 +52,16 @@ Or via CSS `@import`:
 
 ### The value contract
 
-The wrapper's `value=` attribute is a **percentage (0–100)** driving the drawn arc — read by typed `attr(value type(<number>), 0)`, the v4 idiom. The `<progress>` element's `value`/`max` attributes carry the **raw pair** (`5400`/`8000`) — screen readers announce the real fraction, and the visible arc and the machine truth cannot contradict each other as long as both come from the same numbers.
+The `<progress>` element's own `value`/`max` attributes are the **single source of truth**: the arc percent is computed in CSS via typed `attr()` — `calc(100 * attr(value type(<number>), 0) / attr(max type(<number>), 100))` — so the raw pair (`5400`/`8000`) drives both what screen readers announce and what the ring draws. Nothing is duplicated, and the arc can never contradict the numbers.
 
-> Typed `attr()` has no fallback in Safari/Firefox — the sheet ships the `@supports not` guard restoring the literal `0`, and `ui/base/polyfills/attr-fallback.js` (its map carries `ui-progress-circular[value]`) upgrades to the element's own attribute. Pages using the ring outside the demo bundle need that polyfill tag. `--ui-progress-circular-value` still works as a direct override.
+> Typed `attr()` has no fallback in Safari/Firefox — the sheet ships the `@supports not` guard restoring the literals, and `ui/base/polyfills/attr-fallback.js` (its map carries `ui-progress-circular > progress`) upgrades from the attributes. Pages using the ring outside the demo bundle need that polyfill tag. `--ui-progress-circular-value` (a 0–100 percent) still works as a direct override of the computed arc.
 
 ### Value and label
 
 Direct children other than the `<progress>` stack as centered rows inside the ring (the `<progress>` itself is absolutely positioned). The **value** is any child — use real text (`68%`, `7 / 12`), not a CSS counter; it participates in the accessibility tree. An optional **label** is a `<small>` placed before the value — a muted, uppercase caption line above the number, with its own tokens:
 
 ```html
-<ui-progress-circular size="sm" value="68">
+<ui-progress-circular size="sm">
 	<progress value="5400" max="8000"></progress>
 	<small>Steps</small>
 	<span>68%</span>
@@ -107,7 +107,7 @@ The `track=` attribute steps the ring's line thickness, using the same step name
 The shared `theme=` axis (nine hues + `pale`/`muted` modifiers, from `@browser.style/base`) colours the **arc**, not the box — the component opts out of the resolver's universal paint, so the wrapper stays transparent and the label keeps the page ink:
 
 ```html
-<ui-progress-circular theme="green" value="100">
+<ui-progress-circular theme="green">
 	<progress value="5" max="5"></progress>
 	<span>100%</span>
 </ui-progress-circular>
@@ -125,7 +125,7 @@ A themed ring's track becomes the hue's **pale plate** (the same `color-mix` rec
 |---|---|---|
 | `--ui-progress-circular-size` | `10em` | Ring diameter (`inline-size`; block size follows via `aspect-ratio: 1`) |
 | `--ui-progress-circular-track-size` | `1em` | Ring thickness |
-| `--ui-progress-circular-value` | `attr(value type(<number>), 0)` | Percent of the circle filled (0–100) — normally set via the `value=` attribute |
+| `--ui-progress-circular-value` | computed from `<progress>` `value`/`max` | Percent of the circle filled (0–100) — set it only to override the computed arc |
 | `--ui-progress-circular-fill` | `var(--color-accent)` | Arc color |
 | `--ui-progress-circular-track` | `var(--color-border)` | Remaining-track color |
 | `--ui-progress-circular-value-fs` | `calc((size − 2·track) / 4)` | Value font size — scales with the ring's hole, so it fits any `size=`/`track=` combination |
@@ -135,7 +135,7 @@ A themed ring's track becomes the hue's **pale plate** (the same `color-mix` rec
 | `--ui-progress-circular-label-c` | `var(--color-text-muted)` | Label ink |
 
 ```html
-<ui-progress-circular value="40" style="--ui-progress-circular-size: 6em; --ui-progress-circular-fill: var(--color-success)">
+<ui-progress-circular style="--ui-progress-circular-size: 6em; --ui-progress-circular-fill: var(--color-success)">
 	<progress value="2" max="5"></progress>
 	<span>2/5</span>
 </ui-progress-circular>
