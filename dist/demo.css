@@ -10369,7 +10369,10 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
   :where(ui-progress-circular) {
     --ui-progress-circular-size: 10em;
     --ui-progress-circular-track-size: 1em;
-    --ui-progress-circular-value: 0;
+    --ui-progress-circular-value: attr(value type(<number>), 0);
+    @supports not (background-color: attr(x type(<color>), red)) {
+      --ui-progress-circular-value: 0;
+    }
     --_mask:
       radial-gradient(
         circle farthest-side at center,

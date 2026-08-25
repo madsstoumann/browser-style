@@ -2152,7 +2152,7 @@ const DETAILS = {
 		if (target > 0 && Number.isFinite(current)) {
 			const pct = Math.round(Math.min(100, Math.max(0, current / target * 100)));
 			const hue = HUES.has(d.hue) ? ` theme="${d.hue}"` : '';
-			html += `<ui-progress-circular size="lg"${hue} style="--ui-progress-circular-value: ${pct}"><progress max="${esc(d.target.value)}" value="${esc(d.current.value)}"></progress>${d.progressLabel ? `<small>${esc(d.progressLabel)}</small>` : ''}<span>${pct}%</span></ui-progress-circular>`;
+			html += `<ui-progress-circular size="lg"${hue} value="${pct}"><progress max="${esc(d.target.value)}" value="${esc(d.current.value)}"></progress>${d.progressLabel ? `<small>${esc(d.progressLabel)}</small>` : ''}<span>${pct}%</span></ui-progress-circular>`;
 		}
 		const foot = [d.progressDisplay, d.dateRangeDisplay].filter(Boolean).join(' · ');
 		if (foot) html += `<p data-part="meta">${esc(foot)}</p>`;

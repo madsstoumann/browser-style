@@ -8,7 +8,9 @@
 	<meta name="color-scheme" content="light dark">
 	<meta name="description" content="Six personal goals as schema.org AchieveAction cards — lose weight, walk 8,000 steps, run 100 km, read 12 books, save DKK 10,000 and one completed 5K. Each card pairs a visible progress bar or ring with hidden QuantitativeValue scopes: object carries the target, result the current value, actionStatus the state.">
 	<link rel="alternate" type="text/markdown" href="/ui/card/docs/schema.md">
-	<link rel="stylesheet" href="/dist/demo.ecb6a7ad.min.css">
+	<!-- typed attr() — the rings' value= attribute; Safari/FF need the fallback -->
+	<script type="module" src="/ui/base/polyfills/attr-fallback.min.js" blocking="render"></script>
+	<link rel="stylesheet" href="/dist/demo.02a0b23e.min.css">
 	<style>
 		/* Off-screen cards skip style+layout — page-scoped, as on demo/schema.html.
 		   265px is THIS page's measured median card height (media-less cards run shorter than schema.html's 567). */
@@ -100,7 +102,7 @@
 					<small data-part="eyebrow">Activity</small>
 					<h3 data-part="headline" itemprop="name">Walk 8,000 steps daily</h3>
 					<p data-part="summary" itemprop="description">A daily floor, not a ceiling — tracked from the watch, reset at midnight.</p>
-					<ui-progress-circular style="--ui-progress-circular-value: 68">
+					<ui-progress-circular value="68">
 						<progress max="8000" value="5400"></progress>
 						<small>Steps</small>
 						<span>68%</span>
@@ -235,7 +237,7 @@
 					<small data-part="eyebrow">Mindfulness</small>
 					<h3 data-part="headline" itemprop="name">Meditate 10 minutes daily</h3>
 					<p data-part="summary" itemprop="description">Before the first coffee — breathe in, phone off.</p>
-					<ui-progress-circular size="lg" theme="green" style="--ui-progress-circular-value: 60">
+					<ui-progress-circular size="lg" theme="green" value="60">
 						<progress max="10" value="6"></progress>
 						<small>Minutes</small>
 						<span>60%</span>
@@ -270,7 +272,7 @@
 					<small data-part="eyebrow">Milestone</small>
 					<h3 data-part="headline" itemprop="name">Complete a 5K run</h3>
 					<p data-part="summary" itemprop="description">Twelve weeks from the sofa to the start line — and across the finish.</p>
-					<ui-progress-circular theme="green" style="--ui-progress-circular-value: 100">
+					<ui-progress-circular theme="green" value="100">
 						<progress max="5" value="5"></progress>
 						<small>Done</small>
 						<span>100%</span>

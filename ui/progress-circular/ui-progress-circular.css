@@ -8,7 +8,11 @@
 	:where(ui-progress-circular) {
 		--ui-progress-circular-size: 10em;
 		--ui-progress-circular-track-size: 1em;
-		--ui-progress-circular-value: 0;
+		--ui-progress-circular-value: attr(value type(<number>), 0);
+		/* typed attr() has NO fallback in Safari/FF — restore the literal; ../base/polyfills/attr-fallback.js upgrades. Docs: ../base/polyfills/readme.md */
+		@supports not (background-color: attr(x type(<color>), red)) {
+			--ui-progress-circular-value: 0;
+		}
 		--_mask: radial-gradient(circle farthest-side at center, transparent calc(99% - var(--ui-progress-circular-track-size)), #FFF calc(100% - var(--ui-progress-circular-track-size)));
 		align-content: center;
 		aspect-ratio: 1;
