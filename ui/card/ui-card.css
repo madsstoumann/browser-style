@@ -148,8 +148,10 @@
 	:where([variant*="ovr(be)"]) { --ui-content-ov-justify: end;    --ui-content-ov-align: end;    --ui-content-ov-text: end;    --ui-media-scrim-default: var(--ui-media-scrim-be); }
 	/* a solid CTA keeps its light surface, so its text must stay dark */
 	:where([variant*="ovr("]) .ui-button:not([data-variant]) { color: var(--color-text, hsl(0, 0%, 15%)); }
-	/* overlaid content taller than the asr() frame: the frame stretches to the stacked row */
-	:where([variant*="ovr("]) :is(cq-box, summary) > ui-media { min-block-size: 100%; }
+	/* overlaid content taller than the asr() frame: the frame stretches to the stacked row.
+	   inline-size pins the frame to the track so aspect-ratio can't widen it past the card;
+	   min-inline-size: 0 blocks the ratio transfer of the block minimum into a min WIDTH */
+	:where([variant*="ovr("]) :is(cq-box, summary) > ui-media { inline-size: 100%; min-block-size: 100%; min-inline-size: 0; }
 
 	/* === THEMES — theme= (the shared cross-component axis) === */
 	/* surface + ink come from the resolved --_theme-* pair (base/theme.css) */
