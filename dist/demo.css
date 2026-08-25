@@ -10416,6 +10416,7 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
       background-color: transparent;
       color: inherit;
       --ui-progress-circular-fill: var(--_theme-bg, var(--color-accent));
+      --ui-progress-circular-track: color-mix(in srgb, var(--_theme-bg, var(--color-accent)), var(--color-surface) 80%);
     }
     &[size~=sm] {
       --ui-progress-circular-size: 6em;
@@ -12464,6 +12465,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
   }
   :where(ui-content) > ui-progress-circular {
     align-self: center;
+    margin-block: auto;
   }
   :where([content~=scr]) ui-content,
   :where([content~="scr(y)"]) ui-content,

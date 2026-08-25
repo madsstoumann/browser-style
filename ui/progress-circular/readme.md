@@ -115,7 +115,7 @@ The shared `theme=` axis (nine hues + `pale`/`muted` modifiers, from `@browser.s
 <ui-progress-circular theme="pale red" …>  <!-- washed-out arc via the pale modifier -->
 ```
 
-The track stays `--color-border` under every theme.
+A themed ring's track becomes the hue's **pale plate** (the same `color-mix` recipe as `theme="pale …"`), so arc and track read as one system — `theme="green"` gives a green arc on a pale-green track. Unthemed rings keep the `--color-border` track.
 
 ---
 

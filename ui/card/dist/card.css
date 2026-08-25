@@ -1592,6 +1592,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
   }
   :where(ui-content) > ui-progress-circular {
     align-self: center;
+    margin-block: auto;
   }
   :where([content~=scr]) ui-content,
   :where([content~="scr(y)"]) ui-content,

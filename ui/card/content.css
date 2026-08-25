@@ -182,8 +182,9 @@
 	:where(ui-card[theme]) { --ui-content-eyebrow-ink: currentColor; }
 	:where(ui-card[theme]) progress { --ui-progress-fill: currentColor; }
 
-	/* goal rings (ui/progress-circular) center in the column */
-	:where(ui-content) > ui-progress-circular { align-self: center; }
+	/* goal rings (ui/progress-circular) center in the column; auto block margins soak up
+	   free column space (overlay cards) so trailing lines press to block-end */
+	:where(ui-content) > ui-progress-circular { align-self: center; margin-block: auto; }
 
 	/* === SCROLL — content="scr"; the fade primitive lives in ../base/scroll.css === */
 	:where([content~="scr"]) ui-content, :where([content~="scr(y)"]) ui-content,

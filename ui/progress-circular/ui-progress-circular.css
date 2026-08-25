@@ -55,6 +55,8 @@
 			background-color: transparent;
 			color: inherit;
 			--ui-progress-circular-fill: var(--_theme-bg, var(--color-accent));
+			/* track = the hue's pale plate — same mix as theme.css § pale */
+			--ui-progress-circular-track: color-mix(in srgb, var(--_theme-bg, var(--color-accent)), var(--color-surface) 80%);
 		}
 
 		/* sizes */
