@@ -2731,3 +2731,86 @@ describe('map links', () => {
 		assert.doesNotMatch(html, /<script>bad/);
 	});
 });
+
+/* ── quiz — carousel deck (preset.element lay-out) ─────────────────────────────
+   One <ui-card> slide per graded question inside a <lay-out overflow> scroller, the
+   Quiz's own properties on a wrapping <section>. Presentation, so it is a PRESET
+   (element + carousel.media), never a field. The `gate` media token is the one
+   behaviour switch: it arms one required radio per question, and carousel.css hides
+   every slide after an unanswered one, so the next arrow stays disabled until the
+   current question is answered. Docs: docs/schema.md § Quiz */
+describe('quiz — carousel deck (lay-out preset)', () => {
+	const cards = [
+		{ question: 'What can a qubit hold?', options: [{ text: 'Two values' }, { text: 'A superposition', correct: true }] },
+		{ question: 'Entangled qubits, one measured?', options: [{ text: 'Fixed at once', correct: true }, { text: 'A signal' }] },
+		{ question: 'Why error correction?', options: [{ text: 'Random output' }, { text: 'Decoherence', correct: true }] }
+	];
+	const presets = {
+		gated: { element: 'lay-out', variant: 'col', media: 'asr(16/9)', content: 'wid(2xl)', carousel: { media: 'nav(end) arw(drk) gate' } },
+		free: { element: 'lay-out', variant: 'col', media: 'asr(16/9)', content: 'wid(2xl)', carousel: { media: 'nav(end) arw(drk)' } },
+		stack: { element: 'ui-card', variant: 'col', media: 'asr(16/9)' }
+	};
+	const details = { format: 'multiple-choice', subject: 'Quantum computing', cards };
+	const quiz = (preset, d = details, extra = {}) => renderCard(
+		{ fields: { schemaType: 'quiz', headline: 'Check yourself', summary: 'Three graded questions.', media: [{ mediaType: 'image', src: '/q.png', alt: 'Q' }], details: d, preset: { $ref: `card-preset/${preset}` }, ...extra } },
+		presets);
+
+	test('the root is ONE Quiz <section> carrying the deck metas — the slides are its parts', () => {
+		const html = quiz('gated');
+		assert.match(html, /^<section itemscope itemtype="https:\/\/schema\.org\/Quiz">/);
+		assert.match(html, /<meta itemprop="name" content="Check yourself">/);
+		assert.match(html, /<meta itemprop="description" content="Three graded questions.">/);
+		assert.match(html, /<meta itemprop="learningResourceType" content="Practice problem">/);
+		assert.match(html, /<div itemprop="about" itemscope itemtype="https:\/\/schema\.org\/Thing" hidden><meta itemprop="name" content="Quantum computing"><\/div>/);
+		assert.equal(count(html, 'itemtype="https://schema.org/Quiz"'), 1);
+		assert.equal(count(html, 'itemprop="hasPart" itemscope itemtype="https://schema.org/Question"'), 3);
+	});
+
+	test('one <ui-card> slide per question in the scroller, numbered, headed by the deck name', () => {
+		const html = quiz('gated');
+		assert.match(html, /<lay-out md="columns\(1\)" overflow media="nav\(end\) arw\(drk\) gate">/);
+		assert.equal(count(html, '<ui-card variant="col">'), 3);
+		assert.match(html, /<small data-part="eyebrow">Question 2 of 3<\/small>/);
+		assert.equal(count(html, '<h3 data-part="headline">Check yourself</h3>'), 3, 'a label per slide, never a second name property');
+		assert.equal(count(html, 'itemprop="image"'), 3, 'the deck image repeats per slide');
+		assert.equal(count(html, '<ui-content content="wid(2xl)">'), 3);
+		assert.equal(count(html, '<ui-media media="asr(16/9)">'), 3);
+	});
+
+	test('the gate token arms ONE required radio per question; without it, none', () => {
+		const gated = quiz('gated');
+		assert.equal(count(gated, ' required>'), 3);
+		assert.match(gated, /name="quiz-check-yourself-q1" required>/);
+		assert.match(gated, /name="quiz-check-yourself-q3" required>/);
+		const free = quiz('free');
+		assert.equal(count(free, 'required'), 0);
+		assert.match(free, /<lay-out md="columns\(1\)" overflow media="nav\(end\) arw\(drk\)">/);
+	});
+
+	/* the question markup is SHARED with the single-card deck: same fieldset, same
+	   legend, same option rows — only `required` differs. A drift here would let the
+	   two graded presentations disagree on the schema.org shape */
+	test('each slide reuses the graded fieldset byte-for-byte (minus required)', () => {
+		const pick = (html) => (html.match(/<fieldset[\s\S]*?<\/fieldset>/g) || []).map((f) => f.replaceAll(' required>', '>'));
+		const deck = pick(quiz('stack'));
+		const slides = pick(quiz('gated'));
+		assert.equal(deck.length, 3);
+		assert.deepEqual(slides, deck);
+	});
+
+	test('a flashcard deck declines the scroller — the card renders, with a loud comment', () => {
+		const html = quiz('gated', { format: 'flashcard', cards: [{ question: 'What is a qubit?', answer: 'The quantum unit.' }] });
+		assert.match(html, /^<ui-card /);
+		assert.match(html, /<!-- lay-out preset ignored: a scroller deck needs details\.format multiple-choice -->/);
+	});
+
+	/* the heading goes through renderInline (escaped, b/em/code allowlist — the envelope's
+	   own headline rule); the name meta and the group slug read plain(), which strips tags */
+	test('a hostile deck name is escaped on every slide and never reaches the group name raw', () => {
+		const html = quiz('gated', details, { headline: '<img src=x onerror=alert(1)>' });
+		assert.ok(!html.includes('<img src=x'));
+		assert.equal(count(html, '&lt;img src=x onerror=alert(1)&gt;'), 3, 'one escaped heading per slide');
+		assert.ok(!html.includes('itemprop="name" content="<'), 'the name meta is the plain text, or absent');
+		assert.match(html, /name="quiz-card-q1" required>/, 'the slug falls back, as the single-card deck does');
+	});
+});

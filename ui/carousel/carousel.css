@@ -126,6 +126,9 @@
 		anchor-name: --ui-carousel-timeline;
 		anchor-scope: --ui-carousel-timeline;
 	}
+	/* gate — a scroller DECK: every slide after one holding an :invalid control is hidden, so the
+	   next arrow is natively :disabled until the current slide validates. Docs: ui/card/docs/media.carousel.md § Gate */
+	:where(lay-out[overflow]):where([media~="gate"]) > :has(:invalid) ~ * { display: none; }
 	/* arrows present: base glyph vars */
 	:where(ui-card, ui-reveal, ui-media, lay-out[overflow]) {
 		&:where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"], [media*="nav(abv)"], [media*="nav(end)"]) {

@@ -158,6 +158,7 @@ drift from the CSS. (`md:/lg:` is the container-query prefix column: only `asr()
 | `clip` | corners | — | — | yes | --ui-media-radius | — | — |
 | `loop` | carousel | — | — | yes | --_play-block --_play-inline --_play-justify --_play-size | — | — |
 | `stagger` | carousel | — | — | yes | --_stg-base-i --_stg-crd-i | — | — |
+| `gate` | carousel | — | — | yes | — | — | — |
 | `pages` | carousel | — | — | yes | --_pg | — | — |
 | `open:furniture` | open-state | — | — | yes | — | — | — |
 <!-- /tokens -->

@@ -229,6 +229,28 @@
         "name": "quiz-flashcard"
       }
     },
+    "quiz-carousel": {
+      "name": "Quiz Carousel Preset",
+      "description": "Graded quiz as a scroller deck — one column card per question inside a lay-out overflow, controls in the content end with filled arrows; gate keeps the next arrow disabled until the current question is answered",
+      "element": "lay-out",
+      "variant": "col",
+      "media": "asr(16/9)",
+      "content": "wid(2xl)",
+      "carousel": {
+        "media": "nav(end) arw(drk) gate"
+      }
+    },
+    "quiz-carousel-free": {
+      "name": "Quiz Carousel Preset (free)",
+      "description": "The scroller deck with every slide reachable from the start — dots and both arrows live, no gate",
+      "element": "lay-out",
+      "variant": "col",
+      "media": "asr(16/9)",
+      "content": "wid(2xl)",
+      "carousel": {
+        "media": "nav(end) arw(drk)"
+      }
+    },
     "hero-reveal": {
       "name": "Hero Reveal Preset",
       "description": "Full-width reveal hero — expand on small containers, scale on large; dark panel — from the ui/reveal hero demo",

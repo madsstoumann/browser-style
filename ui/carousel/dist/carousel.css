@@ -160,6 +160,9 @@
     anchor-name: --ui-carousel-timeline;
     anchor-scope: --ui-carousel-timeline;
   }
+  :where(lay-out[overflow]):where([media~=gate]) > :has(:invalid) ~ * {
+    display: none;
+  }
   :where(ui-card, ui-reveal, ui-media, lay-out[overflow]) {
     &:where([media*=nav]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"], [media*="nav(abv)"], [media*="nav(end)"]) {
       --ui-carousel-chevron-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18l6-6-6-6'/%3E%3C/svg%3E");

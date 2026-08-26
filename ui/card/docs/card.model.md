@@ -887,7 +887,7 @@ default.
 
 | Field | Values |
 |---|---|
-| `element` | `ui-card` (default) · `ui-reveal` · `ui-media` · `ui-content` |
+| `element` | `ui-card` (default) · `ui-reveal` · `ui-media` · `ui-content` · `lay-out` (scroller deck — a graded quiz, one card per question) |
 | `variant` / `media` / `media-open` / `content` | token strings — § Token vocabularies |
 | `theme` | § Token vocabularies |
 | `text` | `summary` (default) · `body` · `both` |
@@ -988,6 +988,7 @@ is live. One value per token instance — `chip(ts) chip(red)`, never `chip(ts r
 | `clip` | *(bare flag)* | — | — |
 | `loop` | *(bare flag)* | — | — |
 | `stagger` | *(bare flag)* | — | — |
+| `gate` | *(bare flag)* | — | — |
 | `pages` | *(bare flag)* | — | — |
 | `open:furniture` | *(bare flag)* | — | — |
 <!-- /tokens -->

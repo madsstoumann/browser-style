@@ -12,7 +12,7 @@
 	<link rel="preconnect" href="https://v4.browser.style">
 	<meta name="description" content="61 cards covering 52 distinct schema.org itemtypes on the card hosts (ItemList runs four cards; Quiz three; Review, EventSeries, Place and Person two each) — re-created with the modern &lt;ui-card&gt; engine: inline microdata (itemscope/itemtype/itemprop), no JSON-LD. The job card carries a 53rd type as a second top-level item: EmployerAggregateRating. Two optional scripts: video.min.js polyfills the media invoker commands behind the podcast play button, save.min.js flips the save heart.">
 	<link rel="alternate" type="text/markdown" href="/ui/card/docs/schema.md">
-	<link rel="stylesheet" href="/dist/demo.d1429f20.min.css">
+	<link rel="stylesheet" href="/dist/demo.79927e11.min.css">
 
 	<style>
 		/* Off-screen cards skip style+layout. Page-scoped on purpose; 567px is this page's
@@ -858,23 +858,75 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card id="schema-quiz-mc" variant="col" media="asr(16/9) chip(te)" itemscope itemtype="https://schema.org/Quiz">
+		<section itemscope itemtype="https://schema.org/Quiz">
+		<meta itemprop="name" content="Quantum computing — check yourself"><meta itemprop="description" content="Three graded multiple-choice questions, one per slide. Pick an answer and it tells you whether you were right."><meta itemprop="learningResourceType" content="Practice problem">
+		<div itemprop="about" itemscope itemtype="https://schema.org/Thing" hidden><meta itemprop="name" content="Quantum computing"></div><div itemprop="educationalAlignment" itemscope itemtype="https://schema.org/AlignmentObject" hidden><meta itemprop="alignmentType" content="educationalSubject"><meta itemprop="targetName" content="Quantum computing"></div>
+		<lay-out md="columns(1)" overflow media="nav(end) arw(drk) gate">
+		<ui-card variant="col" media="asr(16/9) chip(te)">
 			<cq-box>
 				<ui-media><img src="/assets/images/quantum.png" alt="Stylised quantum processor" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/quantum.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/quantum.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/quantum.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/quantum.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/quantum.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>Quiz</ui-chip></ui-media>
-				<ui-content>
-					<meta itemprop="learningResourceType" content="Practice problem">
-					<div itemprop="educationalAlignment" itemscope itemtype="https://schema.org/AlignmentObject" hidden><meta itemprop="alignmentType" content="educationalSubject"><meta itemprop="targetName" content="Quantum computing"></div>
-					<small data-part="eyebrow">Practice questions</small>
-					<h3 data-part="headline" itemprop="name">Quantum computing — check yourself</h3>
-					<p data-part="summary" itemprop="description">The same three ideas as the flashcards, graded. Pick an answer and it tells you whether you were right.</p>
-					<p data-part="meta">Subject: <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><span itemprop="name">Quantum computing</span></span> · 3 questions · graded as you answer</p>
-					<fieldset itemprop="hasPart" itemscope itemtype="https://schema.org/Question"><legend itemprop="text">What can a qubit hold that a classical bit cannot?</legend><meta itemprop="eduQuestionType" content="Multiple choice"> <ul data-part="options" aria-live="polite"><li itemprop="suggestedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="position" content="1"> <label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q1"> <span itemprop="text">Two values at once, permanently</span></label> <ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip> </li><li itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="position" content="2"> <label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q1"> <span itemprop="text">A superposition of 0 and 1 that collapses when measured</span></label> <ui-chip data-verdict="correct" theme="pale green">Correct</ui-chip> </li><li itemprop="suggestedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="position" content="3"> <label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q1"> <span itemprop="text">Any number between 0 and 1, read back exactly</span></label> <ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip> </li><li itemprop="suggestedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="position" content="4"> <label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q1"> <span itemprop="text">Nothing — a qubit is a bit with a faster clock</span></label> <ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip> </li></ul> </fieldset>
-					<fieldset itemprop="hasPart" itemscope itemtype="https://schema.org/Question"><legend itemprop="text">Two entangled qubits are separated by a kilometre. What happens when one is measured?</legend><meta itemprop="eduQuestionType" content="Multiple choice"> <ul data-part="options" aria-live="polite"><li itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="position" content="1"> <label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q2"> <span itemprop="text">The other's outcome is fixed in the same instant</span></label> <ui-chip data-verdict="correct" theme="pale green">Correct</ui-chip> </li><li itemprop="suggestedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="position" content="2"> <label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q2"> <span itemprop="text">A signal travels between them at the speed of light</span></label> <ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip> </li><li itemprop="suggestedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="position" content="3"> <label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q2"> <span itemprop="text">The other qubit is destroyed</span></label> <ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip> </li><li itemprop="suggestedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="position" content="4"> <label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q2"> <span itemprop="text">Nothing; entanglement does not survive separation</span></label> <ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip> </li></ul> </fieldset>
-					<fieldset itemprop="hasPart" itemscope itemtype="https://schema.org/Question"><legend itemprop="text">Why does a quantum computer need error correction?</legend><meta itemprop="eduQuestionType" content="Multiple choice"> <ul data-part="options" aria-live="polite"><li itemprop="suggestedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="position" content="1"> <label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q3"> <span itemprop="text">Because its output is random and must be averaged</span></label> <ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip> </li><li itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="position" content="2"> <label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q3"> <span itemprop="text">Because physical qubits decohere in microseconds</span></label> <ui-chip data-verdict="correct" theme="pale green">Correct</ui-chip> </li><li itemprop="suggestedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="position" content="3"> <label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q3"> <span itemprop="text">Because superposition cannot be measured twice</span></label> <ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip> </li><li itemprop="suggestedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="position" content="4"> <label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q3"> <span itemprop="text">It does not — quantum states are exact</span></label> <ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip> </li></ul> </fieldset>
-					<span data-part="tags"><ui-chip itemprop="keywords">Practice problems</ui-chip><ui-chip itemprop="keywords">Physics</ui-chip></span>
+				<ui-content content="wid(2xl)">
+					<small data-part="eyebrow">Question 1 of 3</small>
+					<h3 data-part="headline">Quantum computing — check yourself</h3>
+					<fieldset itemprop="hasPart" itemscope itemtype="https://schema.org/Question">
+					<legend itemprop="text">What can a qubit hold that a classical bit cannot?</legend><meta itemprop="eduQuestionType" content="Multiple choice">
+					<ul data-part="options" aria-live="polite"><li itemprop="suggestedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="position" content="1">
+						<label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q1" required> <span itemprop="text">Two values at once, permanently</span></label> <ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip>
+					</li><li itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="position" content="2">
+						<label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q1"> <span itemprop="text">A superposition of 0 and 1 that collapses when measured</span></label> <ui-chip data-verdict="correct" theme="pale green">Correct</ui-chip>
+					</li><li itemprop="suggestedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="position" content="3">
+						<label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q1"> <span itemprop="text">Any number between 0 and 1, read back exactly</span></label> <ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip>
+					</li><li itemprop="suggestedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="position" content="4">
+						<label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q1"> <span itemprop="text">Nothing — a qubit is a bit with a faster clock</span></label> <ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip>
+					</li></ul>
+				</fieldset>
 				</ui-content>
 			</cq-box>
 		</ui-card>
+		<ui-card variant="col" media="asr(16/9) chip(te)">
+			<cq-box>
+				<ui-media><img src="/assets/images/quantum.png" alt="Stylised quantum processor" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/quantum.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/quantum.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/quantum.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/quantum.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/quantum.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>Quiz</ui-chip></ui-media>
+				<ui-content content="wid(2xl)">
+					<small data-part="eyebrow">Question 2 of 3</small>
+					<h3 data-part="headline">Quantum computing — check yourself</h3>
+					<fieldset itemprop="hasPart" itemscope itemtype="https://schema.org/Question">
+					<legend itemprop="text">Two entangled qubits are separated by a kilometre. What happens when one is measured?</legend><meta itemprop="eduQuestionType" content="Multiple choice">
+					<ul data-part="options" aria-live="polite"><li itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="position" content="1">
+						<label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q2" required> <span itemprop="text">The other's outcome is fixed in the same instant</span></label> <ui-chip data-verdict="correct" theme="pale green">Correct</ui-chip>
+					</li><li itemprop="suggestedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="position" content="2">
+						<label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q2"> <span itemprop="text">A signal travels between them at the speed of light</span></label> <ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip>
+					</li><li itemprop="suggestedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="position" content="3">
+						<label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q2"> <span itemprop="text">The other qubit is destroyed</span></label> <ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip>
+					</li><li itemprop="suggestedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="position" content="4">
+						<label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q2"> <span itemprop="text">Nothing; entanglement does not survive separation</span></label> <ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip>
+					</li></ul>
+				</fieldset>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(16/9) chip(te)">
+			<cq-box>
+				<ui-media><img src="/assets/images/quantum.png" alt="Stylised quantum processor" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/quantum.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/quantum.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/quantum.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/quantum.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/quantum.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>Quiz</ui-chip></ui-media>
+				<ui-content content="wid(2xl)">
+					<small data-part="eyebrow">Question 3 of 3</small>
+					<h3 data-part="headline">Quantum computing — check yourself</h3>
+					<fieldset itemprop="hasPart" itemscope itemtype="https://schema.org/Question">
+					<legend itemprop="text">Why does a quantum computer need error correction?</legend><meta itemprop="eduQuestionType" content="Multiple choice">
+					<ul data-part="options" aria-live="polite"><li itemprop="suggestedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="position" content="1">
+						<label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q3" required> <span itemprop="text">Because its output is random and must be averaged</span></label> <ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip>
+					</li><li itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="position" content="2">
+						<label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q3"> <span itemprop="text">Because physical qubits decohere in microseconds</span></label> <ui-chip data-verdict="correct" theme="pale green">Correct</ui-chip>
+					</li><li itemprop="suggestedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="position" content="3">
+						<label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q3"> <span itemprop="text">Because superposition cannot be measured twice</span></label> <ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip>
+					</li><li itemprop="suggestedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="position" content="4">
+						<label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q3"> <span itemprop="text">It does not — quantum states are exact</span></label> <ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip>
+					</li></ul>
+				</fieldset>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		</lay-out>
+		</section>
 		<ui-reveal variant="ovr(bs) flp scr ico(te) ico(sm) icc(drk)" media="asr(4/3) obp(cc) scm" content="scl(lg)" itemscope itemtype="https://schema.org/Quiz">
 			<meta itemprop="name" content="Quantum computing — flashcard">
 			<meta itemprop="learningResourceType" content="Flashcard">

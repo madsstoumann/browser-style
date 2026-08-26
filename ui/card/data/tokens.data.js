@@ -1642,6 +1642,29 @@ export default {
 					],
 					"notes": "Bare-only in the media= DSL (the equivalent on a <lay-out> is the separate `stagger`/`data-stagger` ATTRIBUTE, which also takes the effect words + `trigger`). Dual arm. Makes each slide a container-type: scroll-state box and holds cards/content at a from-state until @container scroll-state(snapped: inline). Two channels: cards (--_stg-crd-*) and content (--_stg-*). Whole engine is inside @media (prefers-reduced-motion: no-preference). ani()/crd() are separate stems that hang off the same engine."
 				},
+				"gate": {
+					"axis": "carousel",
+					"element": null,
+					"args": {},
+					"argAliases": {},
+					"bare": true,
+					"matching": "whole",
+					"writes": [],
+					"realProperties": true,
+					"cqPrefixes": [],
+					"cqArgs": [],
+					"selfArm": true,
+					"hosts": [
+						"lay-out[overflow]"
+					],
+					"requiresJs": {},
+					"deprecated": false,
+					"canonical": null,
+					"sources": [
+						"ui/carousel/carousel.css:131"
+					],
+					"notes": "A scroller DECK gate, <lay-out overflow> only, WHOLE-token so it can never cross-fire with a parameterised stem. Every slide after one that holds an :invalid control is display:none — the scroller physically ends at the current slide, so the native next ::scroll-button() picks up :disabled (dimmed by carousel.css), a swipe cannot overshoot, hidden slides generate no ::scroll-marker, and the dot row grows as slides unlock. Pure CSS: it needs a required control per slide to key on (the card renderer's quiz-carousel preset puts required on the first radio of every question). Styling the arrow per current slide directly is not expressible (scroll-state() styles only a slide's descendants; :has() has no snapped-slide hook), so the reveal IS the gate. The polyfill counts hidden slides (3 dots from load) and re-syncs the next button on scroll/resize. Demo: schema.html Quiz deck, schema.quiz.html."
+				},
 				"pages": {
 					"axis": "carousel",
 					"element": null,

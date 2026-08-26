@@ -169,6 +169,19 @@ const QUIZ_FORMATS = {
 /* absent/unknown falls back to the flashcard shape — resolved in ONE place, so the
    deck (DETAILS.quiz) and the flip card (REVEAL_FACES.quiz) cannot disagree */
 const quizFormat = (d) => Object.hasOwn(QUIZ_FORMATS, d?.format) ? d.format : 'flashcard';
+/* one graded question — the SAME markup for the single-card deck (DETAILS.quiz) and the
+   carousel deck (renderQuizCarousel), so the two presentations cannot drift. `required`
+   on the first radio is what the scroller's `gate` token keys on. Docs: docs/schema.md § Quiz */
+const quizQuestion = (card, name, words, required = false) => {
+	const options = (card.options || []).map((option, position) =>
+		`<li${scope(option.correct ? 'acceptedAnswer' : 'suggestedAnswer', 'Answer')}>${meta('position', position + 1)}
+					<label><input type="radio" class="--check" name="${esc(name)}"${required && position === 0 ? ' required' : ''}> <span itemprop="text">${esc(option.text)}</span></label> ${option.correct ? '<ui-chip data-verdict="correct" theme="pale green">Correct</ui-chip>' : '<ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip>'}
+				</li>`).join('');
+	return `<fieldset${scope('hasPart', 'Question')}>
+				<legend itemprop="text">${esc(card.question)}</legend>${meta('eduQuestionType', words.question)}
+				${options ? `<ul data-part="options" aria-live="polite">${options}</ul>` : ''}
+			</fieldset>`;
+};
 
 /* Fallback when a card references no preset (or an unknown one).
    Real presets live in data/card.presets.json — instances of the
@@ -2530,17 +2543,7 @@ const DETAILS = {
 		   <fieldset> whose <legend> IS the question, so every option is announced under
 		   it; the legend must come first, so eduQuestionType follows it. */
 		const group = `quiz-${slug(plain(fields.headline))}`;
-		cards.forEach((card, index) => {
-			const name = `${group}-q${index + 1}`;
-			const options = (card.options || []).map((option, position) =>
-				`<li${scope(option.correct ? 'acceptedAnswer' : 'suggestedAnswer', 'Answer')}>${meta('position', position + 1)}
-					<label><input type="radio" class="--check" name="${esc(name)}"> <span itemprop="text">${esc(option.text)}</span></label> ${option.correct ? '<ui-chip data-verdict="correct" theme="pale green">Correct</ui-chip>' : '<ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip>'}
-				</li>`).join('');
-			html += `<fieldset${scope('hasPart', 'Question')}>
-				<legend itemprop="text">${esc(card.question)}</legend>${meta('eduQuestionType', words.question)}
-				${options ? `<ul data-part="options" aria-live="polite">${options}</ul>` : ''}
-			</fieldset>`;
-		});
+		cards.forEach((card, index) => { html += quizQuestion(card, `${group}-q${index + 1}`, words); });
 		return html;
 	},
 
@@ -3091,6 +3094,45 @@ export function renderCard(ucf, presets = {}, cards = {}, options = null) {
 	return stripSchema(renderCardHtml(ucf, presets, cards));
 }
 
+/* ── carousel deck (<lay-out overflow>) — used when preset.element is lay-out ──
+   One <ui-card> slide per graded question; the Quiz's own properties ride a wrapping
+   <section>, never the lay-out itself (the controls polyfill counts every scroller child
+   as a slide). Declines anything but a multiple-choice quiz with questions. The preset's
+   carousel.media is the scroller's token string; its `gate` token arms one required radio
+   per question, which carousel.css turns into "next unlocks when answered". The deck
+   name heads every slide as a label (renderInline, no itemprop) — the name property is
+   the section's meta. Docs: docs/schema.md § Quiz, docs/card.md § Presets */
+const renderQuizCarousel = (fields, type, schemaType, preset, cardId) => {
+	const d = fields.details || {};
+	const cards = d.cards || [];
+	if (type !== 'quiz' || quizFormat(d) !== 'multiple-choice' || !cards.length) return null;
+	const words = QUIZ_FORMATS['multiple-choice'];
+	const tokens = { media: [] };
+	const media = buildMedia(fields, type, tokens, preset, {}, cardId);
+	const frame = withMedia(media?.html || '', mergeMediaTokens(preset.media, tokens.media));
+	const scroller = String(preset.carousel?.media || 'nav(end)').trim().split(/\s+/).filter(Boolean);
+	const gated = scroller.includes('gate');
+	const group = `quiz-${slug(plain(fields.headline))}`;
+	const heading = preset.headingTag || 'h3';
+	const slides = cards.map((card, index) => `<ui-card${attrs({ variant: preset.variant || 'col', theme: preset.theme || null, style: styleAttr(preset.styles) })}>
+		<cq-box>
+			${frame}
+			<ui-content${attrs({ content: preset.content || null })}>
+				<small data-part="eyebrow">Question ${index + 1} of ${cards.length}</small>
+				<${heading} data-part="headline">${renderInline(fields.headline)}</${heading}>
+				${quizQuestion(card, `${group}-q${index + 1}`, words, gated)}
+			</ui-content>
+		</cq-box>
+	</ui-card>`).join('\n\t');
+	return `<section${attrs({ itemscope: true, itemtype: SCHEMA + schemaType })}>
+	${meta('name', plain(fields.headline))}${meta('description', plain(fields.summary))}${meta('learningResourceType', words.resource)}
+	${d.subject ? `<div${scope('about', 'Thing')} hidden>${meta('name', d.subject)}</div><div${scope('educationalAlignment', 'AlignmentObject')} hidden>${meta('alignmentType', 'educationalSubject')}${meta('targetName', d.subject)}</div>` : ''}
+	<lay-out${attrs({ md: 'columns(1)', overflow: true, media: scroller.join(' ') })}>
+	${slides}
+	</lay-out>
+</section>`;
+};
+
 /* the renderer proper — always emits microdata; renderCard() strips it per mode */
 function renderCardHtml(ucf, presets = {}, cards = {}) {
 	const fields = ucf?.fields ?? ucf ?? {};
@@ -3101,6 +3143,13 @@ function renderCardHtml(ucf, presets = {}, cards = {}) {
 	const itemtype = SCHEMA + schemaType;
 	const preset = resolvePreset(fields, presets);
 	const tokens = { media: [] };
+	/* a scroller deck — or, for anything that is not a graded quiz, the card with a loud note */
+	let note = '';
+	if (preset.element === 'lay-out') {
+		const deck = renderQuizCarousel(fields, type, schemaType, preset, cardId);
+		if (deck) return deck;
+		note = '<!-- lay-out preset ignored: a scroller deck needs details.format multiple-choice -->';
+	}
 
 	if (preset.element === 'ui-reveal') {
 		return renderReveal(fields, type, schemaType, tokens, preset, resolveCard(fields.flipside, cards), cardId);
@@ -3144,7 +3193,7 @@ function renderCardHtml(ucf, presets = {}, cards = {}) {
 	})}>
 		<cq-box>
 			${withMedia(media?.html || '', mergeMediaTokens(preset.media, tokens.media))}
-			<ui-content${attrs({ content: preset.content || null })}>${contentColumn(fields, type, overlay, media?.extras || '', preset.text || 'summary', preset.parts || {}, preset.byline || 'tail', preset.headingTag, schemaType)}</ui-content>
+			<ui-content${attrs({ content: preset.content || null })}>${contentColumn(fields, type, overlay, media?.extras || '', preset.text || 'summary', preset.parts || {}, preset.byline || 'tail', preset.headingTag, schemaType)}${note}</ui-content>
 		</cq-box>
 	</ui-card>`;
 }

@@ -10,7 +10,7 @@ sit on. Notes below each table carry the per-token caveats.
 
 ## `media=`
 
-28 stems · 5 bare flags
+28 stems · 6 bare flags
 
 | token | axis | args | aliases | bare | writes | md:/lg: | hosts | requiresJs | deprecated |
 |---|---|---|---|---|---|---|---|---|---|
@@ -45,6 +45,7 @@ sit on. Notes below each table carry the per-token caveats.
 | `clip` | corners | — | — | yes | --ui-media-radius | — | ui-media | — | — |
 | `loop` | carousel | — | — | yes | --_play-block --_play-inline --_play-justify --_play-size | — | ui-media ui-card ui-reveal lay-out[overflow] | carousel.js (*) | — |
 | `stagger` | carousel | — | — | yes | --_stg-base-i --_stg-crd-i | — | ui-media ui-card ui-reveal | — | — |
+| `gate` | carousel | — | — | yes | — | — | lay-out[overflow] | — | — |
 | `pages` | carousel | — | — | yes | --_pg | — | lay-out[overflow] ui-media ui-card ui-reveal | — | — |
 | `open:furniture` | open-state | — | — | yes | — | — | ui-media ui-card ui-reveal | — | — |
 
@@ -142,6 +143,9 @@ sit on. Notes below each table carry the per-token caveats.
 
 **`stagger`** *(substring-matched, self arm)* — Bare-only in the media= DSL (the equivalent on a <lay-out> is the separate `stagger`/`data-stagger` ATTRIBUTE, which also takes the effect words + `trigger`). Dual arm. Makes each slide a container-type: scroll-state box and holds cards/content at a from-state until @container scroll-state(snapped: inline). Two channels: cards (--_stg-crd-*) and content (--_stg-*). Whole engine is inside @media (prefers-reduced-motion: no-preference). ani()/crd() are separate stems that hang off the same engine.
 <sub>ui/base/stagger.css:171 · ui/base/stagger.css:176 · ui/base/stagger.css:181</sub>
+
+**`gate`** *(whole-matched, self arm)* — A scroller DECK gate, <lay-out overflow> only, WHOLE-token so it can never cross-fire with a parameterised stem. Every slide after one that holds an :invalid control is display:none — the scroller physically ends at the current slide, so the native next ::scroll-button() picks up :disabled (dimmed by carousel.css), a swipe cannot overshoot, hidden slides generate no ::scroll-marker, and the dot row grows as slides unlock. Pure CSS: it needs a required control per slide to key on (the card renderer's quiz-carousel preset puts required on the first radio of every question). Styling the arrow per current slide directly is not expressible (scroll-state() styles only a slide's descendants; :has() has no snapped-slide hook), so the reveal IS the gate. The polyfill counts hidden slides (3 dots from load) and re-syncs the next button on scroll/resize. Demo: schema.html Quiz deck, schema.quiz.html.
+<sub>ui/carousel/carousel.css:131</sub>
 
 **`pages`** *(whole-matched, self arm)* — One word, one intent — 'this carousel navigates by pages, and adapts on mobile' — with the mechanism following from the markup shape. On <lay-out overflow> (flat children): math paging — snaps + emits one ::scroll-marker per PAGE of --_ci items instead of per item, via mod(sibling-index()-1, --_ci) + if(style(--_pg: 0)); the dot count auto-adapts per breakpoint because --_ci follows columns(N); degrades to per-item where sibling-index()/if() are unsupported. On a <ui-media> scroller (or its card host): the <lay-out> children are PAGE wrappers — below the layout system's md viewport breakpoint (540px) each wrapper dissolves via display:contents, so every card becomes its own full-width snap target with its own dot (grandchild markers collect into the scroller's group natively; a boxless wrapper generates none). ui-media context is CSS-only: slidesOf() still counts the wrapper as ONE slide, so auto/loop don't see through the dissolve; dot markers only (pll/hyb/tmb/lbl stay per-direct-slide). Stagger: each dissolved card becomes its own scroll-state inline-size container — ani() plays per-card, crd() is inert below md. Whole-token ([media~="pages"]).
 <sub>layout/core/base.css:223 · ui/card/media.carousel.css:51 · ui/carousel/carousel.css:186 · ui/base/stagger.css:228</sub>

@@ -4,8 +4,8 @@
   "title": "🎨 Card Preset",
   "description": "A named look & feel for a card: the combined attributes placed on the <ui-card> or <ui-reveal> element itself (variant, media, content token strings — plus reveal-specific attributes). Cards reference a preset instead of owning presentation, so restyling any card is a single reference swap. Presets are design-system data: invariant, not localized.",
   "metadata": {
-    "version": "1.2.0",
-    "lastModified": "2026-07-05",
+    "version": "1.3.0",
+    "lastModified": "2026-08-26",
     "displayField": "internalName"
   },
   "structure": {
@@ -35,6 +35,14 @@
         "description": "Only used when element is ui-reveal",
         "collapse": true,
         "fields": ["reveal"]
+      },
+      {
+        "area": "main",
+        "type": "group",
+        "name": "Carousel",
+        "description": "Only used when element is lay-out",
+        "collapse": true,
+        "fields": ["carousel"]
       }
     ]
   },
@@ -77,7 +85,8 @@
         { "value": "ui-card", "label": "<ui-card>" },
         { "value": "ui-reveal", "label": "<ui-reveal>" },
         { "value": "ui-media", "label": "<ui-media> (bare media frame)" },
-        { "value": "ui-content", "label": "<ui-content> — text only, no media" }
+        { "value": "ui-content", "label": "<ui-content> — text only, no media" },
+        { "value": "lay-out", "label": "<lay-out overflow> — a scroller deck, one card per part (quiz)" }
       ]
     },
     "variant": {
@@ -162,6 +171,21 @@
       "title": "Style overrides",
       "description": "CSS custom properties written to the element's style attribute, e.g. { \"--ui-reveal-content-bg\": \"#1f2937\" }. Keys must start with --.",
       "localized": false
+    },
+    "carousel": {
+      "type": "object",
+      "title": "Carousel",
+      "description": "Scroller-deck configuration — only used when element is lay-out. The renderer emits one <ui-card> slide per part (a graded Quiz's questions) inside <lay-out overflow>, with the Quiz's own properties on a wrapping <section>; variant/media/content above configure each slide. Anything that is not a multiple-choice quiz falls back to the single card with an HTML comment.",
+      "localized": false,
+      "properties": {
+        "media": {
+          "type": "string",
+          "title": "media= (scroller)",
+          "description": "The lay-out's own control token string — the same media= vocabulary as a card frame: nav(end) puts dots + arrows inside each slide's content end, arw(drk) fills the arrows, and the bare gate token keeps the next arrow disabled until the current slide's question is answered (one required radio per question). Default: nav(end).",
+          "localized": false,
+          "default": "nav(end)"
+        }
+      }
     },
     "reveal": {
       "type": "object",

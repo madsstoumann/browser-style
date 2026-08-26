@@ -58,8 +58,9 @@ const mapIcons = { google: '/assets/svg/google.maps.svg', apple: '/assets/svg/ap
 const PAIRS = [
 	['MemberProgram', 'ui/card/data/loyalty.json'],
 	['Quiz', 'ui/card/data/quiz.json'],
-	/* the graded sibling — two Quiz cards on the page, so this one matches by id */
-	['Quiz#schema-quiz-mc', 'ui/card/data/quiz-mc.json'],
+	/* the graded sibling is a carousel DECK — one Quiz <section> wrapping a lay-out scroller
+	   of question slides — so the host is the disambiguator, not an id */
+	['section:Quiz', 'ui/card/data/quiz-carousel.json'],
 	/* the third Quiz shape: one flashcard as a <ui-reveal> flip card, question front,
 	   answer back — the page's only reveal, so the host name is the disambiguator */
 	['ui-reveal:Quiz', 'ui/card/data/quiz-flashcard.json'],

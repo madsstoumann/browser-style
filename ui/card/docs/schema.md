@@ -940,7 +940,7 @@ The thing that makes two cards out of one type: **`Question` accepts `suggestedA
 | shape | properties on the `Question` | interaction | card |
 |---|---|---|---|
 | Flashcard | one `acceptedAnswer` | reveal | Quiz — *flashcards* (deck) and *flashcard* (flip card) |
-| Multiple choice | several `suggestedAnswer` **+** one `acceptedAnswer` | select, then check the key | Quiz — *check yourself* |
+| Multiple choice | several `suggestedAnswer` **+** one `acceptedAnswer` | select, then check the key | Quiz — *check yourself* (a scroller **deck**, one slide per question — or one card, `stack` preset) |
 | Poll | several `suggestedAnswer`, no accepted one | select, see results | the [`Question` card](#poll--question) |
 
 The flashcard shape runs **two** cards, because the reveal it asks for can be a `<ui-card>`
@@ -970,6 +970,24 @@ is deliberately **explicit rather than inferred** from whether questions carry o
 `details` shape must not silently produce a flashcard when the author meant a graded question. An
 unrecognised format falls back to `flashcard`, and options under an ungraded deck are dropped with
 an HTML comment, the same loud-skip discipline as [`ProductGroup` variants](#product--product-subtype-productgroup).
+
+The graded shape has a **second presentation**, and — like the flip card — it is a preset, not a
+field: `card-preset/quiz-carousel` sets `element: "lay-out"` and the renderer emits one
+`<ui-card>` slide per question inside a `<lay-out overflow>` scroller, the Quiz's own properties
+(`name`, `description`, `learningResourceType`, `about`, `educationalAlignment`) as machine
+metadata on a wrapping `<section itemscope>` — never on the `<lay-out>`, whose children the
+controls polyfill counts as slides. The item count is unchanged: one Quiz, three Questions, twelve
+Answers, so the page's card count treats the deck as one card. Each slide is the same fieldset the
+single card renders (one shared builder, byte-identical minus one attribute), headed by the deck
+name as a label and a "Question *n* of *N*" eyebrow. The preset's `carousel.media` is the scroller's
+token string — `nav(end) arw(drk)` puts filled arrows and dots inside each slide's content end —
+and its bare `gate` token is the one behaviour: the renderer marks the first radio of every question
+`required`, and the token hides every slide after an unanswered one, so the next arrow stays
+natively disabled until the current question is answered
+([carousel.md § gate](./carousel.md)). `quiz-carousel-free` is the same deck without the gate. A
+flashcard deck sent through a lay-out preset renders the card with a loud comment — the reveal idiom
+is the accordion's. The page's graded Quiz is the gated deck; the single-card form stays renderable
+(`data/quiz-mc.json`, `stack` preset) and covered by the renderer suite.
 
 The **flip card** is the one place the generic reveal shape does not fit. A reveal normally shows one
 item twice — a teaser front, a fuller back, both in the host's scope — but a flashcard's question is

@@ -190,6 +190,28 @@ Ink is the band ink (currentColor-derived); `arw(drk)` gives filled discs and
 (`ui-carousel-controls[data-media*="nav(end)"]`). Demo: media.carousel.html § Controls in
 the content, schema.quiz.html.
 
+## Gate — `gate`
+
+A `<lay-out overflow>` whose slides each hold a form control can reveal itself one slide at
+a time — a quiz deck where the next arrow stays disabled until the current question is
+answered. Whole-token, lay-out only:
+
+```css
+:where(lay-out[overflow]):where([media~="gate"]) > :has(:invalid) ~ * { display: none; }
+```
+
+Every slide after one holding an `:invalid` control is hidden, so the scroller physically
+ends at the current slide: the native next `::scroll-button()` picks up `:disabled` (dimmed
+like any dead-end arrow), a swipe cannot overshoot, hidden slides generate no
+`::scroll-marker`, and the dot row grows 1 → 2 → 3 as slides unlock. The token needs
+something to key on — one `required` radio per question is enough, and the card renderer's
+`quiz-carousel` preset writes it. Styling the arrow per *current* slide directly is not
+expressible (`scroll-state()` styles only a slide's descendants; `:has()` has no
+snapped-slide hook), so the reveal is the gate. The polyfill counts hidden slides (three dots
+from load) and re-syncs its next button on scroll/resize. A wrong answer still unlocks — a
+correctness gate is `:not(:has(li[itemprop="acceptedAnswer"] :checked)) ~ *` instead.
+Demo: schema.html Quiz deck, schema.quiz.html (gated and free side by side).
+
 ## Scroller
 
 - `inline-size: round(down, 100%, 1px)` — a fractional width makes the browser round
