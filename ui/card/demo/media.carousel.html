@@ -1342,9 +1342,7 @@
 	</lay-out>
 
 	<h3 id="layoutend">Controls in the content — <code>nav(end)</code></h3>
-	<p><code>&lt;lay-out overflow&gt;</code> only: the dots + arrows move <em>inside</em> each slide's <code>&lt;ui-content&gt;</code>, after its last row. Every column grows its <code>padding-block-end</code> to <em>pbe · controls · pbe</em>, so the column's own end padding repeats above and below the row; arrows align to the content's inline padding. Author the <code>content=</code> padding on the lay-out — the row reads it there. Band ink, so <code>arw(drk)</code> for filled discs.</p>
-	<h4 id="layoutdeck">A quiz deck — <code>nav(end)</code> rendered from data</h4>
-	<p>The same placement driving a real form: <code>card-preset/quiz-carousel</code> deals a graded <a href="schema.html">schema.org Quiz</a> out as one card per question, <code>render.js</code> output verbatim. Left, the <code>gate</code> token — one <code>required</code> radio per question, every slide after an unanswered one hidden, so the next arrow stays natively disabled until you answer. Right, <code>quiz-carousel-free</code>: the same deck, every slide live from the start. No JavaScript in either.</p>
+	<p><code>&lt;lay-out overflow&gt;</code> only — dots + arrows inside each slide's content end. Left: <code>gate</code> locks the next arrow until the question is answered · right: <code>quiz-carousel-free</code>, no gate.</p>
 	<lay-out md="columns(2) items(start)">
 		<section itemscope itemtype="https://schema.org/Quiz">
 		<meta itemprop="name" content="Quantum computing — check yourself"><meta itemprop="description" content="Three graded multiple-choice questions, one per slide. Pick an answer and it tells you whether you were right."><meta itemprop="learningResourceType" content="Practice problem">
