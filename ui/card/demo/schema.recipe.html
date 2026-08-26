@@ -8,294 +8,27 @@
 	<meta name="color-scheme" content="light dark">
 	<!-- Head rationale: docs/schema.md § Demo-page head and scripts -->
 	<meta name="referrer" content="no-referrer">
-	<meta name="format-detection" content="telephone=no">
 	<link rel="preconnect" href="https://v4.browser.style">
-	<meta name="description" content="Investigation: turning the schema.org Recipe card into a small kitchen app. The card opens as a fullscreen popover overlay; the steps accordion becomes a button that opens a cook-mode popover with one readable step at a time, Screen Wake Lock (with indicator), read-aloud via the Web Speech API and via an audio file, and hands-free voice navigation via SpeechRecognition. No JSON-LD — microdata stays whole via itemref.">
-	<link rel="stylesheet" href="/dist/demo.8cd1d286.min.css">
-
+	<meta name="description" content="The schema.org Recipe card as the teaser of a small kitchen app: the card stays exactly what schema.html renders, and its cover link + Start cooking button navigate — with a cross-document view transition — to recipes/recipe.html?id=recipe-1, a static entity page with an ingredient checklist (servings, metric/imperial), step timers, narration, and a fullscreen cook-mode popover with wake lock and hands-free voice control.">
+	<link rel="alternate" type="text/markdown" href="/ui/card/docs/schema.md">
+	<link rel="stylesheet" href="/dist/demo.0a296b6e.min.css">
+	<!-- Block first paint (and the view-transition snapshot) until the morph source is parsed. Docs: products/build.js header -->
+	<link rel="expect" href="#recipe-card" blocking="render">
+	<!-- Names the morph targets where typed attr() is unsupported (Safari). MUST be render-blocking. Docs: ui/base/polyfills/readme.md -->
+	<script type="module" src="/ui/base/polyfills/attr-fallback.min.js" blocking="render"></script>
 	<style>
-		/* Page-scoped WCAG AA contrast overrides — same block as demo/schema.html. */
-		:root {
-			--color-link: light-dark(hsl(221, 100%, 44%), hsl(221, 70%, 70%));
-			--color-accent: light-dark(hsl(211, 100%, 38%), hsl(211, 70%, 72%));
-			--color-success: light-dark(hsl(136, 45%, 30%), hsl(136, 25%, 60%));
-			--color-error: light-dark(hsl(360, 65%, 41%), hsl(360, 45%, 62%));
-			--color-text-muted: light-dark(hsl(0, 0%, 42%), hsl(0, 0%, 65%));
-		}
 		ui-content { --ui-content-muted: color-mix(in oklab, currentColor 85%, transparent); }
 		ui-chip[data-type] { --ui-chip-bg: hsl(0, 0%, 95%); --ui-chip-c: hsl(0, 0%, 13%); }
-
-		/* ============================================================
-		   The card — cover button + steps button
-		   The headline cover is a <button> (not an <a>): it opens the app
-		   overlay, it does not navigate. Base styles every <button>, so
-		   strip the plate back to inline text.
-		   ============================================================ */
-		#recipe-card [data-part~="cover"] {
-			background: none;
-			border: 0;
-			border-radius: 0;
-			color: inherit;
-			cursor: pointer;
-			font: inherit;
-			padding: 0;
-			text-align: inherit;
-		}
-
-		/* ============================================================
-		   Shared fullscreen-popover chrome
-		   A popover's UA default is fit-content centered via auto margins;
-		   zero the margins and let it fill the small viewport.
-		   ============================================================ */
-		#recipe-app, #recipe-steps {
-			block-size: auto; /* UA default is fit-content; auto + inset: 0 stretches to the viewport */
-			border: 0;
-			inline-size: auto;
-			inset: 0;
-			margin: 0;
-			max-block-size: none;
-			max-inline-size: none;
-			padding: 0;
-		}
-		#recipe-app::backdrop, #recipe-steps::backdrop {
-			background: color-mix(in srgb, CanvasText 30%, transparent);
-			backdrop-filter: blur(4px);
-		}
-		/* Entry/exit fades — display/overlay transition with allow-discrete,
-		   entry via @starting-style. */
-		#recipe-app, #recipe-steps {
-			opacity: 0;
-			transition: opacity .25s ease, translate .25s ease,
-				display .25s allow-discrete, overlay .25s allow-discrete;
-			translate: 0 1rem;
-		}
-		:is(#recipe-app, #recipe-steps):popover-open {
-			opacity: 1;
-			translate: 0 0;
-			@starting-style { opacity: 0; translate: 0 1rem; }
-		}
-		@media (prefers-reduced-motion: reduce) {
-			#recipe-app, #recipe-steps { transition: none; translate: none; }
-		}
-
-		/* Plain icon-buttons (close, indicators) */
-		.icon-btn {
-			align-items: center;
-			background: none;
-			border: 0;
-			border-radius: 50%;
-			color: inherit;
-			cursor: pointer;
-			display: inline-flex;
-			gap: .5ch;
-			padding: .5em;
-		}
-		.icon-btn:hover { background: color-mix(in srgb, currentColor 12%, transparent); }
-		.icon-btn svg { block-size: 1.4em; fill: none; inline-size: 1.4em; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2; }
-
-		/* Status indicators (wake lock / microphone).
-		   The dot is gray when idle, pulses green when the underlying
-		   API reports active — state comes from data-on, set by JS. */
-		.indicator {
-			align-items: center;
-			background: color-mix(in srgb, currentColor 10%, transparent);
-			border: 0;
-			border-radius: 2em;
-			color: inherit;
-			display: inline-flex;
-			font: inherit;
-			font-size: .8em;
-			gap: .6ch;
-			padding: .35em .8em;
-		}
-		button.indicator { cursor: pointer; }
-		.indicator::before {
-			aspect-ratio: 1;
-			background: light-dark(hsl(0, 0%, 60%), hsl(0, 0%, 45%));
-			border-radius: 50%;
-			content: '';
-			inline-size: .65em;
-		}
-		.indicator[data-on]::before {
-			animation: indicator-pulse 2s ease-in-out infinite;
-			background: var(--color-success);
-		}
-		.indicator[data-unsupported] { opacity: .5; text-decoration: line-through; }
-		@keyframes indicator-pulse {
-			50% { box-shadow: 0 0 0 .35em color-mix(in srgb, var(--color-success) 35%, transparent); }
-		}
-		@media (prefers-reduced-motion: reduce) {
-			.indicator[data-on]::before { animation: none; }
-		}
-
-		/* ============================================================
-		   The app overlay
-		   ============================================================ */
-		#recipe-app {
-			background: var(--color-surface);
-			color: var(--color-text);
-			overflow-y: auto;
-			overscroll-behavior: contain;
-		}
-		.app-bar {
-			align-items: center;
-			backdrop-filter: blur(8px);
-			background: color-mix(in srgb, var(--color-surface) 75%, transparent);
-			display: flex;
-			gap: var(--spacing-sm);
-			inset-block-start: 0;
-			justify-content: space-between;
-			padding: var(--spacing-sm) var(--spacing-md);
-			position: sticky;
-			z-index: 2;
-		}
-		.app-hero {
-			margin: 0;
-			img {
-				aspect-ratio: 21 / 9;
-				display: block;
-				inline-size: 100%;
-				object-fit: cover;
-			}
-		}
-		.app-body {
-			display: grid;
-			gap: var(--spacing-md);
-			margin-inline: auto;
-			max-inline-size: 68ch;
-			padding: var(--spacing-lg) var(--spacing-md) var(--spacing-2xl);
-			h2 { margin: 0; text-wrap: balance; }
-			h3 { margin-block: var(--spacing-md) 0; }
-			p { margin: 0; }
-		}
-		.app-eyebrow { color: var(--color-text-muted); text-transform: uppercase; letter-spacing: .05em; }
-		.app-meta { color: var(--color-text-muted); }
-		.app-ingredients {
-			display: grid;
-			gap: var(--spacing-xs);
-			list-style: none;
-			margin: 0;
-			padding: 0;
-			li { align-items: baseline; display: flex; gap: .75ch; }
-			li:has(:checked) { color: var(--color-text-muted); text-decoration: line-through; }
-		}
-		.app-listen {
-			align-items: center;
-			display: flex;
-			flex-wrap: wrap;
-			gap: var(--spacing-md);
-			figure { display: grid; gap: var(--spacing-xs); margin: 0; }
-			figcaption { color: var(--color-text-muted); font-size: small; }
-			audio { max-inline-size: 100%; }
-		}
-		.app-start { font-size: 1.15em; justify-content: center; padding-block: .8em; }
-		.app-caps {
-			border-block-start: var(--border-width, 1px) dotted var(--color-border);
-			color: var(--color-text-muted);
-			font-size: small;
-			list-style: none;
-			margin: 0;
-			padding: var(--spacing-md) 0 0;
-			li[data-ok="false"] { color: var(--color-error); }
-		}
-
-		/* ============================================================
-		   Cook mode — the steps popover
-		   Deliberately dark (kitchen glare, greasy fingers, distance
-		   reading); color-scheme flips form controls to match.
-		   ============================================================ */
-		#recipe-steps {
-			background: hsl(220, 15%, 10%);
-			color: hsl(0, 0%, 92%);
-			color-scheme: dark;
-			display: grid;
-			gap: var(--spacing-sm);
-			grid-template-rows: auto auto 1fr auto auto auto;
-			overscroll-behavior: contain;
-			&:not(:popover-open) { display: none; }
-		}
-		.cook-bar {
-			align-items: center;
-			display: flex;
-			gap: var(--spacing-sm);
-			justify-content: space-between;
-			padding: var(--spacing-sm) var(--spacing-md);
-			strong { font-size: .9em; }
-			span { display: inline-flex; gap: var(--spacing-xs); }
-		}
-		.cook-progress {
-			align-items: center;
-			display: grid;
-			gap: var(--spacing-xs);
-			padding-inline: var(--spacing-md);
-			text-align: center;
-			progress { inline-size: 100%; }
-			p { color: hsl(0, 0%, 65%); font-size: .85em; margin: 0; }
-		}
-		.cook-steps {
-			align-content: center;
-			display: grid;
-			list-style: none;
-			margin: 0;
-			overflow-y: auto;
-			padding: var(--spacing-md);
-			/* One step at a time — the readable core of cook mode */
-			li { display: none; }
-			li[aria-current="step"] {
-				display: grid;
-				gap: var(--spacing-md);
-				margin-inline: auto;
-				max-inline-size: 42ch;
-				text-align: center;
-			}
-			h3 {
-				color: var(--color-warning);
-				font-size: clamp(1rem, .5rem + 1.5vw, 1.4rem);
-				letter-spacing: .04em;
-				margin: 0;
-				text-transform: uppercase;
-			}
-			p {
-				font-size: clamp(1.5rem, 1rem + 2.5vw, 2.6rem);
-				line-height: 1.4;
-				margin: 0;
-				text-wrap: balance;
-			}
-		}
-		.cook-ingredients {
-			justify-self: center;
-			max-inline-size: 42ch;
-			padding-inline: var(--spacing-md);
-			summary { color: hsl(0, 0%, 65%); cursor: pointer; font-size: .9em; }
-			ul { columns: 2; font-size: .9em; margin: var(--spacing-xs) 0 0; padding-inline-start: 1.2em; }
-		}
-		.cook-nav {
-			display: flex;
-			gap: var(--spacing-sm);
-			padding-inline: var(--spacing-md);
-			button {
-				border-radius: .75em;
-				flex: 1;
-				font-size: 1.1em;
-				justify-content: center;
-				min-block-size: 3.25rem; /* fat, glanceable touch targets */
-			}
-		}
-		.cook-voice {
-			align-items: center;
-			color: hsl(0, 0%, 65%);
-			display: flex;
-			flex-wrap: wrap;
-			font-size: .85em;
-			gap: var(--spacing-sm);
-			justify-content: center;
-			padding: 0 var(--spacing-md) var(--spacing-md);
-			output:not(:empty)::before { content: '“'; }
-			output:not(:empty)::after { content: '”'; }
-			output { color: var(--color-warning); font-style: italic; }
-		}
-		[hidden] { display: none !important; }
+		.try { display: grid; gap: var(--spacing-sm); }
+		.try h2 { font-size: 1.15rem; margin: 0; }
+		.try ul { margin: 0; padding-inline-start: 1.2em; }
+		.try li { margin-block: var(--spacing-xs); }
 	</style>
+	<script type="speculationrules">
+	{
+		"prerender": [{ "urls": ["recipes/recipe.html?id=recipe-1"], "eagerness": "moderate" }]
+	}
+	</script>
 </head>
 <body data-layout-root data-page-gap="2">
 	<header>
@@ -313,424 +46,57 @@
 			</ol>
 		</nav>
 		<h1>UI: Card — Recipe App</h1>
-		<p><strong>Investigation.</strong> Can the schema.org <em>Recipe</em> card grow into a small
-			kitchen app — like the standalone example at <code>recipe.stoumann.dk</code> — without
-			leaving the card system? Clicking the card below opens a <strong>fullscreen popover
-			overlay</strong> (zero-JS open/close via invoker commands, same pattern as the
-			<a href="media.lightbox.html">lightbox</a>). The steps accordion from
-			<a href="schema.html">schema.html</a> is replaced by a <strong>button that opens a
-			cook-mode popover</strong>: one large readable step at a time, Screen Wake Lock with a
-			live indicator, read-aloud via the Speech API <em>and</em> via a pre-recorded audio file,
-			and hands-free voice navigation. Findings at the <a href="#findings">bottom</a>.
-			Nothing in the existing schema demo files changed.</p>
+		<p>The <a href="schema.html">schema.org</a> Recipe card, exactly as the reference page renders it: its
+			headline is a cover link and the steps are a <strong>Start cooking</strong> button (the teaser carries no
+			instructions — they live on the page), both pointing at <a href="recipes/recipe.html?id=recipe-1">a dedicated page</a>. That page is the
+			<em>kitchen app</em>, built the way the <a href="products/aurasound-pro.html">product</a> and
+			<a href="realestate/havnegade-44.html">listing</a> pages are: one static render of the same data
+			(<code>recipes/build.js</code>), so the card morphs into the page hero with a cross-document view
+			transition. The <code>?id=</code> is a route mimic — a CMS would resolve it; here it namespaces the
+			page’s remembered state.</p>
 	</header>
 
 	<main data-layout-root data-page-gap="2">
 		<h2>The card</h2>
 		<lay-out md="columns(2) items(start)">
-			<!-- Same Recipe card as demo/schema.html, two deliberate edits:
-			     1. the headline is a cover BUTTON opening the #recipe-app overlay,
-			     2. the steps accordion is a button opening the #recipe-steps popover.
-			     recipeInstructions moved out of the card DOM with the popover —
-			     itemref pulls the HowToStep list back into this itemscope, so the
-			     Recipe item stays whole for validators. -->
-			<ui-card id="recipe-card" variant="col" media="asr(16/9) chip(te)" itemscope itemtype="https://schema.org/Recipe" itemref="app-steps">
-				<cq-box>
-					<ui-media><img src="/assets/images/carbonara.png" alt="Plate of spaghetti carbonara" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/carbonara.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/carbonara.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/carbonara.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/carbonara.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/carbonara.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="eager" fetchpriority="high" decoding="async" itemprop="image"><ui-chip data-type>Recipe</ui-chip></ui-media>
-					<ui-content>
-						<meta itemprop="recipeCategory" content="Pasta">
-						<meta itemprop="prepTime" content="PT15M">
-						<meta itemprop="cookTime" content="PT20M">
-						<meta itemprop="recipeYield" content="4">
-						<small data-part="eyebrow">Pasta</small>
-						<h3 data-part="headline" itemprop="name"><button type="button" data-part="cover" command="show-popover" commandfor="recipe-app">Classic Spaghetti Carbonara</button></h3>
-						<p data-part="summary" itemprop="description">The Roman original — guanciale, pecorino, eggs and pepper. No cream.</p>
-						<p data-part="meta"><strong data-part="key">Prep:</strong> 15 min · <strong data-part="key">Cook:</strong> 20 min · <strong data-part="key">Serves:</strong> 4</p>
-						<ul data-part="list">
-							<li itemprop="recipeIngredient">400 g spaghetti</li>
-							<li itemprop="recipeIngredient">150 g guanciale</li>
-							<li itemprop="recipeIngredient">4 egg yolks</li>
-							<li itemprop="recipeIngredient">80 g pecorino romano</li>
-						</ul>
-						<span data-part="tags"><ui-chip itemprop="keywords">Pasta</ui-chip><ui-chip itemprop="keywords">Italian</ui-chip><ui-chip itemprop="keywords">Quick</ui-chip></span>
-						<nav data-part="actions">
-							<button class="ui-button" type="button" data-variant="accent" command="show-popover" commandfor="recipe-steps">Start cooking — 6 steps</button>
-						</nav>
-					</ui-content>
-				</cq-box>
-			</ui-card>
-		</lay-out>
-
-		<!-- ============================================================
-		     The app overlay — a fullscreen auto popover. DOM position is
-		     irrelevant (top layer), so it lives outside the lay-out grid.
-		     Content here carries NO itemprops: the card above is the one
-		     Recipe item on the page; duplicating name/image here would
-		     orphan properties outside any itemscope.
-		     ============================================================ -->
-		<aside id="recipe-app" popover aria-label="Classic Spaghetti Carbonara — recipe">
-			<header class="app-bar">
-				<span class="indicator" id="wake-indicator-app">Screen awake</span>
-				<button type="button" class="icon-btn" command="hide-popover" commandfor="recipe-app" aria-label="Close recipe">
-					<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
-				</button>
-			</header>
-			<figure class="app-hero">
-				<img src="/assets/images/carbonara.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=308/assets/images/carbonara.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=514/assets/images/carbonara.png 1200w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1920,height=823/assets/images/carbonara.png 1920w" sizes="100vw" loading="lazy" decoding="async">
-			</figure>
-			<div class="app-body">
-				<small class="app-eyebrow">Pasta</small>
-				<h2>Classic Spaghetti Carbonara</h2>
-				<p>The Roman original — guanciale, pecorino, eggs and pepper. No cream.</p>
-				<p class="app-meta">Prep 15 min · Cook 20 min · Serves 4</p>
-
-				<h3 id="ingredients-heading">Ingredients</h3>
-				<ul class="app-ingredients" aria-labelledby="ingredients-heading">
-					<li><label><input type="checkbox"> 400 g spaghetti</label></li>
-					<li><label><input type="checkbox"> 150 g guanciale</label></li>
-					<li><label><input type="checkbox"> 4 egg yolks</label></li>
-					<li><label><input type="checkbox"> 80 g pecorino romano</label></li>
-				</ul>
-
-				<h3>Listen</h3>
-				<div class="app-listen">
-					<button class="ui-button" type="button" id="read-recipe" data-variant="accent">Read recipe aloud <small>(Speech API)</small></button>
-					<figure>
-						<figcaption>Pre-recorded narration — placeholder audio file</figcaption>
-						<audio id="recipe-audio" controls preload="none" src="/assets/audio/podcast.m4a"></audio>
-					</figure>
-				</div>
-
-				<button class="ui-button app-start" type="button" data-variant="accent" command="show-popover" commandfor="recipe-steps">Start cooking — 6 steps</button>
-
-				<ul class="app-caps" id="caps" aria-label="Capability report for this browser"></ul>
-			</div>
-		</aside>
-
-		<!-- ============================================================
-		     Cook mode — a SIBLING of the app popover, not a child: a popover
-		     nested inside a closed (display: none) popover can never render,
-		     and the card's "Start cooking" button must be able to open cook
-		     mode on its own. When opened from INSIDE the app, the invoker
-		     relationship (commandfor) makes the app an ancestor in the
-		     popover stack, so it stays open underneath.
-		     The <ol> carries the Recipe's actual recipeInstructions
-		     microdata; the card's itemref="app-steps" folds it back in.
-		     ============================================================ -->
-		<section id="recipe-steps" popover aria-label="Cooking steps — Classic Spaghetti Carbonara">
-				<header class="cook-bar">
-					<strong>Classic Spaghetti Carbonara</strong>
-					<span>
-						<button type="button" class="indicator" id="wake-toggle" aria-pressed="true">Screen awake</button>
-						<button type="button" class="indicator" id="voice-toggle" aria-pressed="false">Hands-free</button>
-						<button type="button" class="icon-btn" command="hide-popover" commandfor="recipe-steps" aria-label="Close cooking steps">
-							<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
-						</button>
-					</span>
-				</header>
-				<div class="cook-progress">
-					<p aria-live="polite">Step <output id="step-now">1</output> of <span id="step-total">6</span></p>
-					<progress id="step-progress" max="6" value="1"></progress>
-				</div>
-				<ol id="app-steps" class="cook-steps" itemprop="recipeInstructions" itemscope itemtype="https://schema.org/ItemList">
-					<li itemprop="itemListElement" itemscope itemtype="https://schema.org/HowToStep" aria-current="step">
-						<meta itemprop="position" content="1">
-						<h3 itemprop="name">Boil &amp; salt</h3>
-						<p itemprop="text">Bring a large pot of water to a rolling boil, then salt it generously — it should taste like the sea.</p>
-					</li>
-					<li itemprop="itemListElement" itemscope itemtype="https://schema.org/HowToStep">
-						<meta itemprop="position" content="2">
-						<h3 itemprop="name">Crisp the guanciale</h3>
-						<p itemprop="text">Cut the guanciale into short strips and crisp them in a dry pan over medium heat until golden. Pull the pan off the heat.</p>
-					</li>
-					<li itemprop="itemListElement" itemscope itemtype="https://schema.org/HowToStep">
-						<meta itemprop="position" content="3">
-						<h3 itemprop="name">Make the cream</h3>
-						<p itemprop="text">Whisk the egg yolks with the grated pecorino and plenty of coarsely ground black pepper into a thick paste.</p>
-					</li>
-					<li itemprop="itemListElement" itemscope itemtype="https://schema.org/HowToStep">
-						<meta itemprop="position" content="4">
-						<h3 itemprop="name">Cook the pasta</h3>
-						<p itemprop="text">Cook the spaghetti until just shy of al dente. Scoop out a cup of the starchy cooking water before you drain.</p>
-					</li>
-					<li itemprop="itemListElement" itemscope itemtype="https://schema.org/HowToStep">
-						<meta itemprop="position" content="5">
-						<h3 itemprop="name">Toss, off the heat</h3>
-						<p itemprop="text">Toss the hot pasta with the guanciale and its fat. Off the heat, stir in the egg mixture, loosening with splashes of pasta water until glossy.</p>
-					</li>
-					<li itemprop="itemListElement" itemscope itemtype="https://schema.org/HowToStep">
-						<meta itemprop="position" content="6">
-						<h3 itemprop="name">Serve</h3>
-						<p itemprop="text">Serve immediately in warm bowls, with more pecorino and black pepper on top.</p>
-					</li>
-				</ol>
-				<details class="cook-ingredients">
-					<summary>Ingredients</summary>
-					<ul>
-						<li>400 g spaghetti</li>
-						<li>150 g guanciale</li>
-						<li>4 egg yolks</li>
-						<li>80 g pecorino romano</li>
+			<!-- The Recipe card from demo/schema.html, byte-for-byte (plus id=): data-view names on the host and
+			     hero are the morph pair recipes/recipe.html answers; the steps live on the page, in its one Recipe scope. -->
+		<ui-card id="recipe-card" data-view="card-recipe-1" variant="col" media="asr(16/9) chip(te)" itemscope itemtype="https://schema.org/Recipe">
+			<cq-box>
+				<ui-media><img data-view="hero-recipe-1" src="/assets/images/carbonara.png" alt="Plate of spaghetti carbonara" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/carbonara.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/carbonara.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/carbonara.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/carbonara.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/carbonara.png 1200w" sizes="(min-width: 540px) min(50vw, 512px), 100vw" loading="eager" fetchpriority="high" decoding="async" itemprop="image"><ui-chip data-type>Recipe</ui-chip></ui-media>
+				<ui-content>
+					<meta itemprop="recipeCategory" content="Pasta">
+					<meta itemprop="prepTime" content="PT15M">
+					<meta itemprop="cookTime" content="PT20M">
+					<meta itemprop="recipeYield" content="4">
+					<small data-part="eyebrow">Pasta</small>
+					<h3 data-part="headline" itemprop="name"><a data-part="cover" href="recipes/recipe.html?id=recipe-1">Classic Spaghetti Carbonara</a></h3>
+					<p data-part="summary" itemprop="description">The Roman original — guanciale, pecorino, eggs and pepper. No cream.</p>
+					<p data-part="meta"><strong data-part="key">Prep:</strong> 15 min · <strong data-part="key">Cook:</strong> 20 min · <strong data-part="key">Serves:</strong> 4</p>
+					<ul data-part="list">
+						<li itemprop="recipeIngredient">400 g spaghetti</li>
+						<li itemprop="recipeIngredient">150 g guanciale</li>
+						<li itemprop="recipeIngredient">4 egg yolks</li>
+						<li itemprop="recipeIngredient">80 g pecorino romano</li>
 					</ul>
-				</details>
-				<nav class="cook-nav" aria-label="Step navigation">
-					<button type="button" id="prev-step">Back</button>
-					<button type="button" id="read-step">Read step</button>
-					<button type="button" id="next-step" data-variant="accent">Next</button>
-				</nav>
-				<footer class="cook-voice">
-					<span id="voice-hint">Hands-free: say “next”, “back”, “repeat”, “read”, “ingredients”, “stop” or “close”.</span>
-					<output id="voice-heard" aria-live="polite"></output>
-			</footer>
-		</section>
-
-		<h2 id="findings">Findings</h2>
-		<lay-out md="columns(2) items(start)">
-			<div>
-				<h3>What needs zero JavaScript</h3>
+					<span data-part="tags"><ui-chip itemprop="keywords">Pasta</ui-chip><ui-chip itemprop="keywords">Italian</ui-chip><ui-chip itemprop="keywords">Quick</ui-chip></span>
+					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="recipes/recipe.html?id=recipe-1">Start cooking</a></nav>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+			<div class="try">
+				<h2>What to try on the page</h2>
 				<ul>
-					<li><strong>Open/close of both layers.</strong> The card's cover button and the steps
-						button are plain invokers — <code>command="show-popover" commandfor="…"</code>.
-						The platform handles the top layer, Esc, light-dismiss, focus and
-						<code>::backdrop</code>; same mechanism as the media lightbox.</li>
-					<li><strong>Stacking.</strong> Cook mode is a <em>sibling</em> of the app popover —
-						a popover inside a closed (<code>display: none</code>) popover can never render,
-						and the card's own steps button must open cook mode standalone. Opened from inside
-						the app, the <em>invoker relationship</em> makes the app its ancestor in the popover
-						stack, so it stays open underneath. (<code>popovertarget=</code> is the
-						wider-support spelling of the same invoker; this page follows the repo's
-						<code>command=</code> convention, with a JS fallback.)</li>
-					<li><strong>Fullscreen styling.</strong> A popover's UA default is fit-content with
-						auto margins; <code>inset: 0; margin: 0; width: 100vw; height: 100dvh</code> makes
-						it an app shell. Entry/exit animate with
-						<code>@starting-style</code> + <code>transition-behavior: allow-discrete</code>.</li>
-					<li><strong>Microdata stays whole.</strong> Moving <code>recipeInstructions</code> out
-						of the card and into the popover would normally break the Recipe item —
-						<code>itemref="app-steps"</code> on the card's <code>itemscope</code> folds the
-						HowToStep list back in. Validate with <code>/validate-schema</code>.</li>
-				</ul>
-			</div>
-			<div>
-				<h3>What needs JavaScript — and its caveats</h3>
-				<ul>
-					<li><strong>Screen Wake Lock</strong> (<code>navigator.wakeLock</code>): secure context
-						only; the lock is <em>released by the platform</em> whenever the tab is hidden, so it
-						must be re-requested on <code>visibilitychange</code>. The indicator dot reflects the
-						sentinel's real state (its <code>release</code> event), not the toggle.</li>
-					<li><strong>Read-aloud, two ways.</strong> <code>speechSynthesis</code> is free and
-						per-step (dynamic text), but voice quality and voice loading are inconsistent across
-						platforms. A pre-recorded <strong>audio file</strong> gives production quality and
-						works where TTS voices are poor — but is static content (here a placeholder file).
-						Playing one cancels the other.</li>
-					<li><strong>Hands-free</strong> (<code>SpeechRecognition</code>): Chromium-only in
-						practice (webkit-prefixed), needs mic permission, and on most builds streams audio
-						to a server. Recognition auto-stops on silence, so it must be restarted from
-						<code>onend</code>; it is also paused while the app itself is speaking so TTS
-						doesn't trigger commands. Keyboard arrows do the same job as fallback.</li>
-					<li><strong>Next steps</strong> if this graduates from demo to component: per-step
-						timers from HowToStep durations, a card ↔ app View Transition morph
-						(lightbox.js pattern), Media Session metadata for the narration, and moving the
-						inline script into an optional <code>recipe.js</code> module.</li>
+					<li><strong>Manual transport</strong> — the bar at the bottom: back · step N / 6 · play/pause · next, plus wake lock, copy and share. Everything works by touch; nothing needs a voice.</li>
+					<li><strong>Cook mode</strong> — a fullscreen popover that <em>grows from the button</em> (<code>@starting-style</code> + <code>transition-behavior: allow-discrete</code>), one large step at a time, Esc or × to leave. Screen Wake Lock switches on while it is open — the pill reflects the real sentinel, not the toggle.</li>
+					<li><strong>Timers</strong> — every step with a duration has one; wall-clock based, several can run at once, a three-note chime when done, and they keep running if you close cook mode.</li>
+					<li><strong>Listen</strong> — play/pause reads the current step from its recorded file (script in <code>recipes/narration.md</code>), falling back to the Speech API for any step without one; headset and lock-screen controls (Media Session) play, pause and skip steps.</li>
+					<li><strong>Hands-free</strong> — say “next”, “back”, “repeat”, “pause”, “ingredients”, “timer” or “close”. The mic mutes itself while the page is speaking.</li>
+					<li><strong>Servings and units</strong> — scale 1–24 servings; switch metric ↔ imperial. Only the visible text changes: the <code>recipeIngredient</code> microdata rides a <code>&lt;data value&gt;</code> and stays as authored.</li>
+					<li><strong>It remembers</strong> — current step, ticked ingredients, servings, units and voice, per <code>?id=</code>, in <code>localStorage</code>.</li>
 				</ul>
 			</div>
 		</lay-out>
 	</main>
-
-	<script type="module">
-		const $ = s => document.querySelector(s);
-		const app = $('#recipe-app');
-		const cook = $('#recipe-steps');
-		const steps = [...document.querySelectorAll('#app-steps > li')];
-		const stepNow = $('#step-now'), stepProgress = $('#step-progress');
-		const heard = $('#voice-heard');
-		const audio = $('#recipe-audio');
-		const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-		const hasTTS = 'speechSynthesis' in window;
-		let current = 0;
-
-		/* --- Capability report ------------------------------------------- */
-		const caps = {
-			'Popover API': HTMLElement.prototype.hasOwnProperty('popover'),
-			'Invoker commands (command/commandfor)': 'command' in document.createElement('button'),
-			'Screen Wake Lock': 'wakeLock' in navigator,
-			'Speech synthesis (read aloud)': hasTTS,
-			'Speech recognition (hands-free)': !!SR,
-			'Secure context (wake lock & microphone)': window.isSecureContext,
-		};
-		$('#caps').innerHTML = Object.entries(caps)
-			.map(([k, ok]) => `<li data-ok="${ok}">${ok ? '✓' : '✗'} ${k}</li>`).join('');
-
-		/* Invoker-command fallback: browsers without command/commandfor get
-		   click handlers doing the same popover calls. */
-		if (!caps['Invoker commands (command/commandfor)']) {
-			document.querySelectorAll('button[commandfor]').forEach(btn => {
-				btn.addEventListener('click', () => {
-					const target = document.getElementById(btn.getAttribute('commandfor'));
-					const cmd = btn.getAttribute('command');
-					if (!target) return;
-					// {source} preserves the invoker relationship in the popover
-					// stack (keeps the app open under cook mode) where supported.
-					if (cmd === 'show-popover') { try { target.showPopover({ source: btn }); } catch { target.showPopover(); } }
-					else if (cmd === 'hide-popover') target.hidePopover();
-					else target.togglePopover();
-				});
-			});
-		}
-
-		/* --- Step navigation --------------------------------------------- */
-		stepProgress.max = steps.length;
-		$('#step-total').textContent = steps.length;
-		function show(i, { announce = false } = {}) {
-			current = Math.min(Math.max(i, 0), steps.length - 1);
-			steps.forEach((li, n) => n === current
-				? li.setAttribute('aria-current', 'step')
-				: li.removeAttribute('aria-current'));
-			stepNow.value = current + 1;
-			stepProgress.value = current + 1;
-			if (announce) speakStep();
-		}
-		$('#next-step').addEventListener('click', () => show(current + 1, { announce: listening }));
-		$('#prev-step').addEventListener('click', () => show(current - 1, { announce: listening }));
-		cook.addEventListener('keydown', e => {
-			if (e.key === 'ArrowRight') show(current + 1);
-			if (e.key === 'ArrowLeft') show(current - 1);
-			if (e.key === 'Home') show(0);
-		});
-
-		/* --- Screen Wake Lock -------------------------------------------- */
-		const wakeToggle = $('#wake-toggle');
-		const wakeIndicators = [wakeToggle, $('#wake-indicator-app')];
-		let sentinel = null;
-		let wakeUserOff = false;
-
-		const wakeUI = on => wakeIndicators.forEach(el => el.toggleAttribute('data-on', on));
-		const wakeWanted = () => !wakeUserOff && (app.matches(':popover-open') || cook.matches(':popover-open'));
-
-		async function syncWakeLock() {
-			if (!('wakeLock' in navigator)) return;
-			if (wakeWanted() && !sentinel && document.visibilityState === 'visible') {
-				try {
-					sentinel = await navigator.wakeLock.request('screen');
-					wakeUI(true);
-					// The UA can release the lock at any time (tab hidden, battery
-					// saver) — the indicator tracks the sentinel, not the toggle.
-					sentinel.addEventListener('release', () => { sentinel = null; wakeUI(false); });
-				} catch { wakeUI(false); }
-			} else if (!wakeWanted() && sentinel) {
-				sentinel.release();
-			}
-		}
-		document.addEventListener('visibilitychange', syncWakeLock);
-		wakeToggle.addEventListener('click', () => {
-			wakeUserOff = !wakeUserOff;
-			wakeToggle.setAttribute('aria-pressed', String(!wakeUserOff));
-			syncWakeLock();
-		});
-		if (!('wakeLock' in navigator)) {
-			wakeIndicators.forEach(el => { el.setAttribute('data-unsupported', ''); el.title = 'Wake Lock not supported'; });
-		}
-
-		/* --- Read-aloud: Speech API -------------------------------------- */
-		let speaking = false;
-		function speak(text) {
-			if (!hasTTS) return;
-			speechSynthesis.cancel();
-			audio.pause();
-			const u = new SpeechSynthesisUtterance(text);
-			u.lang = 'en-US';
-			const voice = speechSynthesis.getVoices().find(v => v.lang.startsWith('en'));
-			if (voice) u.voice = voice;
-			// Mute the mic while we talk, or TTS output triggers commands.
-			u.onstart = () => { speaking = true; pauseRecognition(); };
-			u.onend = u.onerror = () => { speaking = false; resumeRecognition(); };
-			speechSynthesis.speak(u);
-		}
-		const stepText = i => `Step ${i + 1}. ${steps[i].querySelector('h3').textContent}. ${steps[i].querySelector('[itemprop="text"]').textContent}`;
-		const ingredientsText = 'You need: ' + [...document.querySelectorAll('.cook-ingredients li')].map(li => li.textContent.trim()).join(', ') + '.';
-		const speakStep = () => speak(stepText(current));
-		$('#read-step').addEventListener('click', speakStep);
-		$('#read-recipe').addEventListener('click', () => speak(
-			'Classic Spaghetti Carbonara. The Roman original — guanciale, pecorino, eggs and pepper. No cream. ' +
-			'Preparation 15 minutes, cooking 20 minutes, serves 4. ' + ingredientsText + ' ' +
-			steps.map((_, i) => stepText(i)).join(' ')
-		));
-		if (!hasTTS) { $('#read-recipe').hidden = true; $('#read-step').hidden = true; }
-
-		/* --- Read-aloud: audio file — one narrator at a time -------------- */
-		audio.addEventListener('play', () => hasTTS && speechSynthesis.cancel());
-
-		/* --- Hands-free: SpeechRecognition -------------------------------- */
-		const voiceToggle = $('#voice-toggle');
-		let rec = null;
-		let listening = false;
-
-		if (!SR) {
-			voiceToggle.setAttribute('data-unsupported', '');
-			voiceToggle.disabled = true;
-			voiceToggle.title = 'SpeechRecognition not supported in this browser';
-			$('#voice-hint').textContent = 'Hands-free voice control is not supported in this browser — use the buttons or arrow keys.';
-		} else {
-			rec = new SR();
-			rec.lang = 'en-US';
-			rec.continuous = true;
-			rec.interimResults = false;
-			rec.onresult = e => {
-				const phrase = e.results[e.resultIndex][0].transcript.trim().toLowerCase();
-				heard.value = phrase;
-				if (/\b(next|forward|continue)\b/.test(phrase)) show(current + 1, { announce: true });
-				else if (/\b(back|previous)\b/.test(phrase)) show(current - 1, { announce: true });
-				else if (/\b(repeat|again|read)\b/.test(phrase)) speakStep();
-				else if (/\bingredients?\b/.test(phrase)) speak(ingredientsText);
-				else if (/\b(start over|first step)\b/.test(phrase)) show(0, { announce: true });
-				else if (/\b(stop|quiet|silence)\b/.test(phrase)) hasTTS && speechSynthesis.cancel();
-				else if (/\b(close|exit|finish)\b/.test(phrase)) cook.matches(':popover-open') && cook.hidePopover();
-			};
-			// Chrome ends recognition after a stretch of silence — restart.
-			rec.onend = () => { if (listening && !speaking) restartRecognition(); };
-			rec.onerror = e => {
-				if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
-					stopListening();
-					$('#voice-hint').textContent = 'Microphone access was denied — hands-free is off.';
-				}
-			};
-			voiceToggle.addEventListener('click', () => listening ? stopListening() : startListening());
-		}
-		const restartRecognition = () => { try { rec.start(); } catch {} };
-		function startListening() {
-			listening = true;
-			voiceToggle.setAttribute('aria-pressed', 'true');
-			voiceToggle.setAttribute('data-on', '');
-			restartRecognition();
-		}
-		function stopListening() {
-			listening = false;
-			voiceToggle.setAttribute('aria-pressed', 'false');
-			voiceToggle.removeAttribute('data-on');
-			heard.value = '';
-			rec?.abort();
-		}
-		const pauseRecognition = () => listening && rec?.abort();
-		const resumeRecognition = () => listening && restartRecognition();
-
-		/* --- Lifecycle: tie it together on popover toggle ------------------ */
-		cook.addEventListener('toggle', e => {
-			if (e.newState === 'open') {
-				show(current);
-				syncWakeLock();
-			} else {
-				if (hasTTS) speechSynthesis.cancel();
-				stopListening?.();
-				syncWakeLock();
-			}
-		});
-		app.addEventListener('toggle', e => {
-			if (e.newState === 'closed') {
-				if (hasTTS) speechSynthesis.cancel();
-				audio.pause();
-			}
-			syncWakeLock();
-		});
-		if (hasTTS) speechSynthesis.getVoices(); // warm the async voice list
-	</script>
 </body>
 </html>

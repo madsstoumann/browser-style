@@ -382,6 +382,15 @@
       "content": "scl(lg)",
       "headingTag": "h2"
     },
+    "recipe-page": {
+      "name": "Recipe page",
+      "description": "Full recipe view — the product-page-solo surface (one 4:3 photo hugging its ratio beside the text column from the lg tier, no shadow) for a Recipe. The page builder hands the renderer a details object WITHOUT ingredients/instructions: the checklist and the HowToStep list are hand-authored bands below the card, inside the page’s one Recipe scope (demo/recipes/build.js)",
+      "element": "ui-card",
+      "variant": "col lg:row lg:spl(1/1) shd(non)",
+      "media": "asr(4/3) hug rds(lg)",
+      "content": "scl(lg)",
+      "headingTag": "h2"
+    },
     "realestate-page": {
       "name": "Real estate page",
       "description": "Full listing view — the photo gallery stays ABOVE the text column at every width and opens FULLSCREEN as the same one-image-at-a-time carousel, arrows and dots included; bare nav, so the markers are the default dots",

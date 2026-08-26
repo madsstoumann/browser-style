@@ -56,4 +56,9 @@ export const ICON_NAMES = [
 	'text-snippet',
 	'folder-zip',
 	'draft',
+	'chevron-left',
+	'chevron-right',
+	'light-mode',
+	'mic',
+	'content-copy',
 ];

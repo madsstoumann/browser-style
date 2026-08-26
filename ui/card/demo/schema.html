@@ -12,7 +12,7 @@
 	<link rel="preconnect" href="https://v4.browser.style">
 	<meta name="description" content="62 cards covering 53 distinct schema.org itemtypes on the card hosts (ItemList runs four cards; Quiz three; Review, EventSeries, Place and Person two each) — re-created with the modern &lt;ui-card&gt; engine: inline microdata (itemscope/itemtype/itemprop), no JSON-LD. The job card carries a 54th type as a second top-level item: EmployerAggregateRating. Two optional scripts: video.min.js polyfills the media invoker commands behind the podcast play button, save.min.js flips the save heart.">
 	<link rel="alternate" type="text/markdown" href="/ui/card/docs/schema.md">
-	<link rel="stylesheet" href="/dist/demo.6b8147a7.min.css">
+	<link rel="stylesheet" href="/dist/demo.0a296b6e.min.css">
 
 	<style>
 		/* Off-screen cards skip style+layout. Page-scoped on purpose; 567px is this page's
@@ -45,7 +45,7 @@
 	<!-- polyfill:end -->
 	<script type="speculationrules">
 	{
-		"prerender": [{ "urls": ["articles/article.html", "articles/news.html"], "eagerness": "moderate" }]
+		"prerender": [{ "urls": ["articles/article.html", "articles/news.html", "recipes/recipe.html?id=recipe-1"], "eagerness": "moderate" }]
 	}
 	</script>
 
@@ -1614,16 +1614,16 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card variant="col" media="asr(16/9) chip(te)" itemscope itemtype="https://schema.org/Recipe">
+		<ui-card data-view="card-recipe-1" variant="col" media="asr(16/9) chip(te)" itemscope itemtype="https://schema.org/Recipe">
 			<cq-box>
-				<ui-media><img src="/assets/images/carbonara.png" alt="Plate of spaghetti carbonara" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/carbonara.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/carbonara.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/carbonara.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/carbonara.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/carbonara.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>Recipe</ui-chip></ui-media>
+				<ui-media><img data-view="hero-recipe-1" src="/assets/images/carbonara.png" alt="Plate of spaghetti carbonara" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/carbonara.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/carbonara.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/carbonara.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/carbonara.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/carbonara.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>Recipe</ui-chip></ui-media>
 				<ui-content>
 					<meta itemprop="recipeCategory" content="Pasta">
 					<meta itemprop="prepTime" content="PT15M">
 					<meta itemprop="cookTime" content="PT20M">
 					<meta itemprop="recipeYield" content="4">
 					<small data-part="eyebrow">Pasta</small>
-					<h3 data-part="headline" itemprop="name">Classic Spaghetti Carbonara</h3>
+					<h3 data-part="headline" itemprop="name"><a data-part="cover" href="recipes/recipe.html?id=recipe-1">Classic Spaghetti Carbonara</a></h3>
 					<p data-part="summary" itemprop="description">The Roman original — guanciale, pecorino, eggs and pepper. No cream.</p>
 					<p data-part="meta"><strong data-part="key">Prep:</strong> 15 min · <strong data-part="key">Cook:</strong> 20 min · <strong data-part="key">Serves:</strong> 4</p>
 					<ul data-part="list">
@@ -1632,26 +1632,8 @@
 						<li itemprop="recipeIngredient">4 egg yolks</li>
 						<li itemprop="recipeIngredient">80 g pecorino romano</li>
 					</ul>
-					<ui-accordion variant="bordered rounded divided" group="recipe-acc"><cq-box>
-						<details name="recipe-acc">
-							<summary>Instructions<ui-icon type="plus-minus"></ui-icon></summary>
-							<ui-accordion variant="divided" group="recipe-step" itemprop="recipeInstructions" itemscope itemtype="https://schema.org/ItemList"><cq-box>
-									<details name="recipe-step" itemprop="itemListElement" itemscope itemtype="https://schema.org/HowToStep">
-										<summary>Step 1<meta itemprop="position" content="1"><ui-icon type="chevron right"></ui-icon></summary>
-										<div><p itemprop="text">Crisp the guanciale in a dry pan.</p></div>
-									</details>
-									<details name="recipe-step" itemprop="itemListElement" itemscope itemtype="https://schema.org/HowToStep">
-										<summary>Step 2<meta itemprop="position" content="2"><ui-icon type="chevron right"></ui-icon></summary>
-										<div><p itemprop="text">Whisk yolks with grated pecorino and pepper.</p></div>
-									</details>
-									<details name="recipe-step" itemprop="itemListElement" itemscope itemtype="https://schema.org/HowToStep">
-										<summary>Step 3<meta itemprop="position" content="3"><ui-icon type="chevron right"></ui-icon></summary>
-										<div><p itemprop="text">Toss hot pasta with guanciale, then the egg mixture, off the heat.</p></div>
-									</details>
-							</cq-box></ui-accordion>
-						</details>
-					</cq-box></ui-accordion>
 					<span data-part="tags"><ui-chip itemprop="keywords">Pasta</ui-chip><ui-chip itemprop="keywords">Italian</ui-chip><ui-chip itemprop="keywords">Quick</ui-chip></span>
+					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="recipes/recipe.html?id=recipe-1">Start cooking</a></nav>
 				</ui-content>
 			</cq-box>
 		</ui-card>

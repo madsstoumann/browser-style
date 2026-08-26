@@ -12,7 +12,7 @@
 	<link rel="preconnect" href="https://v4.browser.style">
 	<meta name="description" content="demo/schema.html with the structured data removed — the same cards, sections and layout, rendered with schema="" so there is no itemscope, itemtype or itemprop and none of the hidden meta blocks that carry machine values.">
 	<link rel="alternate" type="text/markdown" href="/ui/card/docs/card.md">
-	<link rel="stylesheet" href="/dist/demo.6b8147a7.min.css">
+	<link rel="stylesheet" href="/dist/demo.0a296b6e.min.css">
 
 	<style>
 		/* Off-screen cards skip style+layout. Page-scoped on purpose; 567px is this page's
@@ -45,7 +45,7 @@
 	<!-- polyfill:end -->
 	<script type="speculationrules">
 	{
-		"prerender": [{ "urls": ["articles/article.html", "articles/news.html"], "eagerness": "moderate" }]
+		"prerender": [{ "urls": ["articles/article.html", "articles/news.html", "recipes/recipe.html?id=recipe-1"], "eagerness": "moderate" }]
 	}
 	</script>
 
@@ -1549,16 +1549,16 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card variant="col" media="asr(16/9) chip(te)">
+		<ui-card data-view="card-recipe-1" variant="col" media="asr(16/9) chip(te)">
 			<cq-box>
-				<ui-media><img src="/assets/images/carbonara.png" alt="Plate of spaghetti carbonara" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/carbonara.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/carbonara.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/carbonara.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/carbonara.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/carbonara.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Recipe</ui-chip></ui-media>
+				<ui-media><img data-view="hero-recipe-1" src="/assets/images/carbonara.png" alt="Plate of spaghetti carbonara" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/carbonara.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/carbonara.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/carbonara.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/carbonara.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/carbonara.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Recipe</ui-chip></ui-media>
 				<ui-content>
 					
 					
 					
 					
 					<small data-part="eyebrow">Pasta</small>
-					<h3 data-part="headline">Classic Spaghetti Carbonara</h3>
+					<h3 data-part="headline"><a data-part="cover" href="recipes/recipe.html?id=recipe-1">Classic Spaghetti Carbonara</a></h3>
 					<p data-part="summary">The Roman original — guanciale, pecorino, eggs and pepper. No cream.</p>
 					<p data-part="meta"><strong data-part="key">Prep:</strong> 15 min · <strong data-part="key">Cook:</strong> 20 min · <strong data-part="key">Serves:</strong> 4</p>
 					<ul data-part="list">
@@ -1567,26 +1567,8 @@
 						<li>4 egg yolks</li>
 						<li>80 g pecorino romano</li>
 					</ul>
-					<ui-accordion variant="bordered rounded divided" group="recipe-acc"><cq-box>
-						<details name="recipe-acc">
-							<summary>Instructions<ui-icon type="plus-minus"></ui-icon></summary>
-							<ui-accordion variant="divided" group="recipe-step"><cq-box>
-									<details name="recipe-step">
-										<summary>Step 1<ui-icon type="chevron right"></ui-icon></summary>
-										<div><p>Crisp the guanciale in a dry pan.</p></div>
-									</details>
-									<details name="recipe-step">
-										<summary>Step 2<ui-icon type="chevron right"></ui-icon></summary>
-										<div><p>Whisk yolks with grated pecorino and pepper.</p></div>
-									</details>
-									<details name="recipe-step">
-										<summary>Step 3<ui-icon type="chevron right"></ui-icon></summary>
-										<div><p>Toss hot pasta with guanciale, then the egg mixture, off the heat.</p></div>
-									</details>
-							</cq-box></ui-accordion>
-						</details>
-					</cq-box></ui-accordion>
 					<span data-part="tags"><ui-chip>Pasta</ui-chip><ui-chip>Italian</ui-chip><ui-chip>Quick</ui-chip></span>
+					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="recipes/recipe.html?id=recipe-1">Start cooking</a></nav>
 				</ui-content>
 			</cq-box>
 		</ui-card>
