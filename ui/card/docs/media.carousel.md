@@ -179,6 +179,11 @@ column**, after the last row, instead of in a band outside the card. Two halves:
   `content=` padding on the lay-out (or an ancestor) — a `pbe()` on one slide moves that
   slide's reserve but not the row. Arrows sit at the content's inline padding, not the
   overlay gap, so they line up with the copy.
+- **The scroller keeps shadow room.** A scroll container clips its slides' `box-shadow`; the
+  band tokens hide that behind their padding, so `nav(end)` reserves
+  `--ui-carousel-nav-end-room` (2.5rem — the card shadow's 20px offset + blur) as
+  `padding-block-end` on the `<lay-out>` (layout/core/base.css, beside the band reservations)
+  and the control math subtracts it. Set the token to `0` for shadowless slides.
 
 Ink is the band ink (currentColor-derived); `arw(drk)` gives filled discs and
 `arw(sqr)`/`arw(sft)` the shape. The polyfill mirrors both halves

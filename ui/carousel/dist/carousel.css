@@ -194,6 +194,7 @@
     }
     &:where([media*="nav(end)"]) {
       --ui-carousel-nav-end: 1;
+      --ui-carousel-nav-end-room: 2.5rem;
       --_nav-end-pbe: var(--ui-content-pbe, var(--ui-content-pb, var(--ui-content-p, var(--spacing-md))));
     }
     &:where([media*="nav(blw)"], [media*="nav(abv)"], [media*="nav(end)"]) {
@@ -754,7 +755,7 @@
       }
     }
     :where(lay-out[overflow]):where([media*="nav(end)"]) {
-      --ui-carousel-arrow-top: calc(anchor(bottom) - var(--_nav-end-pbe) - var(--ui-carousel-arrow-size));
+      --ui-carousel-arrow-top: calc(anchor(bottom) - var(--ui-carousel-nav-end-room, 0px) - var(--_nav-end-pbe) - var(--ui-carousel-arrow-size));
       &::scroll-button(inline-start) {
         inset-inline-start: calc(anchor(self-start) + var(--ui-content-pis, var(--ui-content-pi, var(--ui-content-p, var(--spacing-md)))));
       }
@@ -762,7 +763,7 @@
         inset-inline-end: calc(anchor(self-end) + var(--ui-content-pie, var(--ui-content-pi, var(--ui-content-p, var(--spacing-md)))));
       }
       &::scroll-marker-group {
-        top: calc(anchor(bottom) - var(--_nav-end-pbe) - var(--ui-carousel-arrow-size) / 2 - var(--ui-carousel-marker-size) / 2);
+        top: calc(anchor(bottom) - var(--ui-carousel-nav-end-room, 0px) - var(--_nav-end-pbe) - var(--ui-carousel-arrow-size) / 2 - var(--ui-carousel-marker-size) / 2);
       }
     }
     :where(ui-card, ui-reveal):where([media*="arw(blw)"]) :where(ui-media)::scroll-marker-group,

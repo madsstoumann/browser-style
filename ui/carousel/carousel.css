@@ -149,7 +149,7 @@
 		/* arw(hid) — auto-hide the dead-end arrow */
 		&:where([media*="arw(hid)"]) { --ui-carousel-arrow-disabled-opacity: 0; }
 		/* nav(end) — flag content.css reads for the row reserve; --_nav-end-pbe resolves on the HOST (author content= on the lay-out). Docs: ui/card/docs/media.carousel.md § Content end */
-		&:where([media*="nav(end)"]) { --ui-carousel-nav-end: 1; --_nav-end-pbe: var(--ui-content-pbe, var(--ui-content-pb, var(--ui-content-p, var(--spacing-md)))); }
+		&:where([media*="nav(end)"]) { --ui-carousel-nav-end: 1; --ui-carousel-nav-end-room: 2.5rem; --_nav-end-pbe: var(--ui-content-pbe, var(--ui-content-pb, var(--ui-content-p, var(--spacing-md)))); }
 		/* nav(blw)/nav(abv)/nav(end) control band — transparent, so control ink derives from
 		   currentColor and follows color-scheme + theme= for free. Docs: ui/card/docs/media.carousel.md */
 		&:where([media*="nav(blw)"], [media*="nav(abv)"], [media*="nav(end)"]) {
@@ -713,12 +713,12 @@
 			&:where([media*="nav(blw)"], [media*="arw(blw)"]) { --ui-carousel-arrow-top: calc(anchor(bottom) - var(--ui-carousel-band) / 2 - var(--ui-carousel-arrow-size) / 2); }
 			&:where([media*="nav(abv)"], [media*="arw(abv)"]) { --ui-carousel-arrow-top: calc(anchor(top) + var(--ui-carousel-band) / 2 - var(--ui-carousel-arrow-size) / 2); }
 		}
-		/* nav(end) — the row sits INSIDE the slides' content column: pbe · controls · pbe; arrows align to the content's inline padding. Docs: ui/card/docs/media.carousel.md § Content end */
+		/* nav(end) — the row sits INSIDE the slides' content column: pbe · controls · pbe, above the shadow room layout/core/base.css reserves; arrows align to the content's inline padding. Docs: ui/card/docs/media.carousel.md § Content end */
 		:where(lay-out[overflow]):where([media*="nav(end)"]) {
-			--ui-carousel-arrow-top: calc(anchor(bottom) - var(--_nav-end-pbe) - var(--ui-carousel-arrow-size));
+			--ui-carousel-arrow-top: calc(anchor(bottom) - var(--ui-carousel-nav-end-room, 0px) - var(--_nav-end-pbe) - var(--ui-carousel-arrow-size));
 			&::scroll-button(inline-start) { inset-inline-start: calc(anchor(self-start) + var(--ui-content-pis, var(--ui-content-pi, var(--ui-content-p, var(--spacing-md))))); }
 			&::scroll-button(inline-end)   { inset-inline-end: calc(anchor(self-end) + var(--ui-content-pie, var(--ui-content-pi, var(--ui-content-p, var(--spacing-md))))); }
-			&::scroll-marker-group { top: calc(anchor(bottom) - var(--_nav-end-pbe) - var(--ui-carousel-arrow-size) / 2 - var(--ui-carousel-marker-size) / 2); }
+			&::scroll-marker-group { top: calc(anchor(bottom) - var(--ui-carousel-nav-end-room, 0px) - var(--_nav-end-pbe) - var(--ui-carousel-arrow-size) / 2 - var(--ui-carousel-marker-size) / 2); }
 		}
 		/* arw(blw) — lift the default dots back onto the visible media edge */
 		:where(ui-card, ui-reveal):where([media*="arw(blw)"]) :where(ui-media)::scroll-marker-group,

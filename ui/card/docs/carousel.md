@@ -99,7 +99,7 @@ inventory cannot drift from the CSS. The prose tables under it explain what the 
 | `nav(arw)` | Arrows only |
 | `nav(blw)` | Markers + arrows in a reserved **band below** the media |
 | `nav(abv)` | Markers + arrows in a reserved **band above** the media (mirror of `nav(blw)`) |
-| `nav(end)` | Markers + arrows **inside the slides' content column**, at its end — `<lay-out overflow>` only. Every `<ui-content>` in the scroller grows its `padding-block-end` to *pbe · control row · pbe*, so the column's own end padding repeats above and below the controls; arrows align to the content's inline padding. Band ink (currentColor) — add `arw(drk)` for filled discs, `arw(sqr)`/`arw(sft)` for shape. Author the `content=` padding on the lay-out, not on a slide (the row reads it on the host) |
+| `nav(end)` | Markers + arrows **inside the slides' content column**, at its end — `<lay-out overflow>` only. Every `<ui-content>` in the scroller grows its `padding-block-end` to *pbe · control row · pbe*, so the column's own end padding repeats above and below the controls; arrows align to the content's inline padding. Band ink (currentColor) — add `arw(drk)` for filled discs, `arw(sqr)`/`arw(sft)` for shape. Author the `content=` padding on the lay-out, not on a slide (the row reads it on the host). The scroller keeps `--ui-carousel-nav-end-room` (2.5rem) below the cards so their shadow is not clipped |
 | `nav(non)` | **Scroller only, no controls** — a bare swipe carousel. The parenthesised arg suppresses the bare-`nav` needle (so neither dots nor arrows are declared) while the `nav` substring still enables the scroll-snap scroller |
 
 ### `axis()` — scroll direction

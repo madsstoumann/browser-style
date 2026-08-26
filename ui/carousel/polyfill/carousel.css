@@ -527,8 +527,8 @@ ui-media:where([media*="mrk(bc)"]) > ui-carousel-controls [data-dots] { inset-bl
 ui-carousel-controls[data-media*="mrk(blw)"] { --_pf-arrow-top: calc(50% - (var(--ui-carousel-below-gap, 0.5rem) + var(--ui-carousel-band)) / 2 - var(--ui-carousel-arrow-size) / 2); }
 ui-carousel-controls[data-media*="mrk(abv)"] { --_pf-arrow-top: calc(50% + (var(--ui-carousel-above-gap, 0.5rem) + var(--ui-carousel-band)) / 2 - var(--ui-carousel-arrow-size) / 2); }
 /* nav(end) — row inside the content column: pbe · controls · pbe (--_nav-end-pbe is set on the host by carousel.css, outside the gate) */
-ui-carousel-controls[data-media*="nav(end)"] { --_pf-arrow-top: calc(100% - var(--_nav-end-pbe, var(--spacing-md)) - var(--ui-carousel-arrow-size)); }
-ui-carousel-controls[data-media*="nav(end)"] [data-dots] { block-size: var(--ui-carousel-arrow-size); inset-block: auto var(--_nav-end-pbe, var(--spacing-md)); }
+ui-carousel-controls[data-media*="nav(end)"] { --_pf-arrow-top: calc(100% - var(--ui-carousel-nav-end-room, 0px) - var(--_nav-end-pbe, var(--spacing-md)) - var(--ui-carousel-arrow-size)); }
+ui-carousel-controls[data-media*="nav(end)"] [data-dots] { block-size: var(--ui-carousel-arrow-size); inset-block: auto calc(var(--ui-carousel-nav-end-room, 0px) + var(--_nav-end-pbe, var(--spacing-md))); }
 ui-carousel-controls[data-media*="nav(end)"] [data-nav="prev"] { inset-inline-start: var(--ui-content-pis, var(--ui-content-pi, var(--ui-content-p, var(--spacing-md)))); }
 ui-carousel-controls[data-media*="nav(end)"] [data-nav="next"] { inset-inline-end: var(--ui-content-pie, var(--ui-content-pi, var(--ui-content-p, var(--spacing-md)))); }
 
