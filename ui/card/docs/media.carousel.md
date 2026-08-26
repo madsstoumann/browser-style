@@ -63,6 +63,7 @@ media.md.)
 | `mrk(bc)` `mrk(tc)` | CSS | `nav(blw)`/`nav(abv)`: dots centered in the band (**default**) — `bc` below, `tc` above |
 | `mrk(blw)` `mrk(abv)` | CSS | Dots **alone** in a reserved band below / above the media (arrows keep their on-media position/ink); marker/pill ink follows the band ink |
 | `mrk(drk)`  | CSS | Dark marker ink |
+| `mrk(dyn)`  | CSS | **Dynamic** dots (Instagram) — past 5 slides the strip becomes a 5-slot window: always 3 full-size dots (current ±1, pinned to the leading/trailing 3 at the ends), the rest scaling down toward the edges, and the strip **glides with the swipe** (scroll-driven, no JS). ≤ 5 slides: stock dots. Knobs `--ui-carousel-dyn-min-scale` `-step` `-edge-opacity`. Not with `loop` |
 | `mrk(be)` `mrk(te)` | CSS | `nav(blw)`/`nav(abv)`: dots at the inline-end — `be` below, `te` above |
 | `mrk(hyb)`  | CSS | **Hybrid** dots — markers stay circles; the active one morphs into a pill and runs the `mrk(pll)` fill timer |
 | `mrk(lbl)`  | CSS | **Text-label** markers — each slide's `aria-label` becomes a pill (`content: attr(aria-label)`, mirrors how `mrk(tmb)` reads a per-slide image). Positions with the same 9-grid cells (`mrk(ts/tc/te … bs/bc/be)`). Styled via `--ui-carousel-label-*` custom properties (below), incl. an optional group background/shadow |
@@ -454,6 +455,29 @@ mechanism follows from the markup shape.
   scroll-driven animation on the scroller + an inherited custom property, since
   `scroll(nearest)` does **not** resolve from the group's own box — but the segmented
   form needs no timeline at all.)
+
+### Dynamic dots — `mrk(dyn)`
+
+Instagram's shrinking dots, CSS-only. Past 5 slides the group becomes a fixed 5-slot
+`overflow: clip` window — **not** a scroller — and one number drives everything: the
+frame animates the registered `--ui-carousel-dyn-progress` (0 → 1) on its own
+`scroll(self inline)` timeline, and the value inherits through the slides into their
+`::scroll-marker`s. Per dot: clamped center `c = clamp(1, p·(N−1), N−2)` (the clamp is
+what pins the full trio to dots 1–3 / N−2–N at the ends), distance
+`d = |sibling-index()−1 − c|` (as `max(x, −x)`), `scale = clamp(min, 1 + step − step·d, 1)`
+— current ±1 full, then one step down per slot, plus a matching opacity ramp. The strip
+shifts through ONE `margin-inline-start` on the first slide's marker (logical, so RTL is
+free). Mid-swipe every value interpolates with the finger; autoplay glides through the
+same pipe; no reduced-motion arm is needed because nothing moves unless the carousel does.
+
+Gate: `:has(> :nth-child(6 of …))` with `[data-clone]` excluded — but `sibling-index()`
+still counts clones and furniture, so **`loop` is incompatible** and the scroller wants a
+clean slide list. Needs `sibling-index()`/`sibling-count()` (Chromium 138+) behind its own
+`@supports`. The group is anchored by **name** (`--ui-carousel-dyn`) because
+`position-anchor: auto` stopped binding in Chromium 141 — if that reaches stable, every
+`position-anchor: auto` control in this sheet needs the same treatment. Native
+`::scroll-marker` only: the Safari DOM-controls polyfill draws plain dots. Probe history
+and the discrete runner-up that was rejected: `docs/carousel-dyn-investigation.md`.
 
 ## Arrows
 

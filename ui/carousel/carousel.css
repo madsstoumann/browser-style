@@ -339,6 +339,49 @@
 		:where(ui-card, ui-reveal):where([media*="mrk(non)"]) :where(ui-media),
 		:where(ui-media, lay-out[overflow]):where([media*="mrk(non)"]) { scroll-marker-group: none; }
 
+		/* mrk(dyn) — Instagram dots: 5-slot clip; scale + strip shift derive from ONE
+		   scroll(self)-driven number. Docs: ui/card/docs/media.carousel.md § Dynamic dots */
+		@supports (animation-timeline: scroll()) and (inline-size: calc(sibling-index() * 1px)) {
+			/* NAMED anchor on purpose — position-anchor:auto stopped binding in Chromium 141 */
+			:where(ui-card, ui-reveal):where([media*="mrk(dyn)"]) :where(ui-media),
+			:where(ui-media, lay-out[overflow]):where([media*="mrk(dyn)"]) {
+				--_dyn-pitch: calc(var(--ui-carousel-marker-size) + var(--ui-carousel-marker-gap));
+				--_dyn-window: calc(5 * var(--_dyn-pitch) - var(--ui-carousel-marker-gap));
+				anchor-name: --ui-carousel-dyn;
+				anchor-scope: --ui-carousel-dyn;
+			}
+			:where(ui-card, ui-reveal):where([media*="mrk(dyn)"]) :where(ui-media)::scroll-marker-group,
+			:where(ui-media, lay-out[overflow]):where([media*="mrk(dyn)"])::scroll-marker-group {
+				position-anchor: --ui-carousel-dyn;
+			}
+			/* everything below needs a 6th REAL slide — loop clones don't count */
+			:where(ui-card, ui-reveal):where([media*="mrk(dyn)"]) :where(ui-media:has(> :nth-child(6 of :not(ui-beacon, ui-chip, ui-lightbox, ui-marquee, ui-play, ui-save, ui-sticker, [data-clone])))),
+			:where(ui-media, lay-out[overflow]):where([media*="mrk(dyn)"]):where(:has(> :nth-child(6 of :not(ui-beacon, ui-chip, ui-lightbox, ui-marquee, ui-play, ui-save, ui-sticker, [data-clone])))) {
+				animation: ui-carousel-dyn-progress linear both;
+				animation-timeline: scroll(self inline);
+				/* a fixed clip, deliberately NOT a scroller */
+				&::scroll-marker-group {
+					box-sizing: border-box;
+					inline-size: var(--_dyn-window);
+					overflow: clip;
+				}
+				/* display:block is load-bearing — an inline marker is not transformable */
+				& > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker {
+					display: block;
+					flex: 0 0 auto;
+					--_dyn-c: clamp(1, var(--ui-carousel-dyn-progress) * (sibling-count() - 1), sibling-count() - 2);
+					--_dyn-x: calc(sibling-index() - 1 - var(--_dyn-c));
+					--_dyn-d: max(var(--_dyn-x), -1 * var(--_dyn-x));
+					opacity: clamp(var(--ui-carousel-dyn-edge-opacity, 0.7), 1.6 - 0.3 * var(--_dyn-d), 1);
+					scale: clamp(var(--ui-carousel-dyn-min-scale, 0.4), 1 + var(--ui-carousel-dyn-step, 0.3) - var(--ui-carousel-dyn-step, 0.3) * var(--_dyn-d), 1);
+				}
+				/* the strip shift — ONE logical margin on the first slide's marker */
+				& > :nth-child(1 of :not(ui-beacon, ui-chip, ui-lightbox, ui-marquee, ui-play, ui-save, ui-sticker, [data-clone]))::scroll-marker {
+					margin-inline-start: calc(-1 * var(--_dyn-pitch) * clamp(0, var(--ui-carousel-dyn-progress) * (sibling-count() - 1) - 2, sibling-count() - 5));
+				}
+			}
+		}
+
 		/* mrk(tmb) strips cap via anchor-size() (a `%` won't). Docs: ui/card/docs/media.carousel.md */
 		:where(ui-card, ui-reveal):where([media*="mrk(tmb)"]:not([media*="mrk(rail)"])) :where(ui-media)::scroll-marker-group,
 		:where(ui-media, lay-out[overflow]):where([media*="mrk(tmb)"]:not([media*="mrk(rail)"]))::scroll-marker-group {
@@ -1081,6 +1124,12 @@
 		from { --ui-carousel-thumb-timer-progress: 0%; }
 		to   { --ui-carousel-thumb-timer-progress: 100%; }
 	}
+
+	/* mrk(dyn) — the frame's scroll progress 0→1, inherited into its markers */
+	@keyframes ui-carousel-dyn-progress {
+		from { --ui-carousel-dyn-progress: 0; }
+		to   { --ui-carousel-dyn-progress: 1; }
+	}
 }
 
 /* registered so the keyframe can interpolate it; @property takes no layer scoping */
@@ -1088,4 +1137,9 @@
 	syntax: "<length-percentage>";
 	inherits: false;
 	initial-value: 0%;
+}
+@property --ui-carousel-dyn-progress {
+	syntax: "<number>";
+	inherits: true;
+	initial-value: 0;
 }

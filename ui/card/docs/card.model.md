@@ -973,7 +973,7 @@ is live. One value per token instance — `chip(ts) chip(red)`, never `chip(ts r
 | `arw()` | **size** | sm lg xl | — |
 | `arw()` | **pos** | ts tc te cs cc bs bc be | — |
 | `arw()` | **mode** | blw abv | — |
-| `mrk()` | **variant** | pll hyb bar tmb tml rail non lgt drk sbr lbl | — |
+| `mrk()` | **variant** | pll hyb bar tmb tml rail non lgt drk sbr lbl dyn | — |
 | `mrk()` | **size** | sm md lg xl | — |
 | `mrk()` | **pos** | ts tc te cs cc ce bs bc be | — |
 | `mrk()` | **mode** | blw abv | — |

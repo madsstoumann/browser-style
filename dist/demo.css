@@ -3440,6 +3440,41 @@
     :where(ui-media, lay-out[overflow]):where([media*="mrk(non)"]) {
       scroll-marker-group: none;
     }
+    @supports (animation-timeline: scroll()) and (inline-size: calc(sibling-index() * 1px)) {
+      :where(ui-card, ui-reveal):where([media*="mrk(dyn)"]) :where(ui-media),
+      :where(ui-media, lay-out[overflow]):where([media*="mrk(dyn)"]) {
+        --_dyn-pitch: calc(var(--ui-carousel-marker-size) + var(--ui-carousel-marker-gap));
+        --_dyn-window: calc(5 * var(--_dyn-pitch) - var(--ui-carousel-marker-gap));
+        anchor-name: --ui-carousel-dyn;
+        anchor-scope: --ui-carousel-dyn;
+      }
+      :where(ui-card, ui-reveal):where([media*="mrk(dyn)"]) :where(ui-media)::scroll-marker-group,
+      :where(ui-media, lay-out[overflow]):where([media*="mrk(dyn)"])::scroll-marker-group {
+        position-anchor: --ui-carousel-dyn;
+      }
+      :where(ui-card, ui-reveal):where([media*="mrk(dyn)"]) :where(ui-media:has(> :nth-child(6 of :not(ui-beacon, ui-chip, ui-lightbox, ui-marquee, ui-play, ui-save, ui-sticker, [data-clone])))),
+      :where(ui-media, lay-out[overflow]):where([media*="mrk(dyn)"]):where(:has(> :nth-child(6 of :not(ui-beacon, ui-chip, ui-lightbox, ui-marquee, ui-play, ui-save, ui-sticker, [data-clone])))) {
+        animation: ui-carousel-dyn-progress linear both;
+        animation-timeline: scroll(self inline);
+        &::scroll-marker-group {
+          box-sizing: border-box;
+          inline-size: var(--_dyn-window);
+          overflow: clip;
+        }
+        & > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker {
+          display: block;
+          flex: 0 0 auto;
+          --_dyn-c: clamp(1, var(--ui-carousel-dyn-progress) * (sibling-count() - 1), sibling-count() - 2);
+          --_dyn-x: calc(sibling-index() - 1 - var(--_dyn-c));
+          --_dyn-d: max(var(--_dyn-x), -1 * var(--_dyn-x));
+          opacity: clamp(var(--ui-carousel-dyn-edge-opacity, 0.7), 1.6 - 0.3 * var(--_dyn-d), 1);
+          scale: clamp(var(--ui-carousel-dyn-min-scale, 0.4), 1 + var(--ui-carousel-dyn-step, 0.3) - var(--ui-carousel-dyn-step, 0.3) * var(--_dyn-d), 1);
+        }
+        & > :nth-child(1 of :not(ui-beacon, ui-chip, ui-lightbox, ui-marquee, ui-play, ui-save, ui-sticker, [data-clone]))::scroll-marker {
+          margin-inline-start: calc(-1 * var(--_dyn-pitch) * clamp(0, var(--ui-carousel-dyn-progress) * (sibling-count() - 1) - 2, sibling-count() - 5));
+        }
+      }
+    }
     :where(ui-card, ui-reveal):where([media*="mrk(tmb)"]:not([media*="mrk(rail)"])) :where(ui-media)::scroll-marker-group,
     :where(ui-media, lay-out[overflow]):where([media*="mrk(tmb)"]:not([media*="mrk(rail)"]))::scroll-marker-group {
       max-inline-size: calc(anchor-size(--ui-carousel-thumbs inline) - 2 * var(--ui-carousel-overlay-gap, 0.75rem));
@@ -4226,8 +4261,17 @@
       --ui-carousel-thumb-timer-progress: 100%;
     }
   }
+  @keyframes ui-carousel-dyn-progress {
+    from {
+      --ui-carousel-dyn-progress: 0;
+    }
+    to {
+      --ui-carousel-dyn-progress: 1;
+    }
+  }
 }
 @property --ui-carousel-thumb-timer-progress { syntax: "<length-percentage>"; inherits: false; initial-value: 0%; }
+@property --ui-carousel-dyn-progress { syntax: "<number>"; inherits: true; initial-value: 0; }
 
 /* ui/carousel/index.css */
 
@@ -8921,6 +8965,7 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
     --_cosh: calc(1em * cos(45deg));
     background: var(--ui-icon-bg);
     border-radius: var(--ui-icon-radius);
+    corner-shape: var(--ui-icon-corner, round);
     direction: ltr;
     display: inline-grid;
     font-size: var(--ui-icon-size);
@@ -8942,10 +8987,12 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
       display: block;
       transition: var(--ui-icon-duration) var(--ui-icon-easing);
     }
-    &[variant~=border] {
-      border: var(--ui-icon-border-width, var(--ui-icon-stroke)) solid var(--ui-icon-border-color);
+    &:is([variant~=border], [theme], [data-theme]) {
       box-sizing: content-box;
       padding: var(--ui-icon-padding, 0.3em);
+    }
+    &[variant~=border] {
+      border: var(--ui-icon-border-width, var(--ui-icon-stroke)) solid var(--ui-icon-border-color);
     }
     &:is([type*=arrow], [type=check], [type*=chevron])::after {
       border-color: currentColor;
@@ -9127,6 +9174,26 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
     &[stroke=xl] {
       --ui-icon-stroke: 6px;
       --ui-icon-svg-stroke: 2.5;
+    }
+    &:is([theme], [data-theme]) {
+      --ui-icon-bg: var(--_theme-bg, transparent);
+      color: var(--_theme-c, var(--_theme-ink));
+    }
+    &[radius~=non] {
+      --ui-icon-radius: 0;
+    }
+    &[radius~=rnd] {
+      --ui-icon-radius: var(--radius-md);
+    }
+    &[radius~=pll] {
+      --ui-icon-radius: var(--radius-pill);
+    }
+    &[radius~=crc] {
+      --ui-icon-radius: var(--radius-circle);
+    }
+    &[radius~=sqr] {
+      --ui-icon-radius: var(--radius-circle);
+      --ui-icon-corner: superellipse(var(--squircle-md));
     }
     &[shape=bookmark] {
       --_shape: var(--ui-icon-shape-bookmark);
