@@ -516,7 +516,32 @@ Standard column layout with a participate CTA. Location → `Place` → `PostalA
 
 ### Recipe — `Recipe`
 
-Ingredients as proposed part `list`; instructions as a nested `<ui-accordion>` with `HowToStep` items.
+Ingredients as proposed part `list`. The card is the **teaser** of the recipe app: `cover` on the headline and a
+*Start cooking* action both lead to `demo/recipes/recipe.html?id=recipe-1`, and `details.instructions` stays off the
+teaser — the `HowToStep` list (with `name`, `text` and `timeRequired`) is the page's. (The renderer still emits a
+nested `<ui-accordion>` of `HowToStep` items, or the `popover` form, for any recipe whose data carries instructions —
+the HowTo card below is the live example.)
+
+**The kitchen-app demo pair.** [`demo/schema.recipe.html`](../demo/schema.recipe.html) shows this
+card exactly as above with two edits — the headline is a cover link and the steps accordion is a
+*Start cooking* button, both to [`demo/recipes/recipe.html?id=recipe-1`](../demo/recipes/recipe.html?id=recipe-1)
+— and the page is the entity view, built by `demo/recipes/build.js` the way the product and
+real-estate pages are: `data/recipe.json` deep-merged with the page-local `recipes/carbonara.json`
+(six steps as `{name, text, duration, audio}`, richer than the card model's `string[]`), one static
+`renderCard()` through the `recipe-page` demo preset, and a cross-document view transition on the
+`card-recipe-1` / `hero-recipe-1` pair. The card is handed a `details` object **without**
+`ingredients`/`instructions`, so the renderer emits no accordion; both bands are hand-authored in the
+page's one Recipe scope — ingredients as `<data itemprop="recipeIngredient" value="…">` (the machine
+text stays as authored while the servings scaler and the metric ↔ imperial toggle rewrite only the
+visible `<span data-qty data-unit>`), steps as `recipeInstructions` → `ItemList` of `HowToStep` with
+`name` + `text` + `timeRequired`. The fullscreen cook-mode `<section popover>` carries no itemprops
+and no `data-view` (morph names must stay unique per document); it animates open from the invoking
+button (`@starting-style` + `display`/`overlay` `allow-discrete`; Safari has no `overlay`, so its
+exit is instant). `?id=` is a route mimic — the page is static and `recipe.js` reads the id only to
+namespace `localStorage`. Narration plays each step's recorded file (the exact script is the generated `recipes/narration.md`)
+and falls back to the Speech API for any step without one — hands-free and the Media Session
+transport (headset / lock screen: play, pause, next, previous) drive the same player. Back-button
+close of cook mode is a follow-up (the lightbox's `syncHistory` pattern).
 
 ### Review — `Review`
 

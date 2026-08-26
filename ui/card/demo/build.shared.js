@@ -1,5 +1,5 @@
 /**
- * Page-shell pieces shared by the SSR demo-page builders (articles/, products/).
+ * Page-shell pieces shared by the SSR demo-page builders (articles/, products/, realestate/, rentals/, offices/, recipes/).
  *
  * Extracted verbatim from articles/build.js when products/build.js needed the same
  * head, the same contrast overrides and the same descope rule — two copies of a page
@@ -11,9 +11,9 @@
    line along with the 26 hand-authored demo pages (scripts/hash-asset.js). Do not edit
    it by hand and do not replace it with a fixed name: /dist/* is immutable for a year,
    so a stable filename would let a shipped CSS change stay invisible behind a cached
-   copy. This template is rewritten too because the articles/ and products/ builders
+   copy. This template is rewritten too because the page builders
    emit it — miss it and the next build silently reverts five generated pages. */
-export const HEAD_COMMON = `<link rel="stylesheet" href="/dist/demo.6b8147a7.min.css">
+export const HEAD_COMMON = `<link rel="stylesheet" href="/dist/demo.0a296b6e.min.css">
 	<!-- no-referrer: the zone hotlink-protects CDN srcset. Docs: docs/performance.md -->
 	<meta name="referrer" content="no-referrer">
 	<link rel="preconnect" href="https://v4.browser.style">`;

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>UI: Card — Recipe App</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="text-scale" content="scale">
+	<meta name="color-scheme" content="light dark">
+	<!-- Head rationale: docs/schema.md § Demo-page head and scripts -->
+	<meta name="referrer" content="no-referrer">
+	<link rel="preconnect" href="https://v4.browser.style">
+	<meta name="description" content="The schema.org Recipe card as the teaser of a small kitchen app: the card stays exactly what schema.html renders, and its cover link + Start cooking button navigate — with a cross-document view transition — to recipes/recipe.html?id=recipe-1, a static entity page with an ingredient checklist (servings, metric/imperial), step timers, narration, and a fullscreen cook-mode popover with wake lock and hands-free voice control.">
+	<link rel="alternate" type="text/markdown" href="/ui/card/docs/schema.md">
+	<link rel="stylesheet" href="/dist/demo.0a296b6e.min.css">
+	<!-- Block first paint (and the view-transition snapshot) until the morph source is parsed. Docs: products/build.js header -->
+	<link rel="expect" href="#recipe-card" blocking="render">
+	<!-- Names the morph targets where typed attr() is unsupported (Safari). MUST be render-blocking. Docs: ui/base/polyfills/readme.md -->
+	<script type="module" src="/ui/base/polyfills/attr-fallback.min.js" blocking="render"></script>
+	<style>
+		ui-content { --ui-content-muted: color-mix(in oklab, currentColor 85%, transparent); }
+		ui-chip[data-type] { --ui-chip-bg: hsl(0, 0%, 95%); --ui-chip-c: hsl(0, 0%, 13%); }
+		.try { display: grid; gap: var(--spacing-sm); }
+		.try h2 { font-size: 1.15rem; margin: 0; }
+		.try ul { margin: 0; padding-inline-start: 1.2em; }
+		.try li { margin-block: var(--spacing-xs); }
+	</style>
+	<script type="speculationrules">
+	{
+		"prerender": [{ "urls": ["recipes/recipe.html?id=recipe-1"], "eagerness": "moderate" }]
+	}
+	</script>
+</head>
+<body data-layout-root data-page-gap="2">
+	<header>
+		<!-- Hand-authored CSS-only breadcrumbs — ui/breadcrumbs/readme.md § Structured data -->
+		<nav aria-label="Breadcrumb">
+			<ol data-breadcrumbs itemscope itemtype="https://schema.org/BreadcrumbList">
+				<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+					<a itemprop="item" href="/ui/card/"><span itemprop="name">Card</span></a>
+					<meta itemprop="position" content="1">
+				</li>
+				<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+					<span itemprop="name">Recipe App</span>
+					<meta itemprop="position" content="2">
+				</li>
+			</ol>
+		</nav>
+		<h1>UI: Card — Recipe App</h1>
+		<p>The <a href="schema.html">schema.org</a> Recipe card, exactly as the reference page renders it: its
+			headline is a cover link and the steps are a <strong>Start cooking</strong> button (the teaser carries no
+			instructions — they live on the page), both pointing at <a href="recipes/recipe.html?id=recipe-1">a dedicated page</a>. That page is the
+			<em>kitchen app</em>, built the way the <a href="products/aurasound-pro.html">product</a> and
+			<a href="realestate/havnegade-44.html">listing</a> pages are: one static render of the same data
+			(<code>recipes/build.js</code>), so the card morphs into the page hero with a cross-document view
+			transition. The <code>?id=</code> is a route mimic — a CMS would resolve it; here it namespaces the
+			page’s remembered state.</p>
+	</header>
+
+	<main data-layout-root data-page-gap="2">
+		<h2>The card</h2>
+		<lay-out md="columns(2) items(start)">
+			<!-- The Recipe card from demo/schema.html, byte-for-byte (plus id=): data-view names on the host and
+			     hero are the morph pair recipes/recipe.html answers; the steps live on the page, in its one Recipe scope. -->
+		<ui-card id="recipe-card" data-view="card-recipe-1" variant="col" media="asr(16/9) chip(te)" itemscope itemtype="https://schema.org/Recipe">
+			<cq-box>
+				<ui-media><img data-view="hero-recipe-1" src="/assets/images/carbonara.png" alt="Plate of spaghetti carbonara" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/carbonara.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/carbonara.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/carbonara.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/carbonara.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/carbonara.png 1200w" sizes="(min-width: 540px) min(50vw, 512px), 100vw" loading="eager" fetchpriority="high" decoding="async" itemprop="image"><ui-chip data-type>Recipe</ui-chip></ui-media>
+				<ui-content>
+					<meta itemprop="recipeCategory" content="Pasta">
+					<meta itemprop="prepTime" content="PT15M">
+					<meta itemprop="cookTime" content="PT20M">
+					<meta itemprop="recipeYield" content="4">
+					<small data-part="eyebrow">Pasta</small>
+					<h3 data-part="headline" itemprop="name"><a data-part="cover" href="recipes/recipe.html?id=recipe-1">Classic Spaghetti Carbonara</a></h3>
+					<p data-part="summary" itemprop="description">The Roman original — guanciale, pecorino, eggs and pepper. No cream.</p>
+					<p data-part="meta"><strong data-part="key">Prep:</strong> 15 min · <strong data-part="key">Cook:</strong> 20 min · <strong data-part="key">Serves:</strong> 4</p>
+					<ul data-part="list">
+						<li itemprop="recipeIngredient">400 g spaghetti</li>
+						<li itemprop="recipeIngredient">150 g guanciale</li>
+						<li itemprop="recipeIngredient">4 egg yolks</li>
+						<li itemprop="recipeIngredient">80 g pecorino romano</li>
+					</ul>
+					<span data-part="tags"><ui-chip itemprop="keywords">Pasta</ui-chip><ui-chip itemprop="keywords">Italian</ui-chip><ui-chip itemprop="keywords">Quick</ui-chip></span>
+					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="recipes/recipe.html?id=recipe-1">Start cooking</a></nav>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+			<div class="try">
+				<h2>What to try on the page</h2>
+				<ul>
+					<li><strong>Manual transport</strong> — the bar at the bottom: back · step N / 6 · play/pause · next, plus wake lock, copy and share. Everything works by touch; nothing needs a voice.</li>
+					<li><strong>Cook mode</strong> — a fullscreen popover that <em>grows from the button</em> (<code>@starting-style</code> + <code>transition-behavior: allow-discrete</code>), one large step at a time, Esc or × to leave. Screen Wake Lock switches on while it is open — the pill reflects the real sentinel, not the toggle.</li>
+					<li><strong>Timers</strong> — every step with a duration has one; wall-clock based, several can run at once, a three-note chime when done, and they keep running if you close cook mode.</li>
+					<li><strong>Listen</strong> — play/pause reads the current step from its recorded file (script in <code>recipes/narration.md</code>), falling back to the Speech API for any step without one; headset and lock-screen controls (Media Session) play, pause and skip steps.</li>
+					<li><strong>Hands-free</strong> — say “next”, “back”, “repeat”, “pause”, “ingredients”, “timer” or “close”. The mic mutes itself while the page is speaking.</li>
+					<li><strong>Servings and units</strong> — scale 1–24 servings; switch metric ↔ imperial. Only the visible text changes: the <code>recipeIngredient</code> microdata rides a <code>&lt;data value&gt;</code> and stays as authored.</li>
+					<li><strong>It remembers</strong> — current step, ticked ingredients, servings, units and voice, per <code>?id=</code>, in <code>localStorage</code>.</li>
+				</ul>
+			</div>
+		</lay-out>
+	</main>
+</body>
+</html>

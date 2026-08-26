@@ -1,0 +1,59 @@
+{
+  "$schema": "../../../../cms/baseline/models/card.schema.json",
+  "id": "recipe-1",
+  "model": "card",
+  "meta": {
+    "internalName": "Demo — Recipe, PAGE-ONLY additions",
+    "note": "Deep-merged over ui/card/data/recipe.json by build.js (arrays replace outright). Everything here is what the kitchen-app PAGE has and the teaser card must not: six steps as {name, text, duration, audio} — richer than the card model's string[] and never handed to render.js (build.js renders the card without ingredients/instructions and hand-authors both bands) — the fuller ingredient list, and the narration file. `narration` and per-step `audio`/`duration` are page-local, not card-model fields; durations are ISO 8601 and drive the step timers."
+  },
+  "fields": {
+    "details": {
+      "servings": 4,
+      "ingredients": [
+        "400 g spaghetti",
+        "150 g guanciale",
+        "4 egg yolks",
+        "80 g pecorino romano",
+        "2 tsp black pepper",
+        "salt, for the water"
+      ],
+      "instructions": [
+        {
+          "name": "Boil & salt",
+          "text": "Bring a large pot of water to a rolling boil, then salt it generously — it should taste like the sea.",
+          "duration": "PT10M",
+          "audio": "/assets/audio/recipes/carbonara/step-1.mp3"
+        },
+        {
+          "name": "Crisp the guanciale",
+          "text": "Cut the guanciale into short strips and crisp them in a dry pan over medium heat until golden. Pull the pan off the heat.",
+          "duration": "PT6M",
+          "audio": "/assets/audio/recipes/carbonara/step-2.mp3"
+        },
+        {
+          "name": "Make the cream",
+          "text": "Whisk the egg yolks with the grated pecorino and plenty of coarsely ground black pepper into a thick paste.",
+          "duration": "PT3M",
+          "audio": "/assets/audio/recipes/carbonara/step-3.mp3"
+        },
+        {
+          "name": "Cook the pasta",
+          "text": "Cook the spaghetti until just shy of al dente. Scoop out 250 ml of the starchy cooking water before you drain.",
+          "duration": "PT9M",
+          "audio": "/assets/audio/recipes/carbonara/step-4.mp3"
+        },
+        {
+          "name": "Toss, off the heat",
+          "text": "Toss the hot pasta with the guanciale and its fat. Off the heat, stir in the egg mixture, loosening with splashes of pasta water until glossy.",
+          "duration": "PT2M",
+          "audio": "/assets/audio/recipes/carbonara/step-5.mp3"
+        },
+        {
+          "name": "Serve",
+          "text": "Serve immediately in warm bowls, with more pecorino and black pepper on top.",
+          "audio": "/assets/audio/recipes/carbonara/step-6.mp3"
+        }
+      ]
+    }
+  }
+}

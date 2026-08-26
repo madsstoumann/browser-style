@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Classic Spaghetti Carbonara</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="text-scale" content="scale">
+	<meta name="color-scheme" content="light dark">
+	<meta name="description" content="The Roman original — guanciale, pecorino, eggs and pepper. No cream. — the recipe as a small kitchen app: ingredient checklist with servings and units, step timers, narration, cook mode with wake lock and hands-free voice control.">
+	<link rel="stylesheet" href="/dist/demo.0a296b6e.min.css">
+	<!-- no-referrer: the zone hotlink-protects CDN srcset. Docs: docs/performance.md -->
+	<meta name="referrer" content="no-referrer">
+	<link rel="preconnect" href="https://v4.browser.style">
+	<!-- Block first paint (and the view-transition snapshot) until the hero is parsed,
+	     so the card/hero morph targets exist when the browser captures the incoming
+	     page. Docs: products/build.js header -->
+	<link rel="expect" href="#hero" blocking="render">
+	<!-- Names the morph targets where typed attr() is unsupported (Safari). MUST be
+	     render-blocking in <head>: the incoming page is snapshotted at first paint,
+	     so a deferred script names the targets too late and the forward morph
+	     degrades to a cross-fade. Docs: ui/base/polyfills/readme.md -->
+	<script type="module" src="/ui/base/polyfills/attr-fallback.min.js" blocking="render"></script>
+	<style>
+		/* cross-document view transitions (@view-transition, the [data-view] attr()
+		   naming rule and group timing) come from ui-card.css — nothing page-scoped
+		   here, deliberately: see the header comment in products/build.js */
+		body { margin-inline: auto; max-inline-size: 64rem; padding-block-end: 6rem; }
+		@media (max-width: 540px) { body { padding-block-end: 9rem; } }
+		.recipe-page { display: grid; gap: var(--spacing-xl); margin-block-end: var(--spacing-2xl); }
+		.band-title { font-size: 1.25rem; margin: 0 0 var(--spacing-md); }
+		.band :where(h3) { margin: 0; }
+		.bands { display: grid; gap: var(--spacing-xl); }
+		@media (min-width: 720px) { .bands { grid-template-columns: 2fr 3fr; align-items: start; } }
+
+		/* ingredients */
+		.servings { align-items: center; display: flex; flex-wrap: wrap; gap: var(--spacing-sm); margin-block-end: var(--spacing-md); }
+		.servings-count { font-variant-numeric: tabular-nums; min-inline-size: 6ch; text-align: center; }
+		.checklist { display: grid; gap: var(--spacing-xs); list-style: none; margin: 0; padding: 0; }
+		.checklist label { align-items: center; cursor: pointer; display: flex; gap: .75ch; }
+		.checklist li:has(:checked) data { color: var(--color-text-muted); text-decoration: line-through; }
+		[data-qty] { font-variant-numeric: tabular-nums; }
+
+		/* method */
+		.steps { counter-reset: step; display: grid; gap: var(--spacing-md); list-style: none; margin: 0; padding: 0; }
+		.steps li { counter-increment: step; border-inline-start: var(--border-width-heavy) solid var(--color-border); display: grid; gap: var(--spacing-xs); padding-inline-start: var(--spacing-md); scroll-margin-block: 6rem; transition: border-color var(--duration-normal); }
+		.steps li[aria-current="step"] { border-color: var(--color-accent); }
+		.steps h3 { font-size: 1.05rem; }
+		.steps h3::before { color: var(--color-text-muted); content: counter(step) '. '; font-variant-numeric: tabular-nums; }
+		.steps p { margin: 0; }
+		[data-timer] { --button-p: .5ch 1.5ch; font-variant-numeric: tabular-nums; justify-self: start; }
+		/* the font's outlines carry the ::marker baseline shift — undo it for inline use */
+		/* a 1em box with no line-box strut, so an enlarged glyph never grows its button */
+		[data-icon] { block-size: 1em; display: inline-grid; inline-size: 1em; line-height: 1; place-items: center; }
+		[data-icon]::before { content: var(--icon) / ""; display: block; font-family: 'ui-icons'; translate: 0 -0.17em; } /* = icons.json baselineShiftEm, measured back out in both engines */
+		button > [data-icon]:first-child:not(:last-child) { margin-inline-end: .25ch; }
+		/* Material's chevrons are compact — enlarge them as lone glyphs, a touch beside text */
+		button[data-variant~="icon"] > [data-icon^="chevron"] { font-size: 1.3em; }
+		button:not([data-variant~="icon"]) > [data-icon^="chevron"] { font-size: 1.15em; }
+		[data-timer][data-running] { --button-bg: var(--color-accent); --button-c: var(--color-accent-text); }
+		[data-timer][data-done] { --button-bg: var(--color-success); --button-c: hsl(0, 0%, 100%); }
+
+		/* the fixed transport bar */
+		.bar { align-items: center; backdrop-filter: blur(8px); background: color-mix(in srgb, var(--color-surface) 88%, transparent); border-block-start: var(--border-width) solid var(--color-border); display: flex; flex-wrap: wrap; gap: var(--spacing-sm); inset-block-end: 0; inset-inline: 0; justify-content: center; margin-inline: auto; max-inline-size: 64rem; padding: var(--spacing-sm) var(--spacing-md); position: fixed; z-index: 1; }
+		/* base's icon variant is a 1fr grid: the 1em glyph start-aligns in the track (WebKit shows it) — items, not content, need centring */
+		button[data-variant~="icon"] { place-items: center; }
+		.bar > button[data-variant~="icon"], .bar ui-play button {
+			--ui-play-sz: 3rem; --ui-play-icon-sz: 1.25rem;
+			align-content: center; block-size: 3rem; font-size: 1.25rem; inline-size: 3rem; padding: 0; place-content: center;
+		}
+		.bar > button:not([data-variant~="icon"]) { min-block-size: 3rem; }
+		.bar-step { font-variant-numeric: tabular-nums; line-height: 1; padding-inline: var(--spacing-xs); }
+		.bar-status { flex-basis: 100%; font-size: .85em; text-align: center; }
+		.bar-status:empty { display: none; }
+		button[aria-pressed="true"]:not([data-timer], ui-play *) { --button-bg: var(--color-accent); --button-c: var(--color-accent-text); --button-bdc: transparent; }
+		/* theme= paints the plate but not its hover — without this the hover jumps to ui-play's black default */
+		ui-play { --ui-play-bg-hover: color-mix(in srgb, var(--ui-play-bg) 80%, var(--color-text)); }
+		button[aria-pressed="true"][data-variant~="outline"] { background: var(--color-accent); color: var(--color-accent-text); }
+
+		/* cook mode — the fullscreen popover */
+		#cook {
+			background: var(--color-surface);
+			block-size: auto;
+			border: 0;
+			color: var(--color-text);
+			gap: var(--spacing-sm);
+			grid-template-rows: auto auto 1fr auto auto auto;
+			inline-size: auto;
+			inset: 0;
+			margin: 0;
+			max-block-size: none;
+			max-inline-size: none;
+			opacity: 0;
+			overscroll-behavior: contain;
+			padding: 0;
+			scale: .7;
+			transform-origin: var(--ox, 50%) var(--oy, 50%);
+			transition: opacity var(--duration-slow) var(--ease-3), scale var(--duration-slow) var(--ease-3), display var(--duration-slow) allow-discrete, overlay var(--duration-slow) allow-discrete;
+			z-index: 2; /* Safari has no `overlay`: the exiting panel leaves the top layer at once */
+		}
+		#cook:popover-open { display: grid; opacity: 1; scale: 1; }
+		#cook::backdrop { background: color-mix(in srgb, CanvasText 40%, transparent); opacity: 0; transition: opacity var(--duration-slow), display var(--duration-slow) allow-discrete, overlay var(--duration-slow) allow-discrete; }
+		#cook:popover-open::backdrop { opacity: 1; }
+		@starting-style { /* standalone on purpose — a nested @starting-style does not re-fire on re-open */
+			#cook:popover-open { opacity: 0; scale: .7; }
+			#cook:popover-open::backdrop { opacity: 0; }
+		}
+		@media (prefers-reduced-motion: reduce) {
+			#cook { scale: none; }
+			#cook, #cook::backdrop { transition-duration: 0s; }
+			.steps li { transition: none; }
+		}
+		:where(html):has(#cook:popover-open) { overflow: hidden; scrollbar-gutter: stable; }
+		.cook-bar { align-items: center; display: flex; gap: var(--spacing-sm); justify-content: space-between; padding: var(--spacing-sm) var(--spacing-md); }
+		.cook-bar > span { align-items: center; display: inline-flex; flex-wrap: wrap; gap: var(--spacing-xs); justify-content: end; }
+		.cook-progress { display: grid; gap: var(--spacing-xs); padding-inline: var(--spacing-md); text-align: center; }
+		.cook-progress p { color: var(--color-text-muted); font-size: .85em; margin: 0; }
+		.cook-progress progress { inline-size: 100%; }
+		.cook-steps { align-content: center; display: grid; gap: var(--spacing-lg); list-style: none; margin: 0; overflow-y: auto; padding: var(--spacing-md); }
+		.cook-steps li { display: grid; gap: var(--spacing-md); justify-items: center; margin-inline: auto; max-inline-size: 42ch; text-align: center; }
+		.cook-steps h3 { color: var(--color-accent); font-size: clamp(1rem, .5rem + 1.5vw, 1.4rem); letter-spacing: .04em; text-transform: uppercase; }
+		.cook-steps p { font-size: clamp(1.5rem, 1rem + 2.5vw, 2.6rem); line-height: 1.4; margin: 0; text-wrap: balance; }
+		.cook-steps [data-timer] { font-size: 1.1em; justify-self: center; }
+		#cook[data-ready] .cook-steps li:not([aria-current="step"]) { display: none; } /* one step at a time, JS live */
+		.cook-nav { align-items: center; display: grid; gap: var(--spacing-sm); grid-template-columns: 1fr auto 1fr; padding-inline: var(--spacing-md); }
+		.cook-nav > button { border-radius: .75em; font-size: 1.1em; min-block-size: 3.25rem; }
+		.cook-nav ui-play { justify-self: center; }
+		.cook-nav ui-play button { --ui-play-sz: 3.25rem; --ui-play-icon-sz: 1.5rem; }
+		.cook-tools { display: flex; flex-wrap: wrap; gap: var(--spacing-sm); justify-content: center; margin: 0; padding-inline: var(--spacing-md); }
+		.cook-tools button { min-block-size: 2.75rem; }
+		.cook-voice { color: var(--color-text-muted); font-size: .85em; margin: 0; padding: 0 var(--spacing-md) var(--spacing-md); text-align: center; }
+		.cook-voice output { color: var(--color-accent); font-style: italic; }
+		.cook-voice output:not(:empty)::before { content: '“'; }
+		.cook-voice output:not(:empty)::after { content: '”'; }
+		button:disabled ui-icon { opacity: .4; }
+	</style>
+	<style>
+		ui-content { --ui-content-muted: color-mix(in oklab, currentColor 85%, transparent); }
+		ui-chip[data-type] { --ui-chip-bg: hsl(0, 0%, 95%); --ui-chip-c: hsl(0, 0%, 13%); }
+	</style>
+</head>
+<body>
+	<nav aria-label="Breadcrumb">
+		<ol data-breadcrumbs itemscope itemtype="https://schema.org/BreadcrumbList">
+			<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+				<a itemprop="item" href="/ui/card/"><span itemprop="name">Card</span></a>
+				<meta itemprop="position" content="1">
+			</li>
+			<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+				<a itemprop="item" href="/ui/card/demo/schema.recipe.html"><span itemprop="name">Recipe app</span></a>
+				<meta itemprop="position" content="2">
+			</li>
+			<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+				<span itemprop="name">Classic Spaghetti Carbonara</span>
+				<meta itemprop="position" content="3">
+			</li>
+		</ol>
+	</nav>
+	<main>
+		<article class="recipe-page" data-view="card-recipe-1" data-id="recipe-1" itemscope itemtype="https://schema.org/Recipe">
+			<link itemprop="mainEntityOfPage" href="recipe.html?id=recipe-1">
+			<ui-card class="recipe-view" variant="col lg:row lg:spl(1/1) shd(non)">
+		<cq-box>
+			<ui-media media="asr(4/3) hug rds(lg)"><img id="hero" data-view="hero-recipe-1" src="/assets/images/carbonara.png" alt="Plate of spaghetti carbonara" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=180/assets/images/carbonara.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=240/assets/images/carbonara.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=360/assets/images/carbonara.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=540/assets/images/carbonara.png 720w" sizes="(min-width: 720px) 30rem, 100vw" loading="eager" fetchpriority="high" decoding="async" itemprop="image"></ui-media>
+			<ui-content content="scl(lg)"><small data-part="eyebrow" itemprop="recipeCategory">Pasta</small><h2 data-part="headline" itemprop="name">Classic Spaghetti Carbonara</h2><p data-part="summary" itemprop="description">The Roman original — guanciale, pecorino, eggs and pepper. No cream.</p><meta itemprop="prepTime" content="PT15M"><meta itemprop="cookTime" content="PT20M"><meta itemprop="recipeYield" content="4"><p data-part="meta"><strong data-part="key">Prep:</strong> 15 min · <strong data-part="key">Cook:</strong> 20 min · <strong data-part="key">Serves:</strong> 4</p><span data-part="tags"><ui-chip itemprop="keywords">Pasta</ui-chip><ui-chip itemprop="keywords">Italian</ui-chip><ui-chip itemprop="keywords">Quick</ui-chip></span></ui-content>
+		</cq-box>
+	</ui-card>
+			<div class="bands">
+			<section class="band ingredients" aria-labelledby="ingredients-h">
+				<h2 id="ingredients-h" class="band-title">Ingredients</h2>
+				<div class="servings" role="group" aria-label="Servings and units">
+					<button class="ui-button" type="button" data-variant="icon" command="--servings-down" commandfor="ingredients" aria-label="Fewer servings" title="Fewer servings"><ui-icon type="minus"></ui-icon></button>
+					<span class="servings-count">Serves <output id="servings" aria-live="polite">4</output></span>
+					<button class="ui-button" type="button" data-variant="icon" command="--servings-up" commandfor="ingredients" aria-label="More servings" title="More servings"><ui-icon type="plus"></ui-icon></button>
+					<button class="ui-button" type="button" data-variant="outline" command="--toggle-units" commandfor="ingredients" aria-pressed="false">Imperial</button>
+				</div>
+				<ul id="ingredients" class="checklist" data-servings="4">
+					<li><label><input type="checkbox" data-ingredient="0"> <data itemprop="recipeIngredient" value="400 g spaghetti"><span data-qty="400" data-unit="g">400 g</span> spaghetti</data></label></li>
+					<li><label><input type="checkbox" data-ingredient="1"> <data itemprop="recipeIngredient" value="150 g guanciale"><span data-qty="150" data-unit="g">150 g</span> guanciale</data></label></li>
+					<li><label><input type="checkbox" data-ingredient="2"> <data itemprop="recipeIngredient" value="4 egg yolks"><span data-qty="4">4</span> egg yolks</data></label></li>
+					<li><label><input type="checkbox" data-ingredient="3"> <data itemprop="recipeIngredient" value="80 g pecorino romano"><span data-qty="80" data-unit="g">80 g</span> pecorino romano</data></label></li>
+					<li><label><input type="checkbox" data-ingredient="4"> <data itemprop="recipeIngredient" value="2 tsp black pepper"><span data-qty="2" data-unit="tsp">2 tsp</span> black pepper</data></label></li>
+					<li><label><input type="checkbox" data-ingredient="5"> <data itemprop="recipeIngredient" value="salt, for the water">salt, for the water</data></label></li>
+				</ul>
+			</section>
+			<section class="band method" aria-labelledby="steps-h">
+				<h2 id="steps-h" class="band-title">Method</h2>
+				<ol id="steps" class="steps" itemprop="recipeInstructions" itemscope itemtype="https://schema.org/ItemList">
+					<li itemprop="itemListElement" itemscope itemtype="https://schema.org/HowToStep" data-step="1" data-audio="/assets/audio/recipes/carbonara/step-1.mp3" aria-current="step">
+						<meta itemprop="position" content="1"><meta itemprop="timeRequired" content="PT10M"><h3 itemprop="name">Boil &amp; salt</h3>
+						<p itemprop="text">Bring a large pot of water to a rolling boil, then salt it generously — it should taste like the sea.</p>
+						<button class="ui-button" type="button" command="--timer" commandfor="steps" data-timer data-step="1" data-ms="600000" aria-label="Start a 10 min timer for Boil &amp; salt"><span data-icon="timer" aria-hidden="true"></span><span data-label>10 min</span></button>
+					</li>
+					<li itemprop="itemListElement" itemscope itemtype="https://schema.org/HowToStep" data-step="2" data-audio="/assets/audio/recipes/carbonara/step-2.mp3">
+						<meta itemprop="position" content="2"><meta itemprop="timeRequired" content="PT6M"><h3 itemprop="name">Crisp the guanciale</h3>
+						<p itemprop="text">Cut the guanciale into short strips and crisp them in a dry pan over medium heat until golden. Pull the pan off the heat.</p>
+						<button class="ui-button" type="button" command="--timer" commandfor="steps" data-timer data-step="2" data-ms="360000" aria-label="Start a 6 min timer for Crisp the guanciale"><span data-icon="timer" aria-hidden="true"></span><span data-label>6 min</span></button>
+					</li>
+					<li itemprop="itemListElement" itemscope itemtype="https://schema.org/HowToStep" data-step="3" data-audio="/assets/audio/recipes/carbonara/step-3.mp3">
+						<meta itemprop="position" content="3"><meta itemprop="timeRequired" content="PT3M"><h3 itemprop="name">Make the cream</h3>
+						<p itemprop="text">Whisk the egg yolks with the grated pecorino and plenty of coarsely ground black pepper into a thick paste.</p>
+						<button class="ui-button" type="button" command="--timer" commandfor="steps" data-timer data-step="3" data-ms="180000" aria-label="Start a 3 min timer for Make the cream"><span data-icon="timer" aria-hidden="true"></span><span data-label>3 min</span></button>
+					</li>
+					<li itemprop="itemListElement" itemscope itemtype="https://schema.org/HowToStep" data-step="4" data-audio="/assets/audio/recipes/carbonara/step-4.mp3">
+						<meta itemprop="position" content="4"><meta itemprop="timeRequired" content="PT9M"><h3 itemprop="name">Cook the pasta</h3>
+						<p itemprop="text">Cook the spaghetti until just shy of al dente. Scoop out <span data-qty="250" data-unit="ml" data-fixed>250 ml</span> of the starchy cooking water before you drain.</p>
+						<button class="ui-button" type="button" command="--timer" commandfor="steps" data-timer data-step="4" data-ms="540000" aria-label="Start a 9 min timer for Cook the pasta"><span data-icon="timer" aria-hidden="true"></span><span data-label>9 min</span></button>
+					</li>
+					<li itemprop="itemListElement" itemscope itemtype="https://schema.org/HowToStep" data-step="5" data-audio="/assets/audio/recipes/carbonara/step-5.mp3">
+						<meta itemprop="position" content="5"><meta itemprop="timeRequired" content="PT2M"><h3 itemprop="name">Toss, off the heat</h3>
+						<p itemprop="text">Toss the hot pasta with the guanciale and its fat. Off the heat, stir in the egg mixture, loosening with splashes of pasta water until glossy.</p>
+						<button class="ui-button" type="button" command="--timer" commandfor="steps" data-timer data-step="5" data-ms="120000" aria-label="Start a 2 min timer for Toss, off the heat"><span data-icon="timer" aria-hidden="true"></span><span data-label>2 min</span></button>
+					</li>
+					<li itemprop="itemListElement" itemscope itemtype="https://schema.org/HowToStep" data-step="6" data-audio="/assets/audio/recipes/carbonara/step-6.mp3">
+						<meta itemprop="position" content="6"><h3 itemprop="name">Serve</h3>
+						<p itemprop="text">Serve immediately in warm bowls, with more pecorino and black pepper on top.</p>
+						
+					</li>
+				</ol>
+			</section></div>
+		</article>
+		<nav class="bar" aria-label="Cooking controls">
+			<button class="ui-button" type="button" data-variant="icon" command="--toggle-wake" commandfor="cook" aria-label="Keep the screen awake" title="Keep the screen awake" aria-pressed="false"><span data-icon="light-mode" aria-hidden="true"></span></button>
+			<button class="ui-button" type="button" data-variant="icon" command="--prev-step" commandfor="steps" aria-label="Previous step" title="Previous step" disabled><span data-icon="chevron-left" aria-hidden="true"></span></button>
+			<span class="bar-step" aria-live="polite">Step <output id="step-now">1</output> / 6</span>
+			<ui-play theme="gray"><button type="button" command="--play-step" commandfor="steps" aria-label="Play step" aria-pressed="false"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+			<button class="ui-button" type="button" data-variant="icon" command="--next-step" commandfor="steps" aria-label="Next step" title="Next step"><span data-icon="chevron-right" aria-hidden="true"></span></button>
+			<button class="ui-button" type="button" data-variant="icon" command="--copy" commandfor="steps" aria-label="Copy recipe as text" title="Copy recipe as text"><span data-icon="content-copy" aria-hidden="true"></span></button>
+			<button class="ui-button" type="button" data-variant="icon" command="--share" commandfor="steps" aria-label="Share this recipe" title="Share this recipe"><span data-icon="share" aria-hidden="true"></span></button>
+			<button class="ui-button" type="button" data-variant="accent" command="show-popover" commandfor="cook">Cook mode</button>
+			<output class="bar-status" aria-live="polite"></output>
+		</nav>
+		<section id="cook" popover aria-labelledby="cook-title">
+			<header class="cook-bar">
+				<strong id="cook-title">Classic Spaghetti Carbonara</strong>
+				<span>
+					<ui-beacon id="cook-wake" variant="pill" size="sm" theme="gray">Screen may sleep</ui-beacon>
+					<ui-beacon id="cook-mic" variant="pill" size="sm" theme="gray">Mic off</ui-beacon>
+					<button class="ui-button" type="button" data-variant="icon" command="hide-popover" commandfor="cook" aria-label="Close cook mode" title="Close cook mode"><ui-icon type="cross"></ui-icon></button>
+				</span>
+			</header>
+			<div class="cook-progress">
+				<p aria-live="polite">Step <output id="cook-now">1</output> of 6</p>
+				<progress id="cook-bar" max="6" value="1"></progress>
+			</div>
+			<ol class="cook-steps">
+				<li data-step="1" data-audio="/assets/audio/recipes/carbonara/step-1.mp3" aria-current="step">
+						<h3>Boil &amp; salt</h3>
+						<p>Bring a large pot of water to a rolling boil, then salt it generously — it should taste like the sea.</p>
+						<button class="ui-button" type="button" command="--timer" commandfor="steps" data-timer data-step="1" data-ms="600000" aria-label="Start a 10 min timer for Boil &amp; salt"><span data-icon="timer" aria-hidden="true"></span><span data-label>10 min</span></button>
+					</li>
+				<li data-step="2" data-audio="/assets/audio/recipes/carbonara/step-2.mp3">
+						<h3>Crisp the guanciale</h3>
+						<p>Cut the guanciale into short strips and crisp them in a dry pan over medium heat until golden. Pull the pan off the heat.</p>
+						<button class="ui-button" type="button" command="--timer" commandfor="steps" data-timer data-step="2" data-ms="360000" aria-label="Start a 6 min timer for Crisp the guanciale"><span data-icon="timer" aria-hidden="true"></span><span data-label>6 min</span></button>
+					</li>
+				<li data-step="3" data-audio="/assets/audio/recipes/carbonara/step-3.mp3">
+						<h3>Make the cream</h3>
+						<p>Whisk the egg yolks with the grated pecorino and plenty of coarsely ground black pepper into a thick paste.</p>
+						<button class="ui-button" type="button" command="--timer" commandfor="steps" data-timer data-step="3" data-ms="180000" aria-label="Start a 3 min timer for Make the cream"><span data-icon="timer" aria-hidden="true"></span><span data-label>3 min</span></button>
+					</li>
+				<li data-step="4" data-audio="/assets/audio/recipes/carbonara/step-4.mp3">
+						<h3>Cook the pasta</h3>
+						<p>Cook the spaghetti until just shy of al dente. Scoop out <span data-qty="250" data-unit="ml" data-fixed>250 ml</span> of the starchy cooking water before you drain.</p>
+						<button class="ui-button" type="button" command="--timer" commandfor="steps" data-timer data-step="4" data-ms="540000" aria-label="Start a 9 min timer for Cook the pasta"><span data-icon="timer" aria-hidden="true"></span><span data-label>9 min</span></button>
+					</li>
+				<li data-step="5" data-audio="/assets/audio/recipes/carbonara/step-5.mp3">
+						<h3>Toss, off the heat</h3>
+						<p>Toss the hot pasta with the guanciale and its fat. Off the heat, stir in the egg mixture, loosening with splashes of pasta water until glossy.</p>
+						<button class="ui-button" type="button" command="--timer" commandfor="steps" data-timer data-step="5" data-ms="120000" aria-label="Start a 2 min timer for Toss, off the heat"><span data-icon="timer" aria-hidden="true"></span><span data-label>2 min</span></button>
+					</li>
+				<li data-step="6" data-audio="/assets/audio/recipes/carbonara/step-6.mp3">
+						<h3>Serve</h3>
+						<p>Serve immediately in warm bowls, with more pecorino and black pepper on top.</p>
+						
+					</li>
+			</ol>
+			<nav class="cook-nav" aria-label="Step navigation">
+				<button class="ui-button" type="button" command="--prev-step" commandfor="steps" disabled><span data-icon="chevron-left" aria-hidden="true"></span>Back</button>
+				<ui-play theme="gray"><button type="button" command="--play-step" commandfor="steps" aria-label="Play step" aria-pressed="false"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+				<button class="ui-button" type="button" data-variant="accent" command="--next-step" commandfor="steps">Next<span data-icon="chevron-right" aria-hidden="true"></span></button>
+			</nav>
+			<p class="cook-tools">
+				<button class="ui-button" type="button" data-variant="outline" command="--toggle-wake" commandfor="cook" aria-pressed="false"><span data-icon="light-mode" aria-hidden="true"></span>Screen awake</button>
+				<button class="ui-button" type="button" data-variant="outline" command="--toggle-voice" commandfor="cook" aria-pressed="false"><span data-icon="mic" aria-hidden="true"></span>Hands-free</button>
+			</p>
+			<p class="cook-voice"><span id="voice-hint">Hands-free: say “next”, “back”, “repeat”, “pause”, “ingredients”, “timer” or “close”.</span> <output id="voice-heard" aria-live="polite"></output></p>
+		</section>
+	</main>
+	<!-- Everything above works without it: checkboxes, native popover open/close, the step
+	     list. The module adds the transport, timers, wake lock, narration state, voice. -->
+	<script type="module" src="recipe.js"></script>
+</body>
+</html>

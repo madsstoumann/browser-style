@@ -65,6 +65,11 @@
     "description",
     "text_snippet",
     "folder_zip",
-    "draft"
+    "draft",
+    "chevron_left",
+    "chevron_right",
+    "light_mode",
+    "mic",
+    "content_copy"
   ]
 }
