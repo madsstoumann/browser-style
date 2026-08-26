@@ -1,32 +1,79 @@
+/**
+ * ui-progress-circular — CSS-only ring around the native <progress> element. Docs: readme.md
+ * @version 4.1.0
+ * @date 2026-08-24
+ * @author Mads Stoumann
+ */
 @layer bs-component {
-	:where(.ui-progress-circular) {
-		--meter-progress-bs: 10em;
-		--progress-bdw: 1em;
-		--_mask: radial-gradient(circle farthest-side at center, transparent calc(99% - var(--progress-bdw)), #FFF calc(100% - var(--progress-bdw)));
+	:where(ui-progress-circular) {
+		--ui-progress-circular-size: 10em;
+		--ui-progress-circular-track-size: 1em;
+		--_mask: radial-gradient(circle farthest-side at center, transparent calc(99% - var(--ui-progress-circular-track-size)), #FFF calc(100% - var(--ui-progress-circular-track-size)));
+		align-content: center;
+		aspect-ratio: 1;
+		display: grid;
+		inline-size: var(--ui-progress-circular-size);
+		justify-items: center;
 		position: relative;
-		width: var(--meter-progress-bs);
 
-		&::after {
-			counter-reset: val var(--value);
-			content: counter(val) "%";
-			font-size: 200%;
-			font-weight: 700;
-			margin-top: 1.25ch;
-			place-self: center;
-			position: absolute;
-		}
 		& progress {
+			/* the arc reads the progress element's OWN value/max — one source of truth */
+			--_pc-v: attr(value type(<number>), 0);
+			--_pc-m: attr(max type(<number>), 100);
+			/* typed attr() has NO fallback in Safari/FF — restore the literals; ../base/polyfills/attr-fallback.js upgrades. Docs: ../base/polyfills/readme.md */
+			@supports not (background-color: attr(x type(<color>), red)) {
+				--_pc-v: 0;
+				--_pc-m: 100;
+			}
 			background: conic-gradient(
-				var(--AccentColor) 0%,
-				var(--AccentColor) calc(1% * var(--value)) 0,
-				var(--ButtonBorder) calc(1% * var(--value))
+				var(--ui-progress-circular-fill, var(--color-accent)) calc(1% * var(--ui-progress-circular-value, calc(100 * var(--_pc-v) / var(--_pc-m)))),
+				var(--ui-progress-circular-track, var(--color-border)) 0
 			);
-			border-radius: 50%;
-			height: var(--meter-progress-bs);
+			block-size: 100%;
+			border: 0;
+			border-radius: var(--radius-circle);
+			inline-size: 100%;
+			inset: 0;
 			mask: var(--_mask);
 			-webkit-mask: var(--_mask);
+			position: absolute;
+			&::-webkit-progress-bar { background: transparent; }
 			&::-webkit-progress-inner-element { display: none; }
 			&::-moz-progress-bar { opacity: 0; }
 		}
+
+		/* center value — real, author-supplied text, scaled to the HOLE so it fits any size/track combo */
+		& > :not(progress, small) {
+			font-size: var(--ui-progress-circular-value-fs, calc((var(--ui-progress-circular-size) - 2 * var(--ui-progress-circular-track-size)) / 4));
+			font-weight: var(--ui-progress-circular-value-fw, var(--font-weight-bold));
+		}
+
+		/* label — a <small> line above (or below) the value. Docs: readme.md § Label */
+		& > small {
+			color: var(--ui-progress-circular-label-c, var(--color-text-muted));
+			font-size: var(--ui-progress-circular-label-fs, calc((var(--ui-progress-circular-size) - 2 * var(--ui-progress-circular-track-size)) / 9));
+			font-weight: var(--ui-progress-circular-label-fw, var(--font-weight-medium));
+			letter-spacing: var(--tracking-wide);
+			text-transform: uppercase;
+		}
+
+		/* theme= colours the ARC, not the box — opt out of universal paint (base/theme.css). Docs: readme.md */
+		&[theme] {
+			background-color: transparent;
+			color: inherit;
+			--ui-progress-circular-fill: var(--_theme-bg, var(--color-accent));
+			/* track = the hue's pale plate — same mix as theme.css § pale */
+			--ui-progress-circular-track: color-mix(in srgb, var(--_theme-bg, var(--color-accent)), var(--color-surface) 80%);
+		}
+
+		/* sizes */
+		&[size~="sm"] { --ui-progress-circular-size: 6em; }
+		&[size~="lg"] { --ui-progress-circular-size: 13em; }
+		&[size~="xl"] { --ui-progress-circular-size: 16em; }
+
+		/* track thickness — same sm/lg/xl step names as size= */
+		&[track~="sm"] { --ui-progress-circular-track-size: 0.5em; }
+		&[track~="lg"] { --ui-progress-circular-track-size: 1.5em; }
+		&[track~="xl"] { --ui-progress-circular-track-size: 2em; }
 	}
 }

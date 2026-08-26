@@ -1,0 +1,89 @@
+{
+  "$schema": "../../../cms/baseline/models/card.schema.json",
+  "id": "quiz-carousel-1",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-07-04T12:00:00Z",
+    "updatedAt": "2026-08-26T09:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Education"
+  },
+  "fields": {
+    "internalName": "Demo — Quiz (carousel deck, gated)",
+    "schemaType": "quiz",
+    "preset": {
+      "$ref": "card-preset/quiz-carousel"
+    },
+    "eyebrow": "Practice questions",
+    "headline": "Quantum computing — check yourself",
+    "summary": "Three graded multiple-choice questions, one per slide. Pick an answer and it tells you whether you were right.",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/quantum.png",
+        "alt": "Stylised quantum processor"
+      }
+    ],
+    "details": {
+      "format": "multiple-choice",
+      "subject": "Quantum computing",
+      "cards": [
+        {
+          "question": "What can a qubit hold that a classical bit cannot?",
+          "options": [
+            {
+              "text": "Two values at once, permanently"
+            },
+            {
+              "text": "A superposition of 0 and 1 that collapses when measured",
+              "correct": true
+            },
+            {
+              "text": "Any number between 0 and 1, read back exactly"
+            },
+            {
+              "text": "Nothing — a qubit is a bit with a faster clock"
+            }
+          ]
+        },
+        {
+          "question": "Two entangled qubits are separated by a kilometre. What happens when one is measured?",
+          "options": [
+            {
+              "text": "The other's outcome is fixed in the same instant",
+              "correct": true
+            },
+            {
+              "text": "A signal travels between them at the speed of light"
+            },
+            {
+              "text": "The other qubit is destroyed"
+            },
+            {
+              "text": "Nothing; entanglement does not survive separation"
+            }
+          ]
+        },
+        {
+          "question": "Why does a quantum computer need error correction?",
+          "options": [
+            {
+              "text": "Because its output is random and must be averaged"
+            },
+            {
+              "text": "Because physical qubits decohere in microseconds",
+              "correct": true
+            },
+            {
+              "text": "Because superposition cannot be measured twice"
+            },
+            {
+              "text": "It does not — quantum states are exact"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -333,6 +333,13 @@ ui-media:where([media*="nav(abv)"][media*="arw(set)"]) > ui-carousel-controls [d
 	inset-inline-end: calc(var(--ui-carousel-arrow-size) + var(--ui-carousel-arrow-gap));
 }
 
+/* arw(out) is NOT mirrored here — deliberately. The DOM controls live INSIDE the
+   scroller, so buttons shifted past its border box are clipped by the scroll
+   container (verified; unlike mrk(rail), whose layer only extends into the
+   scroller's own reservation padding — native ::scroll-button boxes escape that
+   clip, real elements can't). Graceful degradation: the frame still shrinks
+   (media.carousel.css), the buttons keep the standard overlay insets above. */
+
 /* arw(bare) — drop the circle, paint the glyph as a recolourable shape */
 :where(ui-card, ui-reveal):where([media*="arw(bare)"]) ui-media ui-carousel-controls [data-nav],
 ui-media:where([media*="arw(bare)"]) > ui-carousel-controls [data-nav] {
@@ -526,6 +533,11 @@ ui-media:where([media*="mrk(bc)"]) > ui-carousel-controls [data-dots] { inset-bl
 /* dots-only band recenter — a DEFAULT, declared BEFORE the rows so an explicit arw row wins (mirrors native) */
 ui-carousel-controls[data-media*="mrk(blw)"] { --_pf-arrow-top: calc(50% - (var(--ui-carousel-below-gap, 0.5rem) + var(--ui-carousel-band)) / 2 - var(--ui-carousel-arrow-size) / 2); }
 ui-carousel-controls[data-media*="mrk(abv)"] { --_pf-arrow-top: calc(50% + (var(--ui-carousel-above-gap, 0.5rem) + var(--ui-carousel-band)) / 2 - var(--ui-carousel-arrow-size) / 2); }
+/* nav(end) — row inside the content column: pbe · controls · pbe (--_nav-end-pbe is set on the host by carousel.css, outside the gate) */
+ui-carousel-controls[data-media*="nav(end)"] { --_pf-arrow-top: calc(100% - var(--ui-carousel-nav-end-room, 0px) - var(--_nav-end-pbe, var(--spacing-md)) - var(--ui-carousel-arrow-size)); }
+ui-carousel-controls[data-media*="nav(end)"] [data-dots] { block-size: var(--ui-carousel-arrow-size); inset-block: auto calc(var(--ui-carousel-nav-end-room, 0px) + var(--_nav-end-pbe, var(--spacing-md))); }
+ui-carousel-controls[data-media*="nav(end)"] [data-nav="prev"] { inset-inline-start: var(--ui-content-pis, var(--ui-content-pi, var(--ui-content-p, var(--spacing-md)))); }
+ui-carousel-controls[data-media*="nav(end)"] [data-nav="next"] { inset-inline-end: var(--ui-content-pie, var(--ui-content-pi, var(--ui-content-p, var(--spacing-md)))); }
 
 /* ---- arrows · block row (3×3 grid; cc/default = middle) ---- */
 ui-carousel-controls[data-media*="arw(ts)"],

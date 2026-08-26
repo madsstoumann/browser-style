@@ -174,7 +174,9 @@ Precedence lives in the **`var()` chain**, not the cascade. Each of the four phy
 ```css
 :where(ui-content) {
   padding-block-start:  var(--ui-content-pbs, var(--ui-content-pb, var(--ui-content-p, var(--spacing-md))));
-  padding-block-end:    var(--ui-content-pbe, var(--ui-content-pb, var(--ui-content-p, var(--spacing-md))));
+  --_pbe: var(--ui-content-pbe, var(--ui-content-pb, var(--ui-content-p, var(--spacing-md))));
+  padding-block-end:    calc(var(--_pbe) * (1 + var(--ui-carousel-nav-end, 0)) + var(--ui-carousel-nav-end, 0) * var(--ui-carousel-arrow-size, 2.25rem));
+  /* --ui-carousel-nav-end is the lay-out carousel's nav(end) flag: pbe · control row · pbe. Off a carousel it is 0 and the chain is the plain pbe. */
   padding-inline-start: var(--ui-content-pis, var(--ui-content-pi, var(--ui-content-p, var(--spacing-md))));
   padding-inline-end:   var(--ui-content-pie, var(--ui-content-pi, var(--ui-content-p, var(--spacing-md))));
 }
@@ -574,7 +576,9 @@ card-side hook is for card-scoped overrides only.
 In rendered cards the wrapper's variant is **preset-authored**: the preset's
 `parts.quote` value is written verbatim to the emitted `<ui-quote>` (the quote type
 defaults to `bigquote`, review/social to none), and `parts.accordion` does the same
-for the `<ui-accordion>` emitted by faq/recipe/job. `byline` avatars render through
+for the `<ui-accordion>` emitted by faq/recipe/job (its reserved word `popover`
+switches the emitted markup to `<button popovertarget>`/`<div popover>` pairs
+instead of `<details>` — native Popover API, no JS). `byline` avatars render through
 `@browser.style/avatar` (`<ui-avatar>` with an `<abbr>` initials fallback — the card
 sets no avatar styling at all; size it with the component's own `size=` attribute or
 `--ui-avatar-size`), and the `options`
@@ -830,6 +834,8 @@ Host themes come from the shared `theme=` axis ([base/theme.md](../../base/theme
 | `--ui-content-muted` | subheadline, meta, caption, byline, footer | theme |
 | `--ui-content-eyebrow-ink` | eyebrow | theme |
 | `--ui-content-tag-bg` | tags pills | theme |
+
+On a themed card (`ui-card[theme]`) two of those follow the theme ink by default (`content.css` § themed-host relays): the **eyebrow** takes `currentColor` instead of the accent, and a bare `<progress>` bar's fill (`--ui-progress-fill`, from `@browser.style/progress`) does the same — so a pale-plate goal card's bar paints in its own hue ink. An explicit token write on the card or page still overrides both.
 
 ```css
 :where([theme~="black"]) {

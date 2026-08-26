@@ -58,14 +58,20 @@ const mapIcons = { google: '/assets/svg/google.maps.svg', apple: '/assets/svg/ap
 const PAIRS = [
 	['MemberProgram', 'ui/card/data/loyalty.json'],
 	['Quiz', 'ui/card/data/quiz.json'],
-	/* the graded sibling — two Quiz cards on the page, so this one matches by id */
-	['Quiz#schema-quiz-mc', 'ui/card/data/quiz-mc.json'],
+	/* the graded sibling is a carousel DECK — one Quiz <section> wrapping a lay-out scroller
+	   of question slides — so the host is the disambiguator, not an id */
+	['section:Quiz', 'ui/card/data/quiz-carousel.json'],
 	/* the third Quiz shape: one flashcard as a <ui-reveal> flip card, question front,
 	   answer back — the page's only reveal, so the host name is the disambiguator */
 	['ui-reveal:Quiz', 'ui/card/data/quiz-flashcard.json'],
 	/* pairable since the visible ISBN dropped its U+2060 word joiners (docs/schema.md § Book):
 	   the two sides used to spell the same ISBN differently and could never match */
+	/* paired when the popover mode landed — the outer Steps wrapper renders as a
+	   button + popover pair (preset stack-accordion-popover); pairing keeps the two
+	   spellings one spelling */
+	['HowTo', 'ui/card/data/howto.json'],
 	['Book', 'ui/card/data/book.json'],
+	['AchieveAction', 'ui/card/data/goal.json'],
 	['Service', 'ui/card/data/service.json'],
 	['RealEstateListing', 'ui/card/data/realestate.json'],
 	['VacationRental', 'ui/card/data/vacationrental.json'],

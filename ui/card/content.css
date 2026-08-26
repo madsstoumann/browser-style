@@ -124,7 +124,9 @@
 		justify-content: var(--ui-content-ov-justify, var(--ui-content-place-block, normal));
 		/* PADDING — side → axis → all. Precedence is this var() chain, NOT the cascade. */
 		padding-block-start:  var(--ui-content-pbs, var(--ui-content-pb, var(--ui-content-p, var(--spacing-md))));
-		padding-block-end:    var(--ui-content-pbe, var(--ui-content-pb, var(--ui-content-p, var(--spacing-md))));
+		/* nav(end) reserve — pbe · control row · pbe; the flag comes from ui/carousel. Docs: docs/content.md § Padding */
+		--_pbe: var(--ui-content-pbe, var(--ui-content-pb, var(--ui-content-p, var(--spacing-md))));
+		padding-block-end:    calc(var(--_pbe) * (1 + var(--ui-carousel-nav-end, 0)) + var(--ui-carousel-nav-end, 0) * var(--ui-carousel-arrow-size, 2.25rem));
 		padding-inline-start: var(--ui-content-pis, var(--ui-content-pi, var(--ui-content-p, var(--spacing-md))));
 		padding-inline-end:   var(--ui-content-pie, var(--ui-content-pi, var(--ui-content-p, var(--spacing-md))));
 		text-align: var(--ui-content-ov-text, var(--ui-content-text-align, start));
@@ -177,6 +179,14 @@
 			color: var(--_theme-c, var(--color-text));
 		}
 	}
+
+	/* themed hosts: eyebrow + bar fill follow the theme ink; accent stays the unthemed default. Docs: docs/content.md § Theme ink */
+	:where(ui-card[theme]) { --ui-content-eyebrow-ink: currentColor; }
+	:where(ui-card[theme]) progress { --ui-progress-fill: currentColor; }
+
+	/* goal rings (ui/progress-circular) center in the column; auto block margins soak up
+	   free column space (overlay cards) so trailing lines press to block-end */
+	:where(ui-content) > ui-progress-circular { align-self: center; margin-block: auto; }
 
 	/* === SCROLL — content="scr"; the fade primitive lives in ../base/scroll.css === */
 	:where([content~="scr"]) ui-content, :where([content~="scr(y)"]) ui-content,

@@ -365,6 +365,9 @@
 			padding-block-start: calc(var(--ui-carousel-above-gap, 0.5rem) + var(--ui-carousel-band, 2.75rem));
 			scroll-padding-block-start: calc(var(--ui-carousel-above-gap, 0.5rem) + var(--ui-carousel-band, 2.75rem));
 		}
+		/* nav(end) — no band, but the scroller clips the slides' box-shadow: reserve room past the
+		   cards (the controls subtract it — ui/carousel/carousel.css). Docs: ui/card/docs/media.carousel.md § Content end */
+		&[overflow][media*="nav(end)"] { padding-block-end: var(--ui-carousel-nav-end-room, 2.5rem); }
 
 		/* === width === */
 		&[width]:not([bleed]) { max-inline-size: var(--_mi); }
