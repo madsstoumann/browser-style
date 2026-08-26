@@ -10,11 +10,14 @@
     },
     "./style": "./index.css",
     "./index.css": "./index.css",
-    "./icon-font.css": "./icon-font.css"
+    "./icon-font.css": "./icon-font.css",
+    "./icons.json": "./icons.json",
+    "./icons.data.js": "./icons.data.js"
   },
   "files": [
     "icon-font.css",
     "icons.json",
+    "icons.data.js",
     "index.css",
     "ui-icon.css"
   ],

@@ -46,6 +46,7 @@ media.md.)
 | `arw(bare)` | CSS | Drop the circle — glyph painted as a recolourable shape (`--ui-carousel-arrow-color`) |
 | `arw(bc)`   | CSS | Split arrows, bottom band (block row) |
 | `arw(blw)` `arw(abv)` | CSS | Arrows **alone** in a reserved band below / above the media (markers keep their on-media position/ink); arrow ink follows the band ink |
+| `arw(out)` | CSS | Arrows **outside** the host (card or frame), flanking both inline sides, vertically centered on the media — the host **shrinks** to make room; gap = `--ui-carousel-outside-gap`. Default disc kept; `<ui-card>`/`<ui-media>` hosts, horizontal only (see § Arrows) |
 | `arw(drk)`  | CSS | **Dark theme** preset — dark circle + white glyph + light hover ring (composes on the overlay and in `nav(blw)`/`nav(abv)` bands; on `arw(bare)` it just paints a dark glyph) |
 | `arw(hid)`  | CSS | Auto-hide the dead-end arrow (default dims it) |
 | `arw(rev)`  | CSS | Reveal arrows on hover / focus-within (+ button `:focus-visible`); gated on `@media (hover: hover)` so touch keeps them visible |
@@ -161,8 +162,57 @@ base's `--_dir-s`/`--_dir-e` pair.)
 
 ## Token → control mapping (inside `@supports`)
 
-- **DOTS present** = bare `nav` · `nav(mrk)` · `nav(blw)` / `nav(abv)` (drop them with `mrk(non)`)
-- **ARROWS present** = bare `nav` · `nav(arw)` · `nav(blw)` / `nav(abv)`
+- **DOTS present** = bare `nav` · `nav(mrk)` · `nav(blw)` / `nav(abv)` / `nav(end)` (drop them with `mrk(non)`)
+- **ARROWS present** = bare `nav` · `nav(arw)` · `nav(blw)` / `nav(abv)` / `nav(end)`
+
+## Content end — `nav(end)`
+
+A `<lay-out overflow>` whose slides are cards can put the controls **inside the content
+column**, after the last row, instead of in a band outside the card. Two halves:
+
+- **The reserve lives in the slides.** The host sets `--ui-carousel-nav-end: 1`; it inherits
+  into every `<ui-content>` in the scroller, whose `padding-block-end` becomes
+  `pbe + arrow-size + pbe` (content.css) — the column's own end padding repeats above and
+  below the row, and an author `pbe()` still governs both gaps. Any nested `<ui-content>`
+  inside a slide reserves too; keep slides to one column.
+- **The controls are still the scroller's pseudos**, anchored to the scroller's bottom edge:
+  `anchor(bottom) − pbe − arrow-size` for the arrows, the dots centred on that row. The
+  `pbe` the row reads (`--_nav-end-pbe`) resolves on the **host**, so author the
+  `content=` padding on the lay-out (or an ancestor) — a `pbe()` on one slide moves that
+  slide's reserve but not the row. Arrows sit at the content's inline padding, not the
+  overlay gap, so they line up with the copy.
+- **The scroller keeps shadow room.** A scroll container clips its slides' `box-shadow`; the
+  band tokens hide that behind their padding, so `nav(end)` reserves
+  `--ui-carousel-nav-end-room` (2.5rem — the card shadow's 20px offset + blur) as
+  `padding-block-end` on the `<lay-out>` (layout/core/base.css, beside the band reservations)
+  and the control math subtracts it. Set the token to `0` for shadowless slides.
+
+Ink is the band ink (currentColor-derived); `arw(drk)` gives filled discs and
+`arw(sqr)`/`arw(sft)` the shape. The polyfill mirrors both halves
+(`ui-carousel-controls[data-media*="nav(end)"]`). Demo: media.carousel.html § Controls in
+the content, schema.quiz.html.
+
+## Gate — `gate`
+
+A `<lay-out overflow>` whose slides each hold a form control can reveal itself one slide at
+a time — a quiz deck where the next arrow stays disabled until the current question is
+answered. Whole-token, lay-out only:
+
+```css
+:where(lay-out[overflow]):where([media~="gate"]) > :has(:invalid) ~ * { display: none; }
+```
+
+Every slide after one holding an `:invalid` control is hidden, so the scroller physically
+ends at the current slide: the native next `::scroll-button()` picks up `:disabled` (dimmed
+like any dead-end arrow), a swipe cannot overshoot, hidden slides generate no
+`::scroll-marker`, and the dot row grows 1 → 2 → 3 as slides unlock. The token needs
+something to key on — one `required` radio per question is enough, and the card renderer's
+`quiz-carousel` preset writes it. Styling the arrow per *current* slide directly is not
+expressible (`scroll-state()` styles only a slide's descendants; `:has()` has no
+snapped-slide hook), so the reveal is the gate. The polyfill counts hidden slides (three dots
+from load) and re-syncs its next button on scroll/resize. A wrong answer still unlocks — a
+correctness gate is `:not(:has(li[itemprop="acceptedAnswer"] :checked)) ~ *` instead.
+Demo: schema.html Quiz deck, schema.quiz.html (gated and free side by side).
 
 ## Scroller
 
@@ -505,6 +555,38 @@ and the discrete runner-up that was rejected: `docs/carousel-dyn-investigation.m
   are mirrored in `/ui/carousel/polyfill/carousel.css` (where the row+band arms carry a
   `:not()` band guard, since its selectors are not zero-specificity).
 - **`arw(set)`** moves the left button next to the right one (adjacent pair at inline-end).
+- **`arw(out)` — arrows outside the host.** Both buttons flank the *host* on the inline
+  sides — the card when `media=` sits on the card, the frame when it sits on the frame —
+  vertically centered on the media, a `--ui-carousel-outside-gap` (default `--spacing-sm`)
+  away from the edge. The room comes from **shrinking the host box** (`inline-size:
+  calc(round(down, 100%, 1px) - 2 * (arrow-size + gap))` + `margin-inline: auto` in
+  `media.carousel.css`) — never `padding-inline`, which on a horizontal scroller sits on the
+  *scroll* axis and lets adjacent slides peek into the reservation (the mirror of the
+  `axis(y)` band problem below). A frame host anchors the buttons past its own edges
+  (`anchor(self-start) - gap - size`, implicit anchor). A **card host** is different: the
+  media is not the card's edge in a `row` card (the text column sits between them), so the
+  card carries `anchor-name: --ui-card-out` (+ `anchor-scope`, so nested cards never
+  collide) and the *inline* insets read `anchor(--ui-card-out self-start|self-end)` while
+  `top` keeps the implicit media anchor — inline edges from the card, block centre from the
+  media. Nothing clips them: `container-type: inline-size` no longer implies layout
+  containment, so the card is not the buttons' containing block and its `overflow: hidden`
+  does not apply to them (verified, Chrome 152). Vertical centering is the
+  `--ui-carousel-arrow-top` default, so a dots band (`mrk(blw)`/`mrk(abv)`) still
+  re-centers them on the visible media. **Ink:** the disc default is kept; `arw(bare)`
+  paints the glyph in the surface ink (`--ui-carousel-controls-ink` at 80%, the band
+  recipe — the overlay's white would vanish on a light surface), and `arw(lgt)`/`arw(drk)`
+  still win. Kept deliberately narrow: `<ui-card>`/`<ui-media>` hosts (no `<ui-reveal>` or
+  `lay-out[overflow]` shrink mirror yet), horizontal only (`:not(axis(y))` on the shrink;
+  `axis(y)` hides the inline buttons anyway). Undefined with `nav(blw|abv)` /
+  `arw(blw|abv)` (they force arrows *into* the band) and `arw(set)` (it re-clusters the
+  inline insets). A *frame-level* `arw(out)` inside a row card opts the frame out of
+  `inline-size: 100%` like `mrk(rail)` does — the `ui-card.css` note in § Rail; a card-level
+  one shrinks the card, so its frame still stretches.
+  **Polyfill degradation:** the DOM controls live *inside* the scroller, and real
+  buttons shifted past its border box are clipped by the scroll container (verified —
+  native `::scroll-button` boxes escape that clip, elements can't), so
+  `/ui/carousel/polyfill/carousel.css` deliberately does not mirror the outside
+  insets: Safari/Firefox get the shrunk, centered frame with standard overlay arrows.
 - **Disabled (dead-end) arrow** dims to `--ui-carousel-arrow-disabled-opacity` (0.4) by
   default; **`arw(hid)`** sets it to 0 (auto-hide instead of dim).
 - **`arw(rev)`** hides the arrows (`opacity: 0`, added to the button transition) and reveals
@@ -625,10 +707,12 @@ thumb from the slide's own image.)
   arrangement rules stretch the frame to its grid column, which is exactly the declaration the
   reservation above needs to win — the frame kept the full column *and* added the rail's padding
   outside it (content-box), sliding under the text column. The three `ui-card.css` rules now carry
-  `:where(:not([media*="mrk(rail)"]))` on **both** the host and the frame, since `media=` may sit
-  on either. Zero-specificity `:where()` wrapping is load-bearing: a bare `:not([media*=…])` would
-  raise those rules from 0,0,1 to 0,1,1 and reorder the cascade. Reference: the product pages
-  (`demo/products/`), the only place the two compose.
+  `:where(:not([media*="mrk(rail)"], [media*="hug"]))` on **both** the host and the frame, since
+  `media=` may sit on either — and the frame arm alone also carries `[media*="arw(out)"]`: a
+  frame-level `arw(out)` shrinks the frame the way the rail reserves space, while a card-level one
+  shrinks the card and its frame must still stretch. Zero-specificity `:where()` wrapping is load-bearing:
+  a bare `:not([media*=…])` would raise those rules from 0,0,1 to 0,1,1 and reorder the cascade.
+  Reference: the product pages (`demo/products/`), the only place rail + row compose.
 
 ## Loop clones
 

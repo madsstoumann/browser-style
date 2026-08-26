@@ -124,7 +124,9 @@
 		justify-content: var(--ui-content-ov-justify, var(--ui-content-place-block, normal));
 		/* PADDING — side → axis → all. Precedence is this var() chain, NOT the cascade. */
 		padding-block-start:  var(--ui-content-pbs, var(--ui-content-pb, var(--ui-content-p, var(--spacing-md))));
-		padding-block-end:    var(--ui-content-pbe, var(--ui-content-pb, var(--ui-content-p, var(--spacing-md))));
+		/* nav(end) reserve — pbe · control row · pbe; the flag comes from ui/carousel. Docs: docs/content.md § Padding */
+		--_pbe: var(--ui-content-pbe, var(--ui-content-pb, var(--ui-content-p, var(--spacing-md))));
+		padding-block-end:    calc(var(--_pbe) * (1 + var(--ui-carousel-nav-end, 0)) + var(--ui-carousel-nav-end, 0) * var(--ui-carousel-arrow-size, 2.25rem));
 		padding-inline-start: var(--ui-content-pis, var(--ui-content-pi, var(--ui-content-p, var(--spacing-md))));
 		padding-inline-end:   var(--ui-content-pie, var(--ui-content-pi, var(--ui-content-p, var(--spacing-md))));
 		text-align: var(--ui-content-ov-text, var(--ui-content-text-align, start));
@@ -177,6 +179,14 @@
 			color: var(--_theme-c, var(--color-text));
 		}
 	}
+
+	/* themed hosts: eyebrow + bar fill follow the theme ink; accent stays the unthemed default. Docs: docs/content.md § Theme ink */
+	:where(ui-card[theme]) { --ui-content-eyebrow-ink: currentColor; }
+	:where(ui-card[theme]) progress { --ui-progress-fill: currentColor; }
+
+	/* goal rings (ui/progress-circular) center in the column; auto block margins soak up
+	   free column space (overlay cards) so trailing lines press to block-end */
+	:where(ui-content) > ui-progress-circular { align-self: center; margin-block: auto; }
 
 	/* === SCROLL — content="scr"; the fade primitive lives in ../base/scroll.css === */
 	:where([content~="scr"]) ui-content, :where([content~="scr(y)"]) ui-content,
@@ -311,11 +321,31 @@
 			& [data-part="jobTitle"], & [itemprop="jobTitle"] {
 				color: var(--ui-content-byline-role-ink, var(--ui-content-muted));
 			}
+			/* verified marker — a glyph, never a literal ✓ in the text node: the `/ ""` arm
+			   keeps the codepoint out of the accessible name. Docs: docs/content.md § Key rows */
+			& [data-part="verified"] {
+				color: var(--ui-content-byline-verified-ink, var(--ui-content-muted));
+				&::before {
+					content: var(--icon-check, '✓') / "";
+					font-family: var(--ui-icon-font);
+					margin-inline-end: var(--ui-content-verified-icon-gap, 0.35em);
+				}
+			}
 			& [data-part="dateline"] {
 				color: var(--ui-content-dateline-ink, var(--ui-content-muted));
 				font-size: inherit;
 				margin-inline-start: auto;
 				text-align: end;
+
+				/* date + reading time each take a glyph — the `/ ""` arm keeps the codepoint
+				   out of the accessible name. Docs: docs/content.md § Icon markers */
+				& > :is(time, [data-part="reading-time"])::before {
+					content: var(--icon) / "";
+					font-family: var(--ui-icon-font);
+					margin-inline-end: var(--ui-content-dateline-icon-gap, 0.35em);
+				}
+				& > time { --icon: var(--icon-calendar-month); }
+				& > [data-part="reading-time"] { --icon: var(--icon-schedule); }
 			}
 		}
 
@@ -470,13 +500,14 @@
 			/* icon markers — the glyph rides list-style-type as a STRING (Baseline);
 			   ::marker takes no vertical-align, so centring is baked into the font.
 			   Needs @browser.style/icon/icon-font.css. Docs: docs/content.md § Icon markers */
-			& li[data-icon] {
-				list-style-type: var(--icon);
-				&::marker {
-					font-family: var(--ui-icon-font);
-					letter-spacing: var(--ui-content-list-icon-gap, 0.4em);
-				}
+			&[data-icon] { --ui-content-list-marker: var(--icon); }
+			&[data-icon] > li::marker,
+			& li[data-icon]::marker {
+				font-family: var(--ui-icon-font);
+				letter-spacing: var(--ui-content-list-icon-gap, 0.4em);
 			}
+			/* a row overrides the list — same attribute, nearer subject */
+			& li[data-icon] { list-style-type: var(--icon); }
 		}
 		& ol[data-part="list"] { list-style-type: var(--ui-content-list-marker, decimal); }
 		/* block-content rows (qa answers, places): no marker — inside-position bullets wrap
@@ -515,9 +546,19 @@
 			}
 		}
 
-		/* crossed list — excluded items (membership limitations) */
+		/* checked / crossed lists — included vs excluded items. The mark is an icon-font
+		   glyph, falling back to a text one when icon-font.css is not linked (the --icon-*
+		   customs are then undefined). Docs: docs/content.md § Checked and crossed lists */
+		& [data-part="list"]:is([data-variant="checked"], [data-variant="crossed"]) li::marker {
+			font-family: var(--ui-icon-font);
+			letter-spacing: var(--ui-content-list-icon-gap, 0.4em);
+		}
+		& [data-part="list"][data-variant="checked"] {
+			--ui-content-list-marker: var(--icon-check, '✓');
+			--ui-content-list-marker-ink: var(--ui-content-list-checked-mark, var(--color-success, currentColor));
+		}
 		& [data-part="list"][data-variant="crossed"] {
-			--ui-content-list-marker: '✗  ';
+			--ui-content-list-marker: var(--icon-close, '✗');
 			--ui-content-list-marker-ink: var(--ui-content-list-crossed-mark, var(--color-error, currentColor));
 			& li { color: var(--ui-content-list-crossed-ink, var(--ui-content-muted)); }
 		}
@@ -526,13 +567,17 @@
 		& [data-part="links"] {
 			font-size: var(--ui-content-links-fs, var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))));
 			list-style-position: inside;
-			list-style-type: var(--ui-content-links-marker, disc);
+			list-style-type: var(--ui-content-links-marker, var(--icon-check, '✓'));
 			margin: 0;
 			padding: 0;
 			& li {
 				padding-block: var(--ui-content-links-pb, var(--spacing-xs));
 				&:not(:last-child) { border-block-end: var(--border-width) solid var(--ui-content-links-border, var(--color-border)); }
-				&::marker { color: var(--ui-content-links-mark, currentColor); }
+				&::marker {
+					color: var(--ui-content-links-mark, currentColor);
+					font-family: var(--ui-icon-font);
+					letter-spacing: var(--ui-content-list-icon-gap, 0.4em);
+				}
 			}
 			& a {
 				color: var(--ui-content-links-ink, inherit);
@@ -698,6 +743,20 @@
 		text-shadow: var(--ui-content-meta-text-shadow, none);
 	}
 
+	/* counter rows — an inline count with its own glyph. `data-icon` sets --icon through the
+	   icon sheet; the `/ ""` arm keeps the codepoint out of the accessible name. */
+	:where(ui-content, ui-media) [data-part="count"]::before {
+		content: var(--icon) / "";
+		font-family: var(--ui-icon-font);
+		margin-inline-end: var(--ui-content-count-icon-gap, 0.35em);
+	}
+
+	/* key rows — the <strong> label half of a "key: value" pair. Docs: docs/content.md § Key rows */
+	:where(ui-content, ui-media) [data-part="key"] {
+		color: var(--ui-content-key-ink, inherit);
+		font-weight: var(--ui-content-key-weight, 600);
+	}
+
 	/* status-chip row — the only meta row carrying more than one chip. Docs: docs/content.md */
 	:where(ui-content) [data-part="meta"]:has(> ui-chip + ui-chip) {
 		display: flex;
@@ -732,8 +791,10 @@
 		   hides this: the dots and arrows are scroll-control pseudos at z-index 3, above
 		   the cover, so the arrows work while the swipe is dead. Positioning the text
 		   column re-anchors the same ::after to it, no second rule needed.
-		   Tapping the photo stops navigating; the headline link still does. Docs: docs/card.md § cover */
-		&:is([media*="nav"], :has(ui-media[media*="nav"])) ui-content { position: relative; }
+		   Tapping the photo stops navigating; the headline link still does.
+		   The :not() is the COLLAGE BOUNDARY — :has() matches ancestors, so a frame full of
+		   nested cards drags this rule onto their text columns too. Docs: docs/card.md § cover */
+		&:is([media*="nav"], :has(ui-media[media*="nav"])) ui-content:not(:where(ui-media *)) { position: relative; }
 
 		/* A card that IS a slide keeps its swipe. Two reasons the re-anchor above cannot help
 		   here: the scroller is the PARENT frame, not this card's own media, so the selector

@@ -12,7 +12,7 @@
 	<meta name="referrer" content="no-referrer">
 	<!-- preconnect: CDN handshake parallel to the CSS download. Docs: docs/performance.md -->
 	<link rel="preconnect" href="https://v4.browser.style">
-	<link rel="stylesheet" href="/dist/demo.f91a7400.min.css">
+	<link rel="stylesheet" href="/dist/demo.6b8147a7.min.css">
 	<style>
 		section {
 			content-visibility: auto;
@@ -126,6 +126,7 @@
 				<li><a href="#arrowshape">Shape</a></li>
 				<li><a href="#arrowreveal">Reveal on hover</a></li>
 				<li><a href="#arrowplacement">Placement</a></li>
+				<li><a href="#arrowoutside">Outside</a></li>
 				<li><a href="#arrowset">Sets</a></li>
 				<li><a href="#arrowhide">Auto-hide</a></li>
 			</ol>
@@ -172,6 +173,7 @@
 				<li><a href="#layoutgrids">Grid pages</a></li>
 				<li><a href="#layoutfullscreen">Full-screen hero</a></li>
 				<li><a href="#layoutpeek">Peek both sides</a></li>
+				<li><a href="#layoutend">Controls in the content</a></li>
 			</ol>
 		</div>
 		<div>
@@ -302,6 +304,23 @@
 			<cq-box><ui-media><img src="/assets/images/gastronomy.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/gastronomy.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/gastronomy.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/gastronomy.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/gastronomy.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/gastronomy.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><img src="/assets/images/brewandbean.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/brewandbean.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/brewandbean.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/brewandbean.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/brewandbean.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/brewandbean.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><img src="/assets/images/aurasoundpro.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/aurasoundpro.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/aurasoundpro.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/aurasoundpro.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/aurasoundpro.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/aurasoundpro.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"></ui-media>
 			<ui-content><small data-part="eyebrow">arw(bc)</small><h3 data-part="headline">Arrows at bottom</h3></ui-content></cq-box>
 		</ui-card>
+	</lay-out>
+
+	<h3 id="arrowoutside">Outside — <code>arw(out)</code></h3>
+	<p><code>arw(out)</code> flanks the arrows <em>outside</em> the host on both sides, vertically centered on the media — the card when <code>media=</code> sits on the card, the frame when it sits on the frame. The host shrinks to make room; <code>--ui-carousel-outside-gap</code> sets the gap. Arrows keep the default disc; compose <code>arw(bare)</code> for a bare glyph in the surface ink. Horizontal carousels only; pair with <code>mrk(blw)</code> for banded dots.</p>
+	<lay-out md="columns(2)">
+		<ui-card variant="col" media="asr(4/3) nav arw(out)" content="scl(sm)">
+			<cq-box><ui-media><img src="/assets/images/hubble.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/hubble.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/hubble.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/hubble.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/hubble.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/hubble.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><img src="/assets/images/quantum.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/quantum.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/quantum.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/quantum.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/quantum.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/quantum.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><img src="/assets/images/websummit.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/websummit.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/websummit.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/websummit.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/websummit.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/websummit.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"></ui-media>
+			<ui-content><small data-part="eyebrow">nav arw(out)</small><h3 data-part="headline">Arrows outside</h3></ui-content></cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) nav(arw) arw(out) arw(bare)" content="scl(sm)">
+			<cq-box><ui-media><img src="/assets/images/gastronomy.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/gastronomy.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/gastronomy.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/gastronomy.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/gastronomy.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/gastronomy.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><img src="/assets/images/brewandbean.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/brewandbean.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/brewandbean.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/brewandbean.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/brewandbean.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/brewandbean.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><img src="/assets/images/aurasoundpro.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/aurasoundpro.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/aurasoundpro.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/aurasoundpro.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/aurasoundpro.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/aurasoundpro.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"></ui-media>
+			<ui-content><small data-part="eyebrow">nav(arw) arw(out) arw(bare)</small><h3 data-part="headline">Outside, bare glyph</h3></ui-content></cq-box>
+		</ui-card>
+	</lay-out>
+	<lay-out md="columns(2)">
+		<ui-media media="asr(16/9) rds(lg) clip nav arw(out) mrk(blw)"><img src="/assets/images/gastronomy.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/gastronomy.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/gastronomy.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/gastronomy.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/gastronomy.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/gastronomy.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><img src="/assets/images/brewandbean.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/brewandbean.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/brewandbean.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/brewandbean.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/brewandbean.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/brewandbean.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><img src="/assets/images/aurasoundpro.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/aurasoundpro.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/aurasoundpro.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/aurasoundpro.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/aurasoundpro.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/aurasoundpro.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"></ui-media>
+		<ui-media media="asr(16/9) rds(lg) clip nav(arw) arw(out) arw(arr) arw(lg)"><img src="/assets/images/hubble.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/hubble.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/hubble.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/hubble.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/hubble.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/hubble.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><img src="/assets/images/quantum.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/quantum.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/quantum.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/quantum.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/quantum.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/quantum.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><img src="/assets/images/websummit.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/websummit.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/websummit.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/websummit.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/websummit.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/websummit.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"></ui-media>
 	</lay-out>
 
 	<h3 id="arrowset">Sets — <code>arw(set)</code></h3>
@@ -1352,6 +1371,149 @@
 				</lay-out-group>
 			</ui-card>
 		</lay-out>
+	</lay-out>
+
+	<h3 id="layoutend">Controls in the content — <code>nav(end)</code></h3>
+	<p><code>nav(end)</code> — the lay-out's controls, drawn inside each slide's content end. Left: <code>gate</code> locks the next arrow until the question is answered · right: <code>quiz-carousel-free</code>, no gate.</p>
+	<lay-out md="columns(2) items(start)">
+		<section itemscope itemtype="https://schema.org/Quiz">
+		<meta itemprop="name" content="Quantum computing — check yourself"><meta itemprop="description" content="Three graded multiple-choice questions, one per slide. Pick an answer and it tells you whether you were right."><meta itemprop="learningResourceType" content="Practice problem">
+		<div itemprop="about" itemscope itemtype="https://schema.org/Thing" hidden><meta itemprop="name" content="Quantum computing"></div><div itemprop="educationalAlignment" itemscope itemtype="https://schema.org/AlignmentObject" hidden><meta itemprop="alignmentType" content="educationalSubject"><meta itemprop="targetName" content="Quantum computing"></div>
+		<lay-out md="columns(1)" overflow media="nav(end) arw(drk) gate">
+		<ui-card variant="col" media="asr(16/9) chip(te)">
+			<cq-box>
+				<ui-media><img src="/assets/images/quantum.png" alt="Stylised quantum processor" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/quantum.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/quantum.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/quantum.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/quantum.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/quantum.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>Quiz</ui-chip></ui-media>
+				<ui-content content="wid(2xl)">
+					<small data-part="eyebrow">Question 1 of 3</small>
+					<h3 data-part="headline">Quantum computing — check yourself</h3>
+					<fieldset itemprop="hasPart" itemscope itemtype="https://schema.org/Question">
+					<legend itemprop="text">What can a qubit hold that a classical bit cannot?</legend><meta itemprop="eduQuestionType" content="Multiple choice">
+					<ul data-part="options" aria-live="polite"><li itemprop="suggestedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="position" content="1">
+						<label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q1" required> <span itemprop="text">Two values at once, permanently</span></label> <ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip>
+					</li><li itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="position" content="2">
+						<label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q1"> <span itemprop="text">A superposition of 0 and 1 that collapses when measured</span></label> <ui-chip data-verdict="correct" theme="pale green">Correct</ui-chip>
+					</li><li itemprop="suggestedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="position" content="3">
+						<label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q1"> <span itemprop="text">Any number between 0 and 1, read back exactly</span></label> <ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip>
+					</li><li itemprop="suggestedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="position" content="4">
+						<label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q1"> <span itemprop="text">Nothing — a qubit is a bit with a faster clock</span></label> <ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip>
+					</li></ul>
+				</fieldset>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(16/9) chip(te)">
+			<cq-box>
+				<ui-media><img src="/assets/images/quantum.png" alt="Stylised quantum processor" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/quantum.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/quantum.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/quantum.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/quantum.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/quantum.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>Quiz</ui-chip></ui-media>
+				<ui-content content="wid(2xl)">
+					<small data-part="eyebrow">Question 2 of 3</small>
+					<h3 data-part="headline">Quantum computing — check yourself</h3>
+					<fieldset itemprop="hasPart" itemscope itemtype="https://schema.org/Question">
+					<legend itemprop="text">Two entangled qubits are separated by a kilometre. What happens when one is measured?</legend><meta itemprop="eduQuestionType" content="Multiple choice">
+					<ul data-part="options" aria-live="polite"><li itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="position" content="1">
+						<label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q2" required> <span itemprop="text">The other's outcome is fixed in the same instant</span></label> <ui-chip data-verdict="correct" theme="pale green">Correct</ui-chip>
+					</li><li itemprop="suggestedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="position" content="2">
+						<label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q2"> <span itemprop="text">A signal travels between them at the speed of light</span></label> <ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip>
+					</li><li itemprop="suggestedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="position" content="3">
+						<label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q2"> <span itemprop="text">The other qubit is destroyed</span></label> <ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip>
+					</li><li itemprop="suggestedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="position" content="4">
+						<label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q2"> <span itemprop="text">Nothing; entanglement does not survive separation</span></label> <ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip>
+					</li></ul>
+				</fieldset>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(16/9) chip(te)">
+			<cq-box>
+				<ui-media><img src="/assets/images/quantum.png" alt="Stylised quantum processor" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/quantum.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/quantum.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/quantum.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/quantum.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/quantum.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>Quiz</ui-chip></ui-media>
+				<ui-content content="wid(2xl)">
+					<small data-part="eyebrow">Question 3 of 3</small>
+					<h3 data-part="headline">Quantum computing — check yourself</h3>
+					<fieldset itemprop="hasPart" itemscope itemtype="https://schema.org/Question">
+					<legend itemprop="text">Why does a quantum computer need error correction?</legend><meta itemprop="eduQuestionType" content="Multiple choice">
+					<ul data-part="options" aria-live="polite"><li itemprop="suggestedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="position" content="1">
+						<label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q3" required> <span itemprop="text">Because its output is random and must be averaged</span></label> <ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip>
+					</li><li itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="position" content="2">
+						<label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q3"> <span itemprop="text">Because physical qubits decohere in microseconds</span></label> <ui-chip data-verdict="correct" theme="pale green">Correct</ui-chip>
+					</li><li itemprop="suggestedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="position" content="3">
+						<label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q3"> <span itemprop="text">Because superposition cannot be measured twice</span></label> <ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip>
+					</li><li itemprop="suggestedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="position" content="4">
+						<label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q3"> <span itemprop="text">It does not — quantum states are exact</span></label> <ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip>
+					</li></ul>
+				</fieldset>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		</lay-out>
+		</section>
+		<section itemscope itemtype="https://schema.org/Quiz">
+		<meta itemprop="name" content="Quantum computing — free navigation"><meta itemprop="description" content="The same three questions with every slide reachable from the start."><meta itemprop="learningResourceType" content="Practice problem">
+		<div itemprop="about" itemscope itemtype="https://schema.org/Thing" hidden><meta itemprop="name" content="Quantum computing"></div><div itemprop="educationalAlignment" itemscope itemtype="https://schema.org/AlignmentObject" hidden><meta itemprop="alignmentType" content="educationalSubject"><meta itemprop="targetName" content="Quantum computing"></div>
+		<lay-out md="columns(1)" overflow media="nav(end) arw(drk)">
+		<ui-card variant="col" media="asr(16/9) chip(te)">
+			<cq-box>
+				<ui-media><img src="/assets/images/quantum.png" alt="Stylised quantum processor" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/quantum.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/quantum.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/quantum.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/quantum.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/quantum.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>Quiz</ui-chip></ui-media>
+				<ui-content content="wid(2xl)">
+					<small data-part="eyebrow">Question 1 of 3</small>
+					<h3 data-part="headline">Quantum computing — free navigation</h3>
+					<fieldset itemprop="hasPart" itemscope itemtype="https://schema.org/Question">
+					<legend itemprop="text">What can a qubit hold that a classical bit cannot?</legend><meta itemprop="eduQuestionType" content="Multiple choice">
+					<ul data-part="options" aria-live="polite"><li itemprop="suggestedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="position" content="1">
+						<label><input type="radio" class="--check" name="quiz-quantum-computing-free-navigation-q1"> <span itemprop="text">Two values at once, permanently</span></label> <ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip>
+					</li><li itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="position" content="2">
+						<label><input type="radio" class="--check" name="quiz-quantum-computing-free-navigation-q1"> <span itemprop="text">A superposition of 0 and 1 that collapses when measured</span></label> <ui-chip data-verdict="correct" theme="pale green">Correct</ui-chip>
+					</li><li itemprop="suggestedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="position" content="3">
+						<label><input type="radio" class="--check" name="quiz-quantum-computing-free-navigation-q1"> <span itemprop="text">Any number between 0 and 1, read back exactly</span></label> <ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip>
+					</li><li itemprop="suggestedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="position" content="4">
+						<label><input type="radio" class="--check" name="quiz-quantum-computing-free-navigation-q1"> <span itemprop="text">Nothing — a qubit is a bit with a faster clock</span></label> <ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip>
+					</li></ul>
+				</fieldset>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(16/9) chip(te)">
+			<cq-box>
+				<ui-media><img src="/assets/images/quantum.png" alt="Stylised quantum processor" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/quantum.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/quantum.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/quantum.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/quantum.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/quantum.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>Quiz</ui-chip></ui-media>
+				<ui-content content="wid(2xl)">
+					<small data-part="eyebrow">Question 2 of 3</small>
+					<h3 data-part="headline">Quantum computing — free navigation</h3>
+					<fieldset itemprop="hasPart" itemscope itemtype="https://schema.org/Question">
+					<legend itemprop="text">Two entangled qubits are separated by a kilometre. What happens when one is measured?</legend><meta itemprop="eduQuestionType" content="Multiple choice">
+					<ul data-part="options" aria-live="polite"><li itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="position" content="1">
+						<label><input type="radio" class="--check" name="quiz-quantum-computing-free-navigation-q2"> <span itemprop="text">The other's outcome is fixed in the same instant</span></label> <ui-chip data-verdict="correct" theme="pale green">Correct</ui-chip>
+					</li><li itemprop="suggestedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="position" content="2">
+						<label><input type="radio" class="--check" name="quiz-quantum-computing-free-navigation-q2"> <span itemprop="text">A signal travels between them at the speed of light</span></label> <ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip>
+					</li><li itemprop="suggestedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="position" content="3">
+						<label><input type="radio" class="--check" name="quiz-quantum-computing-free-navigation-q2"> <span itemprop="text">The other qubit is destroyed</span></label> <ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip>
+					</li><li itemprop="suggestedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="position" content="4">
+						<label><input type="radio" class="--check" name="quiz-quantum-computing-free-navigation-q2"> <span itemprop="text">Nothing; entanglement does not survive separation</span></label> <ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip>
+					</li></ul>
+				</fieldset>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(16/9) chip(te)">
+			<cq-box>
+				<ui-media><img src="/assets/images/quantum.png" alt="Stylised quantum processor" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/quantum.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/quantum.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/quantum.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/quantum.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/quantum.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>Quiz</ui-chip></ui-media>
+				<ui-content content="wid(2xl)">
+					<small data-part="eyebrow">Question 3 of 3</small>
+					<h3 data-part="headline">Quantum computing — free navigation</h3>
+					<fieldset itemprop="hasPart" itemscope itemtype="https://schema.org/Question">
+					<legend itemprop="text">Why does a quantum computer need error correction?</legend><meta itemprop="eduQuestionType" content="Multiple choice">
+					<ul data-part="options" aria-live="polite"><li itemprop="suggestedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="position" content="1">
+						<label><input type="radio" class="--check" name="quiz-quantum-computing-free-navigation-q3"> <span itemprop="text">Because its output is random and must be averaged</span></label> <ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip>
+					</li><li itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="position" content="2">
+						<label><input type="radio" class="--check" name="quiz-quantum-computing-free-navigation-q3"> <span itemprop="text">Because physical qubits decohere in microseconds</span></label> <ui-chip data-verdict="correct" theme="pale green">Correct</ui-chip>
+					</li><li itemprop="suggestedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="position" content="3">
+						<label><input type="radio" class="--check" name="quiz-quantum-computing-free-navigation-q3"> <span itemprop="text">Because superposition cannot be measured twice</span></label> <ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip>
+					</li><li itemprop="suggestedAnswer" itemscope itemtype="https://schema.org/Answer"><meta itemprop="position" content="4">
+						<label><input type="radio" class="--check" name="quiz-quantum-computing-free-navigation-q3"> <span itemprop="text">It does not — quantum states are exact</span></label> <ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip>
+					</li></ul>
+				</fieldset>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		</lay-out>
+		</section>
 	</lay-out>
 
 	<!-- ════════════════════════════════════════════════════════════

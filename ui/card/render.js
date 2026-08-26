@@ -52,12 +52,14 @@ export const SCHEMA_TYPES = {
 	gallery: 'ImageGallery',
 	statistic: 'Observation',
 	achievement: 'EducationalOccupationalCredential',
+	goal: 'AchieveAction',
 	announcement: 'SpecialAnnouncement',
 	business: 'LocalBusiness',
 	comparison: 'ItemList',
 	contact: 'ContactPoint',
 	location: 'Place',
 	places: 'ItemList',
+	filelist: 'ItemList',
 	membership: 'Offer',
 	social: 'SocialMediaPosting',
 	software: 'SoftwareApplication',
@@ -168,6 +170,19 @@ const QUIZ_FORMATS = {
 /* absent/unknown falls back to the flashcard shape — resolved in ONE place, so the
    deck (DETAILS.quiz) and the flip card (REVEAL_FACES.quiz) cannot disagree */
 const quizFormat = (d) => Object.hasOwn(QUIZ_FORMATS, d?.format) ? d.format : 'flashcard';
+/* one graded question — the SAME markup for the single-card deck (DETAILS.quiz) and the
+   carousel deck (renderQuizCarousel), so the two presentations cannot drift. `required`
+   on the first radio is what the scroller's `gate` token keys on. Docs: docs/schema.md § Quiz */
+const quizQuestion = (card, name, words, required = false) => {
+	const options = (card.options || []).map((option, position) =>
+		`<li${scope(option.correct ? 'acceptedAnswer' : 'suggestedAnswer', 'Answer')}>${meta('position', position + 1)}
+					<label><input type="radio" class="--check" name="${esc(name)}"${required && position === 0 ? ' required' : ''}> <span itemprop="text">${esc(option.text)}</span></label> ${option.correct ? '<ui-chip data-verdict="correct" theme="pale green">Correct</ui-chip>' : '<ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip>'}
+				</li>`).join('');
+	return `<fieldset${scope('hasPart', 'Question')}>
+				<legend itemprop="text">${esc(card.question)}</legend>${meta('eduQuestionType', words.question)}
+				${options ? `<ul data-part="options" aria-live="polite">${options}</ul>` : ''}
+			</fieldset>`;
+};
 
 /* Fallback when a card references no preset (or an unknown one).
    Real presets live in data/card.presets.json — instances of the
@@ -215,7 +230,7 @@ const ROOT_VIDEO_TYPES = new Set(['video']);
 /* Person has no keywords property. Intangible-rooted types (JobPosting, Offer,
    Reservation, ContactPoint, ItemList, Observation, MemberProgram, Service) have
    none either — null = visible chips only, no itemprop */
-const TAGS_PROP = { profile: 'knowsAbout', artist: 'knowsAbout', job: null, membership: null, booking: null, contact: null, comparison: null, places: null, statistic: null, loyalty: null, service: null };
+const TAGS_PROP = { profile: 'knowsAbout', artist: 'knowsAbout', job: null, membership: null, booking: null, contact: null, comparison: null, places: null, filelist: null, statistic: null, loyalty: null, service: null, goal: null };
 /* byline itemprop — a quote's people are its creators, everyone else's are authors */
 const bylineProp = (type) => type === 'quote' ? 'creator' : 'author';
 
@@ -273,6 +288,10 @@ let TYPE_CHIP = false;
    images.cdnBase. Unset = text labels, so a consumer never gets an invented asset path.
    Docs: docs/card.md § External map links */
 let MAP_ICONS = null;
+/* current card's ucf.id — set per renderCard() call, module-level like IMG/SCHEMA_MODE
+   (see the schema-mode note below on why nothing threads through the call tree);
+   consumed by accordion() popover mode to mint popovertarget ids */
+let CARD_ID = null;
 /* same eligibility as ui-media-srcset.js #eligible(): ROOT-relative local paths only —
    a page-relative src would transform into the wrong zone path (404, no src fallback) */
 const cdnEligible = (src) => !!(IMG && src && src.startsWith('/') && !src.startsWith('//'));
@@ -723,15 +742,17 @@ const addressPart = (address, prop = 'address') => {
 	return `<address data-part="address"${scope(prop, 'PostalAddress')}>${lines}${country.length > 2 ? '' : meta('addressCountry', country)}</address>`;
 };
 
-/* an item is a plain string, or { text, icon, href, itemprop } where `icon` names a
+/* `crossed`/`checked` mark the whole list (excluded vs included items) — one repeated
+   ::marker glyph, NOT a per-row data-icon: the rows do not differ in kind.
+   an item is a plain string, or { text, icon, href, itemprop } where `icon` names a
    glyph in @browser.style/icon/icons.json — it rides data-icon and becomes the ::marker.
    An unknown name is inert (the list falls back to its normal marker). `href` makes the
    row a link; the marker keeps the row's body colour while the link takes link colour,
    which is what lets a contact row sit in the same list as plain ones. There is NO raw
    markup escape hatch here — every part is escaped. */
-const listPart = (items, { ordered = false, itemprop = null, crossed = false } = {}) =>
+const listPart = (items, { ordered = false, itemprop = null, crossed = false, checked = false } = {}) =>
 	items?.length
-		? `<${ordered ? 'ol' : 'ul'} data-part="list"${crossed ? ' data-variant="crossed"' : ''}${itemprop ? ` itemprop="${esc(itemprop)}"` : ''}>${items.map((item) => {
+		? `<${ordered ? 'ol' : 'ul'} data-part="list"${crossed ? ' data-variant="crossed"' : checked ? ' data-variant="checked"' : ''}${itemprop ? ` itemprop="${esc(itemprop)}"` : ''}>${items.map((item) => {
 			const { text, icon, href, itemprop: rowProp } = typeof item === 'object' && item !== null ? item : { text: item };
 			const body = href
 				? `<a${rowProp ? ` itemprop="${esc(rowProp)}"` : ''} href="${esc(href)}">${esc(text)}</a>`
@@ -739,6 +760,16 @@ const listPart = (items, { ordered = false, itemprop = null, crossed = false } =
 			return `<li${icon ? ` data-icon="${esc(icon)}"` : ''}>${body}</li>`;
 		}).join('')}</${ordered ? 'ol' : 'ul'}>`
 		: '';
+
+/* amenity rows — LocationFeatureSpecification scopes, so NOT listPart(): each row is a
+   nested item, not a plain string. Takes the same `{text, icon}` shape all the same, so an
+   amenity can carry a ::marker glyph. Docs: docs/content.md § Icon markers */
+const amenityList = (items) => items?.length
+	? `<ul data-part="list">${items.map((item) => {
+		const { text, icon } = typeof item === 'object' && item !== null ? item : { text: item };
+		return `<li${icon ? ` data-icon="${esc(icon)}"` : ''}${scope('amenityFeature', 'LocationFeatureSpecification')}>${meta('value', 'true')}<span itemprop="name">${esc(text)}</span></li>`;
+	}).join('')}</ul>`
+	: '';
 
 /* author image via @browser.style/avatar — initials fallback when no image */
 const initials = (name) => {
@@ -759,13 +790,18 @@ const byline = (authors, prop = 'author', dateline = '') =>
 		<span data-part="byline-who"><span itemprop="name">${esc(author.name)}</span>${author.role ? `<span itemprop="jobTitle">${esc(author.role)}</span>` : ''}</span>${index === 0 ? dateline : ''}
 	</address>`).join('');
 
+/* key row in a meta run — the label half of a "key: value" pair. The colon is part of the
+   key, and is normalised so an author-supplied label may spell it either way.
+   Docs: docs/content.md § Key rows */
+const keyed = (label) => `<strong data-part="key">${esc(String(label).replace(/:\s*$/, ''))}:</strong> `;
+
 /* screen credits — director row + one actor scope per name. Shared by movie/
    tvseries/tvepisode; the label carries its own punctuation because a series is
    "Created and directed by" where a film is "Director:". `actor` accepts a Person
    OR a PerformingGroup; Person is the safe default for a bare name. */
 const creditsPart = (d) =>
-	(d.director?.name ? `<p data-part="meta"${scope('director', 'Person')}>${esc(d.director.label || 'Director:')} <span itemprop="name">${esc(d.director.name)}</span></p>` : '')
-	+ (d.actors?.length ? `<p data-part="meta">Starring: ${d.actors.map((name) => `<span${scope('actor', 'Person')}><span itemprop="name">${esc(name)}</span></span>`).join(', ')}</p>` : '');
+	(d.director?.name ? `<p data-part="meta"${scope('director', 'Person')}>${keyed(d.director.label || 'Director')}<span itemprop="name">${esc(d.director.name)}</span></p>` : '')
+	+ (d.actors?.length ? `<p data-part="meta">${keyed('Starring')}${d.actors.map((name) => `<span${scope('actor', 'Person')}><span itemprop="name">${esc(name)}</span></span>`).join(', ')}</p>` : '');
 
 /* comic credits — one Person scope per filled role, as a visible meta row. All five are
    ComicIssue's OWN properties (shared with ComicStory) and a ComicSeries carries none of
@@ -774,7 +810,7 @@ const creditsPart = (d) =>
 const COMIC_ROLES = [['artist', 'Art'], ['penciler', 'Pencils'], ['inker', 'Inks'], ['letterer', 'Letters'], ['colorist', 'Colours']];
 const comicCredits = (d) => {
 	const rows = COMIC_ROLES.filter(([key]) => d[key])
-		.map(([key, label]) => `${label} <span${scope(key, 'Person')}><span itemprop="name">${esc(d[key])}</span></span>`);
+		.map(([key, label]) => `${keyed(label)}<span${scope(key, 'Person')}><span itemprop="name">${esc(d[key])}</span></span>`);
 	return rows.length ? `<p data-part="meta">${rows.join(' · ')}</p>` : '';
 };
 
@@ -782,14 +818,41 @@ const comicCredits = (d) => {
 const quotePart = (text, { itemprop = 'text', variant = null, cite = null } = {}) =>
 	`<ui-quote data-part="quote"${attrs({ variant })}><blockquote itemprop="${esc(itemprop)}"><q>${esc(text)}</q>${cite ? `<cite>${esc(cite)}</cite>` : ''}</blockquote></ui-quote>`;
 
-/* nested <ui-accordion> — cq-box is hand-authored so the CSS-only form styles without JS */
-const accordion = (group, items, variant = null, hostAttrs = '') =>
-	`<ui-accordion${attrs({ group, variant })}${hostAttrs}><cq-box>${items.map(({ summary, body, scopeAttrs = '', icon = 'plus-minus' }) =>
-		`<details name="${esc(group)}"${scopeAttrs}>
+/* nested <ui-accordion> — cq-box is hand-authored so the CSS-only form styles without JS.
+   The parts.accordion word `popover` swaps <details>/<summary> for <button popovertarget>
+   + <div popover> pairs (native Popover API — CSS/HTML only, light-dismiss, no JS). The
+   word is STRIPPED from the emitted variant=; remaining words keep the chrome, restated
+   for button rows in ui-accordion.css § Popover mode. Ids are deterministic:
+   `${cardId}-${group}-${n}`, falling back to `${group}-${n}` when the UCF has no id —
+   two id-less cards of one type on one page then share targets (ui/accordion/readme.md) */
+const accordion = (group, items, variant = null, hostAttrs = '') => {
+	const words = String(variant || '').trim().split(/\s+/).filter(Boolean);
+	const popover = words.includes('popover');
+	const hostVariant = words.filter((word) => word !== 'popover').join(' ') || null;
+	const inner = popover
+		? items.map(({ summary, body, scopeAttrs = '' }, index) => {
+			const id = esc(`${CARD_ID ? `${CARD_ID}-` : ''}${group}-${index + 1}`);
+			/* the panel header repeats the label VISUALLY only — tags (and the itemprops/
+			   metas they carry) are stripped so no property is claimed twice; summary is
+			   already-escaped HTML, so removing tags cannot un-escape anything */
+			const label = summary.replace(/<[^>]+>/g, '');
+			const pair = `<button type="button" popovertarget="${id}">${summary}<ui-icon type="arrow upright"></ui-icon></button>
+			<div popover id="${id}">
+				<header><span>${label}</span><button type="button" popovertarget="${id}" popovertargetaction="hide"><ui-icon type="cross"></ui-icon></button></header>
+				${body}
+			</div>`;
+			/* an item's microdata scope must span name (button) and body (popover) — one
+			   wrapper, only when the item carries a scope; ui-accordion.css flattens it */
+			return scopeAttrs ? `<div${scopeAttrs}>${pair}</div>` : pair;
+		}).join('')
+		: items.map(({ summary, body, scopeAttrs = '', icon = 'plus-minus' }) =>
+			`<details name="${esc(group)}"${scopeAttrs}>
 			<summary>${summary}<ui-icon type="${esc(icon)}"></ui-icon></summary>
 			${body}
 		</details>`
-	).join('')}</cq-box></ui-accordion>`;
+		).join('');
+	return `<ui-accordion${attrs({ group, variant: hostVariant })}${hostAttrs}><cq-box>${inner}</cq-box></ui-accordion>`;
+};
 
 /* VideoObject metas for a native <video> item (placed INSIDE the element — valid fallback content) */
 const videoMetas = (item, src) =>
@@ -1257,7 +1320,7 @@ const datelinePart = (fields) => {
 		? `<time datetime="${esc(fields.published)}">${new Date(fields.published).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</time>`
 		: '';
 	return date || fields.readingTime
-		? `<small data-part="dateline">${date}${fields.readingTime ? `<span>${esc(fields.readingTime)}</span>` : ''}</small>`
+		? `<small data-part="dateline">${date}${fields.readingTime ? `<span data-part="reading-time">${esc(fields.readingTime)}</span>` : ''}</small>`
 		: '';
 };
 
@@ -1311,11 +1374,15 @@ const buildTail = (fields, type) => {
 			if (eng[key] == null) continue;
 			html += `<div${scope('interactionStatistic', 'InteractionCounter')} hidden>${meta('interactionType', SCHEMA + action)}${meta('userInteractionCount', eng[key])}</div>`;
 		}
+		/* each counter is its own element so it can carry a glyph — data-icon sets --icon
+		   through the icon sheet, and the ::before arm draws it. Docs: docs/content.md */
+		const count = (icon, value, word) => value == null ? null
+			: `<span data-part="count" data-icon="${icon}">${num(value)} ${word}</span>`;
 		const summary = [
-			eng.viewCount != null ? `${num(eng.viewCount)} views` : null,
-			eng.likeCount != null ? `${num(eng.likeCount)} likes` : null,
-			eng.shareCount != null ? `${num(eng.shareCount)} shares` : null,
-			eng.commentCount != null ? `${num(eng.commentCount)} comments` : null
+			count('visibility', eng.viewCount, 'views'),
+			count('favorite', eng.likeCount, 'likes'),
+			count('share', eng.shareCount, 'shares'),
+			count('mode-comment', eng.commentCount, 'comments')
 		].filter(Boolean).join(' · ');
 		if (summary) html += `<footer data-part="footer">${summary}</footer>`;
 	}
@@ -1471,8 +1538,10 @@ const slug = (text) => String(text ?? '').toLowerCase().replace(/[^a-z0-9]+/g, '
    runs in — data always wins. */
 /* `sr` renders the list visually-hidden but still IN the accessibility tree ([data-sr],
    ui/base/core.css) — not `hidden`, which would remove it from both. Docs: docs/content.md */
-const scopedList = (rows, ordered, sr = false) => rows.length
-	? `<${ordered ? 'ol' : 'ul'} data-part="list"${sr ? ' data-sr' : ''}>${rows.join('')}</${ordered ? 'ol' : 'ul'}>`
+/* `icon` marks the WHOLE list — rows that do not differ in kind take one repeated glyph,
+   not a per-row data-icon. Docs: docs/content.md § Icon markers */
+const scopedList = (rows, ordered, sr = false, icon = null) => rows.length
+	? `<${ordered ? 'ol' : 'ul'} data-part="list"${sr ? ' data-sr' : ''}${icon ? ` data-icon="${esc(icon)}"` : ''}>${rows.join('')}</${ordered ? 'ol' : 'ul'}>`
 	: '';
 
 /* one MenuItem row: name · label · price on one line, description under it. The row
@@ -1577,10 +1646,7 @@ export const realestateSections = (d = {}, fields = {}) => {
 		factsRun: facts.length ? `<p data-part="meta">${facts.join(' · ')}</p>` : '',
 		figures,
 		address: addressPart(home?.address),
-		amenities: home?.amenities?.length
-			? `<ul data-part="list">${home.amenities.map((amenity) =>
-				`<li${scope('amenityFeature', 'LocationFeatureSpecification')}>${meta('value', 'true')}<span itemprop="name">${esc(amenity)}</span></li>`).join('')}</ul>`
-			: '',
+		amenities: amenityList(home?.amenities),
 		place,
 		footer: bits ? `<p data-part="meta">${bits}</p>` : ''
 	};
@@ -1664,10 +1730,7 @@ export const vacationrentalSections = (d = {}, fields = {}) => {
 		factsRun: facts.length ? `<p data-part="meta">${facts.join(' · ')}</p>` : '',
 		figures,
 		beds,
-		amenities: unit?.amenities?.length
-			? `<ul data-part="list">${unit.amenities.map((amenity) =>
-				`<li${scope('amenityFeature', 'LocationFeatureSpecification')}>${meta('value', 'true')}<span itemprop="name">${esc(amenity)}</span></li>`).join('')}</ul>`
-			: '',
+		amenities: amenityList(unit?.amenities),
 		address: addressPart(d.address),
 		stay: stayBits ? `<p data-part="meta">${stayBits}</p>` : '',
 		place: {
@@ -1716,6 +1779,21 @@ const PLACE_FALLBACK = { business: 'LocalBusiness', residence: 'Accommodation' }
 const DEFAULT_PLACE_CTA = 'See More';
 /* the complete schema.org ItemListOrderType member set */
 const ITEM_LIST_ORDERS = new Set(['ItemListOrderAscending', 'ItemListOrderDescending', 'ItemListUnordered']);
+
+/* ── filelist: a downloadable-file collection — root ItemList (like comparison/places),
+   each file a complete MediaObject: name, contentUrl, contentSize, encodingFormat.
+   The file KIND is this closed allowlist, because it lands in two machine surfaces —
+   the ::marker glyph (a name in ui/icon/icons.json) and the encodingFormat MIME type —
+   and neither may ever interpolate author data. An unknown kind falls back to the
+   generic `draft` glyph and emits NO encodingFormat: every row still carries a glyph,
+   since a partially-iconed list renders mixed markers. Docs: docs/schema.md § File list ── */
+const FILE_TYPES = {
+	pdf: { icon: 'picture-as-pdf', mime: 'application/pdf', label: 'PDF' },
+	excel: { icon: 'table-view', mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', label: 'Excel' },
+	word: { icon: 'description', mime: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', label: 'Word' },
+	txt: { icon: 'text-snippet', mime: 'text/plain', label: 'Text' },
+	zip: { icon: 'folder-zip', mime: 'application/zip', label: 'ZIP' }
+};
 
 /* the per-place map link, and the ONE place hasMap is declared. On the single-place card
    hasMap rides the <iframe> and the CTA stays bare; here the frame's enclosing scope is an
@@ -1899,7 +1977,7 @@ const DETAILS = {
 
 	recipe(d, fields, parts = {}) {
 		let html = meta('prepTime', d.prepTime) + meta('cookTime', d.cookTime) + meta('recipeYield', d.servings);
-		html += `<p data-part="meta">Prep ${esc(duration(d.prepTime))} · Cook ${esc(duration(d.cookTime))} · Serves ${esc(d.servings)}</p>`;
+		html += `<p data-part="meta">${keyed('Prep')}${esc(duration(d.prepTime))} · ${keyed('Cook')}${esc(duration(d.cookTime))} · ${keyed('Serves')}${esc(d.servings)}</p>`;
 		if (d.ingredients?.length) {
 			html += `<ul data-part="list">${d.ingredients.map((item) => `<li itemprop="recipeIngredient">${esc(item)}</li>`).join('')}</ul>`;
 		}
@@ -1924,7 +2002,7 @@ const DETAILS = {
 			html += quotePart(fields.summary, { itemprop: 'reviewBody', variant: parts.quote || null });
 		}
 		if (d.reviewer?.name) {
-			html += `<address data-part="byline"${scope('author', 'Person')}>${avatarPart(d.reviewer)}<span data-part="byline-who"><span itemprop="name">${esc(d.reviewer.name)}</span>${d.reviewer.title ? `<span itemprop="jobTitle">${esc(d.reviewer.title)}</span>` : ''}${d.reviewer.verified ? '<span>✓ Verified purchase</span>' : ''}</span>${d.reviewDate ? `<small data-part="dateline"><time datetime="${esc(d.reviewDate)}">${esc(d.reviewDateDisplay || d.reviewDate)}</time></small>` : ''}</address>`;
+			html += `<address data-part="byline"${scope('author', 'Person')}>${avatarPart(d.reviewer)}<span data-part="byline-who"><span itemprop="name">${esc(d.reviewer.name)}</span>${d.reviewer.title ? `<span itemprop="jobTitle">${esc(d.reviewer.title)}</span>` : ''}${d.reviewer.verified ? `<span data-part="verified">${esc(d.reviewerVerifiedText || 'Verified purchase')}</span>` : ''}</span>${d.reviewDate ? `<small data-part="dateline"><time datetime="${esc(d.reviewDate)}">${esc(d.reviewDateDisplay || d.reviewDate)}</time></small>` : ''}</address>`;
 			/* the visible time sits inside the Person scope, so the machine-readable
 			   date rides a meta on the Review itself */
 			if (d.reviewDate) html += meta('datePublished', d.reviewDate);
@@ -1983,7 +2061,7 @@ const DETAILS = {
 			+ `<div${scope('hasCourseInstance', 'CourseInstance')} hidden>${meta('courseMode', 'Online')}${meta('courseWorkload', d.courseWorkload)}${d.instructor?.name ? `<span${scope('instructor', 'Person')}>${meta('name', d.instructor.name)}</span>` : ''}</div>`
 			+ (d.provider ? `<span${scope('provider', 'Organization')} hidden>${meta('name', d.provider)}</span>` : '');
 		const facts = [d.duration ? duration(d.duration) : null, d.difficultyLevel, d.courseWorkload ? duration(d.courseWorkload) + ' of study' : null].filter(Boolean).join(' · ');
-		html += `<p data-part="meta">${esc(facts)}${d.instructor?.name ? ` · Instructor: ${esc(d.instructor.name)}${d.instructor.title ? `, ${esc(d.instructor.title)}` : ''}` : ''}</p>`;
+		html += `<p data-part="meta">${esc(facts)}${d.instructor?.name ? ` · ${keyed('Instructor')}${esc(d.instructor.name)}${d.instructor.title ? `, ${esc(d.instructor.title)}` : ''}` : ''}</p>`;
 		if (d.price) {
 			html += `<p data-part="price"${scope('offers', 'Offer')}>${meta('priceCurrency', d.price.currency)}${meta('availability', SCHEMA + 'InStock')}${priceValue(d.price.currency, d.price.current)}${d.price.original ? ` <del>${fmtPrice(d.price.currency, d.price.original)}</del>` : ''}</p>`;
 		}
@@ -2099,8 +2177,29 @@ const DETAILS = {
 		let html = d.status ? `<p data-part="meta"><ui-chip theme="pale green">${esc(d.status)}</ui-chip></p>` : '';
 		html += meta('dateCreated', d.dateEarned) + meta('expires', d.expirationDate)
 			+ meta('educationalLevel', d.skillLevel) + meta('identifier', d.credentialId);
-		html += `<p data-part="meta">Issued by <span${scope('recognizedBy', 'Organization')}><span itemprop="name">${esc(d.issuingOrganization)}</span></span>${d.dateEarnedDisplay ? ` · ${esc(d.dateEarnedDisplay)}` : ''}${d.expirationDateDisplay ? ` · Expires ${esc(d.expirationDateDisplay)}` : ''}${d.credentialId ? ` · ID ${esc(d.credentialId)}` : ''}</p>`;
+		html += `<p data-part="meta">${keyed('Issued by')}<span${scope('recognizedBy', 'Organization')}><span itemprop="name">${esc(d.issuingOrganization)}</span></span>${d.dateEarnedDisplay ? ` · ${esc(d.dateEarnedDisplay)}` : ''}${d.expirationDateDisplay ? ` · ${keyed('Expires')}${esc(d.expirationDateDisplay)}` : ''}${d.credentialId ? ` · ${keyed('ID')}${esc(d.credentialId)}` : ''}</p>`;
 		if (d.verificationUrl) html += `<nav data-part="actions"><a class="ui-button" href="${esc(d.verificationUrl)}" target="_blank" rel="noopener">Verify credential</a></nav>`;
+		return html;
+	},
+
+	goal(d) {
+		/* target rides `object`, progress rides `result` — both QuantitativeValue; the ring is
+		   presentation only, machine numbers stay on the metas. Docs: docs/schema.md § Goal */
+		const STATUS = { active: 'ActiveActionStatus', completed: 'CompletedActionStatus', failed: 'FailedActionStatus', potential: 'PotentialActionStatus' };
+		const HUES = new Set(['red', 'orange', 'green', 'blue', 'accent', 'black', 'white', 'gray', 'slate']);
+		let html = meta('actionStatus', STATUS[d.status] ? SCHEMA + STATUS[d.status] : null)
+			+ meta('startTime', d.startDate) + meta('endTime', d.endDate);
+		if (d.agentName) html += `<span${scope('agent', 'Person')} hidden>${meta('name', d.agentName)}</span>`;
+		if (d.target) html += `<span${scope('object', 'QuantitativeValue')} hidden>${meta('name', d.target.name)}${meta('value', d.target.value)}${meta('unitText', d.target.unitText)}</span>`;
+		if (d.current) html += `<span${scope('result', 'QuantitativeValue')} hidden>${meta('value', d.current.value)}${meta('unitText', d.current.unitText)}</span>`;
+		const target = Number(d.target?.value), current = Number(d.current?.value);
+		if (target > 0 && Number.isFinite(current)) {
+			const pct = Math.round(Math.min(100, Math.max(0, current / target * 100)));
+			const hue = HUES.has(d.hue) ? ` theme="${d.hue}"` : '';
+			html += `<ui-progress-circular size="lg"${hue}><progress max="${esc(d.target.value)}" value="${esc(d.current.value)}"></progress>${d.progressLabel ? `<small>${esc(d.progressLabel)}</small>` : ''}<span>${pct}%</span></ui-progress-circular>`;
+		}
+		const foot = [d.progressDisplay, d.dateRangeDisplay].filter(Boolean).join(' · ');
+		if (foot) html += `<p data-part="meta">${esc(foot)}</p>`;
 		return html;
 	},
 
@@ -2211,13 +2310,41 @@ const DETAILS = {
 		return html;
 	},
 
+	/* A collection of downloadable files. Rows DIFFER IN KIND, so each carries its own
+	   data-icon (docs/content.md § Icon markers) — the glyph and the MIME type both come
+	   from the FILE_TYPES allowlist, never from data. Always a <ul>: the glyph rides
+	   list-style-type, so ordinal markers and file icons cannot coexist — which is also
+	   why there is no `ordered` switch and no per-row `position`. The `download`
+	   attribute carries the download name (the served filename wins when it is absent
+	   or the file is cross-origin — an HTML rule, not a schema one). */
+	filelist(d, fields, parts = {}, itemtype = null, owned = NO_PROPS) {
+		const files = (d.files || []).filter((file) => file?.name);
+		let html = meta('numberOfItems', files.length || null)
+			/* the envelope summary owns `description` whenever it is filled — this is the
+			   fallback only. Docs: docs/schema.md § One property, one value */
+			+ (owned.has('description') ? '' : meta('description', d.description));
+		html += scopedList(files.map((file) => {
+			const kind = Object.hasOwn(FILE_TYPES, file.type) ? FILE_TYPES[file.type] : null;
+			const name = `<span itemprop="name">${esc(file.name)}</span>`;
+			const facts = [kind?.label, file.size].filter(Boolean).map(esc).join(' · ');
+			return `<li data-icon="${kind ? kind.icon : 'draft'}"${scope('itemListElement', 'MediaObject')}>`
+				+ (kind ? meta('encodingFormat', kind.mime) : '')
+				+ meta('contentSize', file.size)
+				+ (file.url ? `<a itemprop="contentUrl" href="${esc(file.url)}"${file.download ? ` download="${esc(file.download)}"` : ' download'}>${name}</a>` : name)
+				+ (facts ? ` <small>${facts}</small>` : '')
+				+ '</li>';
+		}), false);
+		if (d.note) html += `<footer data-part="footer">${esc(d.note)}</footer>`;
+		return html;
+	},
+
 	membership(d) {
 		let html = eligibleDuration(d.trialPeriod);
 		if (d.isPopular) html += `<p data-part="meta"><ui-chip theme="pale accent">${esc(d.popularText || 'Most popular')}</ui-chip></p>`;
 		if (d.price) {
 			html += `<p data-part="price"${scope('priceSpecification', 'PriceSpecification')}>${meta('priceCurrency', d.price.currency)}${priceValue(d.price.currency, d.price.monthly)}/mo ${d.price.yearly ? `<small>or ${fmtPrice(d.price.currency, d.price.yearly)}/yr${d.price.savings ? ` — ${esc(d.price.savings)}` : ''}</small>` : ''}</p>`;
 		}
-		html += listPart(d.features, { itemprop: 'includesObject' });
+		html += listPart(d.features, { itemprop: 'includesObject', checked: true });
 		html += listPart(d.limitations, { crossed: true });
 		if (d.trialText) html += `<p data-part="meta">${esc(d.trialText)}</p>`;
 		return html;
@@ -2249,7 +2376,7 @@ const DETAILS = {
 		if (req) {
 			/* softwareRequirements is free text in schema.org — one readable line */
 			const line = typeof req === 'string' ? req : [req.processor, req.ram ? `${req.ram} RAM` : null, req.storage ? `${req.storage} free` : null].filter(Boolean).join(' · ');
-			if (line) html += meta('softwareRequirements', line) + `<p data-part="meta">Requires ${esc(line)}</p>`;
+			if (line) html += meta('softwareRequirements', line) + `<p data-part="meta">${keyed('Requires')}${esc(line)}</p>`;
 		}
 		if (d.price) {
 			html += `<p data-part="price"${scope('offers', 'Offer')}>${meta('priceCurrency', d.price.currency)}${meta('availability', SCHEMA + 'InStock')}${priceValue(d.price.currency, d.price.current)}${d.price.note ? ` <small>${esc(d.price.note)}</small>` : ''}</p>`;
@@ -2301,7 +2428,7 @@ const DETAILS = {
 		const bits = [d.totalTime ? `Takes ${esc(duration(d.totalTime))}` : null, d.estimatedCost ? `~${fmtPrice(d.estimatedCost.currency, d.estimatedCost.value)}` : null, d.difficulty ? esc(d.difficulty) : null].filter(Boolean).join(' · ');
 		if (bits) html += `<p data-part="meta">${bits}</p>`;
 		if (d.supplies?.length || d.tools?.length) {
-			html += `<ul data-part="list">${(d.supplies || []).map((item) => `<li${scope('supply', 'HowToSupply')}><span itemprop="name">${esc(item)}</span></li>`).join('')}${(d.tools || []).map((item) => `<li${scope('tool', 'HowToTool')}><span itemprop="name">${esc(item)}</span></li>`).join('')}</ul>`;
+			html += `<ul data-part="list" data-variant="checked">${(d.supplies || []).map((item) => `<li${scope('supply', 'HowToSupply')}><span itemprop="name">${esc(item)}</span></li>`).join('')}${(d.tools || []).map((item) => `<li${scope('tool', 'HowToTool')}><span itemprop="name">${esc(item)}</span></li>`).join('')}</ul>`;
 		}
 		if (d.steps?.length) {
 			const steps = accordion('howto-step', d.steps.map((step, index) => ({
@@ -2469,17 +2596,7 @@ const DETAILS = {
 		   <fieldset> whose <legend> IS the question, so every option is announced under
 		   it; the legend must come first, so eduQuestionType follows it. */
 		const group = `quiz-${slug(plain(fields.headline))}`;
-		cards.forEach((card, index) => {
-			const name = `${group}-q${index + 1}`;
-			const options = (card.options || []).map((option, position) =>
-				`<li${scope(option.correct ? 'acceptedAnswer' : 'suggestedAnswer', 'Answer')}>${meta('position', position + 1)}
-					<label><input type="radio" class="--check" name="${esc(name)}"> <span itemprop="text">${esc(option.text)}</span></label> ${option.correct ? '<ui-chip data-verdict="correct" theme="pale green">Correct</ui-chip>' : '<ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip>'}
-				</li>`).join('');
-			html += `<fieldset${scope('hasPart', 'Question')}>
-				<legend itemprop="text">${esc(card.question)}</legend>${meta('eduQuestionType', words.question)}
-				${options ? `<ul data-part="options" aria-live="polite">${options}</ul>` : ''}
-			</fieldset>`;
-		});
+		cards.forEach((card, index) => { html += quizQuestion(card, `${group}-q${index + 1}`, words); });
 		return html;
 	},
 
@@ -2494,7 +2611,7 @@ const DETAILS = {
 		const catalog = d.catalog;
 		if (catalog?.items?.length) {
 			html += `<div${scope('hasOfferCatalog', 'OfferCatalog')}>${meta('name', catalog.name)}<ul data-part="list">${catalog.items.map((item) =>
-				`<li${scope('itemListElement', 'Offer')}>${meta('priceCurrency', item.currency)}<span${scope('itemOffered', 'Service')}><span itemprop="name">${esc(item.name)}</span></span> — ${priceValue(item.currency, item.price)}${catalog.period ? `/${esc(catalog.period)}` : ''}</li>`
+				`<li${item.icon ? ` data-icon="${esc(item.icon)}"` : ''}${scope('itemListElement', 'Offer')}>${meta('priceCurrency', item.currency)}<span${scope('itemOffered', 'Service')}><span itemprop="name">${esc(item.name)}</span></span> — ${priceValue(item.currency, item.price)}${catalog.period ? `/${esc(catalog.period)}` : ''}</li>`
 			).join('')}</ul></div>`;
 		}
 		const channel = d.channel;
@@ -2593,7 +2710,7 @@ const DETAILS = {
 			const aspects = (d.about.aspects || [])
 				.filter((aspect) => Object.hasOwn(MEDICAL_ASPECTS, aspect.type))
 				.map((aspect) => `<li${scope(aspect.type, MEDICAL_ASPECTS[aspect.type])}><span itemprop="name">${esc(aspect.text)}</span></li>`).join('');
-			html += `<div${scope('about', MEDICAL_ABOUT_TYPES.has(d.about.type) ? d.about.type : 'MedicalCondition')}>${meta('name', d.about.name)}${aspects ? `<ul data-part="list">${aspects}</ul>` : ''}</div>`;
+			html += `<div${scope('about', MEDICAL_ABOUT_TYPES.has(d.about.type) ? d.about.type : 'MedicalCondition')}>${meta('name', d.about.name)}${aspects ? `<ul data-part="list" data-variant="checked">${aspects}</ul>` : ''}</div>`;
 		}
 		if (d.reviewedBy?.name) {
 			const dateline = d.lastReviewed
@@ -2656,7 +2773,7 @@ const DETAILS = {
 		/* one row of members, role label OUTSIDE the Person scope — the same shape
 		   comicCredits() uses, because the label is editorial and the name is the datum */
 		const members = (d.members || []).filter((member) => member?.name).map((member) =>
-			`${member.role ? `${esc(member.role)} ` : ''}<span${scope('member', 'Person')}><span itemprop="name">${esc(member.name)}</span></span>`);
+			`${member.role ? keyed(member.role) : ''}<span${scope('member', 'Person')}><span itemprop="name">${esc(member.name)}</span></span>`);
 		if (members.length) html += `<p data-part="meta">${members.join(' · ')}</p>`;
 		/* discography, newest first — a descending list must NOT get ordinal markers */
 		html += scopedList((d.albums || []).map((album) => {
@@ -2664,7 +2781,7 @@ const DETAILS = {
 			return `<li${scope('album', 'MusicAlbum')}>${meta('datePublished', album.datePublished)}${meta('numTracks', album.numTracks)}`
 				+ (album.url ? `<a itemprop="url" href="${esc(album.url)}">${name}</a>` : name)
 				+ `${album.display ? ` <small>${esc(album.display)}</small>` : ''}</li>`;
-		}), d.ordered ?? false);
+		}), d.ordered ?? false, false, 'album');
 		if (d.note) html += `<footer data-part="footer">${esc(d.note)}</footer>`;
 		return html;
 	},
@@ -2702,7 +2819,7 @@ const DETAILS = {
 		/* newest first by convention — descending rows must NOT get ordinal markers */
 		html += scopedList((d.episodes || []).map((episode) =>
 			`<li${scope('hasPart', 'PodcastEpisode')}>${meta('episodeNumber', episode.episodeNumber)}${meta('duration', episode.duration)}<span itemprop="name">${esc(episode.name)}</span>${episode.durationDisplay ? ` <small>${esc(episode.durationDisplay)}</small>` : ''}</li>`
-		), d.ordered ?? false);
+		), d.ordered ?? false, false, 'podcasts');
 		if (d.note) html += `<footer data-part="footer">${esc(d.note)}</footer>`;
 		return html;
 	},
@@ -3030,16 +3147,63 @@ export function renderCard(ucf, presets = {}, cards = {}, options = null) {
 	return stripSchema(renderCardHtml(ucf, presets, cards));
 }
 
+/* ── carousel deck (<lay-out overflow>) — used when preset.element is lay-out ──
+   One <ui-card> slide per graded question; the Quiz's own properties ride a wrapping
+   <section>, never the lay-out itself (the controls polyfill counts every scroller child
+   as a slide). Declines anything but a multiple-choice quiz with questions. The preset's
+   carousel.media is the scroller's token string; its `gate` token arms one required radio
+   per question, which carousel.css turns into "next unlocks when answered". The deck
+   name heads every slide as a label (renderInline, no itemprop) — the name property is
+   the section's meta. Docs: docs/schema.md § Quiz, docs/card.md § Presets */
+const renderQuizCarousel = (fields, type, schemaType, preset, cardId) => {
+	const d = fields.details || {};
+	const cards = d.cards || [];
+	if (type !== 'quiz' || quizFormat(d) !== 'multiple-choice' || !cards.length) return null;
+	const words = QUIZ_FORMATS['multiple-choice'];
+	const tokens = { media: [] };
+	const media = buildMedia(fields, type, tokens, preset, {}, cardId);
+	const frame = withMedia(media?.html || '', mergeMediaTokens(preset.media, tokens.media));
+	const scroller = String(preset.carousel?.media || 'nav(end)').trim().split(/\s+/).filter(Boolean);
+	const gated = scroller.includes('gate');
+	const group = `quiz-${slug(plain(fields.headline))}`;
+	const heading = preset.headingTag || 'h3';
+	const slides = cards.map((card, index) => `<ui-card${attrs({ variant: preset.variant || 'col', theme: preset.theme || null, style: styleAttr(preset.styles) })}>
+		<cq-box>
+			${frame}
+			<ui-content${attrs({ content: preset.content || null })}>
+				<small data-part="eyebrow">Question ${index + 1} of ${cards.length}</small>
+				<${heading} data-part="headline">${renderInline(fields.headline)}</${heading}>
+				${quizQuestion(card, `${group}-q${index + 1}`, words, gated)}
+			</ui-content>
+		</cq-box>
+	</ui-card>`).join('\n\t');
+	return `<section${attrs({ itemscope: true, itemtype: SCHEMA + schemaType })}>
+	${meta('name', plain(fields.headline))}${meta('description', plain(fields.summary))}${meta('learningResourceType', words.resource)}
+	${d.subject ? `<div${scope('about', 'Thing')} hidden>${meta('name', d.subject)}</div><div${scope('educationalAlignment', 'AlignmentObject')} hidden>${meta('alignmentType', 'educationalSubject')}${meta('targetName', d.subject)}</div>` : ''}
+	<lay-out${attrs({ md: 'columns(1)', overflow: true, media: scroller.join(' ') })}>
+	${slides}
+	</lay-out>
+</section>`;
+};
+
 /* the renderer proper — always emits microdata; renderCard() strips it per mode */
 function renderCardHtml(ucf, presets = {}, cards = {}) {
 	const fields = ucf?.fields ?? ucf ?? {};
 	const cardId = ucf?.id || null;
+	CARD_ID = cardId;
 	const type = baseType(fields);
 	/* resolved ONCE: schemaType is what gets written, and what DETAILS renderers gate on */
 	const schemaType = resolveItemtype(fields);
 	const itemtype = SCHEMA + schemaType;
 	const preset = resolvePreset(fields, presets);
 	const tokens = { media: [] };
+	/* a scroller deck — or, for anything that is not a graded quiz, the card with a loud note */
+	let note = '';
+	if (preset.element === 'lay-out') {
+		const deck = renderQuizCarousel(fields, type, schemaType, preset, cardId);
+		if (deck) return deck;
+		note = '<!-- lay-out preset ignored: a scroller deck needs details.format multiple-choice -->';
+	}
 
 	if (preset.element === 'ui-reveal') {
 		return renderReveal(fields, type, schemaType, tokens, preset, resolveCard(fields.flipside, cards), cardId);
@@ -3083,7 +3247,7 @@ function renderCardHtml(ucf, presets = {}, cards = {}) {
 	})}>
 		<cq-box>
 			${withMedia(media?.html || '', mergeMediaTokens(preset.media, tokens.media))}
-			<ui-content${attrs({ content: preset.content || null })}>${contentColumn(fields, type, overlay, media?.extras || '', preset.text || 'summary', preset.parts || {}, preset.byline || 'tail', preset.headingTag, schemaType)}</ui-content>
+			<ui-content${attrs({ content: preset.content || null })}>${contentColumn(fields, type, overlay, media?.extras || '', preset.text || 'summary', preset.parts || {}, preset.byline || 'tail', preset.headingTag, schemaType)}${note}</ui-content>
 		</cq-box>
 	</ui-card>`;
 }

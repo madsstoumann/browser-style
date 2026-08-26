@@ -9,32 +9,36 @@
 > [`cms/baseline/models/card.schema.json`](../../../cms/baseline/models/card.schema.json): a
 > structured envelope + a `schemaType` discriminator + one `details` object per type. Sibling
 > demo pages: [cards.html](../demo/cards.html) · [media.html](../demo/media.html) ·
-> [content.html](../demo/content.html).
+> [content.html](../demo/content.html). Satellite pages hand-authored **outside** the
+> comparator gate: [schema.place.html](../demo/schema.place.html) (the Place card across the
+> OpenStreetMap embed layers) and [schema.goals.html](../demo/schema.goals.html) (personal
+> goals as `AchieveAction` — target and progress as `object`/`result` `QuantitativeValue`
+> scopes, a `<progress>` bar or `<ui-progress-circular>` ring as the visible face).
 
-**Four counts, four different quantities — do not conflate them.** The page carries **60
-cards** with **52 distinct root itemtypes**; a structured-data validator reports **63 items**;
-the renderer knows **52 `schemaType` keys**.
+**Four counts, four different quantities — do not conflate them.** The page carries **62
+cards** with **53 distinct root itemtypes**; a structured-data validator reports **65 items**;
+the renderer knows **54 `schemaType` keys**.
 
 | Count | What it measures | Reproduce it |
 |---|---|---|
-| **60** | card hosts on the page — `<ui-card>` plus the one `<ui-reveal>` | `grep -oE '<ui-(card\|reveal)[^>]*itemtype="[^"]*"' ui/card/demo/schema.html \| grep -vc 'itemprop='` |
-| **63** | top-level microdata items — **what schema.org's validator reports** | `grep -o '<[a-z-]*[^<>]*itemscope[^<>]*>' ui/card/demo/schema.html \| grep -v 'itemprop=' \| grep -c 'itemtype='` |
-| **52** | distinct root `itemtype` values | `grep -oE '<ui-(card\|reveal)[^>]*itemtype="[^"]*"' ui/card/demo/schema.html \| grep -v 'itemprop=' \| grep -o 'itemtype="[^"]*"' \| sort -u \| wc -l` |
-| **52** | `schemaType` keys `render.js` supports (`SCHEMA_TYPES`) | `node -e "import('./ui/card/render.js').then(m => console.log(Object.keys(m.SCHEMA_TYPES).length))"` |
+| **62** | card hosts on the page — `<ui-card>` plus the one `<ui-reveal>` | `grep -oE '<ui-(card\|reveal)[^>]*itemtype="[^"]*"' ui/card/demo/schema.html \| grep -vc 'itemprop='` |
+| **65** | top-level microdata items — **what schema.org's validator reports** | `grep -o '<[a-z-]*[^<>]*itemscope[^<>]*>' ui/card/demo/schema.html \| grep -v 'itemprop=' \| grep -c 'itemtype='` |
+| **53** | distinct root `itemtype` values | `grep -oE '<ui-(card\|reveal)[^>]*itemtype="[^"]*"' ui/card/demo/schema.html \| grep -v 'itemprop=' \| grep -o 'itemtype="[^"]*"' \| sort -u \| wc -l` |
+| **54** | `schemaType` keys `render.js` supports (`SCHEMA_TYPES`) | `node -e "import('./ui/card/render.js').then(m => console.log(Object.keys(m.SCHEMA_TYPES).length))"` |
 
 The flashcard Quiz is the page's one **`<ui-reveal>`** host rather than a `<ui-card>` — a
 question on the front face, its answer on the flipside, which is what a flashcard actually is.
 It counts identically in every column below; only the element differs.
 
 **Items ≠ cards.** A validator counts every *top-level* item — an `itemscope` with no `itemprop`
-of its own — so it sees the 60 cards plus **three items that are not cards**: the standalone
+of its own — so it sees the 62 cards plus **three items that are not cards**: the standalone
 `EmployerAggregateRating` on the job card, the page-level `WebSite` (site identity plus the
 sitelinks-searchbox `potentialAction`, which describes the *site*, not any card on it), and the
-page-trail `BreadcrumbList` on the breadcrumb `<ol>` — 61. Nested scopes (`author` → `Person`,
+page-trail `BreadcrumbList` on the breadcrumb `<ol>` — 65. Nested scopes (`author` → `Person`,
 `offers` → `Offer`, …) are properties of their
 parent, not items, and are not counted. The `grep -c 'itemtype='` on the end of that command is
 load-bearing: without it the page's own `<meta name="description">` is counted too, because its
-text mentions "itemscope" — that is how a naive scan reports 62. (It read 63 while an HTML
+text mentions "itemscope" — that is how a naive scan reports 65. (It read 63 while an HTML
 comment on the job card also spelled the word out; that comment is gone, but the guard is not
 about any one line — any future prose mentioning `itemscope` walks into the same trap.)
 
@@ -45,15 +49,16 @@ nested property scope (`AggregateRating`, a byline `Person`, `Organization`, `Co
 `Occupation`, …) is not an itemtype *on a card host*.
 
 **Cards ≠ types.** `Quiz` runs three cards, and `Review`, `EventSeries`, `Place` and `Person`
-run two each, and ItemList three (the comparison card plus the two collection cards) — so 60 − 2 − 2 − 4 = 52. The `grep -v itemprop=` in those commands is load-bearing: the
+run two each, and ItemList four (the comparison card, the two collection cards, and the file
+list) — so 61 − 2 − 4 − 3 = 52. The `grep -v itemprop=` in those commands is load-bearing: the
 collage `ProductGroup` nests a `<ui-card>` per variant, and a nested card is a **property** of
 its parent item, not a card of its own. Note the second `grep` in that command: **reduce to the `itemtype=`
 substring before `sort -u`**. Uniquing the whole `<ui-card …>` match counts one type twice
 whenever its two cards differ in any other attribute (an `id`, a `style`) — that is how this
 count once read 50.
 
-**Types ≠ renderer keys.** The 52 is the **50** distinct base itemtypes behind the 52
-`schemaType` keys (`profile` and `artist` both resolve to `Person`, `comparison` and `places` both to `ItemList`), minus `LocalBusiness` (never
+**Types ≠ renderer keys.** The 52 is the **50** distinct base itemtypes behind the 53
+`schemaType` keys (`profile` and `artist` both resolve to `Person`; `comparison`, `places` and `filelist` all to `ItemList`), minus `LocalBusiness` (never
 shown plain — the business card is always sharpened), plus the three sharpened [subtypes](#subtypes)
 `ProductGroup`, `CafeOrCoffeeShop` and `DiscussionForumPosting`, which `details.subtype` produces
 with no key of their own. Three further types appear as **top-level items that are not cards**
@@ -77,7 +82,7 @@ type — a demo affordance, emitted by `render.js` only when `renderCard` gets `
 
 ## Page structure — eleven sections, and where the heading level comes from
 
-The page groups its 60 cards into **eleven sections by what the thing *is*** — Editorial &
+The page groups its 62 cards into **eleven sections by what the thing *is*** — Editorial &
 journalism · Commerce & offers · Screen · Audio · Page & picture · Learning & reference ·
 People, work & history · Food & drink · Places, events & property · Community & support ·
 Data, health & operations. Each section is a bare `<h2>` followed by its own
@@ -99,7 +104,7 @@ That is the whole mechanism: sections own `<h2>`, cards render whatever their pr
 
 > **The full cross-map lives in
 > [`google-rich-results.md`](google-rich-results.md)** —
-> every itemtype in the system (50 distinct behind the 51 renderer keys) against the Google gallery, bucketed Live / Withdrawn / None, with a
+> every itemtype in the system (50 distinct behind the 53 renderer keys) against the Google gallery, bucketed Live / Withdrawn / None, with a
 > per-row marker saying whether each Google claim was researched here or is unverified model
 > knowledge. This section stays the source of truth for the withdrawn dates below; that
 > document defers to it.
@@ -600,6 +605,10 @@ abbreviation (`M`, `k`, `bn`) belongs in `displayValue`, because `unitText: "M"`
 
 Status `<ui-chip>` (a burst sticker clips long words), issuer → `recognizedBy`, hidden `dateCreated`/`expires`/`identifier` metas.
 
+### Goal — `AchieveAction`
+
+schema.org has no `Goal` type; a personal goal with progress is an `AchieveAction` — "an incremental achievement". `actionStatus` is an **allowlist** (`active`/`completed`/`failed`/`potential` → `ActionStatusType` URLs; anything else emits nothing), the time span rides `startTime`/`endTime` metas, `agent` → `Person`. The two numbers are two hidden `QuantitativeValue` scopes: **`object` carries the target** (the thing being worked toward), **`result` the current value** (what the effort has produced so far). The `<ui-progress-circular>` ring is **presentation only** — no itemprop anywhere on it, and its arc percent is *computed* from `current/target` (clamped 0–100), so the drawn progress can never contradict the machine numbers; `details.hue` themes the ring through the nine-hue allowlist. Tag chips emit no `keywords` — out of domain on an Action. The `goal` preset is the overlay treatment: `ovr(ts)`, rest-blurred frame (`hov(blur)`), `scm(lg)` dark scrim, `eb(inv)` eyebrow. The satellite page [schema.goals.html](../demo/schema.goals.html) runs six hand-authored variations of the same shape.
+
 ### Announcement — `SpecialAnnouncement`
 
 Dark theme; priority as a hue-mapped `<ui-chip>` (low=gray · medium=orange · high/critical=red); audience → `Audience`.
@@ -781,7 +790,7 @@ The card ROOT is the VideoObject, so media facts (`contentUrl`, `thumbnailUrl`, 
 
 ### How-to — `HowTo`
 
-Recipe's sibling: supplies/tools as part `list` (`HowToSupply`/`HowToTool`), steps as a nested `<ui-accordion>` of `HowToStep`, plus `totalTime` and `estimatedCost` → `MonetaryAmount`.
+Recipe's sibling: supplies/tools as part `list` (`HowToSupply`/`HowToTool`), steps as a nested `<ui-accordion>` of `HowToStep`, plus `totalTime` and `estimatedCost` → `MonetaryAmount`. The demo card opens its steps as a popover (preset `stack-accordion-popover`, the `parts.accordion` word `popover`) — same microdata, the outer Steps wrapper is a `<button popovertarget>` + `<div popover>` pair instead of a `<details>`; this pair is guarded by the `schema.compare.js` transcription gate.
 
 ### Q&A — `QAPage`
 
@@ -810,6 +819,29 @@ License, temporal/spatial coverage and `variableMeasured` metas; each download i
 ### Fact check — `ClaimReview`
 
 The verdict chip leads — it is the answer (`reviewRating` → `Rating`, `alternateName` visible, hue from the rating value); the quoted claim (`claimReviewed`) follows.
+
+### File list — `ItemList`
+
+A collection of downloadable files — a press kit, report annexes, a resource pack. The root is
+the same Intangible `ItemList` the comparison and places cards use (`numberOfItems`, no
+`keywords` on tags); each file is `itemListElement` → `MediaObject` carrying `name`,
+`contentUrl`, `contentSize` and `encodingFormat` — all four in domain on `MediaObject`, which
+is why the rows are not `DigitalDocument` (a plain CreativeWork: no `contentUrl`, no
+`contentSize`). The visible row is a real download link — `<a itemprop="contentUrl" download>`
+with the suggested filename in the `download` attribute value (`details.files[].download`);
+absent, the bare attribute keeps the served filename, and cross-origin the browser ignores it
+either way — an HTML rule, not a schema one.
+
+The file **kind** (`pdf` | `excel` | `word` | `txt` | `zip`) is a closed allowlist in
+`render.js` (`FILE_TYPES`), because it lands in two machine surfaces at once: the row's
+`data-icon` ::marker glyph (a name in `ui/icon/icons.json` — `picture-as-pdf`, `table-view`,
+`description`, `text-snippet`, `folder-zip`) and the `encodingFormat` MIME type. An unknown
+kind gets the generic `draft` glyph and **no** `encodingFormat` — author data never reaches
+either surface, and every row still carries a glyph because a partially-iconed list renders
+mixed markers ([content.md § Icon markers](content.md)). The size is one human string
+("2.4 MB") emitted verbatim as `contentSize`, whose range is Text — no display/machine split.
+Always an unordered `<ul>`: the glyphs ride `list-style-type`, so ordinal markers cannot
+coexist with them — no `ordered` switch, no per-row `position`.
 
 ## Types authored markup-first
 
@@ -916,7 +948,7 @@ The thing that makes two cards out of one type: **`Question` accepts `suggestedA
 | shape | properties on the `Question` | interaction | card |
 |---|---|---|---|
 | Flashcard | one `acceptedAnswer` | reveal | Quiz — *flashcards* (deck) and *flashcard* (flip card) |
-| Multiple choice | several `suggestedAnswer` **+** one `acceptedAnswer` | select, then check the key | Quiz — *check yourself* |
+| Multiple choice | several `suggestedAnswer` **+** one `acceptedAnswer` | select, then check the key | Quiz — *check yourself* (a scroller **deck**, one slide per question — or one card, `stack` preset) |
 | Poll | several `suggestedAnswer`, no accepted one | select, see results | the [`Question` card](#poll--question) |
 
 The flashcard shape runs **two** cards, because the reveal it asks for can be a `<ui-card>`
@@ -946,6 +978,24 @@ is deliberately **explicit rather than inferred** from whether questions carry o
 `details` shape must not silently produce a flashcard when the author meant a graded question. An
 unrecognised format falls back to `flashcard`, and options under an ungraded deck are dropped with
 an HTML comment, the same loud-skip discipline as [`ProductGroup` variants](#product--product-subtype-productgroup).
+
+The graded shape has a **second presentation**, and — like the flip card — it is a preset, not a
+field: `card-preset/quiz-carousel` sets `element: "lay-out"` and the renderer emits one
+`<ui-card>` slide per question inside a `<lay-out overflow>` scroller, the Quiz's own properties
+(`name`, `description`, `learningResourceType`, `about`, `educationalAlignment`) as machine
+metadata on a wrapping `<section itemscope>` — never on the `<lay-out>`, whose children the
+controls polyfill counts as slides. The item count is unchanged: one Quiz, three Questions, twelve
+Answers, so the page's card count treats the deck as one card. Each slide is the same fieldset the
+single card renders (one shared builder, byte-identical minus one attribute), headed by the deck
+name as a label and a "Question *n* of *N*" eyebrow. The preset's `carousel.media` is the scroller's
+token string — `nav(end) arw(drk)` puts filled arrows and dots inside each slide's content end —
+and its bare `gate` token is the one behaviour: the renderer marks the first radio of every question
+`required`, and the token hides every slide after an unanswered one, so the next arrow stays
+natively disabled until the current question is answered
+([carousel.md § gate](./carousel.md)). `quiz-carousel-free` is the same deck without the gate. A
+flashcard deck sent through a lay-out preset renders the card with a loud comment — the reveal idiom
+is the accordion's. The page's graded Quiz is the gated deck; the single-card form stays renderable
+(`data/quiz-mc.json`, `stack` preset) and covered by the renderer suite.
 
 The **flip card** is the one place the generic reveal shape does not fit. A reveal normally shows one
 item twice — a teaser front, a fuller back, both in the host's scope — but a flashcard's question is

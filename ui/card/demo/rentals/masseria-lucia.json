@@ -9,11 +9,16 @@
   "fields": {
     "body": "Masseria Lucia was a working olive farm until the 1970s, and the walls tell you so: a metre of local stone, small windows on the south side, and vaults high enough that the rooms stay cool through August. The restoration kept all of it and added the things a stone farmhouse never had — underfloor heating, insect screens, fast wifi and a kitchen you can actually cook in.\n\nThe ground floor is one long room: kitchen at one end, a table for eight in the middle, and doors onto the terrace at the other. Two bedrooms open off it. The third is upstairs under the old beams, with its own bathroom and a window looking back over the grove.\n\nOutside, the pool is heated from April and screened from the lane by a dry-stone wall and forty-year-old bougainvillea. There is shade by eleven, a wood oven that works, and enough loungers that nobody has to negotiate.\n\nOstuni is fifteen minutes by car — the white town on the hill you can see from the terrace. The Adriatic beaches at Torre Guaceto are twenty, and the nature reserve behind them is worth the morning. Bari airport is an hour and ten; Brindisi is forty minutes.",
     "furniture": {
-      "lightbox": { "label": "View all 4 photos" }
+      "lightbox": {
+        "label": "View all 4 photos"
+      }
     },
     "actions": [
       {
-        "link": { "url": "#availability", "text": "Check availability" },
+        "link": {
+          "url": "#availability",
+          "text": "Check availability"
+        },
         "style": "primary"
       }
     ],
@@ -45,11 +50,26 @@
       ],
       "property": {
         "amenities": [
-          "Heated pool, open April to October",
-          "Air conditioning in every bedroom",
-          "Walled garden and wood-fired oven",
-          "Fast wifi and a desk in the upstairs room",
-          "Cot, high chair and stair gate on request"
+          {
+            "text": "Heated pool, open April to October",
+            "icon": "pool"
+          },
+          {
+            "text": "Air conditioning in every bedroom",
+            "icon": "ac-unit"
+          },
+          {
+            "text": "Walled garden and wood-fired oven",
+            "icon": "outdoor-grill"
+          },
+          {
+            "text": "Fast wifi and a desk in the upstairs room",
+            "icon": "wifi"
+          },
+          {
+            "text": "Cot, high chair and stair gate on request",
+            "icon": "crib"
+          }
         ]
       }
     }

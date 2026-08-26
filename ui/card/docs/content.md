@@ -174,7 +174,9 @@ Precedence lives in the **`var()` chain**, not the cascade. Each of the four phy
 ```css
 :where(ui-content) {
   padding-block-start:  var(--ui-content-pbs, var(--ui-content-pb, var(--ui-content-p, var(--spacing-md))));
-  padding-block-end:    var(--ui-content-pbe, var(--ui-content-pb, var(--ui-content-p, var(--spacing-md))));
+  --_pbe: var(--ui-content-pbe, var(--ui-content-pb, var(--ui-content-p, var(--spacing-md))));
+  padding-block-end:    calc(var(--_pbe) * (1 + var(--ui-carousel-nav-end, 0)) + var(--ui-carousel-nav-end, 0) * var(--ui-carousel-arrow-size, 2.25rem));
+  /* --ui-carousel-nav-end is the lay-out carousel's nav(end) flag: pbe · control row · pbe. Off a carousel it is 0 and the chain is the plain pbe. */
   padding-inline-start: var(--ui-content-pis, var(--ui-content-pi, var(--ui-content-p, var(--spacing-md))));
   padding-inline-end:   var(--ui-content-pie, var(--ui-content-pi, var(--ui-content-p, var(--spacing-md))));
 }
@@ -359,9 +361,13 @@ Content parts are **semantic children** marked with `data-part`. They are auto-s
 | `tags` | `<ul data-part="tags">` | Tag list — flex-wrap. Children are either **plain links** (default pill) or **`<ui-chip>`** (full colour palette) — see below |
 | `actions` | `<div data-part="actions">` | Button / link row — flex-wrap with action gap. The accent (primary) CTA goes **last**, so it reads at the inline-end of the row and mirrors under `dir="rtl"`; `render.js` reorders it there whatever order the data declares |
 | `footer` | `<footer data-part="footer">` | Trailing muted meta row — flex-wrap |
+| `key` | `<strong data-part="key">` | **Meta group** — the label half of a `key: value` pair inside a meta run; bold, colon included |
+| `count` | `<span data-part="count" data-icon="…">` | **Meta group** — one engagement counter (views / likes / shares / comments); the `data-icon` names its glyph |
+| `reading-time` | `<span data-part="reading-time">` | inside `dateline` — takes the clock glyph, as the sibling `<time>` takes the calendar |
+| `verified` | `<span data-part="verified">` | inside `byline-who` — a verified-purchase mark; the ✓ is a `::before` glyph, never a character in the text node |
 | `price` | `<p data-part="price">` | **Body group** (prominent) — large current price; `<del>` struck original, `<small>` accent note; a discount rides an inline `<ui-chip>` |
 | `stat` | `<p data-part="stat">` | **Body group** (prominent) — big `<data>` number + `<small>` unit; muted trend |
-| `list` | `<ul>`/`<ol data-part="list">` | **Body group** — feature / step list; flex column. Two `data-variant`s: `crossed` (excluded items, ✗ marker) and `menu` (priced rows — see below) |
+| `list` | `<ul>`/`<ol data-part="list">` | **Body group** — feature / step list; flex column. Three `data-variant`s: `checked` (included items, ✓ marker), `crossed` (excluded items, ✗ marker) and `menu` (priced rows — see below) |
 | `address` | `<address data-part="address">` | **Body group** — postal block, no avatar (distinct from byline) |
 | `timeline` | `<ol data-part="timeline">` | **Body group** — dated entries; muted `<time>` |
 | `quote` | `<ui-quote data-part="quote">` wrapping `<blockquote>` | **Body group** — indented; composes with `@browser.style/quote` via `variant` |
@@ -411,6 +417,19 @@ icons, which are `::before` glyphs for the same reason — one vocabulary, two p
 Knobs: `--ui-content-list-icon-gap` (default `0.4em`, rides `letter-spacing` on the marker)
 and `--ui-content-list-marker-ink` (defaults to `currentColor`, i.e. the row's own colour).
 
+**`data-icon` on the `<ul>` marks the whole list** — one repeated glyph, for rows that do not
+differ in kind (a discography, an episode list). A row-level `data-icon` still wins, so a list
+default can be overridden per row:
+
+```html
+<ul data-part="list" data-icon="album">…</ul>   <!-- every row gets the record glyph -->
+```
+
+**Partial coverage renders mixed markers.** A `li[data-icon]` sets `list-style-type` while a
+sibling without one falls through to the list's `disc`, so a list is all-or-nothing: either
+every row carries a glyph, or the mark belongs on the list. That is why a list with only one
+honestly-matching glyph takes none — or takes a list-level one instead.
+
 **Prefer the marker over `::before` on a link.** Generated content on an element lands in that
 element's *accessible name* — a private-use icon codepoint in front of a phone number,
 measured. A `::marker` never does. That is why two contact methods render as a `<ul>` with
@@ -430,6 +449,108 @@ catalog. The glyphs are **baseline-shifted at build time** (`baselineShiftEm` in
 `icons.json`) because Material Symbols centre their icon box at `+0.5em` above the baseline
 while text centres near `+0.33em` — and `::marker` has no lever to correct it. See
 [`ui/icon/readme.md` § Icon font](../../icon/readme.md).
+
+#### Checked and crossed lists — one mark for the whole list
+
+Where the rows do **not** differ in kind — a feature list, a set of excluded items, related
+links — the mark belongs to the list, not to each row, and `data-icon` is the wrong tool.
+Two list-level variants carry it:
+
+```html
+<ul data-part="list" data-variant="checked">…</ul>   <!-- included -->
+<ul data-part="list" data-variant="crossed">…</ul>   <!-- excluded, muted rows -->
+```
+
+Both marks are icon-font glyphs — `--icon-check` and `--icon-close` — set on
+`--ui-content-list-marker`, so they sit in the same catalog and at the same optical weight as
+the per-row `data-icon` glyphs above. Each falls back to a **text** ✓/✗ when
+`icon-font.css` is not linked: the `--icon-*` customs are then undefined and the `var()`
+fallback fires, unlike the typed-`attr()` case in `docs/v4.md` where the property holds
+literal text and no fallback ever fires. `font-family` degrades the same way, so the text
+mark lands in the body font.
+
+`data-part="links"` takes the ✓ glyph as its **default** marker (same fallback), on the same
+reasoning — override per card with `--ui-content-links-marker`.
+
+In `render.js`, `listPart(items, { checked: true })` / `{ crossed: true }` emit the variant.
+
+##### Mark colour — global semantic tokens, and where they run out
+
+The green ✓ and red ✗ are **not** demo-page styling. They come from the global semantic
+tokens in `ui/base/tokens.css`, through two per-part knobs:
+
+| Knob | Default | Resolves to |
+|---|---|---|
+| `--ui-content-list-checked-mark` | `--color-success` | `light-dark(hsl(136 45% 30%), hsl(136 21% 51%))` |
+| `--ui-content-list-crossed-mark` | `--color-error` | `light-dark(hsl(360 65% 41%), hsl(360 40% 56%))` |
+| `--ui-content-links-mark` | `currentColor` | the row's own ink |
+
+`--color-success` / `--color-error` are the same tokens that produce `theme="green"` and
+`theme="red"` — one palette, used for both a surface and a mark.
+
+**They are page tokens, not theme tokens, and that is the sharp edge.** `theme=` swaps the
+card's surface; the semantic colours do not follow it. Measured on the membership card,
+`::marker` against the surface behind it (Chrome 150):
+
+| Context | ✓ checked | ✗ crossed |
+|---|---|---|
+| light, card surface | 5.22:1 | 5.85:1 |
+| dark (`prefers-color-scheme`) | 4.62:1 | 3.54:1 |
+| `theme="black"` | 2.40:1 | 2.14:1 |
+| `theme="green"` | **1.00:1 — invisible** | 1.12:1 |
+
+Only the light row clears 4.5:1 on both marks. Dark mode passes on ✓ and lands at 3.54:1 on
+✗ — above the 3:1 UI-boundary floor, below the body-text one. Under `theme=` both fail, and
+`theme="green"` puts the success green on a success-green surface.
+
+This matters because the mark is the **only** carrier of the included/excluded distinction —
+the row text does not say "included", so an invisible mark is lost meaning, not lost
+decoration.
+
+Until the marks are theme-aware, a themed card must set them itself:
+
+```css
+ui-card[theme] {
+  --ui-content-list-checked-mark: currentColor;
+  --ui-content-list-crossed-mark: currentColor;
+}
+```
+
+`contrast-color()` is in both baseline engines and is the obvious systematic fix; it is not
+wired up here yet. Tracked in `docs/plans/open-items.md`.
+
+The gap between mark and text is the shared `--ui-content-list-icon-gap` (`0.4em`,
+`letter-spacing` on the marker).
+
+#### Key rows — `key: value` inside a meta run
+
+Several meta rows are really key/value pairs read as one dot-joined line — band members,
+comic credits, recipe times, screen credits. The label is marked up, the value is not:
+
+```html
+<p data-part="meta">
+  <strong data-part="key">Vocals:</strong> <span itemprop="member" …>Ida Krogh</span> ·
+  <strong data-part="key">Guitar:</strong> <span itemprop="member" …>Jonas Riis</span>
+</p>
+```
+
+**Every key carries a colon.** `render.js` normalises it — `keyed()` strips a trailing colon
+from the label and adds exactly one back, so an author-supplied label (the screen-credit
+`director.label`, which may be "Created and directed by") can spell it either way and still
+lands consistent.
+
+**The label is outside the microdata scope.** `Vocals` is editorial, `Ida Krogh` is the datum,
+so the `itemprop` sits on the value's span and the key is plain text. Same shape everywhere.
+
+Knobs: `--ui-content-key-weight` (default `600`) and `--ui-content-key-ink` (default
+`inherit` — the key stays in the meta row's muted colour, and only weight separates it).
+
+Emitted by `keyed()` at nine sites: musicgroup members, the five comic credits, recipe
+prep/cook/serves, screen credits (director + starring), course instructor, achievement
+issuer/expiry/id, software requirements.
+
+Not key rows, deliberately: prose runs ("Formed in Copenhagen, 2019", "Check-in from 16:00"),
+value+unit runs ("180 m² · 3 bedrooms") and bare value lists ("macOS · Windows · Switch").
 
 ### Structured parts — microdata scope + who uses them
 
@@ -455,7 +576,9 @@ card-side hook is for card-scoped overrides only.
 In rendered cards the wrapper's variant is **preset-authored**: the preset's
 `parts.quote` value is written verbatim to the emitted `<ui-quote>` (the quote type
 defaults to `bigquote`, review/social to none), and `parts.accordion` does the same
-for the `<ui-accordion>` emitted by faq/recipe/job. `byline` avatars render through
+for the `<ui-accordion>` emitted by faq/recipe/job (its reserved word `popover`
+switches the emitted markup to `<button popovertarget>`/`<div popover>` pairs
+instead of `<details>` — native Popover API, no JS). `byline` avatars render through
 `@browser.style/avatar` (`<ui-avatar>` with an `<abbr>` initials fallback — the card
 sets no avatar styling at all; size it with the component's own `size=` attribute or
 `--ui-avatar-size`), and the `options`
@@ -711,6 +834,8 @@ Host themes come from the shared `theme=` axis ([base/theme.md](../../base/theme
 | `--ui-content-muted` | subheadline, meta, caption, byline, footer | theme |
 | `--ui-content-eyebrow-ink` | eyebrow | theme |
 | `--ui-content-tag-bg` | tags pills | theme |
+
+On a themed card (`ui-card[theme]`) two of those follow the theme ink by default (`content.css` § themed-host relays): the **eyebrow** takes `currentColor` instead of the accent, and a bare `<progress>` bar's fill (`--ui-progress-fill`, from `@browser.style/progress`) does the same — so a pale-plate goal card's bar paints in its own hue ink. An explicit token write on the card or page still overrides both.
 
 ```css
 :where([theme~="black"]) {

@@ -993,6 +993,11 @@
     padding-block-start: calc(var(--ui-carousel-above-gap, 0.5rem) + var(--ui-carousel-band, 2.75rem));
     scroll-padding-block-start: calc(var(--ui-carousel-above-gap, 0.5rem) + var(--ui-carousel-band, 2.75rem));
   }
+  ui-card:where([media*="arw(out)"]:not([media*="axis(y)"])),
+  ui-media:where([media*="arw(out)"]:not([media*="axis(y)"])) {
+    inline-size: calc(round(down, 100%, 1px) - 2 * (var(--ui-carousel-arrow-size, 2.25rem) + var(--ui-carousel-outside-gap, 0.5rem)));
+    margin-inline: auto;
+  }
   ui-media:where([media*="mrk(tmb)"], :is(ui-card, ui-reveal)[media*="mrk(tmb)"] *) {
     box-sizing: content-box;
   }
@@ -1547,7 +1552,8 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     gap: var(--ui-content-gap, 1em);
     justify-content: var(--ui-content-ov-justify, var(--ui-content-place-block, normal));
     padding-block-start: var(--ui-content-pbs, var(--ui-content-pb, var(--ui-content-p, var(--spacing-md))));
-    padding-block-end: var(--ui-content-pbe, var(--ui-content-pb, var(--ui-content-p, var(--spacing-md))));
+    --_pbe: var(--ui-content-pbe, var(--ui-content-pb, var(--ui-content-p, var(--spacing-md))));
+    padding-block-end: calc(var(--_pbe) * (1 + var(--ui-carousel-nav-end, 0)) + var(--ui-carousel-nav-end, 0) * var(--ui-carousel-arrow-size, 2.25rem));
     padding-inline-start: var(--ui-content-pis, var(--ui-content-pi, var(--ui-content-p, var(--spacing-md))));
     padding-inline-end: var(--ui-content-pie, var(--ui-content-pi, var(--ui-content-p, var(--spacing-md))));
     text-align: var(--ui-content-ov-text, var(--ui-content-text-align, start));
@@ -1583,6 +1589,16 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       background: var(--_theme-bg, transparent);
       color: var(--_theme-c, var(--color-text));
     }
+  }
+  :where(ui-card[theme]) {
+    --ui-content-eyebrow-ink: currentColor;
+  }
+  :where(ui-card[theme]) progress {
+    --ui-progress-fill: currentColor;
+  }
+  :where(ui-content) > ui-progress-circular {
+    align-self: center;
+    margin-block: auto;
   }
   :where([content~=scr]) ui-content,
   :where([content~="scr(y)"]) ui-content,
@@ -1699,11 +1715,30 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       & [itemprop=jobTitle] {
         color: var(--ui-content-byline-role-ink, var(--ui-content-muted));
       }
+      & [data-part=verified] {
+        color: var(--ui-content-byline-verified-ink, var(--ui-content-muted));
+        &::before {
+          content: var(--icon-check, "\2713") / "";
+          font-family: var(--ui-icon-font);
+          margin-inline-end: var(--ui-content-verified-icon-gap, 0.35em);
+        }
+      }
       & [data-part=dateline] {
         color: var(--ui-content-dateline-ink, var(--ui-content-muted));
         font-size: inherit;
         margin-inline-start: auto;
         text-align: end;
+        & > :is(time, [data-part=reading-time])::before {
+          content: var(--icon) / "";
+          font-family: var(--ui-icon-font);
+          margin-inline-end: var(--ui-content-dateline-icon-gap, 0.35em);
+        }
+        & > time {
+          --icon: var(--icon-calendar-month);
+        }
+        & > [data-part=reading-time] {
+          --icon: var(--icon-schedule);
+        }
       }
     }
     & [data-part=tags] {
@@ -1851,12 +1886,16 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       & li::marker {
         color: var(--ui-content-list-marker-ink, currentColor);
       }
+      &[data-icon] {
+        --ui-content-list-marker: var(--icon);
+      }
+      &[data-icon] > li::marker,
+      & li[data-icon]::marker {
+        font-family: var(--ui-icon-font);
+        letter-spacing: var(--ui-content-list-icon-gap, 0.4em);
+      }
       & li[data-icon] {
         list-style-type: var(--icon);
-        &::marker {
-          font-family: var(--ui-icon-font);
-          letter-spacing: var(--ui-content-list-icon-gap, 0.4em);
-        }
       }
     }
     & ol[data-part=list] {
@@ -1897,8 +1936,16 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
         grid-column: 1 / -1;
       }
     }
+    & [data-part=list]:is([data-variant=checked], [data-variant=crossed]) li::marker {
+      font-family: var(--ui-icon-font);
+      letter-spacing: var(--ui-content-list-icon-gap, 0.4em);
+    }
+    & [data-part=list][data-variant=checked] {
+      --ui-content-list-marker: var(--icon-check, "\2713");
+      --ui-content-list-marker-ink: var(--ui-content-list-checked-mark, var(--color-success, currentColor));
+    }
     & [data-part=list][data-variant=crossed] {
-      --ui-content-list-marker: "\2717   ";
+      --ui-content-list-marker: var(--icon-close, "\2717");
       --ui-content-list-marker-ink: var(--ui-content-list-crossed-mark, var(--color-error, currentColor));
       & li {
         color: var(--ui-content-list-crossed-ink, var(--ui-content-muted));
@@ -1907,7 +1954,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     & [data-part=links] {
       font-size: var(--ui-content-links-fs, var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))));
       list-style-position: inside;
-      list-style-type: var(--ui-content-links-marker, disc);
+      list-style-type: var(--ui-content-links-marker, var(--icon-check, "\2713"));
       margin: 0;
       padding: 0;
       & li {
@@ -1917,6 +1964,8 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
         }
         &::marker {
           color: var(--ui-content-links-mark, currentColor);
+          font-family: var(--ui-icon-font);
+          letter-spacing: var(--ui-content-list-icon-gap, 0.4em);
         }
       }
       & a {
@@ -2066,6 +2115,15 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     font-weight: var(--ui-content-meta-weight, inherit);
     text-shadow: var(--ui-content-meta-text-shadow, none);
   }
+  :where(ui-content, ui-media) [data-part=count]::before {
+    content: var(--icon) / "";
+    font-family: var(--ui-icon-font);
+    margin-inline-end: var(--ui-content-count-icon-gap, 0.35em);
+  }
+  :where(ui-content, ui-media) [data-part=key] {
+    color: var(--ui-content-key-ink, inherit);
+    font-weight: var(--ui-content-key-weight, 600);
+  }
   :where(ui-content) [data-part=meta]:has(> ui-chip + ui-chip) {
     display: flex;
     flex-wrap: wrap;
@@ -2089,7 +2147,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     & ui-media :is(ui-chip, ui-sticker, ui-beacon):not(:has(a, button)) {
       pointer-events: none;
     }
-    &:is([media*=nav], :has(ui-media[media*=nav])) ui-content {
+    &:is([media*=nav], :has(ui-media[media*=nav])) ui-content:not(:where(ui-media *)) {
       position: relative;
     }
     :where(ui-media:where([media*=nav], :is(ui-card, ui-reveal)[media*=nav] *)) > & [data-part~=cover]::after {
@@ -2830,7 +2888,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
   :where([variant~=row], [variant~=row-r]) {
     --ui-card-cols: var(--ui-card-split, 1fr 1fr);
   }
-  :where([variant~=row], [variant~=row-r]):where(:not([media*="mrk(rail)"], [media*=hug])) ui-media:where(:not([media*="mrk(rail)"], [media*=hug])) {
+  :where([variant~=row], [variant~=row-r]):where(:not([media*="mrk(rail)"], [media*=hug])) ui-media:where(:not([media*="mrk(rail)"], [media*="arw(out)"], [media*=hug])) {
     block-size: 100%;
     inline-size: 100%;
     min-block-size: 0;
@@ -2950,6 +3008,14 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
   :where([variant*="ovr("]) .ui-button:not([data-variant]) {
     color: var(--color-text, hsl(0, 0%, 15%));
   }
+  :where([variant*="ovr("]) ui-progress-circular {
+    --ui-progress-circular-label-c: currentColor;
+  }
+  :where([variant*="ovr("]) :is(cq-box, summary) > ui-media {
+    inline-size: 100%;
+    min-block-size: 100%;
+    min-inline-size: 0;
+  }
   :where(ui-card[theme]) {
     --ui-card-bg: var(--_theme-bg, light-dark(var(--color-surface), var(--ui-card-dark-bg, #1f2937)));
     color: var(--_theme-c, var(--_theme-ink, var(--color-text)));
@@ -2963,8 +3029,8 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     :where([variant~="md:row-r"]) :is(cq-box, summary) {
       --ui-card-cols: var(--ui-card-split, 1fr 1fr);
     }
-    :where([variant~="md:row"]):where(:not([media*="mrk(rail)"], [media*=hug])) :is(cq-box, summary) ui-media:where(:not([media*="mrk(rail)"], [media*=hug])),
-    :where([variant~="md:row-r"]):where(:not([media*="mrk(rail)"], [media*=hug])) :is(cq-box, summary) ui-media:where(:not([media*="mrk(rail)"], [media*=hug])) {
+    :where([variant~="md:row"]):where(:not([media*="mrk(rail)"], [media*=hug])) :is(cq-box, summary) ui-media:where(:not([media*="mrk(rail)"], [media*="arw(out)"], [media*=hug])),
+    :where([variant~="md:row-r"]):where(:not([media*="mrk(rail)"], [media*=hug])) :is(cq-box, summary) ui-media:where(:not([media*="mrk(rail)"], [media*="arw(out)"], [media*=hug])) {
       block-size: 100%;
       inline-size: 100%;
       min-block-size: 0;
@@ -3261,8 +3327,8 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     :where([variant~="lg:row-r"]) :is(cq-box, summary) {
       --ui-card-cols: var(--ui-card-split, 1fr 1fr);
     }
-    :where([variant~="lg:row"]):where(:not([media*="mrk(rail)"], [media*=hug])) :is(cq-box, summary) ui-media:where(:not([media*="mrk(rail)"], [media*=hug])),
-    :where([variant~="lg:row-r"]):where(:not([media*="mrk(rail)"], [media*=hug])) :is(cq-box, summary) ui-media:where(:not([media*="mrk(rail)"], [media*=hug])) {
+    :where([variant~="lg:row"]):where(:not([media*="mrk(rail)"], [media*=hug])) :is(cq-box, summary) ui-media:where(:not([media*="mrk(rail)"], [media*="arw(out)"], [media*=hug])),
+    :where([variant~="lg:row-r"]):where(:not([media*="mrk(rail)"], [media*=hug])) :is(cq-box, summary) ui-media:where(:not([media*="mrk(rail)"], [media*="arw(out)"], [media*=hug])) {
       block-size: 100%;
       inline-size: 100%;
       min-block-size: 0;

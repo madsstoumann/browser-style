@@ -13,7 +13,7 @@
     "internalName": "Demo — How-to",
     "schemaType": "howto",
     "preset": {
-      "$ref": "card-preset/stack-accordion"
+      "$ref": "card-preset/stack-accordion-popover"
     },
     "eyebrow": "Home maintenance",
     "headline": "Bleed a radiator in four steps",

@@ -136,11 +136,11 @@ how it looks. Each accepts a free-string `style` token override.
 ## The discriminator
 
 `schemaType` selects the itemtype, the microdata mapping, and which `details` shape applies.
-**52 values, 50 distinct itemtypes** — `profile`/`artist` both emit `Person`,
-`comparison`/`places` both emit `ItemList`.
+**54 values, 51 distinct itemtypes** — `profile`/`artist` both emit `Person`,
+`comparison`/`places`/`filelist` all emit `ItemList`.
 
-`subtype` narrows it. **Only 8 of the 52 types have a subtype allowlist**, so the control is
-conditional on `schemaType` and must be absent for the other 44:
+`subtype` narrows it. **Only 8 of the 54 types have a subtype allowlist**, so the control is
+conditional on `schemaType` and must be absent for the other 46:
 
 | schemaType | Base itemtype | Values |
 |---|---|---|
@@ -191,6 +191,7 @@ by name rather than repeating the fields.
 | **contacts** | `[{type: email\|phone\|url, value, label}]` | `contactLink()` |
 | **person** | `{name, role, avatar}` | `avatarPart()` / `byline()` |
 | **list item** | string **or** `{text, icon, href, itemprop}` | `listPart()` |
+| **key row** | a `key: value` pair in a meta run — the label is emitted as `<strong data-part="key">`, colon normalised; the value keeps the `itemprop` | `keyed()` |
 | **accordion** | `[{summary, body}]` | `accordion()` |
 
 **Machine value + display twin.** Many types carry both a machine value and a pre-formatted
@@ -392,6 +393,21 @@ ignores a display twin. Do not go hunting for a mapping that does not exist.
 | `skillLevel` | string | text |  |
 | `credentialId` | string | text |  |
 | `verificationUrl` | url | url |  |
+
+### `goal` — AchieveAction
+
+| Key | Type | Control | Lookup / notes |
+|---|---|---|---|
+| `status` | string | select | `active` `completed` `failed` `potential` — mapped to ActionStatusType URLs; anything else emits no actionStatus |
+| `startDate` | date | date |  |
+| `endDate` | date | date |  |
+| `dateRangeDisplay` | string | text | display twin for the span |
+| `agentName` | string | text | agent → Person |
+| `target` | object | fieldset | {name, value, unitText} — object → QuantitativeValue (the goal) |
+| `current` | object | fieldset | {value, unitText} — result → QuantitativeValue (progress so far) |
+| `progressLabel` | string | text | the ring's small caption |
+| `progressDisplay` | string | text | human line, e.g. "6 of 10 minutes" |
+| `hue` | string | select | ring theme — the nine-hue allowlist; unknown values drop the attribute |
 
 ### `announcement` — SpecialAnnouncement
 
@@ -886,7 +902,7 @@ default.
 
 | Field | Values |
 |---|---|
-| `element` | `ui-card` (default) · `ui-reveal` · `ui-media` · `ui-content` |
+| `element` | `ui-card` (default) · `ui-reveal` · `ui-media` · `ui-content` · `lay-out` (scroller deck — a graded quiz, one card per question) |
 | `variant` / `media` / `media-open` / `content` | token strings — § Token vocabularies |
 | `theme` | § Token vocabularies |
 | `text` | `summary` (default) · `body` · `both` |
@@ -968,11 +984,11 @@ is live. One value per token instance — `chip(ts) chip(red)`, never `chip(ts r
 | `vid()` | **mode** | cc pip fls | — |
 | `vid()` | **size** | sm md lg xl | — |
 | `load()` | **mode** | eager lazy | — |
-| `nav()` | **mode** | mrk arw blw abv non | — |
+| `nav()` | **mode** | mrk arw blw abv end non | — |
 | `arw()` | **variant** | arr bare sqr sft lgt drk hid rev set | — |
 | `arw()` | **size** | sm lg xl | — |
 | `arw()` | **pos** | ts tc te cs cc bs bc be | — |
-| `arw()` | **mode** | blw abv | — |
+| `arw()` | **mode** | blw abv out | — |
 | `mrk()` | **variant** | pll hyb bar tmb tml rail non lgt drk sbr lbl dyn | — |
 | `mrk()` | **size** | sm md lg xl | — |
 | `mrk()` | **pos** | ts tc te cs cc ce bs bc be | — |
@@ -987,6 +1003,7 @@ is live. One value per token instance — `chip(ts) chip(red)`, never `chip(ts r
 | `clip` | *(bare flag)* | — | — |
 | `loop` | *(bare flag)* | — | — |
 | `stagger` | *(bare flag)* | — | — |
+| `gate` | *(bare flag)* | — | — |
 | `pages` | *(bare flag)* | — | — |
 | `open:furniture` | *(bare flag)* | — | — |
 <!-- /tokens -->
@@ -1117,7 +1134,7 @@ undocumented in the UCM format spec · `cms/baseline/CLAUDE.md` describing only 
 
 **Conditional rules that must be honoured.** These are the only places the form changes shape:
 
-1. `subtype` is visible for exactly 8 of the 52 types, and its options depend on which.
+1. `subtype` is visible for exactly 8 of the 54 types, and its options depend on which.
 2. The whole `details` panel swaps on `schemaType`; 4 types have no panel at all.
 3. `media[]` item fields branch on `mediaType` — `zoom`/`provider`/`latitude`/`longitude` only
    for `map`, `map` only for `places`, `uploadDate`/`duration`/`description` only for `video`.

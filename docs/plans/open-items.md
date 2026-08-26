@@ -1290,3 +1290,41 @@ items to a scoping quirk, was wrong and is retracted.
 
 **One smaller divergence, same cause, also no action:** the JSON-LD run flags Breadcrumbs
 "Non-critical issues detected" where the microdata run does not. Same single valid item in both.
+
+## 37. `checked`/`crossed` mark colours are page tokens, not theme tokens
+
+`--ui-content-list-checked-mark` defaults to `--color-success`, `--ui-content-list-crossed-mark`
+to `--color-error`. Both are `:root` tokens in `ui/base/tokens.css` with a `light-dark()` pair,
+and both are the *same* tokens that produce the `theme="green"` / `theme="red"` surfaces.
+
+`theme=` swaps a card's surface. It does not swap these. Measured on the membership card,
+`::marker` against the surface behind it (Chrome 150, `demo/schema.html`):
+
+| Context | ✓ checked | ✗ crossed |
+|---|---|---|
+| light, card surface `#ededed` | 5.22:1 | 5.85:1 |
+| dark (`prefers-color-scheme`) | 4.62:1 | 3.54:1 |
+| `theme="black"` | 2.40:1 | 2.14:1 |
+| `theme="green"` | **1.00:1 — invisible** | 1.12:1 |
+
+Only the light row clears 4.5:1 on both. Dark passes on ✓ and sits at 3.54:1 on ✗ — over the
+3:1 UI floor, under the body-text one. `theme="green"` paints the success green on a
+success-green surface.
+
+This is not decoration: the mark is the ONLY carrier of the included/excluded distinction. The
+row text never says "included", so an invisible mark is lost meaning.
+
+No live demo hits the failing cases — no themed card currently carries either variant — which
+is why it shipped. A consumer theming a pricing card does hit it immediately.
+
+**Options.** (a) Fall the marks back to `currentColor` whenever `theme=` is present — one
+rule, always legible, loses the red/green signal on themed cards. (b) Resolve them through
+`contrast-color()` against the theme surface — in both baseline engines, keeps a tinted
+signal, needs a per-theme decision about what "success" means on a green card. (c) Add
+`--ui-theme-*-success` / `-error` to the nine-hue bundles in `ui/base/theme.css` — most
+control, most surface area.
+
+Same question applies to any other semantic colour used as ink inside a themed card
+(`ui-chip theme="pale green"` is unaffected — it carries its own paired ink).
+
+Docs: `ui/card/docs/content.md` § Mark colour.

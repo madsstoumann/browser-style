@@ -75,8 +75,8 @@ inventory cannot drift from the CSS. The prose tables under it explain what the 
 <!-- tokens:summary attr=media stems=nav,arw,mrk,tmb,axis,auto,ani,crd,load,clip,loop,stagger,pages -->
 | token | axis | args | aliases | bare | writes | md:/lg: | deprecated |
 |---|---|---|---|---|---|---|---|
-| `nav()` | carousel | **mode** mrk arw blw abv non | — | yes | --ui-media-bg --ui-carousel-* | — | — |
-| `arw()` | arrows | **variant** arr bare sqr sft lgt drk hid rev set · **size** sm lg xl · **pos** ts tc te cs cc bs bc be · **mode** blw abv | — | — | --ui-carousel-arrow-glyph --ui-carousel-arrow-size --ui-carousel-arrow-radius --ui-carousel-arrow-bg --ui-carousel-arrow-bg-hover --ui-carousel-arrow-color --ui-carousel-arrow-color-hover --ui-carousel-arrow-ink --ui-carousel-arrow-ink-hover --ui-carousel-arrow-plate --ui-carousel-arrow-plate-hover --ui-carousel-arrow-shadow --ui-carousel-arrow-hover-ring --ui-carousel-arrow-nudge --ui-carousel-arrow-disabled-opacity --ui-carousel-arrow-top --_arw-rot --_arw-scale | — | — |
+| `nav()` | carousel | **mode** mrk arw blw abv end non | — | yes | --ui-media-bg --ui-carousel-* | — | — |
+| `arw()` | arrows | **variant** arr bare sqr sft lgt drk hid rev set · **size** sm lg xl · **pos** ts tc te cs cc bs bc be · **mode** blw abv out | — | — | --ui-carousel-arrow-glyph --ui-carousel-arrow-size --ui-carousel-arrow-radius --ui-carousel-arrow-bg --ui-carousel-arrow-bg-hover --ui-carousel-arrow-color --ui-carousel-arrow-color-hover --ui-carousel-arrow-ink --ui-carousel-arrow-ink-hover --ui-carousel-arrow-plate --ui-carousel-arrow-plate-hover --ui-carousel-arrow-shadow --ui-carousel-arrow-hover-ring --ui-carousel-arrow-nudge --ui-carousel-arrow-disabled-opacity --ui-carousel-arrow-top --_arw-rot --_arw-scale | — | — |
 | `mrk()` | markers | **variant** pll hyb bar tmb tml rail non lgt drk sbr lbl dyn · **size** sm md lg xl · **pos** ts tc te cs cc ce bs bc be · **mode** blw abv | — | — | --ui-carousel-marker-size --ui-carousel-marker-bg --ui-carousel-marker-active --ui-carousel-marker-inset --ui-carousel-pill-width --ui-carousel-pill-height --ui-carousel-pill-track --ui-carousel-pill-fill --ui-carousel-thumb-size --ui-carousel-bar-* --ui-carousel-band --ui-carousel-rail --ui-carousel-sbr-* --ui-carousel-label-* --ui-carousel-tml-* --ui-carousel-dyn-* | — | — |
 | `tmb()` | thumbs | **ratio** 1/1 4/3 3/4 16/9 3/2 2/3 | — | — | --ui-carousel-thumb-ratio --ui-carousel-thumb-ratio-n | — | — |
 | `axis()` | carousel | **value** y | — | — | — | — | — |
@@ -99,6 +99,8 @@ inventory cannot drift from the CSS. The prose tables under it explain what the 
 | `nav(arw)` | Arrows only |
 | `nav(blw)` | Markers + arrows in a reserved **band below** the media |
 | `nav(abv)` | Markers + arrows in a reserved **band above** the media (mirror of `nav(blw)`) |
+| `gate` | **Scroller-deck gate** — `<lay-out overflow>` only, bare whole-token. Every slide after one holding an `:invalid` control is hidden, so the scroller ends at the current slide and the next arrow stays natively disabled until it validates (one `required` control per slide is what it keys on; the card renderer's `quiz-carousel` preset supplies it). Dots grow as slides unlock |
+| `nav(end)` | Markers + arrows **inside the slides' content column**, at its end — `<lay-out overflow>` only. Every `<ui-content>` in the scroller grows its `padding-block-end` to *pbe · control row · pbe*, so the column's own end padding repeats above and below the controls; arrows align to the content's inline padding. Band ink (currentColor) — add `arw(drk)` for filled discs, `arw(sqr)`/`arw(sft)` for shape. Author the `content=` padding on the lay-out, not on a slide (the row reads it on the host). The scroller keeps `--ui-carousel-nav-end-room` (2.5rem) below the cards so their shadow is not clipped |
 | `nav(non)` | **Scroller only, no controls** — a bare swipe carousel. The parenthesised arg suppresses the bare-`nav` needle (so neither dots nor arrows are declared) while the `nav` substring still enables the scroll-snap scroller |
 
 ### `axis()` — scroll direction
@@ -138,6 +140,7 @@ slash-ratio vocabulary.
 | `arw(ts)` `arw(tc)` `arw(te)` `arw(cs)` `arw(cc)` `arw(bs)` `arw(bc)` `arw(be)` | **Placement cell.** The eight cells `arw()` implements — there is no `arw(ce)` (the inline-end column is `arw(set)`'s default) and no `arw(top)`/`arw(mid)`/`arw(bot)`. For **split** arrows only the block row is read: `tc` top · `cc` centered (**default**) · `bc` bottom. The inline letter matters for `arw(set)` and under `axis(y)` |
 | `arw(cs)` | `axis(y)`: a start-inline cell moves the up/down arrows (and marker column) to the inline-**start** edge (default is inline-end) |
 | `arw(blw)` `arw(abv)` | Arrows **alone** in a reserved band below / above the media — markers keep their on-media position/ink; the arrow ink follows the band (see *Automatic band ink*) |
+| `arw(out)` | Arrows **outside** the host, flanking both inline sides, vertically centered on the media — the **host shrinks** (`inline-size` + auto margins) to make room: the card when `media=` sits on the card, the frame when it sits on the frame; gap = `--ui-carousel-outside-gap`. Keeps the default disc; `arw(bare)` paints the glyph in the surface ink (`arw(lgt)`/`arw(drk)` still win). `<ui-card>` / `<ui-media>` hosts, horizontal only; markers keep their position (`mrk(blw)`/`mrk(abv)` band them). Undefined with `nav(blw|abv)`/`arw(blw|abv)`/`arw(set)` and on `<ui-reveal>` |
 
 > **Default look:** the overlay circle is Instagram-style — a frosted semi-transparent-white
 > circle, dark chevron, soft shadow. `arw(lgt)` = that light theme; `arw(drk)` = the dark
@@ -602,6 +605,7 @@ All optional — sensible defaults baked in. Set via `style="--token: value"` on
 | `--ui-carousel-arrow-hover-ring` | = `--ui-carousel-arrow-shadow` | Circle `box-shadow` on hover — `arw(drk)` sets a light ring (`0 0 0 2px rgb(255 255 255 / 0.5)`) |
 | `--ui-carousel-arrow-hover-scale` | `1.18` | Scale of a **bare** glyph on hover / `:focus-visible` |
 | `--ui-carousel-arrow-gap` | `0.5rem` | Gap between the two arrows in `arw(set)` |
+| `--ui-carousel-outside-gap` | `var(--spacing-sm, 0.5rem)` | Gap between an **outside** arrow (`arw(out)`) and the media edge — also the amount the frame shrinks per side (plus the arrow size) |
 | `--ui-carousel-arrow-disabled-opacity` | `0.4` | Dimming of a dead-end arrow (`arw(hid)` sets `0`) |
 | `--ui-carousel-arrow-color` | `#fff` (over image) / `--ui-carousel-controls-ink` at 80% (in band) | **Bare** glyph ink — used by `arw(bare)` **and by every band arrow**, which paints its own glyph (the circle ignores it) |
 | `--ui-carousel-arrow-color-hover` | = arrow-color | Bare glyph ink on hover (bands go to the full ink) |

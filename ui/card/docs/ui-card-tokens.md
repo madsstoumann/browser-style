@@ -108,6 +108,8 @@ See [layout/AGENTS.md](../../../layout/AGENTS.md#subgrid--subgrid) for the layou
 
 Stacks `<ui-content>` over `<ui-media>` (same grid cell) and places + aligns it at one of nine positions. Also sets the matching default scrim direction (paint it with `scm` on `media=`) and the overlay ink.
 
+**Resize behaviour:** the frame's `asr()` ratio sets the card's height as long as the overlaid column fits inside it. When a narrow card makes the column taller than the ratio height, the frame stretches to the stacked row (`min-block-size: 100%`) so the image keeps covering the whole card — the ratio is a floor, never a clip. Same family as the row-arrangement fill (where `hug` opts out to keep `asr()`).
+
 | Token | Default | Controls |
 |-------|---------|----------|
 | `--ui-card-overlay-ink` | `#fff` | text colour when content is overlaid (`--ui-content-ov-ink`) |

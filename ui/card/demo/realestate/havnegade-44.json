@@ -9,11 +9,16 @@
   "fields": {
     "body": "Havnegade 44 sits where the old harbour front meets the city, and the top floor has the view that comes with it: rooftops, water, and the spires of Christianshavn straight ahead. The flat runs the full depth of the building, so the light follows you from the kitchen in the morning to the living room in the evening.\n\nThe living room opens onto the terrace through full-height doors, and the kitchen sits at the other end of the same floor — separate enough to cook in, close enough to keep talking. Three bedrooms sit off the hall, each with its own window onto the courtyard, and the two bathrooms mean the morning never queues.\n\nThe building was fully renovated in 2018: new services throughout, a lift to every floor, district heating and an energy label B. The underground garage below the courtyard comes with the flat, which in this part of the city is worth as much as the square metres.\n\nKongens Nytorv is a five-minute walk, the metro two minutes past that. The harbour bus stops at the end of the street.",
     "furniture": {
-      "lightbox": { "label": "View all 6 photos" }
+      "lightbox": {
+        "label": "View all 6 photos"
+      }
     },
     "actions": [
       {
-        "link": { "url": "#viewing", "text": "Book a viewing" },
+        "link": {
+          "url": "#viewing",
+          "text": "Book a viewing"
+        },
         "style": "primary"
       }
     ],
@@ -25,10 +30,22 @@
           "url": "https://www.google.com/maps/search/?api=1&query=55.6761,12.5911"
         },
         "amenities": [
-          "South-facing terrace, 14 m²",
-          "Lift to every floor",
-          "Underground parking, one space",
-          "District heating, energy label B"
+          {
+            "text": "South-facing terrace, 14 m²",
+            "icon": "balcony"
+          },
+          {
+            "text": "Lift to every floor",
+            "icon": "elevator"
+          },
+          {
+            "text": "Underground parking, one space",
+            "icon": "local-parking"
+          },
+          {
+            "text": "District heating, energy label B",
+            "icon": "thermostat"
+          }
         ]
       }
     }

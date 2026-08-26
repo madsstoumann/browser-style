@@ -46,15 +46,30 @@
         "currency": "USD"
       },
       "prerequisites": [
-        "No prior experience needed",
-        "10 minutes a day"
+        {
+          "text": "No prior experience needed",
+          "icon": "check"
+        },
+        {
+          "text": "10 minutes a day",
+          "icon": "schedule"
+        }
       ],
       "courseWorkload": "PT3H",
       "provider": "Calm Academy",
       "learningOutcomes": [
-        "Sustain attention for 20 minutes",
-        "Build a daily sitting habit",
-        "Apply body scans to stress"
+        {
+          "text": "Sustain attention for 20 minutes",
+          "icon": "timer"
+        },
+        {
+          "text": "Build a daily sitting habit",
+          "icon": "calendar-month"
+        },
+        {
+          "text": "Apply body scans to stress",
+          "icon": "self-improvement"
+        }
       ]
     },
     "tags": [

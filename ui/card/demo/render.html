@@ -12,7 +12,7 @@
 	<meta name="format-detection" content="telephone=no">
 	<meta name="description" content="The 63 cards of data/index.json — 51 distinct schema.org itemtypes — rendered client-side by render.js from UCF data files in data/, with the same markup and microdata as the hand-authored schema.html.">
 	<link rel="alternate" type="text/markdown" href="/ui/card/docs/card.md">
-	<link rel="stylesheet" href="/dist/demo.f91a7400.min.css">
+	<link rel="stylesheet" href="/dist/demo.6b8147a7.min.css">
 	<style>
 		.note { color: var(--color-text-secondary, #666); max-inline-size: 70ch; }
 		/* Skip style + layout for OFF-SCREEN cards. The page was 57 cards / ~2,400
@@ -107,7 +107,7 @@
 
 		/* preset parts= — sub-component variants (demo presets + demo data) */
 		const demoPresets = { ...presets, ...(await loadPresets('../data/card.presets.demo.json')) };
-		const partsDocs = await Promise.all(['parts-quote-01', 'parts-faq-01']
+		const partsDocs = await Promise.all(['parts-quote-01', 'parts-faq-01', 'parts-recipe-popover-01']
 			.map(async (name) => [name, await (await fetch(`../data/demo/${name}.json`)).json()]));
 		for (const [name, ucf] of partsDocs) {
 			const heading = document.createElement('h2');

@@ -1,6 +1,6 @@
 ---
 name: add-card
-description: Use when authoring or editing <ui-card>, <ui-media>, <ui-content> or <ui-reveal> markup, or card JSON instances — choosing variant=/media=/content=/theme= tokens, overlay furniture (chip, sticker, beacon, save, play, lightbox, marquee), data-part content, presets — and whenever a card token appears to have no effect.
+description: Use when authoring or editing <ui-card>, <ui-media>, <ui-content> or <ui-reveal> markup, or card JSON instances — choosing variant=/media=/content=/theme= tokens, overlay furniture (chip, sticker, beacon, save, play, lightbox, marquee), data-part content, icon markers on lists and rows, presets — and whenever a card token or an icon appears to have no effect.
 argument-hint: <what you want, e.g. "horizontal product card, save top-right">
 allowed-tools: Read, Edit, Write, Bash, Glob, Grep, AskUserQuestion
 ---
@@ -85,9 +85,84 @@ demo bundle; on a standalone page add the `<link>`.
 
 Style keys off `[data-part]`, never the tag — so the same part renders identically as `<b>`
 in a `<summary>` and `<h2>` in a panel. Parts in use: `eyebrow headline subheadline summary
-meta caption byline byline-who dateline jobTitle tags actions footer cover price rating list
-links address hours office stat timeline quote options`. Padding precedence is the `var()`
-chain, not the cascade: **side > axis > all** (`pbs()` beats `pb()` beats `pad()`).
+meta caption byline byline-who dateline reading-time verified key count jobTitle tags actions
+footer cover price rating list links address hours office stat timeline quote options`. Padding
+precedence is the `var()` chain, not the cascade: **side > axis > all** (`pbs()` beats `pb()`
+beats `pad()`).
+
+## Icons — two placements, one closed vocabulary
+
+Icons are glyphs from a **generated webfont** (`@browser.style/icon`), not SVGs and not
+per-icon CSS. One catalog, two ways to place a glyph:
+
+| Placement | Where | How |
+|---|---|---|
+| `::marker` | list rows and whole lists | `data-icon` → `list-style-type` |
+| `::before` | inline text (contact links, counters, dateline, verified mark) | `content: var(--icon) / ""` |
+
+```html
+<ul data-part="list" data-icon="album">          <!-- one glyph for the whole list -->
+  <li>Slow Weather <small>EP · 2026</small></li>
+</ul>
+
+<ul data-part="list">                             <!-- a glyph per row -->
+  <li data-icon="king-bed">2 × Queen</li>
+  <li data-icon="bathtub">2 bathrooms</li>
+</ul>
+
+<ul data-part="list" data-variant="checked">…</ul>   <!-- ✓ mark, included items -->
+<ul data-part="list" data-variant="crossed">…</ul>   <!-- ✗ mark, excluded, muted rows -->
+```
+
+A row-level `data-icon` beats a list-level one, so a list default can be overridden per row.
+
+**Which one to reach for:**
+
+- rows **differ in kind** (amenities, bed types, contact methods, a service catalog) → per-row `data-icon`
+- rows are **uniform assertions** (features, outcomes, qualifications) → list-level `data-variant="checked"` / `"crossed"`
+- rows are uniform but not assertions (episodes, a discography) → list-level `data-icon`
+- rows are **ordered and the number means something** (tracks, seasons, how-to steps) → no icon
+
+**All-or-nothing per list.** `li[data-icon]` sets `list-style-type` while a sibling without
+one falls through to the list's `disc`, so partial coverage renders mixed markers. If only
+one row has an honest glyph, the list gets none — or gets a list-level mark instead.
+
+## Icons — the rules that bite
+
+- **The name is a closed vocabulary.** Kebab-case in markup, underscore in the manifest:
+  `square_foot` → `square-foot`. **An unknown name is silently inert** — the row just falls
+  back to a bullet, no error. Grep the manifest before writing one:
+  `grep '"square_foot"' ui/icon/icons.json`.
+- **The sheet is opt-in.** `ui/icon/index.css` does not import `icon-font.css`; a page adds
+  its own `<link>`. The card demo bundle already has it. Without it, rows fall back cleanly.
+- **Generated content lands in the accessible name.** A `::before` icon **must** carry the
+  alt-text arm `content: var(--icon) / ""`, or the private-use codepoint is announced. A
+  `::marker` never does — which is why two contact methods are a `<ul>`, not a `<br>`-split
+  `<p>`. Prefer the marker whenever the thing is a list.
+- **Never fix icon alignment in CSS.** `::marker` drops `vertical-align`, `transform`,
+  `mask` and `background` (measured, Chrome 150). The ~0.17em optical correction is baked
+  into the glyph outlines by `icons.build.py`. There is no CSS lever.
+- **`checked` / `crossed` ink is a page token, not a theme token.** `--color-success` /
+  `--color-error` do not follow `theme=`; on `theme="green"` the ✓ is invisible. Set
+  `--ui-content-list-checked-mark` / `--ui-content-list-crossed-mark` on a themed card.
+  Open-items #37.
+
+**Adding a glyph** (needs `python3 -m pip install fonttools brotli`):
+
+```bash
+# 1. add the Material Symbols name to ui/icon/icons.json  (underscore spelling)
+cd ui/icon && npm run build:icons        # regenerates icon-font.css + icons.data.js
+cd - && npm run build:demo-css           # the demo bundle inlines the font
+node --test ui/card/render.test.js       # § icon markers is the sync gate
+```
+
+The build is deterministic — run it twice and `git status` stays clean. Both artifacts are
+committed; `icons.data.js` (`export const ICON_NAMES`) is what feeds a CMS dropdown, so an
+editor can never offer a name the font lacks.
+
+In JSON, a list row is a string **or** `{text, icon, href, itemprop}` — see
+`ui/card/docs/card.model.md` § list item. Details: `ui/card/docs/content.md` § Icon markers,
+`ui/icon/readme.md` § Icon font.
 
 ## Markup or JSON?
 
