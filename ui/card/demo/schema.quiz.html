@@ -29,6 +29,12 @@
 		   Stricter correctness-gate variant, unlocking only on the RIGHT answer:
 		   #quiz-carousel > ui-card:not(:has(li[itemprop="acceptedAnswer"] :checked)) ~ ui-card */
 		#quiz-carousel > ui-card:has(:invalid) ~ ui-card { display: none; }
+
+		/* nav(end) slack (demo trial): slides stretch to the tallest one and a col card pools the slack
+		   under cq-box's auto rows — let the content row fill (auto 1fr), then pin the column's last
+		   row so the fieldset always sits pbe above the controls; slack moves above it instead */
+		lay-out[media*="nav(end)"] ui-card > cq-box { grid-template-rows: auto 1fr; }
+		lay-out[media*="nav(end)"] ui-content > :last-child { margin-block-start: auto; }
 	</style>
 </head>
 <body data-layout-root data-page-gap="2">
