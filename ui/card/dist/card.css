@@ -1552,7 +1552,8 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     gap: var(--ui-content-gap, 1em);
     justify-content: var(--ui-content-ov-justify, var(--ui-content-place-block, normal));
     padding-block-start: var(--ui-content-pbs, var(--ui-content-pb, var(--ui-content-p, var(--spacing-md))));
-    padding-block-end: var(--ui-content-pbe, var(--ui-content-pb, var(--ui-content-p, var(--spacing-md))));
+    --_pbe: var(--ui-content-pbe, var(--ui-content-pb, var(--ui-content-p, var(--spacing-md))));
+    padding-block-end: calc(var(--_pbe) * (1 + var(--ui-carousel-nav-end, 0)) + var(--ui-carousel-nav-end, 0) * var(--ui-carousel-arrow-size, 2.25rem));
     padding-inline-start: var(--ui-content-pis, var(--ui-content-pi, var(--ui-content-p, var(--spacing-md))));
     padding-inline-end: var(--ui-content-pie, var(--ui-content-pi, var(--ui-content-p, var(--spacing-md))));
     text-align: var(--ui-content-ov-text, var(--ui-content-text-align, start));
@@ -1588,6 +1589,16 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       background: var(--_theme-bg, transparent);
       color: var(--_theme-c, var(--color-text));
     }
+  }
+  :where(ui-card[theme]) {
+    --ui-content-eyebrow-ink: currentColor;
+  }
+  :where(ui-card[theme]) progress {
+    --ui-progress-fill: currentColor;
+  }
+  :where(ui-content) > ui-progress-circular {
+    align-self: center;
+    margin-block: auto;
   }
   :where([content~=scr]) ui-content,
   :where([content~="scr(y)"]) ui-content,
@@ -2996,6 +3007,14 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
   }
   :where([variant*="ovr("]) .ui-button:not([data-variant]) {
     color: var(--color-text, hsl(0, 0%, 15%));
+  }
+  :where([variant*="ovr("]) ui-progress-circular {
+    --ui-progress-circular-label-c: currentColor;
+  }
+  :where([variant*="ovr("]) :is(cq-box, summary) > ui-media {
+    inline-size: 100%;
+    min-block-size: 100%;
+    min-inline-size: 0;
   }
   :where(ui-card[theme]) {
     --ui-card-bg: var(--_theme-bg, light-dark(var(--color-surface), var(--ui-card-dark-bg, #1f2937)));

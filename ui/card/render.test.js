@@ -1273,6 +1273,49 @@ describe('statistic — Observation', () => {
 	});
 });
 
+describe('filelist — ItemList of files', () => {
+	const details = {
+		files: [
+			{ name: 'Brand guidelines', url: '/files/brand-guidelines.pdf', download: 'northwind-brand-guidelines.pdf', size: '2.4 MB', type: 'pdf' },
+			{ name: 'Logo pack', url: '/files/logo-pack.zip', size: '18 MB', type: 'zip' }
+		]
+	};
+	const card = (extra = {}) => render({ schemaType: 'filelist', headline: 'Press kit', summary: 'Everything you need.', details: { ...details, ...extra } });
+
+	test('the root is an ItemList and each file a complete MediaObject', () => {
+		const html = card();
+		assert.match(html, /itemtype="https:\/\/schema\.org\/ItemList"/);
+		assert.match(html, /<meta itemprop="numberOfItems" content="2">/);
+		assert.match(html, /<li data-icon="picture-as-pdf" itemprop="itemListElement" itemscope itemtype="https:\/\/schema\.org\/MediaObject"><meta itemprop="encodingFormat" content="application\/pdf"><meta itemprop="contentSize" content="2.4 MB">/);
+		assert.match(html, /<a itemprop="contentUrl" href="\/files\/brand-guidelines\.pdf" download="northwind-brand-guidelines\.pdf"><span itemprop="name">Brand guidelines<\/span><\/a> <small>PDF · 2\.4 MB<\/small>/);
+	});
+
+	test('the file kind is an allowlist — it picks the glyph and the MIME type', () => {
+		const html = card();
+		assert.match(html, /<li data-icon="folder-zip" itemprop="itemListElement"[^>]*><meta itemprop="encodingFormat" content="application\/zip">/);
+		/* no download name given → the bare attribute keeps the served filename */
+		assert.match(html, /<a itemprop="contentUrl" href="\/files\/logo-pack\.zip" download><span itemprop="name">Logo pack<\/span><\/a> <small>ZIP · 18 MB<\/small>/);
+	});
+
+	test('an unknown kind gets the generic glyph and NO encodingFormat', () => {
+		const html = card({ files: [{ name: 'Mystery blob', url: '/files/blob.bin', size: '1 MB', type: 'exe"><script>' }] });
+		assert.match(html, /<li data-icon="draft" itemprop="itemListElement"/);
+		assert.ok(!html.includes('encodingFormat'), 'an unknown kind must never reach a machine value');
+		assert.ok(!html.includes('<script>'), 'the kind is never interpolated');
+	});
+
+	test('a hostile display name comes out escaped', () => {
+		const html = card({ files: [{ name: '<img src=x onerror=alert(1)>', url: '/files/x.txt', size: '1 kB', type: 'txt' }] });
+		assert.match(html, /<span itemprop="name">&lt;img src=x onerror=alert\(1\)&gt;<\/span>/);
+		assert.match(html, /<li data-icon="text-snippet"/);
+	});
+
+	test('keywords stay visible chips only — ItemList is an Intangible', () => {
+		const html = render({ schemaType: 'filelist', headline: 'Press kit', tags: ['brand'], details });
+		assert.ok(!html.includes('itemprop="keywords"'), 'no keywords property on an Intangible');
+	});
+});
+
 describe('job — EmployerAggregateRating', () => {
 	const base = { company: 'Nordlys ApS', location: 'Copenhagen' };
 	const rated = { ...base, employerRating: { value: 4.3, count: 268, max: 5, organization: 'Nordlys ApS', sameAs: 'https://nordlys.example' } };
@@ -1456,6 +1499,70 @@ describe('product page — variant picker + carousel thumbnails', () => {
 		   help inside url(), where any of them would end the value */
 		assert.ok(!/['();\\]/.test(inner), `the url() value still holds a CSS terminator: ${inner}`);
 		assert.equal(inner, '/a.png background: urlevil.png');
+	});
+});
+
+/* parts.accordion `popover` — a MODE word: accordion() swaps <details>/<summary> for
+   <button popovertarget> + <div popover> pairs (native Popover API, no JS). The word is
+   stripped from the emitted variant=; ids are `${ucf.id}-${group}-${n}`. Docs: docs/card.md */
+describe('parts.accordion popover mode', () => {
+	const FAQ = { items: [
+		{ question: 'How do I reset my password?', answer: 'Use the reset link.' },
+		{ question: 'Can I export my data?', answer: 'Yes, as JSON.' }
+	] };
+	const faq = (accordion, id) => renderCard(
+		{ id, fields: { schemaType: 'faq', headline: 'FAQ', preset: { $ref: 'card-preset/p' }, details: FAQ } },
+		{ p: { element: 'ui-card', parts: { accordion } } }
+	);
+
+	test('popover word swaps details for button + popover pairs and leaves the chrome words', () => {
+		const html = faq('bordered rounded popover', 'faq-x');
+		assert.match(html, /<ui-accordion group="faq-render" variant="bordered rounded">/, 'popover stripped from variant=');
+		assert.ok(!html.includes('<details'), 'no details in popover mode');
+		assert.match(html, /<button type="button" popovertarget="faq-x-faq-render-1">/);
+		assert.match(html, /<div popover id="faq-x-faq-render-1">/);
+		assert.match(html, /<ui-icon type="arrow upright"><\/ui-icon><\/button>/, 'trigger carries the top-right arrow');
+		assert.match(html, /<button type="button" popovertarget="faq-x-faq-render-1" popovertargetaction="hide"><ui-icon type="cross"><\/ui-icon><\/button>/, 'panel header carries a native close button');
+	});
+
+	test('a bare popover word drops the variant attribute entirely', () => {
+		const html = faq('popover', 'faq-x');
+		assert.match(html, /<ui-accordion group="faq-render">/);
+	});
+
+	test('item scopes wrap button + popover as one microdata scope, name claimed once', () => {
+		const html = faq('popover', 'faq-x');
+		assert.match(html, /<div itemprop="mainEntity" itemscope itemtype="https:\/\/schema\.org\/Question"><button type="button" popovertarget="faq-x-faq-render-1">/);
+		/* the header repeats the label visually only — tags and their itemprops are stripped */
+		assert.equal(count(html, 'itemprop="name">How do I reset my password?'), 1, 'one name per Question');
+		assert.match(html, /<header><span>How do I reset my password\?<\/span>/);
+	});
+
+	test('without a ucf id the ids fall back to group-index', () => {
+		const html = faq('popover');
+		assert.match(html, /popovertarget="faq-render-1"/);
+		assert.match(html, /<div popover id="faq-render-2">/);
+	});
+
+	test('recipe: the outer wrapper becomes the popover, the inner steps accordion is untouched', () => {
+		const html = renderCard(
+			{ id: 'recipe-x', fields: { schemaType: 'recipe', headline: 'X', preset: { $ref: 'card-preset/p' }, details: { instructions: ['Chop.', 'Cook.'] } } },
+			{ p: { element: 'ui-card', parts: { accordion: 'bordered rounded popover' } } }
+		);
+		assert.match(html, /<button type="button" popovertarget="recipe-x-recipe-acc-1">Instructions</);
+		/* outer item carries no scope — no wrapper div around the pair */
+		assert.ok(!html.includes('<div itemscope'), 'outer pair stays unwrapped');
+		/* the panel body is the inner accordion, exactly as in accordion mode */
+		assert.match(html, /<ui-accordion group="recipe-step" variant="divided" itemprop="recipeInstructions" itemscope itemtype="https:\/\/schema\.org\/ItemList">/);
+		assert.equal(count(html, '<details name="recipe-step"'), 2, 'inner steps stay details');
+		assert.equal(count(html, 'itemtype="https://schema.org/HowToStep"'), 2);
+	});
+
+	test('without the word the details form renders unchanged', () => {
+		const html = faq('divided', 'faq-x');
+		assert.match(html, /<ui-accordion group="faq-render" variant="divided">/);
+		assert.equal(count(html, '<details name="faq-render"'), 2);
+		assert.ok(!html.includes('popovertarget'), 'no popover artifacts in accordion mode');
 	});
 });
 
@@ -2686,5 +2793,157 @@ describe('map links', () => {
 			{}, {}, { mapIcons: { google: '"><script>bad()</script>' } }
 		);
 		assert.doesNotMatch(html, /<script>bad/);
+	});
+});
+
+describe('goal — AchieveAction', () => {
+	const card = (details = {}) => render({
+		schemaType: 'goal',
+		eyebrow: 'Mindfulness',
+		headline: 'Meditate 10 minutes daily',
+		summary: 'Before the first coffee — breathe in, phone off.',
+		details: {
+			status: 'active',
+			startDate: '2026-01-01',
+			endDate: '2026-12-31',
+			dateRangeDisplay: 'Jan 1 – Dec 31, 2026',
+			agentName: 'Alex Winther',
+			target: { name: 'Daily meditation target', value: 10, unitText: 'minutes' },
+			current: { value: 6, unitText: 'minutes' },
+			progressLabel: 'Minutes',
+			progressDisplay: '6 of 10 minutes',
+			hue: 'green',
+			...details
+		}
+	});
+
+	test('the root is an AchieveAction with status and time span as metas', () => {
+		const html = card();
+		assert.match(html, /itemtype="https:\/\/schema\.org\/AchieveAction"/);
+		assert.match(html, /<meta itemprop="actionStatus" content="https:\/\/schema\.org\/ActiveActionStatus">/);
+		assert.match(html, /<meta itemprop="startTime" content="2026-01-01">/);
+		assert.match(html, /<meta itemprop="endTime" content="2026-12-31">/);
+	});
+
+	test('target and current ride object/result QuantitativeValue scopes; the agent is a Person', () => {
+		const html = card();
+		assert.match(html, /itemprop="object" itemscope itemtype="https:\/\/schema\.org\/QuantitativeValue"/);
+		assert.match(html, /itemprop="result" itemscope itemtype="https:\/\/schema\.org\/QuantitativeValue"/);
+		assert.match(html, /<meta itemprop="value" content="10"><meta itemprop="unitText" content="minutes">/);
+		assert.match(html, /<meta itemprop="value" content="6"><meta itemprop="unitText" content="minutes">/);
+		assert.match(html, /itemprop="agent" itemscope itemtype="https:\/\/schema\.org\/Person"/);
+		assert.match(html, /<meta itemprop="name" content="Alex Winther">/);
+	});
+
+	test('the ring shows the computed ratio and carries NO microdata of its own', () => {
+		const html = card();
+		assert.match(html, /<ui-progress-circular size="lg" theme="green">/);
+		assert.match(html, /<progress max="10" value="6"><\/progress>/);
+		assert.match(html, /<small>Minutes<\/small>/);
+		assert.match(html, /<span>60%<\/span>/);
+		assert.ok(!/<ui-progress-circular[^>]*itemprop/.test(html), 'ring is presentation only');
+		assert.ok(!/<progress[^>]*itemprop/.test(html), 'the machine numbers ride the metas');
+	});
+
+	test('a completed goal maps to CompletedActionStatus', () => {
+		const html = card({ status: 'completed', current: { value: 10, unitText: 'minutes' } });
+		assert.match(html, /<meta itemprop="actionStatus" content="https:\/\/schema\.org\/CompletedActionStatus">/);
+		assert.match(html, /<ui-progress-circular size="lg" theme="green">/);
+	});
+
+	test('the hue is an allowlist, never verbatim data', () => {
+		const html = card({ hue: '"><script>bad()</script>' });
+		assert.doesNotMatch(html, /<script>bad/);
+		assert.ok(!/theme="/.test(html.split('<ui-progress-circular')[1]?.split('>')[0] || ''), 'unknown hue drops the theme attribute');
+	});
+
+	test('a hostile display string comes out escaped', () => {
+		const html = card({ progressDisplay: '<img src=x onerror=alert(1)>' });
+		assert.ok(!html.includes('<img src=x'), 'escaped');
+		assert.match(html, /&lt;img src=x/);
+
+	});
+});
+
+/* ── quiz — carousel deck (preset.element lay-out) ─────────────────────────────
+   One <ui-card> slide per graded question inside a <lay-out overflow> scroller, the
+   Quiz's own properties on a wrapping <section>. Presentation, so it is a PRESET
+   (element + carousel.media), never a field. The `gate` media token is the one
+   behaviour switch: it arms one required radio per question, and carousel.css hides
+   every slide after an unanswered one, so the next arrow stays disabled until the
+   current question is answered. Docs: docs/schema.md § Quiz */
+describe('quiz — carousel deck (lay-out preset)', () => {
+	const cards = [
+		{ question: 'What can a qubit hold?', options: [{ text: 'Two values' }, { text: 'A superposition', correct: true }] },
+		{ question: 'Entangled qubits, one measured?', options: [{ text: 'Fixed at once', correct: true }, { text: 'A signal' }] },
+		{ question: 'Why error correction?', options: [{ text: 'Random output' }, { text: 'Decoherence', correct: true }] }
+	];
+	const presets = {
+		gated: { element: 'lay-out', variant: 'col', media: 'asr(16/9)', content: 'wid(2xl)', carousel: { media: 'nav(end) arw(drk) gate' } },
+		free: { element: 'lay-out', variant: 'col', media: 'asr(16/9)', content: 'wid(2xl)', carousel: { media: 'nav(end) arw(drk)' } },
+		stack: { element: 'ui-card', variant: 'col', media: 'asr(16/9)' }
+	};
+	const details = { format: 'multiple-choice', subject: 'Quantum computing', cards };
+	const quiz = (preset, d = details, extra = {}) => renderCard(
+		{ fields: { schemaType: 'quiz', headline: 'Check yourself', summary: 'Three graded questions.', media: [{ mediaType: 'image', src: '/q.png', alt: 'Q' }], details: d, preset: { $ref: `card-preset/${preset}` }, ...extra } },
+		presets);
+
+	test('the root is ONE Quiz <section> carrying the deck metas — the slides are its parts', () => {
+		const html = quiz('gated');
+		assert.match(html, /^<section itemscope itemtype="https:\/\/schema\.org\/Quiz">/);
+		assert.match(html, /<meta itemprop="name" content="Check yourself">/);
+		assert.match(html, /<meta itemprop="description" content="Three graded questions.">/);
+		assert.match(html, /<meta itemprop="learningResourceType" content="Practice problem">/);
+		assert.match(html, /<div itemprop="about" itemscope itemtype="https:\/\/schema\.org\/Thing" hidden><meta itemprop="name" content="Quantum computing"><\/div>/);
+		assert.equal(count(html, 'itemtype="https://schema.org/Quiz"'), 1);
+		assert.equal(count(html, 'itemprop="hasPart" itemscope itemtype="https://schema.org/Question"'), 3);
+	});
+
+	test('one <ui-card> slide per question in the scroller, numbered, headed by the deck name', () => {
+		const html = quiz('gated');
+		assert.match(html, /<lay-out md="columns\(1\)" overflow media="nav\(end\) arw\(drk\) gate">/);
+		assert.equal(count(html, '<ui-card variant="col">'), 3);
+		assert.match(html, /<small data-part="eyebrow">Question 2 of 3<\/small>/);
+		assert.equal(count(html, '<h3 data-part="headline">Check yourself</h3>'), 3, 'a label per slide, never a second name property');
+		assert.equal(count(html, 'itemprop="image"'), 3, 'the deck image repeats per slide');
+		assert.equal(count(html, '<ui-content content="wid(2xl)">'), 3);
+		assert.equal(count(html, '<ui-media media="asr(16/9)">'), 3);
+	});
+
+	test('the gate token arms ONE required radio per question; without it, none', () => {
+		const gated = quiz('gated');
+		assert.equal(count(gated, ' required>'), 3);
+		assert.match(gated, /name="quiz-check-yourself-q1" required>/);
+		assert.match(gated, /name="quiz-check-yourself-q3" required>/);
+		const free = quiz('free');
+		assert.equal(count(free, 'required'), 0);
+		assert.match(free, /<lay-out md="columns\(1\)" overflow media="nav\(end\) arw\(drk\)">/);
+	});
+
+	/* the question markup is SHARED with the single-card deck: same fieldset, same
+	   legend, same option rows — only `required` differs. A drift here would let the
+	   two graded presentations disagree on the schema.org shape */
+	test('each slide reuses the graded fieldset byte-for-byte (minus required)', () => {
+		const pick = (html) => (html.match(/<fieldset[\s\S]*?<\/fieldset>/g) || []).map((f) => f.replaceAll(' required>', '>'));
+		const deck = pick(quiz('stack'));
+		const slides = pick(quiz('gated'));
+		assert.equal(deck.length, 3);
+		assert.deepEqual(slides, deck);
+	});
+
+	test('a flashcard deck declines the scroller — the card renders, with a loud comment', () => {
+		const html = quiz('gated', { format: 'flashcard', cards: [{ question: 'What is a qubit?', answer: 'The quantum unit.' }] });
+		assert.match(html, /^<ui-card /);
+		assert.match(html, /<!-- lay-out preset ignored: a scroller deck needs details\.format multiple-choice -->/);
+	});
+
+	/* the heading goes through renderInline (escaped, b/em/code allowlist — the envelope's
+	   own headline rule); the name meta and the group slug read plain(), which strips tags */
+	test('a hostile deck name is escaped on every slide and never reaches the group name raw', () => {
+		const html = quiz('gated', details, { headline: '<img src=x onerror=alert(1)>' });
+		assert.ok(!html.includes('<img src=x'));
+		assert.equal(count(html, '&lt;img src=x onerror=alert(1)&gt;'), 3, 'one escaped heading per slide');
+		assert.ok(!html.includes('itemprop="name" content="<'), 'the name meta is the plain text, or absent');
+		assert.match(html, /name="quiz-card-q1" required>/, 'the slug falls back, as the single-card deck does');
 	});
 });

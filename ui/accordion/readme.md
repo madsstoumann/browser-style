@@ -9,6 +9,7 @@ A CSS-first accordion component built on native `<details>` and `<summary>` elem
 - Smooth open/close transitions via `::details-content`
 - Light/dark mode support via design tokens
 - Composable variants: `bordered`, `divided`, `rounded`, `pill`, `breakout`, `separate`, `filled`, `hide-summary`
+- Popover mode — rows as `<button popovertarget>` + `<div popover>` pairs instead of `<details>`, styled by this sheet (native Popover API, no JS)
 - Color tinting via `tint` + `tinted` attributes (from `@browser.style/base`)
 - `type="horizontal"` for blinds-style horizontal layout (responsive via container query)
 - `type="split"` for two-column layout with `data-split` content panels
@@ -471,6 +472,42 @@ or per-instance:
 ```
 
 With variants that don't pad the details themselves (no `bordered`/`breakout`), nested leaf rows also get a `padding-inline-end` of one step, so their icons align with the parent summaries'.
+
+---
+
+## Popover mode
+
+Instead of expanding in place, a row can open its panel as a centered popover — a `<button popovertarget>` + `<div popover>` pair replaces the `<details>/<summary>`, and the native [Popover API](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API) owns open/close and light-dismiss (Esc / outside click). No JavaScript.
+
+```html
+<ui-accordion variant="bordered rounded" group="steps">
+  <cq-box>
+    <button type="button" popovertarget="steps-1">Steps<ui-icon type="arrow upright"></ui-icon></button>
+    <div popover id="steps-1">
+      <header><span>Steps</span><button type="button" popovertarget="steps-1" popovertargetaction="hide"><ui-icon type="cross"></ui-icon></button></header>
+      <!-- panel body — e.g. a nested accordion, fully usable inside the panel -->
+      <ui-accordion variant="divided" group="steps-inner">
+        <cq-box>
+          <details name="steps-inner"><summary>Step 1<ui-icon type="chevron right"></ui-icon></summary><div>…</div></details>
+          <details name="steps-inner"><summary>Step 2<ui-icon type="chevron right"></ui-icon></summary><div>…</div></details>
+        </cq-box>
+      </ui-accordion>
+    </div>
+  </cq-box>
+</ui-accordion>
+```
+
+The markup contract:
+
+- Each row is a `<button popovertarget="{id}">` followed by its `<div popover id="{id}">`, both direct children of `<cq-box>` — or both inside one wrapper `<div>` (e.g. a microdata scope), which the CSS flattens with `display: contents`.
+- Ids must be unique per document — two accordions minting the same id will open each other's first panel (`popovertarget` resolves to the first match).
+- The panel `<header>` (label + close button) is optional; the close button is any `popovertarget="{id}" popovertargetaction="hide"` button.
+
+Chrome variants (`bordered`, `divided`, `rounded`, `pill`, `separate`, `filled`) style the button rows like summary rows. Not composable with `breakout`, `hide-summary`, `type=` layouts or `tabs` — those are `<details>` mechanics and stay inert on popover rows.
+
+The card renderer (`ui/card/render.js`) emits this form when a card preset's `parts.accordion` contains the word `popover` — see `ui/card/docs/card.md`. Panel tokens: `--ui-accordion-popover-bg`, `--ui-accordion-popover-backdrop`, `--ui-accordion-popover-shadow`, `--ui-accordion-popover-inline-size`, `--ui-accordion-popover-block-size`.
+
+Note: the trigger's `arrow upright` icon does not mirror in RTL (only `left`/`right` icon words flip) — it stays visually up-right.
 
 ---
 

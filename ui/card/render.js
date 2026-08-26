@@ -52,12 +52,14 @@ export const SCHEMA_TYPES = {
 	gallery: 'ImageGallery',
 	statistic: 'Observation',
 	achievement: 'EducationalOccupationalCredential',
+	goal: 'AchieveAction',
 	announcement: 'SpecialAnnouncement',
 	business: 'LocalBusiness',
 	comparison: 'ItemList',
 	contact: 'ContactPoint',
 	location: 'Place',
 	places: 'ItemList',
+	filelist: 'ItemList',
 	membership: 'Offer',
 	social: 'SocialMediaPosting',
 	software: 'SoftwareApplication',
@@ -168,6 +170,19 @@ const QUIZ_FORMATS = {
 /* absent/unknown falls back to the flashcard shape — resolved in ONE place, so the
    deck (DETAILS.quiz) and the flip card (REVEAL_FACES.quiz) cannot disagree */
 const quizFormat = (d) => Object.hasOwn(QUIZ_FORMATS, d?.format) ? d.format : 'flashcard';
+/* one graded question — the SAME markup for the single-card deck (DETAILS.quiz) and the
+   carousel deck (renderQuizCarousel), so the two presentations cannot drift. `required`
+   on the first radio is what the scroller's `gate` token keys on. Docs: docs/schema.md § Quiz */
+const quizQuestion = (card, name, words, required = false) => {
+	const options = (card.options || []).map((option, position) =>
+		`<li${scope(option.correct ? 'acceptedAnswer' : 'suggestedAnswer', 'Answer')}>${meta('position', position + 1)}
+					<label><input type="radio" class="--check" name="${esc(name)}"${required && position === 0 ? ' required' : ''}> <span itemprop="text">${esc(option.text)}</span></label> ${option.correct ? '<ui-chip data-verdict="correct" theme="pale green">Correct</ui-chip>' : '<ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip>'}
+				</li>`).join('');
+	return `<fieldset${scope('hasPart', 'Question')}>
+				<legend itemprop="text">${esc(card.question)}</legend>${meta('eduQuestionType', words.question)}
+				${options ? `<ul data-part="options" aria-live="polite">${options}</ul>` : ''}
+			</fieldset>`;
+};
 
 /* Fallback when a card references no preset (or an unknown one).
    Real presets live in data/card.presets.json — instances of the
@@ -215,7 +230,7 @@ const ROOT_VIDEO_TYPES = new Set(['video']);
 /* Person has no keywords property. Intangible-rooted types (JobPosting, Offer,
    Reservation, ContactPoint, ItemList, Observation, MemberProgram, Service) have
    none either — null = visible chips only, no itemprop */
-const TAGS_PROP = { profile: 'knowsAbout', artist: 'knowsAbout', job: null, membership: null, booking: null, contact: null, comparison: null, places: null, statistic: null, loyalty: null, service: null };
+const TAGS_PROP = { profile: 'knowsAbout', artist: 'knowsAbout', job: null, membership: null, booking: null, contact: null, comparison: null, places: null, filelist: null, statistic: null, loyalty: null, service: null, goal: null };
 /* byline itemprop — a quote's people are its creators, everyone else's are authors */
 const bylineProp = (type) => type === 'quote' ? 'creator' : 'author';
 
@@ -273,6 +288,10 @@ let TYPE_CHIP = false;
    images.cdnBase. Unset = text labels, so a consumer never gets an invented asset path.
    Docs: docs/card.md § External map links */
 let MAP_ICONS = null;
+/* current card's ucf.id — set per renderCard() call, module-level like IMG/SCHEMA_MODE
+   (see the schema-mode note below on why nothing threads through the call tree);
+   consumed by accordion() popover mode to mint popovertarget ids */
+let CARD_ID = null;
 /* same eligibility as ui-media-srcset.js #eligible(): ROOT-relative local paths only —
    a page-relative src would transform into the wrong zone path (404, no src fallback) */
 const cdnEligible = (src) => !!(IMG && src && src.startsWith('/') && !src.startsWith('//'));
@@ -799,14 +818,41 @@ const comicCredits = (d) => {
 const quotePart = (text, { itemprop = 'text', variant = null, cite = null } = {}) =>
 	`<ui-quote data-part="quote"${attrs({ variant })}><blockquote itemprop="${esc(itemprop)}"><q>${esc(text)}</q>${cite ? `<cite>${esc(cite)}</cite>` : ''}</blockquote></ui-quote>`;
 
-/* nested <ui-accordion> — cq-box is hand-authored so the CSS-only form styles without JS */
-const accordion = (group, items, variant = null, hostAttrs = '') =>
-	`<ui-accordion${attrs({ group, variant })}${hostAttrs}><cq-box>${items.map(({ summary, body, scopeAttrs = '', icon = 'plus-minus' }) =>
-		`<details name="${esc(group)}"${scopeAttrs}>
+/* nested <ui-accordion> — cq-box is hand-authored so the CSS-only form styles without JS.
+   The parts.accordion word `popover` swaps <details>/<summary> for <button popovertarget>
+   + <div popover> pairs (native Popover API — CSS/HTML only, light-dismiss, no JS). The
+   word is STRIPPED from the emitted variant=; remaining words keep the chrome, restated
+   for button rows in ui-accordion.css § Popover mode. Ids are deterministic:
+   `${cardId}-${group}-${n}`, falling back to `${group}-${n}` when the UCF has no id —
+   two id-less cards of one type on one page then share targets (ui/accordion/readme.md) */
+const accordion = (group, items, variant = null, hostAttrs = '') => {
+	const words = String(variant || '').trim().split(/\s+/).filter(Boolean);
+	const popover = words.includes('popover');
+	const hostVariant = words.filter((word) => word !== 'popover').join(' ') || null;
+	const inner = popover
+		? items.map(({ summary, body, scopeAttrs = '' }, index) => {
+			const id = esc(`${CARD_ID ? `${CARD_ID}-` : ''}${group}-${index + 1}`);
+			/* the panel header repeats the label VISUALLY only — tags (and the itemprops/
+			   metas they carry) are stripped so no property is claimed twice; summary is
+			   already-escaped HTML, so removing tags cannot un-escape anything */
+			const label = summary.replace(/<[^>]+>/g, '');
+			const pair = `<button type="button" popovertarget="${id}">${summary}<ui-icon type="arrow upright"></ui-icon></button>
+			<div popover id="${id}">
+				<header><span>${label}</span><button type="button" popovertarget="${id}" popovertargetaction="hide"><ui-icon type="cross"></ui-icon></button></header>
+				${body}
+			</div>`;
+			/* an item's microdata scope must span name (button) and body (popover) — one
+			   wrapper, only when the item carries a scope; ui-accordion.css flattens it */
+			return scopeAttrs ? `<div${scopeAttrs}>${pair}</div>` : pair;
+		}).join('')
+		: items.map(({ summary, body, scopeAttrs = '', icon = 'plus-minus' }) =>
+			`<details name="${esc(group)}"${scopeAttrs}>
 			<summary>${summary}<ui-icon type="${esc(icon)}"></ui-icon></summary>
 			${body}
 		</details>`
-	).join('')}</cq-box></ui-accordion>`;
+		).join('');
+	return `<ui-accordion${attrs({ group, variant: hostVariant })}${hostAttrs}><cq-box>${inner}</cq-box></ui-accordion>`;
+};
 
 /* VideoObject metas for a native <video> item (placed INSIDE the element — valid fallback content) */
 const videoMetas = (item, src) =>
@@ -1734,6 +1780,21 @@ const DEFAULT_PLACE_CTA = 'See More';
 /* the complete schema.org ItemListOrderType member set */
 const ITEM_LIST_ORDERS = new Set(['ItemListOrderAscending', 'ItemListOrderDescending', 'ItemListUnordered']);
 
+/* ── filelist: a downloadable-file collection — root ItemList (like comparison/places),
+   each file a complete MediaObject: name, contentUrl, contentSize, encodingFormat.
+   The file KIND is this closed allowlist, because it lands in two machine surfaces —
+   the ::marker glyph (a name in ui/icon/icons.json) and the encodingFormat MIME type —
+   and neither may ever interpolate author data. An unknown kind falls back to the
+   generic `draft` glyph and emits NO encodingFormat: every row still carries a glyph,
+   since a partially-iconed list renders mixed markers. Docs: docs/schema.md § File list ── */
+const FILE_TYPES = {
+	pdf: { icon: 'picture-as-pdf', mime: 'application/pdf', label: 'PDF' },
+	excel: { icon: 'table-view', mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', label: 'Excel' },
+	word: { icon: 'description', mime: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', label: 'Word' },
+	txt: { icon: 'text-snippet', mime: 'text/plain', label: 'Text' },
+	zip: { icon: 'folder-zip', mime: 'application/zip', label: 'ZIP' }
+};
+
 /* the per-place map link, and the ONE place hasMap is declared. On the single-place card
    hasMap rides the <iframe> and the CTA stays bare; here the frame's enclosing scope is an
    ItemList, which is not a Place, so the property moves DOWN onto the item's own link. */
@@ -2121,6 +2182,27 @@ const DETAILS = {
 		return html;
 	},
 
+	goal(d) {
+		/* target rides `object`, progress rides `result` — both QuantitativeValue; the ring is
+		   presentation only, machine numbers stay on the metas. Docs: docs/schema.md § Goal */
+		const STATUS = { active: 'ActiveActionStatus', completed: 'CompletedActionStatus', failed: 'FailedActionStatus', potential: 'PotentialActionStatus' };
+		const HUES = new Set(['red', 'orange', 'green', 'blue', 'accent', 'black', 'white', 'gray', 'slate']);
+		let html = meta('actionStatus', STATUS[d.status] ? SCHEMA + STATUS[d.status] : null)
+			+ meta('startTime', d.startDate) + meta('endTime', d.endDate);
+		if (d.agentName) html += `<span${scope('agent', 'Person')} hidden>${meta('name', d.agentName)}</span>`;
+		if (d.target) html += `<span${scope('object', 'QuantitativeValue')} hidden>${meta('name', d.target.name)}${meta('value', d.target.value)}${meta('unitText', d.target.unitText)}</span>`;
+		if (d.current) html += `<span${scope('result', 'QuantitativeValue')} hidden>${meta('value', d.current.value)}${meta('unitText', d.current.unitText)}</span>`;
+		const target = Number(d.target?.value), current = Number(d.current?.value);
+		if (target > 0 && Number.isFinite(current)) {
+			const pct = Math.round(Math.min(100, Math.max(0, current / target * 100)));
+			const hue = HUES.has(d.hue) ? ` theme="${d.hue}"` : '';
+			html += `<ui-progress-circular size="lg"${hue}><progress max="${esc(d.target.value)}" value="${esc(d.current.value)}"></progress>${d.progressLabel ? `<small>${esc(d.progressLabel)}</small>` : ''}<span>${pct}%</span></ui-progress-circular>`;
+		}
+		const foot = [d.progressDisplay, d.dateRangeDisplay].filter(Boolean).join(' · ');
+		if (foot) html += `<p data-part="meta">${esc(foot)}</p>`;
+		return html;
+	},
+
 	announcement(d) {
 		let html = meta('datePosted', d.effectiveDate?.start) + meta('expires', d.effectiveDate?.end) + meta('spatialCoverage', 'Global');
 		const range = [d.effectiveDate?.startDisplay || d.effectiveDate?.start, d.effectiveDate?.endDisplay || d.effectiveDate?.end].filter(Boolean).join(' – ');
@@ -2225,6 +2307,34 @@ const DETAILS = {
 		   text alternative — the pins are aria-hidden decoration. Sighted readers reach the
 		   same data through a marker popup. Docs: docs/schema.md § Places */
 		if (!d.slides) html += scopedList(items.map((place, index) => placeRow(place, kind, index)), d.ordered !== false, d.list === 'sr');
+		return html;
+	},
+
+	/* A collection of downloadable files. Rows DIFFER IN KIND, so each carries its own
+	   data-icon (docs/content.md § Icon markers) — the glyph and the MIME type both come
+	   from the FILE_TYPES allowlist, never from data. Always a <ul>: the glyph rides
+	   list-style-type, so ordinal markers and file icons cannot coexist — which is also
+	   why there is no `ordered` switch and no per-row `position`. The `download`
+	   attribute carries the download name (the served filename wins when it is absent
+	   or the file is cross-origin — an HTML rule, not a schema one). */
+	filelist(d, fields, parts = {}, itemtype = null, owned = NO_PROPS) {
+		const files = (d.files || []).filter((file) => file?.name);
+		let html = meta('numberOfItems', files.length || null)
+			/* the envelope summary owns `description` whenever it is filled — this is the
+			   fallback only. Docs: docs/schema.md § One property, one value */
+			+ (owned.has('description') ? '' : meta('description', d.description));
+		html += scopedList(files.map((file) => {
+			const kind = Object.hasOwn(FILE_TYPES, file.type) ? FILE_TYPES[file.type] : null;
+			const name = `<span itemprop="name">${esc(file.name)}</span>`;
+			const facts = [kind?.label, file.size].filter(Boolean).map(esc).join(' · ');
+			return `<li data-icon="${kind ? kind.icon : 'draft'}"${scope('itemListElement', 'MediaObject')}>`
+				+ (kind ? meta('encodingFormat', kind.mime) : '')
+				+ meta('contentSize', file.size)
+				+ (file.url ? `<a itemprop="contentUrl" href="${esc(file.url)}"${file.download ? ` download="${esc(file.download)}"` : ' download'}>${name}</a>` : name)
+				+ (facts ? ` <small>${facts}</small>` : '')
+				+ '</li>';
+		}), false);
+		if (d.note) html += `<footer data-part="footer">${esc(d.note)}</footer>`;
 		return html;
 	},
 
@@ -2486,17 +2596,7 @@ const DETAILS = {
 		   <fieldset> whose <legend> IS the question, so every option is announced under
 		   it; the legend must come first, so eduQuestionType follows it. */
 		const group = `quiz-${slug(plain(fields.headline))}`;
-		cards.forEach((card, index) => {
-			const name = `${group}-q${index + 1}`;
-			const options = (card.options || []).map((option, position) =>
-				`<li${scope(option.correct ? 'acceptedAnswer' : 'suggestedAnswer', 'Answer')}>${meta('position', position + 1)}
-					<label><input type="radio" class="--check" name="${esc(name)}"> <span itemprop="text">${esc(option.text)}</span></label> ${option.correct ? '<ui-chip data-verdict="correct" theme="pale green">Correct</ui-chip>' : '<ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip>'}
-				</li>`).join('');
-			html += `<fieldset${scope('hasPart', 'Question')}>
-				<legend itemprop="text">${esc(card.question)}</legend>${meta('eduQuestionType', words.question)}
-				${options ? `<ul data-part="options" aria-live="polite">${options}</ul>` : ''}
-			</fieldset>`;
-		});
+		cards.forEach((card, index) => { html += quizQuestion(card, `${group}-q${index + 1}`, words); });
 		return html;
 	},
 
@@ -3047,16 +3147,63 @@ export function renderCard(ucf, presets = {}, cards = {}, options = null) {
 	return stripSchema(renderCardHtml(ucf, presets, cards));
 }
 
+/* ── carousel deck (<lay-out overflow>) — used when preset.element is lay-out ──
+   One <ui-card> slide per graded question; the Quiz's own properties ride a wrapping
+   <section>, never the lay-out itself (the controls polyfill counts every scroller child
+   as a slide). Declines anything but a multiple-choice quiz with questions. The preset's
+   carousel.media is the scroller's token string; its `gate` token arms one required radio
+   per question, which carousel.css turns into "next unlocks when answered". The deck
+   name heads every slide as a label (renderInline, no itemprop) — the name property is
+   the section's meta. Docs: docs/schema.md § Quiz, docs/card.md § Presets */
+const renderQuizCarousel = (fields, type, schemaType, preset, cardId) => {
+	const d = fields.details || {};
+	const cards = d.cards || [];
+	if (type !== 'quiz' || quizFormat(d) !== 'multiple-choice' || !cards.length) return null;
+	const words = QUIZ_FORMATS['multiple-choice'];
+	const tokens = { media: [] };
+	const media = buildMedia(fields, type, tokens, preset, {}, cardId);
+	const frame = withMedia(media?.html || '', mergeMediaTokens(preset.media, tokens.media));
+	const scroller = String(preset.carousel?.media || 'nav(end)').trim().split(/\s+/).filter(Boolean);
+	const gated = scroller.includes('gate');
+	const group = `quiz-${slug(plain(fields.headline))}`;
+	const heading = preset.headingTag || 'h3';
+	const slides = cards.map((card, index) => `<ui-card${attrs({ variant: preset.variant || 'col', theme: preset.theme || null, style: styleAttr(preset.styles) })}>
+		<cq-box>
+			${frame}
+			<ui-content${attrs({ content: preset.content || null })}>
+				<small data-part="eyebrow">Question ${index + 1} of ${cards.length}</small>
+				<${heading} data-part="headline">${renderInline(fields.headline)}</${heading}>
+				${quizQuestion(card, `${group}-q${index + 1}`, words, gated)}
+			</ui-content>
+		</cq-box>
+	</ui-card>`).join('\n\t');
+	return `<section${attrs({ itemscope: true, itemtype: SCHEMA + schemaType })}>
+	${meta('name', plain(fields.headline))}${meta('description', plain(fields.summary))}${meta('learningResourceType', words.resource)}
+	${d.subject ? `<div${scope('about', 'Thing')} hidden>${meta('name', d.subject)}</div><div${scope('educationalAlignment', 'AlignmentObject')} hidden>${meta('alignmentType', 'educationalSubject')}${meta('targetName', d.subject)}</div>` : ''}
+	<lay-out${attrs({ md: 'columns(1)', overflow: true, media: scroller.join(' ') })}>
+	${slides}
+	</lay-out>
+</section>`;
+};
+
 /* the renderer proper — always emits microdata; renderCard() strips it per mode */
 function renderCardHtml(ucf, presets = {}, cards = {}) {
 	const fields = ucf?.fields ?? ucf ?? {};
 	const cardId = ucf?.id || null;
+	CARD_ID = cardId;
 	const type = baseType(fields);
 	/* resolved ONCE: schemaType is what gets written, and what DETAILS renderers gate on */
 	const schemaType = resolveItemtype(fields);
 	const itemtype = SCHEMA + schemaType;
 	const preset = resolvePreset(fields, presets);
 	const tokens = { media: [] };
+	/* a scroller deck — or, for anything that is not a graded quiz, the card with a loud note */
+	let note = '';
+	if (preset.element === 'lay-out') {
+		const deck = renderQuizCarousel(fields, type, schemaType, preset, cardId);
+		if (deck) return deck;
+		note = '<!-- lay-out preset ignored: a scroller deck needs details.format multiple-choice -->';
+	}
 
 	if (preset.element === 'ui-reveal') {
 		return renderReveal(fields, type, schemaType, tokens, preset, resolveCard(fields.flipside, cards), cardId);
@@ -3100,7 +3247,7 @@ function renderCardHtml(ucf, presets = {}, cards = {}) {
 	})}>
 		<cq-box>
 			${withMedia(media?.html || '', mergeMediaTokens(preset.media, tokens.media))}
-			<ui-content${attrs({ content: preset.content || null })}>${contentColumn(fields, type, overlay, media?.extras || '', preset.text || 'summary', preset.parts || {}, preset.byline || 'tail', preset.headingTag, schemaType)}</ui-content>
+			<ui-content${attrs({ content: preset.content || null })}>${contentColumn(fields, type, overlay, media?.extras || '', preset.text || 'summary', preset.parts || {}, preset.byline || 'tail', preset.headingTag, schemaType)}${note}</ui-content>
 		</cq-box>
 	</ui-card>`;
 }
