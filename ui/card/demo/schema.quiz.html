@@ -29,12 +29,6 @@
 		   Stricter correctness-gate variant, unlocking only on the RIGHT answer:
 		   #quiz-carousel > ui-card:not(:has(li[itemprop="acceptedAnswer"] :checked)) ~ ui-card */
 		#quiz-carousel > ui-card:has(:invalid) ~ ui-card { display: none; }
-
-		/* nav(end) slack (demo trial): slides stretch to the tallest one and a col card pools the slack
-		   under cq-box's auto rows — hand it to the MEDIA row (1fr auto) so the text rhythm stays
-		   identical on every slide and the picture just grows a few px (object-fit: cover) */
-		lay-out[media*="nav(end)"] ui-card > cq-box { grid-template-rows: 1fr auto; }
-		lay-out[media*="nav(end)"] ui-card > cq-box > ui-media { align-self: stretch; block-size: 100%; min-block-size: 0; }
 	</style>
 </head>
 <body data-layout-root data-page-gap="2">
