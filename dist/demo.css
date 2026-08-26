@@ -9423,6 +9423,11 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
     --ui-accordion-padding-block: 1.25ch;
     --ui-accordion-padding-inline: 1.5ch;
     --ui-accordion-pill-open-radius: var(--radius-3xl);
+    --ui-accordion-popover-backdrop: oklch(0 0 0 / 0.45);
+    --ui-accordion-popover-bg: light-dark(var(--color-surface), var(--color-surface-alt));
+    --ui-accordion-popover-block-size: 44rem;
+    --ui-accordion-popover-inline-size: 65ch;
+    --ui-accordion-popover-shadow: 0 1rem 3rem -0.5rem oklch(0 0 0 / 0.35);
     --ui-accordion-split-gap: var(--ui-accordion-gap, var(--spacing-xl));
     --_bd: var(--ui-accordion-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
     --_bb: var(--ui-accordion-breakout-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
@@ -9644,6 +9649,151 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
             #0000);
         background: var(--tint-bg, var(--_tint));
         color: var(--tint-fg, contrast-color(var(--_tint)));
+      }
+      & cq-box > :not(details, button, [popover]):has(> button[popovertarget]) {
+        display: contents;
+      }
+      & cq-box > button[popovertarget],
+      & cq-box > :not(details, [popover]) > button[popovertarget] {
+        align-items: center;
+        appearance: none;
+        background: var(--ui-accordion-bg, inherit);
+        border: 0;
+        color: inherit;
+        cursor: pointer;
+        display: flex;
+        font: inherit;
+        font-size: var(--ui-accordion-summary-font-size, 1em);
+        font-weight: var(--ui-accordion-summary-font-weight, 500);
+        justify-content: space-between;
+        padding-block: var(--ui-accordion-padding-block);
+        padding-inline: 0;
+        text-align: start;
+        transition: background var(--duration-normal) var(--ease-in-out);
+        user-select: none;
+        &:hover {
+          background: var(--ui-accordion-bg-hover);
+        }
+        &:focus-visible {
+          outline: var(--ring-width) solid var(--ring-color);
+          outline-offset: calc(-1 * var(--ring-width));
+        }
+      }
+      &[variant~=bordered] cq-box {
+        & > button[popovertarget],
+        & > :not(details, [popover]) > button[popovertarget] {
+          padding-inline: var(--ui-accordion-padding-inline);
+        }
+      }
+      &[variant~=separate] cq-box {
+        & > button[popovertarget],
+        & > :not(details, [popover]) > button[popovertarget] {
+          padding-inline: var(--ui-accordion-padding-inline-separate, 2.25ch);
+        }
+      }
+      &[variant~=bordered][variant~=separate] cq-box {
+        & > button[popovertarget],
+        & > :not(details, [popover]) > button[popovertarget] {
+          border: var(--_bd);
+        }
+      }
+      &:is([variant~=bordered], [variant~=divided]) cq-box {
+        & > button[popovertarget]:has(~ button[popovertarget]),
+        & > :has(> button[popovertarget]):has(~ :has(> button[popovertarget])) > button[popovertarget] {
+          border-block-end: var(--_bd);
+        }
+      }
+      &[variant~=rounded][variant~=separate] cq-box {
+        & > button[popovertarget],
+        & > :not(details, [popover]) > button[popovertarget] {
+          border-radius: var(--ui-accordion-border-radius);
+        }
+      }
+      &[variant~=pill] cq-box {
+        & > button[popovertarget],
+        & > :not(details, [popover]) > button[popovertarget] {
+          border-radius: var(--radius-pill);
+        }
+      }
+      &[variant~=filled] cq-box {
+        & > button[popovertarget],
+        & > :not(details, [popover]) > button[popovertarget] {
+          --ui-accordion-bg: var(--color-surface-alt);
+        }
+      }
+      & cq-box [popover] {
+        background: var(--ui-accordion-popover-bg);
+        border: var(--_bd);
+        border-radius: var(--ui-accordion-border-radius);
+        box-shadow: var(--ui-accordion-popover-shadow);
+        color: inherit;
+        inline-size: min(90dvi, var(--ui-accordion-popover-inline-size));
+        max-block-size: min(80dvb, var(--ui-accordion-popover-block-size));
+        overflow: auto;
+        overscroll-behavior: contain;
+        padding: var(--ui-accordion-padding-block) var(--ui-accordion-padding-inline);
+        > header {
+          align-items: center;
+          display: flex;
+          font-size: var(--ui-accordion-summary-font-size, 1em);
+          font-weight: var(--ui-accordion-summary-font-weight, 500);
+          gap: 1ch;
+          justify-content: space-between;
+          margin-block-end: var(--ui-accordion-padding-block);
+          button {
+            appearance: none;
+            background: none;
+            border: 0;
+            border-radius: var(--ui-accordion-border-radius);
+            color: inherit;
+            cursor: pointer;
+            display: flex;
+            padding: 0.5ch;
+            &:hover {
+              background: light-dark(var(--color-field), var(--color-surface-alt));
+            }
+            &:focus-visible {
+              outline: var(--ring-width) solid var(--ring-color);
+            }
+          }
+        }
+        > :not(header) {
+          margin-block: 0;
+          > :first-child {
+            margin-block-start: 0;
+          }
+          > :last-child {
+            margin-block-end: 0;
+          }
+        }
+      }
+      & cq-box [popover]::backdrop {
+        background: var(--ui-accordion-popover-backdrop);
+      }
+      @media (prefers-reduced-motion: no-preference) {
+        & cq-box [popover] {
+          opacity: 0;
+          translate: 0 0.5rem;
+          transition:
+            opacity var(--ui-accordion-duration) var(--ease-in-out),
+            translate var(--ui-accordion-duration) var(--ease-in-out),
+            display var(--ui-accordion-duration) allow-discrete,
+            overlay var(--ui-accordion-duration) allow-discrete;
+          &:popover-open {
+            opacity: 1;
+            translate: 0 0;
+          }
+        }
+        & cq-box [popover]::backdrop {
+          opacity: 0;
+          transition:
+            opacity var(--ui-accordion-duration) var(--ease-in-out),
+            display var(--ui-accordion-duration) allow-discrete,
+            overlay var(--ui-accordion-duration) allow-discrete;
+        }
+        & cq-box [popover]:popover-open::backdrop {
+          opacity: 1;
+        }
       }
       &[type=slide] cq-box {
         overflow: hidden;
@@ -9909,6 +10059,17 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
   }
   :where(ui-accordion-item) {
     display: contents;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    @starting-style {
+      ui-accordion cq-box [popover]:popover-open,
+      ui-accordion cq-box [popover]:popover-open::backdrop {
+        opacity: 0;
+      }
+      ui-accordion cq-box [popover]:popover-open {
+        translate: 0 0.5rem;
+      }
+    }
   }
   @keyframes accordion-media-in {
     from {
@@ -10383,6 +10544,86 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
   @keyframes progress-rtl {
     100% {
       translate: -400%;
+    }
+  }
+}
+
+/* ui/progress-circular/ui-progress-circular.css */
+@layer bs-component {
+  :where(ui-progress-circular) {
+    --ui-progress-circular-size: 10em;
+    --ui-progress-circular-track-size: 1em;
+    --_mask:
+      radial-gradient(
+        circle farthest-side at center,
+        transparent calc(99% - var(--ui-progress-circular-track-size)),
+        #FFF calc(100% - var(--ui-progress-circular-track-size)));
+    align-content: center;
+    aspect-ratio: 1;
+    display: grid;
+    inline-size: var(--ui-progress-circular-size);
+    justify-items: center;
+    position: relative;
+    & progress {
+      --_pc-v: attr(value type(<number>), 0);
+      --_pc-m: attr(max type(<number>), 100);
+      @supports not (background-color: attr(x type(<color>), red)) {
+        --_pc-v: 0;
+        --_pc-m: 100;
+      }
+      background: conic-gradient(var(--ui-progress-circular-fill, var(--color-accent)) calc(1% * var(--ui-progress-circular-value, calc(100 * var(--_pc-v) / var(--_pc-m)))), var(--ui-progress-circular-track, var(--color-border)) 0);
+      block-size: 100%;
+      border: 0;
+      border-radius: var(--radius-circle);
+      inline-size: 100%;
+      inset: 0;
+      mask: var(--_mask);
+      -webkit-mask: var(--_mask);
+      position: absolute;
+      &::-webkit-progress-bar {
+        background: transparent;
+      }
+      &::-webkit-progress-inner-element {
+        display: none;
+      }
+      &::-moz-progress-bar {
+        opacity: 0;
+      }
+    }
+    & > :not(progress, small) {
+      font-size: var(--ui-progress-circular-value-fs, calc((var(--ui-progress-circular-size) - 2 * var(--ui-progress-circular-track-size)) / 4));
+      font-weight: var(--ui-progress-circular-value-fw, var(--font-weight-bold));
+    }
+    & > small {
+      color: var(--ui-progress-circular-label-c, var(--color-text-muted));
+      font-size: var(--ui-progress-circular-label-fs, calc((var(--ui-progress-circular-size) - 2 * var(--ui-progress-circular-track-size)) / 9));
+      font-weight: var(--ui-progress-circular-label-fw, var(--font-weight-medium));
+      letter-spacing: var(--tracking-wide);
+      text-transform: uppercase;
+    }
+    &[theme] {
+      background-color: transparent;
+      color: inherit;
+      --ui-progress-circular-fill: var(--_theme-bg, var(--color-accent));
+      --ui-progress-circular-track: color-mix(in srgb, var(--_theme-bg, var(--color-accent)), var(--color-surface) 80%);
+    }
+    &[size~=sm] {
+      --ui-progress-circular-size: 6em;
+    }
+    &[size~=lg] {
+      --ui-progress-circular-size: 13em;
+    }
+    &[size~=xl] {
+      --ui-progress-circular-size: 16em;
+    }
+    &[track~=sm] {
+      --ui-progress-circular-track-size: 0.5em;
+    }
+    &[track~=lg] {
+      --ui-progress-circular-track-size: 1.5em;
+    }
+    &[track~=xl] {
+      --ui-progress-circular-track-size: 2em;
     }
   }
 }
@@ -12406,6 +12647,16 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       color: var(--_theme-c, var(--color-text));
     }
   }
+  :where(ui-card[theme]) {
+    --ui-content-eyebrow-ink: currentColor;
+  }
+  :where(ui-card[theme]) progress {
+    --ui-progress-fill: currentColor;
+  }
+  :where(ui-content) > ui-progress-circular {
+    align-self: center;
+    margin-block: auto;
+  }
   :where([content~=scr]) ui-content,
   :where([content~="scr(y)"]) ui-content,
   :where(ui-content[content~=scr]),
@@ -13813,6 +14064,14 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
   }
   :where([variant*="ovr("]) .ui-button:not([data-variant]) {
     color: var(--color-text, hsl(0, 0%, 15%));
+  }
+  :where([variant*="ovr("]) ui-progress-circular {
+    --ui-progress-circular-label-c: currentColor;
+  }
+  :where([variant*="ovr("]) :is(cq-box, summary) > ui-media {
+    inline-size: 100%;
+    min-block-size: 100%;
+    min-inline-size: 0;
   }
   :where(ui-card[theme]) {
     --ui-card-bg: var(--_theme-bg, light-dark(var(--color-surface), var(--ui-card-dark-bg, #1f2937)));

@@ -112,6 +112,7 @@
     "@browser.style/marquee": "^5.0.0",
     "@browser.style/play": "^4.1.0",
     "@browser.style/progress": "^4.0.0",
+    "@browser.style/progress-circular": "^4.0.0",
     "@browser.style/quote": "^5.0.0",
     "@browser.style/rating": "^4.0.0",
     "@browser.style/save": "^5.0.0",
@@ -159,6 +160,9 @@
       "optional": true
     },
     "@browser.style/progress": {
+      "optional": true
+    },
+    "@browser.style/progress-circular": {
       "optional": true
     },
     "@browser.style/quote": {

@@ -1502,6 +1502,70 @@ describe('product page — variant picker + carousel thumbnails', () => {
 	});
 });
 
+/* parts.accordion `popover` — a MODE word: accordion() swaps <details>/<summary> for
+   <button popovertarget> + <div popover> pairs (native Popover API, no JS). The word is
+   stripped from the emitted variant=; ids are `${ucf.id}-${group}-${n}`. Docs: docs/card.md */
+describe('parts.accordion popover mode', () => {
+	const FAQ = { items: [
+		{ question: 'How do I reset my password?', answer: 'Use the reset link.' },
+		{ question: 'Can I export my data?', answer: 'Yes, as JSON.' }
+	] };
+	const faq = (accordion, id) => renderCard(
+		{ id, fields: { schemaType: 'faq', headline: 'FAQ', preset: { $ref: 'card-preset/p' }, details: FAQ } },
+		{ p: { element: 'ui-card', parts: { accordion } } }
+	);
+
+	test('popover word swaps details for button + popover pairs and leaves the chrome words', () => {
+		const html = faq('bordered rounded popover', 'faq-x');
+		assert.match(html, /<ui-accordion group="faq-render" variant="bordered rounded">/, 'popover stripped from variant=');
+		assert.ok(!html.includes('<details'), 'no details in popover mode');
+		assert.match(html, /<button type="button" popovertarget="faq-x-faq-render-1">/);
+		assert.match(html, /<div popover id="faq-x-faq-render-1">/);
+		assert.match(html, /<ui-icon type="arrow upright"><\/ui-icon><\/button>/, 'trigger carries the top-right arrow');
+		assert.match(html, /<button type="button" popovertarget="faq-x-faq-render-1" popovertargetaction="hide"><ui-icon type="cross"><\/ui-icon><\/button>/, 'panel header carries a native close button');
+	});
+
+	test('a bare popover word drops the variant attribute entirely', () => {
+		const html = faq('popover', 'faq-x');
+		assert.match(html, /<ui-accordion group="faq-render">/);
+	});
+
+	test('item scopes wrap button + popover as one microdata scope, name claimed once', () => {
+		const html = faq('popover', 'faq-x');
+		assert.match(html, /<div itemprop="mainEntity" itemscope itemtype="https:\/\/schema\.org\/Question"><button type="button" popovertarget="faq-x-faq-render-1">/);
+		/* the header repeats the label visually only — tags and their itemprops are stripped */
+		assert.equal(count(html, 'itemprop="name">How do I reset my password?'), 1, 'one name per Question');
+		assert.match(html, /<header><span>How do I reset my password\?<\/span>/);
+	});
+
+	test('without a ucf id the ids fall back to group-index', () => {
+		const html = faq('popover');
+		assert.match(html, /popovertarget="faq-render-1"/);
+		assert.match(html, /<div popover id="faq-render-2">/);
+	});
+
+	test('recipe: the outer wrapper becomes the popover, the inner steps accordion is untouched', () => {
+		const html = renderCard(
+			{ id: 'recipe-x', fields: { schemaType: 'recipe', headline: 'X', preset: { $ref: 'card-preset/p' }, details: { instructions: ['Chop.', 'Cook.'] } } },
+			{ p: { element: 'ui-card', parts: { accordion: 'bordered rounded popover' } } }
+		);
+		assert.match(html, /<button type="button" popovertarget="recipe-x-recipe-acc-1">Instructions</);
+		/* outer item carries no scope — no wrapper div around the pair */
+		assert.ok(!html.includes('<div itemscope'), 'outer pair stays unwrapped');
+		/* the panel body is the inner accordion, exactly as in accordion mode */
+		assert.match(html, /<ui-accordion group="recipe-step" variant="divided" itemprop="recipeInstructions" itemscope itemtype="https:\/\/schema\.org\/ItemList">/);
+		assert.equal(count(html, '<details name="recipe-step"'), 2, 'inner steps stay details');
+		assert.equal(count(html, 'itemtype="https://schema.org/HowToStep"'), 2);
+	});
+
+	test('without the word the details form renders unchanged', () => {
+		const html = faq('divided', 'faq-x');
+		assert.match(html, /<ui-accordion group="faq-render" variant="divided">/);
+		assert.equal(count(html, '<details name="faq-render"'), 2);
+		assert.ok(!html.includes('popovertarget'), 'no popover artifacts in accordion mode');
+	});
+});
+
 /* The map frame: a mediaType the renderer builds a URL for rather than passing through,
    so every assert here is about what may reach that URL. Docs: docs/media.md § Map */
 describe('map — the frame as an embedded map', () => {
@@ -2729,6 +2793,75 @@ describe('map links', () => {
 			{}, {}, { mapIcons: { google: '"><script>bad()</script>' } }
 		);
 		assert.doesNotMatch(html, /<script>bad/);
+	});
+});
+
+describe('goal — AchieveAction', () => {
+	const card = (details = {}) => render({
+		schemaType: 'goal',
+		eyebrow: 'Mindfulness',
+		headline: 'Meditate 10 minutes daily',
+		summary: 'Before the first coffee — breathe in, phone off.',
+		details: {
+			status: 'active',
+			startDate: '2026-01-01',
+			endDate: '2026-12-31',
+			dateRangeDisplay: 'Jan 1 – Dec 31, 2026',
+			agentName: 'Alex Winther',
+			target: { name: 'Daily meditation target', value: 10, unitText: 'minutes' },
+			current: { value: 6, unitText: 'minutes' },
+			progressLabel: 'Minutes',
+			progressDisplay: '6 of 10 minutes',
+			hue: 'green',
+			...details
+		}
+	});
+
+	test('the root is an AchieveAction with status and time span as metas', () => {
+		const html = card();
+		assert.match(html, /itemtype="https:\/\/schema\.org\/AchieveAction"/);
+		assert.match(html, /<meta itemprop="actionStatus" content="https:\/\/schema\.org\/ActiveActionStatus">/);
+		assert.match(html, /<meta itemprop="startTime" content="2026-01-01">/);
+		assert.match(html, /<meta itemprop="endTime" content="2026-12-31">/);
+	});
+
+	test('target and current ride object/result QuantitativeValue scopes; the agent is a Person', () => {
+		const html = card();
+		assert.match(html, /itemprop="object" itemscope itemtype="https:\/\/schema\.org\/QuantitativeValue"/);
+		assert.match(html, /itemprop="result" itemscope itemtype="https:\/\/schema\.org\/QuantitativeValue"/);
+		assert.match(html, /<meta itemprop="value" content="10"><meta itemprop="unitText" content="minutes">/);
+		assert.match(html, /<meta itemprop="value" content="6"><meta itemprop="unitText" content="minutes">/);
+		assert.match(html, /itemprop="agent" itemscope itemtype="https:\/\/schema\.org\/Person"/);
+		assert.match(html, /<meta itemprop="name" content="Alex Winther">/);
+	});
+
+	test('the ring shows the computed ratio and carries NO microdata of its own', () => {
+		const html = card();
+		assert.match(html, /<ui-progress-circular size="lg" theme="green">/);
+		assert.match(html, /<progress max="10" value="6"><\/progress>/);
+		assert.match(html, /<small>Minutes<\/small>/);
+		assert.match(html, /<span>60%<\/span>/);
+		assert.ok(!/<ui-progress-circular[^>]*itemprop/.test(html), 'ring is presentation only');
+		assert.ok(!/<progress[^>]*itemprop/.test(html), 'the machine numbers ride the metas');
+	});
+
+	test('a completed goal maps to CompletedActionStatus', () => {
+		const html = card({ status: 'completed', current: { value: 10, unitText: 'minutes' } });
+		assert.match(html, /<meta itemprop="actionStatus" content="https:\/\/schema\.org\/CompletedActionStatus">/);
+		assert.match(html, /<ui-progress-circular size="lg" theme="green">/);
+	});
+
+	test('the hue is an allowlist, never verbatim data', () => {
+		const html = card({ hue: '"><script>bad()</script>' });
+		assert.doesNotMatch(html, /<script>bad/);
+		assert.ok(!/theme="/.test(html.split('<ui-progress-circular')[1]?.split('>')[0] || ''), 'unknown hue drops the theme attribute');
+	});
+
+	test('a hostile display string comes out escaped', () => {
+		const html = card({ progressDisplay: '<img src=x onerror=alert(1)>' });
+		assert.ok(!html.includes('<img src=x'), 'escaped');
+		assert.match(html, /&lt;img src=x/);
+
 	});
 });
 

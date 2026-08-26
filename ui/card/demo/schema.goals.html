@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>UI: Card — Personal goals</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="text-scale" content="scale">
+	<meta name="color-scheme" content="light dark">
+	<meta name="description" content="Six personal goals as schema.org AchieveAction cards — lose weight, walk 8,000 steps, run 100 km, read 12 books, save DKK 10,000 and one completed 5K. Each card pairs a visible progress bar or ring with hidden QuantitativeValue scopes: object carries the target, result the current value, actionStatus the state.">
+	<link rel="alternate" type="text/markdown" href="/ui/card/docs/schema.md">
+	<!-- typed attr() — the rings read <progress> value/max; Safari/FF need the fallback -->
+	<script type="module" src="/ui/base/polyfills/attr-fallback.min.js" blocking="render"></script>
+	<link rel="stylesheet" href="/dist/demo.15eec77c.min.css">
+	<style>
+		/* Off-screen cards skip style+layout — page-scoped, as on demo/schema.html.
+		   265px is THIS page's measured median card height (media-less cards run shorter than schema.html's 567). */
+		main > lay-out > ui-card { content-visibility: auto; contain-intrinsic-size: auto 265px; }
+		/* AA muted ink — same block as demo/schema.html */
+		ui-content { --ui-content-muted: color-mix(in oklab, currentColor 85%, transparent); }
+		ui-chip[data-type] { --ui-chip-bg: hsl(0, 0%, 95%); --ui-chip-c: hsl(0, 0%, 13%); }
+		/* media-less card: pin the type chip top-end — same block as demo/schema.html */
+		ui-card { position: relative; }
+		ui-card > ui-chip[data-type] {
+			position: absolute;
+			inset-block-start: var(--ui-media-overlay-gap, 0.75rem);
+			inset-inline-end: var(--ui-media-overlay-gap, 0.75rem);
+			z-index: 2;
+		}
+		/* ring centering + themed-host eyebrow/bar-fill relays moved to ui/card/content.css */
+	</style>
+</head>
+<body data-layout-root data-page-gap="2">
+	<header>
+	<nav aria-label="Breadcrumb">
+		<ol data-breadcrumbs>
+			<li><a href="/ui/card/">Card</a></li>
+			<li><a href="schema.html">Schema.org</a></li>
+			<li>Personal goals</li>
+		</ol>
+	</nav>
+	<h1>UI: Card — Personal goals</h1>
+	</header>
+
+	<main data-layout-root data-page-gap="2">
+	<p>schema.org has no <code>Goal</code> type — the honest fit for a personal goal is <a href="https://schema.org/AchieveAction"><code>AchieveAction</code></a>, "an incremental achievement". Each card below is one action: <code>actionStatus</code> says whether it is still running, <code>object</code> is a <code>QuantitativeValue</code> carrying the target, <code>result</code> a second one carrying the current value. The visible progress — a native <code>&lt;progress&gt;</code> bar or a <code>&lt;ui-progress-circular&gt;</code> ring — carries <em>no</em> microdata of its own; the machine numbers ride the hidden metas, so display rounding can never lie to a parser.</p>
+
+	<h2>Active goals</h2>
+	<lay-out md="columns(2) items(start)">
+		<ui-card id="goal-weight" variant="col" itemscope itemtype="https://schema.org/AchieveAction">
+			<ui-chip data-type>AchieveAction</ui-chip>
+			<cq-box>
+				<ui-content>
+					<meta itemprop="actionStatus" content="https://schema.org/ActiveActionStatus">
+					<meta itemprop="startTime" content="2026-01-01">
+					<meta itemprop="endTime" content="2026-12-31">
+					<div itemprop="agent" itemscope itemtype="https://schema.org/Person" hidden>
+						<meta itemprop="name" content="Alex Winther">
+					</div>
+					<div itemprop="object" itemscope itemtype="https://schema.org/QuantitativeValue" hidden>
+						<meta itemprop="name" content="Weight-loss target">
+						<meta itemprop="value" content="8">
+						<meta itemprop="unitText" content="kg">
+					</div>
+					<div itemprop="result" itemscope itemtype="https://schema.org/QuantitativeValue" hidden>
+						<meta itemprop="value" content="5.2">
+						<meta itemprop="unitText" content="kg">
+					</div>
+					<small data-part="eyebrow">Health</small>
+					<h3 data-part="headline" itemprop="name">Lose 8 kg</h3>
+					<p data-part="summary" itemprop="description">Slow and boring on purpose — half a kilo a week, weighed on Sunday mornings only.</p>
+					<ul data-part="options">
+						<li>
+							<span>5.2 of 8 kg</span>
+							<progress max="8" value="5.2"></progress> <span>65%</span>
+						</li>
+					</ul>
+					<p data-part="meta">Jan 1 – Dec 31, 2026</p>
+					<span data-part="tags"><ui-chip theme="pale red">Yearly</ui-chip><ui-chip theme="pale red">Health</ui-chip></span>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+
+		<ui-card id="goal-steps" variant="col" theme="pale accent" itemscope itemtype="https://schema.org/AchieveAction">
+			<ui-chip data-type>AchieveAction</ui-chip>
+			<cq-box>
+				<ui-content>
+					<meta itemprop="actionStatus" content="https://schema.org/ActiveActionStatus">
+					<meta itemprop="startTime" content="2026-01-01">
+					<meta itemprop="endTime" content="2026-12-31">
+					<div itemprop="agent" itemscope itemtype="https://schema.org/Person" hidden>
+						<meta itemprop="name" content="Alex Winther">
+					</div>
+					<div itemprop="object" itemscope itemtype="https://schema.org/QuantitativeValue" hidden>
+						<meta itemprop="name" content="Daily step target">
+						<meta itemprop="value" content="8000">
+						<meta itemprop="unitText" content="steps">
+					</div>
+					<div itemprop="result" itemscope itemtype="https://schema.org/QuantitativeValue" hidden>
+						<meta itemprop="value" content="5400">
+						<meta itemprop="unitText" content="steps">
+					</div>
+					<small data-part="eyebrow">Activity</small>
+					<h3 data-part="headline" itemprop="name">Walk 8,000 steps daily</h3>
+					<p data-part="summary" itemprop="description">A daily floor, not a ceiling — tracked from the watch, reset at midnight.</p>
+					<ui-progress-circular>
+						<progress max="8000" value="5400"></progress>
+						<small>Steps</small>
+						<span>68%</span>
+					</ui-progress-circular>
+					<p data-part="meta">5,400 of 8,000 steps today</p>
+					<span data-part="tags"><ui-chip theme="accent">Daily</ui-chip><ui-chip theme="accent">Walking</ui-chip></span>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+
+		<ui-card id="goal-run" variant="col" itemscope itemtype="https://schema.org/AchieveAction">
+			<ui-chip data-type>AchieveAction</ui-chip>
+			<cq-box>
+				<ui-content>
+					<meta itemprop="actionStatus" content="https://schema.org/ActiveActionStatus">
+					<meta itemprop="startTime" content="2026-08-01">
+					<meta itemprop="endTime" content="2026-08-31">
+					<div itemprop="agent" itemscope itemtype="https://schema.org/Person" hidden>
+						<meta itemprop="name" content="Alex Winther">
+					</div>
+					<div itemprop="object" itemscope itemtype="https://schema.org/QuantitativeValue" hidden>
+						<meta itemprop="name" content="Monthly running distance">
+						<meta itemprop="value" content="100">
+						<meta itemprop="unitText" content="km">
+					</div>
+					<div itemprop="result" itemscope itemtype="https://schema.org/QuantitativeValue" hidden>
+						<meta itemprop="value" content="62.4">
+						<meta itemprop="unitText" content="km">
+					</div>
+					<small data-part="eyebrow">Running</small>
+					<h3 data-part="headline" itemprop="name">Run 100 km this month</h3>
+					<p data-part="summary" itemprop="description">Three short runs a week and one long Sunday loop along the harbour.</p>
+					<ul data-part="options">
+						<li>
+							<span>62.4 of 100 km</span>
+							<progress max="100" value="62.4"></progress> <span>62%</span>
+						</li>
+					</ul>
+					<p data-part="meta">Aug 1 – Aug 31, 2026</p>
+					<span data-part="tags"><ui-chip theme="pale blue">Monthly</ui-chip><ui-chip theme="pale blue">Running</ui-chip></span>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+
+		<ui-card id="goal-books" variant="col" theme="pale orange" itemscope itemtype="https://schema.org/AchieveAction">
+			<ui-chip data-type>AchieveAction</ui-chip>
+			<cq-box>
+				<ui-content>
+					<meta itemprop="actionStatus" content="https://schema.org/ActiveActionStatus">
+					<meta itemprop="startTime" content="2026-01-01">
+					<meta itemprop="endTime" content="2026-12-31">
+					<div itemprop="agent" itemscope itemtype="https://schema.org/Person" hidden>
+						<meta itemprop="name" content="Alex Winther">
+					</div>
+					<div itemprop="object" itemscope itemtype="https://schema.org/QuantitativeValue" hidden>
+						<meta itemprop="name" content="Yearly reading target">
+						<meta itemprop="value" content="12">
+						<meta itemprop="unitText" content="books">
+					</div>
+					<div itemprop="result" itemscope itemtype="https://schema.org/QuantitativeValue" hidden>
+						<meta itemprop="value" content="7">
+						<meta itemprop="unitText" content="books">
+					</div>
+					<small data-part="eyebrow">Reading</small>
+					<h3 data-part="headline" itemprop="name">Read 12 books this year</h3>
+					<p data-part="summary" itemprop="description">One a month, no doorstoppers required — audiobooks count.</p>
+					<ul data-part="options">
+						<li>
+							<span>7 of 12 books</span>
+							<progress max="12" value="7"></progress> <span>58%</span>
+						</li>
+					</ul>
+					<p data-part="meta">Jan 1 – Dec 31, 2026</p>
+					<span data-part="tags"><ui-chip theme="orange">Yearly</ui-chip><ui-chip theme="orange">Reading</ui-chip></span>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+
+		<ui-card id="goal-savings" variant="col" itemscope itemtype="https://schema.org/AchieveAction">
+			<ui-chip data-type>AchieveAction</ui-chip>
+			<cq-box>
+				<ui-content>
+					<meta itemprop="actionStatus" content="https://schema.org/ActiveActionStatus">
+					<meta itemprop="startTime" content="2026-01-01">
+					<meta itemprop="endTime" content="2026-12-31">
+					<div itemprop="agent" itemscope itemtype="https://schema.org/Person" hidden>
+						<meta itemprop="name" content="Alex Winther">
+					</div>
+					<div itemprop="object" itemscope itemtype="https://schema.org/QuantitativeValue" hidden>
+						<meta itemprop="name" content="Savings target">
+						<meta itemprop="value" content="10000">
+						<meta itemprop="unitText" content="DKK">
+					</div>
+					<div itemprop="result" itemscope itemtype="https://schema.org/QuantitativeValue" hidden>
+						<meta itemprop="value" content="6500">
+						<meta itemprop="unitText" content="DKK">
+					</div>
+					<small data-part="eyebrow">Money</small>
+					<h3 data-part="headline" itemprop="name">Save DKK&#160;10,000</h3>
+					<p data-part="summary" itemprop="description">A standing transfer the day after payday, before the money learns to walk.</p>
+					<ul data-part="options">
+						<li>
+							<span>DKK&#160;6,500 of DKK&#160;10,000</span>
+							<progress max="10000" value="6500"></progress> <span>65%</span>
+						</li>
+					</ul>
+					<p data-part="meta">Jan 1 – Dec 31, 2026</p>
+					<span data-part="tags"><ui-chip theme="pale green">Yearly</ui-chip><ui-chip theme="pale green">Money</ui-chip></span>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+
+		<ui-card id="goal-meditate" variant="ovr(ts)" media="asr(1/1) hov(blur) scm(lg) chip(te)" content="eb(inv)" itemscope itemtype="https://schema.org/AchieveAction">
+			<cq-box>
+				<ui-media><img src="/assets/images/mindfulness.png" alt="Calm illustration of a meditating figure" loading="lazy" decoding="async"><ui-chip data-type>AchieveAction</ui-chip></ui-media>
+				<ui-content>
+					<meta itemprop="actionStatus" content="https://schema.org/ActiveActionStatus">
+					<meta itemprop="startTime" content="2026-01-01">
+					<meta itemprop="endTime" content="2026-12-31">
+					<div itemprop="agent" itemscope itemtype="https://schema.org/Person" hidden>
+						<meta itemprop="name" content="Alex Winther">
+					</div>
+					<div itemprop="object" itemscope itemtype="https://schema.org/QuantitativeValue" hidden>
+						<meta itemprop="name" content="Daily meditation target">
+						<meta itemprop="value" content="10">
+						<meta itemprop="unitText" content="minutes">
+					</div>
+					<div itemprop="result" itemscope itemtype="https://schema.org/QuantitativeValue" hidden>
+						<meta itemprop="value" content="6">
+						<meta itemprop="unitText" content="minutes">
+					</div>
+					<small data-part="eyebrow">Mindfulness</small>
+					<h3 data-part="headline" itemprop="name">Meditate 10 minutes daily</h3>
+					<p data-part="summary" itemprop="description">Before the first coffee — breathe in, phone off.</p>
+					<ui-progress-circular size="lg" theme="green">
+						<progress max="10" value="6"></progress>
+						<small>Minutes</small>
+						<span>60%</span>
+					</ui-progress-circular>
+					<p data-part="meta">6 of 10 minutes · Jan 1 – Dec 31, 2026</p>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</lay-out>
+
+	<h2>Completed</h2>
+	<lay-out md="columns(2) items(start)">
+		<ui-card id="goal-5k" variant="col" theme="pale green" itemscope itemtype="https://schema.org/AchieveAction">
+			<ui-chip data-type>AchieveAction</ui-chip>
+			<cq-box>
+				<ui-content>
+					<meta itemprop="actionStatus" content="https://schema.org/CompletedActionStatus">
+					<meta itemprop="startTime" content="2026-03-01">
+					<meta itemprop="endTime" content="2026-06-14">
+					<div itemprop="agent" itemscope itemtype="https://schema.org/Person" hidden>
+						<meta itemprop="name" content="Alex Winther">
+					</div>
+					<div itemprop="object" itemscope itemtype="https://schema.org/QuantitativeValue" hidden>
+						<meta itemprop="name" content="Race distance">
+						<meta itemprop="value" content="5">
+						<meta itemprop="unitText" content="km">
+					</div>
+					<div itemprop="result" itemscope itemtype="https://schema.org/QuantitativeValue" hidden>
+						<meta itemprop="value" content="5">
+						<meta itemprop="unitText" content="km">
+					</div>
+					<small data-part="eyebrow">Milestone</small>
+					<h3 data-part="headline" itemprop="name">Complete a 5K run</h3>
+					<p data-part="summary" itemprop="description">Twelve weeks from the sofa to the start line — and across the finish.</p>
+					<ui-progress-circular theme="green">
+						<progress max="5" value="5"></progress>
+						<small>Done</small>
+						<span>100%</span>
+					</ui-progress-circular>
+					<p data-part="meta"><ui-chip theme="green">Completed</ui-chip> Jun 14, 2026</p>
+					<ul data-part="list"><li data-icon="check">Finished in 28:41</li></ul>
+					<span data-part="tags"><ui-chip theme="green">Running</ui-chip><ui-chip theme="green">Milestone</ui-chip></span>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</lay-out>
+	</main>
+</body>
+</html>

@@ -1585,6 +1585,16 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       color: var(--_theme-c, var(--color-text));
     }
   }
+  :where(ui-card[theme]) {
+    --ui-content-eyebrow-ink: currentColor;
+  }
+  :where(ui-card[theme]) progress {
+    --ui-progress-fill: currentColor;
+  }
+  :where(ui-content) > ui-progress-circular {
+    align-self: center;
+    margin-block: auto;
+  }
   :where([content~=scr]) ui-content,
   :where([content~="scr(y)"]) ui-content,
   :where(ui-content[content~=scr]),
@@ -2992,6 +3002,14 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
   }
   :where([variant*="ovr("]) .ui-button:not([data-variant]) {
     color: var(--color-text, hsl(0, 0%, 15%));
+  }
+  :where([variant*="ovr("]) ui-progress-circular {
+    --ui-progress-circular-label-c: currentColor;
+  }
+  :where([variant*="ovr("]) :is(cq-box, summary) > ui-media {
+    inline-size: 100%;
+    min-block-size: 100%;
+    min-inline-size: 0;
   }
   :where(ui-card[theme]) {
     --ui-card-bg: var(--_theme-bg, light-dark(var(--color-surface), var(--ui-card-dark-bg, #1f2937)));

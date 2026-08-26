@@ -52,6 +52,7 @@ export const SCHEMA_TYPES = {
 	gallery: 'ImageGallery',
 	statistic: 'Observation',
 	achievement: 'EducationalOccupationalCredential',
+	goal: 'AchieveAction',
 	announcement: 'SpecialAnnouncement',
 	business: 'LocalBusiness',
 	comparison: 'ItemList',
@@ -229,7 +230,7 @@ const ROOT_VIDEO_TYPES = new Set(['video']);
 /* Person has no keywords property. Intangible-rooted types (JobPosting, Offer,
    Reservation, ContactPoint, ItemList, Observation, MemberProgram, Service) have
    none either — null = visible chips only, no itemprop */
-const TAGS_PROP = { profile: 'knowsAbout', artist: 'knowsAbout', job: null, membership: null, booking: null, contact: null, comparison: null, places: null, filelist: null, statistic: null, loyalty: null, service: null };
+const TAGS_PROP = { profile: 'knowsAbout', artist: 'knowsAbout', job: null, membership: null, booking: null, contact: null, comparison: null, places: null, filelist: null, statistic: null, loyalty: null, service: null, goal: null };
 /* byline itemprop — a quote's people are its creators, everyone else's are authors */
 const bylineProp = (type) => type === 'quote' ? 'creator' : 'author';
 
@@ -287,6 +288,10 @@ let TYPE_CHIP = false;
    images.cdnBase. Unset = text labels, so a consumer never gets an invented asset path.
    Docs: docs/card.md § External map links */
 let MAP_ICONS = null;
+/* current card's ucf.id — set per renderCard() call, module-level like IMG/SCHEMA_MODE
+   (see the schema-mode note below on why nothing threads through the call tree);
+   consumed by accordion() popover mode to mint popovertarget ids */
+let CARD_ID = null;
 /* same eligibility as ui-media-srcset.js #eligible(): ROOT-relative local paths only —
    a page-relative src would transform into the wrong zone path (404, no src fallback) */
 const cdnEligible = (src) => !!(IMG && src && src.startsWith('/') && !src.startsWith('//'));
@@ -813,14 +818,41 @@ const comicCredits = (d) => {
 const quotePart = (text, { itemprop = 'text', variant = null, cite = null } = {}) =>
 	`<ui-quote data-part="quote"${attrs({ variant })}><blockquote itemprop="${esc(itemprop)}"><q>${esc(text)}</q>${cite ? `<cite>${esc(cite)}</cite>` : ''}</blockquote></ui-quote>`;
 
-/* nested <ui-accordion> — cq-box is hand-authored so the CSS-only form styles without JS */
-const accordion = (group, items, variant = null, hostAttrs = '') =>
-	`<ui-accordion${attrs({ group, variant })}${hostAttrs}><cq-box>${items.map(({ summary, body, scopeAttrs = '', icon = 'plus-minus' }) =>
-		`<details name="${esc(group)}"${scopeAttrs}>
+/* nested <ui-accordion> — cq-box is hand-authored so the CSS-only form styles without JS.
+   The parts.accordion word `popover` swaps <details>/<summary> for <button popovertarget>
+   + <div popover> pairs (native Popover API — CSS/HTML only, light-dismiss, no JS). The
+   word is STRIPPED from the emitted variant=; remaining words keep the chrome, restated
+   for button rows in ui-accordion.css § Popover mode. Ids are deterministic:
+   `${cardId}-${group}-${n}`, falling back to `${group}-${n}` when the UCF has no id —
+   two id-less cards of one type on one page then share targets (ui/accordion/readme.md) */
+const accordion = (group, items, variant = null, hostAttrs = '') => {
+	const words = String(variant || '').trim().split(/\s+/).filter(Boolean);
+	const popover = words.includes('popover');
+	const hostVariant = words.filter((word) => word !== 'popover').join(' ') || null;
+	const inner = popover
+		? items.map(({ summary, body, scopeAttrs = '' }, index) => {
+			const id = esc(`${CARD_ID ? `${CARD_ID}-` : ''}${group}-${index + 1}`);
+			/* the panel header repeats the label VISUALLY only — tags (and the itemprops/
+			   metas they carry) are stripped so no property is claimed twice; summary is
+			   already-escaped HTML, so removing tags cannot un-escape anything */
+			const label = summary.replace(/<[^>]+>/g, '');
+			const pair = `<button type="button" popovertarget="${id}">${summary}<ui-icon type="arrow upright"></ui-icon></button>
+			<div popover id="${id}">
+				<header><span>${label}</span><button type="button" popovertarget="${id}" popovertargetaction="hide"><ui-icon type="cross"></ui-icon></button></header>
+				${body}
+			</div>`;
+			/* an item's microdata scope must span name (button) and body (popover) — one
+			   wrapper, only when the item carries a scope; ui-accordion.css flattens it */
+			return scopeAttrs ? `<div${scopeAttrs}>${pair}</div>` : pair;
+		}).join('')
+		: items.map(({ summary, body, scopeAttrs = '', icon = 'plus-minus' }) =>
+			`<details name="${esc(group)}"${scopeAttrs}>
 			<summary>${summary}<ui-icon type="${esc(icon)}"></ui-icon></summary>
 			${body}
 		</details>`
-	).join('')}</cq-box></ui-accordion>`;
+		).join('');
+	return `<ui-accordion${attrs({ group, variant: hostVariant })}${hostAttrs}><cq-box>${inner}</cq-box></ui-accordion>`;
+};
 
 /* VideoObject metas for a native <video> item (placed INSIDE the element — valid fallback content) */
 const videoMetas = (item, src) =>
@@ -2150,6 +2182,27 @@ const DETAILS = {
 		return html;
 	},
 
+	goal(d) {
+		/* target rides `object`, progress rides `result` — both QuantitativeValue; the ring is
+		   presentation only, machine numbers stay on the metas. Docs: docs/schema.md § Goal */
+		const STATUS = { active: 'ActiveActionStatus', completed: 'CompletedActionStatus', failed: 'FailedActionStatus', potential: 'PotentialActionStatus' };
+		const HUES = new Set(['red', 'orange', 'green', 'blue', 'accent', 'black', 'white', 'gray', 'slate']);
+		let html = meta('actionStatus', STATUS[d.status] ? SCHEMA + STATUS[d.status] : null)
+			+ meta('startTime', d.startDate) + meta('endTime', d.endDate);
+		if (d.agentName) html += `<span${scope('agent', 'Person')} hidden>${meta('name', d.agentName)}</span>`;
+		if (d.target) html += `<span${scope('object', 'QuantitativeValue')} hidden>${meta('name', d.target.name)}${meta('value', d.target.value)}${meta('unitText', d.target.unitText)}</span>`;
+		if (d.current) html += `<span${scope('result', 'QuantitativeValue')} hidden>${meta('value', d.current.value)}${meta('unitText', d.current.unitText)}</span>`;
+		const target = Number(d.target?.value), current = Number(d.current?.value);
+		if (target > 0 && Number.isFinite(current)) {
+			const pct = Math.round(Math.min(100, Math.max(0, current / target * 100)));
+			const hue = HUES.has(d.hue) ? ` theme="${d.hue}"` : '';
+			html += `<ui-progress-circular size="lg"${hue}><progress max="${esc(d.target.value)}" value="${esc(d.current.value)}"></progress>${d.progressLabel ? `<small>${esc(d.progressLabel)}</small>` : ''}<span>${pct}%</span></ui-progress-circular>`;
+		}
+		const foot = [d.progressDisplay, d.dateRangeDisplay].filter(Boolean).join(' · ');
+		if (foot) html += `<p data-part="meta">${esc(foot)}</p>`;
+		return html;
+	},
+
 	announcement(d) {
 		let html = meta('datePosted', d.effectiveDate?.start) + meta('expires', d.effectiveDate?.end) + meta('spatialCoverage', 'Global');
 		const range = [d.effectiveDate?.startDisplay || d.effectiveDate?.start, d.effectiveDate?.endDisplay || d.effectiveDate?.end].filter(Boolean).join(' – ');
@@ -3137,6 +3190,7 @@ const renderQuizCarousel = (fields, type, schemaType, preset, cardId) => {
 function renderCardHtml(ucf, presets = {}, cards = {}) {
 	const fields = ucf?.fields ?? ucf ?? {};
 	const cardId = ucf?.id || null;
+	CARD_ID = cardId;
 	const type = baseType(fields);
 	/* resolved ONCE: schemaType is what gets written, and what DETAILS renderers gate on */
 	const schemaType = resolveItemtype(fields);

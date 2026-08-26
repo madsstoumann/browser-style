@@ -180,6 +180,14 @@
 		}
 	}
 
+	/* themed hosts: eyebrow + bar fill follow the theme ink; accent stays the unthemed default. Docs: docs/content.md § Theme ink */
+	:where(ui-card[theme]) { --ui-content-eyebrow-ink: currentColor; }
+	:where(ui-card[theme]) progress { --ui-progress-fill: currentColor; }
+
+	/* goal rings (ui/progress-circular) center in the column; auto block margins soak up
+	   free column space (overlay cards) so trailing lines press to block-end */
+	:where(ui-content) > ui-progress-circular { align-self: center; margin-block: auto; }
+
 	/* === SCROLL — content="scr"; the fade primitive lives in ../base/scroll.css === */
 	:where([content~="scr"]) ui-content, :where([content~="scr(y)"]) ui-content,
 	:where(ui-content[content~="scr"]), :where(ui-content[content~="scr(y)"]) {
