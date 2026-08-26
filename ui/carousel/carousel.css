@@ -214,6 +214,11 @@
 			--ui-carousel-arrow-shadow: none;
 		}
 		&:where([media*="arw(blw)"][media*="arw(arr)"], [media*="arw(abv)"][media*="arw(arr)"]) { --ui-carousel-arrow-glyph: var(--ui-carousel-arrow-grey); }
+		/* arw(out) + arw(bare) — the glyph sits on the surface, not the image: band ink (lgt/drk still win) */
+		&:where([media*="arw(out)"][media*="arw(bare)"]:not([media*="arw(lgt)"], [media*="arw(drk)"])) {
+			--ui-carousel-arrow-color: color-mix(in oklab, var(--ui-carousel-controls-ink, currentColor) 80%, transparent);
+			--ui-carousel-arrow-color-hover: var(--ui-carousel-controls-ink, currentColor);
+		}
 
 		/* dot ink lgt/drk — after the band blocks so explicit ink overrides a band default */
 		&:where([media*="mrk(lgt)"]) { --ui-carousel-marker-bg: rgb(255 255 255 / 0.5);  --ui-carousel-marker-active: #fff; }
@@ -669,16 +674,19 @@
 			inset-inline-end: calc(anchor(self-end) + var(--ui-carousel-arrow-size) + var(--ui-carousel-arrow-gap));
 		}
 
-		/* arw(out) — arrows OUTSIDE the shrunk frame, flanking both inline sides with a gap.
-		   Vertical centering is the --ui-carousel-arrow-top default; the frame shrink lives in
-		   ui/card/media.carousel.css. ui-media frames only (no lay-out arm — the layout scroller
-		   has no shrink mirror) and horizontal only: axis(y) hides the inline buttons.
-		   Docs: ui/card/docs/media.carousel.md § Arrows */
-		:where(ui-card, ui-reveal):where([media*="arw(out)"]) :where(ui-media)::scroll-button(inline-start),
+		/* arw(out) — arrows OUTSIDE the host. Card host: INLINE edges from the card anchor (scoped),
+		   block centre stays the media's; the host shrink is in ui/card/media.carousel.css (KEEP IN
+		   SYNC). ui-card / ui-media hosts, horizontal only. Docs: ui/card/docs/media.carousel.md § Arrows */
+		:where(ui-card):where([media*="arw(out)"]) { anchor-name: --ui-card-out; anchor-scope: --ui-card-out; }
+		:where(ui-card):where([media*="arw(out)"]) :where(ui-media)::scroll-button(inline-start) {
+			inset-inline-start: calc(anchor(--ui-card-out self-start) - var(--ui-carousel-outside-gap, 0.5rem) - var(--ui-carousel-arrow-size));
+		}
+		:where(ui-card):where([media*="arw(out)"]) :where(ui-media)::scroll-button(inline-end) {
+			inset-inline-end: calc(anchor(--ui-card-out self-end) - var(--ui-carousel-outside-gap, 0.5rem) - var(--ui-carousel-arrow-size));
+		}
 		ui-media:where([media*="arw(out)"])::scroll-button(inline-start) {
 			inset-inline-start: calc(anchor(self-start) - var(--ui-carousel-outside-gap, 0.5rem) - var(--ui-carousel-arrow-size));
 		}
-		:where(ui-card, ui-reveal):where([media*="arw(out)"]) :where(ui-media)::scroll-button(inline-end),
 		ui-media:where([media*="arw(out)"])::scroll-button(inline-end) {
 			inset-inline-end: calc(anchor(self-end) - var(--ui-carousel-outside-gap, 0.5rem) - var(--ui-carousel-arrow-size));
 		}

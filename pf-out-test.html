@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8">
+<link rel="stylesheet" href="/dist/demo.5aac056f.min.css">
+<style>
+	main { max-width: 64rem; margin: 2rem auto; display: grid; grid-template-columns: 1fr 1fr; gap: 3rem 4rem; }
+	.wide { grid-column: 1 / -1; }
+	/* candidate C: card shrinks, overflow untouched (hidden) */
+	ui-card:where([media*="arw(out)"]) {
+		inline-size: calc(round(down, 100%, 1px) - 2 * (var(--ui-carousel-arrow-size, 2.25rem) + var(--ui-carousel-outside-gap, 0.5rem)));
+		margin-inline: auto;
+	}
+	/* neutralise the current frame shrink (host arm) */
+	ui-card[media*="arw(out)"] ui-media { inline-size: 100%; margin-inline: 0; }
+	/* bare ink candidate */
+	ui-card:where([media*="arw(out)"][media*="arw(bare)"]) {
+		--ui-carousel-arrow-color: color-mix(in oklab, var(--ui-carousel-controls-ink, currentColor) 80%, transparent);
+		--ui-carousel-arrow-color-hover: var(--ui-carousel-controls-ink, currentColor);
+	}
+	/* card-anchor candidate: inline edges from the CARD, block centre from the media */
+	ui-card:where([media*="arw(out)"]) { anchor-name: --ui-card-out; anchor-scope: --ui-card-out; }
+	ui-card[media*="arw(out)"] ui-media::scroll-button(inline-start) { inset-inline-start: calc(anchor(--ui-card-out self-start) - var(--ui-carousel-outside-gap, 0.5rem) - var(--ui-carousel-arrow-size)); }
+	ui-card[media*="arw(out)"] ui-media::scroll-button(inline-end) { inset-inline-end: calc(anchor(--ui-card-out self-end) - var(--ui-carousel-outside-gap, 0.5rem) - var(--ui-carousel-arrow-size)); }
+</style></head><body><main>
+	<ui-card class="" variant="col" media="asr(4/3) nav arw(out)" content="scl(sm)">
+		<cq-box><ui-media><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='400' height='300' fill='%23c33'/%3E%3C/svg%3E" alt=""><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='400' height='300' fill='%233c3'/%3E%3C/svg%3E" alt=""><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='400' height='300' fill='%2333c'/%3E%3C/svg%3E" alt=""></ui-media>
+		<ui-content><small data-part="eyebrow">C col · nav arw(out)</small><h3 data-part="headline">Card host</h3><p data-part="summary">Text beside or below the media.</p></ui-content></cq-box>
+	</ui-card>
+	<ui-card class="" variant="col" media="asr(4/3) nav(arw) arw(out) arw(bare)" content="scl(sm)">
+		<cq-box><ui-media><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='400' height='300' fill='%23c33'/%3E%3C/svg%3E" alt=""><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='400' height='300' fill='%233c3'/%3E%3C/svg%3E" alt=""><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='400' height='300' fill='%2333c'/%3E%3C/svg%3E" alt=""></ui-media>
+		<ui-content><small data-part="eyebrow">C col · arw(bare)</small><h3 data-part="headline">Card host</h3><p data-part="summary">Text beside or below the media.</p></ui-content></cq-box>
+	</ui-card>
+	<ui-card class="wide" variant="row" media="asr(4/3) nav arw(out) mrk(blw)" content="scl(sm)">
+		<cq-box><ui-media><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='400' height='300' fill='%23c33'/%3E%3C/svg%3E" alt=""><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='400' height='300' fill='%233c3'/%3E%3C/svg%3E" alt=""><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='400' height='300' fill='%2333c'/%3E%3C/svg%3E" alt=""></ui-media>
+		<ui-content><small data-part="eyebrow">C row · mrk(blw)</small><h3 data-part="headline">Card host</h3><p data-part="summary">Text beside or below the media.</p></ui-content></cq-box>
+	</ui-card>
+	<ui-card class="wide" dir="rtl" variant="row" media="asr(4/3) nav arw(out) mrk(blw)" content="scl(sm)">
+		<cq-box><ui-media><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='400' height='300' fill='%23c33'/%3E%3C/svg%3E" alt=""><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='400' height='300' fill='%233c3'/%3E%3C/svg%3E" alt=""><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='400' height='300' fill='%2333c'/%3E%3C/svg%3E" alt=""></ui-media>
+		<ui-content><small data-part="eyebrow">C row RTL · mrk(blw)</small><h3 data-part="headline">Card host</h3><p data-part="summary">Text beside or below the media.</p></ui-content></cq-box>
+	</ui-card>
+</main></body></html>

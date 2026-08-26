@@ -3321,6 +3321,10 @@
     &:where([media*="arw(blw)"][media*="arw(arr)"], [media*="arw(abv)"][media*="arw(arr)"]) {
       --ui-carousel-arrow-glyph: var(--ui-carousel-arrow-grey);
     }
+    &:where([media*="arw(out)"][media*="arw(bare)"]:not([media*="arw(lgt)"], [media*="arw(drk)"])) {
+      --ui-carousel-arrow-color: color-mix(in oklab, var(--ui-carousel-controls-ink, currentColor) 80%, transparent);
+      --ui-carousel-arrow-color-hover: var(--ui-carousel-controls-ink, currentColor);
+    }
     &:where([media*="mrk(lgt)"]) {
       --ui-carousel-marker-bg: rgb(255 255 255 / 0.5);
       --ui-carousel-marker-active: #fff;
@@ -3754,11 +3758,19 @@
     :where(ui-media, lay-out[overflow]):where([media*="nav(abv)"][media*="arw(set)"])::scroll-button(inline-start) {
       inset-inline-end: calc(anchor(self-end) + var(--ui-carousel-arrow-size) + var(--ui-carousel-arrow-gap));
     }
-    :where(ui-card, ui-reveal):where([media*="arw(out)"]) :where(ui-media)::scroll-button(inline-start),
+    :where(ui-card):where([media*="arw(out)"]) {
+      anchor-name: --ui-card-out;
+      anchor-scope: --ui-card-out;
+    }
+    :where(ui-card):where([media*="arw(out)"]) :where(ui-media)::scroll-button(inline-start) {
+      inset-inline-start: calc(anchor(--ui-card-out self-start) - var(--ui-carousel-outside-gap, 0.5rem) - var(--ui-carousel-arrow-size));
+    }
+    :where(ui-card):where([media*="arw(out)"]) :where(ui-media)::scroll-button(inline-end) {
+      inset-inline-end: calc(anchor(--ui-card-out self-end) - var(--ui-carousel-outside-gap, 0.5rem) - var(--ui-carousel-arrow-size));
+    }
     ui-media:where([media*="arw(out)"])::scroll-button(inline-start) {
       inset-inline-start: calc(anchor(self-start) - var(--ui-carousel-outside-gap, 0.5rem) - var(--ui-carousel-arrow-size));
     }
-    :where(ui-card, ui-reveal):where([media*="arw(out)"]) :where(ui-media)::scroll-button(inline-end),
     ui-media:where([media*="arw(out)"])::scroll-button(inline-end) {
       inset-inline-end: calc(anchor(self-end) - var(--ui-carousel-outside-gap, 0.5rem) - var(--ui-carousel-arrow-size));
     }
@@ -11776,7 +11788,7 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
     padding-block-start: calc(var(--ui-carousel-above-gap, 0.5rem) + var(--ui-carousel-band, 2.75rem));
     scroll-padding-block-start: calc(var(--ui-carousel-above-gap, 0.5rem) + var(--ui-carousel-band, 2.75rem));
   }
-  :where(ui-card, ui-reveal):where([media*="arw(out)"]:not([media*="axis(y)"])) ui-media,
+  ui-card:where([media*="arw(out)"]:not([media*="axis(y)"])),
   ui-media:where([media*="arw(out)"]:not([media*="axis(y)"])) {
     inline-size: calc(round(down, 100%, 1px) - 2 * (var(--ui-carousel-arrow-size, 2.25rem) + var(--ui-carousel-outside-gap, 0.5rem)));
     margin-inline: auto;
@@ -13660,7 +13672,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
   :where([variant~=row], [variant~=row-r]) {
     --ui-card-cols: var(--ui-card-split, 1fr 1fr);
   }
-  :where([variant~=row], [variant~=row-r]):where(:not([media*="mrk(rail)"], [media*="arw(out)"], [media*=hug])) ui-media:where(:not([media*="mrk(rail)"], [media*="arw(out)"], [media*=hug])) {
+  :where([variant~=row], [variant~=row-r]):where(:not([media*="mrk(rail)"], [media*=hug])) ui-media:where(:not([media*="mrk(rail)"], [media*="arw(out)"], [media*=hug])) {
     block-size: 100%;
     inline-size: 100%;
     min-block-size: 0;
@@ -13793,8 +13805,8 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     :where([variant~="md:row-r"]) :is(cq-box, summary) {
       --ui-card-cols: var(--ui-card-split, 1fr 1fr);
     }
-    :where([variant~="md:row"]):where(:not([media*="mrk(rail)"], [media*="arw(out)"], [media*=hug])) :is(cq-box, summary) ui-media:where(:not([media*="mrk(rail)"], [media*="arw(out)"], [media*=hug])),
-    :where([variant~="md:row-r"]):where(:not([media*="mrk(rail)"], [media*="arw(out)"], [media*=hug])) :is(cq-box, summary) ui-media:where(:not([media*="mrk(rail)"], [media*="arw(out)"], [media*=hug])) {
+    :where([variant~="md:row"]):where(:not([media*="mrk(rail)"], [media*=hug])) :is(cq-box, summary) ui-media:where(:not([media*="mrk(rail)"], [media*="arw(out)"], [media*=hug])),
+    :where([variant~="md:row-r"]):where(:not([media*="mrk(rail)"], [media*=hug])) :is(cq-box, summary) ui-media:where(:not([media*="mrk(rail)"], [media*="arw(out)"], [media*=hug])) {
       block-size: 100%;
       inline-size: 100%;
       min-block-size: 0;
@@ -14091,8 +14103,8 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     :where([variant~="lg:row-r"]) :is(cq-box, summary) {
       --ui-card-cols: var(--ui-card-split, 1fr 1fr);
     }
-    :where([variant~="lg:row"]):where(:not([media*="mrk(rail)"], [media*="arw(out)"], [media*=hug])) :is(cq-box, summary) ui-media:where(:not([media*="mrk(rail)"], [media*="arw(out)"], [media*=hug])),
-    :where([variant~="lg:row-r"]):where(:not([media*="mrk(rail)"], [media*="arw(out)"], [media*=hug])) :is(cq-box, summary) ui-media:where(:not([media*="mrk(rail)"], [media*="arw(out)"], [media*=hug])) {
+    :where([variant~="lg:row"]):where(:not([media*="mrk(rail)"], [media*=hug])) :is(cq-box, summary) ui-media:where(:not([media*="mrk(rail)"], [media*="arw(out)"], [media*=hug])),
+    :where([variant~="lg:row-r"]):where(:not([media*="mrk(rail)"], [media*=hug])) :is(cq-box, summary) ui-media:where(:not([media*="mrk(rail)"], [media*="arw(out)"], [media*=hug])) {
       block-size: 100%;
       inline-size: 100%;
       min-block-size: 0;

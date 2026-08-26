@@ -143,11 +143,12 @@
 		scroll-padding-block-start: calc(var(--ui-carousel-above-gap, 0.5rem) + var(--ui-carousel-band, 2.75rem));
 	}
 
-	/* arw(out) — arrows flank OUTSIDE both inline sides: SHRINK the frame box (inline-size +
-	   auto margins; buttons anchor past the edges in ui/carousel/carousel.css). Never
-	   padding-inline — on a horizontal scroller that is the scroll axis and adjacent slides
-	   would peek into it. Horizontal only. Docs: docs/media.carousel.md § Arrows */
-	:where(ui-card, ui-reveal):where([media*="arw(out)"]:not([media*="axis(y)"])) ui-media,
+	/* arw(out) — arrows flank OUTSIDE the HOST: SHRINK its box (inline-size + auto margins) — the
+	   card when media= sits on the card, the frame when it sits on the frame. Never padding-inline:
+	   on a horizontal scroller that is the scroll axis and slides would peek in. Buttons anchor past
+	   the host edges in ui/carousel/carousel.css (KEEP IN SYNC — --ui-card-out). Horizontal only.
+	   Docs: docs/media.carousel.md § Arrows */
+	ui-card:where([media*="arw(out)"]:not([media*="axis(y)"])),
 	ui-media:where([media*="arw(out)"]:not([media*="axis(y)"])) {
 		inline-size: calc(round(down, 100%, 1px) - 2 * (var(--ui-carousel-arrow-size, 2.25rem) + var(--ui-carousel-outside-gap, 0.5rem)));
 		margin-inline: auto;

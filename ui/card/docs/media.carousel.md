@@ -46,7 +46,7 @@ media.md.)
 | `arw(bare)` | CSS | Drop the circle — glyph painted as a recolourable shape (`--ui-carousel-arrow-color`) |
 | `arw(bc)`   | CSS | Split arrows, bottom band (block row) |
 | `arw(blw)` `arw(abv)` | CSS | Arrows **alone** in a reserved band below / above the media (markers keep their on-media position/ink); arrow ink follows the band ink |
-| `arw(out)` | CSS | Arrows **outside** the media, flanking both inline sides, vertically centered — the frame **shrinks** to make room; gap = `--ui-carousel-outside-gap`. Default disc kept; `<ui-media>` only, horizontal only (see § Arrows) |
+| `arw(out)` | CSS | Arrows **outside** the host (card or frame), flanking both inline sides, vertically centered on the media — the host **shrinks** to make room; gap = `--ui-carousel-outside-gap`. Default disc kept; `<ui-card>`/`<ui-media>` hosts, horizontal only (see § Arrows) |
 | `arw(drk)`  | CSS | **Dark theme** preset — dark circle + white glyph + light hover ring (composes on the overlay and in `nav(blw)`/`nav(abv)` bands; on `arw(bare)` it just paints a dark glyph) |
 | `arw(hid)`  | CSS | Auto-hide the dead-end arrow (default dims it) |
 | `arw(rev)`  | CSS | Reveal arrows on hover / focus-within (+ button `:focus-visible`); gated on `@media (hover: hover)` so touch keeps them visible |
@@ -482,22 +482,33 @@ mechanism follows from the markup shape.
   are mirrored in `/ui/carousel/polyfill/carousel.css` (where the row+band arms carry a
   `:not()` band guard, since its selectors are not zero-specificity).
 - **`arw(set)`** moves the left button next to the right one (adjacent pair at inline-end).
-- **`arw(out)` — arrows outside the frame.** Both buttons flank the media on the inline
-  sides, vertically centered, a `--ui-carousel-outside-gap` (default `--spacing-sm`) away
-  from the edge. The room comes from **shrinking the frame box** (`inline-size:
+- **`arw(out)` — arrows outside the host.** Both buttons flank the *host* on the inline
+  sides — the card when `media=` sits on the card, the frame when it sits on the frame —
+  vertically centered on the media, a `--ui-carousel-outside-gap` (default `--spacing-sm`)
+  away from the edge. The room comes from **shrinking the host box** (`inline-size:
   calc(round(down, 100%, 1px) - 2 * (arrow-size + gap))` + `margin-inline: auto` in
   `media.carousel.css`) — never `padding-inline`, which on a horizontal scroller sits on the
   *scroll* axis and lets adjacent slides peek into the reservation (the mirror of the
-  `axis(y)` band problem below). The buttons then anchor *past* the frame edges
-  (`anchor(self-start) - gap - size`) in `carousel.css`; vertical centering is the
+  `axis(y)` band problem below). A frame host anchors the buttons past its own edges
+  (`anchor(self-start) - gap - size`, implicit anchor). A **card host** is different: the
+  media is not the card's edge in a `row` card (the text column sits between them), so the
+  card carries `anchor-name: --ui-card-out` (+ `anchor-scope`, so nested cards never
+  collide) and the *inline* insets read `anchor(--ui-card-out self-start|self-end)` while
+  `top` keeps the implicit media anchor — inline edges from the card, block centre from the
+  media. Nothing clips them: `container-type: inline-size` no longer implies layout
+  containment, so the card is not the buttons' containing block and its `overflow: hidden`
+  does not apply to them (verified, Chrome 152). Vertical centering is the
   `--ui-carousel-arrow-top` default, so a dots band (`mrk(blw)`/`mrk(abv)`) still
-  re-centers them on the visible media. Kept deliberately narrow: `<ui-media>` frames only
-  (no `lay-out[overflow]` shrink mirror yet), horizontal only (`:not(axis(y))` on the
-  shrink; `axis(y)` hides the inline buttons anyway), default disc chrome kept
-  (`arw(bare)`/`arw(lgt)`/`arw(drk)` compose). Undefined with `nav(blw|abv)` /
+  re-centers them on the visible media. **Ink:** the disc default is kept; `arw(bare)`
+  paints the glyph in the surface ink (`--ui-carousel-controls-ink` at 80%, the band
+  recipe — the overlay's white would vanish on a light surface), and `arw(lgt)`/`arw(drk)`
+  still win. Kept deliberately narrow: `<ui-card>`/`<ui-media>` hosts (no `<ui-reveal>` or
+  `lay-out[overflow]` shrink mirror yet), horizontal only (`:not(axis(y))` on the shrink;
+  `axis(y)` hides the inline buttons anyway). Undefined with `nav(blw|abv)` /
   `arw(blw|abv)` (they force arrows *into* the band) and `arw(set)` (it re-clusters the
-  inline insets). Row-variant cards opt the frame out of `inline-size: 100%` like
-  `mrk(rail)` does — see *Row precedence* below and the `ui-card.css` note in § Rail.
+  inline insets). A *frame-level* `arw(out)` inside a row card opts the frame out of
+  `inline-size: 100%` like `mrk(rail)` does — the `ui-card.css` note in § Rail; a card-level
+  one shrinks the card, so its frame still stretches.
   **Polyfill degradation:** the DOM controls live *inside* the scroller, and real
   buttons shifted past its border box are clipped by the scroll container (verified —
   native `::scroll-button` boxes escape that clip, elements can't), so
@@ -623,9 +634,10 @@ thumb from the slide's own image.)
   arrangement rules stretch the frame to its grid column, which is exactly the declaration the
   reservation above needs to win — the frame kept the full column *and* added the rail's padding
   outside it (content-box), sliding under the text column. The three `ui-card.css` rules now carry
-  `:where(:not([media*="mrk(rail)"], [media*="arw(out)"], [media*="hug"]))` on **both** the host
-  and the frame, since `media=` may sit on either — `arw(out)` shrinks the frame the same way the
-  rail reserves space, so it opts out too. Zero-specificity `:where()` wrapping is load-bearing:
+  `:where(:not([media*="mrk(rail)"], [media*="hug"]))` on **both** the host and the frame, since
+  `media=` may sit on either — and the frame arm alone also carries `[media*="arw(out)"]`: a
+  frame-level `arw(out)` shrinks the frame the way the rail reserves space, while a card-level one
+  shrinks the card and its frame must still stretch. Zero-specificity `:where()` wrapping is load-bearing:
   a bare `:not([media*=…])` would raise those rules from 0,0,1 to 0,1,1 and reorder the cascade.
   Reference: the product pages (`demo/products/`), the only place rail + row compose.
 
