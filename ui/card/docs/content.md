@@ -174,7 +174,9 @@ Precedence lives in the **`var()` chain**, not the cascade. Each of the four phy
 ```css
 :where(ui-content) {
   padding-block-start:  var(--ui-content-pbs, var(--ui-content-pb, var(--ui-content-p, var(--spacing-md))));
-  padding-block-end:    var(--ui-content-pbe, var(--ui-content-pb, var(--ui-content-p, var(--spacing-md))));
+  --_pbe: var(--ui-content-pbe, var(--ui-content-pb, var(--ui-content-p, var(--spacing-md))));
+  padding-block-end:    calc(var(--_pbe) * (1 + var(--ui-carousel-nav-end, 0)) + var(--ui-carousel-nav-end, 0) * var(--ui-carousel-arrow-size, 2.25rem));
+  /* --ui-carousel-nav-end is the lay-out carousel's nav(end) flag: pbe · control row · pbe. Off a carousel it is 0 and the chain is the plain pbe. */
   padding-inline-start: var(--ui-content-pis, var(--ui-content-pi, var(--ui-content-p, var(--spacing-md))));
   padding-inline-end:   var(--ui-content-pie, var(--ui-content-pi, var(--ui-content-p, var(--spacing-md))));
 }

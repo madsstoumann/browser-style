@@ -6,12 +6,12 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="text-scale" content="scale">
 	<meta name="color-scheme" content="light dark">
-	<meta name="description" content="The schema.org Quiz card from schema.html, split into a CSS-only carousel: one card per Question (ui-media + ui-content + fieldset) in a lay-out overflow scroller with nav(blw) controls. A pure-CSS progressive-reveal gate keeps the next arrow disabled until the current question is answered. The original card sits beside it for comparison.">
+	<meta name="description" content="The schema.org Quiz card from schema.html, split into a CSS-only carousel: one card per Question (ui-media + ui-content + fieldset) in a lay-out overflow scroller with nav(end) controls inside the content column. A pure-CSS progressive-reveal gate keeps the next arrow disabled until the current question is answered. The original card sits beside it for comparison.">
 	<!-- no-referrer: the zone hotlink-protects CDN srcset. Docs: docs/performance.md -->
 	<meta name="referrer" content="no-referrer">
 	<meta name="format-detection" content="telephone=no">
 	<link rel="preconnect" href="https://v4.browser.style">
-	<link rel="stylesheet" href="/dist/demo.8cd1d286.min.css">
+	<link rel="stylesheet" href="/dist/demo.47615817.min.css">
 	<style>
 		/* AA muted ink — 85% survives the byline>dateline double-application. Docs: docs/schema.md */
 		ui-content { --ui-content-muted: color-mix(in oklab, currentColor 85%, transparent); }
@@ -51,7 +51,7 @@
 
 	<main data-layout-root data-page-gap="2">
 
-	<p>Left: the <a href="schema.html#schema-quiz-mc">schema.org Quiz card</a> split into a CSS-only carousel; right: the original three-fieldset card, unchanged, for side-by-side comparison. The carousel: one <code>&lt;ui-card&gt;</code> per <code>Question</code> — a <code>&lt;ui-media&gt;</code> plus a <code>&lt;ui-content&gt;</code> holding that question's <code>&lt;fieldset&gt;</code> — inside a <code>&lt;lay-out overflow media="nav(blw)"&gt;</code> scroller with the default dots + arrows in a band below; <code>content="wid(2xl)"</code> lifts the prose measure so each fieldset spans the card.</p>
+	<p>Left: the <a href="schema.html#schema-quiz-mc">schema.org Quiz card</a> split into a CSS-only carousel; right: the original three-fieldset card, unchanged, for side-by-side comparison. The carousel: one <code>&lt;ui-card&gt;</code> per <code>Question</code> — a <code>&lt;ui-media&gt;</code> plus a <code>&lt;ui-content&gt;</code> holding that question's <code>&lt;fieldset&gt;</code> — inside a <code>&lt;lay-out overflow media="nav(end) arw(drk)"&gt;</code> scroller — <code>nav(end)</code> puts the dots + arrows <em>inside</em> the content column after the fieldset, repeating the column's <code>padding-block-end</code> above and below the row, and <code>arw(drk)</code> fills the arrow discs; <code>content="wid(2xl)"</code> lifts the prose measure so each fieldset spans the card.</p>
 	<p>The <strong>next arrow stays disabled until the current question is answered</strong>, with no JavaScript: one radio per group is <code>required</code>, and a page rule hides every card following an unanswered one (<code>ui-card:has(:invalid) ~ ui-card</code>). The scroller then ends at the current question, so the native <code>::scroll-button()</code> is <code>:disabled</code> (dimmed by carousel.css), swiping cannot overshoot, and the marker dots appear one by one as questions unlock. The gate is <em>answered</em>-based, not correctness-based — a wrong pick still advances (its verdict chip tells you so); after the last question the arrow simply stays dimmed. In browsers on the <a href="/ui/carousel/">carousel polyfill</a> (no native <code>::scroll-marker</code>), all three dots render from load and the next button re-checks its disabled state on scroll/resize.</p>
 
 	<lay-out md="columns(2) items(start)">
@@ -62,7 +62,7 @@
 			<div itemprop="about" itemscope itemtype="https://schema.org/Thing" hidden><meta itemprop="name" content="Quantum computing"></div>
 			<div itemprop="educationalAlignment" itemscope itemtype="https://schema.org/AlignmentObject" hidden><meta itemprop="alignmentType" content="educationalSubject"><meta itemprop="targetName" content="Quantum computing"></div>
 
-			<lay-out id="quiz-carousel" md="columns(1)" overflow media="nav(blw)">
+			<lay-out id="quiz-carousel" md="columns(1)" overflow media="nav(end) arw(drk)">
 				<ui-card variant="col" media="asr(16/9) chip(te)" content="wid(2xl)">
 					<cq-box>
 						<ui-media><img src="/assets/images/quantum.png" alt="Stylised quantum processor" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/quantum.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/quantum.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/quantum.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/quantum.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/quantum.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="eager" fetchpriority="high" decoding="async" itemprop="image"><ui-chip data-type>Quiz</ui-chip></ui-media>

@@ -12,7 +12,7 @@
 	<meta name="referrer" content="no-referrer">
 	<!-- preconnect: CDN handshake parallel to the CSS download. Docs: docs/performance.md -->
 	<link rel="preconnect" href="https://v4.browser.style">
-	<link rel="stylesheet" href="/dist/demo.8cd1d286.min.css">
+	<link rel="stylesheet" href="/dist/demo.47615817.min.css">
 	<style>
 		section {
 			content-visibility: auto;
@@ -171,6 +171,7 @@
 				<li><a href="#layoutgrids">Grid pages</a></li>
 				<li><a href="#layoutfullscreen">Full-screen hero</a></li>
 				<li><a href="#layoutpeek">Peek both sides</a></li>
+				<li><a href="#layoutend">Controls in the content</a></li>
 			</ol>
 		</div>
 		<div>
@@ -1338,6 +1339,35 @@
 				</lay-out-group>
 			</ui-card>
 		</lay-out>
+	</lay-out>
+
+	<h3 id="layoutend">Controls in the content — <code>nav(end)</code></h3>
+	<p><code>&lt;lay-out overflow&gt;</code> only: the dots + arrows move <em>inside</em> each slide's <code>&lt;ui-content&gt;</code>, after its last row. Every column grows its <code>padding-block-end</code> to <em>pbe · controls · pbe</em>, so the column's own end padding repeats above and below the row; arrows align to the content's inline padding. Author the <code>content=</code> padding on the lay-out — the row reads it there. Band ink, so <code>arw(drk)</code> for filled discs.</p>
+	<lay-out md="columns(2)" overflow media="nav(end) arw(drk)" content="pbe(lg)">
+		<ui-card variant="col" media="asr(4/3)" content="scl(sm)">
+			<cq-box>
+				<ui-media><img src="/assets/images/finance.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/finance.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/finance.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/finance.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/finance.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/finance.png 1200w" sizes="(min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"></ui-media>
+				<ui-content><small data-part="eyebrow">Travel</small><h3 data-part="headline">Dots + arrows in the column</h3><p data-part="summary">The controls sit after the copy, not in a band below the card.</p></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3)" content="scl(sm)">
+			<cq-box>
+				<ui-media><img src="/assets/images/river.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/river.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/river.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/river.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/river.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/river.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"></ui-media>
+				<ui-content><small data-part="eyebrow">Science</small><h3 data-part="headline">Reads the content padding</h3><p data-part="summary">The column’s own end padding repeats above and below the row.</p></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3)" content="scl(sm)">
+			<cq-box>
+				<ui-media><img src="/assets/images/mindfulness.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/mindfulness.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/mindfulness.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/mindfulness.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/mindfulness.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/mindfulness.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"></ui-media>
+				<ui-content><small data-part="eyebrow">Food</small><h3 data-part="headline">Filled discs</h3><p data-part="summary"><code>arw(drk)</code> composes as on any band; <code>arw(sqr)</code> / <code>arw(sft)</code> for shape.</p></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3)" content="scl(sm)">
+			<cq-box>
+				<ui-media><img src="/assets/images/gastronomy.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/gastronomy.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/gastronomy.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/gastronomy.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/gastronomy.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/gastronomy.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"></ui-media>
+				<ui-content><small data-part="eyebrow">Wellbeing</small><h3 data-part="headline">Author padding on the lay-out</h3><p data-part="summary"><code>content="pbe(lg)"</code> here widens both gaps in every slide.</p></ui-content>
+			</cq-box>
+		</ui-card>
 	</lay-out>
 
 	<!-- ════════════════════════════════════════════════════════════

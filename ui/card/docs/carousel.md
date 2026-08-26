@@ -75,7 +75,7 @@ inventory cannot drift from the CSS. The prose tables under it explain what the 
 <!-- tokens:summary attr=media stems=nav,arw,mrk,tmb,axis,auto,ani,crd,load,clip,loop,stagger,pages -->
 | token | axis | args | aliases | bare | writes | md:/lg: | deprecated |
 |---|---|---|---|---|---|---|---|
-| `nav()` | carousel | **mode** mrk arw blw abv non | — | yes | --ui-media-bg --ui-carousel-* | — | — |
+| `nav()` | carousel | **mode** mrk arw blw abv end non | — | yes | --ui-media-bg --ui-carousel-* | — | — |
 | `arw()` | arrows | **variant** arr bare sqr sft lgt drk hid rev set · **size** sm lg xl · **pos** ts tc te cs cc bs bc be · **mode** blw abv | — | — | --ui-carousel-arrow-glyph --ui-carousel-arrow-size --ui-carousel-arrow-radius --ui-carousel-arrow-bg --ui-carousel-arrow-bg-hover --ui-carousel-arrow-color --ui-carousel-arrow-color-hover --ui-carousel-arrow-ink --ui-carousel-arrow-ink-hover --ui-carousel-arrow-plate --ui-carousel-arrow-plate-hover --ui-carousel-arrow-shadow --ui-carousel-arrow-hover-ring --ui-carousel-arrow-nudge --ui-carousel-arrow-disabled-opacity --ui-carousel-arrow-top --_arw-rot --_arw-scale | — | — |
 | `mrk()` | markers | **variant** pll hyb bar tmb tml rail non lgt drk sbr lbl · **size** sm md lg xl · **pos** ts tc te cs cc ce bs bc be · **mode** blw abv | — | — | --ui-carousel-marker-size --ui-carousel-marker-bg --ui-carousel-marker-active --ui-carousel-marker-inset --ui-carousel-pill-width --ui-carousel-pill-height --ui-carousel-pill-track --ui-carousel-pill-fill --ui-carousel-thumb-size --ui-carousel-bar-* --ui-carousel-band --ui-carousel-rail --ui-carousel-sbr-* --ui-carousel-label-* --ui-carousel-tml-* | — | — |
 | `tmb()` | thumbs | **ratio** 1/1 4/3 3/4 16/9 3/2 2/3 | — | — | --ui-carousel-thumb-ratio --ui-carousel-thumb-ratio-n | — | — |
@@ -99,6 +99,7 @@ inventory cannot drift from the CSS. The prose tables under it explain what the 
 | `nav(arw)` | Arrows only |
 | `nav(blw)` | Markers + arrows in a reserved **band below** the media |
 | `nav(abv)` | Markers + arrows in a reserved **band above** the media (mirror of `nav(blw)`) |
+| `nav(end)` | Markers + arrows **inside the slides' content column**, at its end — `<lay-out overflow>` only. Every `<ui-content>` in the scroller grows its `padding-block-end` to *pbe · control row · pbe*, so the column's own end padding repeats above and below the controls; arrows align to the content's inline padding. Band ink (currentColor) — add `arw(drk)` for filled discs, `arw(sqr)`/`arw(sft)` for shape. Author the `content=` padding on the lay-out, not on a slide (the row reads it on the host) |
 | `nav(non)` | **Scroller only, no controls** — a bare swipe carousel. The parenthesised arg suppresses the bare-`nav` needle (so neither dots nor arrows are declared) while the `nav` substring still enables the scroll-snap scroller |
 
 ### `axis()` — scroll direction

@@ -969,7 +969,7 @@ is live. One value per token instance — `chip(ts) chip(red)`, never `chip(ts r
 | `vid()` | **mode** | cc pip fls | — |
 | `vid()` | **size** | sm md lg xl | — |
 | `load()` | **mode** | eager lazy | — |
-| `nav()` | **mode** | mrk arw blw abv non | — |
+| `nav()` | **mode** | mrk arw blw abv end non | — |
 | `arw()` | **variant** | arr bare sqr sft lgt drk hid rev set | — |
 | `arw()` | **size** | sm lg xl | — |
 | `arw()` | **pos** | ts tc te cs cc bs bc be | — |

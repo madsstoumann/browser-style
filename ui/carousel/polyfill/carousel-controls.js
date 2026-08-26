@@ -57,7 +57,7 @@ export function wantedFromString(str) {
 	const words = String(str || '').split(/\s+/);
 	let dots = false, arrows = false;
 	for (const w of words) {
-		if (w === 'nav' || w === 'nav(blw)' || w === 'nav(abv)') dots = arrows = true;
+		if (w === 'nav' || w === 'nav(blw)' || w === 'nav(abv)' || w === 'nav(end)') dots = arrows = true;
 		else if (w === 'nav(mrk)') dots = true;
 		else if (w === 'nav(arw)') arrows = true;
 		// nav(non) / nav(bar) ask for nothing

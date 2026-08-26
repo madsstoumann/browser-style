@@ -160,8 +160,30 @@ base's `--_dir-s`/`--_dir-e` pair.)
 
 ## Token → control mapping (inside `@supports`)
 
-- **DOTS present** = bare `nav` · `nav(mrk)` · `nav(blw)` / `nav(abv)` (drop them with `mrk(non)`)
-- **ARROWS present** = bare `nav` · `nav(arw)` · `nav(blw)` / `nav(abv)`
+- **DOTS present** = bare `nav` · `nav(mrk)` · `nav(blw)` / `nav(abv)` / `nav(end)` (drop them with `mrk(non)`)
+- **ARROWS present** = bare `nav` · `nav(arw)` · `nav(blw)` / `nav(abv)` / `nav(end)`
+
+## Content end — `nav(end)`
+
+A `<lay-out overflow>` whose slides are cards can put the controls **inside the content
+column**, after the last row, instead of in a band outside the card. Two halves:
+
+- **The reserve lives in the slides.** The host sets `--ui-carousel-nav-end: 1`; it inherits
+  into every `<ui-content>` in the scroller, whose `padding-block-end` becomes
+  `pbe + arrow-size + pbe` (content.css) — the column's own end padding repeats above and
+  below the row, and an author `pbe()` still governs both gaps. Any nested `<ui-content>`
+  inside a slide reserves too; keep slides to one column.
+- **The controls are still the scroller's pseudos**, anchored to the scroller's bottom edge:
+  `anchor(bottom) − pbe − arrow-size` for the arrows, the dots centred on that row. The
+  `pbe` the row reads (`--_nav-end-pbe`) resolves on the **host**, so author the
+  `content=` padding on the lay-out (or an ancestor) — a `pbe()` on one slide moves that
+  slide's reserve but not the row. Arrows sit at the content's inline padding, not the
+  overlay gap, so they line up with the copy.
+
+Ink is the band ink (currentColor-derived); `arw(drk)` gives filled discs and
+`arw(sqr)`/`arw(sft)` the shape. The polyfill mirrors both halves
+(`ui-carousel-controls[data-media*="nav(end)"]`). Demo: media.carousel.html § Controls in
+the content, schema.quiz.html.
 
 ## Scroller
 
