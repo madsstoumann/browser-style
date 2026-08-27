@@ -160,7 +160,7 @@ export async function onRequestPost({ request }) {
 			return rpcResult(msg.id, { tools: TOOLS });
 		case 'tools/call': {
 			const { name, arguments: args } = msg.params ?? {};
-			const impl = { get_opening_hours: runGetOpeningHours, check_ticket_availability: runCheckTicketAvailability }[name];
+			const impl = TOOL_IMPLS[name];
 			if (!impl) return rpcError(msg.id, -32602, `Unknown tool: ${name}`);
 			try {
 				const { text, structured } = impl(args);
@@ -180,10 +180,48 @@ export function onRequestOptions() {
 	return new Response(null, { status: 204, headers: CORS });
 }
 
-/* Fallback for GET/DELETE/etc — no SSE stream, no session to delete. */
+const TOOL_IMPLS = { get_opening_hours: runGetOpeningHours, check_ticket_availability: runCheckTicketAvailability };
+
+/* GET bridge — a POC affordance for GET-only agents, NOT part of the MCP spec. Docs: docs/mcp-poc.md */
+export function onRequestGet({ request }) {
+	const url = new URL(request.url);
+	const tool = url.searchParams.get('tool');
+	if (!tool) {
+		return json({
+			server: SERVER_INFO,
+			protocol: 'MCP Streamable HTTP (stateless) — POST JSON-RPC 2.0 to this URL',
+			discovery: [
+				'https://v4.browser.style/.well-known/mcp-server-card',
+				'https://v4.browser.style/.well-known/mcp.json',
+			],
+			tools: TOOLS.map(({ name, description, inputSchema }) => ({ name, description, parameters: inputSchema })),
+			examples: {
+				post: { jsonrpc: '2.0', id: 1, method: 'tools/call', params: { name: 'check_ticket_availability', arguments: { date: '2026-08-28' } } },
+				get: [
+					'https://v4.browser.style/mcp?tool=get_opening_hours&date=2026-08-28',
+					'https://v4.browser.style/mcp?tool=check_ticket_availability&date=2026-08-28',
+				],
+			},
+			note: 'The GET bridge (?tool=…) is a read-only proof-of-concept affordance for GET-only agents; it is not part of the MCP specification. All data is static dummy data.',
+		});
+	}
+	const impl = TOOL_IMPLS[tool];
+	if (!impl) return json({ error: `Unknown tool: ${tool}`, tools: Object.keys(TOOL_IMPLS) }, 400);
+	const args = Object.fromEntries(url.searchParams);
+	delete args.tool;
+	try {
+		const { text, structured } = impl(args);
+		return json({ tool, isError: false, content: [{ type: 'text', text }], structuredContent: structured });
+	} catch (err) {
+		if (err instanceof ToolInputError) return json({ tool, isError: true, content: [{ type: 'text', text: err.message }] });
+		throw err;
+	}
+}
+
+/* Fallback for PUT/DELETE/etc — no SSE stream, no session to delete. */
 export function onRequest() {
-	return new Response('Method Not Allowed. POST JSON-RPC to this endpoint (MCP Streamable HTTP, stateless).', {
+	return new Response('Method Not Allowed. POST JSON-RPC to this endpoint (MCP Streamable HTTP, stateless), or GET for a self-description.', {
 		status: 405,
-		headers: { Allow: 'POST, OPTIONS', 'Content-Type': 'text/plain', ...CORS },
+		headers: { Allow: 'GET, POST, OPTIONS', 'Content-Type': 'text/plain', ...CORS },
 	});
 }

@@ -17,6 +17,8 @@ Allow: /ui/card/demo/schema
 Allow: /cms/baseline/models/
 Allow: /$
 Allow: /*/readme.md
+Allow: /.well-known/
+Allow: /mcp
 Disallow: /
 
 # ── Training, scraping and answer-engine crawlers ──────────────────────────────
@@ -182,4 +184,6 @@ User-agent: ZanistaBot
 Allow: /llms.txt
 Allow: /ui/card/demo/schema
 Allow: /cms/baseline/models/
+Allow: /.well-known/
+Allow: /mcp
 Disallow: /

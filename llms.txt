@@ -30,6 +30,14 @@
 - [Layout system](https://v4.browser.style/layout/readme.md): `<lay-out>` — viewport breakpoints, grid patterns, spacing ladder, bleed, subgrid, overflow scrollers.
 - [Card integration](https://v4.browser.style/layout/docs/card-integration.md): how cards and layouts compose.
 
+## MCP server
+
+This site advertises an MCP server (proof of concept — dummy venue data for a fictional ticket-selling scenario; see [the POC doc](https://v4.browser.style/docs/mcp-poc.md)).
+
+- Server card (discovery): https://v4.browser.style/.well-known/mcp-server-card (alias: https://v4.browser.style/.well-known/mcp.json)
+- Endpoint: https://v4.browser.style/mcp — Streamable HTTP, POST JSON-RPC, no auth. Tools: `get_opening_hours`, `check_ticket_availability`.
+- GET-only agent? Read-only bridge: `https://v4.browser.style/mcp?tool=get_opening_hours&date=YYYY-MM-DD` and `https://v4.browser.style/mcp?tool=check_ticket_availability&date=YYYY-MM-DD`. A bare GET on the endpoint returns a JSON self-description.
+
 ## Policy
 
 - [Performance policy](https://v4.browser.style/docs/performance.md): the CPU/GPU split and the cost of every always-running animation.

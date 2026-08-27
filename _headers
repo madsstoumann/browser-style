@@ -36,3 +36,6 @@
 # required application/json content type from the filename.
 /.well-known/mcp-server-card
   Content-Type: application/json
+# HTTP-level MCP discovery hint on the root page; pairs with the <link> in index.html.
+/
+  Link: </.well-known/mcp-server-card>; rel="mcp-server-card"
