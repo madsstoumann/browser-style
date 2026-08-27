@@ -13,7 +13,7 @@
     "internalName": "Demo — Organization",
     "schemaType": "organization",
     "preset": {
-      "$ref": "card-preset/stack"
+      "$ref": "card-preset/stack-boxed-offices"
     },
     "eyebrow": "Consulting",
     "headline": "Northwind Group",

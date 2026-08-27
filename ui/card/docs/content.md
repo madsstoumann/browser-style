@@ -207,7 +207,7 @@ rds(sm-sq)  rds(md-sq)  rds(lg-sq)  rds(xl-sq)       ← squircle (superellipse 
 
 Same scale as `variant="rds()"` on the card and `media="rds()"` on a standalone frame — the values come from the global `--radius-*` / `--radius-*-sq` / `--squircle-*` tokens in `@browser.style/base`, so all three stay in lock-step.
 
-> **Corners need a background to be visible.** `--ui-content-radius` defaults to `0` and is inert inside a card, because `<ui-content>` paints no background *until you give it one*. The canonical way is **`theme=`** — `<ui-content theme="gray" content="rds(lg)">` is a rounded plate (see [Theme surface](#theme-surface)); `style="background: …"` or a utility class work too. Rounding a transparent box is a no-op.
+> **Corners need a background to be visible.** `--ui-content-radius` defaults to `0` and is inert inside a card, because `<ui-content>` paints no background *until you give it one*. The canonical way is **`theme=`** — `<ui-content theme="gray" content="rds(lg)">` is a rounded plate (see [Theme surface](#theme-surface)); `style="background: …"` or a utility class work too. Rounding a transparent box is a no-op. For a **native node** inside the text column — a `data-part` group such as `office` — the pairing is `data-theme` + `data-box` (padding + corners from `theme.css`, [base/theme.md § Box](../../base/theme.md#box)).
 
 `rds()` is substring-matched (like the card's and media's), which is safe here because it has no `md:`/`lg:` forms to shadow and `rds(sm)` is not a substring of `rds(sm-sq)`. The old `rds(none)` spelling was **removed in v5** on all three attributes — `rds(non)` is the only spelling.
 
@@ -815,6 +815,8 @@ through `color-scheme`; add `ink` for the theme's paired ink).
 ```html
 <ui-content theme="gray" content="rds(lg) pad(lg)">…</ui-content>   <!-- standalone plate -->
 ```
+
+Native parts get the same plate with `data-theme` + `data-box` ([base/theme.md § Box](../../base/theme.md#box)) — the Organization demo's offices are `<div data-part="office" data-theme="gray light" data-box>`.
 
 Two things this unlocks: `rds()` finally has a background to round, and a
 `<ui-reveal>` **flipside** can carry its own colour independent of the card's front

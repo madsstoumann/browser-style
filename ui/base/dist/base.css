@@ -415,6 +415,10 @@
     background-color: var(--_theme-bg, transparent);
     color: var(--_theme-c, var(--color-text));
   }
+  :where([data-box]) {
+    border-radius: var(--ui-box-radius, var(--radius-md));
+    padding: var(--ui-box-p, var(--spacing-md));
+  }
   :where([theme~=light], [data-theme~=light]) {
     color-scheme: light;
   }

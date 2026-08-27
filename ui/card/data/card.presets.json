@@ -124,6 +124,17 @@
         "accordion": "bordered rounded divided popover"
       }
     },
+    "stack-boxed-offices": {
+      "name": "Stack Boxed Offices Preset",
+      "description": "The stack look with each local office as a light-gray plate: parts.office \"box\" emits data-box (padding + corners from base theme.css), parts.officeTheme its data-theme — `light` pins the plate's scheme so its inks stay AA in dark mode too. Organization only — other types ignore the part",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(16/9)",
+      "parts": {
+        "office": "box",
+        "officeTheme": "gray light"
+      }
+    },
     "stack-square": {
       "name": "Stack Square Preset",
       "description": "Column card with a square media frame — album covers, podcast artwork, anything whose artwork is 1:1",

@@ -908,7 +908,7 @@ default.
 | `text` | `summary` (default) · `body` · `both` |
 | `headingTag` | `h2` · `h3` (default) · `h4` · `h5` |
 | `byline` | `tail` (default) · `lede` |
-| `parts` | `{quote, accordion, buttonGroup}` |
+| `parts` | `{quote, accordion, buttonGroup, buttonGroupSize, buttonGroupTheme, office, officeTheme}` |
 | `styles` | custom-property → value |
 | `reveal` | `{type, typeLg, to, icon, iconType, iconClose, from, trigger, scroll, name}` |
 

@@ -1,5 +1,5 @@
 /* Theme Resolver — the shared cross-component `theme=` axis. Docs: theme.md
-   Every selector is a PAIR: theme= (custom elements) and data-theme= (native
+   Every theme= selector is a PAIR: theme= (custom elements) and data-theme= (native
    elements, where a bare attribute is invalid HTML). Keep both arms in sync. */
 
 @property --_theme-base-bg { syntax: "*"; inherits: false; }
@@ -82,6 +82,12 @@
 	:where([theme], [data-theme]):not(ui-save, ui-play, ui-lightbox, ui-beacon, ui-reveal) {
 		background-color: var(--_theme-bg, transparent);
 		color: var(--_theme-c, var(--color-text));
+	}
+
+	/* --- box — padding + corners on a native node; ONE arm on purpose (data-* is valid everywhere). Docs: theme.md § Box --- */
+	:where([data-box]) {
+		border-radius: var(--ui-box-radius, var(--radius-md));
+		padding: var(--ui-box-p, var(--spacing-md));
 	}
 
 	/* --- color-scheme --- */

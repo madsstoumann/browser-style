@@ -362,10 +362,11 @@ export const stripSchema = (html) => {
 
 /* Inline-rich text: plain string or UCF richtext object. Escapes everything, then
    re-allows an ALLOWLIST: <b>/<em>/<code> (attribute-free, so an escaped
-   `<em onmouseover=…>` can never match) and <ui-gradient-text>
-   (@browser.style/gradient-text). The gradient element accepts only
-   animate="slide|breathe" — never a free attribute string. Docs: docs/content.md */
-const INLINE_TAGS = /&lt;(\/?)(b|em|code)&gt;|&lt;(\/?)ui-gradient-text(?: animate=&quot;(slide|breathe)&quot;)?&gt;|&lt;(\/?)high-light((?: (?:fill|ink)=&quot;[#\w(),.%\s-]{1,32}&quot;| variant=&quot;(?:underline|strike)&quot;){0,3})&gt;/g;
+   `<em onmouseover=…>` can never match), <ui-gradient-text>
+   (@browser.style/gradient-text — animate="slide|breathe" and a bounded gradient=
+   colour-stop list, re-validated per pair like high-light's) and <high-light>.
+   Never a free attribute string. Docs: docs/content.md */
+const INLINE_TAGS = /&lt;(\/?)(b|em|code)&gt;|&lt;(\/?)ui-gradient-text((?: animate=&quot;(?:slide|breathe)&quot;| gradient=&quot;[#\w(),.%\s-]{1,80}&quot;){0,2})&gt;|&lt;(\/?)high-light((?: (?:fill|ink)=&quot;[#\w(),.%\s-]{1,32}&quot;| variant=&quot;(?:underline|strike)&quot;){0,3})&gt;/g;
 /* high-light's attribute payload is re-validated per pair — the group match above only
    bounds the shape, this rebuilds it from an allowlist so nothing else can ride along */
 const HL_ATTR = /(fill|ink|variant)=&quot;([#\w(),.%\s-]{1,32})&quot;/g;
@@ -373,6 +374,16 @@ const highLightAttrs = (raw) => {
 	let out = '';
 	for (const [, name, value] of String(raw || '').matchAll(HL_ATTR)) {
 		if (name === 'variant' && !/^(underline|strike)$/.test(value)) continue;
+		out += ` ${name}="${esc(value)}"`;
+	}
+	return out;
+};
+/* same discipline for ui-gradient-text: animate is an enum, gradient a bounded stop list */
+const GT_ATTR = /(animate|gradient)=&quot;([#\w(),.%\s-]{1,80})&quot;/g;
+const gradientTextAttrs = (raw) => {
+	let out = '';
+	for (const [, name, value] of String(raw || '').matchAll(GT_ATTR)) {
+		if (name === 'animate' && !/^(slide|breathe)$/.test(value)) continue;
 		out += ` ${name}="${esc(value)}"`;
 	}
 	return out;
@@ -395,10 +406,10 @@ const balancedInline = (html) => {
 const renderInline = (value) => {
 	const text = typeof value === 'string' ? value : value?.$richtext ? value.content : value ?? '';
 	const escaped = esc(text);
-	const rich = escaped.replace(INLINE_TAGS, (match, bSlash, bTag, gSlash, animate, hSlash, hAttrs) => {
+	const rich = escaped.replace(INLINE_TAGS, (match, bSlash, bTag, gSlash, gAttrs, hSlash, hAttrs) => {
 		if (bTag) return `<${bSlash}${bTag}>`;
 		if (hSlash !== undefined) return `<${hSlash}high-light${hSlash ? '' : highLightAttrs(hAttrs)}>`;
-		return `<${gSlash}ui-gradient-text${!gSlash && animate ? ` animate="${animate}"` : ''}>`;
+		return `<${gSlash}ui-gradient-text${gSlash ? '' : gradientTextAttrs(gAttrs)}>`;
 	});
 	return balancedInline(rich) ? rich : escaped;
 };
@@ -718,9 +729,10 @@ const geoPart = (geo) =>
 		: '';
 
 /* Organization has no geo property (Place does) — coordinates ride location → Place */
+/* the Place wrapper is the hidden node — the nested geo is not hidden twice (schema.html is the spec) */
 const geoViaPlace = (geo) =>
 	geo?.latitude != null || geo?.longitude != null
-		? `<div${scope('location', 'Place')} hidden>${geoPart(geo)}</div>`
+		? `<div${scope('location', 'Place')} hidden><div${scope('geo', 'GeoCoordinates')}>${meta('latitude', geo.latitude)}${meta('longitude', geo.longitude)}</div></div>`
 		: '';
 
 /* PostalAddress as stacked lines: street · postal + locality · country.
@@ -2384,7 +2396,7 @@ const DETAILS = {
 		return html;
 	},
 
-	organization(d) {
+	organization(d, fields, parts = {}) {
 		let html = meta('foundingDate', d.foundingDate)
 			+ (d.sameAs || []).map((url) => meta('sameAs', url)).join('')
 			+ (d.numberOfEmployees != null ? `<span${scope('numberOfEmployees', 'QuantitativeValue')} hidden>${meta('value', d.numberOfEmployees)}</span>` : '');
@@ -2395,6 +2407,9 @@ const DETAILS = {
 		if (d.email) html += `<p data-part="meta">${meta('email', d.email)}<a href="mailto:${esc(d.email)}">${esc(d.email)}</a></p>`;
 		/* each local office is a department → LocalBusiness (Google's multi-location pattern),
 		   with its own coordinates so each branch geocodes independently */
+		/* parts.office `box` + parts.officeTheme make each branch a themed plate — data-* because
+		   the node is a <div>; data-box is base/theme.css § Box. Docs: docs/card.md § Preset model */
+		const box = String(parts.office || '').trim().split(/\s+/).includes('box');
 		for (const office of d.offices || []) {
 			/* a list, not a <br>-split <p>: two contact methods ARE a list, and the icon
 			   then rides ::marker instead of ::before — generated content on the link
@@ -2403,7 +2418,7 @@ const DETAILS = {
 				office.telephone ? `<li data-icon="call"><a itemprop="telephone" href="tel:${esc(office.telephone.replace(/\s/g, ''))}">${esc(office.telephone)}</a></li>` : '',
 				office.email ? `<li data-icon="mail">${meta('email', office.email)}<a href="mailto:${esc(office.email)}">${esc(office.email)}</a></li>` : ''
 			].filter(Boolean);
-			html += `<div data-part="office"${scope('department', 'LocalBusiness')}>
+			html += `<div${attrs({ 'data-part': 'office', 'data-theme': parts.officeTheme || null, 'data-box': box })}${scope('department', 'LocalBusiness')}>
 				<strong itemprop="name">${esc(office.name)}</strong>
 				${geoPart(office.geo)}${addressPart(office.address)}${contacts.length ? `<ul data-part="list">${contacts.join('')}</ul>` : ''}${hoursPart(office.openingHours)}
 			</div>`;

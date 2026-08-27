@@ -115,7 +115,10 @@ const PAIRS = [
 	['ItemList#schema-places-offices', 'ui/card/data/places-offices.json'],
 	['ItemList#schema-places-homes', 'ui/card/data/places-homes.json'],
 	/* the fourth ItemList card — the downloadable-file collection */
-	['ItemList#schema-filelist', 'ui/card/data/filelist.json']
+	['ItemList#schema-filelist', 'ui/card/data/filelist.json'],
+	/* paired when the boxed-office preset landed — the office plate is PRESET output
+	   (parts.office / parts.officeTheme), so page and renderer must keep one spelling */
+	['Organization', 'ui/card/data/organization.json']
 ];
 
 /* ── minimal HTML tree parser ── */

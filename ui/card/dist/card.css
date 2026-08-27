@@ -2017,7 +2017,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       font-variant-numeric: tabular-nums;
       grid-template-columns: auto 1fr;
       margin: 0;
-      row-gap: var(--ui-content-hours-row-gap, var(--spacing-xs));
+      row-gap: var(--ui-content-hours-row-gap, 0);
       & dt {
         color: var(--ui-content-hours-day-ink, var(--ui-content-muted));
       }

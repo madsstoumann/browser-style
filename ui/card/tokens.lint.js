@@ -215,7 +215,10 @@ const PRESET_FILES = ['data/card.presets.json', 'data/card.presets.demo.json'];
 /* stems whose args are free-form numbers/ratios the manifest lists as placeholders */
 const OPEN_STEMS = /^(?:md:|lg:)?(?:asr|spl|auto|tmb)\([\d/.:a-z%]+\)$/;
 /* preset parts= vocabularies — KEEP IN SYNC with ui/quote/ui-quote.css,
-   ui/accordion/ui-accordion.css and ui/button-group/ui-button-group.css */
+   ui/accordion/ui-accordion.css, ui/button-group/ui-button-group.css and ui/base/theme.css */
+/* the shared theme axis — nine hues + the bare modifier words (base/theme.md); one Set for every
+   part that emits data-theme. The parameterised border(…) forms are not preset vocabulary */
+const THEME_WORDS = new Set(['red', 'orange', 'green', 'blue', 'accent', 'black', 'white', 'gray', 'slate', 'pale', 'muted', 'ink', 'light', 'dark', 'glass', 'border']);
 const PART_VARIANTS = {
 	quote: new Set(['bigquote', 'breaker', 'code']),
 	/* `popover` is a MODE word, not chrome: render.js strips it and emits <button
@@ -225,7 +228,11 @@ const PART_VARIANTS = {
 	/* the control's other two axes are its own documented API, not card DSL: font-size
 	   utilities from base, and the shared nine-hue theme axis with pale/muted */
 	buttonGroupSize: new Set(['fs-xxs', 'fs-xs', 'fs-sm', 'fs-md', 'fs-lg']),
-	buttonGroupTheme: new Set(['red', 'orange', 'green', 'blue', 'accent', 'black', 'white', 'gray', 'slate', 'pale', 'muted'])
+	buttonGroupTheme: THEME_WORDS,
+	/* office — the organization type's per-branch <div>: `box` emits data-box (base/theme.css § Box),
+	   officeTheme its data-theme */
+	office: new Set(['box']),
+	officeTheme: THEME_WORDS
 };
 const lintPresets = (manifest, errors) => {
 	const valid = {};

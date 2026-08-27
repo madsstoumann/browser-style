@@ -96,6 +96,8 @@ The neutrals form a light→dark ramp (`white` < `gray` < `slate` < `black`) and
 <section data-theme="slate glass">…</section>
 ```
 
+`data-box` is the geometry companion for native nodes — padding (`--ui-box-p`) and corners (`--ui-box-radius`) on the element carrying `data-theme` (`ui/base/theme.md` § Box).
+
 ### Modifiers
 
 - **`pale`** — tinted surface: `color-mix` of the color with `--color-surface` (80%), ink becomes the color itself. The pastel version.

@@ -16,7 +16,7 @@
       "$ref": "card-preset/stack"
     },
     "eyebrow": "Politics",
-    "headline": "Coalition agrees on sweeping climate package",
+    "headline": "Coalition agrees on <ui-gradient-text animate=\"slide\" gradient=\"#14532d, #15803d, #4ade80, #15803d, #14532d\">sweeping</ui-gradient-text> climate package",
     "summary": "The agreement includes a carbon border tariff and a national retrofit programme, ending months of negotiation.",
     "published": "2026-07-01T06:15:00Z",
     "modified": "2026-07-01T08:40:00Z",

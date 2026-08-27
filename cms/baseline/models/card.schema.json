@@ -166,7 +166,7 @@
     "headline": {
       "type": "richtext",
       "title": "Headline",
-      "description": "Primary headline. Emitted as headline (article/news), title (job) or name (all other types). Short rich text: inline <b> (emphasis) and <ui-gradient-text> (gradient treatment, optional animate slide|breathe) pass through; all other markup is stripped/escaped. Keep ≤256 chars — if the CMS cannot constrain rich text length, fall back to a plain rich text field. Plain strings remain valid.",
+      "description": "Primary headline. Emitted as headline (article/news), title (job) or name (all other types). Short rich text: inline <b> (emphasis) and <ui-gradient-text> (gradient treatment, optional animate slide|breathe and a bounded gradient=\"<colour stops>\" list — hex, rgb()/hsl()/var() names, ≤80 chars) pass through; all other markup is stripped/escaped. Keep ≤256 chars — if the CMS cannot constrain rich text length, fall back to a plain rich text field. Plain strings remain valid.",
       "validation": {
         "required": true,
         "maxLength": 256

@@ -44,7 +44,7 @@ never had.
 |------|------|
 | [`cms/baseline/models/card.schema.json`](../../../cms/baseline/models/card.schema.json) | **Content model** (UCM). Structured envelope + `schemaType` select (52 values) + `preset` reference + one `details` object per type |
 | [`cms/baseline/models/card-preset.schema.json`](../../../cms/baseline/models/card-preset.schema.json) | **Preset model** (UCM). The attributes on the host element itself |
-| [`data/card.presets.json`](../data/card.presets.json) | Preset instances — **28** named looks |
+| [`data/card.presets.json`](../data/card.presets.json) | Preset instances — **33** named looks |
 | [`data/*.json`](../data) | 63 UCF card instances (at least one per schemaType — the product and quiz families run several — plus two presentation-only blocks) + [`index.json`](../data/index.json) manifest |
 | [`render.js`](../render.js) | Rendering engine: UCF + presets → DOM with microdata |
 | [`render.html`](../demo/render.html) | Live demo — the 61 cards of `data/index.json` rendered from data |
@@ -238,7 +238,7 @@ Demos in [`media.furniture.html`](../demo/media.furniture.html) and
 | `text` | both | which long text the text column shows: `summary` (teaser — default), `body` (full view — body **instead of** summary, with the summary kept as a hidden `description` meta), `both`. Reveal back panels always render both |
 | `headingTag` | both | headline element — `h2`–`h5`, default `h3`; lets a card fit the host page's outline. Heading level is **placement**, which is why it lives here and not in content. An `ovr()` overlay always renders `<strong>` instead (an overlay headline is a label, not a section heading) |
 | `byline` | both | `tail` (default, the teaser shape) or `lede` — the byline moves above the body carrying the dateline, and the tail then renders neither. The `book` type places its byline early by type regardless |
-| `parts` | both | sub-component variants, written verbatim as the emitted element's `variant` attribute: `parts.quote` → `<ui-quote>` (`bigquote` / `breaker` / `code`; the quote type defaults to `bigquote`, review/social to none), `parts.accordion` → `<ui-accordion>` (`bordered divided rounded pill separate filled`, space-separable) for faq items, recipe instructions, job requirements/benefits — plus the MODE word `popover`, which is stripped from `variant=` and swaps the `<details>` items for `<button popovertarget>` + `<div popover>` pairs (native Popover API, no JS; on recipe/howto that is the outer Instructions/Steps wrapper — the inner steps accordion renders unchanged inside the panel). Values are validated by `tokens.lint.js` against the component vocabularies |
+| `parts` | both | sub-component variants, written verbatim as the emitted element's `variant` attribute: `parts.quote` → `<ui-quote>` (`bigquote` / `breaker` / `code`; the quote type defaults to `bigquote`, review/social to none), `parts.accordion` → `<ui-accordion>` (`bordered divided rounded pill separate filled`, space-separable) for faq items, recipe instructions, job requirements/benefits — plus the MODE word `popover`, which is stripped from `variant=` and swaps the `<details>` items for `<button popovertarget>` + `<div popover>` pairs (native Popover API, no JS; on recipe/howto that is the outer Instructions/Steps wrapper — the inner steps accordion renders unchanged inside the panel). Values are validated by `tokens.lint.js` against the component vocabularies. `parts.office` → the organization type's per-office `<div data-part="office">`: the word `box` emits the bare `data-box` attribute (padding + corners from [base/theme.md § Box](../../base/theme.md#box)), `parts.officeTheme` its `data-theme` (hues + bare modifier words; `light`/`dark` pin the plate's scheme) — together each branch renders as a plate |
 | `styles` | both | object of CSS custom properties → `style` attribute (e.g. `--ui-reveal-content-bg`) |
 | `reveal` | ui-reveal | nested object grouping the reveal-only config: `{ type, typeLg, to, icon, iconType, iconClose, from, trigger, scroll, name }`. The structured object stays in the schema, but the renderer **folds it into `variant=` tokens** at render time: `type`+`from` → one animation token (`exp`, `flp(top)`, `sld(lft)`, `grw`), `typeLg` → `lg:`-prefixed swap (`lg:grw`), `to` → `pop`, `trigger` → `trg(card)`, `scroll` → `scr`, `icon` → one `ico()` per word (default `ico(te) ico(sm)`), `iconClose` → one `icc()` per word. Three fields stay **markup**, not tokens: `iconType` sets the toggle glyph on the emitted `<ui-icon>` (`plus-cross` default, or directional `{up,down,left,right}-arrow-cross` pairing with slide direction — panel from top → `down-arrow-cross`); `name` becomes the native `<details name>`; and `trigger` additionally **suppresses the `<ui-icon>` entirely** |
 | `carousel` | lay-out | nested object for the scroller deck: `{ media }` — the `<lay-out overflow>`'s own `media=` token string (`nav(end) arw(drk) gate` in `quiz-carousel`; `gate` is the answered-gate, `quiz-carousel-free` omits it). `variant`/`media`/`content` above configure each slide. Only a multiple-choice quiz has parts to deal out; anything else falls back to the single card with an HTML comment |
@@ -297,7 +297,8 @@ content and belong in the card's `media[]` items. Bare booleans like `clip`, `au
 
 | id | Element | Look | Used by (demo data) |
 |----|---------|------|---------------------|
-| `stack` | ui-card | `col` · 16:9 | content, article, recipe, booking, achievement, social, organization, video, qa, podcast, dataset, claim |
+| `stack` | ui-card | `col` · 16:9 | content, article, recipe, booking, achievement, social, video, qa, podcast, dataset, claim |
+| `stack-boxed-offices` | ui-card | + `parts.office: "box"` · `parts.officeTheme: "gray light"` — each office a `data-theme` + `data-box` plate | organization |
 | `showcase` | ui-card | `col` · 4:3 | product, movie, book |
 | `split` | ui-card | `row spl(1/2)` · 4:3 | news, course, business |
 | `split-reverse` | ui-card | `row-r spl(2/1)` · 1:1 | contact |
@@ -324,7 +325,7 @@ Restyling any card = changing its reference:
 ```
 
 A second collection, [`data/card.presets.demo.json`](../data/card.presets.demo.json),
-holds **129 demo presets** extracted 1:1 from the original demo pages
+holds **139 demo presets** extracted 1:1 from the original demo pages
 (`media-*`, `carousel-*`, `video-*`, `reveal-*` key prefixes) — every distinct
 attribute combination those pages use, powering the `*.render.html` recreations.
 
@@ -614,8 +615,10 @@ emission in [`content/card/dist/`](../../../content/card/dist)):
 - **Inline markup**: `renderInline()` escapes everything, then re-allows an
   ALLOWLIST of exact tag spellings: `<b>`, `<em>` and `<code>` **attribute-free**,
   `<ui-gradient-text>` (@browser.style/gradient-text — the gradient treatment,
-  optionally `animate="slide|breathe"`) and `<high-light>` (`fill`/`ink`/`variant`,
-  each re-validated per pair by `highLightAttrs()`). Everything else is escaped.
+  optionally `animate="slide|breathe"` and a bounded `gradient="…"` colour-stop list —
+  the `news` demo's green sweep — re-validated per pair by `gradientTextAttrs()`) and
+  `<high-light>` (`fill`/`ink`/`variant`, each re-validated per pair by
+  `highLightAttrs()`). Everything else is escaped.
   Escape-first-then-re-allow is what makes this safe: the pattern matches *escaped*
   text, so `<em onmouseover=…>` never becomes a tag — the bare forms carry no
   attribute at all, therefore no executable surface. Do not copy `high-light`'s
@@ -653,7 +656,7 @@ Twelve parts added for the typed cards, all styled in [`content.css`](../content
 | `links` | `<ul>` of plain related-link rows (hairline dividers) — the envelope `links[]` field; deliberately not buttons, no itemprop. Emitted **before** `actions`: the CTA row always closes the text column. Default marker is the ✓ icon glyph (`--icon-check`, text ✓ fallback); override via `--ui-content-links-marker` (e.g. `'"→ "'`), ink via `--ui-content-links-mark` | any type |
 | `address` | `<address>` of stacked lines: street · postal + locality · country (a 2-letter country code stays machine-only) | business, location, event, contact, organization |
 | `hours` | two-column `<dl>` — `<dt>` day range, `<dd>` time; one row per opening pattern. Days/times derive from the machine string (`Mo-We 09:00-17:00` → "Mon–Wed 9:00–17:00", `Th 09:00-16:00` → "Thu"), overridable per entry with `days`/`time`. Every row emits a structured `OpeningHoursSpecification`; the flat `openingHours` string only where the type owns it — it is a `LocalBusiness`/`CivicStructure` property, so `location` (plain `Place`) passes `flat: false` | business, location, organization offices |
-| `office` | `<div>` wrapping one `department` → `LocalBusiness`: name, address, phone, own `hours` table | organization |
+| `office` | `<div>` wrapping one `department` → `LocalBusiness`: name, address, phone, own `hours` table — preset `parts.office: "box"` + `parts.officeTheme` turn it into a themed plate (`data-theme` + `data-box`, [base/theme.md § Box](../../base/theme.md#box)) | organization |
 | `stat` | `<p>` + `<data>` + unit + trend | statistic |
 | `timeline` | `<ol>` of `<time>` + text | timeline |
 | `quote` | `<ui-quote>` wrapping `<blockquote>` + `<cite>` | quote, review, social, claim, qa |
@@ -937,7 +940,7 @@ navigation; `prefers-reduced-motion` keeps default timing.
 |------|-------|
 | [`schema.html`](../demo/schema.html) | Hand-authored reference — 58 cards, 52 distinct itemtypes, with microdata ([counting rule](schema.md)) |
 | [`render.html`](../demo/render.html) | The 61 cards of [`data/index.json`](../data/index.json) rendered by `render.js` from UCF data + presets |
-| [`carousel.render.html`](../demo/carousel.render.html) · [`video.render.html`](../demo/video.render.html) | The original demo pages recreated data-driven: presets from [`data/card.presets.demo.json`](../data/card.presets.demo.json) (129 presets extracted from the originals) + UCF instances in [`data/demo/`](../data/demo). Each page lists its not-expressible demos in a bottom note. The `media` and `reveal` twins were dropped — [`media.html`](../demo/media.html) and [`../reveal/index.html`](../../reveal/index.html) are the better pages |
+| [`carousel.render.html`](../demo/carousel.render.html) · [`video.render.html`](../demo/video.render.html) | The original demo pages recreated data-driven: presets from [`data/card.presets.demo.json`](../data/card.presets.demo.json) (139 presets extracted from the originals) + UCF instances in [`data/demo/`](../data/demo). Each page lists its not-expressible demos in a bottom note. The `media` and `reveal` twins were dropped — [`media.html`](../demo/media.html) and [`../reveal/index.html`](../../reveal/index.html) are the better pages |
 | [`article.render.html`](../demo/article.render.html) + [`articles/`](../demo/articles/) | The article pattern above, live and **fully static** (pre-rendered by `articles/build.js`): teaser cards with stretched-link headlines → cross-document view transition morphs the whole card into the per-article page and back (`card-{id}` + nested `hero-{id}` names via `data-view` + CSS `attr()`), body-instead-of-summary via the `prose` preset, plain `<a>` navigation, zero runtime JS |
 | [`products/`](../demo/products/) | The same pattern for commerce, pre-rendered by `products/build.js`: `schema.html`'s ProductGroup collage links to one page per colourway, each a `mrk(rail)` thumbnail carousel + lightbox with the rounded size picker (`variants.control: "buttons"`); the plain Product card links to `aurasound-pro.html`, the same shell on the `product-page-solo` preset (one photo, no rail). The transition behaviour is **pure name matching** — a page carries only its own colourway's `data-view` names, so collage→page pairs (morph) while page→page does not (fade). Deliberately no page-scoped view-transition CSS: the incoming document drives a cross-document transition, so a blanket fade rule would kill the morph too |
 | [`schema.recipe.html`](../demo/schema.recipe.html) + [`recipes/`](../demo/recipes/) | The same pattern for a Recipe, pre-rendered by `recipes/build.js`: the teaser card (headline cover link + *Start cooking*) morphs into `recipe.html?id=recipe-1` — a kitchen app with an ingredient checklist (servings scaler, metric ↔ imperial on `<data value>` microdata), a `HowToStep` list with wall-clock timers, recorded narration per step with Speech-API fallback, a manual transport bar (back · step N / M · play/pause · next) and a fullscreen cook-mode popover that grows from its button (`@starting-style`), with Screen Wake Lock and hands-free voice commands layered on the same `command=` invokers. `?id=` is a route mimic; `recipe.js` is page-local |

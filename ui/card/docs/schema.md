@@ -807,7 +807,7 @@ Standard column card — media on top, specs, developer and offer below. Microda
 
 ### Organization — `Organization`
 
-The multi-office shape: HQ address, employees, `sameAs` — and each local office as `department` → `LocalBusiness` (part `office`) with its own address, phone and **per-day opening hours** in the tabular `hours` part (a two-column `<dl>`). Each row carries both the flat `openingHours` string and a structured `OpeningHoursSpecification`, so single days (`Th 09:00-16:00`) and ranges (`Mo-We 09:00-17:00`) both work.
+The multi-office shape: HQ address, employees, `sameAs` — and each local office as `department` → `LocalBusiness` (part `office`) with its own address, phone and **per-day opening hours** in the tabular `hours` part (a two-column `<dl>`). Each row carries both the flat `openingHours` string and a structured `OpeningHoursSpecification`, so single days (`Th 09:00-16:00`) and ranges (`Mo-We 09:00-17:00`) both work. The demo card boxes each office as a light-gray plate (preset `stack-boxed-offices`: `parts.office` `box` + `parts.officeTheme` `gray light` → `data-theme` + `data-box`, [base/theme.md § Box](../../base/theme.md#box)); the pair is guarded by the `schema.compare.js` transcription gate.
 
 ### Video — `VideoObject`
 

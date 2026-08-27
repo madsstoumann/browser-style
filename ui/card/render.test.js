@@ -2017,6 +2017,28 @@ describe('inline markup allowlist', () => {
 		assert.match(render({ schemaType: 'glossary', headline: 'H', details: { terms: [{ name: 'Cascade layer', description: 'no <code>!important</code>' }] } }),
 			/itemprop="description">no <code>!important<\/code></);
 	});
+
+	/* ui-gradient-text carries its colour stops as an attribute (the marquee demo's
+	   pattern) — allowed through with the same bounded charset high-light's fill/ink use,
+	   so a data headline can sweep green without a preset. size= stays out: the default
+	   150% is what every demo uses. Docs: docs/content.md § Inline markup */
+	test('<ui-gradient-text> keeps a bounded gradient= and rejects anything else', () => {
+		const stops = '#14532d, #15803d, #4ade80, #15803d, #14532d';
+		assert.equal(headline(`on <ui-gradient-text animate="slide" gradient="${stops}">sweeping</ui-gradient-text> climate`),
+			`on <ui-gradient-text animate="slide" gradient="${stops}">sweeping</ui-gradient-text> climate`);
+		assert.equal(headline(`<ui-gradient-text gradient="${stops}">x</ui-gradient-text>`), `<ui-gradient-text gradient="${stops}">x</ui-gradient-text>`, 'gradient alone');
+		assert.equal(headline('<ui-gradient-text gradient="var(--brand-a), var(--brand-b)">x</ui-gradient-text>'), '<ui-gradient-text gradient="var(--brand-a), var(--brand-b)">x</ui-gradient-text>', 'custom properties are inside the charset');
+		for (const hostile of [
+			'<ui-gradient-text gradient="url(javascript:alert(1))">x</ui-gradient-text>',
+			'<ui-gradient-text gradient="red" onmouseover="alert(1)">x</ui-gradient-text>',
+			`<ui-gradient-text gradient="${'#0f0, '.repeat(20)}#0f0">x</ui-gradient-text>`,
+			'<ui-gradient-text size="300%">x</ui-gradient-text>'
+		]) {
+			const out = headline(hostile);
+			assert.ok(!out.includes('<ui-gradient-text'), `must stay escaped: ${hostile.slice(0, 60)}`);
+			assert.ok(!out.includes('</ui-gradient-text>'), 'no orphaned closing tag');
+		}
+	});
 });
 
 /* ── clean data, and the meta that lets it stay clean ──
@@ -2945,5 +2967,31 @@ describe('quiz — carousel deck (lay-out preset)', () => {
 		assert.equal(count(html, '&lt;img src=x onerror=alert(1)&gt;'), 3, 'one escaped heading per slide');
 		assert.ok(!html.includes('itemprop="name" content="<'), 'the name meta is the plain text, or absent');
 		assert.match(html, /name="quiz-card-q1" required>/, 'the slug falls back, as the single-card deck does');
+	});
+});
+
+/* the office plate is PRESET output — parts.office `box` → bare data-box, parts.officeTheme →
+   data-theme — so a bare render stays unboxed. Docs: docs/card.md § Preset model */
+describe('organization — boxed offices (parts.office / parts.officeTheme)', () => {
+	const offices = [{ name: 'Aarhus office', telephone: '+45 86 12 34 56' }, { name: 'Berlin office' }];
+	const fields = { schemaType: 'organization', headline: 'Northwind', details: { offices } };
+	const withParts = (parts) => renderCard({ fields: { ...fields, preset: { $ref: 'card-preset/p' } } }, { p: { element: 'ui-card', parts } });
+
+	test('by default an office carries neither data-box nor data-theme', () => {
+		const html = render(fields);
+		assert.equal(count(html, '<div data-part="office" itemprop="department" itemscope itemtype="https://schema.org/LocalBusiness">'), 2);
+		assert.ok(!html.includes('data-box'));
+		assert.ok(!html.includes('data-theme'));
+	});
+
+	test('parts.office "box" + parts.officeTheme emit data-theme and a bare data-box ahead of the scope', () => {
+		const html = withParts({ office: 'box', officeTheme: 'gray light' });
+		assert.equal(count(html, '<div data-part="office" data-theme="gray light" data-box itemprop="department" itemscope itemtype="https://schema.org/LocalBusiness">'), 2);
+	});
+
+	test('a hostile officeTheme is escaped', () => {
+		const html = withParts({ office: 'box', officeTheme: '"><img src=x onerror=alert(1)>' });
+		assert.ok(!html.includes('<img src=x'));
+		assert.equal(count(html, 'data-theme="&quot;&gt;&lt;img src=x onerror=alert(1)&gt;"'), 2);
 	});
 });

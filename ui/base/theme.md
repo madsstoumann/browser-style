@@ -42,6 +42,8 @@ element type:
 <blockquote data-theme="blue pale">…</blockquote>
 ```
 
+A native node that also needs padding and corners adds `data-box` — see [Box](#box).
+
 Mixing both on one element is pointless but harmless — they set the same properties,
 so the later rule simply wins.
 
@@ -322,6 +324,53 @@ colours one entry's **dot**, not the entry, so it resets the fill:
   &[data-theme~="accent"] { --ui-timeline-dot: var(--ui-theme-accent-bg); }
 }
 ```
+
+## Box
+
+Universal paint gives a native node its **colour**; `data-box` gives it its **geometry** —
+padding and rounded corners — so the two together make a plate out of any element:
+
+```html
+<div data-theme="gray light" data-box>…</div>         <!-- light-gray plate, 16px inset, 6px corners -->
+<aside data-theme="blue pale border" data-box>…</aside> <!-- + the theme's border -->
+<div data-theme="slate dark ink" data-box style="--ui-box-p: var(--spacing-md)">…</div>
+```
+
+It is one rule in `theme.css`, reading two tokens:
+
+| Token | Default | Purpose |
+|---|---|---|
+| `--ui-box-p` | `var(--spacing-md)` (1rem) | Padding, all sides. `0` for a flush plate. |
+| `--ui-box-radius` | `var(--radius-md)` (0.375rem) | Corner radius. `0` for square corners; any `--radius-*` token for more. |
+
+Set them on the element or on any ancestor — they inherit like every custom property.
+
+**One spelling, on purpose.** Every `theme=` rule is a `theme=`/`data-theme=` pair because a
+bare `theme` attribute is invalid on a built-in element. `data-*` is valid on *every*
+element, so `data-box` needs no `[box]` twin — and custom elements that want a plate already
+have their own geometry tokens (`content="pad() rds()"`, `variant="rds()"`).
+
+**Inert on components that own their geometry.** `<ui-content>` sets its four padding
+longhands and `--ui-content-radius`, `<ui-card>` its radius, `<lay-out>` both — all from
+`@layer bs-component` / `layout.*`, declared after `bs-core`, so they win. Same layer
+argument as [Universal paint](#universal-paint): `data-box` is for the native nodes
+*inside* those components, not the components themselves.
+
+**A box without a theme is invisible.** The padding still takes space, but nothing paints
+it — pair `data-box` with `data-theme` (or any background of your own).
+
+**Pin the plate's scheme.** A neutral plate keeps its shade in both schemes (`gray` is
+light in dark mode too), but its *contents* re-tone with the page — light ink on a light
+plate. Add `light` (or `dark` for `slate`/`black`) so the descendants' `light-dark()`
+tokens follow the plate, not the page: measured on the Organization demo, `gray light`
+keeps every ink >= 6:1 in both schemes where bare `gray` drops to 1.03 in dark mode. And
+note `pale` on a neutral is near-invisible — `gray pale` is 20% gray over the surface,
+1.03:1 against a white card — so reach for the plain neutral.
+
+Live example: the Organization card's offices in `ui/card/demo/schema.html` —
+`<div data-part="office" data-theme="gray light" data-box>` — emitted by the renderer from
+preset `parts.office: "box"` + `parts.officeTheme: "gray light"`
+([card.md § Preset model](../card/docs/card.md)).
 
 ## How a component opts in
 
