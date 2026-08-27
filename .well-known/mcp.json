@@ -20,7 +20,7 @@
         },
         {
           "name": "check_ticket_availability",
-          "description": "Ticket availability for events at the venue on a specific ISO date."
+          "description": "Day-ticket availability and named events for a specific ISO date (data window 2026-08-01 to 2027-08-31)."
         }
       ]
     }

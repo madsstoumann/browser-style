@@ -39,3 +39,7 @@
 # HTTP-level MCP discovery hint on the root page; pairs with the <link> in index.html.
 /
   Link: </.well-known/mcp-server-card>; rel="mcp-server-card"
+# The static dataset behind the /mcp tools (see docs/mcp-poc.md).
+/api/venue-availability.json
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=300

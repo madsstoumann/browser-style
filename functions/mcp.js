@@ -1,12 +1,14 @@
 /**
  * /mcp — stateless Streamable-HTTP MCP server (proof of concept).
  * Cloudflare Pages Function; fronted ONLY on /mcp via /_routes.json.
+ * Thin wrapper over the static /api/venue-availability.json (ASSETS binding).
  * No sessions (no Mcp-Session-Id issued), no SSE, no auth. Docs: docs/mcp-poc.md
  */
 
-const SERVER_INFO = { name: 'browser-style-venue', title: 'browser.style Studio (demo venue)', version: '0.1.0' };
+const SERVER_INFO = { name: 'browser-style-venue', title: 'browser.style Studio (demo venue)', version: '0.2.0' };
 const SUPPORTED_PROTOCOLS = ['2025-06-18', '2025-03-26', '2024-11-05'];
 const LATEST_PROTOCOL = '2025-06-18';
+const DATA_PATH = '/api/venue-availability.json';
 
 const CORS = {
 	'Access-Control-Allow-Origin': '*',
@@ -15,51 +17,32 @@ const CORS = {
 	'Access-Control-Max-Age': '86400',
 };
 
-/* Dummy data. Dates are ISO YYYY-MM-DD; hours are local venue time. */
-const VENUE = {
-	name: 'browser.style Studio',
-	timezone: 'Europe/Copenhagen',
-	weeklyHours: {
-		mon: null,
-		tue: { open: '10:00', close: '18:00' },
-		wed: { open: '10:00', close: '18:00' },
-		thu: { open: '10:00', close: '20:00' },
-		fri: { open: '10:00', close: '22:00' },
-		sat: { open: '09:00', close: '22:00' },
-		sun: { open: '11:00', close: '16:00' },
-	},
-	/* Date-specific overrides beat weeklyHours. null = closed (holiday). */
-	exceptions: {
-		'2026-09-05': { open: '12:00', close: '23:59', note: 'Culture Night — extended hours' },
-		'2026-12-24': null,
-		'2026-12-25': null,
-	},
-	events: [
-		{ id: 'css-live', name: 'CSS Live! — creative coding on stage', date: '2026-08-28', ticketsTotal: 120, ticketsAvailable: 14, price: '150 DKK' },
-		{ id: 'grid-gala', name: 'The Grid Gala', date: '2026-09-05', ticketsTotal: 300, ticketsAvailable: 0, price: '250 DKK' },
-		{ id: 'type-night', name: 'Typography Night', date: '2026-09-18', ticketsTotal: 80, ticketsAvailable: 62, price: '100 DKK' },
-	],
-};
-
 const DAY_KEYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
 
 class ToolInputError extends Error {}
 
-/* Resolve an ISO date to hours; exceptions beat the weekly schedule. */
-function hoursForDate(date) {
+let venuePromise;
+const loadVenue = (env, requestUrl) =>
+	(venuePromise ??= env.ASSETS.fetch(new URL(DATA_PATH, requestUrl)).then((r) => r.json()));
+
+/* Resolve an ISO date to hours; exceptions beat the weekly schedule. Slots are [open, close, note?]. */
+function hoursForDate(venue, date) {
 	const weekday = DAY_KEYS[new Date(`${date}T00:00:00Z`).getUTCDay()];
-	const slot = date in VENUE.exceptions ? VENUE.exceptions[date] : VENUE.weeklyHours[weekday];
+	const slot = date in venue.exceptions ? venue.exceptions[date] : venue.weeklyHours[weekday];
 	return slot === null
 		? { date, weekday, closed: true }
-		: { date, weekday, closed: false, open: slot.open, close: slot.close, ...(slot.note && { note: slot.note }) };
+		: { date, weekday, closed: false, open: slot[0], close: slot[1], ...(slot[2] && { note: slot[2] }) };
 }
+
+const inWindow = (venue, date) => date >= venue.window[0] && date <= venue.window[1];
+const ticketsFor = (venue, date) => venue.tickets[date.slice(0, 7)]?.[Number(date.slice(8)) - 1];
 
 const TOOLS = [
 	{
 		name: 'get_opening_hours',
 		description:
-			`Get opening hours for ${VENUE.name} (timezone ${VENUE.timezone}). ` +
+			'Get opening hours for browser.style Studio (timezone Europe/Copenhagen). ' +
 			'Pass "date" as an ISO date (YYYY-MM-DD) — resolve relative expressions like ' +
 			'"this Friday" or "tomorrow" to a concrete ISO date yourself before calling. ' +
 			'Omit "date" to get the full weekly schedule plus known holiday exceptions.',
@@ -73,10 +56,11 @@ const TOOLS = [
 	{
 		name: 'check_ticket_availability',
 		description:
-			`Check ticket availability for events at ${VENUE.name} on a given date. ` +
+			'Check day-ticket availability (and any named events) at browser.style Studio ' +
+			'on a given date. Data covers 2026-08-01 to 2027-08-31, per day. ' +
 			'Pass "date" as an ISO date (YYYY-MM-DD) — resolve relative expressions like ' +
 			'"this Friday" yourself before calling. Optionally pass "event" (name or id, ' +
-			'case-insensitive substring) to filter.',
+			'case-insensitive substring) to filter the named events.',
 		inputSchema: {
 			type: 'object',
 			properties: {
@@ -88,50 +72,59 @@ const TOOLS = [
 	},
 ];
 
-function runGetOpeningHours({ date } = {}) {
+function runGetOpeningHours(venue, { date } = {}) {
 	if (date !== undefined) {
 		if (!ISO_DATE.test(date)) throw new ToolInputError(`"date" must be YYYY-MM-DD, got: ${JSON.stringify(date)}`);
-		const h = hoursForDate(date);
+		const h = hoursForDate(venue, date);
 		return {
 			structured: h,
 			text: h.closed
-				? `${VENUE.name} is CLOSED on ${date} (${h.weekday}).`
-				: `${VENUE.name} is open on ${date} (${h.weekday}) from ${h.open} to ${h.close} (${VENUE.timezone})${h.note ? ` — ${h.note}` : ''}.`,
+				? `${venue.venue} is CLOSED on ${date} (${h.weekday}).`
+				: `${venue.venue} is open on ${date} (${h.weekday}) from ${h.open} to ${h.close} (${venue.timezone})${h.note ? ` — ${h.note}` : ''}.`,
 		};
 	}
-	const structured = { weeklyHours: VENUE.weeklyHours, exceptions: VENUE.exceptions, timezone: VENUE.timezone };
-	return { structured, text: `Weekly schedule for ${VENUE.name} (closed = null):\n${JSON.stringify(structured, null, 2)}` };
+	const structured = { weeklyHours: venue.weeklyHours, exceptions: venue.exceptions, timezone: venue.timezone };
+	return { structured, text: `Weekly schedule for ${venue.venue} (closed = null; slots are [open, close, note?]):\n${JSON.stringify(structured, null, 2)}` };
 }
 
-function runCheckTicketAvailability({ date, event } = {}) {
+function runCheckTicketAvailability(venue, { date, event } = {}) {
 	if (!ISO_DATE.test(date ?? '')) throw new ToolInputError(`"date" is required and must be YYYY-MM-DD, got: ${JSON.stringify(date)}`);
 	const filter = event?.toLowerCase();
-	let matches = VENUE.events.filter((e) => e.date === date);
-	if (filter) matches = matches.filter((e) => e.name.toLowerCase().includes(filter) || e.id.toLowerCase().includes(filter));
-	if (matches.length === 0) {
-		const upcoming = VENUE.events.filter((e) => e.date > date).map((e) => `${e.name} on ${e.date}`);
+	let events = venue.events.filter((e) => e.date === date);
+	if (filter) events = events.filter((e) => e.name.toLowerCase().includes(filter) || e.id.toLowerCase().includes(filter));
+	const eventLines = events.map((e) => e.ticketsAvailable > 0
+		? `${e.name} on ${e.date}: ${e.ticketsAvailable} of ${e.ticketsTotal} tickets available at ${e.price}.`
+		: `${e.name} on ${e.date}: SOLD OUT.`);
+
+	if (!inWindow(venue, date)) {
 		return {
-			structured: { date, events: [] },
-			text: `No ${filter ? 'matching ' : ''}events at ${VENUE.name} on ${date}.` +
-				(upcoming.length ? ` Upcoming events: ${upcoming.join('; ')}.` : ''),
+			structured: { date, events, dayTickets: null },
+			text: [`No availability data for ${date} (data covers ${venue.window[0]} to ${venue.window[1]}).`, ...eventLines].join('\n'),
 		};
 	}
+	const h = hoursForDate(venue, date);
+	const dayTickets = ticketsFor(venue, date) ?? 0;
+	const dayLine = h.closed
+		? `${venue.venue} is CLOSED on ${date} (${h.weekday}) — no tickets sold.`
+		: dayTickets === 0
+			? `${date} (${h.weekday}): SOLD OUT — 0 day tickets left.`
+			: dayTickets < 5
+				? `${date} (${h.weekday}): only ${dayTickets} day ticket${dayTickets === 1 ? '' : 's'} left.`
+				: `${date} (${h.weekday}): ${dayTickets} day tickets available.`;
 	return {
-		structured: { date, events: matches },
-		text: matches
-			.map((e) => e.ticketsAvailable > 0
-				? `${e.name} on ${e.date}: ${e.ticketsAvailable} of ${e.ticketsTotal} tickets available at ${e.price}.`
-				: `${e.name} on ${e.date}: SOLD OUT.`)
-			.join('\n'),
+		structured: { date, closed: h.closed, dayTickets: h.closed ? 0 : dayTickets, events },
+		text: [dayLine, ...eventLines].join('\n'),
 	};
 }
+
+const TOOL_IMPLS = { get_opening_hours: runGetOpeningHours, check_ticket_availability: runCheckTicketAvailability };
 
 const json = (body, status = 200) =>
 	new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json', ...CORS } });
 const rpcResult = (id, result) => json({ jsonrpc: '2.0', id, result });
 const rpcError = (id, code, message) => json({ jsonrpc: '2.0', id: id ?? null, error: { code, message } });
 
-export async function onRequestPost({ request }) {
+export async function onRequestPost({ request, env }) {
 	let msg;
 	try { msg = await request.json(); }
 	catch { return rpcError(null, -32700, 'Parse error'); }
@@ -151,7 +144,8 @@ export async function onRequestPost({ request }) {
 				serverInfo: SERVER_INFO,
 				instructions:
 					'Demo MCP server with STATIC DUMMY DATA for a fictional venue on v4.browser.style. ' +
-					'All dates must be ISO YYYY-MM-DD; resolve relative dates before calling tools.',
+					'All dates must be ISO YYYY-MM-DD; resolve relative dates before calling tools. ' +
+					'Availability data covers 2026-08-01 to 2027-08-31.',
 			});
 		}
 		case 'ping':
@@ -163,7 +157,8 @@ export async function onRequestPost({ request }) {
 			const impl = TOOL_IMPLS[name];
 			if (!impl) return rpcError(msg.id, -32602, `Unknown tool: ${name}`);
 			try {
-				const { text, structured } = impl(args);
+				const venue = await loadVenue(env, request.url);
+				const { text, structured } = impl(venue, args);
 				return rpcResult(msg.id, { content: [{ type: 'text', text }], structuredContent: structured, isError: false });
 			} catch (err) {
 				if (err instanceof ToolInputError)
@@ -180,10 +175,8 @@ export function onRequestOptions() {
 	return new Response(null, { status: 204, headers: CORS });
 }
 
-const TOOL_IMPLS = { get_opening_hours: runGetOpeningHours, check_ticket_availability: runCheckTicketAvailability };
-
 /* GET bridge — a POC affordance for GET-only agents, NOT part of the MCP spec. Docs: docs/mcp-poc.md */
-export function onRequestGet({ request }) {
+export async function onRequestGet({ request, env }) {
 	const url = new URL(request.url);
 	const tool = url.searchParams.get('tool');
 	if (!tool) {
@@ -194,6 +187,8 @@ export function onRequestGet({ request }) {
 				'https://v4.browser.style/.well-known/mcp-server-card',
 				'https://v4.browser.style/.well-known/mcp.json',
 			],
+			data: `https://v4.browser.style${DATA_PATH}`,
+			dataWindow: ['2026-08-01', '2027-08-31'],
 			tools: TOOLS.map(({ name, description, inputSchema }) => ({ name, description, parameters: inputSchema })),
 			examples: {
 				post: { jsonrpc: '2.0', id: 1, method: 'tools/call', params: { name: 'check_ticket_availability', arguments: { date: '2026-08-28' } } },
@@ -210,7 +205,8 @@ export function onRequestGet({ request }) {
 	const args = Object.fromEntries(url.searchParams);
 	delete args.tool;
 	try {
-		const { text, structured } = impl(args);
+		const venue = await loadVenue(env, request.url);
+		const { text, structured } = impl(venue, args);
 		return json({ tool, isError: false, content: [{ type: 'text', text }], structuredContent: structured });
 	} catch (err) {
 		if (err instanceof ToolInputError) return json({ tool, isError: true, content: [{ type: 'text', text: err.message }] });

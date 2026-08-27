@@ -37,6 +37,7 @@ This site advertises an MCP server (proof of concept — dummy venue data for a 
 - Server card (discovery): https://v4.browser.style/.well-known/mcp-server-card (alias: https://v4.browser.style/.well-known/mcp.json)
 - Endpoint: https://v4.browser.style/mcp — Streamable HTTP, POST JSON-RPC, no auth. Tools: `get_opening_hours`, `check_ticket_availability`.
 - GET-only agent? Read-only bridge: `https://v4.browser.style/mcp?tool=get_opening_hours&date=YYYY-MM-DD` and `https://v4.browser.style/mcp?tool=check_ticket_availability&date=YYYY-MM-DD`. A bare GET on the endpoint returns a JSON self-description.
+- Raw data: https://v4.browser.style/api/venue-availability.json — per-day ticket counts for 2026-08-01 to 2027-08-31, weekly hours, exceptions, events.
 
 ## Policy
 
