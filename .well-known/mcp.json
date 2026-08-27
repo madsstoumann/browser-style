@@ -1,0 +1,28 @@
+{
+  "$comment": "MCP discovery manifest (proof of concept). This path/shape tracks the popular pre-standard convention (SEP-1960 lineage); the SEP-2127 draft-standard document is /.well-known/mcp-server-card, which is primary. Not a ratified MCP standard. See /docs/mcp-poc.md.",
+  "spec_version": "0.1",
+  "name": "browser-style-venue",
+  "title": "browser.style Studio (demo venue)",
+  "description": "Demo MCP server for v4.browser.style: opening hours and ticket availability for a fictional venue, backed by static dummy data.",
+  "website": "https://v4.browser.style/",
+  "servers": [
+    {
+      "name": "browser-style-venue",
+      "endpoint": "https://v4.browser.style/mcp",
+      "transport": "streamable-http",
+      "protocol_version": "2025-06-18",
+      "authentication": { "type": "none" },
+      "capabilities": { "tools": {} },
+      "tools": [
+        {
+          "name": "get_opening_hours",
+          "description": "Opening hours for the venue, for a specific ISO date or the full weekly schedule."
+        },
+        {
+          "name": "check_ticket_availability",
+          "description": "Ticket availability for events at the venue on a specific ISO date."
+        }
+      ]
+    }
+  ]
+}

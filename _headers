@@ -24,3 +24,15 @@
 /dist/*
   Cache-Control: public, max-age=31536000, immutable
   Referrer-Policy: no-referrer
+# MCP discovery documents (see docs/mcp-poc.md). CORS `*` so clients can fetch
+# them cross-origin; short TTL so manifest edits propagate within minutes.
+# These rules cover the STATIC files only — the /mcp endpoint is a Pages
+# Function and `_headers` never applies to Function responses; its CORS
+# headers live in functions/mcp.js.
+/.well-known/*
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=300
+# The server card is extensionless (SEP-2127 path), so Pages cannot infer the
+# required application/json content type from the filename.
+/.well-known/mcp-server-card
+  Content-Type: application/json
