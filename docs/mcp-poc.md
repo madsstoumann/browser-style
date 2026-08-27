@@ -32,7 +32,8 @@ path/shape to move when a SEP is ratified — that is the point of a POC.
 |---|---|
 | `.well-known/mcp-server-card` | SEP-2127 server card (primary discovery document) |
 | `.well-known/mcp.json` | Popular-convention alias manifest |
-| `functions/mcp.js` | The MCP server: a single stateless Streamable-HTTP Pages Function at `/mcp` (no auth, no sessions, no SSE); dummy data inline; plus the GET bridge below |
+| `api/venue-availability.json` | **The single source of all dummy data** (2.7 KB): weekly hours, exceptions, events, and per-day ticket counts for 2026-08-01 – 2027-08-31; served statically, read by the Function via the ASSETS binding |
+| `functions/mcp.js` | The MCP server: a single stateless Streamable-HTTP Pages Function at `/mcp` (no auth, no sessions, no SSE) — a thin protocol wrapper over the JSON above; plus the GET bridge below |
 | `_routes.json` | Narrow `include: ["/mcp"]` so the Worker fronts **only** `/mcp` — the other ~300 markdown/demo files stay purely static |
 | `_headers` | `/.well-known/*` CORS + short TTL; content-type for the extensionless card; `Link` discovery header on `/` |
 | `index.html` | `<link rel="mcp-server-card" …>` in the head |
@@ -67,10 +68,23 @@ In Claude Code, the plain question suffices — it can curl the full handshake.
 Whether an unnudged model chooses to go fetch is probabilistic; that
 unpredictability is precisely what client-native SEP-2127 discovery will remove.
 
-Expected answer from the dummy data: Friday **2026-08-28** open 10:00–22:00 with
-14 tickets left for "CSS Live!". Mondays closed; 2026-09-05 is a sold-out
-extended-hours exception; 2026-12-24/25 closed holidays. Event dates go stale
-after September 2026.
+The dummy data covers **every day from 2026-08-01 to 2027-08-31** (per-day
+ticket counts, deterministically generated: closed days 0, ~8% of open days
+sold out, ~10% low stock 1–4). Useful probe questions and their expected
+answers:
+
+| Question | Expected |
+|---|---|
+| "Is v4.browser.style open this Friday, and are there tickets?" | 2026-08-28 (Fri) open 10:00–22:00, 40 day tickets + "CSS Live!" event, 14 of 120 at 150 DKK |
+| "Is v4.browser.style open on May 1st 2027?" | Open (Sat) 09:00–22:00, 65 day tickets |
+| "Can I buy 2 tickets on September 2nd 2026?" | Open, but SOLD OUT — 0 day tickets left |
+| "Can I buy 2 tickets on September 8th 2026?" | Only **1** day ticket left — so no |
+| Any Monday, or 2026-12-24/25 | Closed — no tickets sold |
+| A date after 2027-08-31 | "No availability data for … (data covers 2026-08-01 to 2027-08-31)" |
+
+Data goes stale after August 2027. To regenerate with different randomness,
+adjust and re-run the seeded generator (mulberry32, seed 42) described in the
+git history of `api/venue-availability.json`.
 
 ## The spec-pure path (claude.ai connector)
 
@@ -101,11 +115,11 @@ production. Everything goes live on merge to `v4`.
 
 ## Removal
 
-Delete `.well-known/`, `functions/`, `_routes.json`; in `_headers` the
-`/.well-known/…` blocks and the `/` Link-header rule; in `index.html` the
-`rel="mcp-server-card"` link; in `llms.txt` the § MCP server section; in
-`robots.txt` the `Allow: /.well-known/` and `Allow: /mcp` lines (both groups);
-and this doc.
+Delete `.well-known/`, `functions/`, `api/`, `_routes.json`; in `_headers` the
+`/.well-known/…` blocks, the `/` Link-header rule and the `/api/…` rule; in
+`index.html` the `rel="mcp-server-card"` link; in `llms.txt` the § MCP server
+section; in `robots.txt` the `Allow: /.well-known/`, `Allow: /mcp` and
+`Allow: /api/venue-availability.json` lines (both groups); and this doc.
 
 ## Note
 
