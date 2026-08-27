@@ -765,13 +765,58 @@ moving). **Direction:** add a minify step to layout's build (esbuild, as ui/base
 point the tags at the unminified file — or retire the layout copy and point everything at
 the maintained `ui/base` build.
 
-## 24. `mosaic(photo)` writes a dead property — the tight gutter never applies
+## 24. `mosaic(photo)` writes a dead property — DONE 2026-08-27
 
-2026-08-19 finding. `layout/layouts/mosaic.json:36` sets
-`--layout-spacing-unit: 0.25rem` on the photo mosaic. The property the system reads is
-**`--layout-space-unit`** (no "spacing"), so the declaration is inert and the intended
-4px gutter silently stays at the 1rem default. One-word fix in the JSON plus a rebuild;
-worth a quick sweep of the other layout JSONs for the same misspelling while there.
+2026-08-19 finding. `layout/layouts/mosaic.json` set `--layout-spacing-unit: 0.25rem` on the
+photo mosaic. That name is **not a typo — it is the pre-rename spelling.** It was the real
+multiplier unit (`padding-inline: calc(var(--layout-pi) * var(--layout-spacing-unit))`,
+`ui/layout/layout.css`, live 2025-06-23) and was renamed `--layout-space-unit` on 2025-07-25
+(`0279569a`); the old layout system that still used it was deleted 2026-01-02 (`da4d2b4e`).
+This one declaration outlived both, because a layout JSON's `properties` blob is written into
+the generated CSS **verbatim** — the builder never validates property names. It had been inert
+for ~13 months, so the intended 4px gutter was silently rendering at the 1rem default.
+
+**Swept:** `--layout-spacing-unit` appeared in exactly one source file repo-wide. No other
+layout JSON carried the old spelling.
+
+**Shipped**, and rewritten to the collage pattern rather than patched one word:
+
+```json
+"--layout-bg": "var(--_theme-bg, light-dark(#333, #EEE))",
+"--layout-colmg": "0.25",
+"--layout-rg": "0.25",
+"--layout-pbe": "var(--layout-colmg)",
+"--layout-pbs": "var(--layout-colmg)",
+"--layout-pi": "var(--layout-colmg)"
+```
+
+The gutter is expressed with the spacing **multipliers** the system actually reads (0.25 is the
+`xs` step, so `cg(xs)`/`rg(xs)` produce the same 4px) instead of rewriting the unit for the
+whole subtree — rewriting `--layout-space-unit` would have rescaled every other multiplier on
+that element too. And the plate now defers to `theme=`: `--_theme-bg` is
+`@property … inherits: false` with no initial value, so it is guaranteed-invalid on an unthemed
+element and the `light-dark(#333, #EEE)` fallback fires, while `<lay-out sm="mosaic(photo)"
+theme="gray">` takes the theme surface — the same lever the collage uses
+(`ui/card/docs/media.md` § Gutter colour).
+
+Measured after `cd layout && npm run build:all` (Chrome 150, `layout/dist/mosaic.html`):
+
+| State | Plate | Gutters |
+|---|---|---|
+| default | `rgb(51, 51, 51)` | 4px (was 16px) |
+| `theme="gray"` | `rgb(237, 237, 237)` | 4px |
+| `theme="pale black"` | `color(srgb 0.824 0.832 0.844)` | 4px |
+
+Note the breakpoint cascade this exposes: `mosaic(photo)` is declared at `sm`, so it sits in
+`@layer layout.sm` and now beats an author's `xs="cg(…)"` while losing to `lg="cg(…)"`. That is
+the layer ladder working as designed, not a regression — but it is the first layout variant to
+set a spacing multiplier, so it is the first place the ordering is observable.
+
+**Still open, and the reason this class of bug is invisible:** a layout JSON's `properties` keys
+are never validated. A misspelled or retired custom property is emitted into `layout/dist/` and
+does nothing. A lint over the known `--layout-*` vocabulary at build time would have caught this
+in 2025 — see the same gap in item 20 (`@version` headers) and item 21 (cascade layers enforced
+by nothing).
 
 ## 25. `lanes` at `xl`/`xxl` — config-gate the static selector, or accept the documented trap
 

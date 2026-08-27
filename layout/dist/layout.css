@@ -1101,8 +1101,9 @@
 
   lay-out[sm*="mosaic(photo)"] {
     --layout-gtc: repeat(5, 1fr);
-    --layout-bg: light-dark(#333, #EEE);
-    --layout-spacing-unit: 0.25rem;
+    --layout-bg: var(--_theme-bg, light-dark(#333, #EEE));
+    --layout-colmg: 0.25;
+    --layout-rg: 0.25;
     --layout-pbe: var(--layout-colmg);
     --layout-pbs: var(--layout-colmg);
     --layout-pi: var(--layout-colmg);

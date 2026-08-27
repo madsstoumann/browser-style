@@ -12,7 +12,7 @@
 	<meta name="referrer" content="no-referrer">
 	<!-- preconnect: CDN handshake parallel to the CSS download. Docs: docs/performance.md -->
 	<link rel="preconnect" href="https://v4.browser.style">
-	<link rel="stylesheet" href="/dist/demo.0a296b6e.min.css">
+	<link rel="stylesheet" href="/dist/demo.e2ac4c18.min.css">
 	<style>
 		section {
 			content-visibility: auto;
@@ -24,7 +24,12 @@
 		code { font-size: 0.9em; }
 		/* per-slide grid now comes from lay-out md=columns(N) slides */
 		.slide-gap { --ui-media-gap: var(--spacing-lg); }
-		.shadow-room { padding-inline: var(--spacing-md); scroll-padding-inline: var(--spacing-md); }
+		/* 1.25rem = the tile shadow's inline outset (spread + blur = -5 + 25 = 20px); the negative
+		   margin puts that room back OUTSIDE the column so tiles still start on the grid line. */
+		.shadow-room { --_room: 1.25rem; padding-inline: var(--_room); scroll-padding-inline: var(--_room); margin-inline: calc(-1 * var(--_room)); }
+		/* TEMP — quiz slides: explicit plate. The shadow is off via variant="shd(non)", so the
+		   scrollport has nothing to clip at the slide edges. */
+		lay-out[overflow][media*="nav(end)"] > ui-card { --ui-card-bg: hsl(210 70% 95% / 1); }
 		.reveal-cards ui-reveal ui-accordion { font-size: var(--font-size-sm); }
 		/* table of contents — multi-column on desktop */
 		.toc { margin-block: var(--spacing-lg); }
@@ -1380,7 +1385,7 @@
 		<meta itemprop="name" content="Quantum computing — check yourself"><meta itemprop="description" content="Three graded multiple-choice questions, one per slide. Pick an answer and it tells you whether you were right."><meta itemprop="learningResourceType" content="Practice problem">
 		<div itemprop="about" itemscope itemtype="https://schema.org/Thing" hidden><meta itemprop="name" content="Quantum computing"></div><div itemprop="educationalAlignment" itemscope itemtype="https://schema.org/AlignmentObject" hidden><meta itemprop="alignmentType" content="educationalSubject"><meta itemprop="targetName" content="Quantum computing"></div>
 		<lay-out md="columns(1)" overflow media="nav(end) arw(drk) gate">
-		<ui-card variant="col" media="asr(16/9) chip(te)">
+		<ui-card variant="col shd(non)" media="asr(16/9) chip(te)">
 			<cq-box>
 				<ui-media><img src="/assets/images/quantum.png" alt="Stylised quantum processor" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/quantum.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/quantum.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/quantum.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/quantum.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/quantum.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>Quiz</ui-chip></ui-media>
 				<ui-content content="wid(2xl)">
@@ -1401,7 +1406,7 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card variant="col" media="asr(16/9) chip(te)">
+		<ui-card variant="col shd(non)" media="asr(16/9) chip(te)">
 			<cq-box>
 				<ui-media><img src="/assets/images/quantum.png" alt="Stylised quantum processor" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/quantum.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/quantum.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/quantum.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/quantum.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/quantum.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>Quiz</ui-chip></ui-media>
 				<ui-content content="wid(2xl)">
@@ -1422,7 +1427,7 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card variant="col" media="asr(16/9) chip(te)">
+		<ui-card variant="col shd(non)" media="asr(16/9) chip(te)">
 			<cq-box>
 				<ui-media><img src="/assets/images/quantum.png" alt="Stylised quantum processor" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/quantum.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/quantum.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/quantum.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/quantum.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/quantum.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>Quiz</ui-chip></ui-media>
 				<ui-content content="wid(2xl)">
@@ -1449,7 +1454,7 @@
 		<meta itemprop="name" content="Quantum computing — free navigation"><meta itemprop="description" content="The same three questions with every slide reachable from the start."><meta itemprop="learningResourceType" content="Practice problem">
 		<div itemprop="about" itemscope itemtype="https://schema.org/Thing" hidden><meta itemprop="name" content="Quantum computing"></div><div itemprop="educationalAlignment" itemscope itemtype="https://schema.org/AlignmentObject" hidden><meta itemprop="alignmentType" content="educationalSubject"><meta itemprop="targetName" content="Quantum computing"></div>
 		<lay-out md="columns(1)" overflow media="nav(end) arw(drk)">
-		<ui-card variant="col" media="asr(16/9) chip(te)">
+		<ui-card variant="col shd(non)" media="asr(16/9) chip(te)">
 			<cq-box>
 				<ui-media><img src="/assets/images/quantum.png" alt="Stylised quantum processor" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/quantum.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/quantum.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/quantum.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/quantum.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/quantum.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>Quiz</ui-chip></ui-media>
 				<ui-content content="wid(2xl)">
@@ -1470,7 +1475,7 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card variant="col" media="asr(16/9) chip(te)">
+		<ui-card variant="col shd(non)" media="asr(16/9) chip(te)">
 			<cq-box>
 				<ui-media><img src="/assets/images/quantum.png" alt="Stylised quantum processor" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/quantum.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/quantum.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/quantum.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/quantum.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/quantum.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>Quiz</ui-chip></ui-media>
 				<ui-content content="wid(2xl)">
@@ -1491,7 +1496,7 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card variant="col" media="asr(16/9) chip(te)">
+		<ui-card variant="col shd(non)" media="asr(16/9) chip(te)">
 			<cq-box>
 				<ui-media><img src="/assets/images/quantum.png" alt="Stylised quantum processor" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/quantum.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/quantum.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/quantum.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/quantum.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/quantum.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>Quiz</ui-chip></ui-media>
 				<ui-content content="wid(2xl)">
