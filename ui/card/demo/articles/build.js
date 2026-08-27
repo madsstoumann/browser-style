@@ -130,6 +130,12 @@ const gridPage = (cards) => `<!DOCTYPE html>
 	     so a deferred script names the targets too late and the forward morph
 	     degrades to a cross-fade. Docs: ui/base/polyfills/readme.md -->
 	<script type="module" src="/ui/base/polyfills/attr-fallback.min.js" blocking="render"></script>
+	<!-- Prerender the article pages (view-transition morph targets) on hover. Docs: docs/performance.md § Resource hints -->
+	<script type="speculationrules">
+	{
+		"prerender": [{ "where": { "href_matches": "/ui/card/demo/*/*" }, "eagerness": "moderate" }]
+	}
+	</script>
 	<style>
 		/* cross-document view transitions (@view-transition, the [data-view]
 		   attr() naming rule and group timing) come from ui-card.css */

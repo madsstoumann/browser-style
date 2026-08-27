@@ -230,18 +230,48 @@ scanner runs on regardless, so the *network* is not gated — and the cost is **
 trace before moving it (`docs/plans/open-items.md` § 30).
 
 `<link rel="expect" blocking="render">` is spec-valid (whatwg/html #9970); the W3C
-validator's complaint is a stale rule. Morph-target anchors are load-bearing — schema.html's
-`#schema-product-variants` is the *deepest* cross-document morph target, not a regression.
+validator's complaint is a stale rule. Morph-target anchors are load-bearing, and schema.html's
+`#schema-product-variants` (line 221 of 2138) covers **7 of its 9** morph pairs — article, news,
+product and the four variants, all at lines 110–269. It is deliberately **not** the deepest:
+`card-recipe-1` (1618), `card-realestate-1` (1788) and `card-vacationrental-1` (1803) are
+uncovered.
+
+Naming them changes nothing on its own — render-blocking is a **union** and parsing is
+sequential, so four anchors equal one anchor at the deepest. The real choice is whether to move
+the anchor to ~84% of the document. Don't: first paint would wait on ~1600 more lines of parse
+while the LCP hero at lines 110–190 is already paintable, and the only path that gains is a
+**non-bfcache Back** — an ordinary Back restores schema.html from bfcache fully parsed, with no
+race to lose. `content-visibility: auto` is no help either; `rel=expect` blocks on *parse*, not
+layout. The alternative — hoisting those cards up the page — would break its schema-type order.
 
 ### Resource hints — measure first; most preloads are 0 ms here
 
 Do: `preconnect` to `https://v4.browser.style` on pages with absolute CDN srcsets
 (handshake parallel to CSS on off-zone hosts); speculation rules (`prerender`,
-`eagerness: moderate`) for morph-target pages (Chromium-only, inert elsewhere) — but
-`moderate` caps at **two** concurrent prerenders, FIFO, so a third URL silently evicts the
-oldest; schema.html already declares exactly two. Do NOT:
+`eagerness: moderate`) for morph-target pages (Chromium-only, inert elsewhere). Do NOT:
 preload head CSS/scripts (already the first requests — RenderBlocking shows 0 ms), preload
 a `fetchpriority=high` LCP image, `modulepreload` end-of-body scripts.
+
+**The cap is on in-flight speculations, not on listed URLs.** Chrome allows 2 (FIFO) for
+`eager`/`moderate`/`conservative` and 10 prerenders / 50 prefetches for `immediate`. Since
+`moderate` only speculates on hover, a long candidate set costs nothing — eviction happens
+when a *third link is hovered*, not when a third URL is listed.
+
+**Use a document rule, not a URL list.** The five demo pages that link detail pages
+(`schema.html` and its two generated twins, `schema.recipe.html`, `article.render.html`)
+all carry the same rule:
+
+```json
+{ "prerender": [{ "where": { "href_matches": "/ui/card/demo/*/*" }, "eagerness": "moderate" }] }
+```
+
+`*/*` selects every page in the six detail directories — `articles/ offices/ products/
+realestate/ recipes/ rentals/`, 23 linked URLs — and excludes the sibling demo pages
+(`media.html`, `schema.raw.html`). Query variants match too: a string-form URL pattern
+leaves the `search` component as `*`, so `realestate/havnegade-44.html?home=nyhavn-17` and
+`offices/copenhagen.html?studio=berlin` are covered without being named. Two of those five
+pages are generated — edit `schema.html` then rerun `node ui/card/demo/schema.modes.build.js`,
+and edit `gridPage()` in `ui/card/demo/articles/build.js` for `article.render.html`.
 
 ### Big DOMs
 

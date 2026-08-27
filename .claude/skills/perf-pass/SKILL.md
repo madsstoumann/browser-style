@@ -59,9 +59,11 @@ load-bearing for view-transition morphs — do not defer them.
 
 **Resource hints — measure first; most preloads are 0 ms here.** `preconnect` to the CDN
 origin when the page uses absolute transform URLs; speculation rules for morph targets —
-`eagerness: moderate` caps at **two** concurrent prerenders (FIFO), so a third URL silently
-evicts the oldest. Do **not** add preloads for head CSS/scripts (already the first requests),
-for a `fetchpriority=high` LCP image, or `modulepreload` for end-of-body polyfills.
+prefer a **document rule** (`where: { href_matches: … }`) over a URL list, and note the cap
+is on **in-flight** speculations (2 FIFO for `eager`/`moderate`/`conservative`, 10 for
+`immediate`), not on listed URLs: `moderate` only fires on hover. Do **not** add preloads for
+head CSS/scripts (already the first requests), for a `fetchpriority=high` LCP image, or
+`modulepreload` for end-of-body polyfills.
 
 **Animations** — check the price list in `docs/performance.md` first. Custom-property clocks
 driving layout properties cost an order of magnitude more than composited

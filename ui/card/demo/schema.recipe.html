@@ -24,9 +24,10 @@
 		.try ul { margin: 0; padding-inline-start: 1.2em; }
 		.try li { margin-block: var(--spacing-xs); }
 	</style>
+	<!-- Prerender the detail pages (view-transition morph targets) on hover — document rule, so query variants are covered. Docs: docs/performance.md § Resource hints -->
 	<script type="speculationrules">
 	{
-		"prerender": [{ "urls": ["recipes/recipe.html?id=recipe-1"], "eagerness": "moderate" }]
+		"prerender": [{ "where": { "href_matches": "/ui/card/demo/*/*" }, "eagerness": "moderate" }]
 	}
 	</script>
 </head>

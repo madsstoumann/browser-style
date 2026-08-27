@@ -1328,3 +1328,59 @@ Same question applies to any other semantic colour used as ink inside a themed c
 (`ui-chip theme="pale green"` is unaffected — it carries its own paired ink).
 
 Docs: `ui/card/docs/content.md` § Mark colour.
+
+---
+
+## 38. `theme=` on a `<lay-out>` paints the plate but not the ink
+
+**Where:** `layout/core/base.css:97`, `layout/core/group.css:9`
+
+```css
+color: var(--layout-c, var(--_theme-c, inherit));                          /* base.css */
+color: var(--layout-group-c, var(--layout-c, var(--_theme-c, inherit)));   /* group.css */
+```
+
+`--_theme-c` is set by exactly **one** rule in `ui/base/theme.css` (line 45,
+`:where([theme~="ink"], [data-theme~="ink"])`). The resolver's general output is
+`--_theme-ink`, which is why every other consumer in the repo reads the pair:
+
+| Consumer | Chain |
+|---|---|
+| `ui/card/ui-card.css:162` | `var(--_theme-c, var(--_theme-ink, var(--color-text)))` |
+| `ui/reveal/ui-reveal.css:78, 146` | `var(--_theme-c, var(--_theme-ink, var(--color-text)))` |
+| `ui/chip`, `ui/sticker`, `ui/marquee` | `var(--_theme-c, var(--_theme-ink))` |
+| **`layout/core/*.css`** | `var(--_theme-c, inherit)` — **`--_theme-ink` skipped** |
+
+So a themed `<lay-out>` takes the theme's surface and leaves its text at whatever the page
+inherits. Measured (Chrome 150, light scheme, a bare `<lay-out theme="…"><p>` probe — the
+inherited ink is `rgb(38, 38, 38)`):
+
+| `theme=` | Plate | Text | Contrast |
+|---|---|---|---|
+| `black` | `rgb(31, 41, 55)` | `rgb(38, 38, 38)` | **1.03:1** |
+| `slate` | `rgb(56, 67, 82)` | `rgb(38, 38, 38)` | **1.51:1** |
+| `red` | `rgb(173, 37, 37)` | `rgb(38, 38, 38)` | **2.21:1** |
+| `accent` | `rgb(0, 94, 194)` | `rgb(38, 38, 38)` | **2.44:1** |
+| `green` | `rgb(42, 111, 60)` | `rgb(38, 38, 38)` | **2.48:1** |
+| `gray` | `rgb(237, 237, 237)` | `rgb(38, 38, 38)` | 12.93:1 |
+
+Five of the nine hues fail 4.5:1, and `black` is effectively invisible. Only the light end of
+the neutral ramp passes, and only because the *inherited* ink happens to suit it.
+
+**No live page is broken.** The one themed layout in the demos is
+`ui/card/demo/media.collage.html` (`<lay-out bleed theme="muted gray">`), whose plate is light,
+and the collage layouts themed in the same file (`gray` / `black` / `pale gray`) contain only
+`<ui-media>` tiles — no text. A consumer theming a section with a headline in it hits this on
+the first try.
+
+**The fix is one fallback level** — `var(--layout-c, var(--_theme-c, var(--_theme-ink, inherit)))`
+in both files, then `cd layout && npm run build:all`. It is **not** a pure win, and that is the
+open part: under `muted`, `--_theme-ink` is
+`color-mix(in srgb, light-dark(hsl(0 0% 15%), hsl(0 0% 10%)), transparent 50%)`, so
+`theme="muted gray"` would go from solid inherited ink to a 50%-transparent one — the *muted
+compounding* trap in `AGENTS.md` § Accessibility, landing on the one live instance. Decide
+whether `muted` should modify the fill only, or whether the layout arm should read
+`--_theme-base-c` instead.
+
+Docs to correct in the same change: `layout/core/base.md:304` currently states "theme ink wins
+when no explicit value is set", which is what the chain *fails* to do.

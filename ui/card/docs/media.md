@@ -624,6 +624,14 @@ Tiles are nested `<ui-media>`, which the `ui-media ui-media` rule pins to a plai
 
 With aspect-less tiles the row height comes from the tiles' own floor: **`--ui-media-min`** (see [Frame tokens](#frame), default `12.5rem`) is the collage's row-height knob. Set it on the tiles, or on an ancestor to tune the whole collage.
 
+### Gutter colour — theme the lay-out, never the frame
+
+A gap is a **hole**: it shows whatever paints behind it, and the nearest layer is the `<lay-out>` itself. A collage with visible gutters therefore paints them on the layout — `theme="gray"` (the shared axis, which feeds `--_theme-bg`) or `--layout-bg` directly. The builder already does this for `mosaic(photo)`, which ships `--layout-bg: light-dark(#333, #EEE)`.
+
+Do **not** leave the layout transparent and let the frame's own plate show through. It looks like it works — a bare `<ui-media>` paints `--color-overlay-light` — right up until the frame gains `nav`: a scroller sets `--ui-media-bg: #0000` so slides fill it edge to edge, and every gutter goes invisible in the same commit that added the carousel. That is exactly what happened to the ProductGroup collage in `demo/schema.html`, whose `cg(3xs) rg(3xs)` hairline was still 1px wide and painting white on white.
+
+Two properties make the layout the right layer: `--_theme-bg` is `@property … inherits: false`, so `theme=` stops at the layout and tiles keep their own colours; and under the `pages` dissolve the layout is `display: contents` and paints nothing, which is correct — a carousel arm has no gaps to fill.
+
 ### Collage carousel — CSS-only
 
 Put `nav` on the **outer** frame and each direct `<lay-out>` child becomes a slide: a swipeable, snapping, dotted collage carousel with no JavaScript. Without `nav`, a lone `<lay-out>` child is just a grid — the scroller only activates on `nav`.

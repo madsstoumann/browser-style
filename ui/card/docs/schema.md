@@ -1492,11 +1492,21 @@ docs; the reasoning is below and the measurements behind it are in
   `demo.css`. The filename hash is what makes the one-year `immutable` cache safe, so the link
   is rewritten on every rebuild.
 - **`<link rel="expect" href="#schema-product-variants" blocking="render">`** blocks first
-  paint — *and the incoming snapshot on Back* — until the morphing card is parsed. See
+  paint — *and the incoming snapshot on Back* — until the morphing cards are parsed: the article,
+  news, product and four variant pairs, `data-view` names at lines 110–269. The page's three
+  other morph pairs — `card-recipe-1`, `card-realestate-1`, `card-vacationrental-1`, at lines
+  1618/1788/1803 — are **outside** that anchor on purpose, and rely on bfcache. Adding anchors
+  for them would not help: render-blocking is a union over sequential parsing, so it would amount
+  to moving the anchor to 84% of the document and paying first paint for it. Rationale:
+  [`docs/performance.md` § render-blocking](../../../docs/performance.md). See also
   [card.md § Article pattern](card.md#article-pattern--teaser-card--full-page-view).
-- **Speculation rules** prerender `articles/article.html` and `articles/news.html` at
-  `eagerness: "moderate"`. Prerender plus a cross-document view transition makes the article
-  morph instant; the feature is Chromium-only and inert everywhere else.
+- **Speculation rules** prerender the linked detail pages at `eagerness: "moderate"` via a
+  document rule — `"where": { "href_matches": "/ui/card/demo/*/*" }` — which covers all six
+  detail directories (`articles/ offices/ products/ realestate/ recipes/ rentals/`) including
+  the `?home=` / `?studio=` / `?id=` query variants, and excludes the sibling demo pages.
+  Prerender plus a cross-document view transition makes the morph instant; the feature is
+  Chromium-only and inert everywhere else. The cap is 2 **in-flight** speculations (FIFO), and
+  `moderate` only speculates on hover, so the size of the candidate set is not a cost.
 
 ### The typed-`attr()` polyfill block
 
