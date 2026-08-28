@@ -425,6 +425,35 @@ describe('subtype-aware properties', () => {
 });
 
 describe('subtype sharpening', () => {
+	/* 2026-08 usage-stats round (docs/schema.md § Subtypes): software gets its first
+	   allowlist, the local-service trades join business. Off-list values keep the base. */
+	test('software sharpens to its application subtypes', () => {
+		for (const subtype of ['MobileApplication', 'WebApplication', 'VideoGame'])
+			assert.match(render({ schemaType: 'software', headline: 'App', details: { subtype } }),
+				new RegExp(`itemtype="https://schema\\.org/${subtype}"`), subtype);
+		/* Game is a CreativeWork, not a SoftwareApplication — refused, base type kept */
+		assert.match(render({ schemaType: 'software', headline: 'App', details: { subtype: 'Game' } }),
+			/itemtype="https:\/\/schema\.org\/SoftwareApplication"/);
+	});
+	test('the local-service verticals sharpen business', () => {
+		for (const subtype of ['ProfessionalService', 'HomeAndConstructionBusiness', 'MedicalBusiness', 'Plumber', 'Attorney', 'Hospital', 'HairSalon', 'ShoppingCenter'])
+			assert.match(render({ schemaType: 'business', headline: 'B', details: { subtype } }),
+				new RegExp(`itemtype="https://schema\\.org/${subtype}"`), subtype);
+		/* TaxiService is a Service; Casino is deliberately unlisted — both stay LocalBusiness */
+		for (const subtype of ['TaxiService', 'Casino'])
+			assert.match(render({ schemaType: 'business', headline: 'B', details: { subtype } }),
+				/itemtype="https:\/\/schema\.org\/LocalBusiness"/, subtype);
+	});
+	test('venues sharpen location, a broadcast sharpens event', () => {
+		for (const subtype of ['EventVenue', 'StadiumOrArena'])
+			assert.match(render({ schemaType: 'location', headline: 'V', details: { subtype } }),
+				new RegExp(`itemtype="https://schema\\.org/${subtype}"`), subtype);
+		assert.match(render({ schemaType: 'event', headline: 'E', details: { subtype: 'BroadcastEvent' } }),
+			/itemtype="https:\/\/schema\.org\/BroadcastEvent"/);
+		/* StadiumOrArena is also a LocalBusiness, but it is listed under location only */
+		assert.match(render({ schemaType: 'business', headline: 'S', details: { subtype: 'StadiumOrArena' } }),
+			/itemtype="https:\/\/schema\.org\/LocalBusiness"/);
+	});
 	test('legacy businessType still works', () => {
 		const html = render({ schemaType: 'business', headline: 'Brew', details: { businessType: 'CafeOrCoffeeShop' } });
 		assert.match(html, /itemtype="https:\/\/schema\.org\/CafeOrCoffeeShop"/);
@@ -3073,5 +3102,61 @@ describe('CTA icons', () => {
 		assert.match(html, /<a class="ui-button" data-icon="data-object" itemprop="contentUrl" href="https:\/\/x\/a\.json" download>JSON<\/a>/);
 		assert.match(html, /<a class="ui-button" itemprop="contentUrl" href="https:\/\/x\/a\.parquet" download>Parquet<\/a>/);
 		assert.ok(!html.includes('aria-label'));
+	});
+});
+
+/* Brand on the product card — the subheadline slot, the album→artist shape.
+   Docs: docs/schema.md § Product */
+describe('product brand', () => {
+	test('brand renders in the subheadline slot as a Brand scope', () => {
+		assert.match(render({ schemaType: 'product', headline: 'X', details: { brand: 'AuraSound' } }),
+			/<p data-part="subheadline" itemprop="brand" itemscope itemtype="https:\/\/schema\.org\/Brand"><span itemprop="name">AuraSound<\/span><\/p>/);
+	});
+	test('brandUrl wraps the name in a crawlable url, like artistUrl', () => {
+		assert.match(render({ schemaType: 'product', headline: 'X', details: { brand: 'AuraSound', brandUrl: '/brands/aurasound' } }),
+			/itemtype="https:\/\/schema\.org\/Brand"><a itemprop="url" href="\/brands\/aurasound"><span itemprop="name">AuraSound<\/span><\/a><\/p>/);
+	});
+	test('the row sits between headline and summary', () => {
+		const html = render({ schemaType: 'product', headline: 'X', summary: 'S', details: { brand: 'B' } });
+		const at = (needle) => html.indexOf(needle);
+		assert.ok(at('data-part="headline"') < at('itemprop="brand"') && at('itemprop="brand"') < at('data-part="summary"'));
+	});
+	test('no brand, no scope; a hostile brand is escaped', () => {
+		assert.ok(!render({ schemaType: 'product', headline: 'X', details: { sku: 'S' } }).includes('itemprop="brand"'));
+		const html = render({ schemaType: 'product', headline: 'X', details: { brand: '<img src=x onerror=alert(1)>', brandUrl: '" onclick="x' } });
+		assert.ok(!html.includes('<img src=x'));
+		assert.match(html, /&lt;img src=x onerror=alert\(1\)&gt;/);
+		assert.ok(!html.includes('" onclick="x'));
+	});
+});
+
+/* Paywalled content — `details.paywalled: true` → isAccessibleForFree False on any
+   CreativeWork | Event | Place type; the full view also names the gated part.
+   Docs: docs/schema.md § Paywall */
+describe('paywalled content', () => {
+	const FALSE = '<meta itemprop="isAccessibleForFree" content="https://schema.org/False">';
+	const paywalled = (schemaType, extra = {}) => render({ schemaType, headline: 'H', details: { paywalled: true }, ...extra });
+	test('paywalled emits isAccessibleForFree False on a CreativeWork, Event or Place', () => {
+		for (const schemaType of ['news', 'article', 'content', 'recipe', 'video', 'event', 'location'])
+			assert.ok(paywalled(schemaType).includes(FALSE), schemaType);
+	});
+	test('only the boolean true, and only in domain', () => {
+		for (const value of [false, 'true', 1, 'yes'])
+			assert.ok(!render({ schemaType: 'news', headline: 'H', details: { paywalled: value } }).includes('isAccessibleForFree'), String(value));
+		assert.ok(!render({ schemaType: 'news', headline: 'H' }).includes('isAccessibleForFree'));
+		/* Product, JobPosting, Person, Offer, Organization — out of domain, so the flag is dropped */
+		for (const schemaType of ['product', 'job', 'profile', 'membership', 'organization'])
+			assert.ok(!paywalled(schemaType).includes('isAccessibleForFree'), schemaType);
+	});
+	test('a teaser carries the boolean only; the full view adds the WebPageElement part', () => {
+		assert.ok(!paywalled('news', { summary: 'S' }).includes('WebPageElement'));
+		const FULL = { full: { element: 'ui-card', variant: 'col', text: 'body' } };
+		const full = (details) => renderCard({ fields: { schemaType: 'news', headline: 'H', body: 'Paid words', details, preset: { $ref: 'card-preset/full' } } }, FULL);
+		const html = full({ paywalled: true });
+		assert.match(html, /<div itemprop="articleBody">/);
+		assert.ok(html.includes(`<div itemprop="hasPart" itemscope itemtype="https://schema.org/WebPageElement" hidden>${FALSE}<meta itemprop="cssSelector" content="[itemprop=articleBody]"></div>`));
+		/* the part is only truthful where the paywalled body is in the DOM */
+		assert.ok(!full({}).includes('WebPageElement'));
+		assert.ok(!full(undefined).includes('isAccessibleForFree'));
 	});
 });

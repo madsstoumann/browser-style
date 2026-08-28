@@ -12,7 +12,7 @@
 	<meta name="referrer" content="no-referrer">
 	<!-- preconnect: CDN handshake parallel to the CSS download. Docs: docs/performance.md -->
 	<link rel="preconnect" href="https://v4.browser.style">
-	<link rel="stylesheet" href="/dist/demo.9ec1ad20.min.css">
+	<link rel="stylesheet" href="/dist/demo.f9916274.min.css">
 	<style>
 
 		/* Demo-only custom themes (navy + beige) — add your own theme by feeding the
@@ -416,6 +416,37 @@
 			</ui-content></cq-box>
 		</ui-card>
 	</div>
+
+	<!-- ============================================================
+	     Gated content — content="gate"
+	     ============================================================ -->
+	<h2>Gated content — <code>content="gate"</code></h2>
+	<p class="note">The paywalled-preview look: <code>content="gate"</code> fades the text column out towards the bottom — the same <code>ui-scroll-fade</code> gradient as <code>scr</code>, held still, with no scrolling. Default size <code>100cqb</code> (one ramp over the whole column); shorten it with <code>--ui-content-gate-size</code>. Pair with <code>details.paywalled</code> for the machine claim.</p>
+	<lay-out md="columns(2)">
+		<ui-card variant="col" media="asr(16/9)">
+			<cq-box>
+				<ui-media><img src="/assets/images/finance.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/finance.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/finance.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/finance.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/finance.png 720w" sizes="(min-width: 540px) 50vw, 100vw" loading="lazy" decoding="async"></ui-media>
+				<ui-content content="gate">
+					<p data-part="meta"><ui-chip theme="black">Subscribers only</ui-chip></p>
+					<small data-part="eyebrow">gate</small>
+					<h2 data-part="headline">Who pays for the carbon tariff</h2>
+					<p data-part="summary">The rebate mechanism that unlocked the climate deal, modelled sector by sector with the figures the negotiators would not publish.</p>
+					<p data-part="summary">Steel and cement are in line for rebates worth more than they pay in; agriculture carries the net bill.</p>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(16/9)" style="--ui-content-gate-size: 8rem;">
+			<cq-box>
+				<ui-media><img src="/assets/images/finance.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/finance.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/finance.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/finance.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/finance.png 720w" sizes="(min-width: 540px) 50vw, 100vw" loading="lazy" decoding="async"></ui-media>
+				<ui-content content="gate">
+					<small data-part="eyebrow">gate · --ui-content-gate-size: 8rem</small>
+					<h2 data-part="headline">Only the last lines fade</h2>
+					<p data-part="summary">A shorter ramp keeps the headline and the first lines fully legible and fades only the tail — set the size on the card or on the column itself.</p>
+					<p data-part="summary">Any length at or above the column height reproduces the default full ramp.</p>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</lay-out>
 
 	<!-- ============================================================
 	     Core surface tokens

@@ -9,7 +9,7 @@
 > 2026-08-19 when `VacationRental` took it to 50 (51 `schemaType` keys; the demo page's
 > cards carry 52 distinct root itemtypes — the count bridge is at the top of `schema.md`),
 > and on 2026-08-24 when the `filelist` card joined — no new itemtype, a fourth `ItemList`
-> (53 keys).
+> (54 keys).
 > The question: how many of the card system's schema.org types have a live Google rich
 > result, which do not, and is it worth adding or reshaping anything to close the gap.
 >
@@ -52,7 +52,7 @@ console.log(new Set(Object.values(SCHEMA_TYPES)).size)"   # → 50
 
 ## 1. The headline answer
 
-Of **50 distinct itemtypes** across 53 `schemaType` keys (`profile` and `artist` both resolve
+Of **50 distinct itemtypes** across 54 `schemaType` keys (`profile` and `artist` both resolve
 to `Person`; `comparison`, `places` and `filelist` all to `ItemList`):
 
 | Bucket | Count | Meaning |
@@ -165,14 +165,14 @@ Sorted by bucket, then alphabetically. `key` is the `schemaType` discriminator.
 
 | itemtype | key | Google feature | Src |
 |---|---|---|---|
-| `Article` | `article` | Article | ⚠ |
-| `NewsArticle` | `news` | Article | ⚠ |
-| `Product` | `product` | Product snippets / merchant listings; **Product variants** via the `ProductGroup` subtype | `repo` — [schema.md § Product](schema.md), incl. the distinct-URL requirement and price formatting |
+| `Article` | `article` | Article; **Subscription & paywalled content** via `details.paywalled` | ⚠ — the paywall arm is `repo`, [schema.md § Paywall](schema.md) |
+| `NewsArticle` | `news` | Article; **Subscription & paywalled content** via `details.paywalled` | ⚠ — the paywall arm is `repo`, [schema.md § Paywall](schema.md) |
+| `Product` | `product` | Product snippets / merchant listings; **Product variants** via the `ProductGroup` subtype; `brand` → `Brand` (recommended for merchant listings) | `repo` — [schema.md § Product](schema.md), incl. the distinct-URL requirement and price formatting |
 | `Recipe` | `recipe` | Recipe (and the surviving `HowTo` shape, nested as `recipeInstructions`) | `repo` — schema.md § Rich results, rider 1 |
 | `Event` | `event` | Event; ticket tiers as `Offer` scopes | `repo` — `render.js` DETAILS.event comment |
 | `JobPosting` | `job` | Job posting; `EmployerAggregateRating` as a second top-level item | `repo` — schema.md § Employer rating |
 | `VideoObject` | `video` | Video | `repo` — 2026-08-05 coverage doc |
-| `LocalBusiness` | `business` | Local business (31 allowlisted subtypes) | ⚠ |
+| `LocalBusiness` | `business` | Local business (60 allowlisted subtypes) | ⚠ |
 | `Organization` | `organization` | Organization / merchant info; multi-location via `department` | `repo` — 2026-08-05 coverage doc |
 | `Review` | `review` | Review snippet | ⚠ |
 | `QAPage` | `qa` | Q&A | `repo` — 2026-08-05 coverage doc |
@@ -286,10 +286,13 @@ it. The reasoning above still stands as the *test*, and the type still has no op
 Google's *Vacation rental* feature is fed through its partner programme, not by published markup.
 See [schema.md § Vacation rental](schema.md).
 
-Note also that three of the four SUBTYPE families already cover vertical ground a naive reading
-would call missing: `product` allowlists `Vehicle`/`Car`/`Motorcycle`, `social` allowlists
-`DiscussionForumPosting`, and `business` allowlists 31 `LocalBusiness` subtypes including
-`Hotel` and `Resort`.
+Note also that the SUBTYPE families already cover vertical ground a naive reading would call
+missing: `product` allowlists `Vehicle`/`Car`/`Motorcycle`, `social` allowlists
+`DiscussionForumPosting`, `software` allowlists `MobileApplication`/`WebApplication`/`VideoGame`,
+and `business` allowlists 60 `LocalBusiness` subtypes — hotels, restaurants, the medical and
+local-service trades (`Plumber`, `Attorney`, `HairSalon`…). The 2026-08 round that added most of
+them came from the schema.org usage statistics, not the gallery: every subtype in the 100K–1M
+bucket of a base we render ([schema.md § Subtypes](schema.md)).
 
 ---
 

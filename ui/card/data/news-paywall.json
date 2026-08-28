@@ -1,0 +1,51 @@
+{
+  "$schema": "../../../cms/baseline/models/card.schema.json",
+  "id": "news-paywall",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-08-28T09:00:00Z",
+    "updatedAt": "2026-08-28T09:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Editorial"
+  },
+  "fields": {
+    "internalName": "Demo — News (paywalled)",
+    "schemaType": "news",
+    "preset": {
+      "$ref": "card-preset/stack-gate"
+    },
+    "chip": {
+      "text": "Subscribers only",
+      "theme": "black"
+    },
+    "eyebrow": "Economy",
+    "headline": "Who pays for the carbon tariff — and who keeps the rebate",
+    "summary": "The rebate mechanism that unlocked the climate deal, modelled sector by sector with the figures the negotiators would not publish.",
+    "published": "2026-07-02T05:30:00Z",
+    "modified": "2026-07-02T07:10:00Z",
+    "readingTime": "6 min read",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/finance.png",
+        "alt": "City skyline at night behind a wall of stock-market candlestick charts"
+      }
+    ],
+    "authors": [
+      {
+        "name": "Sofia Rahbek",
+        "role": "Economics editor",
+        "avatar": "https://assets.stoumann.dk/img/avatar5.webp"
+      }
+    ],
+    "details": {
+      "paywalled": true
+    },
+    "body": {
+      "$richtext": true,
+      "content": "The tariff's headline rate was the easy part. What decided the negotiation was the rebate: exporters recover tariff costs against verified decarbonisation investment, which means the mechanism's real cost lands on whoever cannot prove they invested.\n\nOur sector-by-sector model, built from the coalition's own working papers, puts steel and cement in line for rebates worth more than they pay in — and leaves agriculture, which has no comparable capital programme, carrying the net bill.",
+      "format": "text"
+    }
+  }
+}

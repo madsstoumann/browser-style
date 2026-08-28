@@ -1157,7 +1157,7 @@ and [`ui/card/jsonld.js`](../../ui/card/jsonld.js) reads the structured data bac
 **microdata** as a page-level `@graph`. There is one source of structured data, not two, so
 the objection in § 2.2 of google-rich-results.md never applies — no mapping was
 re-implemented, and no equivalence gate is needed because the graph is *derived*, not
-authored. `demo/schema.jsonld.html` ships as the third twin (63 nodes, 55 distinct types).
+authored. `demo/schema.jsonld.html` ships as the third twin (66 nodes, 56 distinct types as of 2026-08-28).
 
 The extraction route made the "restructure the content models" question moot too: nothing in
 `details` had to move, because the mapping is read from the emitted markup rather than from

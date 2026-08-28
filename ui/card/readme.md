@@ -254,6 +254,7 @@ Configures `<ui-content>`: type scale, padding, gap, scroll. Set it on the card 
 | `pad()` | `none xs sm md lg xl 2xl` | content padding | Yes |
 | `gap()` | `none xs sm md lg` | row gap between parts | Yes |
 | `scr` | *(bare flag)* | scrollable column with edge-fade mask | No |
+| `gate` | *(bare flag)* | static bottom fade — the paywalled-preview look (`--ui-content-gate-size`, default `100cqb`) | No |
 
 Content **parts** are styled by `data-part`, never by tag — pick the semantically correct element for the context:
 

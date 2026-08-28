@@ -139,19 +139,20 @@ how it looks. Each accepts a free-string `style` token override.
 **54 values, 51 distinct itemtypes** — `profile`/`artist` both emit `Person`,
 `comparison`/`places`/`filelist` all emit `ItemList`.
 
-`subtype` narrows it. **Only 8 of the 54 types have a subtype allowlist**, so the control is
-conditional on `schemaType` and must be absent for the other 46:
+`subtype` narrows it. **Only 9 of the 54 types have a subtype allowlist**, so the control is
+conditional on `schemaType` and must be absent for the other 45:
 
 | schemaType | Base itemtype | Values |
 |---|---|---|
 | `article` | Article | 7 |
-| `business` | LocalBusiness | 31 |
-| `event` | Event | 18 |
-| `location` | Place | 21 |
+| `business` | LocalBusiness | 60 |
+| `event` | Event | 19 |
+| `location` | Place | 23 |
 | `news` | NewsArticle | 5 |
 | `organization` | Organization | 22 |
 | `product` | Product | 8 |
 | `social` | SocialMediaPosting | 3 |
+| `software` | SoftwareApplication | 3 |
 
 The full value lists are in [schema.md § Subtypes](./schema.md#subtypes) — one table, kept in
 sync with `SUBTYPES` by `tokens.lint.js`, so an editor should read them from `render.js`
@@ -170,9 +171,16 @@ other changes which renderer runs, not the emitted itemtype.
 
 ### Fields some types take from `details`
 
-Three types fill the envelope's `subheadline` from `details` instead
+Four types fill the envelope's `subheadline` from `details` instead
 (`SUBHEADLINE_SLOT`): `profile` and `artist` use `{jobTitle, organization}`, `music` uses
-`{artist, artistUrl}`. An editor should show those under the type panel, not the Basics group.
+`{artist, artistUrl}`, `product` uses `{brand, brandUrl}`. An editor should show those under the
+type panel, not the Basics group.
+
+**`paywalled`** (boolean) is accepted in `details` on any type whose itemtype is a CreativeWork,
+Event or Place — including `article`, `news` and `content`, which otherwise take no `details`.
+Show it as a checkbox on those types; it emits `isAccessibleForFree: False` and is dropped
+silently on Product, JobPosting, Person, Offer and Organization (out of domain). See
+[schema.md § Paywall](./schema.md#paywall--isaccessibleforfree).
 
 ---
 
@@ -241,6 +249,8 @@ ignores a display twin. Do not go hunting for a mapping that does not exist.
 | `validUntil` | date | date |  |
 | `validUntilDisplay` | string | text | display twin |
 | `sku` | string | text |  |
+| `brand` | string | text | → Brand.name, rendered in the subheadline slot |
+| `brandUrl` | url | url | crawlable `<a itemprop="url">` around the brand name |
 | `subtype` | select | select | SUBTYPES.product (8) |
 | `variants` | object | fieldset | variesBy[] ∈ VARIANT_AXES · productGroupID · control ∈ VARIANT_CONTROLS · items[] · tile · layout |
 | `reviews` | array | repeater | detail pages only, never the teaser |
@@ -1079,6 +1089,7 @@ is live. One value per token instance — `chip(ts) chip(red)`, never `chip(ts r
 | `wid()` | **size** | sm md lg xl 2xl | — |
 | `tal()` | **value** | start ctr end | — |
 | `scr()` | **value** | x y | — |
+| `gate` | *(bare flag)* | — | — |
 <!-- /tokens -->
 
 ### `map=`

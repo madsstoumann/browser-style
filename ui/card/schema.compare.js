@@ -110,6 +110,9 @@ const PAIRS = [
 	/* the sticker shape had drifted (page sh:spark, data sh:burst) with nothing watching —
 	   pairing the product is what keeps the two spellings one spelling */
 	['Product', 'ui/card/data/product.json'],
+	/* the paywalled teaser — the page's second NewsArticle, keyed by id; the first is a
+	   morphing card with page-only hooks and stays unpaired */
+	['NewsArticle#schema-news-paywall', 'ui/card/data/news-paywall.json'],
 	/* the two collection cards. Both are keyed by id: the page's bare ItemList is the
 	   comparison card, which has none, and the bare form matches only an id-less card */
 	['ItemList#schema-places-offices', 'ui/card/data/places-offices.json'],

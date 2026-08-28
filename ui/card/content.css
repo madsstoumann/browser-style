@@ -230,6 +230,13 @@
 		}
 	}
 
+	/* === GATE — content="gate": the scroll-fade gradient held static (a paywalled preview, not a scroller). Docs: docs/content.md § gate === */
+	:where([content~="gate"]) ui-content,
+	:where(ui-content[content~="gate"]) {
+		--ui-scroll-fade-end: var(--ui-content-gate-size, 100cqb);
+		mask: var(--ui-scroll-fade-mask);
+	}
+
 	/* === PARTS — styled by [data-part], never by tag === */
 
 	/* eyebrow — Eyebrow group (the part IS the group's representative) */

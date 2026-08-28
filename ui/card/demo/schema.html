@@ -10,9 +10,9 @@
 	<meta name="referrer" content="no-referrer">
 	<meta name="format-detection" content="telephone=no">
 	<link rel="preconnect" href="https://v4.browser.style">
-	<meta name="description" content="62 cards covering 53 distinct schema.org itemtypes on the card hosts (ItemList runs four cards; Quiz three; Review, EventSeries, Place and Person two each) — re-created with the modern &lt;ui-card&gt; engine: inline microdata (itemscope/itemtype/itemprop), no JSON-LD. The job card carries a 54th type as a second top-level item: EmployerAggregateRating. Two optional scripts: video.min.js polyfills the media invoker commands behind the podcast play button, save.min.js flips the save heart.">
+	<meta name="description" content="62 cards covering 53 distinct schema.org itemtypes on the card hosts (ItemList runs four cards; Quiz three; Review, EventSeries, Place, Person and NewsArticle two each) — re-created with the modern &lt;ui-card&gt; engine: inline microdata (itemscope/itemtype/itemprop), no JSON-LD. The job card carries a 54th type as a second top-level item: EmployerAggregateRating. Two optional scripts: video.min.js polyfills the media invoker commands behind the podcast play button, save.min.js flips the save heart.">
 	<link rel="alternate" type="text/markdown" href="/ui/card/docs/schema.md">
-	<link rel="stylesheet" href="/dist/demo.9ec1ad20.min.css">
+	<link rel="stylesheet" href="/dist/demo.f9916274.min.css">
 
 	<style>
 		/* Off-screen cards skip style+layout. Page-scoped on purpose; 567px is this page's
@@ -150,6 +150,26 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
+		<ui-card id="schema-news-paywall" variant="col" media="asr(16/9) chip(te)" itemscope itemtype="https://schema.org/NewsArticle">
+			<cq-box>
+				<ui-media>
+					<img src="/assets/images/finance.png" alt="City skyline at night behind a wall of stock-market candlestick charts" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/finance.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/finance.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/finance.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/finance.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/finance.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image">
+				<ui-chip data-type>NewsArticle</ui-chip></ui-media>
+				<ui-content content="gate">
+					<meta itemprop="datePublished" content="2026-07-02T05:30:00Z">
+					<meta itemprop="dateModified" content="2026-07-02T07:10:00Z">
+					<meta itemprop="isAccessibleForFree" content="https://schema.org/False">
+					<p data-part="meta"><ui-chip theme="black">Subscribers only</ui-chip></p>
+					<small data-part="eyebrow" itemprop="articleSection">Economy</small>
+					<h3 data-part="headline" itemprop="headline">Who pays for the carbon tariff — and who keeps the rebate</h3>
+					<p data-part="summary" itemprop="description">The rebate mechanism that unlocked the climate deal, modelled sector by sector with the figures the negotiators would not publish.</p>
+					<address data-part="byline" itemprop="author" itemscope itemtype="https://schema.org/Person">
+						<ui-avatar><img src="https://assets.stoumann.dk/img/avatar5.webp" alt="" loading="lazy" decoding="async"></ui-avatar>
+						<span data-part="byline-who"><span itemprop="name">Sofia Rahbek</span><span itemprop="jobTitle">Economics editor</span></span><small data-part="dateline"><time datetime="2026-07-02T05:30:00Z">Jul 2, 2026</time><span data-part="reading-time">6 min read</span></small>
+					</address>
+				</ui-content>
+			</cq-box>
+		</ui-card>
 		<ui-card variant="col" media="asr(16/9) chip(te)" theme="gray" content="scl(lg)" itemscope itemtype="https://schema.org/Quotation">
 			<cq-box>
 				<ui-media><img src="/assets/images/quote.png" alt="Open book on a quiet desk" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/quote.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/quote.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/quote.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/quote.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/quote.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>Quotation</ui-chip></ui-media>
@@ -194,6 +214,7 @@
 					<meta itemprop="sku" content="WH-1000XM5">
 					<small data-part="eyebrow" itemprop="category">Electronics</small>
 					<h3 data-part="headline" itemprop="name"><a data-part="cover" href="products/aurasound-pro.html">AuraSound Pro Wireless Headphones</a></h3>
+					<p data-part="subheadline" itemprop="brand" itemscope itemtype="https://schema.org/Brand"><span itemprop="name">AuraSound</span></p>
 					<p data-part="summary" itemprop="description">Industry-leading noise cancellation, 30-hour battery and multipoint pairing.</p>
 					<div data-part="rating" itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
 						<meta itemprop="ratingValue" content="4.5">

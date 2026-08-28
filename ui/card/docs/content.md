@@ -120,6 +120,7 @@ Argument vocabularies, the custom properties each token writes, and which tokens
 | `wid()` | measure | **size** sm md lg xl 2xl | — | — | --ui-content-max | — | — |
 | `tal()` | alignment | **value** start ctr end | — | — | --ui-content-text-align | — | — |
 | `scr()` | scroll | **value** x y | — | yes | --ui-scroll-fade-dir --ui-scroll-fade-start --ui-scroll-fade-end | — | — |
+| `gate` | scroll | — | — | yes | --ui-scroll-fade-end | — | — |
 <!-- /tokens -->
 
 What each one is *for*:
@@ -141,6 +142,7 @@ What each one is *for*:
 | `wid()` | text measure — caps each row's `max-inline-size`: `sm` 35ch · `md` 50ch · `lg` 65ch · `xl` 80ch · `2xl` 100%. No-token default = `--width-prose` (65ch); `scr(x)` rows exempt | No |
 | `tal()` | explicit `text-align` — `start` (default) / `ctr` / `end`. Sits under the `ovr()` slot (like `plc()`): `content=` inherits freely, so a group-level `tal(ctr)` never overrides a nested overlay card's cell-derived alignment | No |
 | `scr` / `scr(y)` / `scr(x)` | *(bare flag + axis arg)* scrollable content + shared `ui-scroll-fade` edge mask (`ui/base/scroll.css`). Bare `scr` = `scr(y)` = vertical column; `scr(x)` = horizontal row | No |
+| `gate` | *(bare flag)* the same `ui-scroll-fade` gradient held **static** — the text column fades out towards its block-end, no scrolling. The paywalled-preview look; size via `--ui-content-gate-size` (default `100cqb`) | No |
 
 **Tone** (ink strength + hue): `shr` (30%) · `lgt` (45%) · `med` (65%, = muted) · `drk` (85%) · `sld` (100%, theme text) · `accent` · `inv` (white, for overlays).
 **Weight**: `300`–`900` → `--font-weight-*` (`800` is a literal). **Vocabularies are disjoint** so a size, a tone, and a weight never collide inside one family — e.g. `hl(3xl)`, `hl(accent)`, and `hl(900)` compose freely.
@@ -1100,7 +1102,7 @@ A group is viewport-wide, so the card-scale thresholds (25rem / 44rem) act as a 
 
 ### What is still unprefixed
 
-Content **tone/weight** (`eb()`/`hl()`/`tx()`/`mt()` ink + weight), group **sizes** (`eb()`/`tx()`/`mt()` `sm`–`xl`), `fnt()`, `plc()`, `wid()`, `tal()`, `scr` and `rds()` have no `md:`/`lg:` forms. Tone/weight would cost a rule per token × tier × arm and is deferred; group sizes don't need prefixes at all, since a responsive `scl()` shifts them via the relational ladder. On the `media=` side only `asr()` is prefixable — see [media.md](./media.md#responsive).
+Content **tone/weight** (`eb()`/`hl()`/`tx()`/`mt()` ink + weight), group **sizes** (`eb()`/`tx()`/`mt()` `sm`–`xl`), `fnt()`, `plc()`, `wid()`, `tal()`, `scr`, `gate` and `rds()` have no `md:`/`lg:` forms. Tone/weight would cost a rule per token × tier × arm and is deferred; group sizes don't need prefixes at all, since a responsive `scl()` shifts them via the relational ladder. On the `media=` side only `asr()` is prefixable — see [media.md](./media.md#responsive).
 
 **Axis:** bare `scr` (alias `scr(y)`) is a **vertical** scrolling column with a top/bottom fade; **`scr(x)`** is a **horizontal** scrolling row (`flex-direction: row`, `overflow-x: auto`) with a start/end fade — handy for a strip of thumbnails, tags or chips that overflows the card. Both drive the one scroll-edge-fade engine; `scr(x)` just flips the mask direction (`--ui-scroll-fade-dir: to var(--_dir-e)`, so it **mirrors under `dir="rtl"`**) and the timeline axis (`scroll(self inline)`). Cap the scroll extent with `--ui-content-scroll-bs` (block) as usual.
 
@@ -1288,6 +1290,35 @@ them. That is what makes the seven padding stems compose in any order and at any
 spacing tokens (`p`/`pi`/`pb`/`pbs`/`pbe`/…) — same names, named `--spacing-*` steps instead
 of layout's numeric unit multiples. All are whole-token (`~=`) matched so the base rules
 never substring-match the `md:`/`lg:` forms declared in `ui-card.css`.
+
+### `gate` holds the same gradient still
+
+`content="gate"` is the paywalled-preview look: the text column fades out towards its
+block-end and does **not** scroll. It reuses the engine's gradient — `--ui-scroll-fade-mask`
+from `ui/base/scroll.css` — but writes only `--ui-scroll-fade-end` (the registered
+non-inheriting `<length>` that `scr` animates) once, statically, and applies the mask:
+
+```css
+:where([content~="gate"]) ui-content, :where(ui-content[content~="gate"]) {
+	--ui-scroll-fade-end: var(--ui-content-gate-size, 100cqb);
+	mask: var(--ui-scroll-fade-mask);
+}
+```
+
+No `max-block-size`, no `overflow`, no animation — so no `@supports` gate and no
+reduced-motion arm. It is deliberately not `scr`: a gate that scrolls is not a gate.
+
+**Why `100cqb`.** `<ui-card>` is an *inline-size* container only, so `cqb` has no block-axis
+container and resolves to the small-viewport block size — larger than any column, which
+drives the gradient's `calc(100% − …)` stop negative; it clamps to the previous stop and
+leaves one opaque→transparent ramp over the whole column. Any `<length>` ≥ the column does
+the same; `100%` is not accepted (the property is registered `<length>`). Shorten the ramp
+per element with `--ui-content-gate-size` (e.g. `10rem` fades only the last lines).
+
+Pair it with `details.paywalled` ([schema.md § Paywall](schema.md#paywall--isaccessibleforfree)):
+the flag is the machine claim, the token is the look, and the renderer never derives one
+from the other. A mask hides nothing from a crawler or view-source — enforcement is
+server-side.
 
 ### `scr` drives the shared scroll-edge-fade engine
 

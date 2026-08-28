@@ -10,6 +10,14 @@
       "variant": "col",
       "media": "asr(16/9)"
     },
+    "stack-gate": {
+      "name": "Stack Preset — gated",
+      "description": "The stack card with its text column faded out towards the bottom (content=\"gate\") — the paywalled-teaser look. Pair with details.paywalled, which carries the machine claim. Docs: ui/card/docs/schema.md § Paywall",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(16/9)",
+      "content": "gate"
+    },
     "showcase": {
       "name": "Showcase Preset",
       "description": "Column card with a taller 4:3 media frame — products, credentials",

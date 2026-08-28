@@ -16,13 +16,13 @@
 > scopes, a `<progress>` bar or `<ui-progress-circular>` ring as the visible face).
 
 **Four counts, four different quantities — do not conflate them.** The page carries **62
-cards** with **53 distinct root itemtypes**; a structured-data validator reports **65 items**;
+cards** with **53 distinct root itemtypes**; a structured-data validator reports **66 items**;
 the renderer knows **54 `schemaType` keys**.
 
 | Count | What it measures | Reproduce it |
 |---|---|---|
 | **62** | card hosts on the page — `<ui-card>` plus the one `<ui-reveal>` | `grep -oE '<ui-(card\|reveal)[^>]*itemtype="[^"]*"' ui/card/demo/schema.html \| grep -vc 'itemprop='` |
-| **65** | top-level microdata items — **what schema.org's validator reports** | `grep -o '<[a-z-]*[^<>]*itemscope[^<>]*>' ui/card/demo/schema.html \| grep -v 'itemprop=' \| grep -c 'itemtype='` |
+| **66** | top-level microdata items — **what schema.org's validator reports** | `grep -o '<[a-z-]*[^<>]*itemscope[^<>]*>' ui/card/demo/schema.html \| grep -v 'itemprop=' \| grep -c 'itemtype='` |
 | **53** | distinct root `itemtype` values | `grep -oE '<ui-(card\|reveal)[^>]*itemtype="[^"]*"' ui/card/demo/schema.html \| grep -v 'itemprop=' \| grep -o 'itemtype="[^"]*"' \| sort -u \| wc -l` |
 | **54** | `schemaType` keys `render.js` supports (`SCHEMA_TYPES`) | `node -e "import('./ui/card/render.js').then(m => console.log(Object.keys(m.SCHEMA_TYPES).length))"` |
 
@@ -34,11 +34,11 @@ It counts identically in every column below; only the element differs.
 of its own — so it sees the 62 cards plus **three items that are not cards**: the standalone
 `EmployerAggregateRating` on the job card, the page-level `WebSite` (site identity plus the
 sitelinks-searchbox `potentialAction`, which describes the *site*, not any card on it), and the
-page-trail `BreadcrumbList` on the breadcrumb `<ol>` — 65. Nested scopes (`author` → `Person`,
+page-trail `BreadcrumbList` on the breadcrumb `<ol>` — 66. Nested scopes (`author` → `Person`,
 `offers` → `Offer`, …) are properties of their
 parent, not items, and are not counted. The `grep -c 'itemtype='` on the end of that command is
 load-bearing: without it the page's own `<meta name="description">` is counted too, because its
-text mentions "itemscope" — that is how a naive scan reports 65. (It read 63 while an HTML
+text mentions "itemscope" — that is how a naive scan reports 67. (It read 63 while an HTML
 comment on the job card also spelled the word out; that comment is gone, but the guard is not
 about any one line — any future prose mentioning `itemscope` walks into the same trap.)
 
@@ -48,16 +48,16 @@ inside the [ProductGroup collage](#the-collage-presentation)'s `<ui-media>` are 
 nested property scope (`AggregateRating`, a byline `Person`, `Organization`, `ComicIssue`,
 `Occupation`, …) is not an itemtype *on a card host*.
 
-**Cards ≠ types.** `Quiz` runs three cards, and `Review`, `EventSeries`, `Place` and `Person`
-run two each, and ItemList four (the comparison card, the two collection cards, and the file
-list) — so 61 − 2 − 4 − 3 = 52. The `grep -v itemprop=` in those commands is load-bearing: the
+**Cards ≠ types.** `Quiz` runs three cards, `Review`, `EventSeries`, `Place`, `Person` and
+`NewsArticle` run two each, and ItemList four (the comparison card, the two collection cards,
+and the file list) — so 62 − 2 − 5 − 3 = 52. The `grep -v itemprop=` in those commands is load-bearing: the
 collage `ProductGroup` nests a `<ui-card>` per variant, and a nested card is a **property** of
 its parent item, not a card of its own. Note the second `grep` in that command: **reduce to the `itemtype=`
 substring before `sort -u`**. Uniquing the whole `<ui-card …>` match counts one type twice
 whenever its two cards differ in any other attribute (an `id`, a `style`) — that is how this
 count once read 50.
 
-**Types ≠ renderer keys.** The 52 is the **50** distinct base itemtypes behind the 53
+**Types ≠ renderer keys.** The 52 is the **50** distinct base itemtypes behind the 54
 `schemaType` keys (`profile` and `artist` both resolve to `Person`; `comparison`, `places` and `filelist` all to `ItemList`), minus `LocalBusiness` (never
 shown plain — the business card is always sharpened), plus the three sharpened [subtypes](#subtypes)
 `ProductGroup`, `CafeOrCoffeeShop` and `DiscussionForumPosting`, which `details.subtype` produces
@@ -104,7 +104,7 @@ That is the whole mechanism: sections own `<h2>`, cards render whatever their pr
 
 > **The full cross-map lives in
 > [`google-rich-results.md`](google-rich-results.md)** —
-> every itemtype in the system (50 distinct behind the 53 renderer keys) against the Google gallery, bucketed Live / Withdrawn / None, with a
+> every itemtype in the system (50 distinct behind the 54 renderer keys) against the Google gallery, bucketed Live / Withdrawn / None, with a
 > per-row marker saying whether each Google claim was researched here or is unverified model
 > knowledge. This section stays the source of truth for the withdrawn dates below; that
 > document defers to it.
@@ -302,16 +302,24 @@ on the flipside path resolves a different object than the one that produced the 
 Every entry below was verified against the schema.org vocabulary as a transitive subclass of
 the base type. Add to a list only after checking the same.
 
+The 2026-08 additions — `software`'s first list, the local-service trades under `business`,
+`EventVenue`/`StadiumOrArena`, `BroadcastEvent` — were picked from the [schema.org usage
+statistics](https://schema.org/docs/usage_stats.html) (July 2026 release): every subtype in the
+100K–1M-domain bucket of a base we render, plus the 10K–100K local-SEO trades (`Plumber`,
+`Attorney`, `HairSalon`…). No new card type came out of it — the top 25 types by domain count
+were already covered.
+
 | schemaType | Base itemtype | Allowed subtypes |
 |---|---|---|
 | `article` | `Article` | BlogPosting, TechArticle, APIReference, ScholarlyArticle, Report, SatiricalArticle, AdvertiserContentArticle |
-| `business` | `LocalBusiness` | Restaurant, CafeOrCoffeeShop, Bakery, BarOrPub, FastFoodRestaurant, IceCreamShop, Winery, Brewery, Distillery, Store, Hotel, Resort, BedAndBreakfast, Motel, Hostel, Campground, BeautySalon, DaySpa, HealthClub, AutoRepair, AutoDealer, AutoRental, GasStation, Dentist, MedicalClinic, Pharmacy, Physician, RealEstateAgent, TravelAgency, Library, GovernmentOffice |
-| `event` | `Event` | SportsEvent, MusicEvent, TheaterEvent, ScreeningEvent, ComedyEvent, DanceEvent, ExhibitionEvent, FoodEvent, LiteraryEvent, BusinessEvent, EducationEvent, ChildrensEvent, SocialEvent, SaleEvent, Festival, Hackathon, PublicationEvent, CourseInstance |
-| `location` | `Place` | TouristAttraction, TouristDestination, LandmarksOrHistoricalBuildings, Accommodation, Apartment, House, SingleFamilyResidence, Room, Suite, Residence, ApartmentComplex, GatedResidenceCommunity, CivicStructure, Park, Beach, Campground, Church, Museum, Airport, TrainStation, Mountain |
+| `business` | `LocalBusiness` | Restaurant, CafeOrCoffeeShop, Bakery, BarOrPub, FastFoodRestaurant, IceCreamShop, Winery, Brewery, Distillery, Store, Hotel, Resort, BedAndBreakfast, Motel, Hostel, Campground, BeautySalon, DaySpa, HealthClub, AutoRepair, AutoDealer, AutoRental, GasStation, Dentist, MedicalClinic, Pharmacy, Physician, RealEstateAgent, TravelAgency, Library, GovernmentOffice, ProfessionalService, LegalService, Attorney, FinancialService, AccountingService, InsuranceAgency, HomeAndConstructionBusiness, GeneralContractor, Plumber, Electrician, RoofingContractor, HVACBusiness, MovingCompany, Locksmith, MedicalBusiness, Hospital, HealthAndBeautyBusiness, HairSalon, FoodEstablishment, LodgingBusiness, AutomotiveBusiness, ClothingStore, FurnitureStore, JewelryStore, Florist, SelfStorage, EntertainmentBusiness, SportsActivityLocation, ShoppingCenter |
+| `event` | `Event` | SportsEvent, MusicEvent, TheaterEvent, ScreeningEvent, ComedyEvent, DanceEvent, ExhibitionEvent, FoodEvent, LiteraryEvent, BusinessEvent, EducationEvent, ChildrensEvent, SocialEvent, SaleEvent, Festival, Hackathon, PublicationEvent, CourseInstance, BroadcastEvent |
+| `location` | `Place` | TouristAttraction, TouristDestination, LandmarksOrHistoricalBuildings, Accommodation, Apartment, House, SingleFamilyResidence, Room, Suite, Residence, ApartmentComplex, GatedResidenceCommunity, CivicStructure, Park, Beach, Campground, Church, Museum, Airport, TrainStation, Mountain, EventVenue, StadiumOrArena |
 | `news` | `NewsArticle` | ReportageNewsArticle, OpinionNewsArticle, AnalysisNewsArticle, BackgroundNewsArticle, ReviewNewsArticle |
 | `organization` | `Organization` | NGO, Corporation, OnlineStore, OnlineBusiness, EducationalOrganization, School, CollegeOrUniversity, GovernmentOrganization, NewsMediaOrganization, MedicalOrganization, ResearchOrganization, PerformingGroup, MusicGroup, SportsOrganization, SportsTeam, Airline, LibrarySystem, WorkersUnion, PoliticalParty, FundingScheme, Consortium, Project |
 | `product` | `Product` | ProductGroup, ProductModel, IndividualProduct, Vehicle, Car, Motorcycle, Drug, DietarySupplement |
 | `social` | `SocialMediaPosting` | DiscussionForumPosting, BlogPosting, LiveBlogPosting |
+| `software` | `SoftwareApplication` | MobileApplication, WebApplication, VideoGame |
 
 **Two values appear on two lists — `Campground` and `BlogPosting` — and they are the complete
 set.** Both are deliberate: schema.org gives each of them two truthful parents.
@@ -331,8 +339,13 @@ carry commercial properties, `location` for one you do not; `social` for a post 
 platform or a `details.author` handle, `article` otherwise. Neither spelling is wrong in
 either case, which is why nothing guards this.
 
-Note the near miss: `Museum` is **only** a `CivicStructure`, never a `LocalBusiness`, so it
-sharpens `location` and is absent from `business`.
+Note the near misses: `Museum` is **only** a `CivicStructure`, never a `LocalBusiness`, so it
+sharpens `location` and is absent from `business`; `TaxiService` is a `Service`, not a
+`LocalBusiness`; `Game` is a `CreativeWork`, so only `VideoGame` (which is also a
+`SoftwareApplication`) sharpens `software`. `StadiumOrArena` is both a `CivicStructure` and a
+`SportsActivityLocation` but is listed under `location` only. `Casino` is a `LocalBusiness` and
+sits in the 100K–1M bucket, yet is left off on purpose: that count is affiliate volume, not
+content anyone authors here.
 
 `details.businessType` is the **legacy alias** — the business-only spelling that predates
 `subtype`, kept working for existing content. `subtype` is the general spelling; prefer it in
@@ -352,13 +365,25 @@ Envelope only: byline (author → `Person`), published date, reading time, engag
 
 As Article, plus a “Breaking” `<ui-chip>` on the media and `dateModified`. Same `cover` link + `data-view` morph into [its full page](../demo/articles/news.html).
 
+The **second `NewsArticle` card** (`#schema-news-paywall`, `data/news-paywall.json`) is the paywalled teaser: the same envelope, a text-column `chip` (“Subscribers only”) instead of the live beacon, and `details.paywalled: true` — see [§ Paywall](#paywall--isaccessibleforfree). It is paired in `schema.compare.js`.
+
+### Paywall — `isAccessibleForFree`
+
+`details.paywalled: true` emits `<meta itemprop="isAccessibleForFree" content="https://schema.org/False">` — schema.org’s Boolean spelled as its enumeration URL, the house style for every other enumeration member. The property’s domain is **CreativeWork, Event and Place**, so the flag is accepted on the 38 keys whose itemtype is one of those (verified against the schema.org 30.0 dump: `article`, `news`, `content`, `recipe`, `video`, `event`, `location`, `business`, `software`, `book`, `movie`, …) and dropped silently on `product`, `job`, `profile`/`artist`, `membership`, `organization`, `service`, `contact`, `booking`, `statistic`, `goal`, `loyalty`, `musicgroup` and the three `ItemList` keys. Only the boolean `true` counts — a string `"true"` is refused, because the meta is a claim about access and must never be set by accident.
+
+**Two arms, and the second is gated on the body.** Google’s *Subscription and paywalled content* feature reads the boolean **plus** `hasPart → WebPageElement { isAccessibleForFree: False, cssSelector }` naming the gated section of the DOM. A teaser card carries the boolean only: the paywalled text is not on the listing page, so a selector pointing at it would be a lie. The full view — a preset with `text: "body"`, the shape `articles/build.js` renders — adds the part, hidden, with `cssSelector: [itemprop=articleBody]`, which is exactly the wrapper the same render wrote around the body. Caveat for the `jsonld` schema mode: `stripSchema()` removes that `itemprop`, so on a JSON-LD page the selector matches nothing — give the body wrapper a class of your own and point `cssSelector` at that.
+
+**Presentation is not a disabled card.** The link still works (it is the conversion path), a tinted or `muted` treatment fails the muted-compounding contrast rule, and a publisher wants gated content to look *more* desirable, not less. The paywalled news card uses the envelope `chip` — a status flag above the eyebrow, the same slot “New” and “Sold” use — and keeps the type chip on the media. Nothing about the flag is automatic on the visual side; the editor chooses the label.
+
+**The fade is a token, not a flag.** `content="gate"` fades the text column out towards its block-end — the shared scroll-fade gradient held static, default `100cqb` (see [content.md § gate](content.md#gate-holds-the-same-gradient-still)). The demo card gets it from the `stack-gate` preset; `details.paywalled` never appends it, because the machine claim and the look are two decisions. And a mask hides nothing from a crawler or view-source: the visual is a courtesy, enforcement is server-side.
+
 ### Quote — `Quotation`
 
 Envelope `summary` as `<ui-quote>` wrapping `<blockquote itemprop="text">` + author. Proposed part: `quote`.
 
 ### Product — `Product` (subtype `ProductGroup`)
 
-Offer + AggregateRating, discount `<ui-sticker>`, save toggle. Proposed parts: `price`, `rating`.
+Offer + AggregateRating, discount `<ui-sticker>`, save toggle. Proposed parts: `price`, `rating`. `details.brand` renders under the headline in the **subheadline slot** as `brand → Brand` (`name`, plus a crawlable `<a itemprop="url">` when `brandUrl` is set) — the album card’s `artist`/`artistUrl` shape, and the PDP convention of brand above the fold rather than down among price and stock. Google lists `brand` as recommended for merchant listings; a chip on the media stays an editor’s `furniture.chip` choice, never the machine property.
 
 **Individual reviews are a detail-page property.** `details.reviews[]` renders nowhere on the
 teaser — `DETAILS.product` never reads it — and the five generated product pages compose it into a
@@ -1587,6 +1612,14 @@ same mechanism as a first-class attribute — `<lay-out size="…">` writes
 `content-visibility: auto` + `contain-intrinsic-size` (`layout/core/base.css`) — but it
 applies to the section, not to each card inside it. This page wants per-card granularity,
 which has no token today; see `docs/plans/open-items.md`.
+
+### Paywalled teaser fade — now a token
+
+The paywalled news card's bottom fade shipped first as a page rule here
+(`#schema-news-paywall ui-content { --ui-scroll-fade-end: 100cqb; mask: … }`) and was promoted
+the same day to `content="gate"` — the `stack-gate` preset — so nothing page-scoped remains.
+The reasoning (why not `scr`, why `100cqb`) lives with the token in
+[content.md § gate](content.md#gate-holds-the-same-gradient-still).
 
 ### Accessibility overrides
 

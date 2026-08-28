@@ -98,13 +98,14 @@ export const SCHEMA_TYPES = {
    Never verbatim data: this value lands in an itemtype. Docs: docs/schema.md § Subtypes */
 export const SUBTYPES = {
 	article: new Set(['BlogPosting', 'TechArticle', 'APIReference', 'ScholarlyArticle', 'Report', 'SatiricalArticle', 'AdvertiserContentArticle']),
-	business: new Set(['Restaurant', 'CafeOrCoffeeShop', 'Bakery', 'BarOrPub', 'FastFoodRestaurant', 'IceCreamShop', 'Winery', 'Brewery', 'Distillery', 'Store', 'Hotel', 'Resort', 'BedAndBreakfast', 'Motel', 'Hostel', 'Campground', 'BeautySalon', 'DaySpa', 'HealthClub', 'AutoRepair', 'AutoDealer', 'AutoRental', 'GasStation', 'Dentist', 'MedicalClinic', 'Pharmacy', 'Physician', 'RealEstateAgent', 'TravelAgency', 'Library', 'GovernmentOffice']),
-	event: new Set(['SportsEvent', 'MusicEvent', 'TheaterEvent', 'ScreeningEvent', 'ComedyEvent', 'DanceEvent', 'ExhibitionEvent', 'FoodEvent', 'LiteraryEvent', 'BusinessEvent', 'EducationEvent', 'ChildrensEvent', 'SocialEvent', 'SaleEvent', 'Festival', 'Hackathon', 'PublicationEvent', 'CourseInstance']),
-	location: new Set(['TouristAttraction', 'TouristDestination', 'LandmarksOrHistoricalBuildings', 'Accommodation', 'Apartment', 'House', 'SingleFamilyResidence', 'Room', 'Suite', 'Residence', 'ApartmentComplex', 'GatedResidenceCommunity', 'CivicStructure', 'Park', 'Beach', 'Campground', 'Church', 'Museum', 'Airport', 'TrainStation', 'Mountain']),
+	business: new Set(['Restaurant', 'CafeOrCoffeeShop', 'Bakery', 'BarOrPub', 'FastFoodRestaurant', 'IceCreamShop', 'Winery', 'Brewery', 'Distillery', 'Store', 'Hotel', 'Resort', 'BedAndBreakfast', 'Motel', 'Hostel', 'Campground', 'BeautySalon', 'DaySpa', 'HealthClub', 'AutoRepair', 'AutoDealer', 'AutoRental', 'GasStation', 'Dentist', 'MedicalClinic', 'Pharmacy', 'Physician', 'RealEstateAgent', 'TravelAgency', 'Library', 'GovernmentOffice', 'ProfessionalService', 'LegalService', 'Attorney', 'FinancialService', 'AccountingService', 'InsuranceAgency', 'HomeAndConstructionBusiness', 'GeneralContractor', 'Plumber', 'Electrician', 'RoofingContractor', 'HVACBusiness', 'MovingCompany', 'Locksmith', 'MedicalBusiness', 'Hospital', 'HealthAndBeautyBusiness', 'HairSalon', 'FoodEstablishment', 'LodgingBusiness', 'AutomotiveBusiness', 'ClothingStore', 'FurnitureStore', 'JewelryStore', 'Florist', 'SelfStorage', 'EntertainmentBusiness', 'SportsActivityLocation', 'ShoppingCenter']),
+	event: new Set(['SportsEvent', 'MusicEvent', 'TheaterEvent', 'ScreeningEvent', 'ComedyEvent', 'DanceEvent', 'ExhibitionEvent', 'FoodEvent', 'LiteraryEvent', 'BusinessEvent', 'EducationEvent', 'ChildrensEvent', 'SocialEvent', 'SaleEvent', 'Festival', 'Hackathon', 'PublicationEvent', 'CourseInstance', 'BroadcastEvent']),
+	location: new Set(['TouristAttraction', 'TouristDestination', 'LandmarksOrHistoricalBuildings', 'Accommodation', 'Apartment', 'House', 'SingleFamilyResidence', 'Room', 'Suite', 'Residence', 'ApartmentComplex', 'GatedResidenceCommunity', 'CivicStructure', 'Park', 'Beach', 'Campground', 'Church', 'Museum', 'Airport', 'TrainStation', 'Mountain', 'EventVenue', 'StadiumOrArena']),
 	news: new Set(['ReportageNewsArticle', 'OpinionNewsArticle', 'AnalysisNewsArticle', 'BackgroundNewsArticle', 'ReviewNewsArticle']),
 	organization: new Set(['NGO', 'Corporation', 'OnlineStore', 'OnlineBusiness', 'EducationalOrganization', 'School', 'CollegeOrUniversity', 'GovernmentOrganization', 'NewsMediaOrganization', 'MedicalOrganization', 'ResearchOrganization', 'PerformingGroup', 'MusicGroup', 'SportsOrganization', 'SportsTeam', 'Airline', 'LibrarySystem', 'WorkersUnion', 'PoliticalParty', 'FundingScheme', 'Consortium', 'Project']),
 	product: new Set(['ProductGroup', 'ProductModel', 'IndividualProduct', 'Vehicle', 'Car', 'Motorcycle', 'Drug', 'DietarySupplement']),
-	social: new Set(['DiscussionForumPosting', 'BlogPosting', 'LiveBlogPosting'])
+	social: new Set(['DiscussionForumPosting', 'BlogPosting', 'LiveBlogPosting']),
+	software: new Set(['MobileApplication', 'WebApplication', 'VideoGame'])
 };
 
 /* Own-key test, not truthiness: a bare `SCHEMA_TYPES[x]` lets inherited Object.prototype
@@ -216,6 +217,9 @@ const HEADING_TAGS = new Set(['h2', 'h3', 'h4', 'h5']);
 
 /* types whose `body` is the article text → wrapped in itemprop="articleBody" */
 const ARTICLE_BODY_TYPES = new Set(['article', 'news']);
+/* isAccessibleForFree domain — CreativeWork | Event | Place: every key whose itemtype is one
+   (schema.org 30.0 dump). Docs: docs/schema.md § Paywall */
+const PAYWALL_TYPES = new Set(['content', 'article', 'news', 'event', 'recipe', 'review', 'course', 'poll', 'faq', 'quote', 'timeline', 'gallery', 'achievement', 'announcement', 'business', 'location', 'social', 'software', 'video', 'howto', 'qa', 'podcast', 'movie', 'book', 'dataset', 'claim', 'quiz', 'realestate', 'vacationrental', 'menu', 'tvseries', 'tvepisode', 'medical', 'music', 'glossary', 'podcastseries', 'comicseries', 'comicissue']);
 /* types where the image/video belongs to another scope — skip itemprop */
 const NO_IMAGE_PROP = new Set(['review', 'contact']);
 /* A gallery whose data carries licensing emits a full ImageObject per photo, which then
@@ -1328,6 +1332,12 @@ const buildContent = (fields, type, overlay, slots = {}, textMode = 'summary', p
 		html += meta(prop, prop === 'datePosted' ? dateOnly(fields.published) : fields.published);
 	}
 	if (fields.modified) html += meta('dateModified', fields.modified);
+	/* `paywalled` === true only, in-domain types only; the WebPageElement part names the gated
+	   DOM and is truthful only where the body is rendered. Docs: docs/schema.md § Paywall */
+	if (fields.details?.paywalled === true && PAYWALL_TYPES.has(type)) {
+		html += meta('isAccessibleForFree', SCHEMA + 'False');
+		if (body && ARTICLE_BODY_TYPES.has(type)) html += `<div${scope('hasPart', 'WebPageElement')} hidden>${meta('isAccessibleForFree', SCHEMA + 'False')}${meta('cssSelector', '[itemprop=articleBody]')}</div>`;
+	}
 	return html;
 };
 
@@ -2963,6 +2973,13 @@ const SUBHEADLINE_SLOT = {
 		? `<${textTag} data-part="subheadline"${scope('byArtist', 'MusicGroup')}>${d.artistUrl
 			? `<a itemprop="url" href="${esc(d.artistUrl)}"><span itemprop="name">${esc(d.artist)}</span></a>`
 			: `<span itemprop="name">${esc(d.artist)}</span>`}</${textTag}>`
+		: '',
+	/* the product's brand — the same row as the album's artist, PDP convention puts it
+	   above the fold. Docs: docs/schema.md § Product */
+	product: (d, textTag) => d?.brand
+		? `<${textTag} data-part="subheadline"${scope('brand', 'Brand')}>${d.brandUrl
+			? `<a itemprop="url" href="${esc(d.brandUrl)}"><span itemprop="name">${esc(d.brand)}</span></a>`
+			: `<span itemprop="name">${esc(d.brand)}</span>`}</${textTag}>`
 		: ''
 };
 
