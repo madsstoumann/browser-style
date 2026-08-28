@@ -126,12 +126,12 @@
     },
     "stack-boxed-offices": {
       "name": "Stack Boxed Offices Preset",
-      "description": "The stack look with each local office as a light-gray plate: parts.office \"box\" emits data-box (padding + corners from base theme.css), parts.officeTheme its data-theme — `light` pins the plate's scheme so its inks stay AA in dark mode too. Organization only — other types ignore the part",
+      "description": "The stack look with each local office as a light-gray plate with a theme-matched hairline: parts.office \"box brd\" emits data-box=\"brd\" (padding, corners and the border from base theme.css), parts.officeTheme its data-theme — `light` pins the plate's scheme so its inks stay AA in dark mode too. Organization only — other types ignore the part",
       "element": "ui-card",
       "variant": "col",
       "media": "asr(16/9)",
       "parts": {
-        "office": "box",
+        "office": "box brd",
         "officeTheme": "gray light"
       }
     },
@@ -260,9 +260,10 @@
     },
     "quiz-carousel": {
       "name": "Quiz Carousel Preset",
-      "description": "Graded quiz as a scroller deck — one column card per question inside a lay-out overflow, controls in the content end with filled arrows; gate keeps the next arrow disabled until the current question is answered",
+      "description": "Graded quiz as a scroller deck — one column card per question inside a lay-out overflow, controls in the content end with filled arrows; gate keeps the next arrow disabled until the current question is answered. Slides sit flat (shd(non)) on the demo's `quantum` theme — a deep-blue plate with `dark` pinning the scheme (the bundle + resolver live in demo/demo.css, base/theme.md § Create your own theme)",
       "element": "lay-out",
-      "variant": "col",
+      "variant": "col shd(non)",
+      "theme": "quantum dark",
       "media": "asr(16/9)",
       "content": "wid(2xl)",
       "carousel": {

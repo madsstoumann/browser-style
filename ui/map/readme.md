@@ -174,8 +174,13 @@ twice.
 
 If the place lives in a carousel slide with an `id`, the popup title links to `#that-id`
 instead of the listing's own URL: a scroll-snap child is reachable by plain in-page anchor,
-so clicking a pin scrolls the carousel to that card with **no JavaScript**. Without slides it
-falls back to the external URL.
+so the link works on its own. The engine still intercepts the click — native fragment
+navigation is `block: start`, so the **page** would scroll to put the slide at the viewport
+top (a `scroll-margin`/`scroll-padding` of `100dvh` cannot change that; measured, it parks the
+frame a viewport lower). `scrollIntoView({ block: 'nearest', inline: 'start' })` moves only
+the carousel, the URL still gets the fragment (`history.replaceState`), and
+`prefers-reduced-motion` drops the smooth scroll. Without slides the title falls back to the
+external URL.
 
 ## Accessibility
 

@@ -21,7 +21,7 @@
 		gap: 1ch;
 		grid-auto-flow: column;
 		line-height: normal;
-		padding: var(--button-p, 1ch 2.5ch);
+		padding: var(--button-p, 1ch 2ch);
 		place-content: center;
 		text-decoration: none;
 		@media (prefers-reduced-motion: no-preference) { transition: all var(--duration-normal, .2s) ease-in-out; }
@@ -42,6 +42,14 @@
 			box-shadow: var(--button-bxsh--hover);
 			color: var(--button-c--hover);
 		}
+		/* icon-font glyph — data-icon binds --icon (ui/icon); the alt-text arm keeps it out of the name. Docs: ui/button/readme.md § Icons */
+		&[data-icon]::before, &[data-icon][data-icon-at="end"]::after {
+			content: var(--icon) / "";
+			font-family: var(--ui-icon-font);
+			font-size: var(--button-icon-fs, 1.25em);
+			translate: 0 -0.17em; /* undo the font's baked ::marker baseline shift (ui/icon/icons.build.py baselineShiftEm) — measured centred */
+		}
+		&[data-icon][data-icon-at="end"]::before { content: none; }
 		&[data-variant~="icon"] {
 			--button-p: 1ch;
 			align-content: baseline;

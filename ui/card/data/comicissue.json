@@ -24,7 +24,7 @@
       }
     ],
     "actions": [
-      { "link": { "text": "Buy now" }, "style": "primary" }
+      { "link": { "text": "Buy now" }, "style": "primary", "icon": "shopping-cart" }
     ],
     "details": {
       "issueNumber": 2,

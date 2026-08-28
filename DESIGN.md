@@ -96,7 +96,7 @@ The neutrals form a light→dark ramp (`white` < `gray` < `slate` < `black`) and
 <section data-theme="slate glass">…</section>
 ```
 
-`data-box` is the geometry companion for native nodes — padding (`--ui-box-p`) and corners (`--ui-box-radius`) on the element carrying `data-theme` (`ui/base/theme.md` § Box).
+`data-box` is the geometry companion for native nodes — padding (`--ui-box-p`) and corners (`--ui-box-radius`) on the element carrying `data-theme`; `data-box="brd"` adds a theme-matched hairline (`--ui-box-border-width` / `--ui-box-border-color`). `ui/base/theme.md` § Box.
 
 ### Modifiers
 

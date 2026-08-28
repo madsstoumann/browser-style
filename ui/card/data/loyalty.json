@@ -27,6 +27,7 @@
       "hostingOrganization": "Nordlys Retail",
       "joinUrl": "#",
       "joinText": "Join Nordlys Rewards",
+      "joinIcon": "loyalty",
       "tiers": [
         {
           "name": "Blue",

@@ -38,7 +38,9 @@
           "url": "#",
           "text": "Read more"
         },
-        "style": "primary"
+        "style": "primary",
+        "icon": "chevron-right",
+        "iconAt": "end"
       }
     ],
     "links": [

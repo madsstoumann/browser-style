@@ -12,7 +12,7 @@
 	<link rel="preconnect" href="https://v4.browser.style">
 	<meta name="description" content="62 cards covering 53 distinct schema.org itemtypes on the card hosts (ItemList runs four cards; Quiz three; Review, EventSeries, Place and Person two each) — re-created with the modern &lt;ui-card&gt; engine: inline microdata (itemscope/itemtype/itemprop), no JSON-LD. The job card carries a 54th type as a second top-level item: EmployerAggregateRating. Two optional scripts: video.min.js polyfills the media invoker commands behind the podcast play button, save.min.js flips the save heart.">
 	<link rel="alternate" type="text/markdown" href="/ui/card/docs/schema.md">
-	<link rel="stylesheet" href="/dist/demo.7b254d32.min.css">
+	<link rel="stylesheet" href="/dist/demo.9e0af8af.min.css">
 
 	<style>
 		/* Off-screen cards skip style+layout. Page-scoped on purpose; 567px is this page's
@@ -103,7 +103,7 @@
 						<li><a href="#">Release notes</a></li>
 						<li><a href="#">Support</a></li>
 					</ul>
-					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="#" itemprop="url">Read more</a></nav>
+					<nav data-part="actions"><a class="ui-button" data-variant="accent" data-icon="chevron-right" data-icon-at="end" href="#" itemprop="url">Read more</a></nav>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -214,7 +214,7 @@
 					<p data-part="meta"><small>Valid until Aug 1, 2026</small></p>
 					<p data-part="meta"><ui-chip theme="pale green">In stock</ui-chip></p>
 					<span data-part="tags"><ui-chip itemprop="keywords">Wireless</ui-chip><ui-chip itemprop="keywords">Noise Cancelling</ui-chip></span>
-					<nav data-part="actions"><button class="ui-button" type="button" data-variant="accent" aria-label="Add to cart: AuraSound Pro">Add to cart</button></nav>
+					<nav data-part="actions"><button class="ui-button" type="button" data-variant="accent" aria-label="Add to cart: AuraSound Pro" data-icon="shopping-cart">Add to cart</button></nav>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -305,7 +305,7 @@
 					<meta itemprop="softwareRequirements" content="Apple M1 or Intel i5 · 8 GB RAM · 4 GB free">
 					<p data-part="meta"><strong data-part="key">Requires:</strong> Apple M1 or Intel i5 · 8 GB RAM · 4 GB free</p>
 					<span data-part="tags"><ui-chip itemprop="keywords">Game</ui-chip><ui-chip itemprop="keywords">Co-op</ui-chip></span>
-					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="#">Play demo</a></nav>
+					<nav data-part="actions"><a class="ui-button" data-variant="accent" data-icon="play-arrow" href="#">Play demo</a></nav>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -409,7 +409,7 @@
 						<li>Max 2 connected devices</li>
 					</ul>
 					<p data-part="meta">14-day free trial · cancel anytime</p>
-					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="#">Start free trial</a></nav>
+					<nav data-part="actions"><a class="ui-button" data-variant="accent" data-icon="rocket-launch" href="#">Start free trial</a></nav>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -457,7 +457,7 @@
 							</div>
 						</details>
 					</cq-box></ui-accordion>
-					<nav data-part="actions"><a class="ui-button" data-variant="accent" itemprop="url" href="#">Join Nordlys Rewards</a></nav>
+					<nav data-part="actions"><a class="ui-button" data-variant="accent" data-icon="loyalty" itemprop="url" href="#">Join Nordlys Rewards</a></nav>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -481,7 +481,7 @@
 						<li data-icon="local-cafe">Coffee &amp; water included</li>
 					</ul>
 					<footer data-part="footer">Tell us about allergies or accessibility needs when booking.</footer>
-					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="#">Check availability</a></nav>
+					<nav data-part="actions"><a class="ui-button" data-variant="accent" data-icon="event-available" href="#">Check availability</a></nav>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -558,7 +558,7 @@
 					<p data-part="meta">Season 3, episode 4 · 58 min · Mar 5, 2026</p>
 					<p data-part="meta" itemprop="director" itemscope itemtype="https://schema.org/Person"><strong data-part="key">Directed by:</strong> <span itemprop="name">Freja Nyholm</span></p>
 					<p data-part="meta"><strong data-part="key">Starring:</strong> <span itemprop="actor" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Ingrid Solberg</span></span>, <span itemprop="actor" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Mattias Vogel</span></span></p>
-					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="#">Watch episode</a></nav>
+					<nav data-part="actions"><a class="ui-button" data-variant="accent" data-icon="play-circle" href="#">Watch episode</a></nav>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -605,7 +605,7 @@
 					</ul>
 					<footer data-part="footer">New episodes every other Thursday.</footer>
 					<span data-part="tags"><ui-chip itemprop="keywords">Wellbeing</ui-chip><ui-chip itemprop="keywords">Attention</ui-chip></span>
-					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="#">Subscribe</a></nav>
+					<nav data-part="actions"><a class="ui-button" data-variant="accent" data-icon="rss-feed" href="#">Subscribe</a></nav>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -706,7 +706,7 @@
 						<meta itemprop="price" content="34">€34
 					</p>
 					<p data-part="meta" itemprop="publisher" itemscope itemtype="https://schema.org/Organization">Publisher: <span itemprop="name">Kbh Press</span></p>
-					<nav data-part="actions"><button class="ui-button" type="button" data-variant="accent" aria-label="Buy The Nordic Pantry">Buy the book</button></nav>
+					<nav data-part="actions"><button class="ui-button" type="button" data-variant="accent" aria-label="Buy The Nordic Pantry" data-icon="shopping-cart">Buy the book</button></nav>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -741,7 +741,7 @@
 					<p data-part="meta"><strong data-part="key">Art:</strong> <span itemprop="artist" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Milton Stanley</span></span> · <strong data-part="key">Pencils:</strong> <span itemprop="penciler" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Milton Stanley</span></span> · <strong data-part="key">Inks:</strong> <span itemprop="inker" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Rosa Vega</span></span> · <strong data-part="key">Letters:</strong> <span itemprop="letterer" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Artie Kemp</span></span> · <strong data-part="key">Colours:</strong> <span itemprop="colorist" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Dot Halliday</span></span></p>
 					<p data-part="price" itemprop="offers" itemscope itemtype="https://schema.org/Offer"><meta itemprop="priceCurrency" content="USD"><meta itemprop="availability" content="https://schema.org/InStock"><meta itemprop="price" content="4.99">$4.99</p>
 					<span data-part="tags"><ui-chip itemprop="keywords">Silver Age</ui-chip><ui-chip itemprop="keywords">Dark Mode</ui-chip></span>
-					<nav data-part="actions"><button class="ui-button" type="button" data-variant="accent">Buy now</button></nav>
+					<nav data-part="actions"><button class="ui-button" type="button" data-variant="accent" data-icon="shopping-cart">Buy now</button></nav>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -799,7 +799,7 @@
 						<li data-icon="schedule">10 minutes a day</li>
 					</ul>
 					<span data-part="tags"><ui-chip itemprop="keywords">Mindfulness</ui-chip><ui-chip itemprop="keywords">Wellbeing</ui-chip></span>
-					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="#">Enroll</a></nav>
+					<nav data-part="actions"><a class="ui-button" data-variant="accent" data-icon="school" href="#">Enroll</a></nav>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -818,7 +818,7 @@
 					<p data-part="summary" itemprop="description">Demonstrated expertise in WCAG 2.2, ARIA patterns and assistive technology testing.</p>
 					<p data-part="meta"><ui-chip theme="pale green">Certified</ui-chip></p>
 					<p data-part="meta"><strong data-part="key">Issued by:</strong> <span itemprop="recognizedBy" itemscope itemtype="https://schema.org/Organization"><span itemprop="name">IAAP</span></span> · Mar 2026 · <strong data-part="key">Expires:</strong> Mar 2029 · <strong data-part="key">ID:</strong> AWA-2026-8841</p>
-					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="#">Verify credential</a></nav>
+					<nav data-part="actions"><a class="ui-button" data-variant="accent" data-icon="verified" href="#">Verify credential</a></nav>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -881,7 +881,7 @@
 		<meta itemprop="name" content="Quantum computing — check yourself"><meta itemprop="description" content="Three graded multiple-choice questions, one per slide. Pick an answer and it tells you whether you were right."><meta itemprop="learningResourceType" content="Practice problem">
 		<div itemprop="about" itemscope itemtype="https://schema.org/Thing" hidden><meta itemprop="name" content="Quantum computing"></div><div itemprop="educationalAlignment" itemscope itemtype="https://schema.org/AlignmentObject" hidden><meta itemprop="alignmentType" content="educationalSubject"><meta itemprop="targetName" content="Quantum computing"></div>
 		<lay-out md="columns(1)" overflow media="nav(end) arw(drk) gate">
-		<ui-card variant="col" media="asr(16/9) chip(te)">
+		<ui-card variant="col shd(non)" theme="quantum dark" media="asr(16/9) chip(te)">
 			<cq-box>
 				<ui-media><img src="/assets/images/quantum.png" alt="Stylised quantum processor" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/quantum.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/quantum.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/quantum.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/quantum.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/quantum.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>Quiz</ui-chip></ui-media>
 				<ui-content content="wid(2xl)">
@@ -902,7 +902,7 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card variant="col" media="asr(16/9) chip(te)">
+		<ui-card variant="col shd(non)" theme="quantum dark" media="asr(16/9) chip(te)">
 			<cq-box>
 				<ui-media><img src="/assets/images/quantum.png" alt="Stylised quantum processor" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/quantum.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/quantum.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/quantum.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/quantum.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/quantum.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>Quiz</ui-chip></ui-media>
 				<ui-content content="wid(2xl)">
@@ -923,7 +923,7 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card variant="col" media="asr(16/9) chip(te)">
+		<ui-card variant="col shd(non)" theme="quantum dark" media="asr(16/9) chip(te)">
 			<cq-box>
 				<ui-media><img src="/assets/images/quantum.png" alt="Stylised quantum processor" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/quantum.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/quantum.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/quantum.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/quantum.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/quantum.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>Quiz</ui-chip></ui-media>
 				<ui-content content="wid(2xl)">
@@ -963,7 +963,7 @@
 					</ui-face>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<ui-content itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer" theme="gray ink" content="pad(lg)">
+				<ui-content itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer" theme="gray ink" content="pad(lg) plc(cc) tal(ctr)">
 					<p data-part="summary" itemprop="text">The quantum unit of information. Unlike a bit it can hold a superposition of 0 and 1, and only collapses to one of them when measured.</p>
 				</ui-content>
 			</details>
@@ -1058,7 +1058,7 @@
 					<meta itemprop="sameAs" content="https://www.linkedin.com/in/jane-doe-journalist">
 					<nav data-part="actions">
 						<a class="ui-button" itemprop="url" href="#">Portfolio</a>
-						<meta itemprop="email" content="jane@dailyledger.example"><a class="ui-button" data-variant="accent" href="mailto:jane@dailyledger.example">Email</a>
+						<meta itemprop="email" content="jane@dailyledger.example"><a class="ui-button" data-variant="accent" data-icon="mail" href="mailto:jane@dailyledger.example">Email</a>
 					</nav>
 				</ui-content>
 			</cq-box>
@@ -1076,7 +1076,7 @@
 					<p data-part="meta"><span itemprop="award">Eisner nominee — Best Cover Artist, 2026</span></p>
 					<meta itemprop="sameAs" content="https://webcomicsgroup.example/artists/m-stanley">
 					<span data-part="tags"><ui-chip itemprop="knowsAbout">Pencils</ui-chip><ui-chip itemprop="knowsAbout">Inking</ui-chip><ui-chip itemprop="knowsAbout">Lettering</ui-chip></span>
-					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="#schema-comicseries">See the series</a></nav>
+					<nav data-part="actions"><a class="ui-button" data-variant="accent" data-icon="chevron-right" data-icon-at="end" href="#schema-comicseries">See the series</a></nav>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -1104,17 +1104,19 @@
 						<meta itemprop="addressCountry" content="DK">
 					</address>
 					<p data-part="meta"><meta itemprop="email" content="contact@northwind.example"><a href="mailto:contact@northwind.example">contact@northwind.example</a></p>
-					<div data-part="office" data-theme="gray light" data-box itemprop="department" itemscope itemtype="https://schema.org/LocalBusiness">
-						<strong itemprop="name">Aarhus office</strong>
+					<div data-part="office" data-theme="gray light" data-box="brd" itemprop="department" itemscope itemtype="https://schema.org/LocalBusiness">
+						<div>
+							<strong itemprop="name">Aarhus office</strong>
+							<address data-part="address" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
+								<span><span itemprop="streetAddress">Åboulevarden 21</span></span>
+								<span><span itemprop="addressLocality">Aarhus</span></span>
+								<meta itemprop="addressCountry" content="DK">
+							</address>
+						</div>
 						<div itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates" hidden>
 							<meta itemprop="latitude" content="56.1567">
 							<meta itemprop="longitude" content="10.2108">
 						</div>
-						<address data-part="address" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
-							<span><span itemprop="streetAddress">Åboulevarden 21</span></span>
-							<span><span itemprop="addressLocality">Aarhus</span></span>
-							<meta itemprop="addressCountry" content="DK">
-						</address>
 						<ul data-part="list"><li data-icon="call"><a itemprop="telephone" href="tel:+4586123456">+45 86 12 34 56</a></li><li data-icon="mail"><meta itemprop="email" content="aarhus@northwind.example"><a href="mailto:aarhus@northwind.example">aarhus@northwind.example</a></li></ul>
 						<dl data-part="hours">
 							<dt>Mon–Wed</dt>
@@ -1146,17 +1148,19 @@
 							</dd>
 						</dl>
 					</div>
-					<div data-part="office" data-theme="gray light" data-box itemprop="department" itemscope itemtype="https://schema.org/LocalBusiness">
-						<strong itemprop="name">Berlin office</strong>
+					<div data-part="office" data-theme="gray light" data-box="brd" itemprop="department" itemscope itemtype="https://schema.org/LocalBusiness">
+						<div>
+							<strong itemprop="name">Berlin office</strong>
+							<address data-part="address" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
+								<span><span itemprop="streetAddress">Torstraße 140</span></span>
+								<span><span itemprop="addressLocality">Berlin</span></span>
+								<meta itemprop="addressCountry" content="DE">
+							</address>
+						</div>
 						<div itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates" hidden>
 							<meta itemprop="latitude" content="52.5296">
 							<meta itemprop="longitude" content="13.4062">
 						</div>
-						<address data-part="address" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
-							<span><span itemprop="streetAddress">Torstraße 140</span></span>
-							<span><span itemprop="addressLocality">Berlin</span></span>
-							<meta itemprop="addressCountry" content="DE">
-						</address>
 						<ul data-part="list"><li data-icon="call"><a itemprop="telephone" href="tel:+4930901820">+49 30 901820</a></li><li data-icon="mail"><meta itemprop="email" content="berlin@northwind.example"><a href="mailto:berlin@northwind.example">berlin@northwind.example</a></li></ul>
 						<dl data-part="hours">
 							<dt>Mon–Thu</dt>
@@ -1239,7 +1243,7 @@
 						</details>
 					</cq-box></ui-accordion>
 					<span data-part="tags"><ui-chip>Remote</ui-chip><ui-chip>Full-time</ui-chip></span>
-					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="#">Apply now</a></nav>
+					<nav data-part="actions"><a class="ui-button" data-variant="accent" data-icon="send" href="#">Apply now</a></nav>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -1389,8 +1393,8 @@
 					</dl>
 					<span data-part="tags"><ui-chip itemprop="keywords">Coffee</ui-chip><ui-chip itemprop="keywords">Bakery</ui-chip></span>
 					<nav data-part="actions">
-						<a class="ui-button" itemprop="telephone" href="tel:+4533221100">+45 33 22 11 00</a>
-						<meta itemprop="email" content="hello@brewandbean.example"><a class="ui-button" href="mailto:hello@brewandbean.example">Email</a>
+						<a class="ui-button" data-icon="call" itemprop="telephone" href="tel:+4533221100">+45 33 22 11 00</a>
+						<meta itemprop="email" content="hello@brewandbean.example"><a class="ui-button" data-variant="accent" data-icon="mail" href="mailto:hello@brewandbean.example">Email</a>
 					</nav>
 				</ui-content>
 			</cq-box>
@@ -1634,7 +1638,7 @@
 						<li itemprop="recipeIngredient">80 g pecorino romano</li>
 					</ul>
 					<span data-part="tags"><ui-chip itemprop="keywords">Pasta</ui-chip><ui-chip itemprop="keywords">Italian</ui-chip><ui-chip itemprop="keywords">Quick</ui-chip></span>
-					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="recipes/recipe.html?id=recipe-1">Start cooking</a></nav>
+					<nav data-part="actions"><a class="ui-button" data-variant="accent" data-icon="skillet" href="recipes/recipe.html?id=recipe-1">Start cooking</a></nav>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -1780,7 +1784,7 @@
 						<meta itemprop="priceCurrency" content="EUR"><meta itemprop="availability" content="https://schema.org/InStock">
 						<span itemprop="name">Standard</span> <meta itemprop="price" content="449">€449
 					</p>
-					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="#">Participate</a></nav>
+					<nav data-part="actions"><a class="ui-button" data-variant="accent" data-icon="how-to-reg" href="#">Participate</a></nav>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -1911,8 +1915,8 @@
 					<p data-part="summary" itemprop="description">Real people, no phone trees. Average response under 2 hours.</p>
 					<p data-part="meta">Customer Success · Mon–Fri 9–17 CET · English, Danish, German · Replies within 2 hours</p>
 					<nav data-part="actions">
-						<a class="ui-button" itemprop="telephone" href="tel:+4570203040">+45 70 20 30 40</a>
-						<meta itemprop="email" content="support@example.com"><a class="ui-button" data-variant="accent" href="mailto:support@example.com">support@example.com</a>
+						<a class="ui-button" data-icon="call" itemprop="telephone" href="tel:+4570203040">+45 70 20 30 40</a>
+						<meta itemprop="email" content="support@example.com"><a class="ui-button" data-variant="accent" data-icon="mail" href="mailto:support@example.com">support@example.com</a>
 					</nav>
 				</ui-content>
 			</cq-box>
@@ -2015,8 +2019,8 @@
 						<li>Stellar magnitude</li>
 					</ul>
 					<nav data-part="actions">
-						<span itemprop="distribution" itemscope itemtype="https://schema.org/DataDownload"><meta itemprop="encodingFormat" content="JSON"><a class="ui-button" itemprop="contentUrl" href="https://data.example.com/exoplanets.json">JSON</a></span>
-						<span itemprop="distribution" itemscope itemtype="https://schema.org/DataDownload"><meta itemprop="encodingFormat" content="CSV"><a class="ui-button" data-variant="accent" itemprop="contentUrl" href="https://data.example.com/exoplanets.csv">CSV</a></span>
+						<span itemprop="distribution" itemscope itemtype="https://schema.org/DataDownload"><meta itemprop="encodingFormat" content="JSON"><meta itemprop="contentSize" content="2.6 MB"><a class="ui-button" data-icon="data-object" itemprop="contentUrl" href="https://data.example.com/exoplanets.json" download>JSON <small>2.6 MB</small></a></span>
+						<span itemprop="distribution" itemscope itemtype="https://schema.org/DataDownload"><meta itemprop="encodingFormat" content="CSV"><meta itemprop="contentSize" content="1.8 MB"><a class="ui-button" data-variant="accent" data-icon="table-view" itemprop="contentUrl" href="https://data.example.com/exoplanets.csv" download>CSV <small>1.8 MB</small></a></span>
 					</nav>
 				</ui-content>
 			</cq-box>
@@ -2118,8 +2122,8 @@
 						<meta itemprop="availableLanguage" content="Danish">
 						<meta itemprop="processingTime" content="PT1H">
 						<nav data-part="actions">
-							<span itemprop="servicePhone" itemscope itemtype="https://schema.org/ContactPoint"><meta itemprop="contactType" content="technical support"><a class="ui-button" itemprop="telephone" href="tel:+4570809000">+45 70 80 90 00</a></span>
-							<a class="ui-button" data-variant="accent" itemprop="serviceUrl" href="#">Request a quote</a>
+							<span itemprop="servicePhone" itemscope itemtype="https://schema.org/ContactPoint"><meta itemprop="contactType" content="technical support"><a class="ui-button" data-icon="call" itemprop="telephone" href="tel:+4570809000">+45 70 80 90 00</a></span>
+							<a class="ui-button" data-variant="accent" data-icon="request-quote" itemprop="serviceUrl" href="#">Request a quote</a>
 						</nav>
 					</div>
 				</ui-content>
@@ -2129,6 +2133,7 @@
 	</main>
 	<!-- optional — docs/schema.md § The two end-of-body scripts -->
 	<script type="module" src="../video.min.js"></script>
+	<script type="module" src="../carousel.min.js"></script>
 	<!-- optional — /ui/save/readme.md § Toggling -->
 	<script type="module" src="/ui/save/save.min.js"></script>
 	<!-- optional — the two ItemList cards. Without it their <ui-map> keeps the no-JS

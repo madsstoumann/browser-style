@@ -171,9 +171,33 @@ const NAV_SEL = [
 	CAROUSEL_SEL,
 ].join(', ');
 
+/* fragment link → slide: scroll only the carousel. Native fragment navigation is block:
+   start — the PAGE scrolls to put the slide at the viewport top, and no scroll-margin or
+   scroll-padding cancels that (measured: 100dvh parks the frame a viewport lower). A link
+   whose target is a slide of a scroll container gets scrollIntoView block: nearest instead,
+   and the URL still carries the fragment. Modified clicks and links another handler already
+   claimed (the map popup's) pass through. Docs: docs/media.md § Anchors */
+export function initSlideAnchors(root = document) {
+	if (root.uiSlideAnchors) return;
+	root.uiSlideAnchors = true;
+	root.addEventListener('click', (event) => {
+		if (event.defaultPrevented || event.button || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+		const link = event.target.closest?.('a[href^="#"]');
+		if (!link) return;
+		const id = decodeURIComponent(link.getAttribute('href').slice(1));
+		const target = id && document.getElementById(id);
+		const scroller = target?.parentElement;
+		if (!scroller || !/auto|scroll/.test(getComputedStyle(scroller).overflowX) || !slidesOf(scroller).includes(target)) return;
+		event.preventDefault();
+		target.scrollIntoView({ block: 'nearest', inline: 'start', behavior: reduce.matches ? 'instant' : 'smooth' });
+		history.replaceState(null, '', `#${id}`);
+	});
+}
+
 export function scanCarousels() {
 	initCarousels(document.querySelectorAll(CAROUSEL_SEL));
 	initCarouselVideoPause(document.querySelectorAll(NAV_SEL));
+	initSlideAnchors();
 }
 
 // index.js owns idle scanning when it's loaded; this only covers a solo import

@@ -40,12 +40,12 @@
       }
       > ui-content {
         color: var(--ui-reveal-content-c, inherit);
-        align-items: normal;
+        align-items: var(--ui-content-place-inline, normal);
         display: flex;
         gap: var(--ui-reveal-content-gap, 1em);
         grid-area: auto;
-        justify-content: normal;
-        text-align: start;
+        justify-content: var(--ui-content-place-block, normal);
+        text-align: var(--ui-content-text-align, start);
         z-index: auto;
       }
       &[open]:has(> ui-content)::details-content {
@@ -323,6 +323,9 @@
     }
     :where(ui-reveal:is([variant~="ico(ts)"], [variant~="icc(ts)"])) > details[open] > :not(summary) > :first-child {
       padding-inline-start: var(--ui-reveal-icon-clear);
+    }
+    :where(ui-reveal:is([variant~="ico(ts)"], [variant~="icc(ts)"], [variant~="ico(te)"], [variant~="icc(te)"])) > details[open] > :not(summary)[content~="tal(ctr)"] > :first-child {
+      padding-inline: var(--ui-reveal-icon-clear);
     }
   }
   @container bs-rvl style(--_rvl: flp) or style(--_rvl: sld) {

@@ -31,7 +31,8 @@
           "url": "#",
           "text": "Participate"
         },
-        "style": "primary"
+        "style": "primary",
+        "icon": "how-to-reg"
       }
     ],
     "details": {

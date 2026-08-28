@@ -85,7 +85,7 @@ import '@browser.style/card/ui-media-srcset.js';   // responsive Cloudflare srcs
 |--------|------|
 | **`index.js`** | The package entry (`main` / the `.` export). Imports the three chunks, exports `scan()`, and is the **sole owner** of the idle scan + `globalThis.uiMedia.scan`. |
 | **`hover.js`** | Sets `--ui-media-mx` / `--ui-media-my` (−1…1) on frames matching `hov(track)`, `hov(drift)` or `hov(tilt)`. Listeners are attached per frame on first scan; the pointer handler is `requestAnimationFrame`-throttled and skips updates under `prefers-reduced-motion: reduce`. |
-| **`carousel.js`** | Seamless `loop` (clone slides), `auto(…)` autoplay, and pause-a-slide's-video-on-leave. Slides are counted with the shared `NOT_SLIDE` exclusion list. |
+| **`carousel.js`** | Seamless `loop` (clone slides), `auto(…)` autoplay, pause-a-slide's-video-on-leave, and **fragment links to a slide scroll only the carousel** (§ Anchors). Slides are counted with the shared `NOT_SLIDE` exclusion list. |
 | **`shared.js`** | Not a feature — the primitives `carousel.js` / `video.js` / `index.js` share (`mediaStr`, `hasToken`, `slidesOf` / `NOT_SLIDE`, `reflectPlay`, `bindVideo`). |
 | **`ui-media-srcset.js`** | Registers the `<ui-media>` element and upgrades its `<img>` children (`loading`/`decoding`/`sizes="auto"` + host-gated Cloudflare `srcset`; see *Responsive images*). **Transitional** and deliberately outside `index.js` — once srcset is server-side rendered, stop loading it. |
 
@@ -777,9 +777,26 @@ Three things make it hold together:
   `loop` clones leading and trailing slides, and cloning a `<ui-map>` would start a second
   map engine — **do not combine `loop` with a map slide.**
 - **The slide's `asr()` must match the frame's.** The frame owns the height.
-- **Each slide gets a minted `id` — the map included,** so a plain `<a href="#…">` scrolls
-  it into view: a scroll-snap child needs no JavaScript to be addressable. The map popup
-  uses this to jump from a pin to its card, and `#<cardId>-map` goes back.
+- **Each slide gets a minted `id` — the map included,** so a plain `<a href="#…">` reaches
+  it: a scroll-snap child needs no JavaScript to be addressable. The map popup uses this to
+  jump from a pin to its card, and `#<cardId>-map` goes back. Keeping the *page* still while
+  the carousel moves is JavaScript's job — see § Anchors below.
+
+### Anchors — a fragment link to a slide
+
+Native fragment navigation is `block: start`: the browser scrolls **every** ancestor scroll
+container, the page included, to put the target at the viewport top. Measured on the demo
+(viewport 762, frame parked 200 px down): a plain `#slide` link moved the page +360;
+`scroll-margin-block-start: 100dvh`, `scroll-margin-block: 100dvh` and
+`scroll-padding-block-start: 100dvh` on `:root` all moved it −562 and parked the frame one
+viewport *lower* — the hack relocates the alignment, it never cancels it. `nearest` exists
+only in `scrollIntoView()`, so `carousel.js` installs one delegated click handler: a
+same-document link whose target is a slide of a scroll container (`slidesOf()`, so a
+collage `<lay-out>` slide is excluded like everywhere else in JS) gets
+`scrollIntoView({ block: 'nearest', inline: 'start' })` — smooth unless
+`prefers-reduced-motion` — and the URL keeps the fragment via `history.replaceState`.
+Modified clicks and already-handled clicks (`defaultPrevented`, e.g. the map popup's own
+link) pass through. With JS off the link still works, page jump included.
 - **A slide must not carry a stretched `cover` link.** It would swallow the swipe and turn
   the whole photo into a link — see [schema.md § Places](./schema.md).
 

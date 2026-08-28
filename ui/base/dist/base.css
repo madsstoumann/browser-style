@@ -416,8 +416,14 @@
     color: var(--_theme-c, var(--color-text));
   }
   :where([data-box]) {
-    border-radius: var(--ui-box-radius, var(--radius-md));
-    padding: var(--ui-box-p, var(--spacing-md));
+    --_box-r: var(--ui-box-radius, var(--radius-md));
+    --_box-p: var(--ui-box-p, var(--spacing-md));
+    --ui-box-inner-radius: max(0px, calc(var(--_box-r) - var(--_box-p)));
+    border-radius: var(--_box-r);
+    padding: var(--_box-p);
+  }
+  :where([data-box~=brd]) {
+    border: var(--ui-box-border-width, var(--border-width, 1px)) solid var(--ui-box-border-color, color-mix(in srgb, var(--_theme-border, var(--color-border)), var(--_theme-hue-ink, var(--color-border)) 25%));
   }
   :where([theme~=light], [data-theme~=light]) {
     color-scheme: light;
@@ -1017,7 +1023,7 @@
     gap: 1ch;
     grid-auto-flow: column;
     line-height: normal;
-    padding: var(--button-p, 1ch 2.5ch);
+    padding: var(--button-p, 1ch 2ch);
     place-content: center;
     text-decoration: none;
     @media (prefers-reduced-motion: no-preference) {
@@ -1040,6 +1046,16 @@
       background: var(--button-bg--hover);
       box-shadow: var(--button-bxsh--hover);
       color: var(--button-c--hover);
+    }
+    &[data-icon]::before,
+    &[data-icon][data-icon-at=end]::after {
+      content: var(--icon) / "";
+      font-family: var(--ui-icon-font);
+      font-size: var(--button-icon-fs, 1.25em);
+      translate: 0 -0.17em;
+    }
+    &[data-icon][data-icon-at=end]::before {
+      content: none;
     }
     &[data-variant~=icon] {
       --button-p: 1ch;

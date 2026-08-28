@@ -97,7 +97,7 @@ The fields every card has, whatever its type.
 | `media` | array | — | — | repeater | § Media item |
 | `authors` | array | — | — | repeater | `{name (req), role, avatar}` → person |
 | `tags` | tags | yes | — | tags | |
-| `actions` | array | — | — | repeater | `{link, style}`; style ∈ `primary` `secondary` `ghost` |
+| `actions` | array | — | — | repeater | `{link, style, ariaLabel, icon, iconAt}`; style ∈ `primary` `secondary` `ghost`; `icon` an `ui/icon` glyph name, `iconAt` `end` to place it after the text |
 | `links` | array | — | — | repeater | |
 | `furniture` | object | — | — | fieldset | § Furniture |
 | `engagement` | object | — | — | fieldset | `{viewCount, likeCount, shareCount, commentCount}` — all numbers |
@@ -822,6 +822,7 @@ Every enumerated vocabulary an editor needs, and where it comes from.
 | `media[].mediaType` | `image` (default) · `video` · `youtube` · `vimeo` · `audio` · `map` · `places` |
 | `media[].provider` | `osm` (default) · `google` |
 | `actions[].style` | `primary` (default) · `secondary` · `ghost` |
+| `actions[].iconAt` | (before, default) · `end` |
 | `furniture.sticker.lines[].role` | `label` (default) · `lead` · `plain` |
 | `furniture.save.shape` | `heart` (default) · `bookmark` · `star` |
 | `furniture.lightbox.shape` | `photos` (default) · `maximize` |

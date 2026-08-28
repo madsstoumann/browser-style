@@ -175,7 +175,7 @@ Variant guidance for card lists: all `columns(N)` and `grid(N…)` variants are 
 |---|---|
 | `index.js` | all-in-one entry: imports the four chunks below, exports `scan()` (also `globalThis.uiMedia.scan`) |
 | `hover.js` | cursor-tracked `hov(track\|drift\|tilt)` — standalone, zero imports. (`ui-media.js` is **deleted**; this replaced it) |
-| `carousel.js` | loop (seamless clones), autoplay, pause-on-slide-leave, per-slide `<ui-play>` video controls |
+| `carousel.js` | loop (seamless clones), autoplay, pause-on-slide-leave, per-slide `<ui-play>` video controls, fragment links to a slide scroll only the carousel (`initSlideAnchors`) |
 | `video.js` | embed facades, media-command polyfill, `vid()` player tools, solo play, opt-in tracking |
 | `lightbox.js` | popover-lightbox niceties, all gated on `ui-media[popover]` (moved from `ui/lightbox/command.js`): DOM carousel controls via `/ui/carousel/polyfill/carousel-controls.js`, `media-open=` swap, `--lightbox-layout`, View Transition morph, modality, back-button close, tile jump, pause-on-close |
 | `shared.js` | primitives shared by carousel.js/video.js — `reflectPlay`, `bindVideo`, token readers (`mediaStr`, `hasToken`), and the single exported slide-exclusion list `NOT_SLIDE`/`slidesOf` (cross-referenced from the `:not()` list in `media.carousel.css`, which is a **subset**: `NOT_SLIDE` also drops `LAY-OUT`, so a collage `<lay-out>` slide snaps in CSS but is invisible to `loop`/`auto`/per-slide JS) |

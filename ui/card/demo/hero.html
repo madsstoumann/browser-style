@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>UI: Card — Hero promo tile</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="text-scale" content="scale">
+	<meta name="color-scheme" content="light dark">
+	<meta name="description" content="A product promo tile: the text column above the media frame by DOM order, a gradient --ui-card-bg, and a transparent product image floating in an obf(contain) frame with its plate zeroed.">
+	<link rel="alternate" type="text/markdown" href="/ui/card/docs/content.md">
+	<!-- no-referrer: the zone hotlink-protects CDN srcset. Docs: docs/performance.md -->
+	<meta name="referrer" content="no-referrer">
+	<!-- preconnect: CDN handshake parallel to the CSS download. Docs: docs/performance.md -->
+	<link rel="preconnect" href="https://v4.browser.style">
+	<link rel="stylesheet" href="/dist/demo.9e0af8af.min.css">
+	<style>
+		/* Page-scoped WCAG AA contrast overrides — pending a token retune in ui/base/tokens.css.
+		   Unlayered on purpose: beats the bs-core layer. Same block as demo/schema.html. */
+		:root {
+			--color-link: light-dark(hsl(221, 100%, 44%), hsl(221, 70%, 70%));
+			--color-accent: light-dark(hsl(211, 100%, 38%), hsl(211, 70%, 72%));
+			--color-success: light-dark(hsl(136, 45%, 30%), hsl(136, 25%, 60%));
+			--color-error: light-dark(hsl(360, 65%, 41%), hsl(360, 45%, 62%));
+			--color-text-muted: light-dark(hsl(0, 0%, 42%), hsl(0, 0%, 65%));
+		}
+		ui-content {
+			/* 85%: double-application (byline > dateline) still clears 4.5:1 */
+			--ui-content-muted: color-mix(in oklab, currentColor 85%, transparent);
+		}
+		ui-chip[data-type] { --ui-chip-bg: hsl(0, 0%, 95%); --ui-chip-c: hsl(0, 0%, 13%); }
+	</style>
+</head>
+<body data-layout-root data-page-gap="2">
+	<header>
+	<h1>UI: Card — Hero promo tile</h1>
+	<p>An <strong>approximation</strong> of a familiar tablet-maker's promo tile — unaffiliated; original placeholder copy, a repo image, system fonts. The text column sits <em>above</em> the frame by plain DOM order inside <code>variant="col"</code> (no <code>col-r</code> needed), the surface is a gradient on <code>--ui-card-bg</code>, and the product is a transparent PNG in an <code>obf(contain)</code> frame with its default plate zeroed via <code>--ui-media-bg</code>. The buttons follow the reference's order (filled first); the system's own convention puts the accent CTA <em>last</em> (<code>docs/content.md</code> § actions).</p>
+	<p>See also: <a href="content.html">content.html</a> (the text column) · <a href="media.html">media.html</a> (the frame).</p>
+	</header>
+<main data-layout-root data-page-gap="2">
+
+	<section>
+	<h2>Content above media — <code>col</code> + DOM order</h2>
+	<p class="note">Nothing in <code>variant="col"</code> sets <code>order</code>: the two areas auto-place in the grid, so writing <code>&lt;ui-content&gt;</code> before <code>&lt;ui-media&gt;</code> is enough (and keeps reading order = visual order). Two knobs are custom properties rather than tokens — <code>--ui-card-bg</code> takes any <code>background</code> value, and <code>--ui-media-bg: #0000</code> removes the frame's default 25 % plate that would otherwise box a transparent image. <code>theme="light"</code> pins the tile's colour scheme so the dark product never lands on a dark plate. The outline pill needs <code>data-variant="outline"</code> for its ring; the <code>--outline</code> class alone paints no border.</p>
+	<!-- aurasoundpro-alpha.png = luminance→alpha key of aurasoundpro.png (PIL: white 240 / black 40, grey un-premultiplied against white). srcset is width-only: obf(contain) has no crop for fit=cover to match. -->
+	<ui-card variant="col shd(non)" theme="light"
+		media="asr(16/9) obf(contain)"
+		content="scl(lg) hl(lg) hl(600) plc(tc) tal(ctr) pad(xl) pbe(sm)"
+		style="--ui-card-bg: linear-gradient(180deg, hsl(206 90% 94%), var(--color-surface) 70%)">
+		<cq-box>
+			<ui-content>
+				<h2 data-part="headline">AuraSound <ui-gradient-text style="--GradientText: hsl(211 100% 45%), hsl(275 90% 55%), hsl(211 100% 45%)">pro</ui-gradient-text></h2>
+				<p data-part="summary">Now supercharged by the A2 spatial engine.</p>
+				<nav data-part="actions">
+					<a class="ui-button bg-accent" data-variant="rounded" href="#">Learn more</a>
+					<a class="ui-button bg-accent" data-variant="outline rounded" href="#">Buy</a>
+				</nav>
+			</ui-content>
+			<ui-media style="--ui-media-bg: #0000">
+				<img src="/assets/images/aurasoundpro-alpha.png" alt="AuraSound pro speaker" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/aurasoundpro-alpha.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/aurasoundpro-alpha.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/aurasoundpro-alpha.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/aurasoundpro-alpha.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/aurasoundpro-alpha.png 1200w" sizes="(min-width: 1056px) 64rem, 100vw" loading="eager" fetchpriority="high" decoding="async">
+			</ui-media>
+		</cq-box>
+	</ui-card>
+	</section>
+
+</main>
+</body>
+</html>

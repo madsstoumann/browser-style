@@ -31,7 +31,8 @@
           "url": "#",
           "text": "Check availability"
         },
-        "style": "primary"
+        "style": "primary",
+        "icon": "event-available"
       }
     ],
     "details": {

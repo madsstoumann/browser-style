@@ -31,7 +31,8 @@
           "url": "#",
           "text": "Enroll"
         },
-        "style": "primary"
+        "style": "primary",
+        "icon": "school"
       }
     ],
     "details": {

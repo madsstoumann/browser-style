@@ -34,7 +34,8 @@
           "url": "#",
           "text": "Play demo"
         },
-        "style": "primary"
+        "style": "primary",
+        "icon": "play-arrow"
       }
     ],
     "details": {

@@ -770,10 +770,11 @@ Two constraints on a slide, both learned the hard way in the browser:
   `ovr()` the text column fills the whole card).
 
 **Slides are anchor-addressable.** Each one gets a minted `id` (`<cardId>-place-<n>`), and a
-scroll-snap child is reachable by plain in-page anchor — so `<a href="#…">` scrolls a home
-into view with **no JavaScript at all**. That is what the map popup uses: clicking a pin
-jumps the carousel to that home, and falls back to the listing's own URL when there are no
-slides.
+scroll-snap child is reachable by plain in-page anchor — `<a href="#…">` reaches a home with
+no JavaScript. The map popup links that way; its engine intercepts the click to scroll the
+carousel only (`scrollIntoView({ block: 'nearest' })` — native fragment navigation would
+scroll the page to put the slide at the top), and falls back to the listing's own URL when
+there are no slides.
 
 **Complement, not competitor, to `organization`.** That type already emits branch offices as
 `department` → `LocalBusiness`. It is the right answer when the card's subject is *the company*;
@@ -807,7 +808,7 @@ Standard column card — media on top, specs, developer and offer below. Microda
 
 ### Organization — `Organization`
 
-The multi-office shape: HQ address, employees, `sameAs` — and each local office as `department` → `LocalBusiness` (part `office`) with its own address, phone and **per-day opening hours** in the tabular `hours` part (a two-column `<dl>`). Each row carries both the flat `openingHours` string and a structured `OpeningHoursSpecification`, so single days (`Th 09:00-16:00`) and ranges (`Mo-We 09:00-17:00`) both work. The demo card boxes each office as a light-gray plate (preset `stack-boxed-offices`: `parts.office` `box` + `parts.officeTheme` `gray light` → `data-theme` + `data-box`, [base/theme.md § Box](../../base/theme.md#box)); the pair is guarded by the `schema.compare.js` transcription gate.
+The multi-office shape: HQ address, employees, `sameAs` — and each local office as `department` → `LocalBusiness` (part `office`) with its own address, phone and **per-day opening hours** in the tabular `hours` part (a two-column `<dl>`). Each row carries both the flat `openingHours` string and a structured `OpeningHoursSpecification`, so single days (`Th 09:00-16:00`) and ranges (`Mo-We 09:00-17:00`) both work. The demo card boxes each office as a light-gray plate (preset `stack-boxed-offices`: `parts.office` `box brd` + `parts.officeTheme` `gray light` → `data-theme` + `data-box="brd"`, [base/theme.md § Box](../../base/theme.md#box)); the pair is guarded by the `schema.compare.js` transcription gate.
 
 ### Video — `VideoObject`
 
@@ -839,7 +840,7 @@ The visible ISBN itself is emitted **raw**, in the renderer and in reference mar
 
 ### Dataset — `Dataset`
 
-License, temporal/spatial coverage and `variableMeasured` metas; each download is `distribution` → `DataDownload` with `encodingFormat` + `contentUrl` on the button. `temporalCoverageDisplay` carries the human range ("Jan 2019 – Dec 2025", en dash) — the machine meta keeps the ISO 8601 slash interval.
+License, temporal/spatial coverage and `variableMeasured` metas; each download is `distribution` → `DataDownload` with `encodingFormat` + `contentUrl` on the button. The button is a real download link (`download` — browsers honour it same-origin only, the intent still reads), carries the format glyph (`csv` → `table-view`, `json` → `data-object`, a closed map), and shows `distribution[].size` as **visible** text (`<small>`, also `contentSize` meta) — never as an `aria-label`: that would replace the visible name, and WCAG 2.5.3 wants the visible label inside the accessible one. `temporalCoverageDisplay` carries the human range ("Jan 2019 – Dec 2025", en dash) — the machine meta keeps the ISO 8601 slash interval.
 
 ### Fact check — `ClaimReview`
 

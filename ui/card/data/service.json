@@ -61,6 +61,7 @@
         "processingTime": "PT1H",
         "url": "#",
         "urlText": "Request a quote",
+        "urlIcon": "request-quote",
         "telephone": "+45 70 80 90 00",
         "contactType": "technical support"
       }

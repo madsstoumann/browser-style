@@ -150,13 +150,27 @@ export function createMap(canvas, config, points) {
 			point.telephone ? `<a href="tel:${esc(point.telephone.replace(/\s/g, ''))}">${esc(point.telephone)}</a>` : '',
 			...point.hours.map((line) => `<span>${esc(line)}</span>`)
 		].filter(Boolean);
-		/* an in-page anchor wins over the external URL: the slide is a scroll-snap child,
-		   so the browser scrolls it into view natively — pin to card, zero JavaScript. */
+		/* an in-page anchor wins over the external URL: the slide is a scroll-snap child, so
+		   the link works without the click handler below — that handler only keeps the PAGE
+		   from jumping (native fragment navigation aligns the slide to the viewport top). */
 		const href = point.anchor ? `#${point.anchor}` : point.url;
 		const title = href
 			? `<a class="ui-map-popup-title" href="${esc(href)}">${esc(point.name)}</a>`
 			: `<strong class="ui-map-popup-title">${esc(point.name)}</strong>`;
 		return `<div class="ui-map-popup">${point.name ? title : ''}${rows.join('')}</div>`;
+	};
+
+	/* pin → slide: scroll only the carousel. Fragment navigation is block: start (the page
+	   scrolls to put the slide at the top; a scroll-margin cannot change that — measured);
+	   scrollIntoView with block: nearest leaves the page where it is. The URL still gets the
+	   fragment. Docs: readme.md § Popups */
+	const jumpToSlide = (event) => {
+		const href = event.currentTarget.getAttribute('href');
+		const target = document.getElementById(decodeURIComponent(href.slice(1)));
+		if (!target) return;
+		event.preventDefault();
+		target.scrollIntoView({ block: 'nearest', inline: 'start', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
+		history.replaceState(null, '', href);
 	};
 
 	const addPoint = (point) => {
@@ -170,6 +184,8 @@ export function createMap(canvas, config, points) {
 		if (point.name) marker.bindTooltip(esc(point.name), { direction: 'top' });
 		if (point.name && (point.price || point.address || point.telephone || point.hours.length)) {
 			marker.bindPopup(popupHtml(point), { closeButton: true, maxWidth: 260 });
+			/* property assignment, not addEventListener: Leaflet reuses the popup element, so a listener per open would stack */
+			if (point.anchor) marker.on('popupopen', (e) => { const a = e.popup.getElement()?.querySelector('a[href^="#"]'); if (a) a.onclick = jumpToSlide; });
 		}
 		marker.on('click', () => emit('ui-map:select', { point }));
 		marker.addTo(markers);

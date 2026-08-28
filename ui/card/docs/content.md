@@ -207,7 +207,7 @@ rds(sm-sq)  rds(md-sq)  rds(lg-sq)  rds(xl-sq)       ← squircle (superellipse 
 
 Same scale as `variant="rds()"` on the card and `media="rds()"` on a standalone frame — the values come from the global `--radius-*` / `--radius-*-sq` / `--squircle-*` tokens in `@browser.style/base`, so all three stay in lock-step.
 
-> **Corners need a background to be visible.** `--ui-content-radius` defaults to `0` and is inert inside a card, because `<ui-content>` paints no background *until you give it one*. The canonical way is **`theme=`** — `<ui-content theme="gray" content="rds(lg)">` is a rounded plate (see [Theme surface](#theme-surface)); `style="background: …"` or a utility class work too. Rounding a transparent box is a no-op. For a **native node** inside the text column — a `data-part` group such as `office` — the pairing is `data-theme` + `data-box` (padding + corners from `theme.css`, [base/theme.md § Box](../../base/theme.md#box)).
+> **Corners need a background to be visible.** `--ui-content-radius` defaults to `0` and is inert inside a card, because `<ui-content>` paints no background *until you give it one*. The canonical way is **`theme=`** — `<ui-content theme="gray" content="rds(lg)">` is a rounded plate (see [Theme surface](#theme-surface)); `style="background: …"` or a utility class work too. Rounding a transparent box is a no-op. For a **native node** inside the text column — a `data-part` group such as `office` — the pairing is `data-theme` + `data-box` (padding + corners from `theme.css`; `data-box="brd"` for a theme-matched hairline — [base/theme.md § Box](../../base/theme.md#box)).
 
 `rds()` is substring-matched (like the card's and media's), which is safe here because it has no `md:`/`lg:` forms to shadow and `rds(sm)` is not a substring of `rds(sm-sq)`. The old `rds(none)` spelling was **removed in v5** on all three attributes — `rds(non)` is the only spelling.
 
@@ -449,6 +449,29 @@ catalog. The glyphs are **baseline-shifted at build time** (`baselineShiftEm` in
 `icons.json`) because Material Symbols centre their icon box at `+0.5em` above the baseline
 while text centres near `+0.33em` — and `::marker` has no lever to correct it. See
 [`ui/icon/readme.md` § Icon font](../../icon/readme.md).
+
+#### Icons on buttons — `data-icon` on a `.ui-button`
+
+The third placement. A CTA carries the glyph name on `data-icon`, exactly like a list row
+(contact buttons too — `call` / `mail` — the inline `tel:`/`mailto:` text-link rule skips
+`.ui-button` so the glyph is drawn once, sized and centred like every other button icon),
+and `ui/base/button.css` draws it as a `::before` grid item (the button is an inline grid,
+so the button's own `gap` spaces it): `<a class="ui-button" data-icon="shopping-cart">Add to
+cart</a>`. Add `data-icon-at="end"` to put it **after** the text — that is where a chevron
+goes, because it points at what follows: `<a class="ui-button" data-icon="chevron-right"
+data-icon-at="end">Read more</a>`. Same rules as the other two placements: the name is the
+closed catalogue (`ui/icon/icons.json` — the corpus test in `render.test.js` fails on a name
+the font lacks), and the glyph is `content: var(--icon) / ""`, so it never reaches the
+accessible name. Size rides `--button-icon-fs` (1.25em).
+
+In JSON an action is `{ link, style, icon, iconAt }` (`iconAt` only knows `end`); the
+loyalty join CTA reads `details.joinIcon`, the service contact CTA `details.channel.urlIcon`,
+and Dataset downloads take theirs from the format (`csv` → `table-view`, `json` →
+`data-object`; other formats get none). The demo cards: cart on the three buy buttons,
+`play-arrow` / `play-circle` for demo and episode, `rss-feed` subscribe, `school` enrol,
+`verified`, `send` apply, `skillet` cook, `how-to-reg` participate, `event-available`,
+`rocket-launch` trial, `loyalty` join, `request-quote`, chevrons after *Read more* and *See
+the series*.
 
 #### Checked and crossed lists — one mark for the whole list
 
@@ -816,7 +839,7 @@ through `color-scheme`; add `ink` for the theme's paired ink).
 <ui-content theme="gray" content="rds(lg) pad(lg)">…</ui-content>   <!-- standalone plate -->
 ```
 
-Native parts get the same plate with `data-theme` + `data-box` ([base/theme.md § Box](../../base/theme.md#box)) — the Organization demo's offices are `<div data-part="office" data-theme="gray light" data-box>`.
+Native parts get the same plate with `data-theme` + `data-box` ([base/theme.md § Box](../../base/theme.md#box)) — the Organization demo's offices are `<div data-part="office" data-theme="gray light" data-box="brd">` (`brd` = the theme-matched hairline).
 
 Two things this unlocks: `rds()` finally has a background to round, and a
 `<ui-reveal>` **flipside** can carry its own colour independent of the card's front

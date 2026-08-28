@@ -32,7 +32,8 @@
           "url": "#",
           "text": "Apply now"
         },
-        "style": "primary"
+        "style": "primary",
+        "icon": "send"
       }
     ],
     "details": {

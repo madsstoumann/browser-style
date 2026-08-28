@@ -24,7 +24,7 @@
       }
     ],
     "actions": [
-      { "link": { "url": "#", "text": "Subscribe" }, "style": "primary" }
+      { "link": { "url": "#", "text": "Subscribe" }, "style": "primary", "icon": "rss-feed" }
     ],
     "details": {
       "startDate": "2022-01-11",

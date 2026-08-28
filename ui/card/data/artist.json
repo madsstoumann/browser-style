@@ -24,7 +24,7 @@
       }
     ],
     "actions": [
-      { "link": { "url": "#schema-comicseries", "text": "See the series" }, "style": "primary" }
+      { "link": { "url": "#schema-comicseries", "text": "See the series" }, "style": "primary", "icon": "chevron-right", "iconAt": "end" }
     ],
     "details": {
       "jobTitle": "Comic Artist",

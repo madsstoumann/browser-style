@@ -38,11 +38,13 @@
       "distribution": [
         {
           "format": "CSV",
-          "url": "https://data.example.com/exoplanets.csv"
+          "url": "https://data.example.com/exoplanets.csv",
+          "size": "1.8 MB"
         },
         {
           "format": "JSON",
-          "url": "https://data.example.com/exoplanets.json"
+          "url": "https://data.example.com/exoplanets.json",
+          "size": "2.6 MB"
         }
       ]
     }

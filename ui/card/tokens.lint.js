@@ -230,8 +230,8 @@ const PART_VARIANTS = {
 	buttonGroupSize: new Set(['fs-xxs', 'fs-xs', 'fs-sm', 'fs-md', 'fs-lg']),
 	buttonGroupTheme: THEME_WORDS,
 	/* office — the organization type's per-branch <div>: `box` emits data-box (base/theme.css § Box),
-	   officeTheme its data-theme */
-	office: new Set(['box']),
+	   `brd` adds its theme-matched hairline, officeTheme its data-theme */
+	office: new Set(['box', 'brd']),
 	officeTheme: THEME_WORDS
 };
 const lintPresets = (manifest, errors) => {

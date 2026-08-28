@@ -31,7 +31,8 @@
           "url": "#",
           "text": "Verify credential"
         },
-        "style": "primary"
+        "style": "primary",
+        "icon": "verified"
       }
     ],
     "details": {

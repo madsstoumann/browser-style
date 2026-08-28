@@ -461,6 +461,7 @@ So `--icon` resolves from a `data-icon` attribute, and consumers read it whereve
 ```css
 li[data-icon] { list-style-type: var(--icon); }          /* a ::marker */
 a[href^="tel:"]::before { content: var(--icon); }        /* generated content */
+.ui-button[data-icon]::before { content: var(--icon) / ""; }   /* a CTA glyph (base/button.css) */
 ```
 
 Both inherit `color` from their element, since a glyph is text. Used by

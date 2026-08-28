@@ -24,7 +24,7 @@
       }
     ],
     "actions": [
-      { "link": { "url": "#", "text": "Watch episode" }, "style": "primary" }
+      { "link": { "url": "#", "text": "Watch episode" }, "style": "primary", "icon": "play-circle" }
     ],
     "details": {
       "episodeNumber": 4,

@@ -51,6 +51,7 @@
           "text": "Add to cart"
         },
         "style": "primary",
+        "icon": "shopping-cart",
         "ariaLabel": "Add to cart: AuraSound Pro"
       }
     ],

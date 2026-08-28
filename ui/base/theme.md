@@ -332,18 +332,48 @@ padding and rounded corners — so the two together make a plate out of any elem
 
 ```html
 <div data-theme="gray light" data-box>…</div>         <!-- light-gray plate, 16px inset, 6px corners -->
-<aside data-theme="blue pale border" data-box>…</aside> <!-- + the theme's border -->
+<div data-theme="gray light" data-box="brd">…</div>   <!-- + a theme-matched hairline -->
 <div data-theme="slate dark ink" data-box style="--ui-box-p: var(--spacing-md)">…</div>
 ```
 
-It is one rule in `theme.css`, reading two tokens:
+Two rules in `theme.css`, reading four tokens:
 
 | Token | Default | Purpose |
 |---|---|---|
 | `--ui-box-p` | `var(--spacing-md)` (1rem) | Padding, all sides. `0` for a flush plate. |
 | `--ui-box-radius` | `var(--radius-md)` (0.375rem) | Corner radius. `0` for square corners; any `--radius-*` token for more. |
+| `--ui-box-border-width` | `var(--border-width)` (1px) | `brd` only — the hairline's width. |
+| `--ui-box-border-color` | the theme's border colour, 25% toward its ink | `brd` only — see below. |
 
 Set them on the element or on any ancestor — they inherit like every custom property.
+
+The box also **publishes** one token for its children: `--ui-box-inner-radius`, the
+concentric radius a nested plate needs — `max(0px, outer − padding)`. A rounded child that
+sits flush with the padding reads it and its corners follow the box's curve instead of
+wobbling against it; with the defaults (0.375rem corner, 1rem inset) it is `0` — a sharp
+inner corner is the geometrically right answer once the inset exceeds the radius.
+
+```html
+<div data-theme="gray light" data-box style="--ui-box-radius: var(--radius-2xl)">
+  <img style="border-radius: var(--ui-box-inner-radius)" …>   <!-- 1rem − 1rem = 0 → grow the radius or shrink --ui-box-p -->
+</div>
+```
+
+Why arithmetic and not `overflow-clip-margin: content-box` (the clip-margin trick): measured
+in Chrome 152, a child filling the content box keeps square corners — the content-box clip
+is not rounded — and Safari has no `overflow-clip-margin` at all. Two engines, zero wins.
+
+**`brd` — the hairline.** `data-box="brd"` draws a 1px solid border. The theme axis already
+resolves a matching border colour (`--_theme-border`, the solid base hue — what the
+[`border`](#border) modifier draws), but on a *filled* plate that hue **is** the fill: a
+`gray light` plate and its `--_theme-border` are both `#ededed`, so used raw the line would
+vanish. `brd` therefore mixes it 25% toward the theme's AA-clamped ink
+(`--_theme-hue-ink`) — still in the hue, scheme-aware, and visible on solid, pale, muted and
+glass fills alike. Set `--ui-box-border-color: var(--_theme-border)` for the pure hue when
+the fill is pale or transparent. An unthemed `data-box="brd"` falls back to the page
+hairline, `--color-border`. Pick **`brd` or the theme's `border` modifier**, not both — the
+modifier empties the fill by design. The line is decorative: the 3:1 boundary rule applies
+to controls and meaningful edges, not to a plate's hairline.
 
 **One spelling, on purpose.** Every `theme=` rule is a `theme=`/`data-theme=` pair because a
 bare `theme` attribute is invalid on a built-in element. `data-*` is valid on *every*
@@ -363,13 +393,15 @@ it — pair `data-box` with `data-theme` (or any background of your own).
 light in dark mode too), but its *contents* re-tone with the page — light ink on a light
 plate. Add `light` (or `dark` for `slate`/`black`) so the descendants' `light-dark()`
 tokens follow the plate, not the page: measured on the Organization demo, `gray light`
-keeps every ink >= 6:1 in both schemes where bare `gray` drops to 1.03 in dark mode. And
+keeps every ink >= 6:1 in both schemes where bare `gray` drops to 1.03 in dark mode — and
+the `brd` hairline goes with it (its tint follows the same clamped ink, so on an unpinned
+light plate in dark mode it computes to the fill colour). And
 note `pale` on a neutral is near-invisible — `gray pale` is 20% gray over the surface,
 1.03:1 against a white card — so reach for the plain neutral.
 
 Live example: the Organization card's offices in `ui/card/demo/schema.html` —
-`<div data-part="office" data-theme="gray light" data-box>` — emitted by the renderer from
-preset `parts.office: "box"` + `parts.officeTheme: "gray light"`
+`<div data-part="office" data-theme="gray light" data-box="brd">` — emitted by the renderer from
+preset `parts.office: "box brd"` + `parts.officeTheme: "gray light"`
 ([card.md § Preset model](../card/docs/card.md)).
 
 ## How a component opts in

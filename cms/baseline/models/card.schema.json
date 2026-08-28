@@ -383,7 +383,7 @@
     "actions": {
       "type": "array",
       "title": "Actions",
-      "description": "Call-to-action buttons (data-part=\"actions\")",
+      "description": "Call-to-action buttons (data-part=\"actions\"). icon names a glyph from @browser.style/icon (icons.json) drawn before the text; iconAt \"end\" puts it after — a chevron's place. Unknown names are silently blank.",
       "items": {
         "type": "object",
         "properties": {
@@ -404,6 +404,15 @@
               { "value": "primary", "label": "Primary" },
               { "value": "secondary", "label": "Secondary" },
               { "value": "ghost", "label": "Ghost" }
+            ]
+          },
+          "icon": { "type": "string", "title": "Icon", "description": "Glyph name from @browser.style/icon", "localized": false },
+          "iconAt": {
+            "type": "select",
+            "title": "Icon position",
+            "localized": false,
+            "options": [
+              { "value": "end", "label": "After the text" }
             ]
           }
         }

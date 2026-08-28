@@ -58,15 +58,16 @@
 				transition: display var(--ui-reveal-duration, var(--duration-slower)) allow-discrete;
 			}
 
-			/* back content — leak-checklist counter-resets (items 1-3) */
+			/* back content — leak-checklist counter-resets (items 1-3). Only the ovr() slot
+			   (--ui-content-ov-*) is dropped: the panel's own plc()/tal() still apply */
 			> ui-content {
 				color: var(--ui-reveal-content-c, inherit); /* neutralise the ovr() white */
-				align-items: normal;
+				align-items: var(--ui-content-place-inline, normal);
 				display: flex; /* vis(media)'s ui-content{display:none} leaks via descendant match */
 				gap: var(--ui-reveal-content-gap, 1em);
 				grid-area: auto;
-				justify-content: normal;
-				text-align: start;
+				justify-content: var(--ui-content-place-block, normal);
+				text-align: var(--ui-content-text-align, start);
 				z-index: auto;
 			}
 			/* a ui-content back self-pads — drop the panel padding so it isn't doubled */
@@ -335,6 +336,10 @@
 		}
 		:where(ui-reveal:is([variant~="ico(ts)"], [variant~="icc(ts)"])) > details[open] > :not(summary) > :first-child {
 			padding-inline-start: var(--ui-reveal-icon-clear);
+		}
+		/* a centred panel (tal(ctr)) clears on BOTH inline sides, so its lines stay centred on the plate */
+		:where(ui-reveal:is([variant~="ico(ts)"], [variant~="icc(ts)"], [variant~="ico(te)"], [variant~="icc(te)"])) > details[open] > :not(summary)[content~="tal(ctr)"] > :first-child {
+			padding-inline: var(--ui-reveal-icon-clear);
 		}
 	}
 

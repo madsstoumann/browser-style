@@ -99,6 +99,7 @@ per-icon CSS. One catalog, two ways to place a glyph:
 |---|---|---|
 | `::marker` | list rows and whole lists | `data-icon` → `list-style-type` |
 | `::before` | inline text (contact links, counters, dateline, verified mark) | `content: var(--icon) / ""` |
+| `::before` / `::after` | a `.ui-button` CTA — `data-icon`, `data-icon-at="end"` for a chevron | `content: var(--icon) / ""` (base/button.css) |
 
 ```html
 <ul data-part="list" data-icon="album">          <!-- one glyph for the whole list -->

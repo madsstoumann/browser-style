@@ -14,6 +14,10 @@ export default {
 		1024,
 		1024
 	],
+	"/assets/images/aurasoundpro-alpha.png": [
+		1408,
+		768
+	],
 	"/assets/images/aurasoundpro.png": [
 		1408,
 		768

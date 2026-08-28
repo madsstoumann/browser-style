@@ -516,12 +516,18 @@ export const reviewItems = (reviews = []) => reviews.map((review) => `<div${scop
 const contactLink = ({ type, value, label }, primary = false) => {
 	const href = type === 'email' ? `mailto:${value}` : type === 'phone' ? `tel:${value.replace(/\s/g, '')}` : value;
 	const prop = type === 'phone' ? 'telephone' : type === 'email' ? null : 'url';
-	return `${type === 'email' ? meta('email', value) : ''}<a class="ui-button"${primary ? ' data-variant="accent"' : ''}${prop ? ` itemprop="${prop}"` : ''} href="${esc(href)}">${esc(label || value)}</a>`;
+	/* the glyph rides data-icon like every CTA — button.css draws it sized + centred; content.css's inline tel:/mailto: rule skips .ui-button */
+	return `${type === 'email' ? meta('email', value) : ''}<a class="ui-button"${primary ? ' data-variant="accent"' : ''}${iconAttrs(type === 'phone' ? 'call' : type === 'email' ? 'mail' : null)}${prop ? ` itemprop="${prop}"` : ''} href="${esc(href)}">${esc(label || value)}</a>`;
 };
 
 /* CTA row — the accent (primary) action TRAILS the row, whatever order the data
    declares it in: presentation only, and the flex row's logical direction mirrors
    it under dir="rtl". The needle is this file's own spelling, never author data. */
+/* CTA glyph — an icon-font name on data-icon (button.css draws it, the corpus test proves the
+   name exists); iconAt "end" puts it after the text (chevrons). Docs: docs/content.md § Icons on buttons */
+const iconAttrs = (icon, at) => icon ? ` data-icon="${esc(icon)}"${at === 'end' ? ' data-icon-at="end"' : ''}` : '';
+/* Dataset download formats → glyph, a closed map: an unknown format gets no icon, never an interpolated name */
+const DATA_FORMATS = { csv: 'table-view', json: 'data-object' };
 const actionsPart = (links) => {
 	const index = links.findIndex((link) => link.includes('data-variant="accent"'));
 	const ordered = index < 0 || index === links.length - 1
@@ -1369,10 +1375,11 @@ const buildTail = (fields, type) => {
 			const variant = action.style === 'primary' ? ' data-variant="accent"' : '';
 			const label = action.link?.text || '';
 			const aria = action.ariaLabel ? ` aria-label="${esc(action.ariaLabel)}"` : '';
+			const icon = iconAttrs(action.icon, action.iconAt);
 			/* no href ⇒ a real <button>: an anchor without one is not a control */
 			return action.link?.url
-				? `<a class="ui-button"${variant}${aria} href="${esc(action.link.url)}">${esc(label)}</a>`
-				: `<button class="ui-button" type="button"${variant}${aria}>${esc(label)}</button>`;
+				? `<a class="ui-button"${variant}${aria}${icon} href="${esc(action.link.url)}">${esc(label)}</a>`
+				: `<button class="ui-button" type="button"${variant}${aria}${icon}>${esc(label)}</button>`;
 		}));
 	}
 	const eng = fields.engagement;
@@ -1921,8 +1928,8 @@ const placeRow = (place, kind, index) => {
 const placeSlide = (place, kind, index, look = {}, cardId = null) => {
 	const type = placeType(place, kind);
 	/* a MINTED id (never author data): the slide is a scroll-snap child, so a plain
-	   `<a href="#id">` scrolls it into view with no JavaScript at all — which is how the
-	   map popup jumps to a home. Docs: docs/media.md § Places */
+	   `<a href="#id">` reaches it — the map popup's link; the map engine scrolls it with
+	   block: nearest so the page stays put. Docs: docs/media.md § Places */
 	const id = cardId ? `${cardId}-place-${index + 1}` : null;
 	const photo = place.image
 		? `<ui-media><img${attrs({ src: place.image, alt: place.imageAlt || '', loading: 'lazy', decoding: 'async', itemprop: 'image' })}></ui-media>`
@@ -2240,8 +2247,9 @@ const DETAILS = {
 		if (d.priceRange) html += `<p data-part="meta">${esc(d.priceRange)}</p>`;
 		html += hoursPart(d.openingHours);
 		const links = [];
-		if (d.telephone) links.push(`<a class="ui-button" itemprop="telephone" href="tel:${esc(d.telephone.replace(/\s/g, ''))}">${esc(d.telephone)}</a>`);
-		if (d.email) links.push(`${meta('email', d.email)}<a class="ui-button" href="mailto:${esc(d.email)}">Email</a>`);
+		if (d.telephone) links.push(`<a class="ui-button" data-icon="call" itemprop="telephone" href="tel:${esc(d.telephone.replace(/\s/g, ''))}">${esc(d.telephone)}</a>`);
+		/* the email is the business card's primary CTA — actionsPart() keeps the accent button last */
+		if (d.email) links.push(`${meta('email', d.email)}<a class="ui-button" data-variant="accent" data-icon="mail" href="mailto:${esc(d.email)}">Email</a>`);
 		if (links.length) html += actionsPart(links);
 		return html;
 	},
@@ -2407,9 +2415,12 @@ const DETAILS = {
 		if (d.email) html += `<p data-part="meta">${meta('email', d.email)}<a href="mailto:${esc(d.email)}">${esc(d.email)}</a></p>`;
 		/* each local office is a department → LocalBusiness (Google's multi-location pattern),
 		   with its own coordinates so each branch geocodes independently */
-		/* parts.office `box` + parts.officeTheme make each branch a themed plate — data-* because
-		   the node is a <div>; data-box is base/theme.css § Box. Docs: docs/card.md § Preset model */
-		const box = String(parts.office || '').trim().split(/\s+/).includes('box');
+		/* parts.office words make each branch a themed plate: `box` turns data-box on, every other
+		   word (`brd`) is its value; parts.officeTheme is its data-theme. data-* because the node
+		   is a <div>; the vocabulary is base/theme.css § Box. Docs: docs/card.md § Preset model */
+		const words = String(parts.office || '').trim().split(/\s+/).filter(Boolean);
+		const mods = words.filter((w) => w !== 'box').join(' ');
+		const box = words.length ? (mods || true) : false;
 		for (const office of d.offices || []) {
 			/* a list, not a <br>-split <p>: two contact methods ARE a list, and the icon
 			   then rides ::marker instead of ::before — generated content on the link
@@ -2419,8 +2430,8 @@ const DETAILS = {
 				office.email ? `<li data-icon="mail">${meta('email', office.email)}<a href="mailto:${esc(office.email)}">${esc(office.email)}</a></li>` : ''
 			].filter(Boolean);
 			html += `<div${attrs({ 'data-part': 'office', 'data-theme': parts.officeTheme || null, 'data-box': box })}${scope('department', 'LocalBusiness')}>
-				<strong itemprop="name">${esc(office.name)}</strong>
-				${geoPart(office.geo)}${addressPart(office.address)}${contacts.length ? `<ul data-part="list">${contacts.join('')}</ul>` : ''}${hoursPart(office.openingHours)}
+				<div><strong itemprop="name">${esc(office.name)}</strong>${addressPart(office.address)}</div>
+				${geoPart(office.geo)}${contacts.length ? `<ul data-part="list">${contacts.join('')}</ul>` : ''}${hoursPart(office.openingHours)}
 			</div>`;
 		}
 		return html;
@@ -2518,8 +2529,11 @@ const DETAILS = {
 		if (bits) html += `<p data-part="meta">${esc(bits)}</p>`;
 		html += listPart(d.variableMeasured);
 		if (d.distribution?.length) {
+			/* a real download: `download` on the link, the format glyph from DATA_FORMATS, and the
+			   size as VISIBLE text in the button — never an aria-label, which would replace the visible
+			   name (WCAG 2.5.3 Label in Name). Docs: docs/schema.md § Dataset */
 			html += actionsPart(d.distribution.map((dist, index) =>
-				`<span${scope('distribution', 'DataDownload')}>${meta('encodingFormat', dist.format)}<a class="ui-button"${index === 0 ? ' data-variant="accent"' : ''} itemprop="contentUrl" href="${esc(dist.url)}">${esc(dist.format)}</a></span>`
+				`<span${scope('distribution', 'DataDownload')}>${meta('encodingFormat', dist.format)}${meta('contentSize', dist.size)}<a class="ui-button"${index === 0 ? ' data-variant="accent"' : ''}${iconAttrs(DATA_FORMATS[String(dist.format || '').toLowerCase()])} itemprop="contentUrl" href="${esc(dist.url)}" download>${esc(dist.format)}${dist.size ? ` <small>${esc(dist.size)}</small>` : ''}</a></span>`
 			));
 		}
 		return html;
@@ -2565,7 +2579,7 @@ const DETAILS = {
 				};
 			}), parts.accordion);
 		}
-		if (d.joinUrl) html += `<nav data-part="actions"><a class="ui-button" data-variant="accent" itemprop="url" href="${esc(d.joinUrl)}">${esc(d.joinText || 'Join')}</a></nav>`;
+		if (d.joinUrl) html += `<nav data-part="actions"><a class="ui-button" data-variant="accent"${iconAttrs(d.joinIcon)} itemprop="url" href="${esc(d.joinUrl)}">${esc(d.joinText || 'Join')}</a></nav>`;
 		return html;
 	},
 
@@ -2632,8 +2646,8 @@ const DETAILS = {
 		const channel = d.channel;
 		if (channel) {
 			const links = [
-				channel.url ? `<a class="ui-button" data-variant="accent" itemprop="serviceUrl" href="${esc(channel.url)}">${esc(channel.urlText || 'Get in touch')}</a>` : '',
-				channel.telephone ? `<span${scope('servicePhone', 'ContactPoint')}>${meta('contactType', channel.contactType)}<a class="ui-button" itemprop="telephone" href="tel:${esc(String(channel.telephone).replace(/\s/g, ''))}">${esc(channel.telephone)}</a></span>` : ''
+				channel.url ? `<a class="ui-button" data-variant="accent"${iconAttrs(channel.urlIcon)} itemprop="serviceUrl" href="${esc(channel.url)}">${esc(channel.urlText || 'Get in touch')}</a>` : '',
+				channel.telephone ? `<span${scope('servicePhone', 'ContactPoint')}>${meta('contactType', channel.contactType)}<a class="ui-button" data-icon="call" itemprop="telephone" href="tel:${esc(String(channel.telephone).replace(/\s/g, ''))}">${esc(channel.telephone)}</a></span>` : ''
 			].filter(Boolean);
 			html += `<div${scope('availableChannel', 'ServiceChannel')}>${(channel.languages || []).map((lang) => meta('availableLanguage', lang)).join('')}${meta('processingTime', channel.processingTime)}${links.length ? actionsPart(links) : ''}</div>`;
 		}
@@ -3058,7 +3072,7 @@ const REVEAL_FACES = {
 			/* the answer is authored PROSE (docs/schema.md § Quiz), and its panel reads as
 			   a second surface — the same call as the graded verdict chips' themes */
 			back: {
-				attrs: { itemprop: 'acceptedAnswer', itemscope: true, itemtype: `${SCHEMA}Answer`, theme: 'gray ink', content: 'pad(lg)' },
+				attrs: { itemprop: 'acceptedAnswer', itemscope: true, itemtype: `${SCHEMA}Answer`, theme: 'gray ink', content: 'pad(lg) plc(cc) tal(ctr)' },
 				html: `<p data-part="summary" itemprop="text">${renderInline(card.answer)}</p>`
 			}
 		};

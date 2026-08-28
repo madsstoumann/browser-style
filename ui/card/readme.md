@@ -349,7 +349,7 @@ All size queries are **named** — `@container bs-card (…)` — and each `cont
 ```js
 import '@browser.style/card';              // index.js: hover + carousel + video
 import '@browser.style/card/hover.js';     // cursor-tracked hov(track|drift|tilt)
-import '@browser.style/card/carousel.js';  // loop clones · autoplay · pause-on-leave
+import '@browser.style/card/carousel.js';  // loop clones · autoplay · pause-on-leave · slide anchors
 import '@browser.style/card/video.js';     // embed facades · media commands · vid() · <ui-play>
 ```
 

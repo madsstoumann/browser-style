@@ -48,7 +48,8 @@
           "text": "Start cooking",
           "url": "recipes/recipe.html?id=recipe-1"
         },
-        "style": "primary"
+        "style": "primary",
+        "icon": "skillet"
       }
     ]
   }

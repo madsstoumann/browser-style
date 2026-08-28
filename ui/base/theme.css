@@ -86,8 +86,17 @@
 
 	/* --- box — padding + corners on a native node; ONE arm on purpose (data-* is valid everywhere). Docs: theme.md § Box --- */
 	:where([data-box]) {
-		border-radius: var(--ui-box-radius, var(--radius-md));
-		padding: var(--ui-box-p, var(--spacing-md));
+		--_box-r: var(--ui-box-radius, var(--radius-md));
+		--_box-p: var(--ui-box-p, var(--spacing-md));
+		/* the concentric radius for a nested plate — outer minus inset, never negative. Docs: theme.md § Box */
+		--ui-box-inner-radius: max(0px, calc(var(--_box-r) - var(--_box-p)));
+		border-radius: var(--_box-r);
+		padding: var(--_box-p);
+	}
+	/* brd — a hairline in the theme's border colour, nudged toward its ink so it reads on the theme's own fill */
+	:where([data-box~="brd"]) {
+		border: var(--ui-box-border-width, var(--border-width, 1px)) solid
+			var(--ui-box-border-color, color-mix(in srgb, var(--_theme-border, var(--color-border)), var(--_theme-hue-ink, var(--color-border)) 25%));
 	}
 
 	/* --- color-scheme --- */

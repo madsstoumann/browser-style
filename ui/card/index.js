@@ -2,20 +2,20 @@
  * scan and globalThis.uiMedia.scan; a chunk imported on its own falls back to its own.
  * Feature chunks (each importable standalone):
  *   hover.js     cursor-tracked hov(track|drift|tilt)
- *   carousel.js  loop (seamless clones) · autoplay · pause-on-slide-leave
+ *   carousel.js  loop (seamless clones) · autoplay · pause-on-slide-leave · fragment links scroll only the carousel
  *   video.js     embed facades · media commands · vid() tools · <ui-play> · solo play · tracking
  *   lightbox.js  popover-lightbox niceties (DOM controls · media-open= · modality · …)
  * No srcset here (ui-media-srcset.js). With JS off everything still renders and scrolls. */
 
 import { initHover, scanHover } from './hover.js';
-import { initLoop, initAuto, initCarousels, initCarouselVideoPause, scanCarousels } from './carousel.js';
+import { initLoop, initAuto, initCarousels, initCarouselVideoPause, initSlideAnchors, scanCarousels } from './carousel.js';
 import { initMediaCommands, initEmbeds, initVideoTools, initSolo, initVideoTracking, scanVideo } from './video.js';
 import { initLightboxCommands } from './lightbox.js';
 import { onIdle, initVideoPlay } from './shared.js';
 
 export {
 	initHover, scanHover,
-	initLoop, initAuto, initCarousels, initCarouselVideoPause, scanCarousels,
+	initLoop, initAuto, initCarousels, initCarouselVideoPause, initSlideAnchors, scanCarousels,
 	initMediaCommands, initEmbeds, initVideoTools, initSolo, initVideoTracking, scanVideo,
 	initLightboxCommands,
 	initVideoPlay,

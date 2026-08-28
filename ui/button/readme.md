@@ -6,6 +6,7 @@ CSS-first button styles with variant modifiers, color utilities, and proportiona
 
 - Styles native `<button>` and `<a class="ui-button">` elements
 - Variants via `data-variant` attribute: `icon`, `outline`, `rounded`, `light`, `text`, `toggle`, `transparent`
+- Icon-font glyph via `data-icon` (before the text) + `data-icon-at="end"` (after) — see § Icons
 - Semantic colors via `bg-*` utility classes
 - Proportional sizing — padding and gap scale with `font-size` (uses `ch` units)
 - Submit buttons auto-styled with accent color
@@ -142,6 +143,23 @@ const { color, variant, ...props } = Astro.props;
 </button>
 ```
 
+## Icons
+
+With `@browser.style/icon`'s font sheet loaded, `data-icon` puts a glyph on the button —
+before the text by default, after it with `data-icon-at="end"` (a chevron's place). The
+glyph is a `::before`/`::after` grid item, spaced by the button's own `gap`, sized by
+`--button-icon-fs` (1.25em), and rendered as `content: var(--icon) / ""` so it never
+enters the accessible name. The name is the closed catalogue in `ui/icon/icons.json`.
+The glyph is nudged up `0.17em` (`translate`) to undo the baseline shift the icon build bakes
+into every outline for `::marker` use — measured: without it the icon sits 3 px low in a
+centred button, and `text-box: cap alphabetic` cannot fix it (it trims by font metrics, the
+shift is in the outlines).
+
+```html
+<a class="ui-button" data-icon="shopping-cart" href="/cart">Add to cart</a>
+<a class="ui-button" data-icon="chevron-right" data-icon-at="end" href="/more">Read more</a>
+```
+
 ## Variants
 
 Variants are set via the `data-variant` attribute with space-separated values:
@@ -228,7 +246,7 @@ Or set font-size on a parent to scale all buttons uniformly:
 |-------|---------|-------------|
 | `--button-bg` | `var(--color-button, hsl(0, 0%, 90%))` | Background color |
 | `--button-c` | `inherit` | Text color |
-| `--button-p` | `1ch 2.5ch` | Padding |
+| `--button-p` | `1ch 2ch` | Padding |
 | `--button-bdc` | `transparent` | Border color |
 | `--button-bg--hover` | color-mix with `--color-text` | Hover background |
 | `--button-c--hover` | `inherit` | Hover text color |

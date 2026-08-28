@@ -28,3 +28,13 @@
 @import '../../highlight/ui-highlight.css';
 @import '../../breadcrumbs/ui-breadcrumbs.css';
 @import '../ui-card.css';
+
+/* demo theme `quantum` — the quiz deck's deep-blue plate. One bundle + one resolver pair, per base/theme.md § Create your own theme */
+:root {
+	--ui-theme-quantum-bg: hsl(205 100% 10%);
+	--ui-theme-quantum-c: hsl(205 100% 95%);
+}
+:where([theme~="quantum"], [data-theme~="quantum"]) {
+	--_theme-base-bg: var(--ui-theme-quantum-bg);
+	--_theme-base-c: var(--ui-theme-quantum-c);
+}

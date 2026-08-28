@@ -1878,7 +1878,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       display: flex;
       flex-direction: column;
       font-size: var(--ui-content-list-fs, var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))));
-      gap: var(--ui-content-list-gap, var(--spacing-xs));
+      gap: var(--ui-content-list-gap, 0);
       list-style-position: inside;
       list-style-type: var(--ui-content-list-marker, disc);
       margin: 0;
@@ -1985,12 +1985,12 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
         }
       }
     }
-    & :is(a[href^="tel:"], a[href^="mailto:"]) {
+    & :is(a[href^="tel:"], a[href^="mailto:"]):not(.ui-button) {
       font-size: var(--ui-content-contact-fs, var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))));
       &::before {
         content: var(--icon) / "";
         font-family: var(--ui-icon-font);
-        margin-inline-end: var(--ui-content-contact-icon-gap, 0.35em);
+        margin-inline-end: var(--ui-content-contact-icon-gap, 0);
       }
     }
     & li[data-icon] :is(a[href^="tel:"], a[href^="mailto:"])::before {
@@ -2028,7 +2028,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     & [data-part=office] {
       display: flex;
       flex-direction: column;
-      gap: var(--ui-content-office-gap, var(--spacing-xs));
+      gap: var(--ui-content-office-gap, var(--spacing-md));
       & strong {
         font-size: var(--ui-content-office-name-fs, 1em);
       }

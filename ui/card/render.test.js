@@ -693,7 +693,7 @@ describe('quiz — flip flashcard (REVEAL_FACES)', () => {
 
 	test('the back panel is the acceptedAnswer and holds nothing else', () => {
 		const html = flip(deck);
-		assert.match(html, /<ui-content itemprop="acceptedAnswer" itemscope itemtype="https:\/\/schema\.org\/Answer" theme="gray ink" content="pad\(lg\)"><p data-part="summary" itemprop="text">The quantum unit of <em>information<\/em>\.<\/p><\/ui-content>/);
+		assert.match(html, /<ui-content itemprop="acceptedAnswer" itemscope itemtype="https:\/\/schema\.org\/Answer" theme="gray ink" content="pad\(lg\) plc\(cc\) tal\(ctr\)"><p data-part="summary" itemprop="text">The quantum unit of <em>information<\/em>\.<\/p><\/ui-content>/);
 		/* the derived back column is what a flashcard must NOT get */
 		assert.ok(!html.includes('data-part="meta"'), 'no derived meta row on a flashcard');
 		assert.ok(!html.includes('<ui-accordion'), 'no deck inside the flip card');
@@ -808,7 +808,7 @@ describe('service — Service', () => {
 	/* servicePhone expects a ContactPoint, NOT a phone string */
 	test('servicePhone is a ContactPoint scope carrying telephone', () => {
 		const html = card();
-		assert.match(html, /<span itemprop="servicePhone" itemscope itemtype="https:\/\/schema\.org\/ContactPoint"><meta itemprop="contactType" content="technical support"><a class="ui-button" itemprop="telephone" href="tel:\+4570809000">/);
+		assert.match(html, /<span itemprop="servicePhone" itemscope itemtype="https:\/\/schema\.org\/ContactPoint"><meta itemprop="contactType" content="technical support"><a class="ui-button" data-icon="call" itemprop="telephone" href="tel:\+4570809000">/);
 		assert.match(html, /<a class="ui-button" data-variant="accent" itemprop="serviceUrl" href="#">/);
 		assert.equal(count(html, '<meta itemprop="availableLanguage"'), 2);
 	});
@@ -2989,9 +2989,85 @@ describe('organization — boxed offices (parts.office / parts.officeTheme)', ()
 		assert.equal(count(html, '<div data-part="office" data-theme="gray light" data-box itemprop="department" itemscope itemtype="https://schema.org/LocalBusiness">'), 2);
 	});
 
+	/* `box` turns the attribute on; every other word is its value — `brd` is the theme-matched
+	   hairline (base/theme.md § Box). The demo preset is the first spelling */
+	test('parts.office "box brd" emits data-box="brd"', () => {
+		const html = withParts({ office: 'box brd', officeTheme: 'gray light' });
+		assert.equal(count(html, '<div data-part="office" data-theme="gray light" data-box="brd" itemprop="department" itemscope itemtype="https://schema.org/LocalBusiness">'), 2);
+	});
+
+	test('parts.office "brd" alone still makes a box — the value implies the attribute', () => {
+		const html = withParts({ office: 'brd' });
+		assert.equal(count(html, '<div data-part="office" data-box="brd" itemprop="department" itemscope itemtype="https://schema.org/LocalBusiness">'), 2);
+	});
+
 	test('a hostile officeTheme is escaped', () => {
 		const html = withParts({ office: 'box', officeTheme: '"><img src=x onerror=alert(1)>' });
 		assert.ok(!html.includes('<img src=x'));
 		assert.equal(count(html, 'data-theme="&quot;&gt;&lt;img src=x onerror=alert(1)&gt;"'), 2);
+	});
+});
+
+/* ── CTA icons — a glyph from the icon font on a button. `icon` names a catalogue glyph
+   (data-icon binds --icon, the corpus test above proves the name exists); `iconAt: "end"`
+   puts it after the text (chevrons), anything else keeps it before. Docs: docs/content.md § Icons on buttons */
+describe('CTA icons', () => {
+	const cta = (action) => /<nav data-part="actions">([\s\S]*?)<\/nav>/.exec(render({ schemaType: 'content', headline: 'H', actions: [action] }))[1];
+
+	test('an action icon rides data-icon, before the text by default', () => {
+		assert.equal(cta({ link: { url: '#', text: 'Add to cart' }, style: 'primary', icon: 'shopping-cart' }),
+			'<a class="ui-button" data-variant="accent" data-icon="shopping-cart" href="#">Add to cart</a>');
+	});
+
+	test('iconAt "end" adds data-icon-at="end"; any other value is dropped', () => {
+		assert.equal(cta({ link: { url: '#', text: 'Read more' }, style: 'primary', icon: 'chevron-right', iconAt: 'end' }),
+			'<a class="ui-button" data-variant="accent" data-icon="chevron-right" data-icon-at="end" href="#">Read more</a>');
+		assert.equal(cta({ link: { url: '#', text: 'Read more' }, icon: 'chevron-right', iconAt: 'start' }),
+			'<a class="ui-button" data-icon="chevron-right" href="#">Read more</a>');
+	});
+
+	test('no icon → no icon attributes; a real <button> carries the icon too', () => {
+		assert.equal(cta({ link: { url: '#', text: 'Plain' } }), '<a class="ui-button" href="#">Plain</a>');
+		assert.equal(cta({ link: { text: 'Apply now' }, style: 'primary', icon: 'send' }), '<button class="ui-button" type="button" data-variant="accent" data-icon="send">Apply now</button>');
+	});
+
+	test('a hostile icon name is escaped', () => {
+		const html = cta({ link: { url: '#', text: 'x' }, icon: '"><b>' });
+		assert.ok(!html.includes('<b>'));
+		assert.match(html, /data-icon="&quot;&gt;&lt;b&gt;"/);
+	});
+
+	test('the loyalty join CTA takes joinIcon', () => {
+		const html = render({ schemaType: 'loyalty', headline: 'H', details: { joinUrl: '#', joinText: 'Join Nordlys Rewards', joinIcon: 'loyalty' } });
+		assert.match(html, /<a class="ui-button" data-variant="accent" data-icon="loyalty" itemprop="url" href="#">Join Nordlys Rewards<\/a>/);
+		assert.ok(!render({ schemaType: 'loyalty', headline: 'H', details: { joinUrl: '#' } }).includes('data-icon'), 'no joinIcon, no attribute');
+	});
+
+	test('the service contact CTA takes channel.urlIcon', () => {
+		const html = render({ schemaType: 'service', headline: 'H', details: { channel: { url: '#', urlText: 'Request a quote', urlIcon: 'request-quote' } } });
+		assert.match(html, /<a class="ui-button" data-variant="accent" data-icon="request-quote" itemprop="serviceUrl" href="#">Request a quote<\/a>/);
+	});
+
+	/* contact BUTTONS carry their glyph as data-icon like every other CTA — the inline
+	   tel:/mailto: text-link rule in content.css excludes .ui-button, so the button
+	   mechanism (sized + centred) draws it once */
+	test('contact buttons carry data-icon call/mail', () => {
+		const html = render({ schemaType: 'contact', headline: 'H', details: { contactMethods: [{ type: 'phone', value: '+45 12 34 56 78' }, { type: 'email', value: 'a@b.c', label: 'Email' }] } });
+		assert.match(html, /<a class="ui-button" data-variant="accent" data-icon="call" itemprop="telephone" href="tel:\+4512345678">\+45 12 34 56 78<\/a>/);
+		assert.match(html, /<a class="ui-button" data-icon="mail" href="mailto:a@b\.c">Email<\/a>/);
+	});
+
+	/* Dataset downloads: the button is a real download (`download`), the format glyph comes
+	   from a closed map (unknown formats get no icon, never an interpolated name), and a
+	   size is VISIBLE text inside the button — never an aria-label, which would replace the
+	   visible name (WCAG 2.5.3). Docs: docs/schema.md § Dataset */
+	test('dataset distribution buttons: download, format glyph from a closed map, visible size', () => {
+		const html = render({ schemaType: 'dataset', headline: 'H', details: { distribution: [
+			{ format: 'CSV', url: 'https://x/a.csv', size: '1.2 MB' }, { format: 'JSON', url: 'https://x/a.json' }, { format: 'Parquet', url: 'https://x/a.parquet' }
+		] } });
+		assert.match(html, /<meta itemprop="contentSize" content="1\.2 MB"><a class="ui-button" data-variant="accent" data-icon="table-view" itemprop="contentUrl" href="https:\/\/x\/a\.csv" download>CSV <small>1\.2 MB<\/small><\/a>/);
+		assert.match(html, /<a class="ui-button" data-icon="data-object" itemprop="contentUrl" href="https:\/\/x\/a\.json" download>JSON<\/a>/);
+		assert.match(html, /<a class="ui-button" itemprop="contentUrl" href="https:\/\/x\/a\.parquet" download>Parquet<\/a>/);
+		assert.ok(!html.includes('aria-label'));
 	});
 });

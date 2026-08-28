@@ -31,7 +31,8 @@
           "url": "#",
           "text": "Start free trial"
         },
-        "style": "primary"
+        "style": "primary",
+        "icon": "rocket-launch"
       }
     ],
     "details": {
