@@ -106,15 +106,84 @@ Predictions, and what the trace said:
 
 ## 5. Measurements
 
-[PLACEHOLDER — scenarios a–f: initial pass ± content-visibility; per-DSL attribute
-flips vs the classList control; lightbox media= string rewrite; hover rAF loop;
-:has() probes; container-query resize; contrast pages.]
+### 5a. Initial style pass (page load to network-idle + settle)
 
-Initial pass, first data (as-shipped page, content-visibility active):
-UpdateLayoutTree median **102.1 ms / 1,211 elements** to network-idle; author CSS
-parse **6.4 ms**; defeating `content-visibility: auto` afterwards cost only
-**+17.2 ms / 227 elements** more. Layout (for contrast) was ~180 ms.
-[PLACEHOLDER — full tables]
+| page | DOM els | CSS parse | recalc ms / els | reveal-all¹ ms / els | selector µs² | match attempts² |
+|---|---|---|---|---|---|---|
+| `schema.html` | ~3,081 | 6.4 ms | **102.1 / 1,211** | +17.2 / 227 | 193,249 | 1,921,108 |
+| `cards.html` | ~545³ | 6.7 ms | 38.5 / 326 | +85.1 / 653 | 165,101 | 1,448,063 |
+| `media.hover.html` | ~198³ | 6.5 ms | 19.7 / 123 | +20.8 / 230 | 57,113 | 484,287 |
+
+¹ cost of then defeating `content-visibility: auto` (`visible !important` override).
+² stats-run numbers — rankings/ratios only, not comparable to the clean-run ms.
+³ smaller demo pages; both load the same 442 KB bundle as schema.html.
+
+Parsing 442 KB of CSS costs **6.4 ms** — bundle size is a bandwidth question, not a
+style-phase question. Initial recalc scales with DOM size (102 → 38 → 20 ms), not
+with rule count (identical bundle on all three). The `[media*=]` family leads
+selector time on every page, but the totals put it in perspective: on schema.html
+all 538 `[media*=]` selectors together account for ~42 ms of *instrumented* time
+(≈22% of selector time) across 346k attempts, and the whole selector-matching
+budget sits inside a ~102 ms real recalc. The layout `[bp*=]` family (325 selectors,
+337k attempts) shows a **98% fast-reject rate** — the ancestor Bloom filter and
+attribute bucketing do their job. The 826 microdata `<meta>` elements cost ~0.3 ms
+(§6 B3 confirms). The most expensive *per-attempt* family is `:has()`.
+
+### 5b. Attribute-mutation cost — the core result
+
+One token flipped on **one element** (median of 90 iterations, schema.html):
+
+| flip | recalc ms | elements recalced | invalidations/toggle |
+|---|---|---|---|
+| `media=` + real token (`hov(zoom)`) | **36.4** | **534** | 29 |
+| `media=` + nonsense token (`zzz`) | 36.6 | 534 | 29 |
+| `variant=` + `md:row` | 37.6 | 537 | 29 |
+| `lay-out` `lg=` + real token (`cg(2)`) | 10.9 | 203 | 8 |
+| `lay-out` `lg=` + nonsense token | 10.9 | 200 | 7 |
+| `content=` + `lg:hl(3xl)` | **2.0** | **33** | 7 |
+| `classList` toggle, matched class | **0.65** | **7** | 10 |
+| `classList` toggle, unmatched class | 0.73 | 7 | 7 |
+
+Three facts fall out:
+
+1. **The nonsense token costs the same as the real one.** The ~36 ms is pure
+   invalidation-set fan-out plus re-matching — not the cost of applying new styles.
+   The invalidation set Blink precomputes for "the `media` attribute changed on a
+   card host" covers the host's whole subtree (descendant arms like
+   `:is(ui-card, ui-reveal)[media*="…"] *` force this) *plus* `:has()`-driven
+   re-evaluation (§6 attributes the split).
+2. **`content=` is ~18× cheaper to flip than `media=`/`variant=`** despite having
+   the most rules (499) and the most on-page occurrences (842). Its
+   custom-property-only setter rules invalidate narrowly: 33 elements, 2 ms.
+   The inheritance model the DSL leans on is the *cheap* part, not the expensive one.
+3. **The class toggle is ~50× cheaper than the host-attribute flip** (0.65 ms/7 els
+   vs 36 ms/534). This is Blink's class fast path plus a minimal invalidation set —
+   the number the Tailwind comparison (§7) has to reckon with.
+
+On the small contrast page the same ordering holds at smaller scale (media flip
+14.4 ms/230 els, layout flip 9.3 ms/146, class 0.39 ms/1 el) — mutation cost scales
+with the *invalidated subtree*, not the page.
+
+### 5c. Runtime scenarios
+
+- **Lightbox toggle** (`media.lightbox.html`): **452 ms / 4,344 elements** per open,
+  the same per close. This stacks the three most expensive mechanisms at once: the
+  whole `media=` string rewrite (full re-match of every `[media*=]` rule against the
+  frame), the popover pseudo-class flip driving 14 `:has(ui-media:popover-open)`
+  rules including a document-level `:where(html):has(…)`, and `inert` stamping along
+  the ancestor chain. The isolated popover probe (below) shows the `:has()` share.
+- **`:has()` probes**: `showPopover()` alone (no lightbox JS, no attribute rewrite)
+  costs **186 ms / 1,422 elements**; toggling `data-part="cover"` on one element
+  costs 36 ms / 502 (schema.html) — `:where(ui-card):has([data-part~="cover"])` is
+  the single hottest selector in nearly every stats run.
+- **hover.js rAF loop**: **0.13 ms / 1 element per recalc**, 12 ms total over a 3 s
+  pointer stream, zero layout. The leaf-scoped write policy (`performance.md` §1.2)
+  fully contains the two inheriting registered properties — the pattern the docs
+  prescribe is confirmed at trace level.
+- **Container-query resize** (schema.html, 1280→500→1280 sweep): style recalc is
+  **15–18 ms per crossing** (140–190 elements) while Layout pays 80–117 ms — the
+  container-query token arms are layout-bound, not style-bound. The md:/lg: token
+  model is not a recalc problem.
 
 ## 6. Controls
 
