@@ -1465,3 +1465,26 @@ markup-first rule), move the other, add the pair. Two ambiguities need an `id=` 
 Re-run the sweep with a scratch copy of `schema.compare.js` whose `PAIRS` is the candidate
 list — ~2 min per card for the small rows.
 
+
+## 40. `:has()` arguments that name DSL attributes — a ~35 ms tax on every runtime token flip
+
+**Measured 2026-08, full data in `docs/style-performance.md` (§4, §6, §8).** Blink tracks
+the attribute names that appear inside `:has()` arguments; mutating such an attribute
+anywhere re-evaluates `:has()` state at page scale. The bundle currently names `media` in
+11 `:has()` needles (the 10 lightbox `asr()` placeholder-ratio rules in
+`ui/card/media.lightbox.css` plus the `nav` arm in `ui/card/content.css`), `variant` in 4,
+`data-part` in 4 and `aria-pressed` in 1. Consequence, measured on `schema.html`: one
+`media=` or `variant=` token flipped on one card costs **~36 ms / ~534 elements**, and a
+nonsense token costs the same — pure invalidation. Deleting the 73 `:has()` rules (or
+flattening only the `media`-referencing ones) collapses the flip to **~2.3 ms / 39
+elements**, with all 1,067 `[media*=]` rules still active. The same mechanism is why the
+lightbox toggle recalcs 4,344 elements (452 ms) and `shared.js`'s `aria-pressed` writes
+pay it on every play/pause.
+
+Proposed fix (`style-performance.md` §8.1): move the attribute needle out of the `:has()`
+argument — the plain `[media~="asr(…)"]` host rules set a custom property
+(`--ui-lightbox-placeholder-ar`) unconditionally, and one `:has(ui-media:popover-open)`
+rule consumes it; same treatment for `nav`, `variant`, `data-part`, `aria-pressed` arms.
+Then guard it: extend `tokens.lint.js` to fail on any DSL-attribute needle inside a
+`:has()` argument (§8.2). No token vocabulary change, no markup change. Verify with the
+flip-ab harness inlined in `style-performance.md` §9c (expect ~36 → ~2 ms).
