@@ -478,6 +478,13 @@ carries the variant's own image, chip label, machine metas, and a stretched `dat
 so the whole tile is the one hit target, which is what makes each variant "preselectable directly with
 a distinct URL".
 
+A grid of photos with plain labels reads as a *gallery*, so each tile also declares that it is a link:
+the chip carries a trailing chevron (`data-icon="chevron-right" data-icon-at="end"` — the same "go
+to" convention as the card CTAs, deliberately **not** ↗, which promises an external site or a new
+tab), the frame has `hov(zoom)`, and a hovered/focused tile paints its chip accent (`content.css`).
+The link's name says navigate, not select — `"Indigo Floral — view this colourway"` — and keeps the
+chip's visible text inside it (WCAG 2.5.3).
+
 It is the third `variants.control` value, beside `list` and `buttons` — but the only one with a
 **data precondition**: the tiles *are* the images, so a collage renders only if every variant carries
 an `image.src`. Ask for one without them and the set falls back to the `<ul>` rather than rendering a

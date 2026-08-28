@@ -1502,11 +1502,14 @@ const variantsPart = (variants, fields, parts = {}) => {
    The LOOK is the preset's (`variants.tile` / `variants.layout`, read in buildMedia,
    the one place holding both the preset and the variant data).
    Docs: docs/schema.md § Product */
-const COLLAGE_TILE = { variant: 'rds(non)', media: 'asr(1/1) chip(bs) chip(blue) chip(pale) chip(sm)', content: 'pad(none)' };
+/* hov(zoom) + the chip's trailing chevron are the tile's LINK affordance — a grid of photos
+   with plain labels reads as a gallery, not as four sub-pages. Docs: docs/schema.md § Product */
+const COLLAGE_TILE = { variant: 'rds(non)', media: 'asr(1/1) hov(zoom) chip(bs) chip(blue) chip(pale) chip(sm)', content: 'pad(none)' };
 const COLLAGE_LAYOUT = { xs: 'cg(3xs) rg(3xs)', md: 'columns(2)' };
 
-/* the accessible name says which variant the tile selects — the axis value carries that
-   ("Indigo Floral"), where the chip is only a short label ("Indigo") */
+/* the accessible name says which variant the tile OPENS — "view", not "select": it is a
+   navigation, and the axis value ("Indigo Floral") keeps the chip's visible text ("Indigo")
+   inside the name (WCAG 2.5.3) */
 const variantAxisValue = (item) => VARIANT_AXES.map((axis) => item[axis]).find(Boolean) || item.name;
 
 const collageTile = (item, tile) => {
@@ -1526,13 +1529,13 @@ const collageTile = (item, tile) => {
 	})}>`;
 	return `<ui-card${attrs({ variant: tile.variant, media: tile.media, content: tile.content })}${scope('hasVariant', 'Product')}>`
 		+ '<cq-box>'
-		+ `<ui-media>${img}${item.label ? `<ui-chip>${esc(item.label)}</ui-chip>` : ''}</ui-media>`
+		+ `<ui-media>${img}${item.label ? `<ui-chip data-icon="chevron-right" data-icon-at="end">${esc(item.label)}</ui-chip>` : ''}</ui-media>`
 		+ '<ui-content>'
 		+ meta('name', item.name)
 		+ meta('sku', item.sku)
 		+ VARIANT_AXES.map((axis) => meta(axis, item[axis])).join('')
 		+ offer
-		+ (item.url ? `<a data-part="cover" href="${esc(item.url)}" itemprop="url" aria-label="Select ${esc(variantAxisValue(item))}"></a>` : '')
+		+ (item.url ? `<a data-part="cover" href="${esc(item.url)}" itemprop="url" aria-label="${esc(variantAxisValue(item))} — view this colourway"></a>` : '')
 		+ '</ui-content></cq-box></ui-card>';
 };
 

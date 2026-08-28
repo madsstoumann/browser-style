@@ -223,6 +223,21 @@ The default is a pill shape. Use `square` for rounded corners or `squircle` for 
 
 Variants can be combined: `variant="light square"`, `variant="outline squircle"`.
 
+## Icons
+
+With `@browser.style/icon`'s font sheet loaded, `data-icon` puts a glyph on the chip —
+before the text by default, after it with `data-icon-at="end"` (a chevron's place: the
+ProductGroup collage tiles use `data-icon="chevron-right" data-icon-at="end"` to say "this
+opens a page"). Same contract as the button: the name is the closed catalogue in
+`ui/icon/icons.json`, the glyph is `content: var(--icon) / ""` so it never enters the
+accessible name, and it is nudged up `0.17em` to undo the font's baked marker shift. Knobs:
+`--ui-chip-icon-fs` (1.15em), `--ui-chip-icon-gap` (0.3em).
+
+```html
+<ui-chip data-icon="chevron-right" data-icon-at="end">Indigo</ui-chip>
+<ui-chip data-icon="verified">Verified</ui-chip>
+```
+
 ## With badges
 
 Chips can host `<ui-badge>` at any corner:

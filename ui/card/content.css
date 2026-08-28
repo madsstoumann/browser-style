@@ -772,6 +772,20 @@
 	:where([content~="scr(x)"]) [data-part="tags"] :is(a, li, ui-chip),
 	:where(ui-content[content~="scr(x)"]) [data-part="tags"] :is(a, li, ui-chip) { flex: 0 0 auto; white-space: nowrap; }
 
+	/* a collage TILE (ui-card inside a frame's lay-out) whose cover link is hovered/focused
+	   paints its label chip accent — with hov(zoom) on the frame, the tile's link affordance.
+	   The fade rides hov()'s own clock (paint-only properties — docs/performance.md) */
+	:where(ui-media > lay-out > ui-card:has([data-part~="cover"])) > cq-box > ui-media > ui-chip {
+		@media (prefers-reduced-motion: no-preference) {
+			transition:
+				background-color var(--ui-media-hover-duration, var(--duration-slower)) var(--ui-media-hover-easing, var(--ease-out)),
+				color var(--ui-media-hover-duration, var(--duration-slower)) var(--ui-media-hover-easing, var(--ease-out));
+		}
+	}
+	:where(ui-media > lay-out > ui-card:has([data-part~="cover"]:is(:hover, :focus-visible))) > cq-box > ui-media > ui-chip {
+		--ui-chip-bg: var(--color-accent);
+		--ui-chip-c: var(--color-accent-text);
+	}
 	/* cover — the host anchors the stretched ::after; interactive parts stay above it */
 	:where(ui-card):has([data-part~="cover"]) {
 		position: relative;

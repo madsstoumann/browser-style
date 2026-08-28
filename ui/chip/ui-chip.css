@@ -28,6 +28,17 @@
 		user-select: none;
 		white-space: nowrap;
 
+		/* icon-font glyph — data-icon binds --icon (ui/icon); alt-text arm; the translate undoes the font's baked marker shift. Docs: readme.md § Icons */
+		&[data-icon]::before, &[data-icon][data-icon-at="end"]::after {
+			content: var(--icon) / "";
+			font-family: var(--ui-icon-font);
+			font-size: var(--ui-chip-icon-fs, 1.15em);
+			translate: 0 -0.17em;
+		}
+		&[data-icon]::before { margin-inline-end: var(--ui-chip-icon-gap, 0.3em); }
+		&[data-icon][data-icon-at="end"]::before { content: none; }
+		&[data-icon][data-icon-at="end"]::after { margin-inline-start: var(--ui-chip-icon-gap, 0.3em); margin-inline-end: calc(-0.35 * var(--ui-chip-padding-inline)); }
+
 		/* ── B. Furniture axes — `&[attr]` standalone · `[media*="chip(…)"] &` card token ── */
 
 		/* colour — --ui-chip-accent is the single input. Docs: readme.md § Colour */

@@ -2138,6 +2138,15 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     flex: 0 0 auto;
     white-space: nowrap;
   }
+  :where(ui-media > lay-out > ui-card:has([data-part~=cover])) > cq-box > ui-media > ui-chip {
+    @media (prefers-reduced-motion: no-preference) {
+      transition: background-color var(--ui-media-hover-duration, var(--duration-slower)) var(--ui-media-hover-easing, var(--ease-out)), color var(--ui-media-hover-duration, var(--duration-slower)) var(--ui-media-hover-easing, var(--ease-out));
+    }
+  }
+  :where(ui-media > lay-out > ui-card:has([data-part~=cover]:is(:hover, :focus-visible))) > cq-box > ui-media > ui-chip {
+    --ui-chip-bg: var(--color-accent);
+    --ui-chip-c: var(--color-accent-text);
+  }
   :where(ui-card):has([data-part~=cover]) {
     position: relative;
     & :is([data-part=tags], [data-part=actions]) :is(a, button) {

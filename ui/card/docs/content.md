@@ -452,7 +452,7 @@ while text centres near `+0.33em` — and `::marker` has no lever to correct it.
 
 #### Icons on buttons — `data-icon` on a `.ui-button`
 
-The third placement. A CTA carries the glyph name on `data-icon`, exactly like a list row
+The third placement (`<ui-chip>` has the same contract — `ui/chip/readme.md` § Icons). A CTA carries the glyph name on `data-icon`, exactly like a list row
 (contact buttons too — `call` / `mail` — the inline `tel:`/`mailto:` text-link rule skips
 `.ui-button` so the glyph is drawn once, sized and centred like every other button icon),
 and `ui/base/button.css` draws it as a `::before` grid item (the button is an inline grid,

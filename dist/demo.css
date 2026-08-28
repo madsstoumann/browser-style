@@ -6225,6 +6225,23 @@
     text-box: text;
     user-select: none;
     white-space: nowrap;
+    &[data-icon]::before,
+    &[data-icon][data-icon-at=end]::after {
+      content: var(--icon) / "";
+      font-family: var(--ui-icon-font);
+      font-size: var(--ui-chip-icon-fs, 1.15em);
+      translate: 0 -0.17em;
+    }
+    &[data-icon]::before {
+      margin-inline-end: var(--ui-chip-icon-gap, 0.3em);
+    }
+    &[data-icon][data-icon-at=end]::before {
+      content: none;
+    }
+    &[data-icon][data-icon-at=end]::after {
+      margin-inline-start: var(--ui-chip-icon-gap, 0.3em);
+      margin-inline-end: calc(-0.35 * var(--ui-chip-padding-inline));
+    }
     &[theme] {
       --ui-chip-accent: var(--_theme-bg);
       --ui-chip-c: var(--_theme-c, var(--_theme-ink));
@@ -13364,6 +13381,15 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
   :where(ui-content[content~="scr(x)"]) [data-part=tags] :is(a, li, ui-chip) {
     flex: 0 0 auto;
     white-space: nowrap;
+  }
+  :where(ui-media > lay-out > ui-card:has([data-part~=cover])) > cq-box > ui-media > ui-chip {
+    @media (prefers-reduced-motion: no-preference) {
+      transition: background-color var(--ui-media-hover-duration, var(--duration-slower)) var(--ui-media-hover-easing, var(--ease-out)), color var(--ui-media-hover-duration, var(--duration-slower)) var(--ui-media-hover-easing, var(--ease-out));
+    }
+  }
+  :where(ui-media > lay-out > ui-card:has([data-part~=cover]:is(:hover, :focus-visible))) > cq-box > ui-media > ui-chip {
+    --ui-chip-bg: var(--color-accent);
+    --ui-chip-c: var(--color-accent-text);
   }
   :where(ui-card):has([data-part~=cover]) {
     position: relative;

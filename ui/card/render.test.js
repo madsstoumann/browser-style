@@ -105,10 +105,14 @@ describe('product variants', () => {
 	test('each tile is one whole-tile link carrying the variant URL', () => {
 		const html = group({ variants: withImages(VARIANTS.items) });
 		/* Google requires each variant be preselectable at a distinct URL, and only a
-		   crawlable <a> satisfies that — the tile chip is a label, not the link */
-		assert.match(html, /<a data-part="cover" href="\/p\?v=0" itemprop="url" aria-label="Select Green"><\/a>/);
+		   crawlable <a> satisfies that — the tile chip is a label, not the link. The name
+		   says NAVIGATE ("view"), not select, and keeps the chip's visible text inside it */
+		assert.match(html, /<a data-part="cover" href="\/p\?v=0" itemprop="url" aria-label="Green — view this colourway"><\/a>/);
 		assert.equal(count(html, 'data-part="cover"'), 2);
-		assert.match(html, /<ui-chip>V0<\/ui-chip>/);
+		/* the tile's link affordance: a trailing chevron on the chip (the CTA convention) and
+		   hov(zoom) on the frame — docs/schema.md § Product */
+		assert.match(html, /<ui-chip data-icon="chevron-right" data-icon-at="end">V0<\/ui-chip>/);
+		assert.match(html, /<ui-card variant="rds\(non\)" media="asr\(1\/1\) hov\(zoom\) chip\(bs\) chip\(blue\) chip\(pale\) chip\(sm\)"/);
 	});
 
 	test('tile images get srcset only when the CDN pipeline is armed', () => {
