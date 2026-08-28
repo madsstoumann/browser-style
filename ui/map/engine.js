@@ -162,15 +162,15 @@ export function createMap(canvas, config, points) {
 
 	/* pin → slide: scroll only the carousel. Fragment navigation is block: start (the page
 	   scrolls to put the slide at the top; a scroll-margin cannot change that — measured);
-	   scrollIntoView with block: nearest leaves the page where it is. The URL still gets the
-	   fragment. Docs: readme.md § Popups */
+	   scrollIntoView with block: nearest leaves the page where it is. No hash is written:
+	   a refresh would not honour it anyway (scroll restoration), and ⌘/ctrl-click still
+	   opens the plain anchor. Docs: readme.md § Popups */
 	const jumpToSlide = (event) => {
 		const href = event.currentTarget.getAttribute('href');
 		const target = document.getElementById(decodeURIComponent(href.slice(1)));
 		if (!target) return;
 		event.preventDefault();
 		target.scrollIntoView({ block: 'nearest', inline: 'start', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
-		history.replaceState(null, '', href);
 	};
 
 	const addPoint = (point) => {

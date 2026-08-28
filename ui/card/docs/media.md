@@ -794,9 +794,12 @@ only in `scrollIntoView()`, so `carousel.js` installs one delegated click handle
 same-document link whose target is a slide of a scroll container (`slidesOf()`, so a
 collage `<lay-out>` slide is excluded like everywhere else in JS) gets
 `scrollIntoView({ block: 'nearest', inline: 'start' })` — smooth unless
-`prefers-reduced-motion` — and the URL keeps the fragment via `history.replaceState`.
-Modified clicks and already-handled clicks (`defaultPrevented`, e.g. the map popup's own
-link) pass through. With JS off the link still works, page jump included.
+`prefers-reduced-motion` — and the URL is left alone: a refresh would not honour a hash
+anyway (scroll restoration restores where you were), so writing one only churns the address
+bar. Modified clicks (⌘/ctrl-click opens the plain anchor — a fresh navigation *does* honour
+the fragment, so that is the deep link) and already-handled clicks (`defaultPrevented`, e.g.
+the map popup's own link) pass through. With JS off the link still works, page jump and hash
+included.
 - **A slide must not carry a stretched `cover` link.** It would swallow the swipe and turn
   the whole photo into a link — see [schema.md § Places](./schema.md).
 

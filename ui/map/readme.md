@@ -178,9 +178,9 @@ so the link works on its own. The engine still intercepts the click — native f
 navigation is `block: start`, so the **page** would scroll to put the slide at the viewport
 top (a `scroll-margin`/`scroll-padding` of `100dvh` cannot change that; measured, it parks the
 frame a viewport lower). `scrollIntoView({ block: 'nearest', inline: 'start' })` moves only
-the carousel, the URL still gets the fragment (`history.replaceState`), and
-`prefers-reduced-motion` drops the smooth scroll. Without slides the title falls back to the
-external URL.
+the carousel, the URL is left alone (a refresh would not honour a hash anyway — scroll
+restoration — and ⌘/ctrl-click still opens the plain anchor), and `prefers-reduced-motion`
+drops the smooth scroll. Without slides the title falls back to the external URL.
 
 ## Accessibility
 

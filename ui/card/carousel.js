@@ -174,9 +174,10 @@ const NAV_SEL = [
 /* fragment link → slide: scroll only the carousel. Native fragment navigation is block:
    start — the PAGE scrolls to put the slide at the viewport top, and no scroll-margin or
    scroll-padding cancels that (measured: 100dvh parks the frame a viewport lower). A link
-   whose target is a slide of a scroll container gets scrollIntoView block: nearest instead,
-   and the URL still carries the fragment. Modified clicks and links another handler already
-   claimed (the map popup's) pass through. Docs: docs/media.md § Anchors */
+   whose target is a slide of a scroll container gets scrollIntoView block: nearest instead.
+   No hash is written — a refresh would not honour it anyway (scroll restoration). Modified
+   clicks (⌘/ctrl: the plain anchor, a deep link) and links another handler already claimed
+   (the map popup's) pass through. Docs: docs/media.md § Anchors */
 export function initSlideAnchors(root = document) {
 	if (root.uiSlideAnchors) return;
 	root.uiSlideAnchors = true;
@@ -190,7 +191,6 @@ export function initSlideAnchors(root = document) {
 		if (!scroller || !/auto|scroll/.test(getComputedStyle(scroller).overflowX) || !slidesOf(scroller).includes(target)) return;
 		event.preventDefault();
 		target.scrollIntoView({ block: 'nearest', inline: 'start', behavior: reduce.matches ? 'instant' : 'smooth' });
-		history.replaceState(null, '', `#${id}`);
 	});
 }
 
