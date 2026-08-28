@@ -85,6 +85,7 @@
 - Dock (`dock`)
 - Drawer (`drawer`)
 - Footer (`footer`)
+- Form Step (`form-step`)
 - Launchpad (`launchpad`)
 - Mega Menu (`mega-menu`)
 - Menu (`menu`)
@@ -97,13 +98,12 @@
 - Radial Menu (`radial-menu`)
 - Scroll (`scroll`)
 - Scroll Mask (`scroll-mask`)
+- Scroll Spy (`scroll-spy`)
 - Step (`step`)
-- Form Step (`form-step`)
 - Tab Bar (`tab-bar`)
 - Tab-Cordion (`tab-cordion`)
 - Tabs (`tabs`)
 - Toolbar (`toolbar`)
-
 ## Layout
 - Bento (`bento`)
 - Grid (`grid`)

@@ -23,7 +23,7 @@ import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { renderCard, realestateSections } from '../../render.js';
-import { CDN_BASE, CONTRAST_STYLE, HEAD_COMMON, VT_HEAD, breadcrumb, descope, esc, withPreset } from '../build.shared.js';
+import { CDN_BASE, CONTRAST_STYLE, HEAD_COMMON, VT_HEAD, breadcrumb, descope, esc, scrollSpy, spyAttrs, withPreset } from '../build.shared.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const data = (file) => JSON.parse(readFileSync(join(here, '../../data', file), 'utf8'));
@@ -31,9 +31,9 @@ const local = (file) => JSON.parse(readFileSync(join(here, file), 'utf8'));
 
 const presets = { ...data('card.presets.json').presets, ...data('card.presets.demo.json').presets };
 
-/* the gallery is full width inside the 64rem shell now that the card is `col` at every
-   width — it is no longer the media half of a lg:row split */
-const IMAGES = { cdnBase: CDN_BASE, sizes: 'min(64rem, 100vw)' };
+/* the gallery fills the article column: the whole shell below 720px, three quarters of the
+   80rem shell beside the scroll-spy rail from lg up (the card is `col` at every width) */
+const IMAGES = { cdnBase: CDN_BASE, sizes: '(min-width: 720px) min(60rem, 75vw), 100vw' };
 /* cdn-cgi resolves against the DEPLOYED site, so these URLs only resolve once the
    branch ships — the assets and the HTML deploy together. Set false to preview locally. */
 const USE_CDN = true;
@@ -53,6 +53,15 @@ const VIEW = 'realestate-1';
 const TITLE = ucf.fields.headline;
 const { fields } = ucf;
 
+/* "On this page" — reading order; index+1 is the data-spy="n" on both the band and its link.
+   Amenities shares the About band on lg (same top edge), so it is not its own entry. */
+const SPY = [
+	{ id: 'gallery', label: 'Photos' },
+	{ id: 'figures', label: 'Key figures' },
+	{ id: 'about', label: 'About the home' },
+	{ id: 'location', label: 'Where it is' }
+];
+
 /* Band 1 renders the LISTING level only. Handing the card a details object with no
    `property` is what keeps it there: DETAILS.realestate then emits datePosted, the
    price and the agent line, and no mainEntity block — which the bands below own. */
@@ -60,6 +69,7 @@ const listingOnly = { ...ucf, fields: { ...fields, body: undefined, cover: undef
 
 const galleryCard = renderCard(withPreset(listingOnly, 'realestate-page'), presets, undefined, USE_CDN ? { images: IMAGES } : {})
 	/* first slide only: the LCP element and the morph target — always eager */
+	.replace('<ui-card ', `<ui-card ${spyAttrs(SPY, 'gallery')} `)
 	.replace('<img', `<img id="hero" data-view="hero-${VIEW}"`)
 	.replace(' loading="lazy"', ' loading="eager" fetchpriority="high"')
 	.replace('sizes="auto, ', 'sizes="'); /* `auto` is spec-invalid on eager images */
@@ -76,16 +86,16 @@ const bodyCard = descope(renderCard(
 
 const band = (attrs, inner) => `\n\t\t\t<lay-out ${attrs}>${inner}\n\t\t\t</lay-out>`;
 
-const figuresBand = band('sm="columns(2) items(start)" md="columns(3) items(start)"',
+const figuresBand = band(`${spyAttrs(SPY, 'figures')} sm="columns(2) items(start)" md="columns(3) items(start)"`,
 	s.figures.map((figure) => `\n\t\t\t\t<ui-content>${figure}</ui-content>`).join(''));
 
-const storyBand = band('lg="ratio(60:40) items(start)"',
+const storyBand = band(`${spyAttrs(SPY, 'about')} lg="ratio(60:40) items(start)"`,
 	`\n\t\t\t\t${bodyCard}
 				<ui-content><h2 data-part="headline">Amenities</h2>${s.amenities}</ui-content>`);
 
 /* the map rides the Apartment, not the listing: hasMap and geo are Place properties and
    RealEstateListing is a WebPage. Docs: docs/schema.md § Real estate */
-const placeBand = band('lg="ratio(40:60) items(start)"',
+const placeBand = band(`${spyAttrs(SPY, 'location')} lg="ratio(40:60) items(start)"`,
 	`\n\t\t\t\t<ui-content><h2 data-part="headline">Where it is</h2>${s.place.geo}${s.address}${s.place.action}</ui-content>
 				<ui-media media="asr(4/3) rds(lg)">${s.place.frame}</ui-media>`);
 
@@ -111,6 +121,11 @@ const page = `<!DOCTYPE html>
 		body { margin-inline: auto; max-inline-size: 64rem; }
 		.listing-view { margin-block-end: var(--spacing-2xl); }
 		.listing-view > lay-out { margin-block-start: var(--spacing-xl); }
+		/* the scroll-spy rail: a ratio(75:25) shell from lg (720px, the only breakpoint that
+		   generates ratio()) — the shell widens so the article keeps ~60rem beside a 20rem rail;
+		   below lg the nav is hidden, as the reference pen does. Docs: ui/scroll-spy/readme.md */
+		@media (width >= 720px) { body { max-inline-size: 80rem; } }
+		@media (width < 720px) { [data-scroll-spy] { display: none; } }
 	</style>
 	${CONTRAST_STYLE}
 </head>
@@ -121,14 +136,19 @@ const page = `<!DOCTYPE html>
 		{ name: TITLE }
 	])}
 	<main>
-		<article class="listing-view" data-view="card-${VIEW}" itemscope itemtype="https://schema.org/RealEstateListing">
-			<link itemprop="mainEntityOfPage" href="havnegade-44.html">
-			${descope(galleryCard)}
-			<!-- ONE mainEntity scope wrapping every band that carries a residence property:
-			     microdata scopes are DOM subtrees, and each property is stated exactly once. -->
-			<section${s.residence.attrs}>${s.residence.metas}${figuresBand}${storyBand}${placeBand}
-			</section>
-		</article>
+		<!-- items(start) is load-bearing: a stretched grid item never sticks, a start-aligned
+		     one keeps the full grid area as its containing block and travels. -->
+		<lay-out lg="ratio(75:25) items(start)">
+			<article class="listing-view" data-view="card-${VIEW}" itemscope itemtype="https://schema.org/RealEstateListing">
+				<link itemprop="mainEntityOfPage" href="havnegade-44.html">
+				${descope(galleryCard)}
+				<!-- ONE mainEntity scope wrapping every band that carries a residence property:
+				     microdata scopes are DOM subtrees, and each property is stated exactly once. -->
+				<section${s.residence.attrs}>${s.residence.metas}${figuresBand}${storyBand}${placeBand}
+				</section>
+			</article>
+			${scrollSpy(SPY)}
+		</lay-out>
 	</main>
 	<!-- Native scroll-control pseudos do NOT follow a popover frame into the top layer
 	     (Chromium), so the open lightbox gets real DOM controls from this module. Non

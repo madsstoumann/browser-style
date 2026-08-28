@@ -1,0 +1,186 @@
+/**
+ * ui-scroll-spy — "on this page" links whose active state follows the section in view.
+ * Sticky bar by default, side list with variant="rail" (data-variant on native <nav>). Docs: readme.md
+ * @version 1.0.0
+ * @date 2026-08-28
+ * @author Mads Stoumann
+ */
+/* ALL non-inheriting on purpose — one item's clock must not leak into a sibling's pseudos */
+@property --_spy-in   { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --_spy-out  { syntax: "<number>"; inherits: false; initial-value: 1; }
+@property --_spy-prog { syntax: "<number>"; inherits: false; initial-value: 0; }
+/* two clocks, multiplied: `in` when the target's start edge crosses the line, `out` when its end edge does */
+@keyframes ui-scroll-spy-in   { from { --_spy-in: 0; }  to { --_spy-in: 1; } }
+@keyframes ui-scroll-spy-out  { from { --_spy-out: 1; } to { --_spy-out: 0; } }
+@keyframes ui-scroll-spy-prog { from { --_spy-prog: 0; } to { --_spy-prog: 1; } }
+
+@layer bs-component {
+	/* scope — NOT additive: every --spy-n lives in this one declaration. Docs: readme.md § How it works */
+	:where(:root:has(ui-scroll-spy, [data-scroll-spy])) {
+		timeline-scope: --spy-1, --spy-2, --spy-3, --spy-4, --spy-5, --spy-6, --spy-7, --spy-8, --spy-9, --spy-10, --spy-11, --spy-12;
+		@media (prefers-reduced-motion: no-preference) { scroll-behavior: smooth; }
+	}
+
+	/* one attribute binds both sides: data-spy="n" on the target AND on the nav item that tracks it.
+	   Replace these arms with ident("--spy-" attr(data-spy)) once both engines ship ident() — readme.md § How it works */
+	:where([data-spy="1"])  { --_spy: --spy-1; }
+	:where([data-spy="2"])  { --_spy: --spy-2; }
+	:where([data-spy="3"])  { --_spy: --spy-3; }
+	:where([data-spy="4"])  { --_spy: --spy-4; }
+	:where([data-spy="5"])  { --_spy: --spy-5; }
+	:where([data-spy="6"])  { --_spy: --spy-6; }
+	:where([data-spy="7"])  { --_spy: --spy-7; }
+	:where([data-spy="8"])  { --_spy: --spy-8; }
+	:where([data-spy="9"])  { --_spy: --spy-9; }
+	:where([data-spy="10"]) { --_spy: --spy-10; }
+	:where([data-spy="11"]) { --_spy: --spy-11; }
+	:where([data-spy="12"]) { --_spy: --spy-12; }
+
+	/* targets — every data-spy outside a nav publishes its own view timeline */
+	:where([data-spy]:not(:is(ui-scroll-spy, [data-scroll-spy]) *)) {
+		scroll-margin-block-start: var(--ui-scroll-spy-offset, 0px);
+		view-timeline: var(--_spy) block;
+		/* the reference line. Ranges below use exit-crossing, never exit — readme.md § How it works */
+		view-timeline-inset: var(--ui-scroll-spy-line, 30%) 0;
+	}
+
+	:where(ui-scroll-spy, [data-scroll-spy]) {
+		--ui-scroll-spy-accent: var(--color-accent);
+		--ui-scroll-spy-bg: var(--color-surface);
+		--ui-scroll-spy-c: var(--color-text-muted);
+		--ui-scroll-spy-c-active: var(--color-text);
+		--ui-scroll-spy-dot-size: 0.5rem;
+		--ui-scroll-spy-fs: var(--font-size-sm);
+		--ui-scroll-spy-gap: var(--spacing-sm);
+		--ui-scroll-spy-ramp: 3rem;
+		--ui-scroll-spy-sticky: 0px;
+		--ui-scroll-spy-track: var(--color-border);
+		--ui-scroll-spy-track-size: var(--border-width-thick);
+
+		background: var(--ui-scroll-spy-bg);
+		display: block;
+		font-size: var(--ui-scroll-spy-fs);
+		inset-block-start: var(--ui-scroll-spy-sticky);
+		position: sticky;
+		z-index: var(--z-index-2);
+
+		/* the list is an inline scroller with the shared scroll-edge fade (base/scroll.css) */
+		& :where(ol, ul) {
+			display: flex;
+			gap: var(--ui-scroll-spy-gap);
+			list-style: none;
+			margin: 0;
+			overflow-x: auto;
+			overscroll-behavior-inline: contain;
+			padding: 0;
+			scrollbar-width: none;
+			--ui-scroll-fade-dir: to var(--_dir-e);
+			--ui-scroll-fade-mask: linear-gradient(var(--ui-scroll-fade-dir, to bottom), #0000, #000 var(--ui-scroll-fade-start) calc(100% - var(--ui-scroll-fade-end)), #0000);
+			@supports (animation-timeline: scroll()) {
+				@media (prefers-reduced-motion: no-preference) {
+					& {
+						animation: ui-scroll-fade-s both linear, ui-scroll-fade-e both linear;
+						animation-timeline: scroll(self inline);
+						animation-range: 0 var(--ui-scroll-fade-ramp-s), calc(100% - var(--ui-scroll-fade-ramp-e)) 100%;
+						mask: var(--ui-scroll-fade-mask);
+					}
+				}
+			}
+		}
+
+		& :where(li) {
+			border-block-end: var(--ui-scroll-spy-track-size) solid var(--ui-scroll-spy-track);
+			color: var(--ui-scroll-spy-c);
+			flex: 0 0 auto;
+			position: relative;
+		}
+
+		/* an item with data-spy="n" reads target n's timeline; an unnumbered item is plain */
+		& :where(li[data-spy]) {
+			--_spy-on: calc(var(--_spy-in) * var(--_spy-out));
+			animation: ui-scroll-spy-in linear both, ui-scroll-spy-out linear both;
+			animation-range: exit-crossing 0% exit-crossing var(--ui-scroll-spy-ramp), exit-crossing 100% exit-crossing calc(100% + var(--ui-scroll-spy-ramp));
+			animation-timeline: var(--_spy), var(--_spy);
+			color: color-mix(in oklab, var(--ui-scroll-spy-c) calc(100% - var(--_spy-on) * 100%), var(--ui-scroll-spy-c-active));
+
+			/* progress fill: ONE composited scale over the track; origin through base's --_dir-s */
+			&::after {
+				animation: ui-scroll-spy-prog linear both;
+				animation-range: exit-crossing 0% exit-crossing 100%;
+				animation-timeline: var(--_spy);
+				background: var(--ui-scroll-spy-accent);
+				block-size: var(--ui-scroll-spy-track-size);
+				content: "";
+				inset-block-end: calc(-1 * var(--ui-scroll-spy-track-size));
+				inset-inline: 0;
+				position: absolute;
+				scale: var(--_spy-prog) 1;
+				transform-origin: var(--_dir-s);
+			}
+			/* first: on from the target's first visible pixel — last: never ramps out */
+			&[data-spy="1"] { animation-range: cover 0% cover 0%, exit-crossing 100% exit-crossing calc(100% + var(--ui-scroll-spy-ramp)); }
+			&:last-child { animation-name: ui-scroll-spy-in, none; }
+		}
+
+		& :where(a) {
+			color: inherit;
+			display: block;
+			padding: var(--ui-scroll-spy-gap) calc(var(--ui-scroll-spy-gap) * 1.5);
+			text-decoration: none;
+			white-space: nowrap;
+			&:hover, &:focus-visible { color: var(--ui-scroll-spy-c-active); }
+		}
+
+		/* the bindings are state, not motion — only the crossfade length is gated */
+		@media (prefers-reduced-motion: reduce) { --ui-scroll-spy-ramp: 0px; }
+	}
+
+	/* rail — vertical side list: track at inline-start, a dot per entry, the fill runs down the track */
+	:where(ui-scroll-spy[variant~="rail"], [data-scroll-spy][data-variant~="rail"]) {
+		--ui-scroll-spy-bg: transparent;
+		--ui-scroll-spy-gap: var(--spacing-xs);
+		--ui-scroll-spy-sticky: var(--spacing-lg);
+
+		& :where(ol, ul) {
+			animation: none;
+			flex-direction: column;
+			gap: 0;
+			mask: none;
+			overflow: visible;
+		}
+
+		& :where(li) {
+			border-block-end: 0;
+			border-inline-start: var(--ui-scroll-spy-track-size) solid var(--ui-scroll-spy-track);
+		}
+		& :where(li[data-spy]) {
+			&::after {
+				block-size: auto;
+				inline-size: var(--ui-scroll-spy-track-size);
+				inset-block: 0;
+				inset-inline: calc(-1 * var(--ui-scroll-spy-track-size)) auto;
+				scale: 1 var(--_spy-prog);
+				transform-origin: 50% 0;
+			}
+			/* the dot fills with the entry's state; the surface ring lifts it off the track */
+			&::before {
+				background: color-mix(in oklab, var(--ui-scroll-spy-track) calc(100% - var(--_spy-on) * 100%), var(--ui-scroll-spy-accent));
+				block-size: var(--ui-scroll-spy-dot-size);
+				border-radius: var(--radius-circle);
+				box-shadow: 0 0 0 var(--ui-scroll-spy-track-size) var(--color-surface);
+				content: "";
+				inline-size: var(--ui-scroll-spy-dot-size);
+				inset-block-start: calc(50% - var(--ui-scroll-spy-dot-size) / 2);
+				inset-inline-start: calc(-1 * (var(--ui-scroll-spy-dot-size) + var(--ui-scroll-spy-track-size)) / 2);
+				position: absolute;
+				z-index: 1;
+			}
+		}
+
+		& :where(a) {
+			padding-block: var(--ui-scroll-spy-gap);
+			padding-inline: var(--spacing-md) 0;
+			white-space: normal;
+		}
+	}
+}

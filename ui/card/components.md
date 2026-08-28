@@ -49,6 +49,7 @@ grouped by role. Paths are relative to `ui/`, matching how the demos link them
 | `ui/progress-circular` | `<ui-progress-circular>` — goal rings on `demo/schema.goals.html` | `progress-circular/ui-progress-circular.css` |
 | `ui/quote` | `<ui-quote>`, `data-part="quote"` | `quote/ui-quote.css` |
 | `ui/rating` | `.ui-rating`, `data-part="rating"` | `rating/ui-rating.css` |
+| `ui/scroll-spy` | `<nav data-scroll-spy>` — the "On this page" rail on `demo/realestate/havnegade-44.html` (`demo/build.shared.js` § `scrollSpy()` + `spyAttrs()`); the bands carry `id` + `data-spy="n"`. Linked by the demos but **not** a declared peer of `@browser.style/card` — it is page furniture, not card markup | `scroll-spy/ui-scroll-spy.css` |
 | `ui/timeline` | `data-part="timeline"` on an `<ol>` | `timeline/ui-timeline.css` |
 
 ## Structural — no package of their own

@@ -1119,7 +1119,10 @@ self-link. It is the same shape the product pages use, and it is what
 **The page is banded, not one card.** One `<article>` carries the listing scope; band 1 is
 the gallery card; the residence bands sit inside **one** `<section itemprop="mainEntity">`.
 They have to: microdata scopes are DOM subtrees, and each property is stated exactly once
-([One property, one value](#one-property-one-value)).
+([One property, one value](#one-property-one-value)). The gallery card and the three bands
+also carry `id` + `data-spy="1…4"`, and from `lg` the page sits in a `ratio(75:25)` shell
+beside an "On this page" rail emitted by `build.shared.js` § `scrollSpy()` —
+`@browser.style/scroll-spy`, CSS-only ([`ui/scroll-spy/readme.md`](../../scroll-spy/readme.md)).
 
 ```
 <article itemscope itemtype=".../RealEstateListing">   ← name, description, datePosted, offers, image

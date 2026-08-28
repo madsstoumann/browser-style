@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Scroll Spy</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="color-scheme" content="light dark">
+	<meta name="description" content="CSS-first scroll-spy navigation — the active link follows the section in view, driven by scroll timelines. No JavaScript.">
+	<meta name="view-transition" content="same-origin">
+	<!-- layer order: layout first, so bs-component rules outrank lay-out's own var-driven
+	     declarations (layer order beats specificity) -->
+	<style>@layer layout, bs-core, bs-component;</style>
+	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="/layout/dist/layout.css">
+	<link rel="stylesheet" href="ui-scroll-spy.css">
+	<style>
+		/* demo-only: page shell, section rhythm and the one page-level knob */
+		:root { --ui-scroll-spy-offset: 4rem; } /* the sticky bar's height — anchor jumps land below it */
+		[data-variant="rail"] { --ui-scroll-spy-sticky: calc(var(--ui-scroll-spy-offset) + var(--spacing-md)); } /* the rail sticks below the bar */
+		body { margin-inline: auto; max-inline-size: 72rem; padding-inline: var(--spacing-md); }
+		.essay {
+			font-size: var(--font-size-lg);
+			line-height: var(--line-height-relaxed);
+			max-inline-size: 40rem;
+			& > section {
+				/* padding, not margin: a margin between targets is a dead zone where nothing is current */
+				padding-block: var(--spacing-xl) var(--spacing-md);
+				& > h3 { font-size: 1.5em; line-height: var(--line-height-tight); margin-block: 0 var(--spacing-md); }
+				& > p:last-child { margin-block-end: 0; }
+			}
+			/* deliberately taller than any viewport: the tall-section case (readme § How it works) */
+			& > .tall { min-block-size: 220dvb; }
+		}
+		.controls { display: flex; gap: var(--spacing-md); margin-block: var(--spacing-md); }
+		.spacer { block-size: 60dvb; }
+	</style>
+</head>
+<body>
+<main>
+	<h1>UI: Components</h1>
+	<h2>Scroll Spy</h2>
+	<p>
+		<strong>Scroll Spy</strong> is an "on this page" navigation whose active link follows the section in view.
+		Number each target with <code>data-spy="n"</code> in reading order and put the same <code>data-spy="n"</code> on the
+		nav item that tracks it — the CSS binds the two through target <em>n</em>'s scroll timeline. No JavaScript, no observers.
+		Below, one set of six sections feeds <strong>two</strong> navs at once: a sticky bar (the default) and a
+		side <code>rail</code>.
+	</p>
+	<div class="controls">
+		<label><input type="checkbox" id="rtl"> <code>dir="rtl"</code></label>
+		<label><input type="checkbox" id="bar" checked> sticky bar</label>
+	</div>
+
+	<nav data-scroll-spy aria-label="On this page" id="topbar">
+		<ol>
+			<li data-spy="1"><a href="#beginnings">Beginnings</a></li>
+			<li data-spy="2"><a href="#scroll-and-page">The scroll and the page</a></li>
+			<li data-spy="3"><a href="#tall">A very tall section</a></li>
+			<li data-spy="4"><a href="#margins">Designing the margins</a></li>
+			<li data-spy="5"><a href="#slowness">The return of slowness</a></li>
+			<li data-spy="6"><a href="#coda">Coda</a></li>
+		</ol>
+	</nav>
+
+	<lay-out lg="ratio(75:25) items(start)">
+		<article class="essay">
+			<section id="beginnings" data-spy="1">
+				<h3>Beginnings</h3>
+				<p>A printed book tells you where you are without being asked: the weight of the unread pages under your thumb is a quiet form of orientation. The page is not only a surface for words — it is an instrument.</p>
+				<p>When reading moved to screens we kept the words and lost the thumb. The scrollbar tried to stand in for that sense of place and never quite managed; it is a thin grey ghost that most readers never consciously see.</p>
+			</section>
+			<section id="scroll-and-page" data-spy="2">
+				<h3>The scroll and the page</h3>
+				<p>The codex is one of the most successful interfaces ever designed. It makes a long, linear argument feel like a navigable space: you can flip back to a half-remembered passage, dog-ear a turning point, riffle ahead to see how much remains.</p>
+				<p>The scroll is pure sequence. It is honest about the forward motion of text and silent about everything else. Where am I? How much is left? The scroll shrugs, hands you the words and withholds the geography.</p>
+				<p>This is what the little map in the margin gives back — structure, position and passage, continuously, as your eye moves down the page.</p>
+			</section>
+			<section id="tall" class="tall" data-spy="3">
+				<h3>A very tall section</h3>
+				<p>This section is deliberately taller than any viewport. It is the case that trips a naive scroll-spy: the spec's <code>exit</code> range for a subject taller than the scrollport starts when the subject's <em>bottom</em> edge reaches the viewport bottom — not when its top crosses the reference line — so its link would light up late, and the link before it would hold on for far too long.</p>
+				<p>The component binds to <code>exit-crossing</code> instead: 0% when the start edge crosses the line, 100% when the end edge does, whatever the height. Watch the rail on the right: this entry is current from the moment its heading reaches the 30% line, and its segment fills steadily through the whole section.</p>
+				<p>Keep scrolling. The fill measures progress <em>through this section</em>, one to one, which is why it is more honest than a page-progress line drawn beside an evenly spaced list.</p>
+			</section>
+			<section id="margins" data-spy="4">
+				<h3>Designing the margins</h3>
+				<p>A navigational aside lives in the margin, and the margin is sacred ground. It must never shout. A thin rail, a line that fills as you descend, section names that brighten as you reach them and settle once you have passed. Nothing blinks; nothing competes.</p>
+			</section>
+			<section id="slowness" data-spy="5">
+				<h3>The return of slowness</h3>
+				<p>A good aside is not a productivity tool. It will not help you read faster. By showing you the shape of the whole it gives you permission to slow down — to settle into a long section because you can see that it ends.</p>
+				<p>Knowing where the ground falls away makes the walk less anxious. Attention, freed from its low-grade worry about duration, can finally do the thing it does best: stay.</p>
+			</section>
+			<section id="coda" data-spy="6">
+				<h3>Coda</h3>
+				<p>The thumb under the pages was never about the pages. It was about trust — a body's quiet confidence that it knew where it stood. Here is the whole, here is your place in it, and here is the way to anywhere else.</p>
+			</section>
+			<div class="spacer" aria-hidden="true"></div>
+		</article>
+
+		<nav data-scroll-spy data-variant="rail" aria-label="On this page">
+			<ol>
+				<li data-spy="1"><a href="#beginnings">Beginnings</a></li>
+				<li data-spy="2"><a href="#scroll-and-page">The scroll and the page</a></li>
+				<li data-spy="3"><a href="#tall">A very tall section</a></li>
+				<li data-spy="4"><a href="#margins">Designing the margins</a></li>
+				<li data-spy="5"><a href="#slowness">The return of slowness</a></li>
+				<li data-spy="6"><a href="#coda">Coda</a></li>
+			</ol>
+		</nav>
+	</lay-out>
+
+	<h2>Custom element spelling</h2>
+	<p>
+		<code>&lt;ui-scroll-spy&gt;</code> takes the same tokens and <code>variant=</code> without the <code>data-</code>
+		prefix. It is a plain unregistered element — wrap a <code>&lt;nav&gt;</code> in it when the landmark matters:
+	</p>
+	<pre><code>&lt;ui-scroll-spy variant="rail"&gt;
+  &lt;nav aria-label="On this page"&gt;
+    &lt;ol&gt;&lt;li data-spy="1"&gt;&lt;a href="#beginnings"&gt;Beginnings&lt;/a&gt;&lt;/li&gt; …&lt;/ol&gt;
+  &lt;/nav&gt;
+&lt;/ui-scroll-spy&gt;</code></pre>
+
+	<h2>Customization</h2>
+	<p>Every knob is a <code>--ui-scroll-spy-*</code> custom property on the nav; <code>--ui-scroll-spy-line</code> and <code>--ui-scroll-spy-offset</code> are read on the <em>targets</em>, so set those on <code>:root</code> or the page shell:</p>
+	<pre><code>:root { --ui-scroll-spy-line: 25%; --ui-scroll-spy-offset: 4rem; }
+[data-scroll-spy] { --ui-scroll-spy-accent: var(--color-success); --ui-scroll-spy-ramp: 1rem; }</code></pre>
+
+</main>
+	<script>
+		/* demo-only toggles */
+		document.getElementById('rtl').addEventListener('change', (e) => { document.documentElement.dir = e.target.checked ? 'rtl' : 'ltr'; });
+		document.getElementById('bar').addEventListener('change', (e) => { document.getElementById('topbar').hidden = !e.target.checked; });
+	</script>
+</body>
+</html>

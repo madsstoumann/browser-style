@@ -1,0 +1,41 @@
+{
+  "name": "@browser.style/scroll-spy",
+  "version": "1.0.0",
+  "description": "CSS-first scroll-spy navigation — \"on this page\" links whose active state follows the section in view, sticky bar or side rail, no JavaScript",
+  "type": "module",
+  "style": "index.css",
+  "exports": {
+    ".": {
+      "style": "./index.css"
+    },
+    "./style": "./index.css",
+    "./index.css": "./index.css"
+  },
+  "files": [
+    "index.css",
+    "ui-scroll-spy.css"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "browser.style",
+    "scroll-spy",
+    "navigation",
+    "table-of-contents",
+    "scroll-driven-animations",
+    "css-first"
+  ],
+  "author": "Mads Stoumann",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/scroll-spy"
+  },
+  "homepage": "https://browser.style/ui/scroll-spy",
+  "peerDependencies": {
+    "@browser.style/base": "^1.0.11"
+  }
+}

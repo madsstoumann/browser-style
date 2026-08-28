@@ -27,6 +27,7 @@
 @import '../../gradient-text/ui-gradient-text.css';
 @import '../../highlight/ui-highlight.css';
 @import '../../breadcrumbs/ui-breadcrumbs.css';
+@import '../../scroll-spy/ui-scroll-spy.css';
 @import '../ui-card.css';
 
 /* demo theme `quantum` — the quiz deck's deep-blue plate. One bundle + one resolver pair, per base/theme.md § Create your own theme */

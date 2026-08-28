@@ -13,7 +13,7 @@
    so a stable filename would let a shipped CSS change stay invisible behind a cached
    copy. This template is rewritten too because the page builders
    emit it — miss it and the next build silently reverts five generated pages. */
-export const HEAD_COMMON = `<link rel="stylesheet" href="/dist/demo.890c384c.min.css">
+export const HEAD_COMMON = `<link rel="stylesheet" href="/dist/demo.6e12d737.min.css">
 	<!-- no-referrer: the zone hotlink-protects CDN srcset. Docs: docs/performance.md -->
 	<meta name="referrer" content="no-referrer">
 	<link rel="preconnect" href="https://v4.browser.style">`;
@@ -59,3 +59,16 @@ export const breadcrumb = (trail) => `<nav aria-label="Breadcrumb">
 			</li>`).join('\n\t\t\t')}
 		</ol>
 	</nav>`;
+
+/* "On this page" — `@browser.style/scroll-spy` markup, the CSS-only form. `items` is
+   [{ id, label }] in READING ORDER: index+1 is the `data-spy="n"` that both the target and
+   its nav item carry, so emit both from this one array (spyAttrs) and they cannot drift.
+   Docs: ui/scroll-spy/readme.md */
+export const scrollSpy = (items, variant = 'rail') => `<nav data-scroll-spy data-variant="${esc(variant)}" aria-label="On this page">
+			<ol>
+				${items.map(({ id, label }, index) => `<li data-spy="${index + 1}"><a href="#${esc(id)}">${esc(label)}</a></li>`).join('\n\t\t\t\t')}
+			</ol>
+		</nav>`;
+
+/* the target side of the same contract: `id` + `data-spy="n"` for one entry of `items` */
+export const spyAttrs = (items, id) => `id="${esc(id)}" data-spy="${items.findIndex((item) => item.id === id) + 1}"`;
