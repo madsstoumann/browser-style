@@ -21,6 +21,7 @@
     },
     "eyebrow": "Economy",
     "headline": "Who pays for the carbon tariff — and who keeps the rebate",
+    "cover": "articles/news-paywall.html",
     "summary": "The rebate mechanism that unlocked the climate deal, modelled sector by sector with the figures the negotiators would not publish.",
     "published": "2026-07-02T05:30:00Z",
     "modified": "2026-07-02T07:10:00Z",
@@ -34,7 +35,7 @@
     ],
     "authors": [
       {
-        "name": "Sofia Rahbek",
+        "name": "Jonas Rahbek",
         "role": "Economics editor",
         "avatar": "https://assets.stoumann.dk/img/avatar5.webp"
       }
@@ -44,7 +45,7 @@
     },
     "body": {
       "$richtext": true,
-      "content": "The tariff's headline rate was the easy part. What decided the negotiation was the rebate: exporters recover tariff costs against verified decarbonisation investment, which means the mechanism's real cost lands on whoever cannot prove they invested.\n\nOur sector-by-sector model, built from the coalition's own working papers, puts steel and cement in line for rebates worth more than they pay in — and leaves agriculture, which has no comparable capital programme, carrying the net bill.",
+      "content": "The tariff's headline rate was the easy part. What decided the negotiation was the rebate: exporters recover tariff costs against verified decarbonisation investment, which means the mechanism's real cost lands on whoever cannot prove they invested.\n\nOur sector-by-sector model, built from the coalition's own working papers, puts steel and cement in line for rebates worth more than they pay in — and leaves agriculture, which has no comparable capital programme, carrying the net bill.\n\nThe numbers are not small. On the working papers' central scenario the steel sector recovers 112% of its tariff exposure by year three, cement 104%, chemicals 97%. Agriculture, with no decarbonisation ledger to draw on, recovers 9% — and pays the balance through input costs it cannot pass on.",
       "format": "text"
     }
   }

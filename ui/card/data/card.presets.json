@@ -222,6 +222,19 @@
       },
       "headingTag": "h2"
     },
+    "prose-article-gate": {
+      "name": "Prose Article Preset — gated",
+      "description": "prose-article for a paywalled article: content=\"gate\" at its default — the same full-column ramp as the stack-gate teaser — so the column dissolves towards the subscribe wall, a separate card the page places after the article (articles/build.js). Cap the ramp with --ui-content-gate-size if a page wants the lede fully legible. Docs: ui/card/docs/schema.md § Paywall",
+      "element": "ui-content",
+      "content": "scl(lg) gate",
+      "text": "body",
+      "byline": "lede",
+      "styles": {
+        "--ui-avatar-size": "3.25em",
+        "--ui-content-byline-fs": "1em"
+      },
+      "headingTag": "h2"
+    },
     "testimonial": {
       "name": "Testimonial Preset",
       "description": "Media-less review card — stars, quote, byline. Warm star tint via --ui-rating-c; pair with schemaType review + details.reviewedType Organization/Service.",

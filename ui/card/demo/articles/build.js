@@ -47,8 +47,13 @@ const page = (ucf, name) => {
 		.replace('<img', `<img id="hero" data-view="hero-${ucf.id}"`)
 		.replace(' loading="lazy"', ' loading="eager" fetchpriority="high"')
 		.replace('sizes="auto, ', 'sizes="'); /* `auto` is spec-invalid on eager images */
-	/* prose-article: text both (summary becomes the standfirst) + byline lede */
-	const prose = descope(renderCard(withPreset(ucf, 'prose-article'), presets, undefined, { images: PROSE_IMAGES }));
+	/* prose-article: text both (summary becomes the standfirst) + byline lede.
+	   A paywalled instance takes the gated preset (the body's tail fades) and gets the
+	   subscribe wall after the article — a top-level Offer, kept OUT of the article scope.
+	   Docs: docs/schema.md § Paywall */
+	const gated = ucf.fields.details?.paywalled === true;
+	const prose = descope(renderCard(withPreset(ucf, gated ? 'prose-article-gate' : 'prose-article'), presets, undefined, { images: PROSE_IMAGES }));
+	const wall = gated ? `<aside aria-label="Subscribe">${renderCard(data('subscription.json'), presets)}</aside>` : '';
 
 	return `<!DOCTYPE html>
 <html lang="en-US" dir="ltr">
@@ -80,6 +85,7 @@ const page = (ucf, name) => {
 			padding: var(--spacing-lg);
 		}
 		.article-view > ui-media { margin-block-end: var(--spacing-lg); }
+		main > aside { margin-block-end: var(--spacing-2xl); }
 	</style>
 	${CONTRAST_STYLE}
 </head>
@@ -98,6 +104,7 @@ const page = (ucf, name) => {
 		${hero}
 		${prose}
 	</article>
+	${wall}
 	</main>
 </body>
 </html>
@@ -106,11 +113,14 @@ const page = (ucf, name) => {
 
 /* teaser card for the grid page: data-view names + the cover link inside the
    headline, all applied string-side — the grid page ships with zero runtime JS */
-const teaser = (ucf, name) => renderCard(ucf, presets, undefined, { images: GRID_IMAGES })
-	.replace('<ui-card', `<ui-card data-view="card-${ucf.id}"`)
-	.replace('<img', `<img data-view="hero-${ucf.id}"`)
-	.replace(/(<h[23] data-part="headline"[^>]*>)([\s\S]*?)(<\/h[23]>)/,
+const teaser = (ucf, name) => {
+	const html = renderCard(ucf, presets, undefined, { images: GRID_IMAGES })
+		.replace('<ui-card', `<ui-card data-view="card-${ucf.id}"`)
+		.replace('<img', `<img data-view="hero-${ucf.id}"`);
+	/* an instance that carries its own `cover` already has the link — never nest anchors */
+	return html.includes('data-part="cover"') ? html : html.replace(/(<h[23] data-part="headline"[^>]*>)([\s\S]*?)(<\/h[23]>)/,
 		`$1<a data-part="cover" href="articles/${name}.html">$2</a>$3`);
+};
 
 const gridPage = (cards) => `<!DOCTYPE html>
 <html lang="en-US" dir="ltr">
@@ -158,7 +168,7 @@ const gridPage = (cards) => `<!DOCTYPE html>
 </head>
 <body>
 	<h1>UI: Card — Article View Transition</h1>
-	<p class="note">Each teaser card links to its <em>own page</em>: <a href="articles/article.html"><code>articles/article.html</code></a> and <a href="articles/news.html"><code>articles/news.html</code></a>. Both documents opt in with <code>@view-transition { navigation: auto }</code> and carry the same per-article <code>view-transition-name</code>s — set via <code>data-view</code> attributes and the CSS <code>attr()</code> rule, no inline styles — so the whole card morphs into the full article across the navigation, and morphs back via the browser Back button. Every page here is pre-rendered by <code>articles/build.js</code> (the SSR engine): static markup on both sides is what makes the capture reliable in both directions. The full view renders the <code>body</code> as <code>itemprop="articleBody"</code> instead of the teaser summary, from the <em>same UCF instance</em>. The full view uses the <code>prose-article</code> preset: the summary stays visible as the standfirst and the byline moves up under it (<code>byline: lede</code>), at reading scale.</p>
+	<p class="note">Each teaser card links to its <em>own page</em>: <a href="articles/article.html"><code>articles/article.html</code></a>, <a href="articles/news.html"><code>articles/news.html</code></a> and <a href="articles/news-paywall.html"><code>articles/news-paywall.html</code></a> — the third is the <strong>paywalled</strong> article: same engine, the <code>prose-article-gate</code> preset fades the body's tail and a subscribe wall (an <code>Offer</code> card) follows the article; its structured data is <code>isAccessibleForFree: False</code> plus <code>hasPart → WebPageElement</code> naming the gated part. All three documents opt in with <code>@view-transition { navigation: auto }</code> and carry the same per-article <code>view-transition-name</code>s — set via <code>data-view</code> attributes and the CSS <code>attr()</code> rule, no inline styles — so the whole card morphs into the full article across the navigation, and morphs back via the browser Back button. Every page here is pre-rendered by <code>articles/build.js</code> (the SSR engine): static markup on both sides is what makes the capture reliable in both directions. The full view renders the <code>body</code> as <code>itemprop="articleBody"</code> instead of the teaser summary, from the <em>same UCF instance</em>. The full view uses the <code>prose-article</code> preset: the summary stays visible as the standfirst and the byline moves up under it (<code>byline: lede</code>), at reading scale.</p>
 
 	<p class="note"><strong>Browser support.</strong> Chromium 133+ morphs natively. Safari 18.2+ supports cross-document transitions but not typed <code>attr()</code>, so the names come from <code>ui/base/polyfills/attr-fallback.js</code> (loaded at the end of this page) — without it the navigation still transitions, just as a plain cross-fade. Firefox has no cross-document transitions and navigates instantly. <code>prefers-reduced-motion: reduce</code> disables navigation transitions by design, and the pages must be <strong>served over http</strong> — opened from <code>file://</code> there is no transition (and the root-absolute base CSS 404s).</p>
 
@@ -172,7 +182,7 @@ const gridPage = (cards) => `<!DOCTYPE html>
 `;
 
 const teasers = [];
-for (const name of ['article', 'news']) {
+for (const name of ['article', 'news', 'news-paywall']) {
 	const ucf = data(`${name}.json`);
 	writeFileSync(join(here, `${name}.html`), page(ucf, name));
 	teasers.push(teaser(ucf, name));

@@ -821,7 +821,7 @@ rest ([`article.render.html`](../demo/article.render.html) is the working demo):
   root-absolute base CSS 404s, which is the visible tell).
 
   Pages that carry the morph today: `demo/article.render.html` (the grid),
-  `demo/articles/{article,news}.html` (the full views), and the Article + News
+  `demo/articles/{article,news,news-paywall}.html` (the full views), and the Article + News
   sections of `demo/schema.html`, which share the same `card-{id}`/`hero-{id}`
   names and cover links so the reference page morphs into the same articles.
   `demo/products/` runs the same pattern on `schema.html`'s ProductGroup collage

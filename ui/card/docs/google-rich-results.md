@@ -91,6 +91,7 @@ The real candidates already exist and are already shaped correctly:
 |---|---|---|
 | `demo/articles/article.html` | `Article` | `Person`, `Organization`, `InteractionCounter` ×4 |
 | `demo/articles/news.html` | `NewsArticle` | same |
+| `demo/articles/news-paywall.html` | `NewsArticle` | same, plus `WebPageElement` (`hasPart`, the gated part) and a top-level `Offer` (the subscribe wall) — the *Subscription and paywalled content* target |
 | `demo/products/silk-gown-*.html` ×4 | `ProductGroup` | `Product` ×3, `Offer` ×4, `AggregateRating` |
 
 All six carry `mainEntityOfPage`. **So "is card type X eligible?" is the wrong question.** The

@@ -1308,6 +1308,15 @@ non-inheriting `<length>` that `scr` animates) once, statically, and applies the
 No `max-block-size`, no `overflow`, no animation — so no `@supports` gate and no
 reduced-motion arm. It is deliberately not `scr`: a gate that scrolls is not a gate.
 
+**`mask-clip: no-clip` is load-bearing.** A mask's default `border-box` clip also clips
+*hit-testing* of whatever a descendant paints outside the column — and the `cover` link's
+`::after` overlay, the thing that makes the whole card clickable, is exactly that. With the
+default clip the media area stopped being a link (measured in Chromium: the image hit-tested
+as `IMG`, not the anchor; `no-clip` restores `A[cover]` on both the image and the text).
+Nothing visible lives outside the column, so `no-clip` changes no pixels. Verify in Safari
+when you touch this: if `no-clip` were unsupported there, the fallback is the old behaviour —
+the text column stays clickable, the media does not — not a broken card.
+
 **Why `100cqb`.** `<ui-card>` is an *inline-size* container only, so `cqb` has no block-axis
 container and resolves to the small-viewport block size — larger than any column, which
 drives the gradient's `calc(100% − …)` stop negative; it clamps to the previous stop and
@@ -1317,7 +1326,9 @@ per element with `--ui-content-gate-size` (e.g. `10rem` fades only the last line
 
 Pair it with `details.paywalled` ([schema.md § Paywall](schema.md#paywall--isaccessibleforfree)):
 the flag is the machine claim, the token is the look, and the renderer never derives one
-from the other. A mask hides nothing from a crawler or view-source — enforcement is
+from the other. The full-view example is the `prose-article-gate` preset behind
+`demo/articles/news-paywall.html` — `scl(lg) gate` at the default size — the same
+full-column ramp as the teaser — with the subscribe wall following un-faded. A mask hides nothing from a crawler or view-source — enforcement is
 server-side.
 
 ### `scr` drives the shared scroll-edge-fade engine

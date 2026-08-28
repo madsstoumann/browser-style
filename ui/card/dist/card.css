@@ -1649,6 +1649,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
   :where(ui-content[content~=gate]) {
     --ui-scroll-fade-end: var(--ui-content-gate-size, 100cqb);
     mask: var(--ui-scroll-fade-mask);
+    mask-clip: no-clip;
   }
   :where(ui-content) {
     & [data-part=eyebrow] {

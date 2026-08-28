@@ -947,6 +947,19 @@ Lighthouse accessibility 100 as the demo-page floor in the `perf-pass` definitio
    **4.97** on the black plate, **6.21** light / **7.17** dark on an ordinary card. Accent
    plates are byte-for-byte unchanged (button still 5.48).
 
+   **DONE 2026-08-28 — dark-mode buttons.** Lighthouse flagged both buttons of the
+   `theme="black dark"` subscribe wall on `demo/articles/news-paywall.html`: accent
+   **3.74** (`#e6f2ff` on `hsl(211 60% 50%)`) and secondary **4.35** (inherited `#e0e0e0`
+   on `hsl(0 0% 40%)`). Both are *plates under light ink*, so the fix is the direction the
+   ink note allows — darker, not lighter: `--color-accent` dark arm L50 → **L44** (button
+   4.62, white 5.25; the `theme="accent"` plate follows, so the accent row above now
+   passes) and `--color-button` dark arm L40 → **L35** (5.31 on the black plate, ~5.0 on
+   `--color-surface`; the tag / chip / avatar fallbacks that read it improve with it).
+   Text never read either raw arm since the ink split above. Not touched: the hover mix
+   (`color-mix` toward `--color-text` *lightens* a dark plate, so hover ink drops to ~3.2 —
+   pre-existing, both schemes) and the remaining plate inks orange 1.63 / green 3.18 /
+   red 4.15, still decision (a).
+
    **Also still open:** the *muted-compounding* fix — `--ui-content-muted` is 65% and
    `dateline` re-applies it inside an already-muted `byline` (0.65² ≈ 0.42).
    `demo/schema.html` still carries an 85% page override; the real fix is stopping the

@@ -235,6 +235,7 @@
 	:where(ui-content[content~="gate"]) {
 		--ui-scroll-fade-end: var(--ui-content-gate-size, 100cqb);
 		mask: var(--ui-scroll-fade-mask);
+		mask-clip: no-clip; /* the cover link's ::after must stay hit-testable over the media */
 	}
 
 	/* === PARTS — styled by [data-part], never by tag === */

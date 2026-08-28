@@ -1,0 +1,56 @@
+{
+  "$schema": "../../../cms/baseline/models/card.schema.json",
+  "id": "subscription",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-08-28T12:00:00Z",
+    "updatedAt": "2026-08-28T12:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Commerce"
+  },
+  "fields": {
+    "internalName": "Demo — Subscription wall (The Daily Ledger)",
+    "schemaType": "membership",
+    "preset": {
+      "$ref": "card-preset/panel-brand"
+    },
+    "eyebrow": "Subscribers only",
+    "headline": "Keep reading with a Daily Ledger subscription",
+    "summary": "This story is for subscribers. Get every article, the full archive and the morning briefing — on every device.",
+    "actions": [
+      {
+        "link": {
+          "url": "#",
+          "text": "Subscribe"
+        },
+        "style": "primary",
+        "ariaLabel": "Subscribe to The Daily Ledger"
+      },
+      {
+        "link": {
+          "url": "#",
+          "text": "Sign in"
+        },
+        "style": "secondary",
+        "ariaLabel": "Sign in to The Daily Ledger"
+      }
+    ],
+    "details": {
+      "price": {
+        "monthly": 9,
+        "yearly": 90,
+        "currency": "USD",
+        "savings": "save 17%"
+      },
+      "trialPeriod": "P7D",
+      "trialText": "7-day free trial · cancel anytime",
+      "features": [
+        "Unlimited articles",
+        "The morning briefing",
+        "Full archive since 1998"
+      ],
+      "isPopular": false
+    }
+  }
+}

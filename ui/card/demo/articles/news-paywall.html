@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Who pays for the carbon tariff — and who keeps the rebate</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="text-scale" content="scale">
+	<meta name="description" content="The rebate mechanism that unlocked the climate deal, modelled sector by sector with the figures the negotiators would not publish.">
+	<link rel="stylesheet" href="/dist/demo.890c384c.min.css">
+	<!-- no-referrer: the zone hotlink-protects CDN srcset. Docs: docs/performance.md -->
+	<meta name="referrer" content="no-referrer">
+	<link rel="preconnect" href="https://v4.browser.style">
+	<!-- Block first paint (and the view-transition snapshot) until the hero is
+	     parsed, so the card/hero morph targets exist when the browser captures
+	     the incoming page. Without this the snapshot races HTML parsing and the
+	     morph degrades to a plain cross-fade on repeat/bfcache navigations. -->
+	<link rel="expect" href="#hero" blocking="render">
+	<!-- Names the morph targets where typed attr() is unsupported (Safari). MUST be
+	     render-blocking in <head>: the incoming page is snapshotted at first paint,
+	     so a deferred script names the targets too late and the forward morph
+	     degrades to a cross-fade. Docs: ui/base/polyfills/readme.md -->
+	<script type="module" src="/ui/base/polyfills/attr-fallback.min.js" blocking="render"></script>
+	<style>
+		/* cross-document view transitions (@view-transition, the [data-view]
+		   attr() naming rule and group timing) come from ui-card.css */
+		body { margin-inline: auto; max-inline-size: var(--width-prose, 65ch); }
+		.article-view {
+			background: var(--ui-card-bg, var(--color-surface, #fff));
+			border-radius: var(--ui-card-radius, var(--radius-2xl));
+			margin-block-end: var(--spacing-2xl);
+			padding: var(--spacing-lg);
+		}
+		.article-view > ui-media { margin-block-end: var(--spacing-lg); }
+		main > aside { margin-block-end: var(--spacing-2xl); }
+	</style>
+	<style>
+		ui-content { --ui-content-muted: color-mix(in oklab, currentColor 85%, transparent); }
+		ui-chip[data-type] { --ui-chip-bg: hsl(0, 0%, 95%); --ui-chip-c: hsl(0, 0%, 13%); }
+	</style>
+</head>
+<body>
+	<nav aria-label="Breadcrumb">
+		<ol data-breadcrumbs itemscope itemtype="https://schema.org/BreadcrumbList">
+			<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+				<a itemprop="item" href="/ui/card/"><span itemprop="name">Card</span></a>
+				<meta itemprop="position" content="1">
+			</li>
+			<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+				<a itemprop="item" href="/ui/card/demo/schema.html"><span itemprop="name">Schema.org</span></a>
+				<meta itemprop="position" content="2">
+			</li>
+			<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+				<span itemprop="name">Who pays for the carbon tariff — and who keeps the rebate</span>
+				<meta itemprop="position" content="3">
+			</li>
+		</ol>
+	</nav>
+	<main>
+	<article class="article-view" data-view="card-news-paywall" itemscope itemtype="https://schema.org/NewsArticle">
+		<link itemprop="mainEntityOfPage" href="news-paywall.html">
+		<div itemprop="publisher" itemscope itemtype="https://schema.org/Organization" hidden>
+			<meta itemprop="name" content="The Daily Ledger">
+		</div>
+		<ui-media media="asr(21/9) rds(lg)"><img id="hero" data-view="hero-news-paywall" src="/assets/images/finance.png" alt="City skyline at night behind a wall of stock-market candlestick charts" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=103/assets/images/finance.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=137/assets/images/finance.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=206/assets/images/finance.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=309/assets/images/finance.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=514/assets/images/finance.png 1200w" sizes="(min-width: 720px) 42rem, 100vw" loading="eager" fetchpriority="high" decoding="async" itemprop="image"><meta itemprop="name" content="Who pays for the carbon tariff — and who keeps the rebate"></ui-media>
+		<ui-content content="scl(lg) gate" style="--ui-avatar-size: 3.25em; --ui-content-byline-fs: 1em"><p data-part="meta"><ui-chip theme="black">Subscribers only</ui-chip></p><small data-part="eyebrow" itemprop="articleSection">Economy</small><h2 data-part="headline" itemprop="headline"><a data-part="cover" href="articles/news-paywall.html">Who pays for the carbon tariff — and who keeps the rebate</a></h2><meta itemprop="description" content="The rebate mechanism that unlocked the climate deal, modelled sector by sector with the figures the negotiators would not publish."><address data-part="byline" itemprop="author" itemscope itemtype="https://schema.org/Person">
+		<ui-avatar><img src="https://assets.stoumann.dk/img/avatar5.webp" alt="" loading="lazy" decoding="async"></ui-avatar>
+		<span data-part="byline-who"><span itemprop="name">Jonas Rahbek</span><span itemprop="jobTitle">Economics editor</span></span><small data-part="dateline"><time datetime="2026-07-02T05:30:00Z">Jul 2, 2026</time><span data-part="reading-time">6 min read</span></small>
+	</address><div itemprop="articleBody"><p>The tariff's headline rate was the easy part. What decided the negotiation was the rebate: exporters recover tariff costs against verified decarbonisation investment, which means the mechanism's real cost lands on whoever cannot prove they invested.</p><p>Our sector-by-sector model, built from the coalition's own working papers, puts steel and cement in line for rebates worth more than they pay in — and leaves agriculture, which has no comparable capital programme, carrying the net bill.</p><p>The numbers are not small. On the working papers' central scenario the steel sector recovers 112% of its tariff exposure by year three, cement 104%, chemicals 97%. Agriculture, with no decarbonisation ledger to draw on, recovers 9% — and pays the balance through input costs it cannot pass on.</p></div><meta itemprop="datePublished" content="2026-07-02T05:30:00Z"><meta itemprop="dateModified" content="2026-07-02T07:10:00Z"><meta itemprop="isAccessibleForFree" content="https://schema.org/False"><div itemprop="hasPart" itemscope itemtype="https://schema.org/WebPageElement" hidden><meta itemprop="isAccessibleForFree" content="https://schema.org/False"><meta itemprop="cssSelector" content="[itemprop=articleBody]"></div></ui-content>
+	</article>
+	<aside aria-label="Subscribe"><ui-card variant="vis(content)" theme="black dark" itemscope itemtype="https://schema.org/Offer">
+		<cq-box>
+			
+			<ui-content><small data-part="eyebrow">Subscribers only</small><h3 data-part="headline" itemprop="name">Keep reading with a Daily Ledger subscription</h3><p data-part="summary" itemprop="description">This story is for subscribers. Get every article, the full archive and the morning briefing — on every device.</p><span itemprop="eligibleDuration" itemscope itemtype="https://schema.org/QuantitativeValue" hidden><meta itemprop="value" content="7"><meta itemprop="unitCode" content="DAY"></span><p data-part="price" itemprop="priceSpecification" itemscope itemtype="https://schema.org/PriceSpecification"><meta itemprop="priceCurrency" content="USD"><meta itemprop="price" content="9">$9/mo <small>or $90/yr — save 17%</small></p><ul data-part="list" data-variant="checked" itemprop="includesObject"><li>Unlimited articles</li><li>The morning briefing</li><li>Full archive since 1998</li></ul><p data-part="meta">7-day free trial · cancel anytime</p><nav data-part="actions"><a class="ui-button" aria-label="Sign in to The Daily Ledger" href="#">Sign in</a> <a class="ui-button" data-variant="accent" aria-label="Subscribe to The Daily Ledger" href="#">Subscribe</a></nav></ui-content>
+		</cq-box>
+	</ui-card></aside>
+	</main>
+</body>
+</html>

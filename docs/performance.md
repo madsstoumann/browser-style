@@ -354,7 +354,9 @@ before it is worth an `_headers` `Link:` line.
    deliberately not ported: each hue doubles as a theme-bundle plate under fixed ink, and
    in dark mode the two roles pull opposite ways (`--color-warning` has *no* lightness
    satisfying both). Full measurements and the three options: `docs/plans/open-items.md`
-   § 29.1a.
+   § 29.1a. Two dark arms *were* moved on 2026-08-28 — accent L50→L44 and the button grey
+   L40→L35 — because both are plates under light ink, so darkening is the safe direction;
+   that cleared the dark-mode buttons and the accent plate (open-items § 29).
 
    Still open under it: **muted compounding** — `--ui-content-muted` is
    `color-mix(in oklab, currentColor 65%, transparent)`

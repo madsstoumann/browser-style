@@ -6,7 +6,7 @@
 		/* Light arms retuned for WCAG 2.1 AA on --color-surface (docs/performance.md § contrast).
 		   Dark arms of accent/info/error/success double as theme-bundle plates under white ink —
 		   see the ink note at --ui-theme-*-bg before changing them. */
-		--color-accent: light-dark(hsl(211, 100%, 38%), hsl(211, 60%, 50%));
+		--color-accent: light-dark(hsl(211, 100%, 38%), hsl(211, 60%, 44%)); /* dark arm L44: accent button + plate under --color-accent-text clear 4.5 (4.62). Docs: open-items § 29 */
 		--color-accent-dark: light-dark(hsl(211, 80%, 30%), hsl(211, 30%, 20%));
 		/* the accent hue AS TEXT — lightness clamped to the readable side of the scheme.
 		   Not --color-accent-text (that is ink ON the accent plate). Docs: theme.md § Ink roles */
@@ -15,7 +15,7 @@
 			oklch(from var(--color-accent) max(l, 0.78) c h));
 		--color-accent-text: hsl(211, 100%, 95%);
 		--color-border: light-dark(hsl(0, 0%, 80%), hsl(0, 0%, 35%)); /* dark arm ≥35%: must stay visible on the #1f2937 card plate */
-		--color-button: light-dark(hsl(0, 0%, 90%), hsl(0, 0%, 40%));
+		--color-button: light-dark(hsl(0, 0%, 90%), hsl(0, 0%, 35%)); /* dark arm L35: inherited light ink clears 4.5 on it (5.31 on the black plate). Docs: open-items § 29 */
 		--color-button-text: light-dark(hsl(0, 0%, 40%), hsl(0, 0%, 60%));
 		--color-surface: light-dark(hsl(0, 0%, 100%), hsl(0, 0%, 0%));
 		--color-surface-alt: light-dark(hsl(0, 0%, 95%), hsl(0, 0%, 15%));
@@ -228,7 +228,8 @@
 		   semantic .bg-* / `color=` axis. */
 		/* AA WARNING — the ink here is FIXED while the surface is a light-dark() pair, so
 		   lightening a dark arm lowers ink contrast. Measured on the dark arms today:
-		   red 4.16, green 3.17, accent 3.74 — all under 4.5. That is why the WCAG retune
+		   red 4.16, green 3.17, orange 1.63 — under 4.5 (accent cleared 4.62 on 2026-08-28 by
+		   DARKENING its dark arm — the direction that helps). That is why the WCAG retune
 		   moved the LIGHT arms only. Fix the ink (contrast-color(), as tint.css already
 		   does) before lightening a dark arm. Tracked: docs/plans/open-items.md § 29. */
 		--ui-theme-red-bg:    var(--color-error);       --ui-theme-red-c:    hsl(0 0% 100%);
