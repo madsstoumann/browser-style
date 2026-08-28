@@ -1258,7 +1258,8 @@ const bodyHtml = (fields, type, textTag = 'p') => {
 		   other tag stays escaped, so body copy can mark up a phrase without raw HTML */
 		.map((paragraph) => `<${textTag}>${renderInline(paragraph)}</${textTag}>`)
 		.join('');
-	return ARTICLE_BODY_TYPES.has(type) ? `<div itemprop="articleBody">${paragraphs}</div>` : paragraphs;
+	/* data-part="body" survives stripSchema() — it is the paywall cssSelector target. Docs: docs/schema.md § Paywall */
+	return ARTICLE_BODY_TYPES.has(type) ? `<div data-part="body" itemprop="articleBody">${paragraphs}</div>` : paragraphs;
 };
 
 /**
@@ -1336,7 +1337,7 @@ const buildContent = (fields, type, overlay, slots = {}, textMode = 'summary', p
 	   DOM and is truthful only where the body is rendered. Docs: docs/schema.md § Paywall */
 	if (fields.details?.paywalled === true && PAYWALL_TYPES.has(type)) {
 		html += meta('isAccessibleForFree', SCHEMA + 'False');
-		if (body && ARTICLE_BODY_TYPES.has(type)) html += `<div${scope('hasPart', 'WebPageElement')} hidden>${meta('isAccessibleForFree', SCHEMA + 'False')}${meta('cssSelector', '[itemprop=articleBody]')}</div>`;
+		if (body && ARTICLE_BODY_TYPES.has(type)) html += `<div${scope('hasPart', 'WebPageElement')} hidden>${meta('isAccessibleForFree', SCHEMA + 'False')}${meta('cssSelector', '[data-part=body]')}</div>`;
 	}
 	return html;
 };

@@ -13,7 +13,15 @@
 > The question: how many of the card system's schema.org types have a live Google rich
 > result, which do not, and is it worth adding or reshaping anything to close the gap.
 >
-> ⛔ **The gallery itself could not be fetched.**
+> ✅ **Superseded 2026-08-28 — the gallery was fetched.** 25 features: Article · Breadcrumb ·
+> Carousel · Course list · Dataset · Discussion forum · Education Q&A · Employer aggregate
+> rating · Event · Image metadata · Job posting · Local business · Math solver · Movie ·
+> Organization · Product · Profile page · Q&A · Recipe · Review snippet · Software app ·
+> Speakable · Subscription and paywalled content · Vacation rental · Video. The ⚠ rows were
+> settled against it (§ 3, § 6). The block below is the 2026-08-05 session's record, kept for
+> the route it documents.
+>
+> ⛔ **(2026-08-05) The gallery itself could not be fetched.**
 > `developers.google.com` is a **policy denial** at this session's egress proxy
 > (`connect_rejected`, gateway 403 to CONNECT; `google.com` likewise), and
 > `/root/.ccr/README.md` is explicit: *"do not retry organization policy denials (403/407) —
@@ -52,13 +60,13 @@ console.log(new Set(Object.values(SCHEMA_TYPES)).size)"   # → 50
 
 ## 1. The headline answer
 
-Of **50 distinct itemtypes** across 54 `schemaType` keys (`profile` and `artist` both resolve
+Of **51 distinct itemtypes** across 54 `schemaType` keys (`profile` and `artist` both resolve
 to `Person`; `comparison`, `places` and `filelist` all to `ItemList`):
 
 | Bucket | Count | Meaning |
 |---|---|---|
-| **Live** | ~18 | A Google feature exists today and this type is its subject |
-| **Withdrawn** | 7 | A feature existed and Google retired or narrowed it |
+| **Live** | 17 | A Google feature exists today and this type is its subject |
+| **Withdrawn** | 8 | A feature existed and Google retired or narrowed it |
 | **None** | ~25 | Valid schema.org, no Google feature ever |
 
 The counts are approximate *because* of the ⚠ rows — several types sit on a Live/None boundary
@@ -126,9 +134,11 @@ re-mapped by hand, guaranteed to drift. That remains something not to build. See
 
 ### 2.3 Measured, 2026-08-20 — both syntaxes, on the deployed pages
 
-The ⛔ at the top of this document still stands for the *gallery*: `developers.google.com` is
-an egress policy denial in the agent session, so the feature table below remains part-⚠. But
-the **validators were run by hand** on the two shipped pages, and those numbers are real:
+The gallery has since been fetched (2026-08-28, top of this document); the ⚠ that remain in
+§ 3 are partner-only programmes the public gallery does not list. The **validators were run by
+hand** on the two shipped pages, and those numbers are real (re-run 2026-08-28 on
+`schema.html`: validator.schema.org 66 items, Rich Results Test 73 valid items — see
+[schema.md](schema.md) § the four counts):
 
 | Tool | `schema.html` (microdata) | `schema.jsonld.html` (JSON-LD) |
 |---|---|---|
@@ -181,8 +191,7 @@ Sorted by bucket, then alphabetically. `key` is the `schemaType` discriminator.
 | `Movie` | `movie` | Movie carousel | `repo` — 2026-08-05 coverage doc |
 | `Quiz` | `quiz` | Education Q&A — **flashcard arm only**, `eduQuestionType: "Flashcard"` required | `repo` — schema.md § Quiz |
 | `SocialMediaPosting` | `social` | Discussion forum, via the `DiscussionForumPosting` subtype (which also flips `headline` on) | `repo` — schema.md § Subtypes |
-| `Book` | `book` | Book actions | ⚠ — believed limited to approved partners |
-| `SoftwareApplication` | `software` | Software app | ⚠ — **most likely retired; check first** |
+| `SoftwareApplication` | `software` | Software app | `repo` — listed in the 2026-08-28 gallery (the "most likely retired" guess was wrong) |
 | `ItemList` | `comparison` | Carousel host + the surviving *Course list* | ⚠ — we emit `ItemList` as a card subject, not as a carousel host ([§ 4](#4-gaps--live-features-with-no-card-type)) |
 
 ### Withdrawn — kept deliberately
@@ -199,6 +208,7 @@ Not restated here; the dates below are that section's, and it is the source of t
 | `Dataset` | `dataset` | Only ever reached Dataset Search, never a mainstream result | `repo` |
 | `Course` | `course` | *Course info* lost 2025-09-09; only *Course list* survives (needs ≥3 in an `ItemList`) | `repo` |
 | `Quiz` (MC arm) | `quiz-mc` | Practice Problems retired Jan 2026 | `repo` |
+| `Book` | `book` | *Book actions* deprecated June 2025 (with Course info, Claim review, Estimated salary, Learning video, Special announcement, Vehicle listing); results stopped January 2026; absent from the 2026-08-28 gallery | `repo` — gallery 2026-08-28 |
 
 **The policy stands.** What Google withdrew is a rendering promise, not a vocabulary. Every one
 is still valid schema.org, and AI agents, answer engines and GEO pipelines read the microdata
@@ -228,11 +238,11 @@ off the page without asking whether Google would have drawn a box around it.
 | `VacationRental` | `vacationrental` | No open rich result — Google's *Vacation rental* feature is fed through its partner programme, not published markup ([§ 5](#5-what-not-to-chase)) | `repo` — schema.md § Vacation rental |
 | `Menu` | `menu` | Feeds local-business context, not its own result | ⚠ |
 | `MedicalWebPage` | `medical` | — | ⚠ |
-| `MusicAlbum` | `music` | Music actions exist for approved partners; not a general result | ⚠ |
+| `MusicAlbum` | `music` | Music actions exist for approved partners; not a general result — absent from the 2026-08-28 gallery | `repo` |
 | `MusicGroup` | `musicgroup` | Same as `MusicAlbum` — artist/band knowledge-panel data comes from approved music partners, not from page markup | ⚠ |
 | `PodcastEpisode` | `podcast` | — | ⚠ |
 | `PodcastSeries` | `podcastseries` | — | ⚠ |
-| `TVSeries` | `tvseries` | Watch actions exist for approved partners; not a general result | ⚠ |
+| `TVSeries` | `tvseries` | Watch actions exist for approved partners; not a general result — absent from the 2026-08-28 gallery | `repo` |
 | `TVEpisode` | `tvepisode` | — | ⚠ |
 | `DefinedTermSet` | `glossary` | Both it and `DefinedTerm` are `pending.schema.org` | `repo` — schema.md § Glossary |
 | `ComicSeries` | `comicseries` | — | `dump` |
@@ -301,17 +311,17 @@ bucket of a base we render ([schema.md § Subtypes](schema.md)).
 
 **This is the section that matters.** The document is worth what its ⚠ rows are worth.
 
-1. **Walk the gallery.** Open
-   <https://developers.google.com/search/docs/appearance/structured-data/search-gallery> on a
-   machine with egress and check every ⚠ row. Where a feature has been retired since, move the
-   row to **Withdrawn** *with its date*, matching the format schema.md § Rich results already
-   uses. Priority order: `SoftwareApplication` (most likely wrong), `Book`, `MusicAlbum`,
-   `TVSeries`, `Menu`, `RealEstateListing`.
-2. **Rich Results Test the two real candidates** —
-   `demo/articles/article.html` and `demo/products/silk-gown-indigo.html`. They are the only
-   pages in the repo where a pass/fail verdict means anything, and neither has been run through
-   it. Any failure there is worth more than any row in § 3.
+1. **DONE 2026-08-28 — the gallery was walked.** `SoftwareApplication` is live (Software app);
+   `Book` moved to Withdrawn (Book actions, June 2025 → January 2026); `MusicAlbum` and
+   `TVSeries` confirmed partner-only (absent from the gallery); `Menu` and `RealEstateListing`
+   have no feature, as recorded. What is still ⚠ in § 3 is Google *behaviour* claims
+   (Article/Review/LocalBusiness eligibility details), not feature existence.
+2. **Rich Results Test the real candidates.** 2026-08-28, by hand: `demo/schema.html` — 73
+   valid items (validator.schema.org: 66); `demo/articles/news-paywall.html` — passes, the
+   *Subscription and paywalled content* markup (`isAccessibleForFree` + `hasPart` →
+   `WebPageElement`) detected. Still unrun: `demo/articles/article.html`,
+   `demo/products/silk-gown-indigo.html`.
 3. **Re-derive the inventory** before trusting the row count — the one-liner at the top of this
-   document. 50 rows, no itemtype missing, none invented.
+   document. 51 rows, no itemtype missing, none invented.
 4. **Dates must agree with `schema.md` § Rich results.** If this table and that section
    disagree, that section wins.

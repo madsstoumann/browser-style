@@ -609,7 +609,7 @@ emission in [`content/card/dist/`](../../../content/card/dist)):
   `claimReviewed` text + `reviewRating` → `Rating` whose `alternateName` is the
   visible verdict chip
 - **articleBody**: for `article`/`news` the `body` paragraphs are wrapped in
-  `<div itemprop="articleBody">`. Teaser/full is a preset decision — the `text`
+  `<div data-part="body" itemprop="articleBody">`. Teaser/full is a preset decision — the `text`
   field: cards show the `summary` only; a `text: "body"` preset (e.g. `prose`)
   shows the body *instead*, keeping the summary as a hidden `description` meta
 - **Inline markup**: `renderInline()` escapes everything, then re-allows an

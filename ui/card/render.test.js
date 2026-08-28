@@ -3153,10 +3153,23 @@ describe('paywalled content', () => {
 		const FULL = { full: { element: 'ui-card', variant: 'col', text: 'body' } };
 		const full = (details) => renderCard({ fields: { schemaType: 'news', headline: 'H', body: 'Paid words', details, preset: { $ref: 'card-preset/full' } } }, FULL);
 		const html = full({ paywalled: true });
-		assert.match(html, /<div itemprop="articleBody">/);
-		assert.ok(html.includes(`<div itemprop="hasPart" itemscope itemtype="https://schema.org/WebPageElement" hidden>${FALSE}<meta itemprop="cssSelector" content="[itemprop=articleBody]"></div>`));
+		assert.match(html, /<div data-part="body" itemprop="articleBody">/);
+		assert.ok(html.includes(`<div itemprop="hasPart" itemscope itemtype="https://schema.org/WebPageElement" hidden>${FALSE}<meta itemprop="cssSelector" content="[data-part=body]"></div>`));
+		/* the selector must survive the raw/jsonld schema modes, which strip microdata attributes only */
+		assert.match(html, /<div data-part="body"/);
 		/* the part is only truthful where the paywalled body is in the DOM */
 		assert.ok(!full({}).includes('WebPageElement'));
 		assert.ok(!full(undefined).includes('isAccessibleForFree'));
 	});
+});
+
+/* The CMS models are JSON files nothing in this repo parsed until 2026-08-28 — card.schema.json
+   shipped invalid (raw quotes in a description) for a week. Cheap insurance. */
+describe('content models parse', () => {
+	for (const model of ['card', 'card-preset']) {
+		test(`cms/baseline/models/${model}.schema.json is valid JSON`, () => {
+			const json = JSON.parse(readFileSync(new URL(`../../cms/baseline/models/${model}.schema.json`, import.meta.url), 'utf8'));
+			assert.equal(json.id, model);
+		});
+	}
 });

@@ -1442,3 +1442,26 @@ whether `muted` should modify the fill only, or whether the layout arm should re
 
 Docs to correct in the same change: `layout/core/base.md:304` currently states "theme ink wins
 when no explicit value is set", which is what the chain *fails* to do.
+
+---
+
+## 39. `schema.compare.js` — 23 cards on `schema.html` still diverge from their data
+
+2026-08-28 sweep: every id-less card on the page with a data file was dry-run through the
+comparator. **4 matched byte-exact and were paired** (Movie, ClaimReview, Reservation, QAPage).
+The rest diverge — page and renderer spell the same card differently, which is exactly the
+drift the comparator exists to catch:
+
+| lines | cards |
+|---|---|
+| 2–4 | Recipe 3 · Event 4 · Dataset 2 · ImageGallery 2 · EducationalOccupationalCredential 3 · SpecialAnnouncement 2 · EventSeries 4 · Review 2 |
+| 5–8 | VideoObject 5 · Question 6 · Offer 6 · Quotation 6 · ItemList (comparison) 6 · FAQPage 8 · CreativeWork 8 · PodcastEpisode 8 |
+| 12–14 | NewsArticle 12 · SoftwareApplication 12 · Person (profile) 12 · CafeOrCoffeeShop 14 |
+| large | DiscussionForumPosting 54 (`social.json` is the plain post, not the forum card — needs its own instance) · ProductGroup#schema-product-variants 146 (the collage) |
+
+Per card the fix is the usual one: decide which side is the spec (the page, per the
+markup-first rule), move the other, add the pair. Two ambiguities need an `id=` first:
+`Review` and `EventSeries` each have two id-less cards, so the bare selector cannot pick one.
+Re-run the sweep with a scratch copy of `schema.compare.js` whose `PAIRS` is the candidate
+list — ~2 min per card for the small rows.
+

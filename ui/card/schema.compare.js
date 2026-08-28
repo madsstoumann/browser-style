@@ -70,6 +70,13 @@ const PAIRS = [
 	   button + popover pair (preset stack-accordion-popover); pairing keeps the two
 	   spellings one spelling */
 	['HowTo', 'ui/card/data/howto.json'],
+	/* 2026-08-28 sweep: of 27 unpaired cards with a data file, these four matched byte-exact
+	   with no work — the other 23 diverge by 2–14 lines (ProductGroup 146, forum 54) and are
+	   listed in docs/plans/open-items.md § 39 */
+	['Movie', 'ui/card/data/movie.json'],
+	['ClaimReview', 'ui/card/data/claim.json'],
+	['Reservation', 'ui/card/data/booking.json'],
+	['QAPage', 'ui/card/data/qa.json'],
 	['Book', 'ui/card/data/book.json'],
 	['AchieveAction', 'ui/card/data/goal.json'],
 	['Service', 'ui/card/data/service.json'],

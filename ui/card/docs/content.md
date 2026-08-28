@@ -357,6 +357,7 @@ Content parts are **semantic children** marked with `data-part`. They are auto-s
 | `headline` | `<h2 data-part="headline">` (also bare `h2`–`h6`) | The title — headline type ramp, bold weight, tight tracking, `text-wrap: pretty` |
 | `subheadline` | `<p data-part="subheadline">` | Secondary title — muted color, normal weight, ~0.88× body |
 | `summary` | `<p data-part="summary">` | The body / lede paragraph — body size, normal line-height |
+| `body` | `<div data-part="body">` | The full article text — the `body` paragraphs under a `text: body` preset; for `article`/`news` it also carries `itemprop="articleBody"`. No rules of its own today; it is the hook the paywall's `cssSelector` names, and it survives the schema modes that strip microdata |
 | `meta` | `<p data-part="meta">` | Small muted metadata line (date, read-time) — ~0.75× body. Also the **status-chip row** (`fields.chip`): a meta row holding more than one `<ui-chip>` becomes a wrapping flex row, gap `--ui-content-meta-chip-gap` |
 | `caption` | `<figcaption data-part="caption">` | Same treatment as `meta`; usable inside `<ui-media>` (sits above the scrim) |
 | `byline` | `<address data-part="byline">` | Author row — flex, centered; an inner `<img>` becomes a round avatar |

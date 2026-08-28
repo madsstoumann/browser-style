@@ -17,7 +17,7 @@
 
 **Four counts, four different quantities — do not conflate them.** The page carries **62
 cards** with **53 distinct root itemtypes**; a structured-data validator reports **66 items**;
-the renderer knows **54 `schemaType` keys**.
+the renderer knows **54 `schemaType` keys**. Validated by hand on 2026-08-28: validator.schema.org reports the 66; Google's Rich Results Test reports **73** valid items, because it also counts the nested `LocalBusiness`/`Product` entities as items (`open-items.md` § 36).
 
 | Count | What it measures | Reproduce it |
 |---|---|---|
@@ -48,16 +48,16 @@ inside the [ProductGroup collage](#the-collage-presentation)'s `<ui-media>` are 
 nested property scope (`AggregateRating`, a byline `Person`, `Organization`, `ComicIssue`,
 `Occupation`, …) is not an itemtype *on a card host*.
 
-**Cards ≠ types.** `Quiz` runs three cards, `Review`, `EventSeries`, `Place`, `Person` and
+**Cards ≠ types.** `Quiz` runs two card *hosts* (the `<ui-card>` and the `<ui-reveal>`; the third Quiz is a `<section>` deck, not a host), `Review`, `EventSeries`, `Place`, `Person` and
 `NewsArticle` run two each, and ItemList four (the comparison card, the two collection cards,
-and the file list) — so 62 − 2 − 5 − 3 = 52. The `grep -v itemprop=` in those commands is load-bearing: the
+and the file list) — so 62 − 1 − 5 − 3 = 53. The `grep -v itemprop=` in those commands is load-bearing: the
 collage `ProductGroup` nests a `<ui-card>` per variant, and a nested card is a **property** of
 its parent item, not a card of its own. Note the second `grep` in that command: **reduce to the `itemtype=`
 substring before `sort -u`**. Uniquing the whole `<ui-card …>` match counts one type twice
 whenever its two cards differ in any other attribute (an `id`, a `style`) — that is how this
 count once read 50.
 
-**Types ≠ renderer keys.** The 52 is the **50** distinct base itemtypes behind the 54
+**Types ≠ renderer keys.** The 53 is the **51** distinct base itemtypes behind the 54
 `schemaType` keys (`profile` and `artist` both resolve to `Person`; `comparison`, `places` and `filelist` all to `ItemList`), minus `LocalBusiness` (never
 shown plain — the business card is always sharpened), plus the three sharpened [subtypes](#subtypes)
 `ProductGroup`, `CafeOrCoffeeShop` and `DiscussionForumPosting`, which `details.subtype` produces
@@ -104,7 +104,7 @@ That is the whole mechanism: sections own `<h2>`, cards render whatever their pr
 
 > **The full cross-map lives in
 > [`google-rich-results.md`](google-rich-results.md)** —
-> every itemtype in the system (50 distinct behind the 54 renderer keys) against the Google gallery, bucketed Live / Withdrawn / None, with a
+> every itemtype in the system (51 distinct behind the 54 renderer keys) against the Google gallery, bucketed Live / Withdrawn / None, with a
 > per-row marker saying whether each Google claim was researched here or is unverified model
 > knowledge. This section stays the source of truth for the withdrawn dates below; that
 > document defers to it.
@@ -371,7 +371,7 @@ The **second `NewsArticle` card** (`#schema-news-paywall`, `data/news-paywall.js
 
 `details.paywalled: true` emits `<meta itemprop="isAccessibleForFree" content="https://schema.org/False">` — schema.org’s Boolean spelled as its enumeration URL, the house style for every other enumeration member. The property’s domain is **CreativeWork, Event and Place**, so the flag is accepted on the 38 keys whose itemtype is one of those (verified against the schema.org 30.0 dump: `article`, `news`, `content`, `recipe`, `video`, `event`, `location`, `business`, `software`, `book`, `movie`, …) and dropped silently on `product`, `job`, `profile`/`artist`, `membership`, `organization`, `service`, `contact`, `booking`, `statistic`, `goal`, `loyalty`, `musicgroup` and the three `ItemList` keys. Only the boolean `true` counts — a string `"true"` is refused, because the meta is a claim about access and must never be set by accident.
 
-**Two arms, and the second is gated on the body.** Google’s *Subscription and paywalled content* feature reads the boolean **plus** `hasPart → WebPageElement { isAccessibleForFree: False, cssSelector }` naming the gated section of the DOM. A teaser card carries the boolean only: the paywalled text is not on the listing page, so a selector pointing at it would be a lie. The full view — a preset with `text: "body"`, the shape `articles/build.js` renders — adds the part, hidden, with `cssSelector: [itemprop=articleBody]`, which is exactly the wrapper the same render wrote around the body. Caveat for the `jsonld` schema mode: `stripSchema()` removes that `itemprop`, so on a JSON-LD page the selector matches nothing — give the body wrapper a class of your own and point `cssSelector` at that.
+**Two arms, and the second is gated on the body.** Google’s *Subscription and paywalled content* feature reads the boolean **plus** `hasPart → WebPageElement { isAccessibleForFree: False, cssSelector }` naming the gated section of the DOM. A teaser card carries the boolean only: the paywalled text is not on the listing page, so a selector pointing at it would be a lie. The full view — a preset with `text: "body"`, the shape `articles/build.js` renders — adds the part, hidden, with `cssSelector: [data-part=body]` — the wrapper the same render wrote around the body is `<div data-part="body" itemprop="articleBody">`, and `data-part` survives the `raw`/`jsonld` schema modes (`stripSchema()` removes microdata attributes only), so the selector holds in every mode.
 
 **Presentation is not a disabled card.** The link still works (it is the conversion path), a tinted or `muted` treatment fails the muted-compounding contrast rule, and a publisher wants gated content to look *more* desirable, not less. The paywalled news card uses the envelope `chip` — a status flag above the eyebrow, the same slot “New” and “Sold” use — and keeps the type chip on the media. Nothing about the flag is automatic on the visual side; the editor chooses the label.
 
