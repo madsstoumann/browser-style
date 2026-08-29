@@ -345,18 +345,19 @@
     },
     "product-collage": {
       "name": "Product collage",
-      "description": "ProductGroup whose variants fill the media frame as a grid of linked tiles.",
+      "description": "ProductGroup whose variants fill the media frame as a grid of linked tiles. `pages` dissolves the wrapper below md so the tiles become a paged scroller; arw(hid) keeps the arrows off until hover. The tile grid carries theme=\"pale black\" as its plate and hov(zoom) per tile.",
       "element": "ui-card",
       "variant": "col",
-      "media": "chip(tc)",
+      "media": "chip(tc) nav(arw) arw(hid) pages",
       "variants": {
         "layout": {
           "xs": "cg(3xs) rg(3xs)",
-          "md": "columns(2)"
+          "md": "columns(2)",
+          "theme": "pale black"
         },
         "tile": {
           "variant": "rds(non)",
-          "media": "asr(1/1) chip(bs) chip(blue) chip(pale) chip(sm)",
+          "media": "asr(1/1) hov(zoom) chip(bs) chip(blue) chip(pale) chip(sm)",
           "content": "pad(none)"
         }
       }

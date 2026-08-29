@@ -119,6 +119,7 @@ const PAIRS = [
 	/* the sticker shape had drifted (page sh:spark, data sh:burst) with nothing watching —
 	   pairing the product is what keeps the two spellings one spelling */
 	['Product', 'ui/card/data/product.json'],
+	['ProductGroup#schema-product-variants', 'ui/card/data/product-group-collage.json'],
 	/* the software card, sharpened to the VideoGame subtype — keyed by id because the
 	   detail page links back to it. Docs: docs/schema.md § Video game */
 	['VideoGame#schema-videogame', 'ui/card/data/software.json'],
