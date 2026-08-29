@@ -83,7 +83,7 @@ const trailerBand = !s.trailer ? '' : band('lg="ratio(60:40) items(start)"',
 /* the store matrix. theme="black dark" is the arcade plate — the shared nine-hue axis,
    not an ad-hoc colour; `light`/`dark` pin the scheme so the inks stay AA either way. */
 const editionsBand = !s.editions ? '' : band('md="columns(1)"',
-	`\n\t\t\t\t<ui-card variant="vis(content)" theme="black dark" id="editions" content="scl(lg)"><cq-box><ui-content><h3 data-part="headline">Editions &amp; where to buy</h3><p data-part="summary">One game, two editions, five storefronts. The platform is a property of the game; the shop is the seller on each offer.</p>${s.editions}</ui-content></cq-box></ui-card>`);
+	`\n\t\t\t\t<ui-card variant="vis(content)" theme="black dark" id="editions" content="scl(lg) pad(lg) md:pad(2xl)"><cq-box><ui-content><h3 data-part="headline">Editions &amp; where to buy</h3><p data-part="summary">One game, two editions, five storefronts. The platform is a property of the game; the shop is the seller on each offer.</p>${s.editions}</ui-content></cq-box></ui-card>`);
 
 const worldBand = band('md="columns(2) items(start)" lg="columns(3) items(start)"',
 	column('Quests', s.quests) + column('Classes', s.characters) + column('Gear', s.items));
