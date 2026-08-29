@@ -10363,7 +10363,9 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
 @property --_show-counter { syntax: "<number>"; inherits: false; initial-value: 0; }
 @layer bs-component {
   :where(ui-avatar) {
-    --ui-avatar-background: oklch(0.5 0.25 random(auto, 0, 360));
+    @supports (color: oklch(0.5 0.25 random(auto, 0, 360))) {
+      --ui-avatar-background: oklch(0.5 0.25 random(auto, 0, 360));
+    }
     aspect-ratio: 1 / 1;
     background: var(--ui-avatar-background, var(--color-button));
     block-size: var(--ui-avatar-size, 4em);
@@ -10371,9 +10373,6 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
     border-radius: var(--ui-avatar-border-radius, var(--radius-circle));
     color: var(--ui-avatar-color, contrast-color(var(--ui-avatar-background)));
     container-type: inline-size;
-    &:has(img) {
-      --ui-avatar-background: var(--ui-avatar-photo-background, var(--color-surface-alt));
-    }
     display: grid;
     place-content: center;
     position: relative;

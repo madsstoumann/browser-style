@@ -13,7 +13,7 @@
    so a stable filename would let a shipped CSS change stay invisible behind a cached
    copy. This template is rewritten too because the page builders
    emit it — miss it and the next build silently reverts five generated pages. */
-export const HEAD_COMMON = `<link rel="stylesheet" href="/dist/demo.b958a30c.min.css">
+export const HEAD_COMMON = `<link rel="stylesheet" href="/dist/demo.7e22998e.min.css">
 	<!-- no-referrer: the zone hotlink-protects CDN srcset. Docs: docs/performance.md -->
 	<meta name="referrer" content="no-referrer">
 	<link rel="preconnect" href="https://v4.browser.style">`;

@@ -810,9 +810,14 @@ const initials = (name) => {
 };
 /* loading/decoding are unconditional — an avatar is always below the fold, and deferring it
    has nothing to do with whether the srcset pipeline is armed. Only srcset is IMG-gated. */
+/* The initials ride ALONG WITH a photo, not instead of it: ui-avatar puts `abbr` and `img`
+   in the same grid cell (`grid-area: 1 / -1`), so the opaque photo covers them — and a photo
+   that fails to load reveals initials on the avatar's plate instead of an empty disc. The
+   abbr stays aria-hidden either way; the name is already in the byline text beside it. */
+const initialsPart = (name) => name ? `<abbr aria-hidden="true">${esc(initials(name))}</abbr>` : '';
 const avatarPart = ({ avatar, name }) => avatar
-	? `<ui-avatar><img src="${esc(avatar)}" alt=""${attrs({ srcset: IMG ? fixedSrcset(avatar, 64) : null, loading: 'lazy', decoding: 'async' })}></ui-avatar>`
-	: (name ? `<ui-avatar><abbr aria-hidden="true">${esc(initials(name))}</abbr></ui-avatar>` : '');
+	? `<ui-avatar>${initialsPart(name)}<img src="${esc(avatar)}" alt=""${attrs({ srcset: IMG ? fixedSrcset(avatar, 64) : null, loading: 'lazy', decoding: 'async' })}></ui-avatar>`
+	: (name ? `<ui-avatar>${initialsPart(name)}</ui-avatar>` : '');
 
 /* byline rows from authors[] — the dateline rides the FIRST author as a second
    line (avatar · name/role over date · reading time), the common editorial shape */
