@@ -26,23 +26,23 @@ export default {
 		3750,
 		2500
 	],
-	"/assets/images/avatar-01.png": [
+	"/assets/images/avatar1.png": [
 		200,
 		200
 	],
-	"/assets/images/avatar-02.png": [
+	"/assets/images/avatar2.png": [
 		200,
 		200
 	],
-	"/assets/images/avatar-03.png": [
+	"/assets/images/avatar3.png": [
 		200,
 		200
 	],
-	"/assets/images/avatar-04.png": [
+	"/assets/images/avatar4.png": [
 		200,
 		200
 	],
-	"/assets/images/avatar-05.png": [
+	"/assets/images/avatar5.png": [
 		200,
 		200
 	],
