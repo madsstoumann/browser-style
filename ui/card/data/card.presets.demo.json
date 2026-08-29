@@ -333,13 +333,6 @@
       "variant": "col",
       "media": "asr(16/9) chip(ts)"
     },
-    "stack-portrait": {
-      "name": "Stack Portrait",
-      "description": "Column card with a 2:3 portrait frame — book jackets, cover art, standing portraits.",
-      "element": "ui-card",
-      "variant": "col",
-      "media": "asr(2/3)"
-    },
     "product-collage": {
       "name": "Product collage",
       "description": "ProductGroup whose variants fill the media frame as a grid of linked tiles.",

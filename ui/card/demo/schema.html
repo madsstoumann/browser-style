@@ -10,7 +10,7 @@
 	<meta name="referrer" content="no-referrer">
 	<meta name="format-detection" content="telephone=no">
 	<link rel="preconnect" href="https://v4.browser.style">
-	<meta name="description" content="62 cards covering 53 distinct schema.org itemtypes on the card hosts (ItemList runs four cards; Quiz three; Review, EventSeries, Place, Person and NewsArticle two each) — re-created with the modern &lt;ui-card&gt; engine: inline microdata (itemscope/itemtype/itemprop), no JSON-LD. The job card carries a 54th type as a second top-level item: EmployerAggregateRating. Two optional scripts: video.min.js polyfills the media invoker commands behind the podcast play button, save.min.js flips the save heart.">
+	<meta name="description" content="63 cards covering 54 distinct schema.org itemtypes on the card hosts (ItemList runs four cards; Quiz three; Review, EventSeries, Place, Person and NewsArticle two each) — re-created with the modern &lt;ui-card&gt; engine: inline microdata (itemscope/itemtype/itemprop), no JSON-LD. The job card carries a 55th type as a second top-level item: EmployerAggregateRating. Two optional scripts: video.min.js polyfills the media invoker commands behind the podcast play button, save.min.js flips the save heart.">
 	<link rel="alternate" type="text/markdown" href="/ui/card/docs/schema.md">
 	<link rel="stylesheet" href="/dist/demo.890c384c.min.css">
 
@@ -698,9 +698,41 @@
 	</lay-out>
 	<h2>Page &amp; picture</h2>
 	<lay-out md="columns(2) items(start)">
-		<ui-card variant="col" media="asr(4/3) chip(te)" itemscope itemtype="https://schema.org/Book">
+		<ui-card variant="col" media="asr(4/3) chip(te)" itemscope itemtype="https://schema.org/BookSeries">
 			<cq-box>
-				<ui-media><img src="/assets/images/gastronomy.png" alt="The Nordic Pantry book cover" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=180/assets/images/gastronomy.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=240/assets/images/gastronomy.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=360/assets/images/gastronomy.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=540/assets/images/gastronomy.png 720w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>Book</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/nordic-table-series.png" alt="The three hardbacks of The Nordic Table laid out on a wooden table among chanterelles, rye bread, salt and root vegetables" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=180/assets/images/nordic-table-series.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=240/assets/images/nordic-table-series.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=360/assets/images/nordic-table-series.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=540/assets/images/nordic-table-series.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=900/assets/images/nordic-table-series.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>BookSeries</ui-chip></ui-media>
+				<ui-content>
+					<meta itemprop="startDate" content="2024-03-05">
+					<meta itemprop="endDate" content="2026-09-15">
+					<small data-part="eyebrow" itemprop="genre">Cookbook series</small>
+					<h3 data-part="headline" itemprop="name">The Nordic Table</h3>
+					<p data-part="summary" itemprop="description">Three volumes on one larder — the roots, the pantry and the shore, cooked the way a northern kitchen actually runs.</p>
+					<address data-part="byline" itemprop="author" itemscope itemtype="https://schema.org/Person">
+						<ui-avatar><img src="https://assets.stoumann.dk/img/avatar4.webp" alt="" loading="lazy" decoding="async"></ui-avatar>
+						<span data-part="byline-who"><span itemprop="name">Mette Holm</span></span>
+					</address>
+					<p data-part="meta">3 books · 2024–2026</p>
+					<div data-part="rating" itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
+						<meta itemprop="ratingValue" content="4.7">
+						<meta itemprop="ratingCount" content="2140">
+						<meta itemprop="bestRating" content="5"><meta itemprop="worstRating" content="1">
+						<input class="ui-rating" type="range" min="1" max="5" value="4.7" step="0.01" disabled aria-hidden="true">
+						<span data-sr>Rated 4.7 out of 5 stars from 2,140 ratings</span>
+						<span aria-hidden="true">4.7 / 5 (2,140 ratings)</span>
+					</div>
+					<ol data-part="list">
+						<li itemprop="hasPart" itemscope itemtype="https://schema.org/Book"><meta itemprop="position" content="1"><meta itemprop="datePublished" content="2024-03-05"><meta itemprop="isbn" content="978-87-12345-65-4"><span itemprop="name">Rooted</span> <small>2024</small></li>
+						<li itemprop="hasPart" itemscope itemtype="https://schema.org/Book"><meta itemprop="position" content="2"><meta itemprop="datePublished" content="2025-10-07"><meta itemprop="isbn" content="978-87-12345-67-8"><a itemprop="url" href="#schema-book"><span itemprop="name">The Nordic Pantry</span></a> <small>2025</small></li>
+						<li itemprop="hasPart" itemscope itemtype="https://schema.org/Book"><meta itemprop="position" content="3"><meta itemprop="datePublished" content="2026-09-15"><meta itemprop="isbn" content="978-87-12345-69-2"><span itemprop="name">Coast &amp; Cold</span> <small>2026</small></li>
+					</ol>
+					<p data-part="meta" itemprop="publisher" itemscope itemtype="https://schema.org/Organization">Publisher: <span itemprop="name">Kbh Press</span></p>
+					<span data-part="tags"><ui-chip itemprop="keywords">Nordic</ui-chip><ui-chip itemprop="keywords">Preserving</ui-chip><ui-chip itemprop="keywords">Root vegetables</ui-chip></span>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card id="schema-book" variant="col" media="asr(2/3) chip(te)" itemscope itemtype="https://schema.org/Book">
+			<cq-box>
+				<ui-media><img src="/assets/images/nordic-pantry-cover.png" alt="The Nordic Pantry book cover" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=360/assets/images/nordic-pantry-cover.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=480/assets/images/nordic-pantry-cover.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=720/assets/images/nordic-pantry-cover.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=1080/assets/images/nordic-pantry-cover.png 720w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>Book</ui-chip></ui-media>
 				<ui-content>
 					<meta itemprop="isbn" content="978-87-12345-67-8">
 					<meta itemprop="numberOfPages" content="312">

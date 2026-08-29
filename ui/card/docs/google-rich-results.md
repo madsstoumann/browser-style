@@ -9,7 +9,7 @@
 > 2026-08-19 when `VacationRental` took it to 50 (51 `schemaType` keys; the demo page's
 > cards carry 52 distinct root itemtypes — the count bridge is at the top of `schema.md`),
 > and on 2026-08-24 when the `filelist` card joined — no new itemtype, a fourth `ItemList`
-> (54 keys).
+> (54 keys), and on 2026-08-29 when `BookSeries` took it to 51 itemtypes / 55 keys.
 > The question: how many of the card system's schema.org types have a live Google rich
 > result, which do not, and is it worth adding or reshaping anything to close the gap.
 >
@@ -60,12 +60,12 @@ console.log(new Set(Object.values(SCHEMA_TYPES)).size)"   # → 50
 
 ## 1. The headline answer
 
-Of **51 distinct itemtypes** across 54 `schemaType` keys (`profile` and `artist` both resolve
+Of **52 distinct itemtypes** across 55 `schemaType` keys (`profile` and `artist` both resolve
 to `Person`; `comparison`, `places` and `filelist` all to `ItemList`):
 
 | Bucket | Count | Meaning |
 |---|---|---|
-| **Live** | 17 | A Google feature exists today and this type is its subject |
+| **Live** | 18 | A Google feature exists today and this type is its subject |
 | **Withdrawn** | 8 | A feature existed and Google retired or narrowed it |
 | **None** | ~25 | Valid schema.org, no Google feature ever |
 
@@ -186,6 +186,7 @@ Sorted by bucket, then alphabetically. `key` is the `schemaType` discriminator.
 | `LocalBusiness` | `business` | Local business (60 allowlisted subtypes) | ⚠ |
 | `Organization` | `organization` | Organization / merchant info; multi-location via `department` | `repo` — 2026-08-05 coverage doc |
 | `Review` | `review` | Review snippet | ⚠ |
+| `BookSeries` | `bookseries` | **Review snippet** — `CreativeWorkSeries` is on that feature's type allowlist, so the series' `aggregateRating` is eligible where a bare `Place`'s is not. No series-specific feature of its own | `repo` — [schema.md § Location](schema.md) carries the allowlist |
 | `QAPage` | `qa` | Q&A | `repo` — 2026-08-05 coverage doc |
 | `MemberProgram` | `loyalty` | Loyalty program (live June 2025; AU BR CA FR DE MX UK US) | `repo` — schema.md § Loyalty programme, incl. the two tier benefits Google reads |
 | `Movie` | `movie` | Movie carousel | `repo` — 2026-08-05 coverage doc |

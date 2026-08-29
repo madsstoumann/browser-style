@@ -77,7 +77,9 @@ const PAIRS = [
 	['ClaimReview', 'ui/card/data/claim.json'],
 	['Reservation', 'ui/card/data/booking.json'],
 	['QAPage', 'ui/card/data/qa.json'],
-	['Book', 'ui/card/data/book.json'],
+	/* matched by id since the series' volume 2 links to it — the bare form requires a card with NO id= */
+	['Book#schema-book', 'ui/card/data/book.json'],
+	['BookSeries', 'ui/card/data/bookseries.json'],
 	['AchieveAction', 'ui/card/data/goal.json'],
 	['Service', 'ui/card/data/service.json'],
 	['RealEstateListing', 'ui/card/data/realestate.json'],

@@ -15,30 +15,30 @@
 > goals as `AchieveAction` — target and progress as `object`/`result` `QuantitativeValue`
 > scopes, a `<progress>` bar or `<ui-progress-circular>` ring as the visible face).
 
-**Four counts, four different quantities — do not conflate them.** The page carries **62
-cards** with **53 distinct root itemtypes**; a structured-data validator reports **66 items**;
-the renderer knows **54 `schemaType` keys**. Validated by hand on 2026-08-28: validator.schema.org reports the 66; Google's Rich Results Test reports **73** valid items, because it also counts the nested `LocalBusiness`/`Product` entities as items (`open-items.md` § 36).
+**Four counts, four different quantities — do not conflate them.** The page carries **63
+cards** with **54 distinct root itemtypes**; a structured-data validator reports **67 items**;
+the renderer knows **55 `schemaType` keys**. Last validated by hand on 2026-08-28, at 62 cards: validator.schema.org reported the 66 items of that revision, and Google's Rich Results Test **73** valid items — more, because it also counts the nested `LocalBusiness`/`Product` entities as items (`open-items.md` § 36). The `BookSeries` card added on 2026-08-29 takes the mechanical counts to the numbers above and is **not** yet in either validator's tally: both hosts are blocked at that session's egress (the offline route is the vocabulary dump — see [Types authored markup-first](#types-authored-markup-first)), so its itemprops were checked against the schema.org 30.0 dump instead. Re-run both validators next time they are reachable.
 
 | Count | What it measures | Reproduce it |
 |---|---|---|
-| **62** | card hosts on the page — `<ui-card>` plus the one `<ui-reveal>` | `grep -oE '<ui-(card\|reveal)[^>]*itemtype="[^"]*"' ui/card/demo/schema.html \| grep -vc 'itemprop='` |
-| **66** | top-level microdata items — **what schema.org's validator reports** | `grep -o '<[a-z-]*[^<>]*itemscope[^<>]*>' ui/card/demo/schema.html \| grep -v 'itemprop=' \| grep -c 'itemtype='` |
-| **53** | distinct root `itemtype` values | `grep -oE '<ui-(card\|reveal)[^>]*itemtype="[^"]*"' ui/card/demo/schema.html \| grep -v 'itemprop=' \| grep -o 'itemtype="[^"]*"' \| sort -u \| wc -l` |
-| **54** | `schemaType` keys `render.js` supports (`SCHEMA_TYPES`) | `node -e "import('./ui/card/render.js').then(m => console.log(Object.keys(m.SCHEMA_TYPES).length))"` |
+| **63** | card hosts on the page — `<ui-card>` plus the one `<ui-reveal>` | `grep -oE '<ui-(card\|reveal)[^>]*itemtype="[^"]*"' ui/card/demo/schema.html \| grep -vc 'itemprop='` |
+| **67** | top-level microdata items — **what schema.org's validator reports** | `grep -o '<[a-z-]*[^<>]*itemscope[^<>]*>' ui/card/demo/schema.html \| grep -v 'itemprop=' \| grep -c 'itemtype='` |
+| **54** | distinct root `itemtype` values | `grep -oE '<ui-(card\|reveal)[^>]*itemtype="[^"]*"' ui/card/demo/schema.html \| grep -v 'itemprop=' \| grep -o 'itemtype="[^"]*"' \| sort -u \| wc -l` |
+| **55** | `schemaType` keys `render.js` supports (`SCHEMA_TYPES`) | `node -e "import('./ui/card/render.js').then(m => console.log(Object.keys(m.SCHEMA_TYPES).length))"` |
 
 The flashcard Quiz is the page's one **`<ui-reveal>`** host rather than a `<ui-card>` — a
 question on the front face, its answer on the flipside, which is what a flashcard actually is.
 It counts identically in every column below; only the element differs.
 
 **Items ≠ cards.** A validator counts every *top-level* item — an `itemscope` with no `itemprop`
-of its own — so it sees the 62 cards plus **three items that are not cards**: the standalone
+of its own — so it sees the 63 cards plus **three items that are not cards**: the standalone
 `EmployerAggregateRating` on the job card, the page-level `WebSite` (site identity plus the
 sitelinks-searchbox `potentialAction`, which describes the *site*, not any card on it), and the
-page-trail `BreadcrumbList` on the breadcrumb `<ol>` — 66. Nested scopes (`author` → `Person`,
+page-trail `BreadcrumbList` on the breadcrumb `<ol>` — 67. Nested scopes (`author` → `Person`,
 `offers` → `Offer`, …) are properties of their
 parent, not items, and are not counted. The `grep -c 'itemtype='` on the end of that command is
 load-bearing: without it the page's own `<meta name="description">` is counted too, because its
-text mentions "itemscope" — that is how a naive scan reports 67. (It read 63 while an HTML
+text mentions "itemscope" — that is how a naive scan reports 68. (It read 64 while an HTML
 comment on the job card also spelled the word out; that comment is gone, but the guard is not
 about any one line — any future prose mentioning `itemscope` walks into the same trap.)
 
@@ -50,14 +50,14 @@ nested property scope (`AggregateRating`, a byline `Person`, `Organization`, `Co
 
 **Cards ≠ types.** `Quiz` runs two card *hosts* (the `<ui-card>` and the `<ui-reveal>`; the third Quiz is a `<section>` deck, not a host), `Review`, `EventSeries`, `Place`, `Person` and
 `NewsArticle` run two each, and ItemList four (the comparison card, the two collection cards,
-and the file list) — so 62 − 1 − 5 − 3 = 53. The `grep -v itemprop=` in those commands is load-bearing: the
+and the file list) — so 63 − 1 − 5 − 3 = 54. The `grep -v itemprop=` in those commands is load-bearing: the
 collage `ProductGroup` nests a `<ui-card>` per variant, and a nested card is a **property** of
 its parent item, not a card of its own. Note the second `grep` in that command: **reduce to the `itemtype=`
 substring before `sort -u`**. Uniquing the whole `<ui-card …>` match counts one type twice
 whenever its two cards differ in any other attribute (an `id`, a `style`) — that is how this
 count once read 50.
 
-**Types ≠ renderer keys.** The 53 is the **51** distinct base itemtypes behind the 54
+**Types ≠ renderer keys.** The 54 is the **52** distinct base itemtypes behind the 55
 `schemaType` keys (`profile` and `artist` both resolve to `Person`; `comparison`, `places` and `filelist` all to `ItemList`), minus `LocalBusiness` (never
 shown plain — the business card is always sharpened), plus the three sharpened [subtypes](#subtypes)
 `ProductGroup`, `CafeOrCoffeeShop` and `DiscussionForumPosting`, which `details.subtype` produces
@@ -82,7 +82,7 @@ type — a demo affordance, emitted by `render.js` only when `renderCard` gets `
 
 ## Page structure — eleven sections, and where the heading level comes from
 
-The page groups its 62 cards into **eleven sections by what the thing *is*** — Editorial &
+The page groups its 63 cards into **eleven sections by what the thing *is*** — Editorial &
 journalism · Commerce & offers · Screen · Audio · Page & picture · Learning & reference ·
 People, work & history · Food & drink · Places, events & property · Community & support ·
 Data, health & operations. Each section is a bare `<h2>` followed by its own
@@ -104,7 +104,7 @@ That is the whole mechanism: sections own `<h2>`, cards render whatever their pr
 
 > **The full cross-map lives in
 > [`google-rich-results.md`](google-rich-results.md)** —
-> every itemtype in the system (51 distinct behind the 54 renderer keys) against the Google gallery, bucketed Live / Withdrawn / None, with a
+> every itemtype in the system (52 distinct behind the 55 renderer keys) against the Google gallery, bucketed Live / Withdrawn / None, with a
 > per-row marker saying whether each Google claim was researched here or is unverified model
 > knowledge. This section stays the source of truth for the withdrawn dates below; that
 > document defers to it.
@@ -369,7 +369,7 @@ The **second `NewsArticle` card** (`#schema-news-paywall`, `data/news-paywall.js
 
 ### Paywall — `isAccessibleForFree`
 
-`details.paywalled: true` emits `<meta itemprop="isAccessibleForFree" content="https://schema.org/False">` — schema.org’s Boolean spelled as its enumeration URL, the house style for every other enumeration member. The property’s domain is **CreativeWork, Event and Place**, so the flag is accepted on the 38 keys whose itemtype is one of those (verified against the schema.org 30.0 dump: `article`, `news`, `content`, `recipe`, `video`, `event`, `location`, `business`, `software`, `book`, `movie`, …) and dropped silently on `product`, `job`, `profile`/`artist`, `membership`, `organization`, `service`, `contact`, `booking`, `statistic`, `goal`, `loyalty`, `musicgroup` and the three `ItemList` keys. Only the boolean `true` counts — a string `"true"` is refused, because the meta is a claim about access and must never be set by accident.
+`details.paywalled: true` emits `<meta itemprop="isAccessibleForFree" content="https://schema.org/False">` — schema.org’s Boolean spelled as its enumeration URL, the house style for every other enumeration member. The property’s domain is **CreativeWork, Event and Place**, so the flag is accepted on the 39 keys whose itemtype is one of those (verified against the schema.org 30.0 dump: `article`, `news`, `content`, `recipe`, `video`, `event`, `location`, `business`, `software`, `book`, `bookseries`, `movie`, …) and dropped silently on `product`, `job`, `profile`/`artist`, `membership`, `organization`, `service`, `contact`, `booking`, `statistic`, `goal`, `loyalty`, `musicgroup` and the three `ItemList` keys. Only the boolean `true` counts — a string `"true"` is refused, because the meta is a claim about access and must never be set by accident.
 
 **Two arms, and the second is gated on the body.** Google’s *Subscription and paywalled content* feature reads the boolean **plus** `hasPart → WebPageElement { isAccessibleForFree: False, cssSelector }` naming the gated section of the DOM. A teaser card carries the boolean only: the paywalled text is not on the listing page, so a selector pointing at it would be a lie. The full view — a preset with `text: "body"`, the shape `articles/build.js` renders — adds the part, hidden, with `cssSelector: [data-part=body]` — the wrapper the same render wrote around the body is `<div data-part="body" itemprop="articleBody">`, and `data-part` survives the `raw`/`jsonld` schema modes (`stripSchema()` removes microdata attributes only), so the selector holds in every mode.
 
@@ -864,6 +864,31 @@ Episode metas plus hidden `partOfSeries` → `PodcastSeries`. The episode audio 
 
 Director and cast as `Person` scopes, `contentRating`, release date and an `AggregateRating` star row. Eyebrow → `genre`.
 
+### Book series — `BookSeries`
+
+`BookSeries` ⊂ `CreativeWorkSeries` ⊂ (`Series`, `CreativeWork`). `startDate`/`endDate` are the
+series' own, from `CreativeWorkSeries`; the author byline, the volume list, the rating and the
+publisher colophon all reach it through `CreativeWork`. The card is the book card's shape one
+level up: byline leads (`BYLINE_EARLY`), then the span row, the rating, the volumes, the
+colophon. Eyebrow → `genre`.
+
+⚠️ **There is no count property.** `numberOfItems` belongs to `ItemList` alone, and
+`numberOfEpisodes` to `CreativeWorkSeason`/`RadioSeries`/`TVSeries`/`VideoGameSeries` — the same
+trap the podcast and comic series walk around. "3 books" is prose; `hasPart` → `Book` is the
+machine answer.
+
+Unlike the comic series, this card **does** enumerate its parts: a book series is a finite,
+ordered shelf, and each volume carries `position`, `datePublished` and `isbn` on its own `Book`
+scope. The list is an `<ol>` by default because volumes ascend, so the ordinal markers are true
+(`details.ordered` overrides it per instance — the album-track rule). A volume with a `url` gets
+a **real anchor**, not a hidden meta: only a link is crawlable, which is the comic issue's
+`isPartOf` reasoning run downwards. On the demo page volume 2 links to the `Book` card below it
+(`#schema-book`).
+
+`aggregateRating` reaches the series through `CreativeWork`, and Google's review-snippet type
+allowlist carries `CreativeWorkSeries` — so the star row is legal in the vocabulary *and*
+eligible for the feature, unlike the one a bare `Place` is refused.
+
 ### Book — `Book`
 
 Author byline leads (photo via `<ui-avatar>`); then facts, rating, `Offer` — publisher is the colophon. `isbn`, pages, allowlisted `bookFormat` (schema.org `BookFormatType`).
@@ -918,7 +943,7 @@ if the type or one of its ancestors is in its domain.
 > `schema.org` and `validator.schema.org` outright. The official release dump is also published
 > in the vocabulary's own repository, which is usually reachable:
 > `raw.githubusercontent.com/schemaorg/schemaorg/main/data/releases/<version>/schemaorg-current-https.jsonld`
-> (current version from `.../main/versions.json`; `ComicSeries` and `Artist` were verified
+> (current version from `.../main/versions.json`; `ComicSeries`, `Artist` and `BookSeries` were verified
 > against **30.0**). Walk `schema:domainIncludes` against the transitive closure of
 > `rdfs:subClassOf` — that check is what caught `issn` being a `CreativeWorkSeries` property
 > rather than a `Periodical` one. Where a property turns out to be out of domain, **drop it**
@@ -930,13 +955,14 @@ on every card: the page hoists `media=` onto `<ui-card>` where the renderer emit
 it after the summary (`DETAILS` runs after the envelope and has no hook to reorder). The comparator
 normalises both on both sides; nothing else is allowed to differ.
 Run it with `node ui/card/schema.compare.js` ([`schema.compare.js`](../schema.compare.js)); all
-27 mapped cards are an exact match.
+39 mapped cards are an exact match.
 
 **A card with an `id=` must be keyed by it.** The comparator's bare form is
 `<ui-card(?![^>]*\bid=)…>` — it deliberately matches only cards *without* an id, so that a bare
 key can never accidentally grab the id'd sibling it was meant to be distinguished from. That is
 why `ComicSeries#schema-comicseries` carries its id even though it is the only ComicSeries on
-the page: the id is the artist card's link target, so the bare key would find nothing.
+the page: the id is the artist card's link target, so the bare key would find nothing. `Book`
+moved to `Book#schema-book` for the same reason when the book series started linking to it.
 
 **Where a scope needs several rows** (`mainEntity`, `hasOfferCatalog`, `about`) it wraps them in a
 bare `<div itemscope>`. That div is grouping, not a box: `content.css` gives

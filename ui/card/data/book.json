@@ -13,7 +13,7 @@
     "internalName": "Demo — Book",
     "schemaType": "book",
     "preset": {
-      "$ref": "card-preset/showcase"
+      "$ref": "card-preset/stack-portrait"
     },
     "eyebrow": "Cookbook",
     "headline": "The Nordic Pantry",
@@ -27,7 +27,7 @@
     "media": [
       {
         "mediaType": "image",
-        "src": "/assets/images/gastronomy.png",
+        "src": "/assets/images/nordic-pantry-cover.png",
         "alt": "The Nordic Pantry book cover"
       }
     ],

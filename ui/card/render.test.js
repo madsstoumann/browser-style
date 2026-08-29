@@ -1132,6 +1132,69 @@ describe('podcastseries — PodcastSeries', () => {
 	});
 });
 
+describe('bookseries — BookSeries', () => {
+	const details = {
+		startDate: '2024-03-05', endDate: '2026-09-15', publisher: 'Kbh Press', bookCount: 3,
+		rating: { value: 4.7, count: 2140, max: 5 },
+		books: [
+			{ position: 1, name: 'Rooted', datePublished: '2024-03-05', isbn: '978-87-12345-65-4' },
+			{ position: 2, name: 'The Nordic Pantry', datePublished: '2025-10-07', isbn: '978-87-12345-67-8', url: '#schema-book' },
+			{ position: 3, name: 'Coast & Cold', datePublished: '2026-09-15', isbn: '978-87-12345-69-2' }
+		]
+	};
+	const card = (extra = {}) => render({ schemaType: 'bookseries', headline: 'The Nordic Table', details: { ...details, ...extra } });
+
+	/* BookSeries ⊂ CreativeWorkSeries ⊂ (Series, CreativeWork): startDate/endDate arrive
+	   from CreativeWorkSeries, everything else from CreativeWork. `numberOfItems` is
+	   ItemList's ALONE — the book count is prose, and hasPart is the machine answer. */
+	test('the book count is prose — numberOfItems is out of domain', () => {
+		const html = card();
+		assert.match(html, /itemtype="https:\/\/schema\.org\/BookSeries"/);
+		assert.ok(!html.includes('numberOfItems'), 'numberOfItems is ItemList’s property, not a series’');
+		assert.ok(!html.includes('numberOfEpisodes'), 'nor is BookSeries in that property’s domain');
+		assert.match(html, /<p data-part="meta">3 books · 2024–2026<\/p>/);
+	});
+
+	test('startDate and endDate are machine metas on the series root', () => {
+		assert.match(card(), /<meta itemprop="startDate" content="2024-03-05">/);
+		assert.match(card(), /<meta itemprop="endDate" content="2026-09-15">/);
+		/* an open-ended series reads "since", not a year range */
+		assert.match(card({ endDate: null }), /<p data-part="meta">3 books · since 2024<\/p>/);
+	});
+
+	/* Volumes ASCEND, so ordinal markers are true — the album-track/TV-season default,
+	   and `details.ordered` still overrides it per instance. */
+	test('the volumes are an ordered hasPart list of Book scopes', () => {
+		const html = card();
+		assert.match(html, /<ol data-part="list"><li itemprop="hasPart" itemscope itemtype="https:\/\/schema\.org\/Book">/);
+		assert.match(html, /<meta itemprop="position" content="1"><meta itemprop="datePublished" content="2024-03-05"><meta itemprop="isbn" content="978-87-12345-65-4"><span itemprop="name">Rooted<\/span> <small>2024<\/small>/);
+		assert.equal((html.match(/itemprop="hasPart"/g) || []).length, 3);
+		assert.match(card({ ordered: false }), /<ul data-part="list"><li itemprop="hasPart"/);
+	});
+
+	/* a real anchor, not a hidden meta — only a link is crawlable (the ComicIssue→series
+	   reasoning, run in the other direction) */
+	test('a volume with a url links through a crawlable anchor', () => {
+		assert.match(card(), /<a itemprop="url" href="#schema-book"><span itemprop="name">The Nordic Pantry<\/span><\/a>/);
+	});
+
+	/* `aggregateRating` reaches BookSeries through CreativeWork, and Google's
+	   review-snippet allowlist carries CreativeWorkSeries — so the rating is legal twice over */
+	test('the series carries an aggregateRating and a publisher colophon', () => {
+		const html = card();
+		assert.match(html, /<div data-part="rating" itemprop="aggregateRating" itemscope itemtype="https:\/\/schema\.org\/AggregateRating">/);
+		assert.match(html, /<meta itemprop="ratingValue" content="4\.7">/);
+		assert.match(html, /<p data-part="meta" itemprop="publisher" itemscope itemtype="https:\/\/schema\.org\/Organization">Publisher: <span itemprop="name">Kbh Press<\/span><\/p>/);
+	});
+
+	test('escapes hostile input', () => {
+		const html = card({ publisher: '"><img src=x onerror=alert(1)>', books: [{ position: 1, name: '<script>alert(1)</script>' }] });
+		assert.ok(!html.includes('<script>') && !html.includes('<img'), 'no raw markup reaches output');
+		assert.match(html, /&lt;script&gt;alert\(1\)&lt;\/script&gt;/, 'the volume name still renders, escaped');
+		assert.match(html, /&quot;&gt;&lt;img src=x onerror=alert\(1\)&gt;/, 'the publisher still renders, escaped');
+	});
+});
+
 describe('comicseries — ComicSeries', () => {
 	const details = { issn: '2634-0011', startDate: '2026-08-01', publisher: 'Web Comics Group', cadence: 'Monthly', issueCount: 12 };
 	const card = (extra = {}) => render({ schemaType: 'comicseries', headline: 'CSS Man', details: { ...details, ...extra } });

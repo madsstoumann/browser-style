@@ -70,6 +70,7 @@ export const SCHEMA_TYPES = {
 	podcast: 'PodcastEpisode',
 	movie: 'Movie',
 	book: 'Book',
+	bookseries: 'BookSeries',
 	dataset: 'Dataset',
 	claim: 'ClaimReview',
 	loyalty: 'MemberProgram',
@@ -207,7 +208,7 @@ const SUMMARY_PROP = { review: 'reviewBody', quote: 'text', announcement: 'text'
    owns it: job's eyebrow is display text, `industry` is details.industry. Docs: schema.md § Job.
    Exported for render.test.js, which re-adds the removed `job: 'industry'` entry to prove the
    duplicate-property guard below still holds when this map grows. */
-export const EYEBROW_PROP = { article: 'articleSection', news: 'articleSection', product: 'category', recipe: 'recipeCategory', course: 'about', video: 'genre', movie: 'genre', book: 'genre', tvseries: 'genre', music: 'genre', musicgroup: 'genre', comicseries: 'genre', comicissue: 'genre' };
+export const EYEBROW_PROP = { article: 'articleSection', news: 'articleSection', product: 'category', recipe: 'recipeCategory', course: 'about', video: 'genre', movie: 'genre', book: 'genre', bookseries: 'genre', tvseries: 'genre', music: 'genre', musicgroup: 'genre', comicseries: 'genre', comicissue: 'genre' };
 /* published itemprop: JobPosting/SpecialAnnouncement use datePosted, VideoObject uploadDate */
 const PUBLISHED_PROP = { job: 'datePosted', announcement: 'datePosted', video: 'uploadDate' };
 /* datePosted is typed Date, so a timestamp is out of range; uploadDate takes a DateTime */
@@ -219,7 +220,7 @@ const HEADING_TAGS = new Set(['h2', 'h3', 'h4', 'h5']);
 const ARTICLE_BODY_TYPES = new Set(['article', 'news']);
 /* isAccessibleForFree domain — CreativeWork | Event | Place: every key whose itemtype is one
    (schema.org 30.0 dump). Docs: docs/schema.md § Paywall */
-const PAYWALL_TYPES = new Set(['content', 'article', 'news', 'event', 'recipe', 'review', 'course', 'poll', 'faq', 'quote', 'timeline', 'gallery', 'achievement', 'announcement', 'business', 'location', 'social', 'software', 'video', 'howto', 'qa', 'podcast', 'movie', 'book', 'dataset', 'claim', 'quiz', 'realestate', 'vacationrental', 'menu', 'tvseries', 'tvepisode', 'medical', 'music', 'glossary', 'podcastseries', 'comicseries', 'comicissue']);
+const PAYWALL_TYPES = new Set(['content', 'article', 'news', 'event', 'recipe', 'review', 'course', 'poll', 'faq', 'quote', 'timeline', 'gallery', 'achievement', 'announcement', 'business', 'location', 'social', 'software', 'video', 'howto', 'qa', 'podcast', 'movie', 'book', 'bookseries', 'dataset', 'claim', 'quiz', 'realestate', 'vacationrental', 'menu', 'tvseries', 'tvepisode', 'medical', 'music', 'glossary', 'podcastseries', 'comicseries', 'comicissue']);
 /* types where the image/video belongs to another scope — skip itemprop */
 const NO_IMAGE_PROP = new Set(['review', 'contact']);
 /* A gallery whose data carries licensing emits a full ImageObject per photo, which then
@@ -2535,6 +2536,39 @@ const DETAILS = {
 		return html;
 	},
 
+	/* BookSeries ⊂ CreativeWorkSeries ⊂ (Series, CreativeWork). `startDate`/`endDate` are
+	   CreativeWorkSeries'; the volume list, the rating and the publisher all arrive from
+	   CreativeWork. There is NO count property — `numberOfItems` is ItemList's alone — so
+	   the book count is prose and `hasPart` is the machine answer.
+	   Docs: docs/schema.md § Book series */
+	bookseries(d) {
+		/* author byline renders EARLY via BYLINE_EARLY, same shape as the book card */
+		let html = meta('startDate', d.startDate) + meta('endDate', d.endDate);
+		const from = startYear(d.startDate);
+		const to = startYear(d.endDate);
+		const span = from ? (to && to !== from ? `${esc(from)}–${esc(to)}` : `since ${esc(from)}`) : null;
+		const bits = [
+			d.bookCount != null ? `${num(d.bookCount)} book${d.bookCount === 1 ? '' : 's'}` : null,
+			span
+		].filter(Boolean).join(' · ');
+		if (bits) html += `<p data-part="meta">${bits}</p>`;
+		html += ratingPart('aggregateRating', 'AggregateRating', d.rating);
+		/* Volumes ASCEND, so ordinal markers are true — the album-track default, and
+		   `details.ordered` overrides it per instance. A volume with a url gets a REAL
+		   anchor: only a link is crawlable (the ComicIssue→series rule, run downwards). */
+		html += scopedList((d.books || []).map((book) => {
+			const year = startYear(book.datePublished);
+			return `<li${scope('hasPart', 'Book')}>${meta('position', book.position)}${meta('datePublished', book.datePublished)}${meta('isbn', book.isbn)}`
+				+ (book.url
+					? `<a itemprop="url" href="${esc(book.url)}"><span itemprop="name">${esc(book.name)}</span></a>`
+					: `<span itemprop="name">${esc(book.name)}</span>`)
+				+ (year ? ` <small>${esc(year)}</small>` : '')
+				+ '</li>';
+		}), d.ordered ?? true);
+		if (d.publisher) html += `<p data-part="meta"${scope('publisher', 'Organization')}>Publisher: <span itemprop="name">${esc(d.publisher)}</span></p>`;
+		return html;
+	},
+
 	dataset(d) {
 		let html = meta('license', d.license) + meta('temporalCoverage', d.temporalCoverage) + meta('spatialCoverage', d.spatialCoverage)
 			+ (d.variableMeasured || []).map((variable) => meta('variableMeasured', variable)).join('');
@@ -2986,7 +3020,7 @@ const SUBHEADLINE_SLOT = {
 
 /* byline-early types: author identity precedes the commerce details (book).
    A preset's byline: "lede" opts any type in — the full-article shape. */
-const BYLINE_EARLY = new Set(['book']);
+const BYLINE_EARLY = new Set(['book', 'bookseries']);
 
 /* `places` has NO card-level CTA: the map is the affordance, and each place carries its own
    (a "See More" on a slide). details.center still feeds the no-JS fallback frame. */
