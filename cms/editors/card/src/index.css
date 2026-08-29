@@ -42,7 +42,23 @@ label.toggle {
 	display: flex;
 	align-items: center;
 	gap: 1ch;
+	inline-size: fit-content;
 }
+
+/* the shared sheet gives EVERY input appearance:none + flex:1 — a checkbox
+   becomes a wide invisible pill that stretches and pushes its label */
+input[type="checkbox"] {
+	appearance: auto;
+	flex: 0 0 auto;
+	inline-size: 1.25em;
+	block-size: 1.25em;
+	margin: 0;
+	padding: 0;
+}
+
+/* overflow guards: no control may exceed its cell */
+fieldset[data-part], label { min-inline-size: 0; }
+input, select, textarea { max-inline-size: 100%; min-inline-size: 0; }
 
 p { margin: 0; }
 p[data-part="hint"] { font-size: smaller; color: var(--editor-gray, GrayText); }
