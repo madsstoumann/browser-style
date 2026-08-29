@@ -10371,6 +10371,9 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
     border-radius: var(--ui-avatar-border-radius, var(--radius-circle));
     color: var(--ui-avatar-color, contrast-color(var(--ui-avatar-background)));
     container-type: inline-size;
+    &:has(img) {
+      --ui-avatar-background: var(--ui-avatar-photo-background, var(--color-surface-alt));
+    }
     display: grid;
     place-content: center;
     position: relative;

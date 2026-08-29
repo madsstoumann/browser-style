@@ -21,6 +21,10 @@
 		border-radius: var(--ui-avatar-border-radius, var(--radius-circle));
 		color: var(--ui-avatar-color, contrast-color(var(--ui-avatar-background)));
 		container-type: inline-size;
+		/* A PHOTO avatar gets a neutral plate, never the random hue: cut-out portraits are
+		   part-transparent, so the disc shows THROUGH the subject. The random colour exists
+		   for the initials fallback, which has no image to tint. Docs: readme.md */
+		&:has(img) { --ui-avatar-background: var(--ui-avatar-photo-background, var(--color-surface-alt)); }
 		display: grid;
 		place-content: center;
 		position: relative;
