@@ -91,8 +91,8 @@ core semantics don't survive the translation.
   before reading the letter. The layout rules pass this 98% of the time, which is
   a sign the system is browser-friendly, not a problem.
 - **Invalidation** — after something changes, the browser's answer to "who needs
-  re-checking?" Good invalidation re-checks 7 elements; bad invalidation re-checks
-  500. The whole `:has()` finding is an invalidation story.
+  re-checking?" Good invalidation re-checks 7 elements; bad invalidation
+  re-checks 500 of them. The whole `:has()` finding is an invalidation story.
 - **`:has()`** — a CSS condition about an element's *contents* ("a card that
   contains a cover link"). Powerful, but expensive to keep up to date: a change
   deep inside means re-checking from above, and the browser is deliberately
