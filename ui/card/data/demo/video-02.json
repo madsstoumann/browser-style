@@ -19,7 +19,7 @@
     "media": [
       {
         "mediaType": "video",
-        "src": "https://assets.stoumann.dk/video/river.mp4",
+        "src": "/assets/video/river.mp4",
         "poster": "/assets/images/river.png",
         "controls": false,
         "muted": true,

@@ -162,6 +162,18 @@ referrer policy, not the document's** — carousel thumb backgrounds
 (`--ui-carousel-thumb-url`) broke on pages.dev until `_headers` gave `/dist/*`
 `Referrer-Policy: no-referrer` (`5ac81cea`). A failed `background-image` is silent.
 
+**Demo assets are single-origin — keep them that way.** Byline avatars used to come from
+`assets.stoumann.dk`; 219 references moved onto the zone on 2026-08-29. A third host costs
+three things, in this order: `cdnEligible()` requires a **root-relative** `src`, so an
+off-zone image gets no transform and no `1x/2x` pair at all (the avatars were shipping
+205 px into a 48 px slot); there is no `preconnect` for it, so the first such image pays a
+full DNS + TCP + TLS handshake; and it sits outside the two referrer rules above, with its
+own policy that can 403 independently. Three off-zone sets remain because no local copy
+exists — `img/bw.jpg`, `img/color.jpg`, `img/colors-base.webp` (ui/image-compare,
+ui/color-compare), `img/movie/01–10.jpg` (ui/slideshow) and `audio/accept.mp3`. Copy them
+onto the zone when convenient; do not add new off-zone references. `content/` is legacy and
+out of scope.
+
 ### Images
 
 Contract (full detail: `ui/card/docs/media.md` § Responsive images): six-width srcset

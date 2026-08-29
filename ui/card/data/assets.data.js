@@ -26,6 +26,26 @@ export default {
 		3750,
 		2500
 	],
+	"/assets/images/avatar1.png": [
+		200,
+		200
+	],
+	"/assets/images/avatar2.png": [
+		200,
+		200
+	],
+	"/assets/images/avatar3.png": [
+		200,
+		200
+	],
+	"/assets/images/avatar4.png": [
+		200,
+		200
+	],
+	"/assets/images/avatar5.png": [
+		200,
+		200
+	],
 	"/assets/images/band_alternative.png": [
 		941,
 		1672
