@@ -193,8 +193,9 @@ const types = manifest.types;
 		if (types[option.value] && types[option.value].label !== option.label)
 			err(8, `card.schema.json label for "${option.value}" ≠ manifest label (run details.build.js)`);
 	const top = schema.description ?? '';
-	const counts = top.match(/(\d+) schema\.org types \((\d+) itemtypes\)/);
-	if (counts) {
+	const counts = top.match(/(\d+) schema\.org types \((\d+) distinct itemtypes/);
+	if (!counts) err(8, 'card.schema.json top description no longer states the type/itemtype counts');
+	else {
 		const distinct = new Set(Object.values(R.SCHEMA_TYPES)).size;
 		if (Number(counts[1]) !== values.length || Number(counts[2]) !== distinct)
 			err(8, `card.schema.json top description says ${counts[1]} types (${counts[2]} itemtypes); actual ${values.length} (${distinct})`);

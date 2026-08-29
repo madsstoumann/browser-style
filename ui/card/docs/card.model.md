@@ -15,8 +15,8 @@ what a card *looks* like see the `card-preset` model, summarised in § Preset.
 | Envelope fields, types, localization, editor groups | [`cms/baseline/models/card.schema.json`](../../../cms/baseline/models/card.schema.json) |
 | `schemaType` → itemtype | `SCHEMA_TYPES`, `render.js` |
 | `subtype` allowlists | `SUBTYPES`, `render.js` — mirrored in [schema.md § Subtypes](./schema.md#subtypes), checked both ways by `tokens.lint.js` |
-| Per-type `details` keys | `DETAILS` in `render.js`, plus `realestateSections()` and `vacationrentalSections()` |
-| Enumerated value sets | the allowlist `Set`s in `render.js` — § Lookups |
+| Per-type `details` keys | [`data/details.json`](../data/details.json) — the machine manifest; the tables below are **generated** from it by `details.build.js`, and `details.lint.js` holds it against `DETAILS` in `render.js` and the whole `data/` corpus |
+| Enumerated value sets | the allowlist `Set`s in `render.js` (+ the manifest's `vocab` block) — § Lookups |
 | Token dropdowns | generated blocks from [`data/tokens.json`](../data/tokens.json) |
 | Field-declaration format | [`cms/baseline/models/README.md`](../../../cms/baseline/models/README.md) (UCM) |
 | Instance value markers | `cms/baseline/pages/UCF.md` — `$ref`, `$asset`, `$richtext` |
@@ -25,9 +25,9 @@ what a card *looks* like see the `card-preset` model, summarised in § Preset.
 
 ## The storage contract
 
-**One content model, 52 payloads.** Everything shared is a native CMS field; everything
+**One content model, 54 payloads.** Everything shared is a native CMS field; everything
 type-specific lives in a single JSON field called **`details`**, discriminated by
-`schemaType`. A CMS therefore needs one card content type, not fifty-two.
+`schemaType`. A CMS therefore needs one card content type, not fifty-four.
 
 ```
 card
@@ -45,10 +45,13 @@ wrapper does the same over `postMessage`.
 > `data`. The current model calls it **`details`**, and so do `render.js` and all 67
 > instances in `ui/card/data/`. `details` is the name.
 
-**The gap this document fills.** In `card.schema.json` the envelope is fully machine-readable,
-but `details` is a bare `object` whose entire per-type contract is one ~9,000-character prose
-`description` string — no `oneOf`, no `if/then`, no `$defs`. An editor cannot build a form from
-prose, so the per-type tables below are the missing half, transcribed from the renderer.
+**Where the machine contract lives.** In `card.schema.json` the envelope is fully
+machine-readable; `details` stays a bare `object` there (its `description` is a generated
+compact digest), and its per-type contract is [`data/details.json`](../data/details.json) —
+fields, controls, lookups, shared shapes, conditional gates. `details.build.js` compiles it
+into the card editor (`cms/editors/card/src/details.data.js`) and regenerates the tables
+below; `details.lint.js` fails the build when the manifest, `render.js` and the corpus
+disagree.
 
 ---
 
@@ -84,7 +87,7 @@ The fields every card has, whatever its type.
 | Field | Type | Loc. | Req. | Control | Lookup / notes |
 |---|---|---|---|---|---|
 | `internalName` | string | no | **yes** | text | the CMS `displayField`; locale-independent, free-form |
-| `schemaType` | select | no | **yes** | select | § Discriminator — 52 values, default `content` |
+| `schemaType` | select | no | **yes** | select | § Discriminator — 54 values, default `content`; the editor groups the dropdown by the eleven `schema.html` sections (`groups` in the manifest) |
 | `chip` | object \| array | — | — | fieldset / repeater | text-column status flag. **Not the same as `furniture.chip`** |
 | `cover` | url | no | — | url | makes the whole card a link |
 | `eyebrow` | string | yes | — | text | |
@@ -172,9 +175,17 @@ other changes which renderer runs, not the emitted itemtype.
 ### Fields some types take from `details`
 
 Four types fill the envelope's `subheadline` from `details` instead
-(`SUBHEADLINE_SLOT`): `profile` and `artist` use `{jobTitle, organization}`, `music` uses
-`{artist, artistUrl}`, `product` uses `{brand, brandUrl}`. An editor should show those under the
-type panel, not the Basics group.
+(`SUBHEADLINE_SLOT`). An editor should show those fields under the type panel, not the Basics
+group:
+
+<!-- details:subheadline -->
+| schemaType | Fields filling the envelope subheadline |
+|---|---|
+| `product` | `brand` |
+| `profile` | `jobTitle` `organization` |
+| `music` | `artist` `artistUrl` |
+| `artist` | `jobTitle` `organization` |
+<!-- /details -->
 
 **`paywalled`** (boolean) is accepted in `details` on any type whose itemtype is a CreativeWork,
 Event or Place — including `article`, `news` and `content`, which otherwise take no `details`.
@@ -233,30 +244,34 @@ ignores a display twin. Do not go hunting for a mapping that does not exist.
 
 ## Per-type `details`
 
-**Four types are envelope-only** and take no `details` at all: `content`, `article`, `news`,
-`quote`. The remaining **48** are below.
+<!-- details:counts -->
+**4 types are envelope-only** — no `DETAILS` renderer: `content`, `article`, `news`, `quote` (`article` and `news` still accept `details.subtype`, and every PAYWALL_TYPES member accepts `details.paywalled`). The remaining **50** are below.
+<!-- /details -->
 
 `→ name` in the Lookup column points at § Shared sub-shapes; a `SCREAMING_CASE` name points at
 § Lookups.
 
 ### `product` — Product
 
+<!-- details:fields type=product -->
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
-| `rating` | object | fieldset | → rating |
-| `price` | object | fieldset | → price; + discountText |
+| `rating` | object | fieldset | {value, max, count} |
+| `price` | object | fieldset | {current, original, currency, discountText} |
 | `availability` | string | text |  |
 | `validUntil` | date | date |  |
 | `validUntilDisplay` | string | text | display twin |
 | `sku` | string | text |  |
 | `brand` | string | text | → Brand.name, rendered in the subheadline slot |
-| `brandUrl` | url | url | crawlable `<a itemprop="url">` around the brand name |
-| `subtype` | select | select | SUBTYPES.product (8) |
-| `variants` | object | fieldset | variesBy[] ∈ VARIANT_AXES · productGroupID · control ∈ VARIANT_CONTROLS · items[] · tile · layout |
-| `reviews` | array | repeater | detail pages only, never the teaser |
+| `brandUrl` | url | url | crawlable &lt;a itemprop="url"&gt; around the brand name |
+| `subtype` | select | select | SUBTYPES.product |
+| `variants` | object | fieldset | {variesBy, productGroupID, control, tile, layout, items} · ProductGroup — emits only when subtype resolves to ProductGroup |
+| `reviews` | array | repeater | {author, rating, max, datePublished, dateDisplay, context, headline, body} · detail pages only, never the teaser |
+<!-- /details -->
 
 ### `event` — Event
 
+<!-- details:fields type=event -->
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
 | `startDate` | datetime | datetime |  |
@@ -264,53 +279,63 @@ ignores a display twin. Do not go hunting for a mapping that does not exist.
 | `dateDisplay` | string | text | display twin |
 | `attendanceMode` | select | select | ATTENDANCE_MODES |
 | `status` | string | text |  |
+| `subtype` | select | select | SUBTYPES.event |
 | `location` | object | fieldset | {name, address} |
 | `organizer` | object | fieldset | {name} |
-| `offers` | array | repeater | {currency, availability, validThrough, name, price} |
+| `offers` | array | repeater | {name, price, currency, availability, validThrough} |
+<!-- /details -->
 
 ### `recipe` — Recipe
 
+<!-- details:fields type=recipe -->
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
-| `prepTime` | string | text | ISO 8601 duration |
-| `cookTime` | string | text | ISO 8601 |
+| `prepTime` | string | text | ISO 8601 duration, e.g. PT15M |
+| `cookTime` | string | text | ISO 8601 duration |
 | `servings` | number | number |  |
-| `ingredients` | array | repeater | strings |
-| `instructions` | array | repeater | strings |
+| `ingredients` | array | repeater |  |
+| `instructions` | array | repeater | → HowToStep accordion |
+<!-- /details -->
 
 ### `review` — Review
 
+<!-- details:fields type=review -->
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
-| `rating` | object | fieldset | → rating |
-| `aggregateRating` | object | fieldset | → rating |
-| `reviewer` | object | fieldset | {name, title, verified} |
+| `rating` | object | fieldset | {value, max, count} |
+| `aggregateRating` | object | fieldset | {value, max, count} |
+| `reviewer` | object | fieldset | {name, title, avatar, verified} |
 | `reviewDate` | date | date |  |
 | `reviewDateDisplay` | string | text | display twin |
+| `reviewerVerifiedText` | string | text | override for the "Verified purchase" badge |
 | `reviewedType` | select | select | REVIEWED_TYPES |
 | `productReviewed` | string | text |  |
-| `productImage` | url | media |  |
+| `productImage` | url | url |  |
 | `productPrice` | object | fieldset | {amount, currency, current} |
+<!-- /details -->
 
 ### `job` — JobPosting
 
+<!-- details:fields type=job -->
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
 | `company` | string | text |  |
 | `industry` | string | text | suppressed when the envelope owns it |
-| `employmentType` | string | text |  |
+| `employmentType` | string | text | e.g. FULL_TIME |
 | `employmentTypeDisplay` | string | text | display twin |
 | `location` | string | text |  |
 | `locationCountry` | string | text | ISO country code |
 | `salaryRange` | object | fieldset | {min, max, currency, period, periodDisplay} |
 | `applicationDeadline` | date | date |  |
 | `applicationDeadlineDisplay` | string | text | display twin |
-| `employerRating` | object | fieldset | {value, count, max, organization, sameAs} — a 2nd top-level item |
-| `qualifications` | array | repeater | strings |
-| `benefits` | array | repeater | strings |
+| `employerRating` | object | fieldset | {value, count, max, organization, sameAs} · a 2nd top-level item (EmployerAggregateRating) |
+| `qualifications` | array | repeater |  |
+| `benefits` | array | repeater |  |
+<!-- /details -->
 
 ### `course` — Course
 
+<!-- details:fields type=course -->
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
 | `duration` | string | text |  |
@@ -318,12 +343,14 @@ ignores a display twin. Do not go hunting for a mapping that does not exist.
 | `difficultyLevel` | string | text |  |
 | `instructor` | object | fieldset | {name, title} |
 | `provider` | string | text |  |
-| `price` | object | fieldset | → price |
-| `prerequisites` | array | repeater | strings |
-| `learningOutcomes` | array | repeater | strings |
+| `price` | object | fieldset | {current, original, currency, discountText} |
+| `prerequisites` | array | repeater | string items allowed · {text, icon, href, itemprop} |
+| `learningOutcomes` | array | repeater | string items allowed · {text, icon, href, itemprop} |
+<!-- /details -->
 
 ### `booking` — Reservation
 
+<!-- details:fields type=booking -->
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
 | `serviceName` | string | text |  |
@@ -331,42 +358,53 @@ ignores a display twin. Do not go hunting for a mapping that does not exist.
 | `capacity` | number | number |  |
 | `duration` | string | text |  |
 | `price` | object | fieldset | {hourlyRate, currency} |
-| `amenities` | array | repeater | strings |
+| `amenities` | array | repeater | string items allowed · {text, icon, href, itemprop} |
 | `cancellationPolicy` | text | textarea |  |
 | `specialRequests` | text | textarea |  |
+<!-- /details -->
 
 ### `poll` — Question
 
+<!-- details:fields type=poll -->
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
 | `options` | array | repeater | {headline, votes} |
 | `totalVotes` | number | number |  |
+| `closes` | date | date |  |
 | `closesDisplay` | string | text | display twin |
+<!-- /details -->
 
 ### `profile` — Person
 
+<!-- details:fields type=profile -->
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
-| `jobTitle` | string | text | SUBHEADLINE_SLOT |
-| `organization` | string | text | SUBHEADLINE_SLOT |
+| `jobTitle` | string | text | subheadline slot |
+| `organization` | string | text | subheadline slot |
 | `location` | string | text |  |
-| `contacts` | array | repeater | → contacts |
+| `contacts` | array | repeater | {type, value, label} |
+<!-- /details -->
 
 ### `faq` — FAQPage
 
+<!-- details:fields type=faq -->
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
-| `items` | array | repeater | {question, answer} → accordion |
+| `items` | array | repeater | {question, answer} · → accordion |
+<!-- /details -->
 
 ### `timeline` — EventSeries
 
+<!-- details:fields type=timeline -->
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
-| `items` | array | repeater | {date, endDate, location, headline, text, theme} |
+| `items` | array | repeater | {date, endDate, headline, location, locationUrl, text, theme} |
 | `locationUrl` | url | url | emits a VirtualLocation |
+<!-- /details -->
 
 ### `gallery` — ImageGallery
 
+<!-- details:fields type=gallery -->
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
 | `albumName` | string | text |  |
@@ -376,9 +414,11 @@ ignores a display twin. Do not go hunting for a mapping that does not exist.
 | `creator` | string | text |  |
 | `creditText` | string | text |  |
 | `copyrightNotice` | string | text |  |
+<!-- /details -->
 
 ### `statistic` — Observation
 
+<!-- details:fields type=statistic -->
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
 | `metricName` | string | text |  |
@@ -389,9 +429,11 @@ ignores a display twin. Do not go hunting for a mapping that does not exist.
 | `trendPercentage` | number | number |  |
 | `comparisonPeriod` | string | text |  |
 | `note` | text | textarea |  |
+<!-- /details -->
 
 ### `achievement` — EducationalOccupationalCredential
 
+<!-- details:fields type=achievement -->
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
 | `status` | string | text |  |
@@ -403,24 +445,28 @@ ignores a display twin. Do not go hunting for a mapping that does not exist.
 | `skillLevel` | string | text |  |
 | `credentialId` | string | text |  |
 | `verificationUrl` | url | url |  |
+<!-- /details -->
 
 ### `goal` — AchieveAction
 
+<!-- details:fields type=goal -->
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
-| `status` | string | select | `active` `completed` `failed` `potential` — mapped to ActionStatusType URLs; anything else emits no actionStatus |
+| `status` | select | select | GOAL_STATUS · mapped to ActionStatusType URLs; anything else emits no actionStatus |
 | `startDate` | date | date |  |
 | `endDate` | date | date |  |
-| `dateRangeDisplay` | string | text | display twin for the span |
+| `dateRangeDisplay` | string | text | display twin |
 | `agentName` | string | text | agent → Person |
-| `target` | object | fieldset | {name, value, unitText} — object → QuantitativeValue (the goal) |
-| `current` | object | fieldset | {value, unitText} — result → QuantitativeValue (progress so far) |
+| `target` | object | fieldset | {name, value, unitText} · → QuantitativeValue (the goal) |
+| `current` | object | fieldset | {value, unitText} · → QuantitativeValue (progress so far) |
 | `progressLabel` | string | text | the ring's small caption |
-| `progressDisplay` | string | text | human line, e.g. "6 of 10 minutes" |
-| `hue` | string | select | ring theme — the nine-hue allowlist; unknown values drop the attribute |
+| `progressDisplay` | string | text | display twin · human line, e.g. "6 of 10 minutes" |
+| `hue` | select | select | HUES · ring theme; unknown values drop the attribute |
+<!-- /details -->
 
 ### `announcement` — SpecialAnnouncement
 
+<!-- details:fields type=announcement -->
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
 | `announcementType` | string | text |  |
@@ -429,34 +475,40 @@ ignores a display twin. Do not go hunting for a mapping that does not exist.
 | `effectiveDate` | object | fieldset | {start, startDisplay, end, endDisplay} |
 | `targetAudience` | string | text |  |
 | `actionRequired` | text | textarea |  |
+<!-- /details -->
 
 ### `business` — LocalBusiness
 
+<!-- details:fields type=business -->
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
-| `subtype` | select | select | SUBTYPES.business (31) |
-| `businessType` | select | select | legacy alias, subtype wins |
-| `address` | object | fieldset | → address |
-| `geo` | object | geopoint | → geo |
+| `subtype` | select | select | SUBTYPES.business |
+| `businessType` | string | text | legacy alias — subtype wins; new content should not write it |
+| `address` | object | fieldset | {streetAddress, postalCode, addressLocality, addressRegion, addressCountry} |
+| `geo` | object | geopoint | {latitude, longitude, url, links} |
 | `telephone` | string | tel |  |
 | `email` | string | email |  |
 | `website` | url | url |  |
 | `priceRange` | string | text |  |
-| `rating` | object | fieldset | → rating |
-| `sameAs` | array | repeater | urls |
+| `rating` | object | fieldset | {value, max, count} |
+| `sameAs` | array | repeater |  |
 | `foundingDate` | date | date |  |
-| `openingHours` | array | repeater | → openingHours |
+| `openingHours` | array | repeater | {schema, days, time, display} |
+<!-- /details -->
 
 ### `comparison` — ItemList
 
+<!-- details:fields type=comparison -->
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
 | `items` | array | repeater | {name, price, image, score, scoreDisplay} |
 | `recommendation` | string | text |  |
 | `summary` | text | textarea |  |
+<!-- /details -->
 
 ### `contact` — ContactPoint
 
+<!-- details:fields type=contact -->
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
 | `contactType` | string | text |  |
@@ -465,143 +517,181 @@ ignores a display twin. Do not go hunting for a mapping that does not exist.
 | `availableHoursDisplay` | string | text | display twin |
 | `responseTime` | string | text |  |
 | `languages` | array | repeater | array OR comma-separated string |
-| `contactMethods` | array | repeater | → contacts |
+| `contactMethods` | array | repeater | {type, value, label} |
+<!-- /details -->
 
 ### `location` — Place
 
+<!-- details:fields type=location -->
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
-| `subtype` | select | select | SUBTYPES.location (21) |
-| `address` | object | fieldset | → address |
-| `geo` | object | geopoint | → geo; also feeds the map frame and the external-map link row ([card.md § External map links](./card.md#external-map-links)) |
-| `openingHours` | array | repeater | → openingHours |
+| `subtype` | select | select | SUBTYPES.location |
+| `address` | object | fieldset | {streetAddress, postalCode, addressLocality, addressRegion, addressCountry} |
+| `geo` | object | geopoint | {latitude, longitude, url, links} · also feeds the map frame and the external-map link row |
+| `openingHours` | array | repeater | {schema, days, time, display} |
 | `hours` | string | text | plain-string alternative to openingHours |
 | `contact` | string | text |  |
-| `amenities` | array | repeater | string OR {text, icon, href, itemprop} |
+| `amenities` | array | repeater | string items allowed · {text, icon, href, itemprop} |
+<!-- /details -->
 
 ### `places` — ItemList
 
+<!-- details:fields type=places -->
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
 | `kind` | select | select | PLACE_KINDS |
-| `items` | array | repeater | shape depends on kind |
-| `center` | object | geopoint | map centre — NOT details.geo |
-| `regionDisplay` | string | text |  |
+| `items` | array | repeater | shape depends on kind — LocalBusiness rows (name, url, branchCode, geo, address, telephone, openingHours[]) or residence rows (type ∈ RESIDENCE_TYPES, name, url, image, imageAlt, datePosted, price{amount,currency}, geo, address, floorSize, numberOfBedrooms, numberOfRooms, yearBuilt) |
+| `center` | object | geopoint | {latitude, longitude, url} · map centre — NOT details.geo |
+| `regionDisplay` | string | text | display twin |
 | `order` | select | select | ITEM_LIST_ORDERS |
 | `ordered` | boolean | toggle |  |
 | `description` | text | textarea |  |
 | `list` | string | text | "sr" renders the list screen-reader-only |
 | `slides` | boolean | toggle | turns the frame into a carousel |
-| `slide` | object | fieldset | {variant, media, content, cta} — only when slides |
+| `slide` | object | fieldset | only when `slides` · {variant, media, content, cta} |
+<!-- /details -->
+
+### `filelist` — ItemList
+
+<!-- details:fields type=filelist -->
+| Key | Type | Control | Lookup / notes |
+|---|---|---|---|
+| `files` | array | repeater | {name, type, size, url, download} |
+| `description` | text | textarea | fallback only — the envelope summary owns description when filled |
+| `note` | text | textarea |  |
+<!-- /details -->
 
 ### `membership` — Offer
 
+<!-- details:fields type=membership -->
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
 | `price` | object | fieldset | {monthly, yearly, currency, savings} |
 | `trialPeriod` | string | text |  |
 | `trialText` | string | text |  |
-| `features` | array | repeater | strings |
-| `limitations` | array | repeater | strings |
+| `features` | array | repeater |  |
+| `limitations` | array | repeater |  |
 | `isPopular` | boolean | toggle |  |
 | `popularText` | string | text |  |
+<!-- /details -->
 
 ### `social` — SocialMediaPosting
 
+<!-- details:fields type=social -->
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
+| `subtype` | select | select | SUBTYPES.social |
 | `platform` | string | text |  |
 | `author` | string | text | suppressed when the envelope owns it |
+<!-- /details -->
 
 ### `software` — SoftwareApplication
 
+<!-- details:fields type=software -->
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
+| `subtype` | select | select | SUBTYPES.software |
 | `version` | string | text |  |
 | `applicationCategory` | string | text |  |
-| `operatingSystem` | array | repeater | strings |
+| `operatingSystem` | array | repeater |  |
 | `developer` | object | fieldset | {name, website} |
 | `price` | object | fieldset | {current, currency, note} |
 | `fileSize` | string | text |  |
-| `systemRequirements` | text | textarea |  |
+| `systemRequirements` | object | fieldset | {processor, ram, storage} · one readable line, or {processor, ram, storage} |
+<!-- /details -->
 
 ### `organization` — Organization
 
+<!-- details:fields type=organization -->
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
-| `subtype` | select | select | SUBTYPES.organization (22) |
+| `subtype` | select | select | SUBTYPES.organization |
 | `foundingDate` | date | date |  |
 | `foundingDateDisplay` | string | text | display twin |
 | `numberOfEmployees` | number | number |  |
-| `sameAs` | array | repeater | urls |
+| `sameAs` | array | repeater |  |
 | `email` | string | email |  |
 | `headquarters` | object | fieldset | {address, geo} |
-| `offices` | array | repeater | {name, address, geo, telephone, email, openingHours[]} |
+| `offices` | array | repeater | {name, address, geo, telephone, email, openingHours} |
+<!-- /details -->
 
 ### `video` — VideoObject
 
+<!-- details:fields type=video -->
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
-| `durationDisplay` | string | text | display twin |
+| `durationDisplay` | string | text | display twin · the machine duration lives on the media item |
 | `viewsDisplay` | string | text | display twin |
 | `creator` | object | fieldset | {name} |
+<!-- /details -->
 
 ### `howto` — HowTo
 
+<!-- details:fields type=howto -->
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
-| `totalTime` | string | text | ISO 8601 |
+| `totalTime` | string | text | ISO 8601 duration |
 | `estimatedCost` | object | fieldset | {value, currency} |
 | `difficulty` | string | text |  |
-| `supplies` | array | repeater | strings |
-| `tools` | array | repeater | strings |
-| `steps` | array | repeater | {name, text} → accordion |
+| `supplies` | array | repeater |  |
+| `tools` | array | repeater |  |
+| `steps` | array | repeater | {name, text} · → accordion |
+<!-- /details -->
 
 ### `qa` — QAPage
 
+<!-- details:fields type=qa -->
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
 | `question` | text | textarea |  |
 | `upvotes` | number | number |  |
 | `answers` | array | repeater | {text, author, upvotes, accepted} |
+<!-- /details -->
 
 ### `podcast` — PodcastEpisode
 
+<!-- details:fields type=podcast -->
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
 | `seriesName` | string | text |  |
 | `episodeNumber` | number | number |  |
-| `duration` | string | text | ISO 8601 |
+| `duration` | string | text | ISO 8601 duration |
 | `durationDisplay` | string | text | display twin |
 | `audioUrl` | url | url |  |
+<!-- /details -->
 
 ### `movie` — Movie
 
+<!-- details:fields type=movie -->
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
 | `dateReleased` | date | date |  |
 | `dateReleasedDisplay` | string | text | display twin |
-| `duration` | string | text | ISO 8601 |
+| `duration` | string | text | ISO 8601 duration |
 | `durationDisplay` | string | text | display twin |
 | `contentRating` | string | text |  |
-| `rating` | object | fieldset | → rating |
+| `rating` | object | fieldset | {value, max, count} |
 | `director` | object | fieldset | {name, label} |
-| `actors` | array | repeater | strings |
+| `actors` | array | repeater |  |
+<!-- /details -->
 
 ### `book` — Book
 
+<!-- details:fields type=book -->
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
-| `isbn` | string | text | see the format-detection note in schema.md § Book |
+| `isbn` | string | text | shown raw — the page carries the format-detection meta (schema.md § Book) |
 | `numberOfPages` | number | number |  |
 | `bookFormat` | select | select | BOOK_FORMATS |
 | `bookFormatDisplay` | string | text | display twin |
 | `publisher` | string | text |  |
-| `rating` | object | fieldset | → rating |
-| `price` | object | fieldset | → price |
+| `rating` | object | fieldset | {value, max, count} |
+| `price` | object | fieldset | {current, original, currency, discountText} |
+<!-- /details -->
 
 ### `dataset` — Dataset
 
+<!-- details:fields type=dataset -->
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
 | `license` | url | url |  |
@@ -609,62 +699,75 @@ ignores a display twin. Do not go hunting for a mapping that does not exist.
 | `temporalCoverage` | string | text | ISO 8601 interval |
 | `temporalCoverageDisplay` | string | text | display twin |
 | `spatialCoverage` | string | text |  |
-| `variableMeasured` | array | repeater | strings |
-| `distribution` | array | repeater | {format, url} |
+| `variableMeasured` | array | repeater |  |
+| `distribution` | array | repeater | {format, url, size} |
+<!-- /details -->
 
 ### `claim` — ClaimReview
 
+<!-- details:fields type=claim -->
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
 | `claim` | text | textarea |  |
 | `claimant` | string | text |  |
 | `reviewDate` | date | date |  |
 | `verdict` | object | fieldset | {value, max, label} |
+<!-- /details -->
 
 ### `loyalty` — MemberProgram
 
+<!-- details:fields type=loyalty -->
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
 | `hostingOrganization` | string | text |  |
 | `joinUrl` | url | url |  |
 | `joinText` | string | text |  |
-| `tiers` | array | repeater | {name, pointsEarned, url, requirement, requirementAmount{currency,value}, requirementNote, benefits[]{type ∈ TIER_BENEFITS, text}} |
+| `joinIcon` | select | select | ICON_NAMES |
+| `tiers` | array | repeater | {name, pointsEarned, url, requirement, requirementAmount, requirementNote, benefits} |
+<!-- /details -->
 
 ### `quiz` — Quiz
 
+<!-- details:fields type=quiz -->
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
-| `format` | select | select | QUIZ_FORMATS — falls back to flashcard |
+| `format` | select | select | QUIZ_FORMATS · falls back to flashcard |
 | `subject` | string | text |  |
 | `pace` | string | text |  |
-| `cards` | array | repeater | {question, answer, options[]{text, correct}} |
+| `cards` | array | repeater | {question, answer, options} |
+<!-- /details -->
 
 ### `service` — Service
 
+<!-- details:fields type=service -->
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
 | `serviceType` | string | text |  |
 | `provider` | string | text |  |
 | `areaServed` | string | text |  |
-| `catalog` | object | fieldset | {name, period, items[]{name, price, currency}} |
-| `channel` | object | fieldset | {languages[], processingTime, url, urlText, telephone, contactType} |
+| `catalog` | object | fieldset | {name, period, items} |
+| `channel` | object | fieldset | {languages, processingTime, url, urlText, urlIcon, telephone, contactType} |
+<!-- /details -->
 
 ### `realestate` — RealEstateListing
 
+<!-- details:fields type=realestate -->
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
-| `property` | object | fieldset | {type ∈ RESIDENCE_TYPES, name, floorLevel, petsAllowed, floorSize, floorSizeUnit (MTK), floorSizeLabel (m²), bedrooms, bathrooms, rooms, yearBuilt, address, geo, amenities[]} |
+| `property` | object | fieldset | {type, name, floorLevel, petsAllowed, floorSize, floorSizeUnit, floorSizeLabel, bedrooms, bathrooms, rooms, yearBuilt, address, geo, amenities} |
 | `price` | object | fieldset | {amount, currency, note} |
 | `datePosted` | date | date |  |
 | `datePostedDisplay` | string | text | display twin |
 | `agent` | string | text |  |
 | `viewings` | string | text |  |
 | `availability` | string | text |  |
-| `map` | object | fieldset | provider options {key} |
+| `map` | object | fieldset | map provider options, e.g. {key} |
 | `mapMedia` | object | fieldset | the map frame's media item |
+<!-- /details -->
 
 ### `vacationrental` — VacationRental
 
+<!-- details:fields type=vacationrental -->
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
 | `additionalType` | string | text |  |
@@ -676,68 +779,78 @@ ignores a display twin. Do not go hunting for a mapping that does not exist.
 | `checkinDisplay` | string | text | display twin |
 | `checkoutDisplay` | string | text | display twin |
 | `languages` | array | repeater | BCP 47 tags |
-| `rating` | object | fieldset | → rating |
-| `geo` | object | geopoint | → geo; rides the ROOT — this type IS a Place |
-| `address` | object | fieldset | → address |
-| `property` | object | fieldset | {additionalType, name, petsAllowed, floorSize, …, sleeps, beds[]{count, type, icon}, amenities[]} → containsPlace |
-| `map` | object | fieldset | provider options {key} |
+| `rating` | object | fieldset | {value, max, count} |
+| `geo` | object | geopoint | {latitude, longitude, url, links} · rides the ROOT — this type IS a Place |
+| `address` | object | fieldset | {streetAddress, postalCode, addressLocality, addressRegion, addressCountry} |
+| `property` | object | fieldset | {additionalType, name, petsAllowed, floorSize, floorSizeUnit, floorSizeLabel, bedrooms, bathrooms, rooms, sleeps, beds, amenities} · → containsPlace |
+| `map` | object | fieldset | map provider options, e.g. {key} |
 | `mapMedia` | object | fieldset | the map frame's media item |
-| `reviews` | array | repeater | detail pages only |
+| `reviews` | array | repeater | {author, rating, max, datePublished, dateDisplay, context, headline, body} · detail pages only |
+<!-- /details -->
 
 ### `menu` — Menu
 
+<!-- details:fields type=menu -->
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
 | `note` | text | textarea |  |
-| `sections` | array | repeater | {name, items[]{name, price, currency, label, labelTheme, labelSize, description, diets[] ∈ RESTRICTED_DIETS, nutrition{calories, proteinContent, servingSize}}} |
+| `sections` | array | repeater | {name, items} |
+<!-- /details -->
 
 ### `tvseries` — TVSeries
 
+<!-- details:fields type=tvseries -->
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
 | `numberOfSeasons` | number | number |  |
 | `numberOfEpisodes` | number | number |  |
 | `startDate` | date | date |  |
 | `contentRating` | string | text |  |
-| `rating` | object | fieldset | → rating |
+| `rating` | object | fieldset | {value, max, count} |
 | `ordered` | boolean | toggle |  |
 | `seasons` | array | repeater | {seasonNumber, numberOfEpisodes, name, display} |
 | `director` | object | fieldset | {name, label} |
-| `actors` | array | repeater | strings |
+| `actors` | array | repeater |  |
+<!-- /details -->
 
 ### `tvepisode` — TVEpisode
 
+<!-- details:fields type=tvepisode -->
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
 | `episodeNumber` | number | number |  |
-| `duration` | string | text | ISO 8601 |
+| `duration` | string | text | ISO 8601 duration |
 | `durationDisplay` | string | text | display twin |
 | `datePublished` | date | date |  |
 | `datePublishedDisplay` | string | text | display twin |
 | `seriesName` | string | text |  |
 | `season` | object | fieldset | {seasonNumber, name} |
 | `director` | object | fieldset | {name, label} |
-| `actors` | array | repeater | strings |
+| `actors` | array | repeater |  |
+<!-- /details -->
 
 ### `medical` — MedicalWebPage
 
+<!-- details:fields type=medical -->
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
-| `specialty` | select | select | MEDICAL_SPECIALTIES (41) |
+| `specialty` | select | select | MEDICAL_SPECIALTIES |
 | `lastReviewed` | date | date |  |
 | `lastReviewedDisplay` | string | text | display twin |
 | `reviewedLabel` | string | text |  |
-| `audience` | object | fieldset | {type ∈ MEDICAL_AUDIENCES, name} |
-| `about` | object | fieldset | {type ∈ MEDICAL_ABOUT_TYPES, name, aspects[]{type ∈ MEDICAL_ASPECTS, text}} |
-| `reviewedBy` | object | fieldset | → person |
+| `audience` | object | fieldset | {type, name} |
+| `about` | object | fieldset | {type, name, aspects} |
+| `reviewedBy` | object | fieldset | {name, role, avatar} |
 | `disclaimer` | text | textarea |  |
+<!-- /details -->
 
 ### `music` — MusicAlbum
 
+<!-- details:fields type=music -->
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
-| `artist` | string | text | SUBHEADLINE_SLOT |
-| `artistUrl` | url | url | SUBHEADLINE_SLOT |
+| `artist` | string | text | subheadline slot |
+| `artistUrl` | url | url | subheadline slot |
 | `numTracks` | number | number |  |
 | `datePublished` | date | date |  |
 | `datePublishedDisplay` | string | text | display twin |
@@ -747,55 +860,65 @@ ignores a display twin. Do not go hunting for a mapping that does not exist.
 | `ordered` | boolean | toggle |  |
 | `tracks` | array | repeater | {name, position, duration, durationDisplay, artist} |
 | `note` | text | textarea |  |
+<!-- /details -->
 
 ### `musicgroup` — MusicGroup
 
+<!-- details:fields type=musicgroup -->
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
-| `genres` | array | repeater | strings |
+| `genres` | array | repeater |  |
 | `foundingDate` | date | date |  |
 | `foundingDateDisplay` | string | text | display twin |
 | `foundingLocation` | string | text |  |
 | `members` | array | repeater | {role, name} |
 | `albums` | array | repeater | {name, datePublished, numTracks, url, display} |
 | `ordered` | boolean | toggle | defaults FALSE here |
-| `sameAs` | array | repeater | urls |
+| `sameAs` | array | repeater |  |
 | `note` | text | textarea |  |
+<!-- /details -->
 
 ### `glossary` — DefinedTermSet
 
+<!-- details:fields type=glossary -->
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
 | `about` | string | text |  |
 | `note` | text | textarea |  |
-| `terms` | array | repeater | {name, termCode, description} → accordion |
+| `terms` | array | repeater | {name, termCode, description} · → accordion |
+<!-- /details -->
 
 ### `podcastseries` — PodcastSeries
 
+<!-- details:fields type=podcastseries -->
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
 | `startDate` | date | date |  |
 | `cadence` | string | text |  |
 | `episodeCount` | number | number |  |
 | `feed` | object | fieldset | {url, text} |
-| `host` | object | fieldset | → person |
+| `host` | object | fieldset | {name, role, avatar} |
 | `ordered` | boolean | toggle | defaults FALSE |
 | `episodes` | array | repeater | {episodeNumber, name, duration, durationDisplay} |
 | `note` | text | textarea |  |
+<!-- /details -->
 
 ### `comicseries` — ComicSeries
 
+<!-- details:fields type=comicseries -->
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
 | `startDate` | date | date |  |
 | `endDate` | date | date |  |
 | `cadence` | string | text |  |
-| `issn` | string | text |  |
+| `issn` | string | text | shown raw — the page carries the format-detection meta |
 | `issueCount` | number | number |  |
 | `publisher` | string | text |  |
+<!-- /details -->
 
 ### `comicissue` — ComicIssue
 
+<!-- details:fields type=comicissue -->
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
 | `issueNumber` | number | number |  |
@@ -806,18 +929,25 @@ ignores a display twin. Do not go hunting for a mapping that does not exist.
 | `coverPrice` | string | text |  |
 | `price` | object | fieldset | {current, currency, availability} |
 | `series` | object | fieldset | {name, url, issn} |
-| `artist / penciler / inker / letterer / colorist` | string | text | COMIC_ROLES |
+| `artist` | string | text | COMIC_ROLES: labelled Art |
+| `penciler` | string | text | COMIC_ROLES: labelled Pencils |
+| `inker` | string | text | COMIC_ROLES: labelled Inks |
+| `letterer` | string | text | COMIC_ROLES: labelled Letters |
+| `colorist` | string | text | COMIC_ROLES: labelled Colours |
+<!-- /details -->
 
 ### `artist` — Person
 
+<!-- details:fields type=artist -->
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
-| `jobTitle` | string | text | SUBHEADLINE_SLOT |
-| `organization` | string | text | SUBHEADLINE_SLOT |
+| `jobTitle` | string | text | subheadline slot |
+| `organization` | string | text | subheadline slot |
 | `location` | string | text |  |
 | `occupation` | object | fieldset | {name, category, since} |
-| `awards` | array | repeater | strings |
-| `sameAs` | array | repeater | urls |
+| `awards` | array | repeater |  |
+| `sameAs` | array | repeater |  |
+<!-- /details -->
 
 ---
 
@@ -842,26 +972,32 @@ Every enumerated vocabulary an editor needs, and where it comes from.
 These are allowlist `Set`s. A value off the list falls back to the default, silently — so the
 editor is the only place a mistake is catchable.
 
+<!-- details:lookups -->
 | Name | Used by | Values |
 |---|---|---|
-| `ATTENDANCE_MODES` | event | `Offline` `Online` `Mixed` |
-| `BOOK_FORMATS` | book | `Hardcover` `Paperback` `EBook` `AudiobookFormat` `GraphicNovel` |
-| `REVIEWED_TYPES` | review | `Product` `Organization` `Service` |
-| `RESIDENCE_TYPES` | realestate, places (kind=residence) | `Accommodation` `Apartment` `House` `SingleFamilyResidence` `Suite` `Room` |
-| `PLACE_KINDS` | places | `business` `residence` |
-| `ITEM_LIST_ORDERS` | places | `ItemListOrderAscending` `ItemListOrderDescending` `ItemListUnordered` |
-| `TIER_BENEFITS` | loyalty | `TierBenefitLoyaltyPoints` `TierBenefitLoyaltyPrice` `TierBenefitLoyaltyReturns` `TierBenefitLoyaltyShipping` |
-| `RESTRICTED_DIETS` | menu | `DiabeticDiet` `GlutenFreeDiet` `HalalDiet` `HinduDiet` `KosherDiet` `LowCalorieDiet` `LowFatDiet` `LowLactoseDiet` `LowSaltDiet` `VeganDiet` `VegetarianDiet` |
-| `ALBUM_PRODUCTION_TYPES` | music | `CompilationAlbum` `DJMixAlbum` `DemoAlbum` `LiveAlbum` `MixtapeAlbum` `RemixAlbum` `SoundtrackAlbum` `SpokenWordAlbum` `StudioAlbum` |
-| `ALBUM_RELEASE_TYPES` | music | `AlbumRelease` `BroadcastRelease` `EPRelease` `SingleRelease` |
-| `MEDICAL_SPECIALTIES` | medical | 41 values — read from `render.js`, too long to mirror here |
-| `MEDICAL_ABOUT_TYPES` | medical | `MedicalCondition` `Drug` `MedicalProcedure` |
-| `MEDICAL_ASPECTS` | medical | `signOrSymptom` `riskFactor` `possibleTreatment` |
-| `MEDICAL_AUDIENCES` | medical | `MedicalAudience` `Patient` |
-| `QUIZ_FORMATS` | quiz | `flashcard` (default) · `multiple-choice` |
+| `CONTACT_KINDS` | profile contact | `email` `phone` `url` |
+| `ICON_NAMES` | course booking location loyalty service realestate vacationrental | 72 values — read from the generated LOOKUPS |
 | `VARIANT_AXES` | product | `color` `size` `material` `pattern` |
 | `VARIANT_CONTROLS` | product | `list` `buttons` `collage` |
-| `HEADING_TAGS` | preset | `h2` `h3` `h4` `h5` |
+| `ATTENDANCE_MODES` | event | `Offline` `Online` `Mixed` |
+| `REVIEWED_TYPES` | review | `Product` `Organization` `Service` |
+| `HUES` | timeline goal menu | `red` `orange` `green` `blue` `accent` `black` `white` `gray` `slate` |
+| `GOAL_STATUS` | goal | `active` `completed` `failed` `potential` |
+| `PLACE_KINDS` | places | `business` `residence` |
+| `ITEM_LIST_ORDERS` | places | `ItemListOrderAscending` `ItemListOrderDescending` `ItemListUnordered` |
+| `FILE_TYPES` | filelist | `pdf` `excel` `word` `txt` `zip` |
+| `BOOK_FORMATS` | book | `Hardcover` `Paperback` `EBook` `AudiobookFormat` `GraphicNovel` |
+| `TIER_BENEFITS` | loyalty | `TierBenefitLoyaltyPoints` `TierBenefitLoyaltyPrice` `TierBenefitLoyaltyReturns` `TierBenefitLoyaltyShipping` |
+| `QUIZ_FORMATS` | quiz | `flashcard` `multiple-choice` |
+| `RESIDENCE_TYPES` | realestate | `Accommodation` `Apartment` `House` `SingleFamilyResidence` `Suite` `Room` |
+| `RESTRICTED_DIETS` | menu | `DiabeticDiet` `GlutenFreeDiet` `HalalDiet` `HinduDiet` `KosherDiet` `LowCalorieDiet` `LowFatDiet` `LowLactoseDiet` `LowSaltDiet` `VeganDiet` `VegetarianDiet` |
+| `MEDICAL_SPECIALTIES` | medical | 41 values — read from the generated LOOKUPS |
+| `MEDICAL_AUDIENCES` | medical | `MedicalAudience` `Patient` |
+| `MEDICAL_ABOUT_TYPES` | medical | `MedicalCondition` `Drug` `MedicalProcedure` |
+| `MEDICAL_ASPECTS` | medical | `signOrSymptom` `riskFactor` `possibleTreatment` |
+| `ALBUM_PRODUCTION_TYPES` | music | `CompilationAlbum` `DJMixAlbum` `DemoAlbum` `LiveAlbum` `MixtapeAlbum` `RemixAlbum` `SoundtrackAlbum` `SpokenWordAlbum` `StudioAlbum` |
+| `ALBUM_RELEASE_TYPES` | music | `AlbumRelease` `BroadcastRelease` `EPRelease` `SingleRelease` |
+<!-- /details -->
 
 ---
 
@@ -1127,8 +1263,8 @@ were fixed that day are listed underneath so they are not re-reported.
 
 | Drift | Detail |
 |---|---|
-| `details` has no machine schema | The only complete contract is `render.js`. `card.schema.json` describes it in prose. **The cheapest route in is now the jsonld extractor** — it proves the mapping is readable from the rendered output, so `oneOf` / `$defs` could be generated rather than hand-written. |
-| Renderer-only `details` keys | `format` (quiz), `variants.control`/`.tile`/`.layout`, `slides`/`slide`/`list` (places), `mapMedia`, `hours` (location's string form), `reviews[]` (product) and others are read by the renderer but absent from the schema prose. |
+| ~~`details` has no machine schema~~ | **Closed.** The machine contract is [`data/details.json`](../data/details.json) — per-type fields, controls and lookup names, built into the card editor by `details.build.js` and held against `render.js` and the whole `data/` corpus by `details.lint.js` (every `details` key in every instance must be declared, kinds must match, and an advisory check flags any `d.*` a `DETAILS` renderer reads that the manifest lacks). The tables in this document are generated from it. |
+| ~~Renderer-only `details` keys~~ | **Closed** by the same manifest — `format` (quiz), `variants.control`/`.tile`/`.layout`, `slides`/`slide`/`list` (places), `mapMedia`, `hours` (location's string form) and `reviews[]` (product) are all declared. |
 | Renderer-only envelope keys | `modifiedDisplay`, and `tags[]` in its `{name, url}` object form. |
 | Media keys not in the schema | `width`, `height`, `map`, per-item `creditText`/`copyrightNotice`. |
 | Bedroom naming split | `places` residence items use `numberOfBedrooms`/`numberOfRooms`; `realestate.details.property` uses `bedrooms`/`bathrooms`/`rooms` — 12 call sites. A rename would be gated by the SSR snapshot staying byte-identical. |
@@ -1146,20 +1282,21 @@ undocumented in the UCM format spec · `cms/baseline/CLAUDE.md` describing only 
 
 **Conditional rules that must be honoured.** These are the only places the form changes shape:
 
-1. `subtype` is visible for exactly 8 of the 54 types, and its options depend on which.
+1. `subtype` is visible for exactly 9 of the 54 types (the `SUBTYPES` families — including
+   `article` and `news`, which are otherwise envelope-only), and its options depend on which.
 2. The whole `details` panel swaps on `schemaType`; 4 types have no panel at all.
 3. `media[]` item fields branch on `mediaType` — `zoom`/`provider`/`latitude`/`longitude` only
    for `map`, `map` only for `places`, `uploadDate`/`duration`/`description` only for `video`.
 4. `details.slides` (places) unlocks `details.slide`.
-5. `profile`, `artist` and `music` move `subheadline` into the type panel.
+5. `profile`, `artist`, `music` and `product` move `subheadline` into the type panel
+   (`SUBHEADLINE_SLOT` — see § Fields some types take from `details`).
 
-**Reuse `ui/data/entry`, not `editor-card`.** `cms/editors/card` is the previous generation
-(25 types, 6 field types, options as inline `enum` arrays where the value doubles as the label,
-and a declared `boolean` type that renders nothing because `_renderField` has no branch for it).
-`ui/data/entry` is the repo's real schema-driven form engine: 16 render methods and — the piece
-that matters here — **named external lookups**, where `options: "subtype"` resolves against a
-lookup endpoint returning `{value, label}` pairs. Every vocabulary in this document can be
-served that way instead of frozen into the schema.
+**The reference implementation is `cms/editors/card` (`<editor-card>`).** It renders every
+table in this document from the generated `src/details.data.js` — the schemaType dropdown
+(grouped by the eleven `schema.html` sections), the per-type panels, the materialized lookup
+vocabularies, the `requires` gates and the round-trip guarantees. A CMS that cannot embed the
+web component can build its own form from the same file, or from `data/details.json` directly;
+nothing in this document needs to be transcribed by hand.
 
 **Import `data/tokens.data.js`, not `data/tokens.json`.** It is a byte-for-byte ES-module
 mirror of the manifest, importable in Node and the browser without JSON import attributes. It

@@ -156,6 +156,7 @@ Package-local gates that the root does **not** reach (run them from the repo roo
 node ui/card/tokens.build.js && node ui/card/tokens.lint.js   # token manifest ↔ CSS sync
 node --test ui/card/render.test.js                            # renderer suite
 node ui/card/schema.compare.js                                # renderer ↔ demo/schema.html
+node ui/card/details.build.js && node ui/card/details.lint.js # details manifest ↔ render.js ↔ corpus ↔ editor
 cd ui/icon && npm run build:icons                             # icon webfont; needs python3 fonttools
 cd layout && npm run build:all                                # CSS + maps + demos + icons
 ```

@@ -829,7 +829,7 @@ const creditsPart = (d) =>
    ComicIssue's OWN properties (shared with ComicStory) and a ComicSeries carries none of
    them, which is why they belong to the ISSUE card and not the series. Order is the
    masthead order, not alphabetical. Docs: docs/schema.md § Comic issue */
-const COMIC_ROLES = [['artist', 'Art'], ['penciler', 'Pencils'], ['inker', 'Inks'], ['letterer', 'Letters'], ['colorist', 'Colours']];
+export const COMIC_ROLES = [['artist', 'Art'], ['penciler', 'Pencils'], ['inker', 'Inks'], ['letterer', 'Letters'], ['colorist', 'Colours']];
 const comicCredits = (d) => {
 	const rows = COMIC_ROLES.filter(([key]) => d[key])
 		.map(([key, label]) => `${keyed(label)}<span${scope(key, 'Person')}><span itemprop="name">${esc(d[key])}</span></span>`);
@@ -1820,7 +1820,7 @@ export const ITEM_LIST_ORDERS = new Set(['ItemListOrderAscending', 'ItemListOrde
    and neither may ever interpolate author data. An unknown kind falls back to the
    generic `draft` glyph and emits NO encodingFormat: every row still carries a glyph,
    since a partially-iconed list renders mixed markers. Docs: docs/schema.md § File list ── */
-const FILE_TYPES = {
+export const FILE_TYPES = {
 	pdf: { icon: 'picture-as-pdf', mime: 'application/pdf', label: 'PDF' },
 	excel: { icon: 'table-view', mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', label: 'Excel' },
 	word: { icon: 'description', mime: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', label: 'Word' },
