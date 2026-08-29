@@ -299,8 +299,8 @@ content and belong in the card's `media[]` items. Bare booleans like `clip`, `au
 |----|---------|------|---------------------|
 | `stack` | ui-card | `col` · 16:9 | content, article, recipe, booking, achievement, social, video, qa, podcast, dataset, claim |
 | `stack-boxed-offices` | ui-card | + `parts.office: "box brd"` · `parts.officeTheme: "gray light"` — each office a `data-theme` + `data-box="brd"` plate with a hairline | organization |
-| `showcase` | ui-card | `col` · 4:3 | product, movie, bookseries |
-| `stack-square` | ui-card | `col` · 1:1 | music, musicgroup, podcastseries, book |
+| `showcase` | ui-card | `col` · 4:3 | product, movie, bookseries, book |
+| `stack-square` | ui-card | `col` · 1:1 | music, musicgroup, podcastseries |
 | `stack-portrait` | ui-card | `col` · 2:3 | comicseries, comicissue |
 | `split` | ui-card | `row spl(1/2)` · 4:3 | news, course, business |
 | `split-reverse` | ui-card | `row-r spl(2/1)` · 1:1 | contact |
