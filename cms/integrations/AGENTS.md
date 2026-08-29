@@ -4,9 +4,9 @@
 
 The `cms` directory contains **CMS-specific wrappers** that adapt browser.style UI components for embedding within Content Management Systems. These are HTML-based Contentful Apps that wrap web components as custom field editors.
 
-**Component Type:** Contentful App wrappers (HTML + inline JavaScript)
+**Component Type:** CMS field-editor wrappers (HTML + inline JavaScript)
 
-**Supported CMS:** Contentful, Umbraco
+**Supported CMS:** Contentful, Umbraco, Contentstack (color), Storyblok (color)
 
 **Key architectural decisions:**
 - **HTML-based wrappers**: Each wrapper is an HTML page, not a JavaScript module
@@ -55,39 +55,52 @@ If SDK unavailable → Fallback to standalone mode
 
 ## File Structure
 
+Each wrapper directory is `[component]/index.html` (+ `icon.svg` where the platform wants one).
+
 ```
-cms/
-├── AGENTS.md                          # This documentation
-├── contentful/
-│   ├── README.md                      # Setup instructions
-│   ├── editor-image-text-alttext/     # Accessible Image (alt + longdesc)
-│   │   ├── index.html
-│   │   └── icon.svg
-│   ├── editor-csp/
-│   │   └── index.html                 # CSP editor wrapper
-│   ├── editor-manifest/
-│   │   └── index.html                 # Manifest editor wrapper
-│   ├── editor-robots/
-│   │   └── index.html                 # Robots.txt editor wrapper
-│   └── editor-security/
-│       └── index.html                 # Security.txt editor wrapper
-└── umbraco/
-    ├── README.md
-    ├── editor-image-text-alttext/     # Accessible Image (alt + longdesc)
-    │   └── index.html
-    ├── editor-card/
-    │   └── index.html
-    ├── editor-csp/
-    │   └── index.html
-    ├── editor-manifest/
-    │   └── index.html
-    ├── editor-robots/
-    │   └── index.html
-    └── editor-security/
-        └── index.html
+cms/integrations/
+├── AGENTS.md                # This documentation
+├── contentful/              # README.md (setup) + card, color, csp, image-text,
+│                            # manifest, robots, security, taxonomy
+├── umbraco/                 # README.md (postMessage protocol) + card, csp,
+│                            # image-text, manifest, robots, security
+├── contentstack/            # color
+└── storyblok/               # color (@storyblok/field-plugin)
 ```
 
 ## Wrapper Implementations
+
+### card/index.html — the card model's details editor
+
+Binds `<editor-card>` (v2 — `cms/editors/card`) to the card content type's single JSON
+field. This is the "one model, one dropdown, one JSON field" integration: the card
+content model has native CMS fields for the envelope, and this wrapper edits the
+`{ schemaType, details }` pair stored in the **`details`** field.
+
+**Component Property:** `value` — accepts the stored object (Contentful Object field)
+or a JSON string (Umbraco stores stringified JSON); legacy `{ type, ... }` payloads
+load without loss.
+
+**Event Name:** `change` — `event.detail` is the `{ schemaType, details }` **object**,
+passed straight to `api.field.setValue()`.
+
+**Sibling-field denormalisation:** the chosen `schemaType` is copied into
+`entry.fields['schemaType'] || ['cardType'] || ['card_type'] || ['type']` (when the
+content type has such a field) so the CMS can filter and list on the type without
+parsing JSON.
+
+**Umbraco:** same component over the postMessage protocol; `init`/`setValue` accept
+object or string, `valueChanged` carries the object, `getState` replies with the JSON
+string (`editor.value`). The component's `ready` promise resolves (v2), so
+`waitForReady` is a real gate, not a no-op.
+
+**Porting to Contentstack / Storyblok:** the shape ports directly — Contentstack's
+`json` field type stores the `change` detail object as-is (follow the
+`contentstack/color` wrapper pattern); Storyblok's field-plugin stores stringified
+JSON, so persist `editor.value` (the string) instead of the event detail (follow
+`storyblok/color`). Nothing card-specific changes; only the SDK plumbing does.
+
+---
 
 ### editor-csp/index.html (121 lines)
 
@@ -332,6 +345,7 @@ await Promise.race([
 
 | Wrapper | Component | Event Name | Event Detail | Contentful Action |
 |---------|-----------|------------|--------------|-------------------|
+| card | `<editor-card>` | `change` | `{ schemaType, details }` | `setValue(detail)` + sibling schemaType sync |
 | editor-image-text-alttext | `<editor-image-text>` | `change` | `{ alt, longdesc }` | `setValue(alt)` + cross-write `longdesc` |
 | editor-csp | `<editor-csp>` | `csp-change` | `{ policy, evaluations }` | `setValue(policy)` + validation |
 | editor-manifest | `<editor-manifest>` | `manifest-change` | manifest object | `setValue(detail)` |
@@ -346,6 +360,7 @@ await Promise.race([
 2. Set App URL: `https://browser.style/cms/integrations/contentful/[component]/`
 3. Enable **Entry field** location
 4. Select appropriate field type:
+   - Card: JSON object (the `details` field; optional sibling Short-text `schemaType` field with predefined values for filtering)
    - Accessible Image (imgtxt-alttext): Short text (attached to `alt` field)
    - CSP: JSON object
    - Manifest: JSON object
@@ -462,17 +477,14 @@ All wrappers call `api.window.startAutoResizer()` after component setup, but ifr
    - `api.field.setValue()` to persist
 4. Register app in Contentful
 
-### Other CMS Platforms (Future)
+### Other CMS Platforms
 
-```
-cms/
-├── contentful/     # Current
-├── sanity/         # Future: Sanity.io integration
-├── strapi/         # Future: Strapi integration
-└── wordpress/      # Future: WordPress Gutenberg blocks
-```
-
-Each would follow similar patterns:
+`contentstack/color` and `storyblok/color` are the working references for those two
+platforms — copy their SDK plumbing and swap the component. Per `cms/baseline/pages/UCM.md`
+§ platform tables, a JSON-object field (Contentful `Object`, Contentstack `json`) stores the
+event-detail object directly; string-storing platforms (Storyblok, Optimizely, Umbraco)
+persist the component's `value` string and the adapters auto-parse. Future candidates
+(Sanity, Strapi, WordPress) follow the same pattern:
 - SDK script loading
 - Component wrapping
 - Field value binding
