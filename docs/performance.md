@@ -189,7 +189,24 @@ src required** — `render.js` `cdnEligible` and
 zone path (404, no fallback). Exactly **one** `loading="eager" fetchpriority="high"` per
 page (the LCP candidate; never lazy a view-transition morph hero); all else
 `loading="lazy" decoding="async"`. Lazy images get `auto, `-prefixed `sizes`; **`auto` is
-spec-invalid on eager** — eager gets the list alone. The fallback list is computed per
+spec-invalid on eager** — eager gets the list alone.
+
+⚠️ **Which makes the EAGER list the only one that has to be accurate, and the LCP image is
+the one that has it.** `sizes=auto` tells the browser to use the element's real rendered
+width, so every lazy image is self-correcting on both baseline engines and its written list
+is a legacy fallback. The eager image has no such escape: whatever the list says *is* what
+the browser budgets. A list that over-declares by even a few CSS px can cost a whole rung —
+`schema.html` declared `100vw` while `body:has(lay-out)`'s `--layout-mi` insets the column
+by 32 px, so at Lighthouse-mobile (412 CSS, DPR 1.75) the browser budgeted 412 × 1.75 = 721,
+missed the 720 rung by **one pixel**, and fetched 1200w for a slot needing 665 — 43 KiB
+wasted on the LCP. Fixed by declaring the truth: `calc(100vw - 2rem)`.
+
+**Audit the eager image, not the page.** Load at 412 × 1.75, compare
+`img.getBoundingClientRect().width * devicePixelRatio` against the chosen `width=` in
+`currentSrc`, and any gap is an over-declared `sizes`. Measured 2026-08-29: **19 of 28 demo
+pages with an eager image over-fetch it**, insets ranging 12–296 px — the inset is
+*page-specific*, so there is no blanket subtraction. Only `schema.html` is fixed; the rest
+are listed in `open-items.md`. The fallback list is computed per
 enclosing `<lay-out>` from `layout/src/srcsets.js` (`generateSrcsets`/`calculateSizes`,
 whose final entry must stay `100vw`). Fixed-size images (48 px thumbs, 64 px avatars) use
 square `1x/2x` pairs, not a width ladder. CSS-background thumbs need their own transform
