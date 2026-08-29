@@ -150,6 +150,13 @@
       "variant": "col",
       "media": "asr(1/1)"
     },
+    "stack-cover": {
+      "name": "Stack Cover Preset",
+      "description": "Column card with a 3:4 media frame — book jackets and cover art that should read as a cover without running a portrait card's full height",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(3/4)"
+    },
     "stack-portrait": {
       "name": "Stack Portrait Preset",
       "description": "Column card with a 2:3 portrait media frame — book jackets, cover art, standing portraits",

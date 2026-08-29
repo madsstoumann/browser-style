@@ -13,7 +13,7 @@
     "internalName": "Demo — Book",
     "schemaType": "book",
     "preset": {
-      "$ref": "card-preset/stack-portrait"
+      "$ref": "card-preset/stack-cover"
     },
     "eyebrow": "Cookbook",
     "headline": "The Nordic Pantry",
