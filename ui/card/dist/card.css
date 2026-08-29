@@ -1138,7 +1138,7 @@
     background: var(--ui-lightbox-placeholder-bg, var(--color-overlay-light, #0000));
     border-radius: var(--ui-media-radius, 0);
     content: "";
-    min-block-size: var(--ui-lightbox-placeholder-min, var(--ui-media-min, 12.5rem));
+    min-block-size: var(--ui-media-min, 12.5rem);
   }
   :where(ui-card, ui-reveal):where([media*="asr("]):has(ui-media:popover-open) :is(cq-box, summary)::before {
     min-block-size: 0;

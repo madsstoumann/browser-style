@@ -78,13 +78,14 @@
 		background: var(--ui-lightbox-placeholder-bg, var(--color-overlay-light, #0000));
 		border-radius: var(--ui-media-radius, 0);
 		content: "";
-		min-block-size: var(--ui-lightbox-placeholder-min, var(--ui-media-min, 12.5rem));
+		min-block-size: var(--ui-media-min, 12.5rem);
 	}
 	:where(ui-card, ui-reveal):where([media*="asr("]):has(ui-media:popover-open) :is(cq-box, summary)::before {
 		min-block-size: 0;
 	}
-	/* SELF-ARM asr() — relayed by lightbox.js, NOT :has() mirrors: a [media…] needle in a
-	   :has() argument taxes every media= write page-wide. Docs: /docs/style-performance.md §8.1 */
+	/* SELF-ARM asr(): the renderer echoes the token on the HOST (never :has() mirrors —
+	   a [media…] needle in a :has() argument taxes every media= write, style-performance.md §8.1);
+	   hand-authored escape hatch: --ui-lightbox-placeholder-ar */
 
 	/* === CAROUSEL CONTROLS — native pseudos don't follow the frame into the top
 	   layer, so lightbox.js injects real elements. Docs: docs/media.md === */

@@ -341,10 +341,15 @@ justify, and — as important — the ones they rule out.
 
 ### 8.1 Rework the `:has()` rules that name DSL attributes (the one real win)
 
-> **IMPLEMENTED 2026-08-29** (same branch, bundle `demo.2bc02287.min.css`). The 10
-> lightbox `asr()` mirrors are gone — lightbox.js relays a frame-placed ratio to
-> the host once at init; the cover `nav` rule is host-arm only (card.md § cover
-> documents the constraint); the PiP rule keys on `ui-play[open]` alone.
+> **IMPLEMENTED 2026-08-29** (same branch; final bundle `demo.5819eaf5.min.css`).
+> The 10 lightbox `asr()` mirrors are gone — replaced **zero-JS**: the renderer
+> echoes a frame-placed `asr()` token onto the host at build time
+> (`render.js` `lightboxHostMedia`), so the placeholder ratio rides ordinary
+> custom-property inheritance; verified in-browser with JavaScript disabled.
+> (A first iteration used a lightbox.js relay; it was replaced the same day to
+> honour the system's CSS-first contract.) The cover `nav` rule is host-arm only
+> (card.md § cover documents the constraint); the PiP rule keys on
+> `ui-play[open]` alone.
 > **Measured after: the `media=` token flip is 2.0 ms / 39 elements** (was
 > 36.4 ms / 534) — deleting every remaining `:has()` rule shaves only 0.17 ms
 > more, so the surviving (`variant`/`data-part`/`type`) arguments no longer tax

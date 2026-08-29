@@ -1468,9 +1468,12 @@ list — ~2 min per card for the small rows.
 
 ## 40. `:has()` arguments that name DSL attributes — DONE 2026-08-29
 
-**Implemented as proposed, same branch.** The 10 lightbox `asr()` mirrors are deleted
-(`lightbox.js` relays a frame-placed ratio to the host once at init; CSS-only pages fall
-back to the `3 / 2` placeholder), the cover `nav` rule in `content.css` is host-arm only
+**Implemented as proposed, same branch — zero-JS.** The 10 lightbox `asr()` mirrors are
+deleted; the renderer echoes a frame-placed `asr()` token onto the host at build time
+(`render.js` `lightboxHostMedia`), so the placeholder ratio rides plain inheritance —
+verified with JavaScript disabled (a first-iteration lightbox.js relay was replaced the
+same day; hand-authored frame placement falls back to `3 / 2` unless the author follows
+the documented host-token rule). The cover `nav` rule in `content.css` is host-arm only
 (constraint documented in `card.md` § cover), the PiP rule keys on `ui-play[open]` alone,
 and `tokens.lint.js` now fails on any `media=`/`content=` needle inside a `:has()`
 argument (11 errors against the pre-fix sheets, 0 after). **Measured after: the `media=`

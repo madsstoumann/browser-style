@@ -321,24 +321,6 @@ function enhanceControls(root = document) {
 	}).catch(() => {});   // controls are an enhancement — a missing polyfill path never breaks open/close
 }
 
-/* asr() placeholder relay (frame placement). The flow placeholder's ::before sits
-   ABOVE the frame, so a frame-placed asr()'s --ui-media-ar cannot inherit up to it.
-   The :has(ui-media[media~="asr(…)"]) mirrors that used to bridge the gap put the
-   `media` attribute into :has() arguments, taxing every media= write page-wide —
-   docs/style-performance.md §8.1. Relay the ratio once at init instead. Host-placed
-   asr() needs nothing (plain inheritance); a CSS-only page with a frame-placed
-   asr() degrades to the 3/2 fallback placeholder. */
-function relayPlaceholderRatio(root = document) {
-	for (const frame of root.querySelectorAll('ui-media[popover][media*="asr("]')) {
-		const host = frame.closest('ui-card, ui-reveal');
-		if (!host) continue;
-		const ar = getComputedStyle(frame).getPropertyValue('--ui-media-ar').trim();
-		if (!ar) continue;
-		host.style.setProperty('--ui-lightbox-placeholder-ar', ar);
-		host.style.setProperty('--ui-lightbox-placeholder-min', '0');
-	}
-}
-
 let inited = false;
 
 export function initLightboxCommands(root = document) {
@@ -352,9 +334,8 @@ export function initLightboxCommands(root = document) {
 	root.addEventListener('click', onClick);
 	globalThis.addEventListener('popstate', onPopstate);
 	if (document.readyState === 'loading') {
-		document.addEventListener('DOMContentLoaded', () => { relayPlaceholderRatio(root); enhanceControls(root); }, { once: true });
+		document.addEventListener('DOMContentLoaded', () => enhanceControls(root), { once: true });
 	} else {
-		relayPlaceholderRatio(root);
 		enhanceControls(root);
 	}
 	return () => {

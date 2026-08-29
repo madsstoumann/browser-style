@@ -976,6 +976,15 @@ const mergeMediaTokens = (presetMedia, overrides = []) => {
    into the built <ui-media> rather than onto the ui-card/ui-reveal host. */
 const withMedia = (html, media) => media ? html.replace('<ui-media', `<ui-media${attrs({ media })}`) : html;
 
+/* Lightbox flow placeholder, zero-JS: the ::before that holds the promoted frame's
+   cell sits ABOVE the frame, so a frame-placed asr() can't inherit up to it. Echo the
+   plain asr() token onto the HOST so --ui-media-ar reaches the placeholder by ordinary
+   inheritance — same mechanism as hand-authored host placement, no :has() needle, no
+   runtime JS. Docs: docs/media.md § Layout shift, /docs/style-performance.md §8.1. */
+const lightboxHostMedia = (fields, media) => fields.furniture?.lightbox
+	? String(media || '').split(/\s+/).filter((token) => /^asr\([^)]+\)$/.test(token)).join(' ') || null
+	: null;
+
 /* reveal preset values → compact variant-token spellings. The scale animation is
    grw() (content= owns scl()); the old `scl` spelling was removed in v5, so `scale`
    is the only preset word that folds to it. */
@@ -3129,7 +3138,8 @@ const renderReveal = (fields, type, schemaType, tokens, preset, flipside, cardId
 			<strong data-part="headline" itemprop="${headlineProp(fields, type)}">${renderInline(fields.headline)}</strong>
 			${fields.details?.version ? `<span data-part="meta"><ui-chip theme="pale accent">v<span itemprop="softwareVersion">${esc(fields.details.version)}</span></ui-chip></span>` : ''}
 		</ui-content>`;
-	const inner = `${withMedia(media?.html || '', mergeMediaTokens(preset.media, tokens.media))}
+	const revealMediaTokens = mergeMediaTokens(preset.media, tokens.media);
+	const inner = `${withMedia(media?.html || '', revealMediaTokens)}
 		${column}`;
 	/* <ui-face> only where the animation transforms the front face; exp animates the host */
 	const front = RVL_FACED.has(anim) ? `<ui-face>${inner}</ui-face>` : inner;
@@ -3138,6 +3148,7 @@ const renderReveal = (fields, type, schemaType, tokens, preset, flipside, cardId
 	return `<ui-reveal${attrs({
 		variant: [preset.variant, ...revealTokens].filter(Boolean).join(' '),
 		theme: preset.theme || null,
+		media: lightboxHostMedia(fields, revealMediaTokens),
 		...(faces?.host?.attrs || {}),
 		style: styleAttr(preset.styles),
 		itemscope: true,
@@ -3287,16 +3298,19 @@ function renderCardHtml(ucf, presets = {}, cards = {}) {
 
 	const media = buildMedia(fields, type, tokens, preset, {}, cardId);
 	const overlay = /ovr\(/.test(preset.variant || '');
-	/* media=/content= sit on the primitives they configure; variant=/theme= on the host */
+	const mediaTokens = mergeMediaTokens(preset.media, tokens.media);
+	/* media=/content= sit on the primitives they configure; variant=/theme= on the host —
+	   except a lightbox card's asr(), echoed on the host for the flow placeholder */
 	return `<ui-card${attrs({
 		variant: preset.variant || 'col',
 		theme: preset.theme || null,
+		media: lightboxHostMedia(fields, mediaTokens),
 		style: styleAttr(preset.styles),
 		itemscope: true,
 		itemtype
 	})}>
 		<cq-box>
-			${withMedia(media?.html || '', mergeMediaTokens(preset.media, tokens.media))}
+			${withMedia(media?.html || '', mediaTokens)}
 			<ui-content${attrs({ content: preset.content || null })}>${contentColumn(fields, type, overlay, media?.extras || '', preset.text || 'summary', preset.parts || {}, preset.byline || 'tail', preset.headingTag, schemaType)}${note}</ui-content>
 		</cq-box>
 	</ui-card>`;

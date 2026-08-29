@@ -56,10 +56,12 @@ into Tailwind-style flat classes on the same page and compare.
 ## What we changed (done, on this branch)
 
 The `:has()` rules that mentioned token attributes were reworked so they no longer
-do: the lightbox's ratio rules now get their value handed over by a few lines of
-JavaScript at page load, one cover-card rule now simply requires its token on the
-card (documented), and one video rule dropped a redundant condition. A new
-automated check (lint) fails the build if anyone reintroduces the pattern.
+do — without adding any runtime JavaScript, keeping the system's CSS-first
+contract: the page *renderer* now writes the lightbox ratio token where CSS
+inheritance can reach it (verified working with JavaScript switched off), one
+cover-card rule now simply requires its token on the card (documented), and one
+video rule dropped a redundant condition. A new automated check (lint) fails the
+build if anyone reintroduces the pattern.
 
 **Result, re-measured: flipping a token now costs 2 ms instead of 36 ms.** Opening
 the fullscreen lightbox improved modestly (452 → 420 ms); its remaining cost is a
