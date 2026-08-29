@@ -384,11 +384,11 @@ before it is worth an `_headers` `Link:` line.
    (`--ui-media-scrim-paint` inherits, so nested frames paint stacked pairs;
    `media.tint.css:25,27` suppresses exactly this for tint, scrim has no equivalent) and
    `hov(sat)`, which no element on `demo/media.hover.html` carries (verified: zero).
-8. **`:has()` args that name DSL attributes** — measured in `style-performance.md`
-   (2026-08): they tax every runtime `media=`/`variant=`/`data-part=`/`aria-pressed`
-   mutation with a page-scale re-evaluation (~35 ms / ~500 elements on schema.html —
-   94% of a token-flip's cost). Rework per `style-performance.md` §8.1 and add the
-   §8.2 lint guard; tracked as `docs/plans/open-items.md` §40.
+8. **`:has()` args that name DSL attributes — DONE 2026-08-29.** They taxed every
+   runtime `media=`/`variant=` mutation with a page-scale re-evaluation (~35 ms /
+   ~500 elements on schema.html — 94% of a token-flip's cost). Reworked per
+   `style-performance.md` §8.1 (measured after: 2.0 ms) and guarded by the
+   `tokens.lint.js` `:has()`-argument check; open-items §40 records the numbers.
 9. **Minor / parked**: mobile picks 1200w rungs at DPR 2.625 (~123 kB over the DPR-2
    convention) — cap via `sizes` if it ever matters; zone decision (exempt the demo host
    from bot detections or accept ~5 pts); native `::scroll-marker` hit-size on the Chromium

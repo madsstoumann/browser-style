@@ -1466,7 +1466,17 @@ Re-run the sweep with a scratch copy of `schema.compare.js` whose `PAIRS` is the
 list — ~2 min per card for the small rows.
 
 
-## 40. `:has()` arguments that name DSL attributes — a ~35 ms tax on every runtime token flip
+## 40. `:has()` arguments that name DSL attributes — DONE 2026-08-29
+
+**Implemented as proposed, same branch.** The 10 lightbox `asr()` mirrors are deleted
+(`lightbox.js` relays a frame-placed ratio to the host once at init; CSS-only pages fall
+back to the `3 / 2` placeholder), the cover `nav` rule in `content.css` is host-arm only
+(constraint documented in `card.md` § cover), the PiP rule keys on `ui-play[open]` alone,
+and `tokens.lint.js` now fails on any `media=`/`content=` needle inside a `:has()`
+argument (11 errors against the pre-fix sheets, 0 after). **Measured after: the `media=`
+token flip is 2.0 ms / 39 elements (was 36.4 ms / 534); the lightbox toggle is
+452 → 420 ms** — its remainder is the `media-open=` swap's re-match volume, tracked as
+`style-performance.md` §8.3. Original finding below, kept for the record.
 
 **Measured 2026-08, full data in `docs/style-performance.md` (§4, §6, §8).** Blink tracks
 the attribute names that appear inside `:has()` arguments; mutating such an attribute

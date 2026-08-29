@@ -7,6 +7,8 @@
 > what invalidation costs when a token flips, and how the model compares to a
 > compiled utility-class system (Tailwind v4). Measurement date: 2026-08 on the
 > bundle `dist/demo.890c384c.min.css`; reference page `ui/card/demo/schema.html`.
+> The §8.1 rework has since shipped (bundle `demo.2bc02287.min.css`) — after-numbers
+> inline in §8. Plain-language version: [`style-performance.summary.md`](style-performance.summary.md).
 
 ## 1. The question, and the verdict
 
@@ -29,7 +31,7 @@ make every runtime `media=`/`variant=` mutation re-evaluate ~500 elements (~35 m
 | `content=` custom-property inheritance | cheapest path measured: 2 ms / 33 els per flip | **keep** — validated |
 | `md:`/`lg:` container-query token arms | resize crossings 15–18 ms style, layout-bound | **keep** — not a recalc problem |
 | layout `xs=`–`xxl=` attrs (incl. unconditional `xs` layer) | 98% fast-reject; flips 11 ms (intended section-scale restyle) | **keep** — §25 stays a correctness item |
-| `:has()` args naming DSL attributes (`media` ×11, `variant` ×4, `data-part` ×4, `aria-pressed` ×1) | **the** cost: 35 ms tax on every such attribute mutation, page-wide | **rework** (§8.1) + lint guard (§8.2) |
+| `:has()` args naming DSL attributes (`media` ×11, `variant` ×4, `data-part` ×4, `aria-pressed` ×1) | **the** cost: 35 ms tax on every such attribute mutation, page-wide | **reworked + lint-guarded** — DONE 2026-08-29, flip now 2.0 ms (§8.1) |
 | lightbox open/close (full `media=` string swap + popover `:has()`) | 452 ms / 4,344 els per toggle | **candidates listed** (§8.3) — one-off UX moment, user judges |
 | microdata `<meta>` payload | 2.3 ms of a 37.8 ms full-tree recalc | **keep** — free |
 | bundle size (442 KB, one shared sheet) | 6.4 ms parse; no match-cost correlation | **keep** — delivery question only |
@@ -339,6 +341,22 @@ justify, and — as important — the ones they rule out.
 
 ### 8.1 Rework the `:has()` rules that name DSL attributes (the one real win)
 
+> **IMPLEMENTED 2026-08-29** (same branch, bundle `demo.2bc02287.min.css`). The 10
+> lightbox `asr()` mirrors are gone — lightbox.js relays a frame-placed ratio to
+> the host once at init; the cover `nav` rule is host-arm only (card.md § cover
+> documents the constraint); the PiP rule keys on `ui-play[open]` alone.
+> **Measured after: the `media=` token flip is 2.0 ms / 39 elements** (was
+> 36.4 ms / 534) — deleting every remaining `:has()` rule shaves only 0.17 ms
+> more, so the surviving (`variant`/`data-part`/`type`) arguments no longer tax
+> `media=` writes at all. The lightbox toggle went 452 → 420 ms: its remaining
+> cost is the `media-open=` full-string swap re-matching (§8.3), not `:has()`.
+> The §8.2 lint guard ships in `tokens.lint.js` (11 errors on the pre-fix sheets,
+> 0 after). All gates green: 318/318 renderer tests, 38/38 transcriptions,
+> byte-identical SSR snapshot, browser-verified placeholder ratios in both
+> placements.
+
+The original analysis and design, kept for the record:
+
 The 10 lightbox placeholder-ratio rules
 (`:where(ui-card, ui-reveal):has(ui-media[media~="asr(…)"]:popover-open) …::before`
 — nine canonical ratios plus the generic `asr(` arm) put `media` inside `:has()`
@@ -377,7 +395,9 @@ remove; if more is wanted afterwards, the candidates are: swapping only the
 control words that actually changed (lightbox.js already computes the union), and
 narrowing the `:where(html):has(ui-media[popover]:popover-open)` document rule to
 key on the frame's own state. It is a once-per-user-gesture cost on one demo
-family — measure again after 8.1 before touching it.
+family — measured again after 8.1: **452 → 420 ms**, and the stats run shows the
+remainder is the swap's re-match volume (4.8 M attempts against `[media*=]` rules
+per toggle), so the swap-narrowing candidate is where any further work goes.
 
 ### 8.4 Explicit non-recommendations (measured, then rejected)
 
