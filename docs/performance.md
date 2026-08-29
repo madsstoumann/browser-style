@@ -155,6 +155,35 @@ link + `challenge-platform/jsd`): ~90–130 ms TBT, ~5 pts — **pages.dev is th
 score**; don't chase the zone delta in page code. `_headers` is honored on both; GitHub
 Pages (main branch) ignores it.
 
+**Which knob lives where** — settled 2026-08-29 after three rounds of looking in the wrong
+place:
+
+| Where | Controls | Reaches |
+|---|---|---|
+| `_headers` (this repo) | response headers — cache, referrer | **both** hosts |
+| Zone → Rules → **Compression Rules** on `browser.style` | compression, WAF, bot defence | **`v4.browser.style` only** |
+| Pages project settings | builds, domains, functions, `_headers`/`_redirects` | no compression control exists here |
+| — | Cloudflare platform defaults | `pages.dev`, **not configurable** |
+
+Two consequences. **The host you score is the host you cannot configure**: a compression or
+security question raised by a pages.dev run has no pages.dev fix — re-measure on the zone
+before acting. And **never put `Content-Encoding` in `_headers`**: it describes the bytes in
+the body, not metadata to attach, so declaring an encoding the response does not have makes
+the browser fail to decode it. Compression is applied by the edge *after* your headers, and
+Pages does not serve pre-compressed files committed to the build output.
+
+⚠️ **Transfer size cannot tell you the encoding.** Edges compress for speed, not ratio —
+Cloudflare's dynamic brotli is ~q4, nowhere near the q11 a local `brotli` run produces. On
+the 431.9 kB demo bundle: gzip -9 **75.6 kB**, gzip -6 **76.3 kB**, brotli q4 **74.9 kB**,
+brotli q11 **59.6 kB**. A Lighthouse figure of 75.6 kB is therefore consistent with *either*
+gzip or edge brotli, and the q11 number is not headroom anyone can ship — reading it as a
+16 kB "saving" is a trap this repo has already fallen into once. Only `content-encoding` on
+the response settles it:
+
+```bash
+curl -sI -H 'Accept-Encoding: br, gzip' https://v4.browser.style/dist/demo.<hash>.min.css | grep -i content-encoding
+```
+
 Two referrer rules, both load-bearing against the zone's Hotlink Protection (403 on any
 cross-origin Referer): `<meta name="referrer" content="no-referrer">` in the page head
 covers document-initiated fetches, but a **CSS-initiated fetch uses the *stylesheet's*
