@@ -912,12 +912,16 @@ matrix ([One property, one value](#one-property-one-value)).
 declared multi-valued in `render.test.js` § *one property, one value* — a repeat that is not on
 that allowlist is a collision between two emitters.
 
-**Two page compromises, both deliberate.** The requirements table reuses
-`data-part="hours"` — the system's only two-column `<dl>`, whose CSS is pure layout with nothing
-hours-specific in it; a `spec` part would have cost a demo-bundle re-hash across ~30 pages for
-cosmetics. And the gallery shows **one** truthful `screenshot`: the other `game_0*.png` assets in
-`/assets/images` are two entirely different games, and claiming them as screenshots of this one
-would be exactly the sort of false statement this page is built to avoid.
+**One deliberate limit.** The gallery shows **one** truthful `screenshot`: the other
+`game_0*.png` assets in `/assets/images` are two entirely different games, and claiming them as
+screenshots of this one would be exactly the sort of false statement this page is built to avoid.
+
+The requirements table is where the generic **`specs`** part came from — it shipped first as a
+reuse of `data-part="hours"`, the system's only two-column `<dl>`, whose CSS turned out to be
+pure layout with nothing hours-specific in it. `specs` is now that rule under an honest name;
+`hours` keeps the same styling because `ui/map` reads `[data-part="hours"]` to pull opening hours
+into a map popup, so the two names are semantically distinct even though they render identically.
+See [card.md § data-part vocabulary](card.md).
 
 ### Book series — `BookSeries`
 

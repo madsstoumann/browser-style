@@ -1748,8 +1748,7 @@ export const videogameSections = (d = {}, fields = {}) => {
 		}).join('')}</ul></div>`;
 
 	/* the teaser's one softwareRequirements line is a SUMMARY; the page splits it into the
-	   three typed SoftwareApplication properties. data-part="hours" is the system's only
-	   two-column <dl> and its CSS is pure layout — reused here, see docs/schema.md */
+	   three typed SoftwareApplication properties, in the generic two-column `specs` <dl> */
 	const req = d.systemRequirements;
 	const rows = typeof req === 'string' || !req ? [] : [
 		['Processor', 'processorRequirements', req.processor],
@@ -1757,7 +1756,7 @@ export const videogameSections = (d = {}, fields = {}) => {
 		['Storage', 'storageRequirements', req.storage]
 	].filter(([, , value]) => value);
 	const requirements = rows.length
-		? `<dl data-part="hours">${rows.map(([label, prop, value]) => `<dt>${esc(label)}</dt><dd>${meta(prop, value)}${esc(value)}</dd>`).join('')}</dl>`
+		? `<dl data-part="specs">${rows.map(([label, prop, value]) => `<dt>${esc(label)}</dt><dd>${meta(prop, value)}${esc(value)}</dd>`).join('')}</dl>`
 		: '';
 
 	return { screenshots, trailer, editions, quests: things(d.quests, 'quest'), characters: things(d.characters, 'characterAttribute'), items: things(d.items, 'gameItem'), requirements };
