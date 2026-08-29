@@ -866,7 +866,7 @@ A second invoker inside `<ui-lightbox>` (hidden while closed) with the custom `c
 
 ### Layout shift — the placeholder
 
-A top-layer element leaves flow, so the frame's grid cell would collapse. While a card-hosted frame is open, a `::before` on `<cq-box>`/`<summary>` reserves the cell, mirroring the frame's sizing (`--ui-media-ar` from a host-placed `asr()`, a `:has()` mirror of the nine canonical ratios for the self-arm placement, the `12.5rem` floor otherwise). Verified: neighbouring cards do not move across open/close. A **standalone** `<ui-media popover>` directly in a `<lay-out>` has no parent hook for a placeholder — documented limitation: the backdrop masks the reflow while open, and closing restores flow.
+A top-layer element leaves flow, so the frame's grid cell would collapse. While a card-hosted frame is open, a `::before` on `<cq-box>`/`<summary>` reserves the cell, mirroring the frame's sizing: `--ui-media-ar` inherits down from a host-placed `asr()`; for the self-arm placement (the token on the frame, below the `::before`'s reach) **lightbox.js relays the ratio onto the host once at init** — the old `:has(ui-media[media~="asr(…)"])` mirrors were removed because a `media` needle in a `:has()` argument taxes every `media=` write page-wide (`/docs/style-performance.md` §8.1, lint-enforced); the `12.5rem` floor covers everything else, and a CSS-only page with a frame-placed `asr()` degrades to the `3 / 2` fallback placeholder while open. Verified: neighbouring cards do not move across open/close. A **standalone** `<ui-media popover>` directly in a `<lay-out>` has no parent hook for a placeholder — documented limitation: the backdrop masks the reflow while open, and closing restores flow.
 
 ### What works without JS — the degradation table
 
@@ -875,7 +875,8 @@ A top-layer element leaves flow, so the frame's grid cell would collapse. While 
 | open/close, Esc, light-dismiss, `::backdrop`, focus return | platform | platform (unchanged) |
 | dots / arrows / thumbnails in the lightbox | DOM controls | swipe, keyboard, thin scrollbar |
 | `media-open=` nav-style switch | swapped on toggle | closed nav style kept |
-| `open:grid()` / `open:furniture` / placeholder / animations | CSS | CSS (unchanged) |
+| `open:grid()` / `open:furniture` / animations | CSS | CSS (unchanged) |
+| flow placeholder ratio | host-placed `asr()`: CSS; frame-placed: relayed at init | host-placed: CSS (unchanged); frame-placed: `3 / 2` fallback |
 | grid tile → slide jump | tap-to-open at that slide | grid still browsable |
 | hi-res image upgrade on open | browser-native (`sizes="auto"`) — no JS in either column | same |
 | modality (`inert`), back-button close, pause-on-close, VT morph | active | non-modal popover; Esc still closes |
