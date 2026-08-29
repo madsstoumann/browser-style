@@ -164,8 +164,8 @@ referrer policy, not the document's** — carousel thumb backgrounds
 
 ### Images
 
-Contract (full detail: `ui/card/docs/media.md` § Responsive images): five-width srcset
-`240/320/480/720/1200`, `format=auto,quality=80`, `fit=cover` + height only when the frame
+Contract (full detail: `ui/card/docs/media.md` § Responsive images): six-width srcset
+`240/320/480/560/720/1200`, `format=auto,quality=80`, `fit=cover` + height only when the frame
 has `asr()` (no asr = width-only, Cloudflare keeps the natural ratio). Rungs above the
 original's intrinsic width are dropped (`buildSrcset` in `ui/card/srcset.js`, `intrinsic`
 option). The `srcset` must be **in the markup**: the preload scanner sees markup, never a
@@ -182,6 +182,17 @@ enclosing `<lay-out>` from `layout/src/srcsets.js` (`generateSrcsets`/`calculate
 whose final entry must stay `100vw`). Fixed-size images (48 px thumbs, 64 px avatars) use
 square `1x/2x` pairs, not a width ladder. CSS-background thumbs need their own transform
 URLs — CSS fetches ignore `loading="lazy"` (a 48 px dot once fetched a 1.9 MB PNG).
+
+**Why 560 exists** (added 2026-08-29). The ladder was a clean 1.5× progression
+`240/320/480/720/1200`, and the gap between 480 and 720 was the widest. The demo `sizes`
+resolves to a ~512 px slot on any desktop ≥ 1024 at **DPR 1** — 480 cannot serve it, so
+the browser was forced to 720: **2.1× the pixels it needed**, and every *"larger than it
+needs to be (720×405 for 497×279)"* row PageSpeed reported. Measured after: 11 images on
+schema.html drop 720 → 560 at DPR 1, and **nothing changes at DPR 2 or on mobile** — both
+already pick a rung 560 does not sit between. Cost is one more edge variant per image and,
+because `schema.html`'s srcsets are hand-authored, 71 hand-inserted candidates there (the
+generated pages just rebuild); `schema.compare.js` is what proves the two spellings still
+agree. Adding a rung is otherwise free: `srcset` lists candidates, the browser fetches one.
 
 ### CSS bundle and caching
 

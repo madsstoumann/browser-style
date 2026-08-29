@@ -285,7 +285,11 @@ const attrs = (obj) => Object.entries(obj)
 /* ── image pipeline (SSR srcset) — armed per renderCard() call via options.images.
    Off by default: /cdn-cgi/image/ only resolves on the Cloudflare zone and a failed
    srcset candidate does NOT fall back to src. Docs: docs/media.md § srcset ── */
-const IMG_DEFAULTS = { breakpoints: [240, 320, 480, 720, 1200], format: 'auto', quality: 80, fit: 'cover', base: '', intrinsic: ASSET_SIZES };
+/* 560 closes the 480->720 gap: the demo `sizes` resolves to a ~512px slot on any desktop
+   >=1024 at DPR 1, which 480 cannot serve — so the browser was forced to 720 (2.1x the
+   pixels). Every other case (tablet, mobile, and all DPR>=2) picks the same rung as before.
+   Docs: docs/performance.md § Images */
+const IMG_DEFAULTS = { breakpoints: [240, 320, 480, 560, 720, 1200], format: 'auto', quality: 80, fit: 'cover', base: '', intrinsic: ASSET_SIZES };
 let IMG = null;
 const setImages = (images) => {
 	IMG = images ? { ...IMG_DEFAULTS, ...images, base: images.cdnBase ?? images.base ?? '' } : null;

@@ -32,7 +32,7 @@ the *procedure*.
 
 **Images — usually the entire problem.** Originals in `/assets/images/` average ~1.4 MB;
 any page using them raw is broken by default. Use the srcset contract in
-`docs/performance.md`: Cloudflare transforms, widths 240/320/480/720/1200, `format=auto`,
+`docs/performance.md`: Cloudflare transforms, widths 240/320/480/560/720/1200, `format=auto`,
 `quality=80`, `fit=cover` with the height from the `asr()` ratio, absolute
 `https://v4.browser.style/cdn-cgi/image/…` URLs (a root-relative candidate 404s off-zone,
 **and a failed srcset candidate never falls back to `src`**). Compute `sizes` from the
