@@ -128,6 +128,11 @@ const ATTENDANCE_MODES = new Set(['Offline', 'Online', 'Mixed']);
 /* schema.org BookFormatType members — bookFormat emits only for these */
 const BOOK_FORMATS = new Set(['Hardcover', 'Paperback', 'EBook', 'AudiobookFormat', 'GraphicNovel']);
 
+/* schema.org GamePlayMode members — playMode emits only for these. An invented mode
+   ("BattleRoyale") lands in an itemprop URL, so the same discipline as SUBTYPES. */
+const GAME_PLAY_MODES = new Set(['SinglePlayer', 'MultiPlayer', 'CoOp']);
+const PLAY_MODE_WORDS = { SinglePlayer: 'Single-player', MultiPlayer: 'Multiplayer', CoOp: 'Co-op' };
+
 /* review itemReviewed types — Organization/Service make the review a testimonial */
 const REVIEWED_TYPES = new Set(['Product', 'Organization', 'Service']);
 
@@ -1686,6 +1691,78 @@ export const realestateSections = (d = {}, fields = {}) => {
 	};
 };
 
+/* ── VideoGame, section by section ────────────────────────────────────────────
+   Same two-consumer contract as realestateSections/vacationrentalSections: the TEASER
+   composes a short subset (DETAILS.software's VideoGame arm), the generated page wraps
+   bands of the strings below. Every band is '' when its data is absent, so a caller can
+   drop it without testing for content.
+
+   THE THREE AXES, which the demo page exists to keep apart — docs/schema.md § Video game:
+     platform  PS5 / PC / Switch  → `gamePlatform` on the GAME (Text|URL|Thing)
+     edition   Standard / Deluxe  → the Offer's own `name`; `gameEdition` is a single Text
+                                    on the item and cannot express a matrix
+     store     Steam / PSN        → NEITHER. A storefront is a `seller` → Organization on
+                                    the Offer, with `url` pointing at its product page.
+   `isVariantOf` is Product/ProductModel only, so the ProductGroup variant markup does NOT
+   reach a VideoGame — the picker UI is reusable, the microdata underneath is Offers. ── */
+export const videogameSections = (d = {}, fields = {}) => {
+	/* hidden ImageObject scopes beside the visible carousel — the ImageGallery card's
+	   shape, so a screenshot carries its caption without duplicating the <img> */
+	const screenshots = (d.screenshots || []).map((shot) =>
+		`<span${scope('screenshot', 'ImageObject')} hidden><link itemprop="contentUrl" href="${esc(shot.src)}">${meta('caption', shot.alt)}</span>`
+	).join('');
+
+	const t = d.trailer;
+	const trailer = !t?.src ? '' : `<div${scope('trailer', 'VideoObject')}>`
+		+ meta('name', t.name) + meta('description', t.description) + meta('duration', t.duration) + meta('uploadDate', t.uploadDate)
+		+ (t.thumbnail ? `<link itemprop="thumbnailUrl" href="${esc(t.thumbnail)}">` : '')
+		+ `<link itemprop="contentUrl" href="${esc(t.src)}">`
+		/* <ui-play> wraps a real <button> + <ui-icon> — the element alone is 0x0 (ui-play.css
+		   styles `& button`). Its one contract is command="--play-pause" + commandfor, driven
+		   by video.js; the `--` prefix keeps the markup valid. Docs: ui/card/AGENTS.md § 9 */
+		+ `<ui-media media="asr(16/9) play(cc)"><video${attrs({ id: t.id || 'trailer', poster: t.thumbnail })} preload="none" playsinline><source src="${esc(t.src)}" type="video/mp4"></video>`
+		+ `<ui-play><button type="button" aria-label="${esc(t.playLabel || 'Play the trailer')}" command="--play-pause" commandfor="${esc(t.id || 'trailer')}"><ui-icon type="play-pause"></ui-icon></button></ui-play></ui-media>`
+		+ '</div>';
+
+	/* one Game property per row list — all three are Thing-ranged, so a row is a name and
+	   at most a description. Nothing here invents a richer type than the vocabulary has. */
+	const things = (rows, prop) => scopedList((rows || []).map((row) =>
+		`<li${scope(prop, 'Thing')}><span itemprop="name">${esc(row.name)}</span>${row.description ? ` — <small itemprop="description">${esc(row.description)}</small>` : ''}</li>`
+	), false);
+
+	const ed = d.editions;
+	const editions = !ed?.items?.length ? '' : `<div${scope('offers', 'AggregateOffer')}>`
+		+ meta('priceCurrency', ed.currency) + meta('lowPrice', ed.lowPrice) + meta('highPrice', ed.highPrice) + meta('offerCount', ed.items.length)
+		+ `<ul data-part="list">${ed.items.map((row) => {
+			const label = [row.edition, row.platform].filter(Boolean).join(' — ');
+			return `<li${scope('offers', 'Offer')}>`
+				+ meta('name', label) + meta('priceCurrency', row.currency || ed.currency)
+				+ meta('availability', availabilityUrl(row.availability || 'in stock'))
+				+ (row.edition ? `<strong>${esc(row.edition)}</strong>` : '')
+				+ (row.platform ? `<span>${esc(row.platform)}</span>` : '')
+				+ (row.seller ? `<span${scope('seller', 'Organization')}><span itemprop="name">${esc(row.seller)}</span></span>` : '')
+				+ `<span data-part="price">${priceValue(row.currency || ed.currency, row.price)}</span>`
+				/* a real anchor, not a meta: an Offer's url must be somewhere a buyer can go */
+				+ (row.url ? `<a class="ui-button" data-variant="accent" itemprop="url" href="${esc(row.url)}">Buy<span data-sr> ${esc(label)}</span></a>` : '')
+				+ '</li>';
+		}).join('')}</ul></div>`;
+
+	/* the teaser's one softwareRequirements line is a SUMMARY; the page splits it into the
+	   three typed SoftwareApplication properties. data-part="hours" is the system's only
+	   two-column <dl> and its CSS is pure layout — reused here, see docs/schema.md */
+	const req = d.systemRequirements;
+	const rows = typeof req === 'string' || !req ? [] : [
+		['Processor', 'processorRequirements', req.processor],
+		['Memory', 'memoryRequirements', req.ram],
+		['Storage', 'storageRequirements', req.storage]
+	].filter(([, , value]) => value);
+	const requirements = rows.length
+		? `<dl data-part="hours">${rows.map(([label, prop, value]) => `<dt>${esc(label)}</dt><dd>${meta(prop, value)}${esc(value)}</dd>`).join('')}</dl>`
+		: '';
+
+	return { screenshots, trailer, editions, quests: things(d.quests, 'quest'), characters: things(d.characters, 'characterAttribute'), items: things(d.items, 'gameItem'), requirements };
+};
+
 /* ── VacationRental, section by section ───────────────────────────────────────
    Same two-consumer contract as realestateSections above: the TEASER composes a
    short subset (DETAILS.vacationrental), the generated page wraps bands of the same
@@ -2399,11 +2476,39 @@ const DETAILS = {
 		return html;
 	},
 
-	software(d) {
+	/* `itemtype` is the sharpened name actually written on the scope, so the VideoGame arm
+	   below is gated on it and never on details.subtype: a subtype off the allowlist falls
+	   back to SoftwareApplication, which is NOT in gamePlatform/playMode/gameEdition/
+	   numberOfPlayers' domain. Docs: docs/schema.md § Video game */
+	software(d, fields, parts = {}, itemtype = null) {
+		const game = itemtype === 'VideoGame';
 		let html = meta('applicationCategory', d.applicationCategory)
 			+ (d.operatingSystem || []).map((os) => meta('operatingSystem', os)).join('');
+		const platforms = game ? (d.gamePlatform || []) : [];
+		if (game) {
+			html += platforms.map((platform) => meta('gamePlatform', platform)).join('')
+				+ (d.playMode || []).filter((mode) => GAME_PLAY_MODES.has(mode)).map((mode) => meta('playMode', SCHEMA + mode)).join('')
+				+ meta('gameEdition', d.gameEdition) + meta('contentRating', d.contentRating);
+			/* numberOfPlayers' range is QuantitativeValue — "up to four raiders" was prose
+			   only, the same prose-vs-machine split the book series' count has */
+			const players = d.numberOfPlayers;
+			if (players && (players.min != null || players.max != null)) {
+				html += `<span${scope('numberOfPlayers', 'QuantitativeValue')} hidden>${meta('minValue', players.min)}${meta('maxValue', players.max)}</span>`;
+			}
+		}
 		if (d.version) html += `<p data-part="meta"><ui-chip theme="pale accent">v<span itemprop="softwareVersion">${esc(d.version)}</span></ui-chip></p>`;
-		html += `<p data-part="meta">${esc((d.operatingSystem || []).join(' · '))}${d.fileSize ? ` · ${esc(d.fileSize)}` : ''}</p>`;
+		/* a game's run names PLATFORMS; plain software keeps the operatingSystem run it always had */
+		const run = platforms.length ? platforms : (d.operatingSystem || []);
+		html += `<p data-part="meta">${esc(run.join(' · '))}${d.fileSize ? ` · ${esc(d.fileSize)}` : ''}</p>`;
+		if (game) {
+			const players = d.numberOfPlayers;
+			const span = !players ? null
+				: players.max != null && players.min != null && players.max !== players.min ? `${num(players.min)}–${num(players.max)} players`
+				: players.max === 1 || players.min === 1 && players.max == null ? '1 player'
+				: `${num(players.max ?? players.min)} players`;
+			const bits = [span, ...(d.playMode || []).filter((mode) => GAME_PLAY_MODES.has(mode)).map((mode) => esc(PLAY_MODE_WORDS[mode]))].filter(Boolean).join(' · ');
+			if (bits) html += `<p data-part="meta">${bits}</p>`;
+		}
 		if (d.developer?.name) {
 			html += `<p data-part="meta"${scope('author', 'Organization')}>Developer: <span itemprop="name">${esc(d.developer.name)}</span>${d.developer.website ? meta('url', d.developer.website) : ''}</p>`;
 		}

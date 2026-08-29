@@ -58,10 +58,10 @@ whenever its two cards differ in any other attribute (an `id`, a `style`) — th
 count once read 50.
 
 **Types ≠ renderer keys.** The 54 is the **52** distinct base itemtypes behind the 55
-`schemaType` keys (`profile` and `artist` both resolve to `Person`; `comparison`, `places` and `filelist` all to `ItemList`), minus `LocalBusiness` (never
-shown plain — the business card is always sharpened), plus the three sharpened [subtypes](#subtypes)
-`ProductGroup`, `CafeOrCoffeeShop` and `DiscussionForumPosting`, which `details.subtype` produces
-with no key of their own. Three further types appear as **top-level items that are not cards**
+`schemaType` keys (`profile` and `artist` both resolve to `Person`; `comparison`, `places` and `filelist` all to `ItemList`), minus the **two** never shown
+plain — `LocalBusiness` and `SoftwareApplication`, whose cards are always sharpened — plus the
+four sharpened [subtypes](#subtypes) `ProductGroup`, `CafeOrCoffeeShop`, `DiscussionForumPosting`
+and `VideoGame`, which `details.subtype` produces with no key of their own. Three further types appear as **top-level items that are not cards**
 (`itemscope`, no `itemprop`) and so are outside all three card counts: `EmployerAggregateRating`
 on the job card, the page-level `WebSite`, and the page-trail `BreadcrumbList`. None has a
 renderer key — `WebSite` and the breadcrumb trail are authored
@@ -320,6 +320,11 @@ were already covered.
 | `product` | `Product` | ProductGroup, ProductModel, IndividualProduct, Vehicle, Car, Motorcycle, Drug, DietarySupplement |
 | `social` | `SocialMediaPosting` | DiscussionForumPosting, BlogPosting, LiveBlogPosting |
 | `software` | `SoftwareApplication` | MobileApplication, WebApplication, VideoGame |
+
+**`VideoGame` is the one subtype that unlocks new properties** rather than only narrowing the
+itemtype — `gamePlatform`, `playMode`, `numberOfPlayers`, `quest` and the rest are out of domain
+on a plain `SoftwareApplication`, so the renderer gates them on the sharpened itemtype. See
+[Video game](#video-game--videogame).
 
 **Two values appear on two lists — `Campground` and `BlogPosting` — and they are the complete
 set.** Both are deliberate: schema.org gives each of them two truthful parents.
@@ -863,6 +868,56 @@ Episode metas plus hidden `partOfSeries` → `PodcastSeries`. The episode audio 
 ### Movie — `Movie`
 
 Director and cast as `Person` scopes, `contentRating`, release date and an `AggregateRating` star row. Eyebrow → `genre`.
+
+### Video game — `VideoGame`
+
+Not a type of its own: `software` + [`details.subtype: "VideoGame"`](#subtypes). `VideoGame` ⊂
+`Game` ⊂ `SoftwareApplication`, so the sharpened card keeps every software property *and* gains
+a vocabulary a plain `SoftwareApplication` is not in the domain of. The renderer gates that arm
+on the **itemtype actually written on the scope**, never on `details.subtype` — a subtype off the
+allowlist falls back to `SoftwareApplication`, and the game properties must fall back with it.
+
+| Property | From | Note |
+|---|---|---|
+| `gamePlatform` | VideoGame | many-valued: PS5 / Xbox / Switch / PC |
+| `playMode` | VideoGame | range `GamePlayMode` — **allowlisted** (`SinglePlayer`, `MultiPlayer`, `CoOp`), never verbatim, same discipline as `SUBTYPES` and `BOOK_FORMATS` |
+| `numberOfPlayers` | Game | range `QuantitativeValue` → `minValue`/`maxValue`. "Up to four raiders" was prose only |
+| `gameEdition` | VideoGame | a single `Text`. It names ONE edition and cannot express a matrix — see below |
+| `quest` · `characterAttribute` · `gameItem` | Game | all range `Thing`, so a row is a name and at most a description. Nothing invents a richer type than the vocabulary has |
+| `trailer` | VideoGame | range `VideoObject` |
+| `screenshot` | SoftwareApplication | range `URL` \| `ImageObject` |
+| `processorRequirements` · `memoryRequirements` · `storageRequirements` | SoftwareApplication | the typed split of the teaser's one `softwareRequirements` summary line |
+
+#### Platform, edition, storefront — three axes, and the trap
+
+A store page mixes three things that look like one. The demo page
+([`demo/games/pixel-raiders.html`](../demo/games/pixel-raiders.html)) exists mostly to keep them apart:
+
+- **Platform** — PS5, PC, Switch. `gamePlatform` **on the game**.
+- **Edition** — Standard, Deluxe. The `name` of each `Offer`. `gameEdition` is a single `Text` on
+  the item, so it can name the edition a listing *is* — it cannot carry a matrix.
+- **Storefront** — Steam, PlayStation Store, eShop. **Neither of the above.** A shop is a
+  `seller` → `Organization` on the Offer, with `url` pointing at its product page.
+
+The matrix rolls up as one `offers` → `AggregateOffer` (`lowPrice`, `highPrice`, `offerCount`)
+wrapping one `Offer` per platform × storefront. ⚠️ **`isVariantOf` does not reach a `VideoGame`** —
+its domain is `Product`/`ProductModel` — so the [ProductGroup](#product--product) variant markup is
+*not* reusable here. The picker UI is; the microdata underneath has to be Offers.
+
+The page declares `offers` exactly once, at the AggregateOffer: `data/software.json`'s single $29
+Offer is nulled out in the page's own data file, or the item would carry a bare Offer beside the
+matrix ([One property, one value](#one-property-one-value)).
+
+`gamePlatform`, `playMode`, `quest`, `characterAttribute`, `gameItem` and `screenshot` are all
+declared multi-valued in `render.test.js` § *one property, one value* — a repeat that is not on
+that allowlist is a collision between two emitters.
+
+**Two page compromises, both deliberate.** The requirements table reuses
+`data-part="hours"` — the system's only two-column `<dl>`, whose CSS is pure layout with nothing
+hours-specific in it; a `spec` part would have cost a demo-bundle re-hash across ~30 pages for
+cosmetics. And the gallery shows **one** truthful `screenshot`: the other `game_0*.png` assets in
+`/assets/images` are two entirely different games, and claiming them as screenshots of this one
+would be exactly the sort of false statement this page is built to avoid.
 
 ### Book series — `BookSeries`
 

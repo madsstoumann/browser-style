@@ -333,6 +333,16 @@
       "variant": "col",
       "media": "asr(16/9) chip(ts)"
     },
+    "game-page": {
+      "name": "Game Page",
+      "description": "Full video-game view — 16:9 screenshot carousel with a lightbox, opening fullscreen with the axis(y) thumbnail rail (media-open). headingTag h2: the game's name is the page's most prominent heading, so every band below is an h3 — h1 is deliberately not in the renderer's allowlist, a card headline never claims the page title",
+      "element": "ui-card",
+      "variant": "col shd(non)",
+      "media": "asr(16/9) rds(lg) nav lightbox(bs)",
+      "media-open": "axis(y) nav(mrk) mrk(tmb) mrk(rail)",
+      "content": "scl(lg)",
+      "headingTag": "h2"
+    },
     "product-collage": {
       "name": "Product collage",
       "description": "ProductGroup whose variants fill the media frame as a grid of linked tiles.",

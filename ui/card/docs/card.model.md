@@ -525,6 +525,33 @@ ignores a display twin. Do not go hunting for a mapping that does not exist.
 | `fileSize` | string | text |  |
 | `systemRequirements` | text | textarea |  |
 
+#### `software` + `subtype: "VideoGame"` — the game keys
+
+Only emitted when the sharpened itemtype is actually written — an off-allowlist `subtype`
+falls back to `SoftwareApplication`, which is not in these properties' domain.
+
+| Key | Type | Control | Lookup / notes |
+|---|---|---|---|
+| `gamePlatform` | array | repeater | free text — PS5 / Xbox / Switch / PC |
+| `playMode` | array | multiselect | GAME_PLAY_MODES — SinglePlayer, MultiPlayer, CoOp |
+| `numberOfPlayers` | object | fieldset | `{min, max}` → QuantitativeValue |
+| `gameEdition` | string | text | ONE edition name; the buy matrix lives in `editions` |
+| `contentRating` | string | text | PEGI / ESRB |
+| `screenshots` | array | repeater | `{src, alt}` → hidden ImageObject scopes |
+| `trailer` | object | fieldset | `{id, name, description, src, thumbnail, duration, uploadDate}` → VideoObject |
+| `editions` | object | fieldset | `{currency, lowPrice, highPrice, items[]}` → AggregateOffer — § below |
+| `quests` / `characters` / `items` | array | repeater | `{name, description}` → quest / characterAttribute / gameItem, all Thing |
+
+**Buy row** (`editions.items[]`, one `Offer` each):
+
+| Key | Type | Control | Lookup / notes |
+|---|---|---|---|
+| `edition` | string | text | Standard, Deluxe — becomes half the Offer's `name` |
+| `platform` | string | text | the other half; the machine platform list is `gamePlatform` |
+| `seller` | string | text | the storefront → `seller` → Organization. **Not** a platform |
+| `url` | url | url | the store's product page — a real crawlable anchor |
+| `price` / `currency` / `availability` | — | — | per row; currency falls back to `editions.currency` |
+
 ### `organization` — Organization
 
 | Key | Type | Control | Lookup / notes |

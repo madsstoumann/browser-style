@@ -192,7 +192,7 @@ Sorted by bucket, then alphabetically. `key` is the `schemaType` discriminator.
 | `Movie` | `movie` | Movie carousel | `repo` — 2026-08-05 coverage doc |
 | `Quiz` | `quiz` | Education Q&A — **flashcard arm only**, `eduQuestionType: "Flashcard"` required | `repo` — schema.md § Quiz |
 | `SocialMediaPosting` | `social` | Discussion forum, via the `DiscussionForumPosting` subtype (which also flips `headline` on) | `repo` — schema.md § Subtypes |
-| `SoftwareApplication` | `software` | Software app | `repo` — listed in the 2026-08-28 gallery (the "most likely retired" guess was wrong) |
+| `SoftwareApplication` | `software` | Software app — the card is always sharpened, today to `VideoGame`, which stays inside the feature (`VideoGame` ⊂ `SoftwareApplication`) and adds `aggregateRating`-eligible Review snippet | `repo` — listed in the 2026-08-28 gallery (the "most likely retired" guess was wrong) |
 | `ItemList` | `comparison` | Carousel host + the surviving *Course list* | ⚠ — we emit `ItemList` as a card subject, not as a carousel host ([§ 4](#4-gaps--live-features-with-no-card-type)) |
 
 ### Withdrawn — kept deliberately

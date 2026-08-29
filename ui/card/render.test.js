@@ -3,7 +3,7 @@
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
-import renderCard, { resolveItemtype, SUBTYPES, EYEBROW_PROP, vacationrentalSections } from './render.js';
+import renderCard, { resolveItemtype, SUBTYPES, EYEBROW_PROP, vacationrentalSections, videogameSections as vidgameSections } from './render.js';
 import { buildSrcset, maxUsableWidth } from './srcset.js';
 
 /* Render a bare fields object with no preset — the DEFAULT_PRESET stack card. */
@@ -1132,6 +1132,139 @@ describe('podcastseries — PodcastSeries', () => {
 	});
 });
 
+describe('software → VideoGame — the subtype-gated vocabulary', () => {
+	const details = {
+		subtype: 'VideoGame', version: '2.1', applicationCategory: 'GameApplication',
+		operatingSystem: ['macOS', 'Windows', 'Switch'],
+		gamePlatform: ['PlayStation 5', 'Xbox Series X|S', 'Nintendo Switch', 'PC'],
+		playMode: ['SinglePlayer', 'CoOp'], numberOfPlayers: { min: 1, max: 4 },
+		gameEdition: 'Sky Fortress Edition', contentRating: 'PEGI 12'
+	};
+	const card = (extra = {}) => render({ schemaType: 'software', headline: 'Pixel Raiders', details: { ...details, ...extra } });
+
+	test('details.subtype sharpens the itemtype to VideoGame', () => {
+		assert.match(card(), /itemtype="https:\/\/schema\.org\/VideoGame"/);
+		assert.equal(resolveItemtype({ schemaType: 'software', details: { subtype: 'VideoGame' } }), 'VideoGame');
+	});
+
+	/* gamePlatform, playMode, gameEdition and numberOfPlayers are Game/VideoGame's OWN —
+	   a plain SoftwareApplication is not in their domain, so the gate is the itemtype */
+	test('the game vocabulary is emitted ONLY under the VideoGame itemtype', () => {
+		const plain = render({ schemaType: 'software', headline: 'Pixel Raiders', details: { ...details, subtype: null } });
+		for (const prop of ['gamePlatform', 'playMode', 'gameEdition', 'numberOfPlayers']) {
+			assert.ok(!plain.includes(`itemprop="${prop}"`), `${prop} is out of domain on SoftwareApplication`);
+		}
+		assert.match(card(), /<meta itemprop="gamePlatform" content="PlayStation 5">/);
+		assert.match(card(), /<meta itemprop="gameEdition" content="Sky Fortress Edition">/);
+	});
+
+	/* playMode's range is the GamePlayMode enumeration — allowlisted, never verbatim,
+	   the same discipline as SUBTYPES and BOOK_FORMATS */
+	test('playMode emits enumeration URLs and refuses anything off the list', () => {
+		assert.match(card(), /<meta itemprop="playMode" content="https:\/\/schema\.org\/SinglePlayer">/);
+		assert.match(card(), /<meta itemprop="playMode" content="https:\/\/schema\.org\/CoOp">/);
+		const bogus = card({ playMode: ['CoOp', 'BattleRoyale', '"><img src=x>'] });
+		assert.ok(!bogus.includes('BattleRoyale'), 'an invented member never reaches an itemprop');
+		assert.ok(!bogus.includes('<img'), 'and nothing breaks out of the attribute');
+		assert.equal((bogus.match(/itemprop="playMode"/g) || []).length, 1);
+	});
+
+	/* numberOfPlayers' range is QuantitativeValue — "up to four raiders" was prose only */
+	test('numberOfPlayers is a QuantitativeValue, not a bare number', () => {
+		assert.match(card(), /<span itemprop="numberOfPlayers" itemscope itemtype="https:\/\/schema\.org\/QuantitativeValue" hidden><meta itemprop="minValue" content="1"><meta itemprop="maxValue" content="4"><\/span>/);
+		assert.match(card(), /1–4 players/);
+		assert.match(card({ numberOfPlayers: { min: 1, max: 1 } }), /1 player/);
+	});
+
+	test('the platform run replaces the OS run, and contentRating rides a chip', () => {
+		assert.match(card(), /<p data-part="meta">PlayStation 5 · Xbox Series X\|S · Nintendo Switch · PC<\/p>/);
+		assert.match(card(), /<meta itemprop="contentRating" content="PEGI 12">/);
+		/* a plain SoftwareApplication keeps the operatingSystem run it always had */
+		assert.match(render({ schemaType: 'software', headline: 'X', details: { operatingSystem: ['macOS'], fileSize: '2.4 GB' } }), /<p data-part="meta">macOS · 2\.4 GB<\/p>/);
+	});
+
+	test('escapes hostile input', () => {
+		const html = card({ gamePlatform: ['<script>alert(1)</script>'], gameEdition: '"><img src=x onerror=alert(1)>' });
+		assert.ok(!html.includes('<script>') && !html.includes('<img'), 'no raw markup reaches output');
+		assert.match(html, /&lt;script&gt;alert\(1\)&lt;\/script&gt;/, 'the platform still renders, escaped');
+	});
+});
+
+describe('videogameSections — the detail-page bands', () => {
+	const d = {
+		subtype: 'VideoGame',
+		screenshots: [{ src: '/assets/images/game_02.png', alt: 'Sky Fortress' }],
+		trailer: { name: 'Season 3 trailer', src: '/assets/video/city.mp4', thumbnail: '/assets/images/game_03.png', duration: 'PT1M12S' },
+		systemRequirements: { processor: 'Apple M1 or Intel i5', ram: '8 GB', storage: '4 GB' },
+		quests: [{ name: 'The Cloudbreak', description: 'Reach the first floating dungeon.' }],
+		characters: [{ name: 'Stormcaller', description: 'Lightning class.' }],
+		items: [{ name: 'Aether Compass', description: 'Points at the nearest rift.' }],
+		editions: {
+			currency: 'USD', lowPrice: 29, highPrice: 59,
+			items: [
+				{ edition: 'Standard', platform: 'PC', seller: 'Steam', url: 'https://store.steampowered.example/pixel-raiders', price: 29 },
+				{ edition: 'Sky Fortress Deluxe', platform: 'PlayStation 5', seller: 'PlayStation Store', price: 59, availability: 'out of stock' }
+			]
+		}
+	};
+	const s = () => vidgameSections(d, { headline: 'Pixel Raiders' });
+
+	/* Steam is NOT a platform and not an edition — it is a seller. The matrix rolls up as
+	   AggregateOffer, one Offer per storefront, each naming its own seller. */
+	test('the editions matrix is an AggregateOffer of per-store Offers', () => {
+		const html = s().editions;
+		assert.match(html, /itemprop="offers" itemscope itemtype="https:\/\/schema\.org\/AggregateOffer"/);
+		assert.match(html, /<meta itemprop="lowPrice" content="29">/);
+		assert.match(html, /<meta itemprop="highPrice" content="59">/);
+		assert.match(html, /<meta itemprop="offerCount" content="2">/);
+		assert.equal((html.match(/itemtype="https:\/\/schema\.org\/Offer"/g) || []).length, 2);
+		assert.match(html, /<meta itemprop="name" content="Standard — PC">/);
+		assert.match(html, /itemprop="seller" itemscope itemtype="https:\/\/schema\.org\/Organization"><span itemprop="name">Steam<\/span>/);
+		/* a store link is a real anchor — only a link is crawlable */
+		assert.match(html, /itemprop="url" href="https:\/\/store\.steampowered\.example\/pixel-raiders"/);
+		/* availability is per row, and never guessed */
+		assert.match(html, /content="https:\/\/schema\.org\/OutOfStock"/);
+	});
+
+	/* Google's Software app result reads offers; a bare gamePlatform would not tell it
+	   which storefront sells what, which is the whole point of the matrix */
+	test('the storefront never becomes a gamePlatform or a gameEdition', () => {
+		const html = s().editions;
+		assert.ok(!html.includes('itemprop="gamePlatform"'), 'the matrix declares no platforms — the root does');
+		assert.ok(!html.includes('itemprop="gameEdition"'), 'nor editions — gameEdition is a single Text on the item');
+	});
+
+	test('quests, characters and items are Thing scopes on their Game properties', () => {
+		const parts = s();
+		assert.match(parts.quests, /<li itemprop="quest" itemscope itemtype="https:\/\/schema\.org\/Thing"><span itemprop="name">The Cloudbreak<\/span>/);
+		assert.match(parts.characters, /<li itemprop="characterAttribute" itemscope itemtype="https:\/\/schema\.org\/Thing">/);
+		assert.match(parts.items, /<li itemprop="gameItem" itemscope itemtype="https:\/\/schema\.org\/Thing">/);
+		assert.match(parts.quests, /<small itemprop="description">Reach the first floating dungeon\.<\/small>/);
+	});
+
+	test('the trailer is a VideoObject and the screenshots are ImageObjects', () => {
+		const parts = s();
+		assert.match(parts.trailer, /itemprop="trailer" itemscope itemtype="https:\/\/schema\.org\/VideoObject"/);
+		assert.match(parts.trailer, /<meta itemprop="duration" content="PT1M12S">/);
+		assert.match(parts.screenshots, /itemprop="screenshot" itemscope itemtype="https:\/\/schema\.org\/ImageObject"/);
+	});
+
+	/* processorRequirements / memoryRequirements / storageRequirements are real
+	   SoftwareApplication properties — the teaser's one softwareRequirements line is a
+	   summary, the page splits it into the three machine values */
+	test('the requirements table emits the three typed properties', () => {
+		const html = s().requirements;
+		assert.match(html, /<dd><meta itemprop="processorRequirements" content="Apple M1 or Intel i5">Apple M1 or Intel i5<\/dd>/);
+		assert.match(html, /<meta itemprop="memoryRequirements" content="8 GB">/);
+		assert.match(html, /<meta itemprop="storageRequirements" content="4 GB">/);
+	});
+
+	test('every band is empty rather than half-built when its data is absent', () => {
+		const empty = vidgameSections({}, {});
+		for (const [key, value] of Object.entries(empty)) assert.equal(value, '', `${key} must be empty`);
+	});
+});
+
 describe('bookseries — BookSeries', () => {
 	const details = {
 		startDate: '2024-03-05', endDate: '2026-09-15', publisher: 'Kbh Press', bookCount: 3,
@@ -1974,7 +2107,10 @@ describe('one property, one value', () => {
 		'keywords', 'knowsAbout', 'knowsLanguage', 'mainEntity', 'member', 'offers', 'openingHours',
 		'openingHoursSpecification', 'operatingSystem', 'recipeIngredient', 'review', 'sameAs', 'signOrSymptom',
 		'step', 'subEvent', 'suggestedAnswer', 'suitableForDiet', 'supply', 'track', 'variableMeasured',
-		'variesBy', 'video'
+		'variesBy', 'video',
+		/* VideoGame: a game ships on several platforms and supports several play modes —
+		   both are genuinely many-valued, unlike gameEdition, which is one Text */
+		'characterAttribute', 'gameItem', 'gamePlatform', 'playMode', 'quest', 'screenshot'
 	]);
 	/* Live collisions of the same class, found BY this check, deferred because their
 	   precedence runs the other way per site — demo/schema.html gives the envelope value
