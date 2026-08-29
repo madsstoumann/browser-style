@@ -230,6 +230,12 @@ class EditorCard extends HTMLElement {
 				const native = value === undefined || /^\d{4}-\d{2}-\d{2}$/.test(String(value));
 				return `<label>${label}<input type="${native ? 'date' : 'text'}" value="${esc(value ?? '')}" data-path="${esc(path)}"></label>`;
 			}
+			case 'time': {
+				/* corpus times carry timezone offsets ("16:00:00+02:00") the native control
+				   cannot represent — it would render EMPTY while the value survives underneath */
+				const native = value === undefined || /^\d{2}:\d{2}(:\d{2})?$/.test(String(value));
+				return `<label>${label}<input type="${native ? 'time' : 'text'}" value="${esc(value ?? '')}" data-path="${esc(path)}"></label>`;
+			}
 			case 'geopoint':
 			case 'fieldset': {
 				const fields = field.fields ?? {};
