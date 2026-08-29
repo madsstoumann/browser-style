@@ -47,6 +47,11 @@ const lintErrors = lintTokens();
 for (const error of lintErrors) console.error('  ' + error);
 console.log(lintErrors.length ? `tokens lint: ${lintErrors.length} error(s)\n` : 'tokens lint: ok\n');
 
+/* details manifest → editor schemas + card.schema.json + doc tables, then its lint
+   (a CLI, spawned so its exit code gates the build without killing this process) */
+execFileSync(process.execPath, [dir + 'details.build.js'], { stdio: 'inherit' });
+execFileSync(process.execPath, [dir + 'details.lint.js'], { stdio: 'inherit' });
+
 console.log(`${'file'.padEnd(16)}${'source'.padStart(9)}${'min'.padStart(9)}${'gzip'.padStart(9)}${'brotli'.padStart(9)}`);
 for (const entry of ENTRIES) {
 	const out = entry.replace('.js', '.min.js');

@@ -26,7 +26,7 @@ const presets = { ...load('ui/card/data/card.presets.json').presets, ...load('ui
 const dataDir = join(root, 'ui/card/data');
 const files = [];
 for (const f of readdirSync(dataDir).sort())
-	if (f.endsWith('.json') && !f.startsWith('card.presets') && f !== 'index.json' && f !== 'tokens.json') files.push(join('ui/card/data', f));
+	if (f.endsWith('.json') && !f.startsWith('card.presets') && f !== 'index.json' && f !== 'tokens.json' && f !== 'details.json') files.push(join('ui/card/data', f));
 for (const f of readdirSync(join(dataDir, 'demo')).sort())
 	if (f.endsWith('.json')) files.push(join('ui/card/data/demo', f));
 
