@@ -28,6 +28,9 @@ If the type is a *specialisation* of one the renderer already handles (e.g. anot
 2. Add it to the § Subtypes table in `ui/card/docs/schema.md` — `tokens.lint.js` checks
    both directions.
 3. Set `details.subtype` on the instance.
+4. `node ui/card/details.build.js` — the editor's subtype dropdowns re-materialize from
+   `SUBTYPES` (the manifest's `SUBTYPES.<family>` lookup refs need no edit); commit the
+   regenerated `cms/editors/card/src/details.data.js`.
 
 Never interpolate a supplied string into an `itemtype`. Allowlist Sets exist for exactly
 that reason.
@@ -60,29 +63,44 @@ split, add a `REVEAL_FACES` entry.
 
 **F. Run the test until green.**
 
-**G. Data, reference markup, docs.**
+**G. Data, reference markup, docs, editor.**
 1. `ui/card/data/<key>.json` — a UCF instance; copy the envelope from `data/software.json`.
 2. Register `"<key>"` in `cards` in `ui/card/data/index.json`.
-3. `cms/baseline/models/card.schema.json` — add the `schemaType` enum option, append the
-   `details` shape to the `Type Details` description, bump `metadata.version` /
-   `lastModified`.
+3. **`ui/card/data/details.json`** — add the type: `label` (the dropdown label), `group`
+   (one of the eleven `schema.html` section names — match where the card lands in G.4), and
+   its `details` fields (type / control / `lookup` / `shape` refs — see the manifest's
+   `$comment` for the field vocabulary). A new enum `Set` in `render.js` must be `export`ed
+   and referenced by name; a vocabulary with no `render.js` home goes in the manifest's
+   `vocab` block. This is what the card editor renders — a type missing here has no panel.
 4. Hand-author the reference card in `ui/card/demo/schema.html`, in the right themed
    section, with `<ui-chip data-type>` as the **last** child of the frame. Give it an `id=`
    only if something links to it.
 5. Add a `### <Type> — \`<ItemType>\`` section to `ui/card/docs/schema.md`, and update the
-   count paragraphs there and in the page's `<meta name="description">`.
+   count paragraphs there and in the page's `<meta name="description">`. A matching
+   `### \`<key>\` — <ItemType>` heading + `<!-- details:fields type=<key> -->` marker pair
+   in `ui/card/docs/card.model.md` § Per-type details gets its table generated.
 6. Add `['<ItemType>', 'ui/card/data/<key>.json']` to `PAIRS` in `ui/card/schema.compare.js`.
+
+`cms/baseline/models/card.schema.json` needs only a hand-bump of `metadata.version` /
+`lastModified` — its `schemaType` options and `details` digest are **generated** by
+`details.build.js` from the manifest.
 
 **H. Gates.**
 
 ```bash
 node ui/card/tokens.build.js && node ui/card/tokens.build.js   # 2nd run must be a no-op
 node ui/card/tokens.lint.js                                     # tokens lint: ok
+node ui/card/details.build.js && node ui/card/details.build.js  # 2nd run must be a no-op (git status clean)
+node ui/card/details.lint.js                                    # details.lint: ok — manifest ↔ render.js ↔ corpus ↔ editor
 node --test ui/card/render.test.js
+node --test cms/editors/card/roundtrip.test.js                  # editor value contract over the corpus
 node ui/card/schema.compare.js                                  # every pair transcribes exactly
 node ui/card/render.snapshot.js . /tmp/after.txt
 diff /tmp/before.txt /tmp/after.txt                             # ONLY the new type's block
 ```
+
+Commit the regenerated files (`cms/editors/card/src/details.data.js`,
+`card.schema.json`, the injected `card.model.md` tables) **with** the manifest edit.
 
 A diff in a pre-existing block means shared code moved — stop and find out why.
 
@@ -128,4 +146,7 @@ some checks.
 - `render.js` must stay **Node-safe** — no `document`, no browser globals — and every
   interpolated value passes `esc()`. `renderInline()` is the one exception and its allowlist
   is deliberate.
+- **Smoke the editor**: serve the repo and open `cms/editors/card/demo.html` — pick the new
+  type from the dropdown (right optgroup?), load its corpus instance, confirm the panel
+  renders and the round-trip readout stays byte-equal.
 - Commit one type per commit.
