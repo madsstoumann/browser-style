@@ -13,6 +13,14 @@ import { SCHEMA_TYPE_GROUPS, DETAILS_SCHEMAS, LOOKUPS, TYPE_FLAGS, INJECTED } fr
 import { esc, parseValue, serializeValue, getPath, setPath, deletePath, emptyItemFor } from './state.js';
 import i18nData from './i18n.json' with { type: 'json' };
 
+const localStylesheetPromise = fetch(new URL('./index.css', import.meta.url))
+	.then((r) => r.text())
+	.then(async (css) => {
+		const sheet = new CSSStyleSheet();
+		await sheet.replace(css);
+		return sheet;
+	});
+
 const INPUT_TYPES = { text: 'text', number: 'number', date: 'date', url: 'url', email: 'email', tel: 'tel', time: 'time' };
 
 class EditorCard extends HTMLElement {
@@ -31,6 +39,9 @@ class EditorCard extends HTMLElement {
 
 	async connectedCallback() {
 		await adoptSharedStyles(this.shadowRoot);
+		try {
+			this.shadowRoot.adoptedStyleSheets = [...this.shadowRoot.adoptedStyleSheets, await localStylesheetPromise];
+		} catch (error) { console.error('editor-card: failed to load local styles', error); }
 		this._boundInput = (e) => this._handleInput(e);
 		this._boundChange = (e) => this._handleChange(e);
 		this._boundClick = (e) => this._handleClick(e);

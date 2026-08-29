@@ -1,0 +1,48 @@
+/* Local layout for <editor-card> on top of editor-shared: the shared sheet's
+   fieldset row-flex never wraps, so deep card panels (nested shapes, repeaters)
+   overflow into one endless row. Groups wrap; wide controls take a full row. */
+
+form {
+	display: grid;
+	row-gap: var(--editor-gap);
+	align-content: start;
+}
+
+fieldset[data-part] {
+	border: 1px solid var(--editor-bdc);
+	border-radius: var(--editor-bdrs);
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--editor-gap);
+	padding: var(--editor-gap);
+}
+
+fieldset[data-part] > legend {
+	font-size: smaller;
+	font-weight: 500;
+	padding-inline: 0.5ch;
+	text-transform: capitalize;
+}
+
+fieldset[data-part] > label,
+fieldset[data-part] > div[data-part="item"] {
+	flex: 1 1 14rem;
+	min-inline-size: 0;
+}
+
+fieldset[data-part] > fieldset[data-part],
+fieldset[data-part] > p,
+label:has(> textarea) {
+	flex: 1 1 100%;
+}
+
+form > div[data-part="item"] { display: flex; gap: var(--editor-gap); align-items: center; }
+
+label.toggle {
+	display: flex;
+	align-items: center;
+	gap: 1ch;
+}
+
+p { margin: 0; }
+p[data-part="hint"] { font-size: smaller; color: var(--editor-gray, GrayText); }
