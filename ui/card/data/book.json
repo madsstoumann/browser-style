@@ -13,7 +13,7 @@
     "internalName": "Demo — Book",
     "schemaType": "book",
     "preset": {
-      "$ref": "card-preset/stack-cover"
+      "$ref": "card-preset/stack-square"
     },
     "eyebrow": "Cookbook",
     "headline": "The Nordic Pantry",
@@ -27,8 +27,8 @@
     "media": [
       {
         "mediaType": "image",
-        "src": "/assets/images/nordic-pantry-cover.png",
-        "alt": "The Nordic Pantry book cover"
+        "src": "/assets/images/nordic-pantry-book.png",
+        "alt": "The Nordic Pantry standing on a wooden kitchen table among rye loaves, preserving jars, root vegetables and a bowl of salt"
       }
     ],
     "actions": [
