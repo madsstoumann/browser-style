@@ -116,11 +116,37 @@ const page = `<!DOCTYPE html>
 		body { margin-inline: auto; max-inline-size: 64rem; }
 		.game-view { margin-block-end: var(--spacing-2xl); }
 		.game-view > lay-out { margin-block-start: var(--spacing-xl); }
-		/* the store matrix: one grid row per offer, the buy button pinned to the end */
-		#editions [data-part="list"] { display: grid; gap: var(--spacing-xs); list-style: none; margin: 0; padding: 0; }
-		#editions [data-part="list"] li { align-items: center; display: grid; gap: var(--spacing-xs) var(--spacing-sm); grid-template-columns: 1fr auto; }
-		@media (min-width: 540px) { #editions [data-part="list"] li { grid-template-columns: 1fr 1fr 1fr auto auto; } }
-		#editions [data-part="price"] { font-variant-numeric: tabular-nums; }
+		/* The store matrix. Mobile-first: an offer is a three-line BLOCK (edition · platform /
+		   seller / price + Buy), because five columns in 380px minus the plate padding gives
+		   each one ~50px. From 540px the block becomes one row. The children are positioned
+		   by source order — strong, platform, seller, price, Buy — which is fixed by
+		   videogameSections(); a hairline separates offers in the stacked form, where row
+		   grouping is otherwise the only thing telling two offers apart. */
+		#editions [data-part="list"] { display: grid; list-style: none; margin: 0; padding: 0; }
+		#editions [data-part="list"] li {
+			align-items: baseline;
+			border-block-start: 1px solid color-mix(in oklab, currentColor 15%, transparent);
+			column-gap: var(--spacing-sm);
+			display: grid;
+			grid-template-columns: 1fr auto;
+			padding-block: var(--spacing-sm);
+			row-gap: var(--spacing-3xs, 0.125rem);
+		}
+		#editions [data-part="list"] li:first-child { border-block-start: 0; }
+		#editions [data-part="list"] li > :nth-child(4) { grid-column: 1; }          /* edition */
+		#editions [data-part="list"] li > :nth-child(5) { grid-column: 2; text-align: end; } /* platform */
+		#editions [data-part="list"] li > :nth-child(6) { grid-column: 1 / -1; }     /* seller */
+		#editions [data-part="price"] { font-size: 1.125em; font-variant-numeric: tabular-nums; font-weight: 700; }
+		#editions [data-part="list"] li > a { justify-self: end; }
+		@media (min-width: 540px) {
+			#editions [data-part="list"] li {
+				align-items: center;
+				grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1.2fr) auto auto;
+			}
+			#editions [data-part="list"] li > :nth-child(4) { grid-column: 1; }
+			#editions [data-part="list"] li > :nth-child(5) { grid-column: 2; text-align: start; }
+			#editions [data-part="list"] li > :nth-child(6) { grid-column: 3; }
+		}
 	</style>
 	${CONTRAST_STYLE}
 </head>
