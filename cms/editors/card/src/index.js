@@ -1,336 +1,301 @@
-import { adoptSharedStyles } from '@browser.style/editor-shared';
-import { schemas, cardTypes } from './schemas.js';
+/* <editor-card> — the card model's `details` editor for CMS embedding.
+ * One card content type per CMS: a grouped schemaType dropdown (the eleven schema.html
+ * sections) plus the per-type details panel, all generated from ./details.data.js
+ * (built by ui/card/details.build.js from ui/card/data/details.json).
+ * Value contract: { schemaType, details } — object or JSON string in, JSON string out
+ * (get value / form association), object detail on the change/input events.
+ * Round-trip: unknown details keys pass through untouched; a key is only written on
+ * user action; clearing a field deletes its key unless the loaded payload had it.
+ * Docs: README.md · architecture: AGENTS.md */
+
+import { adoptSharedStyles, createTranslator } from '@browser.style/editor-shared';
+import { SCHEMA_TYPE_GROUPS, DETAILS_SCHEMAS, LOOKUPS, TYPE_FLAGS, INJECTED } from './details.data.js';
+import { esc, parseValue, serializeValue, getPath, setPath, deletePath, emptyItemFor } from './state.js';
+import i18nData from './i18n.json' with { type: 'json' };
+
+const INPUT_TYPES = { text: 'text', number: 'number', date: 'date', url: 'url', email: 'email', tel: 'tel', time: 'time' };
 
 class EditorCard extends HTMLElement {
 	static formAssociated = true;
-	static observedAttributes = ['value'];
+	static observedAttributes = ['value', 'locked'];
 
 	constructor() {
 		super();
 		this.attachShadow({ mode: 'open' });
 		this._internals = this.attachInternals();
-		this._typeLocked = false;
-		this.state = {
-			type: '',
-			data: {}
-		};
+		this.state = { schemaType: '', details: {} };
+		this._original = {};
+		this.t = createTranslator(i18nData, () => this.lang || this.getAttribute('lang') || 'en');
+		this.ready = new Promise((resolve) => { this._resolveReady = resolve; });
 	}
 
 	async connectedCallback() {
 		await adoptSharedStyles(this.shadowRoot);
-		this._boundHandleInput = (e) => this._handleInput(e);
-		this._boundHandleChange = (e) => this._handleChange(e);
-		this._boundHandleClick = (e) => this._handleClick(e);
+		this._boundInput = (e) => this._handleInput(e);
+		this._boundChange = (e) => this._handleChange(e);
+		this._boundClick = (e) => this._handleClick(e);
 		this.render();
+		this._resolveReady(this);
 	}
 
 	attributeChangedCallback(name, oldValue, newValue) {
 		if (oldValue === newValue) return;
-
-		if (name === 'value') {
-			try {
-				const parsed = JSON.parse(newValue);
-				if (parsed?.type && cardTypes.includes(parsed.type)) {
-					this.state.type = parsed.type;
-					this._typeLocked = true;
-				}
-				this.state.data = parsed || {};
-				if (this.state.data.type && cardTypes.includes(this.state.data.type)) {
-					this.state.type = this.state.data.type;
-					this._typeLocked = true;
-				}
-				this.render();
-			} catch (e) {
-				console.error('Invalid JSON value', e);
-			}
+		if (name === 'value') this._setPayload(newValue);
+		if (name === 'locked') {
+			const select = this.shadowRoot.querySelector('[data-type=schema-type]');
+			if (select) select.disabled = this.locked;
 		}
-	}
-
-	get lockType() {
-		return this._typeLocked;
 	}
 
 	get value() {
-		return JSON.stringify({
-			type: this.state.type,
-			...this.state.data
-		});
+		return serializeValue(this.state.schemaType, this.state.details);
 	}
 
-	set value(val) {
-		if (typeof val === 'string') {
-			this.setAttribute('value', val);
-		} else if (val && typeof val === 'object') {
-			this.state.data = val;
-			if (val.type && cardTypes.includes(val.type)) {
-				this.state.type = val.type;
-				this._typeLocked = true;
-			}
-			this.render();
-		}
+	/* accepts an object (Contentful JSON field) or a JSON string (Umbraco, forms) */
+	set value(input) {
+		this._setPayload(input);
 	}
+
+	_setPayload(input) {
+		const parsed = parseValue(input);
+		if (!parsed) { console.error('editor-card: invalid JSON value'); return; }
+		this.state = parsed;
+		this._original = structuredClone(parsed.details);
+		this._internals.setFormValue(this.value);
+		this.render();
+	}
+
+	get locked() { return this.hasAttribute('locked'); }
+
+	_schema(type = this.state.schemaType) {
+		return DETAILS_SCHEMAS[type] ?? null;
+	}
+
+	/* keys some other field's `requires` points at — a write to one re-renders the panel */
+	_gateKeys() {
+		const schema = this._schema() ?? {};
+		return new Set(Object.values(schema).map((field) => field.requires).filter(Boolean));
+	}
+
+	_emitChange() {
+		this._internals.setFormValue(this.value);
+		this._updatePreview();
+		const detail = structuredClone({ schemaType: this.state.schemaType, details: this.state.details });
+		this.dispatchEvent(new CustomEvent('change', { detail, bubbles: true, composed: true }));
+		this.dispatchEvent(new CustomEvent('input', { detail: structuredClone(detail), bubbles: true, composed: true }));
+	}
+
+	_updatePreview() {
+		const code = this.shadowRoot.querySelector('code');
+		if (code) code.textContent = JSON.stringify({ schemaType: this.state.schemaType, details: this.state.details }, null, 2);
+	}
+
+	/* ── events (delegated on the form — remove before every re-render) ── */
 
 	_addEventListeners() {
 		const form = this.shadowRoot.querySelector('form');
 		if (!form) return;
-
-		form.addEventListener('input', this._boundHandleInput);
-		form.addEventListener('change', this._boundHandleChange);
-		form.addEventListener('click', this._boundHandleClick);
+		form.addEventListener('input', this._boundInput);
+		form.addEventListener('change', this._boundChange);
+		form.addEventListener('click', this._boundClick);
 	}
 
 	_removeEventListeners() {
 		const form = this.shadowRoot.querySelector('form');
 		if (!form) return;
-
-		form.removeEventListener('input', this._boundHandleInput);
-		form.removeEventListener('change', this._boundHandleChange);
-		form.removeEventListener('click', this._boundHandleClick);
+		form.removeEventListener('input', this._boundInput);
+		form.removeEventListener('change', this._boundChange);
+		form.removeEventListener('click', this._boundClick);
 	}
 
 	_handleInput(e) {
 		const { target } = e;
 		const path = target.dataset.path;
-		if (!path) return;
-
-		const value = target.type === 'number' ? Number(target.value) : target.value;
-		this._updateData(path, value);
+		if (!path || target.dataset.json !== undefined || target.type === 'checkbox' || target.tagName === 'SELECT') return;
+		this._write(path, target.type === 'number'
+			? (target.value === '' ? undefined : Number(target.value))
+			: (target.value === '' ? undefined : target.value));
 	}
 
 	_handleChange(e) {
 		const { target } = e;
-
-		// Handle type selector
-		if (target.dataset.type === 'card-type') {
-			this._updateType(target.value);
+		if (target.dataset.type === 'schema-type') { this._updateType(target.value); return; }
+		const path = target.dataset.path;
+		if (!path) return;
+		if (target.dataset.json !== undefined) {
+			try {
+				const parsed = target.value.trim() ? JSON.parse(target.value) : undefined;
+				target.removeAttribute('aria-invalid');
+				this._write(path, parsed);
+			} catch { target.setAttribute('aria-invalid', 'true'); }
 			return;
 		}
-
-		// Handle array item inputs (use change for these)
-		const path = target.dataset.path;
-		const index = target.dataset.index;
-		if (path && index !== undefined) {
-			const keys = path.split('.');
-			let current = this.state.data;
-			for (const key of keys) {
-				current = current?.[key];
-			}
-			if (Array.isArray(current)) {
-				const newItems = [...current];
-				newItems[parseInt(index, 10)] = target.value;
-				this._updateData(path, newItems);
-			}
+		if (target.type === 'checkbox') {
+			/* unchecking deletes the key unless the loaded payload carried it explicitly
+			   (an explicit false can differ from the renderer's per-type default) */
+			const value = target.checked ? true : (getPath(this._original, path) !== undefined ? false : undefined);
+			this._write(path, value, { rerender: this._gateKeys().has(path.split('.')[0]) });
+			return;
 		}
+		if (target.tagName === 'SELECT') this._write(path, target.value === '' ? undefined : target.value);
 	}
 
 	_handleClick(e) {
-		const { target } = e;
-
-		// Handle remove button
-		if (target.dataset.action === 'remove') {
-			const path = target.dataset.path;
-			const index = parseInt(target.dataset.index, 10);
-			const keys = path.split('.');
-			let current = this.state.data;
-			for (const key of keys) {
-				current = current?.[key];
-			}
-			if (Array.isArray(current)) {
-				this._updateData(path, current.filter((_, i) => i !== index));
-				this.render();
-			}
-			return;
+		const action = e.target.dataset.action;
+		if (!action) return;
+		const path = e.target.dataset.path;
+		if (action === 'add') {
+			const items = Array.isArray(getPath(this.state.details, path)) ? getPath(this.state.details, path) : [];
+			setPath(this.state.details, path, [...items, emptyItemFor(this._itemsSpecAt(path))]);
+			this._emitChange();
+			this.render();
 		}
-
-		// Handle add button
-		if (target.dataset.action === 'add') {
-			const path = target.dataset.path;
-			const itemType = target.dataset.itemType;
-			const keys = path.split('.');
-			let current = this.state.data;
-			for (const key of keys) {
-				current = current?.[key];
-			}
-			const items = Array.isArray(current) ? current : [];
-			this._updateData(path, [...items, itemType === 'object' ? {} : '']);
+		if (action === 'remove') {
+			deletePath(this.state.details, `${path}.${e.target.dataset.index}`);
+			const remaining = getPath(this.state.details, path);
+			if (Array.isArray(remaining) && !remaining.length && getPath(this._original, path) === undefined)
+				deletePath(this.state.details, path);
+			this._emitChange();
 			this.render();
 		}
 	}
 
-	_updateType(newType) {
-		this.state.type = newType;
-		if (!this.state.data) this.state.data = {};
-		this.state.data.type = newType;
+	/* the items spec for an array path like "tiers" or "tiers.0.benefits" */
+	_itemsSpecAt(path) {
+		let spec = { fields: this._schema() ?? {} };
+		for (const key of String(path).split('.')) {
+			if (/^\d+$/.test(key)) spec = spec.items ?? {};
+			else spec = spec.fields?.[key] ?? {};
+		}
+		return spec.items;
+	}
+
+	_write(path, value, { rerender = false } = {}) {
+		if (value === undefined) deletePath(this.state.details, path);
+		else setPath(this.state.details, path, value);
+		this._emitChange();
+		if (rerender) this.render();
+	}
+
+	_updateType(schemaType) {
+		this.state.schemaType = schemaType;
 		this._emitChange();
 		this.render();
 	}
 
-	_updateData(path, value) {
-		const keys = path.split('.');
-		let current = this.state.data;
+	/* ── rendering ── */
 
-		for (let i = 0; i < keys.length - 1; i++) {
-			if (!current[keys[i]]) current[keys[i]] = {};
-			current = current[keys[i]];
+	_renderSelect(field, value, path) {
+		const options = LOOKUPS[field.lookup] ?? [];
+		const known = options.some((o) => o.value === value);
+		return `<select data-path="${esc(path)}">
+			<option value="">${esc(this.t('select'))}</option>
+			${value && !known ? `<option value="${esc(value)}" selected>${esc(value)} (${esc(this.t('offList'))})</option>` : ''}
+			${options.map((o) => `<option value="${esc(o.value)}"${o.value === value ? ' selected' : ''}>${esc(o.label)}</option>`).join('')}
+		</select>`;
+	}
+
+	_labelFor(key, field) {
+		const label = field.label ?? key.replace(/([a-z0-9])([A-Z])/g, '$1 $2').replace(/^./, (c) => c.toUpperCase());
+		return `${esc(label)}${field.display ? ` <small>(${esc(this.t('displayTwin'))})</small>` : ''}`;
+	}
+
+	_renderField(key, field, value, path) {
+		/* requires-gate: hidden until the sibling key is truthy */
+		if (field.requires) {
+			const gatePath = path.split('.').slice(0, -1).concat(field.requires).join('.');
+			if (!getPath(this.state.details, gatePath)) return '';
 		}
 
-		current[keys[keys.length - 1]] = value;
-		this._emitChange();
-	}
+		const label = this._labelFor(key, field);
 
-	_emitChange() {
-		const val = this.value;
-		this._internals.setFormValue(val);
-		this._updateOutput();
-		this.dispatchEvent(new CustomEvent('change', { detail: { type: this.state.type, ...this.state.data }, bubbles: true, composed: true }));
-		this.dispatchEvent(new CustomEvent('input', { detail: { type: this.state.type, ...this.state.data }, bubbles: true, composed: true }));
-	}
-
-	_updateOutput() {
-		const code = this.shadowRoot.querySelector('code');
-		if (code) {
-			const output = this.state.type ? { type: this.state.type, ...this.state.data } : {};
-			code.textContent = JSON.stringify(output, null, 2);
+		/* open shapes (free JSON) — and object fields whose current value is a string (`also`) */
+		if (field.open) {
+			const json = value === undefined ? '' : JSON.stringify(value, null, 2);
+			return `<label>${label} <small>(JSON)</small><textarea data-path="${esc(path)}" data-json rows="4" spellcheck="false">${esc(json)}</textarea></label>`;
 		}
-	}
+		if (field.type === 'object' && typeof value === 'string' && field.also?.includes('string')) {
+			return `<label>${label}<input type="text" value="${esc(value)}" data-path="${esc(path)}"></label>`;
+		}
 
-	_renderField(key, schema, value, path) {
-		const label = schema.title || key;
-		const placeholder = schema.placeholder ? ` placeholder="${schema.placeholder}"` : '';
-
-		if (schema.type === 'string') {
-			if (schema.enum) {
-				const options = schema.enum.map(opt =>
-					`<option value="${opt}"${value === opt ? ' selected' : ''}>${opt}</option>`
-				).join('');
-				return `
-					<label>${label}
-						<select data-path="${path}">
-							<option value="">Select...</option>
-							${options}
-						</select>
-					</label>`;
+		switch (field.control) {
+			case 'select': return `<label>${label}${this._renderSelect(field, value, path)}</label>`;
+			case 'toggle': return `<label class="toggle"><input type="checkbox" data-path="${esc(path)}"${value ? ' checked' : ''}>${label}</label>`;
+			case 'textarea': return `<label>${label}<textarea data-path="${esc(path)}" rows="3">${esc(value ?? '')}</textarea></label>`;
+			case 'datetime':
+				/* text, not datetime-local: corpus values carry seconds + timezone offsets
+				   that the native control cannot represent — round-trip beats chrome */
+				return `<label>${label}<input type="text" value="${esc(value ?? '')}" data-path="${esc(path)}" placeholder="2026-01-31T09:00:00+00:00"></label>`;
+			case 'date': {
+				const native = value === undefined || /^\d{4}-\d{2}-\d{2}$/.test(String(value));
+				return `<label>${label}<input type="${native ? 'date' : 'text'}" value="${esc(value ?? '')}" data-path="${esc(path)}"></label>`;
 			}
-			const type = schema.format === 'date' ? 'date' : 'text';
-			return `
-				<label>${label}
-					<input type="${type}" value="${value || ''}" data-path="${path}"${placeholder}>
-				</label>`;
+			case 'geopoint':
+			case 'fieldset': {
+				const fields = field.fields ?? {};
+				const inner = Object.entries(fields)
+					.map(([k, f]) => this._renderField(k, f, value?.[k], `${path}.${k}`)).join('');
+				return `<fieldset data-part="group"><legend>${label}</legend>${inner}</fieldset>`;
+			}
+			case 'repeater': return this._renderRepeater(key, field, value, path, label);
+			default: {
+				const type = INPUT_TYPES[field.control] ?? 'text';
+				return `<label>${label}<input type="${type}" value="${esc(value ?? '')}" data-path="${esc(path)}"></label>`;
+			}
 		}
+	}
 
-		if (schema.type === 'number') {
-			return `
-				<label>${label}
-					<input type="number" value="${value || ''}" data-path="${path}"${placeholder}>
-				</label>`;
-		}
+	_renderRepeater(key, field, value, path, label) {
+		const items = Array.isArray(value) ? value : [];
+		const spec = field.items ?? {};
+		const addButton = `<button type="button" data-action="add" data-path="${esc(path)}">${esc(this.t('add'))} ${esc((field.label ?? key).toLowerCase())}</button>`;
+		const rows = items.map((item, index) => {
+			const remove = `<button type="button" data-action="remove" data-path="${esc(path)}" data-index="${index}">${esc(this.t('remove'))}</button>`;
+			/* a listItem-style shape accepts plain strings — render the kind the data has */
+			if (spec.fields && typeof item !== 'string') {
+				const inner = Object.entries(spec.fields)
+					.map(([k, f]) => this._renderField(k, f, item?.[k], `${path}.${index}.${k}`)).join('');
+				return `<fieldset data-part="item"><legend>${index + 1}</legend>${inner}<p>${remove}</p></fieldset>`;
+			}
+			if (spec.lookup) return `<div data-part="item">${this._renderSelect(spec, item, `${path}.${index}`)} ${remove}</div>`;
+			return `<div data-part="item"><input type="${INPUT_TYPES[spec.control] ?? 'text'}" value="${esc(item ?? '')}" data-path="${esc(path)}.${index}"> ${remove}</div>`;
+		}).join('');
+		return `<fieldset data-part="group"><legend>${label}</legend>${rows}<p>${addButton}</p></fieldset>`;
+	}
 
-		if (schema.type === 'object') {
-			return Object.entries(schema.properties).map(([propKey, propSchema]) => {
-				const propPath = path ? `${path}.${propKey}` : propKey;
-				const propValue = value?.[propKey];
-				return this._renderField(propKey, propSchema, propValue, propPath);
-			}).join('');
-		}
-
-		if (schema.type === 'array') {
-			const items = value || [];
-			const itemPlaceholder = schema.items?.placeholder ? ` placeholder="${schema.items.placeholder}"` : '';
-			const itemTitle = schema.itemTitle || 'Item';
-			const isLastItem = (index) => index === items.length - 1;
-			const itemsHtml = items.map((item, index) => {
-				const addButton = isLastItem(index)
-					? `<button type="button" data-action="add" data-path="${path}" data-item-type="${schema.items.type}">Add ${itemTitle.toLowerCase()}</button>`
-					: '';
-				if (schema.items.type === 'object') {
-					const objectFields = Object.entries(schema.items.properties).map(([k, s]) =>
-						this._renderField(k, s, item[k], `${path}.${index}.${k}`)
-					).join('');
-					return `
-						<div>
-							<h4>${itemTitle} ${index + 1}</h4>
-							${objectFields}
-							<fieldset>
-								<button type="button" data-action="remove" data-path="${path}" data-index="${index}">Remove ${itemTitle.toLowerCase()}</button>
-								${addButton}
-							</fieldset>
-						</div>`;
-				}
-				return `
-					<div>
-						<label>${label}
-							<input type="text" value="${item}" data-path="${path}" data-index="${index}"${itemPlaceholder}>
-						</label>
-						<fieldset>
-							<button type="button" data-action="remove" data-path="${path}" data-index="${index}">Remove</button>
-							${addButton}
-						</fieldset>
-					</div>`;
-			}).join('');
-
-			// If no items yet, show just the Add button
-			const emptyHtml = items.length === 0 ? `
-				<fieldset>
-					<button type="button" data-action="add" data-path="${path}" data-item-type="${schema.items.type}">Add ${itemTitle.toLowerCase()}</button>
-				</fieldset>` : '';
-
-			return `
-				<div>
-					<h3>${label}</h3>
-					${itemsHtml}
-					${emptyHtml}
-				</div>`;
-		}
-
-		return '';
+	_renderPanel() {
+		const type = this.state.schemaType;
+		const schema = this._schema();
+		if (!schema) return '';
+		const fields = Object.entries(schema)
+			.map(([key, field]) => this._renderField(key, field, this.state.details[key], key)).join('');
+		const paywalled = TYPE_FLAGS.paywalled.includes(type)
+			? this._renderField('paywalled', INJECTED.paywalled, this.state.details.paywalled, 'paywalled')
+			: '';
+		const hint = TYPE_FLAGS.subheadline.includes(type) ? `<p data-part="hint">${esc(this.t('subheadlineHint'))}</p>` : '';
+		if (!fields && !paywalled) return `<p data-part="hint">${esc(this.t('envelopeOnly'))}</p>`;
+		return `${hint}${fields}${paywalled}`;
 	}
 
 	render() {
-		if (!schemas) {
-			this.shadowRoot.innerHTML = `<div class="error">Error: Schemas not loaded</div>`;
-			return;
-		}
-
-		const type = this.state.type;
-		const typeSchema = type ? schemas[type] : null;
-		const typeOptions = cardTypes.map(t =>
-			`<option value="${t}"${type === t ? ' selected' : ''}>${t.charAt(0).toUpperCase() + t.slice(1)}</option>`
-		).join('');
-
-		let fieldsHtml = '';
-		if (typeSchema) {
-			const typeData = this.state.data[type] || {};
-			fieldsHtml = Object.entries(typeSchema.properties).map(([key, schema]) =>
-				this._renderField(key, schema, typeData[key], `${type}.${key}`)
-			).join('');
-		}
-
-		const outputJson = JSON.stringify(type ? { type: this.state.type, ...this.state.data } : {}, null, 2);
-
-		const disabledAttr = this.lockType ? ' disabled' : '';
+		const type = this.state.schemaType;
+		const groups = SCHEMA_TYPE_GROUPS.map((group) =>
+			`<optgroup label="${esc(group.label)}">${group.options.map((o) =>
+				`<option value="${esc(o.value)}"${o.value === type ? ' selected' : ''}>${esc(o.label)}</option>`).join('')}</optgroup>`).join('');
 
 		this._removeEventListeners();
-
 		this.shadowRoot.innerHTML = `
 			<form>
-				<div>
-					<label>Card Type
-						<select data-type="card-type"${disabledAttr}>
-							<option value=""${!type ? ' selected' : ''}>Choose card type...</option>
-							<hr>
-							${typeOptions}
-						</select>
-					</label>
-				</div>
-				${typeSchema ? `
-					<div>
-						<h2>${type}</h2>
-						${fieldsHtml}
-					</div>
-				` : ''}
+				<label>${esc(this.t('schemaType'))}
+					<select data-type="schema-type"${this.locked ? ' disabled' : ''}>
+						<option value=""${!type ? ' selected' : ''}>${esc(this.t('chooseType'))}</option>
+						${groups}
+					</select>
+				</label>
+				${this._renderPanel()}
 			</form>
-			<details><summary>Value</summary><pre><code>${outputJson}</code></pre></details>`;
-
+			<details><summary>${esc(this.t('valueSummary'))}</summary><pre><code></code></pre></details>`;
+		this._updatePreview();
 		this._addEventListeners();
 	}
 }
