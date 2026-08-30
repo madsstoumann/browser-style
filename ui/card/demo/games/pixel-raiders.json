@@ -1,0 +1,175 @@
+{
+  "$schema": "../../../../cms/baseline/models/card.schema.json",
+  "id": "software-1",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-07-04T12:00:00Z",
+    "updatedAt": "2026-08-29T12:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Software"
+  },
+  "fields": {
+    "internalName": "Demo — Pixel Raiders (detail page)",
+    "cover": null,
+    "furniture": {
+      "lightbox": true
+    },
+    "body": "Four raiders, one collapsing sky. <b>Pixel Raiders</b> is a co-op dungeon crawler where every floor is stitched together the moment you drop into it — the same seed, the same rooms, on every platform you own.\n\nThe Sky Fortress season lifts the whole run above the cloud line: twelve new floating dungeons, a class that fights with weather, and a shared progression track that follows your account rather than your console.",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/game_01.png",
+        "alt": "Pixel Raiders key art — four chibi heroes charging forward with swords and staves raised, slimes and a star burst around them"
+      }
+    ],
+    "actions": [
+      {
+        "link": {
+          "url": "#editions",
+          "text": "See editions"
+        },
+        "style": "primary",
+        "icon": "shopping-cart"
+      },
+      {
+        "link": {
+          "url": "#trailer",
+          "text": "Watch the trailer"
+        },
+        "style": "ghost",
+        "icon": "play-arrow"
+      }
+    ],
+    "details": {
+      "rating": {
+        "value": 4.6,
+        "count": 18420,
+        "max": 5
+      },
+      "screenshots": [
+        {
+          "src": "/assets/images/game_01.png",
+          "alt": "Pixel Raiders key art — four chibi heroes charging forward with swords and staves raised, slimes and a star burst around them"
+        }
+      ],
+      "trailer": {
+        "id": "pixel-raiders-trailer",
+        "name": "Pixel Raiders — Season 3: Sky Fortress",
+        "description": "Ninety seconds above the cloud line: the twelve new dungeons, the Stormcaller class and cross-play.",
+        "src": "/assets/video/city.mp4",
+        "thumbnail": "/assets/images/game_01.png",
+        "duration": "PT1M12S",
+        "uploadDate": "2026-08-01"
+      },
+      "editions": {
+        "currency": "USD",
+        "lowPrice": 29,
+        "highPrice": 59,
+        "items": [
+          {
+            "edition": "Standard",
+            "platform": "PC",
+            "seller": "Steam",
+            "url": "https://store.steampowered.example/app/pixel-raiders",
+            "price": 29
+          },
+          {
+            "edition": "Standard",
+            "platform": "PC",
+            "seller": "Epic Games Store",
+            "url": "https://store.epicgames.example/pixel-raiders",
+            "price": 29
+          },
+          {
+            "edition": "Standard",
+            "platform": "PlayStation 5",
+            "seller": "PlayStation Store",
+            "url": "https://store.playstation.example/pixel-raiders",
+            "price": 29
+          },
+          {
+            "edition": "Standard",
+            "platform": "Xbox Series X|S",
+            "seller": "Microsoft Store",
+            "url": "https://xbox.example/games/pixel-raiders",
+            "price": 29
+          },
+          {
+            "edition": "Standard",
+            "platform": "Nintendo Switch",
+            "seller": "Nintendo eShop",
+            "url": "https://nintendo.example/store/pixel-raiders",
+            "price": 34
+          },
+          {
+            "edition": "Sky Fortress Deluxe",
+            "platform": "PC",
+            "seller": "Steam",
+            "url": "https://store.steampowered.example/app/pixel-raiders-deluxe",
+            "price": 59
+          },
+          {
+            "edition": "Sky Fortress Deluxe",
+            "platform": "PlayStation 5",
+            "seller": "PlayStation Store",
+            "price": 59,
+            "availability": "limited",
+            "url": "https://store.playstation.example/pixel-raiders-deluxe"
+          }
+        ]
+      },
+      "quests": [
+        {
+          "name": "The Cloudbreak",
+          "description": "Climb out of the drowned quarter and reach the first floating dungeon."
+        },
+        {
+          "name": "Ballast and Bone",
+          "description": "Cut the anchor chains holding the Fortress to the seabed."
+        },
+        {
+          "name": "The Long Static",
+          "description": "Survive nine floors with the storm rising a level each time you rest."
+        },
+        {
+          "name": "Sky Burial",
+          "description": "Return the Lantern Witch's compass to the room it was made in."
+        }
+      ],
+      "characters": [
+        {
+          "name": "Stormcaller",
+          "description": "Weather class — calls lightning down the vault lines, weakest in the open."
+        },
+        {
+          "name": "Ironvow",
+          "description": "Shield-first raider who takes the hit meant for anyone standing behind them."
+        },
+        {
+          "name": "Lantern Witch",
+          "description": "Sees one room ahead, and can hold a door shut for exactly ten seconds."
+        },
+        {
+          "name": "Rook",
+          "description": "Scout who trades armour for a second dodge and a longer reach."
+        }
+      ],
+      "items": [
+        {
+          "name": "Aether Compass",
+          "description": "Points at the nearest rift instead of north."
+        },
+        {
+          "name": "Stormglass Lantern",
+          "description": "Burns brighter the closer the storm gets — and blinds you at full strength."
+        },
+        {
+          "name": "Raider's Sigil",
+          "description": "Carries one death per run back to the party."
+        }
+      ],
+      "price": null
+    }
+  }
+}

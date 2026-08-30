@@ -1,0 +1,52 @@
+{
+  "$schema": "../../../cms/baseline/models/card.schema.json",
+  "id": "bookseries-1",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-08-29T12:00:00Z",
+    "updatedAt": "2026-08-29T12:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Media"
+  },
+  "fields": {
+    "internalName": "Demo — Book series",
+    "schemaType": "bookseries",
+    "preset": {
+      "$ref": "card-preset/showcase"
+    },
+    "eyebrow": "Cookbook series",
+    "headline": "The Nordic Table",
+    "summary": "Three volumes on one larder — the roots, the pantry and the shore, cooked the way a northern kitchen actually runs.",
+    "authors": [
+      {
+        "name": "Mette Holm",
+        "avatar": "/assets/images/avatar4.png"
+      }
+    ],
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/nordic-table-series.png",
+        "alt": "The three hardbacks of The Nordic Table laid out on a wooden table among chanterelles, rye bread, salt and root vegetables"
+      }
+    ],
+    "details": {
+      "startDate": "2024-03-05",
+      "endDate": "2026-09-15",
+      "bookCount": 3,
+      "publisher": "Kbh Press",
+      "rating": {
+        "value": 4.7,
+        "count": 2140,
+        "max": 5
+      },
+      "books": [
+        { "position": 1, "name": "Rooted", "datePublished": "2024-03-05", "isbn": "978-87-12345-65-4" },
+        { "position": 2, "name": "The Nordic Pantry", "datePublished": "2025-10-07", "isbn": "978-87-12345-67-8", "url": "#schema-book" },
+        { "position": 3, "name": "Coast & Cold", "datePublished": "2026-09-15", "isbn": "978-87-12345-69-2" }
+      ]
+    },
+    "tags": ["Nordic", "Preserving", "Root vegetables"]
+  }
+}

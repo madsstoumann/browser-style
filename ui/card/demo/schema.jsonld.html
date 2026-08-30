@@ -10,7 +10,7 @@
 	<meta name="referrer" content="no-referrer">
 	<meta name="format-detection" content="telephone=no">
 	<link rel="preconnect" href="https://v4.browser.style">
-	<meta name="description" content="demo/schema.html rendered with schema="jsonld": the markup carries no microdata, and the same structured data is emitted once as a page-level @graph of 66 nodes in the document head.">
+	<meta name="description" content="demo/schema.html rendered with schema="jsonld": the markup carries no microdata, and the same structured data is emitted once as a page-level @graph of 67 nodes in the document head.">
 	<link rel="alternate" type="text/markdown" href="/ui/card/docs/card.md">
 	<script type="application/ld+json">{
 	"@context": "https://schema.org",
@@ -227,17 +227,19 @@
 			],
 			"productGroupID": "PSG-2026",
 			"variesBy": "https://schema.org/color",
+			"category": "Dresses",
 			"name": "Persistence Silk Gown",
 			"description": "Four colourways, each its own variant with its own URL — pick one to go straight to it.",
 			"offers": {
 				"@type": "Offer",
 				"priceCurrency": "USD",
-				"price": "249",
-				"availability": "https://schema.org/InStock"
+				"availability": "https://schema.org/InStock",
+				"itemCondition": "https://schema.org/NewCondition",
+				"price": "249"
 			}
 		},
 		{
-			"@type": "SoftwareApplication",
+			"@type": "VideoGame",
 			"image": "/assets/images/game_01.png",
 			"applicationCategory": "GameApplication",
 			"operatingSystem": [
@@ -245,21 +247,39 @@
 				"Windows",
 				"Switch"
 			],
+			"gamePlatform": [
+				"PlayStation 5",
+				"Xbox Series X|S",
+				"Nintendo Switch",
+				"PC"
+			],
+			"playMode": [
+				"https://schema.org/SinglePlayer",
+				"https://schema.org/CoOp",
+				"https://schema.org/MultiPlayer"
+			],
+			"gameEdition": "Sky Fortress Edition",
+			"contentRating": "PEGI 12",
+			"numberOfPlayers": {
+				"@type": "QuantitativeValue",
+				"minValue": "1",
+				"maxValue": "4"
+			},
 			"name": "Pixel Raiders",
-			"softwareVersion": "2.1",
 			"description": "Co-op dungeon crawling for up to four raiders — new Sky Fortress season, cross-play everywhere.",
+			"softwareVersion": "2.1",
 			"author": {
 				"@type": "Organization",
 				"name": "Bitburrow Studio",
 				"url": "https://bitburrow.example"
 			},
+			"softwareRequirements": "Apple M1 or Intel i5 · 8 GB RAM · 4 GB free",
 			"offers": {
 				"@type": "Offer",
 				"priceCurrency": "USD",
 				"availability": "https://schema.org/InStock",
 				"price": "29"
 			},
-			"softwareRequirements": "Apple M1 or Intel i5 · 8 GB RAM · 4 GB free",
 			"keywords": [
 				"Game",
 				"Co-op"
@@ -748,8 +768,61 @@
 			]
 		},
 		{
+			"@type": "BookSeries",
+			"image": "/assets/images/nordic-table-series.png",
+			"startDate": "2024-03-05",
+			"endDate": "2026-09-15",
+			"genre": "Cookbook series",
+			"name": "The Nordic Table",
+			"description": "Three volumes on one larder — the roots, the pantry and the shore, cooked the way a northern kitchen actually runs.",
+			"author": {
+				"@type": "Person",
+				"name": "Mette Holm"
+			},
+			"aggregateRating": {
+				"@type": "AggregateRating",
+				"ratingValue": "4.7",
+				"ratingCount": "2140",
+				"bestRating": "5",
+				"worstRating": "1"
+			},
+			"hasPart": [
+				{
+					"@type": "Book",
+					"position": "1",
+					"datePublished": "2024-03-05",
+					"isbn": "978-87-12345-65-4",
+					"name": "Rooted"
+				},
+				{
+					"@type": "Book",
+					"position": "2",
+					"datePublished": "2025-10-07",
+					"isbn": "978-87-12345-67-8",
+					"url": "#schema-book",
+					"name": "The Nordic Pantry"
+				},
+				{
+					"@type": "Book",
+					"position": "3",
+					"datePublished": "2026-09-15",
+					"isbn": "978-87-12345-69-2",
+					"name": "Coast & Cold"
+				}
+			],
+			"publisher": {
+				"@type": "Organization",
+				"name": "Kbh Press"
+			},
+			"keywords": [
+				"Nordic",
+				"Preserving",
+				"Root vegetables"
+			]
+		},
+		{
 			"@type": "Book",
-			"image": "/assets/images/gastronomy.png",
+			"image": "/assets/images/nordic-pantry-book.png",
 			"isbn": "978-87-12345-67-8",
 			"numberOfPages": "312",
 			"bookFormat": "https://schema.org/Hardcover",
@@ -3107,7 +3180,7 @@
 		}
 	]
 }</script>
-	<link rel="stylesheet" href="/dist/demo.5819eaf5.min.css">
+	<link rel="stylesheet" href="/dist/demo.8656b5bb.min.css">
 
 	<style>
 		/* Off-screen cards skip style+layout. Page-scoped on purpose; 567px is this page's
@@ -3167,7 +3240,7 @@
 	<p>This is <a href="schema.html">demo/schema.html</a> rendered with <code>schema=&quot;jsonld&quot;</code>.
 	The markup is identical to <a href="schema.raw.html">schema.raw.html</a> — no <code>itemscope</code>,
 	<code>itemtype</code> or <code>itemprop</code> — and the same structured data is emitted once in
-	<code>&lt;head&gt;</code> as a single <code>@graph</code> of 66 nodes. It is read back out of the
+	<code>&lt;head&gt;</code> as a single <code>@graph</code> of 67 nodes. It is read back out of the
 	microdata by <code>jsonld.js</code>, so it cannot disagree with <a href="schema.html">schema.html</a>.
 	Generated by <code>node ui/card/demo/schema.modes.build.js</code>; do not edit by hand.</p>
 
@@ -3179,7 +3252,7 @@
 	<lay-out md="columns(2) items(start)">
 		<ui-card variant="col" media="asr(16/9) load(eager) chip(te)">
 			<cq-box>
-				<ui-media><img src="/assets/images/popovers.png" alt="Abstract illustration of layered UI panels" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/popovers.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/popovers.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/popovers.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/popovers.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/popovers.png 1200w" sizes="(min-width: 540px) min(50vw, 512px), 100vw" loading="eager" fetchpriority="high" decoding="async"><ui-chip data-type>CreativeWork</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/popovers.png" alt="Abstract illustration of layered UI panels" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/popovers.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/popovers.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/popovers.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/popovers.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/popovers.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/popovers.png 1200w" sizes="(min-width: 540px) min(50vw, 512px), calc(100vw - 2rem)" loading="eager" fetchpriority="high" decoding="async"><ui-chip data-type>CreativeWork</ui-chip></ui-media>
 				<ui-content>
 					<small data-part="eyebrow">Design</small>
 					<h3 data-part="headline">A generic piece of content</h3>
@@ -3197,7 +3270,7 @@
 		</ui-card>
 		<ui-card id="schema-article" data-view="card-article-1" variant="col" media="asr(16/9) chip(te)">
 			<cq-box>
-				<ui-media><img data-view="hero-article-1" src="/assets/images/quantum.png" alt="Stylised quantum processor" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/quantum.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/quantum.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/quantum.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/quantum.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/quantum.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Article</ui-chip></ui-media>
+				<ui-media><img data-view="hero-article-1" src="/assets/images/quantum.png" alt="Stylised quantum processor" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/quantum.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/quantum.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/quantum.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/quantum.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/quantum.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/quantum.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Article</ui-chip></ui-media>
 				<ui-content>
 					
 					
@@ -3218,7 +3291,7 @@
 		<ui-card data-view="card-news-1" variant="col" media="asr(16/9) beacon(red) beacon(ldr) chip(te)">
 			<cq-box>
 				<ui-media>
-					<img data-view="hero-news-1" src="/assets/images/government.png" alt="Parliament building at dusk" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/government.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/government.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/government.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/government.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/government.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
+					<img data-view="hero-news-1" src="/assets/images/government.png" alt="Parliament building at dusk" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/government.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/government.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/government.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/government.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/government.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/government.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
 					<ui-beacon>Live</ui-beacon>
 				<ui-chip data-type>NewsArticle</ui-chip></ui-media>
 				<ui-content>
@@ -3229,7 +3302,7 @@
 					<h3 data-part="headline"><a data-part="cover" href="articles/news.html">Coalition agrees on <ui-gradient-text animate="slide" gradient="#14532d, #15803d, #4ade80, #15803d, #14532d">sweeping</ui-gradient-text> climate package</a></h3>
 					<p data-part="summary">The agreement includes a carbon border tariff and a national retrofit programme, ending months of negotiation.</p>
 					<address data-part="byline">
-						<ui-avatar><img src="https://assets.stoumann.dk/img/avatar2.webp" alt="" loading="lazy" decoding="async"></ui-avatar>
+						<ui-avatar><abbr aria-hidden="true">TB</abbr><img src="/assets/images/avatar2.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=64,height=64/assets/images/avatar2.png 1x, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=128,height=128/assets/images/avatar2.png 2x" loading="lazy" decoding="async"></ui-avatar>
 						<span data-part="byline-who"><span>Thomas Berg</span><span>Newsroom</span></span><small data-part="dateline"><time datetime="2026-07-01T06:15:00Z">Jul 1, 2026</time><span data-part="reading-time">3 min read</span></small>
 					</address>
 				</ui-content>
@@ -3238,7 +3311,7 @@
 		<ui-card id="schema-news-paywall" data-view="card-news-paywall" variant="col" media="asr(16/9) chip(te)">
 			<cq-box>
 				<ui-media>
-					<img data-view="hero-news-paywall" src="/assets/images/finance.png" alt="City skyline at night behind a wall of stock-market candlestick charts" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/finance.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/finance.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/finance.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/finance.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/finance.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
+					<img data-view="hero-news-paywall" src="/assets/images/finance.png" alt="City skyline at night behind a wall of stock-market candlestick charts" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/finance.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/finance.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/finance.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/finance.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/finance.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/finance.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
 				<ui-chip data-type>NewsArticle</ui-chip></ui-media>
 				<ui-content content="gate">
 					
@@ -3249,7 +3322,7 @@
 					<h3 data-part="headline"><a data-part="cover" href="articles/news-paywall.html">Who pays for the carbon tariff — and who keeps the rebate</a></h3>
 					<p data-part="summary">The rebate mechanism that unlocked the climate deal, modelled sector by sector with the figures the negotiators would not publish.</p>
 					<address data-part="byline">
-						<ui-avatar><img src="https://assets.stoumann.dk/img/avatar5.webp" alt="" loading="lazy" decoding="async"></ui-avatar>
+						<ui-avatar><abbr aria-hidden="true">JR</abbr><img src="/assets/images/avatar5.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=64,height=64/assets/images/avatar5.png 1x, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=128,height=128/assets/images/avatar5.png 2x" loading="lazy" decoding="async"></ui-avatar>
 						<span data-part="byline-who"><span>Jonas Rahbek</span><span>Economics editor</span></span><small data-part="dateline"><time datetime="2026-07-02T05:30:00Z">Jul 2, 2026</time><span data-part="reading-time">6 min read</span></small>
 					</address>
 				</ui-content>
@@ -3257,12 +3330,12 @@
 		</ui-card>
 		<ui-card variant="col" media="asr(16/9) chip(te)" theme="gray" content="scl(lg)">
 			<cq-box>
-				<ui-media><img src="/assets/images/quote.png" alt="Open book on a quiet desk" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/quote.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/quote.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/quote.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/quote.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/quote.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Quotation</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/quote.png" alt="Open book on a quiet desk" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/quote.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/quote.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/quote.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/quote.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/quote.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/quote.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Quotation</ui-chip></ui-media>
 				<ui-content>
 					<small data-part="eyebrow">Quote of the day</small>
 					<ui-quote data-part="quote" variant="bigquote"><blockquote><q>Simplicity is the ultimate sophistication — every element you remove makes the remaining ones stronger.</q><cite>Maria Lindgren</cite></blockquote></ui-quote>
 					<address data-part="byline">
-						<ui-avatar><img src="https://assets.stoumann.dk/img/avatar4.webp" alt="" loading="lazy" decoding="async"></ui-avatar>
+						<ui-avatar><img src="/assets/images/avatar4.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=64,height=64/assets/images/avatar4.png 1x, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=128,height=128/assets/images/avatar4.png 2x" loading="lazy" decoding="async"></ui-avatar>
 						<span data-part="byline-who"><cite>Maria Lindgren</cite><span>Design Director</span></span>
 					</address>
 				</ui-content>
@@ -3270,7 +3343,7 @@
 		</ui-card>
 		<ui-card variant="col" media="asr(16/9) chip(te)">
 			<cq-box>
-				<ui-media><img src="/assets/images/government.png" alt="City hall press briefing" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/government.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/government.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/government.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/government.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/government.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>ClaimReview</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/government.png" alt="City hall press briefing" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/government.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/government.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/government.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/government.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/government.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/government.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>ClaimReview</ui-chip></ui-media>
 				<ui-content>
 					
 					<small data-part="eyebrow">Fact check</small>
@@ -3291,7 +3364,7 @@
 		<ui-card data-view="card-product-1" variant="col" media="asr(4/3) sticker(te) sticker(red) sticker(2xl) sticker(sh:spark) save(be)">
 			<cq-box>
 				<ui-media id="product-1-media">
-					<img data-view="hero-product-1" src="/assets/images/aurasoundpro.png" alt="AuraSound Pro wireless headphones" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=180/assets/images/aurasoundpro.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=240/assets/images/aurasoundpro.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=360/assets/images/aurasoundpro.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=540/assets/images/aurasoundpro.png 720w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
+					<img data-view="hero-product-1" src="/assets/images/aurasoundpro.png" alt="AuraSound Pro wireless headphones" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=180/assets/images/aurasoundpro.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=240/assets/images/aurasoundpro.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=360/assets/images/aurasoundpro.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=420/assets/images/aurasoundpro.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=540/assets/images/aurasoundpro.png 720w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
 					<ui-sticker><small>SAVE</small><strong>20%</strong></ui-sticker>
 					<ui-save><button type="button" command="--save" commandfor="product-1-media" aria-label="Save AuraSound Pro Wireless Headphones to favorites"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
 				<ui-chip data-type>Product</ui-chip></ui-media>
@@ -3330,7 +3403,7 @@
 					<lay-out xs="cg(3xs) rg(3xs)" md="columns(2)" theme="pale black">
 						<ui-card data-view="card-variant-indigo" variant="rds(non)" media="asr(1/1) hov(zoom) chip(bs) chip(blue) chip(pale) chip(sm)" content="pad(none)">
 							<cq-box>
-								<ui-media><img data-view="hero-variant-indigo" src="/assets/images/silkgown-indigo.png" alt="Persistence Silk Gown in Indigo Floral" width="509" height="509" loading="lazy" decoding="async"><ui-chip data-icon="chevron-right" data-icon-at="end">Indigo</ui-chip></ui-media>
+								<ui-media><img data-view="hero-variant-indigo" src="/assets/images/silkgown-indigo.png" alt="Persistence Silk Gown in Indigo Floral" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=240/assets/images/silkgown-indigo.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=320/assets/images/silkgown-indigo.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=480/assets/images/silkgown-indigo.png 480w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-icon="chevron-right" data-icon-at="end">Indigo</ui-chip></ui-media>
 								<ui-content>
 									
 									
@@ -3342,7 +3415,7 @@
 						</ui-card>
 						<ui-card data-view="card-variant-crimson" variant="rds(non)" media="asr(1/1) hov(zoom) chip(bs) chip(blue) chip(pale) chip(sm)" content="pad(none)">
 							<cq-box>
-								<ui-media><img data-view="hero-variant-crimson" src="/assets/images/silkgown-crimson.png" alt="Persistence Silk Gown in Crimson Paisley" width="509" height="509" loading="lazy" decoding="async"><ui-chip data-icon="chevron-right" data-icon-at="end">Crimson</ui-chip></ui-media>
+								<ui-media><img data-view="hero-variant-crimson" src="/assets/images/silkgown-crimson.png" alt="Persistence Silk Gown in Crimson Paisley" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=240/assets/images/silkgown-crimson.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=320/assets/images/silkgown-crimson.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=480/assets/images/silkgown-crimson.png 480w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-icon="chevron-right" data-icon-at="end">Crimson</ui-chip></ui-media>
 								<ui-content>
 									
 									
@@ -3354,7 +3427,7 @@
 						</ui-card>
 						<ui-card data-view="card-variant-emerald" variant="rds(non)" media="asr(1/1) hov(zoom) chip(bs) chip(blue) chip(pale) chip(sm)" content="pad(none)">
 							<cq-box>
-								<ui-media><img data-view="hero-variant-emerald" src="/assets/images/silkgown-emerald.png" alt="Persistence Silk Gown in Emerald Palm" width="509" height="509" loading="lazy" decoding="async"><ui-chip data-icon="chevron-right" data-icon-at="end">Emerald</ui-chip></ui-media>
+								<ui-media><img data-view="hero-variant-emerald" src="/assets/images/silkgown-emerald.png" alt="Persistence Silk Gown in Emerald Palm" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=240/assets/images/silkgown-emerald.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=320/assets/images/silkgown-emerald.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=480/assets/images/silkgown-emerald.png 480w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-icon="chevron-right" data-icon-at="end">Emerald</ui-chip></ui-media>
 								<ui-content>
 									
 									
@@ -3366,7 +3439,7 @@
 						</ui-card>
 						<ui-card data-view="card-variant-onyx" variant="rds(non)" media="asr(1/1) hov(zoom) chip(bs) chip(blue) chip(pale) chip(sm)" content="pad(none)">
 							<cq-box>
-								<ui-media><img data-view="hero-variant-onyx" src="/assets/images/silkgown-onyx.png" alt="Persistence Silk Gown in Onyx Deco" width="509" height="509" loading="lazy" decoding="async"><ui-chip data-icon="chevron-right" data-icon-at="end">Onyx</ui-chip></ui-media>
+								<ui-media><img data-view="hero-variant-onyx" src="/assets/images/silkgown-onyx.png" alt="Persistence Silk Gown in Onyx Deco" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=240/assets/images/silkgown-onyx.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=320/assets/images/silkgown-onyx.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=480/assets/images/silkgown-onyx.png 480w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-icon="chevron-right" data-icon-at="end">Onyx</ui-chip></ui-media>
 								<ui-content>
 									
 									
@@ -3377,7 +3450,7 @@
 							</cq-box>
 						</ui-card>
 					</lay-out>
-					<ui-chip data-type="dark">ProductGroup</ui-chip>
+					<ui-chip data-type>ProductGroup</ui-chip>
 				</ui-media>
 				<ui-content>
 					
@@ -3386,30 +3459,42 @@
 					<h3 data-part="headline">Persistence Silk Gown</h3>
 					<p data-part="summary">Four colourways, each its own variant with its own URL — pick one to go straight to it.</p>
 					<p data-part="price">$249</p>
+					<p data-part="meta"><ui-chip theme="pale green">In stock</ui-chip></p>
 				</ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card variant="col" media="asr(16/9) chip(te)">
+		<ui-card id="schema-videogame" variant="col" media="asr(16/9) chip(te)">
 			<cq-box>
-				<ui-media><img src="/assets/images/game_01.png" alt="Pixel Raiders key art — chibi heroes charging into battle" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/game_01.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/game_01.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/game_01.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/game_01.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/game_01.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>SoftwareApplication</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/game_01.png" alt="Pixel Raiders key art — chibi heroes charging into battle" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/game_01.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/game_01.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/game_01.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/game_01.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/game_01.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/game_01.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>VideoGame</ui-chip></ui-media>
 				<ui-content>
 					
 					
 					
 					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
 					<small data-part="eyebrow">Adventure game</small>
-					<h3 data-part="headline">Pixel Raiders</h3>
-					<p data-part="meta"><ui-chip theme="pale accent">v<span>2.1</span></ui-chip></p>
+					<h3 data-part="headline"><a data-part="cover" href="games/pixel-raiders.html">Pixel Raiders</a></h3>
 					<p data-part="summary">Co-op dungeon crawling for up to four raiders — new Sky Fortress season, cross-play everywhere.</p>
-					<p data-part="meta">macOS · Windows · Switch · 2.4 GB</p>
+					<p data-part="meta"><ui-chip theme="pale accent">v<span>2.1</span></ui-chip></p>
+					<p data-part="meta">PlayStation 5 · Xbox Series X|S · Nintendo Switch · PC · 2.4 GB</p>
+					<p data-part="meta">1–4 players · Single-player · Co-op · Multiplayer</p>
 					<p data-part="meta">Developer: <span>Bitburrow Studio</span></p>
+					
+					<p data-part="meta"><strong data-part="key">Requires:</strong> Apple M1 or Intel i5 · 8 GB RAM · 4 GB free</p>
 					<p data-part="price">
 						
 						
 						$29 <small>one-time purchase</small>
 					</p>
-					
-					<p data-part="meta"><strong data-part="key">Requires:</strong> Apple M1 or Intel i5 · 8 GB RAM · 4 GB free</p>
 					<span data-part="tags"><ui-chip>Game</ui-chip><ui-chip>Co-op</ui-chip></span>
 					<nav data-part="actions"><a class="ui-button" data-variant="accent" data-icon="play-arrow" href="#">Play demo</a></nav>
 				</ui-content>
@@ -3417,7 +3502,7 @@
 		</ui-card>
 		<ui-card variant="col" media="asr(16/9) chip(te)">
 			<cq-box>
-				<ui-media><img src="/assets/images/speakers.png" alt="Three portable speakers side by side" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/speakers.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/speakers.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/speakers.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/speakers.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/speakers.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>ItemList</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/speakers.png" alt="Three portable speakers side by side" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/speakers.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/speakers.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/speakers.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/speakers.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/speakers.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/speakers.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>ItemList</ui-chip></ui-media>
 				<ui-content>
 					
 					<small data-part="eyebrow">Buyer’s guide</small>
@@ -3445,7 +3530,7 @@
 		</ui-card>
 		<ui-card variant="col" media="asr(16/9) chip(te)">
 			<cq-box>
-				<ui-media><img src="/assets/images/soundwavemini.png" alt="SoundWave Mini speaker" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/soundwavemini.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/soundwavemini.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/soundwavemini.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/soundwavemini.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/soundwavemini.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Review</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/soundwavemini.png" alt="SoundWave Mini speaker" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/soundwavemini.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/soundwavemini.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/soundwavemini.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/soundwavemini.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/soundwavemini.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/soundwavemini.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Review</ui-chip></ui-media>
 				<ui-content>
 					<small data-part="eyebrow">Verified review</small>
 					<h3 data-part="headline">Punches far above its size</h3>
@@ -3459,7 +3544,7 @@
 					</div>
 					<ui-quote data-part="quote"><blockquote><q>Astonishing bass for a speaker this small. Battery easily lasts a weekend trip — the app is the only weak point.</q></blockquote></ui-quote>
 					<address data-part="byline">
-						<ui-avatar><img src="https://assets.stoumann.dk/img/avatar3.webp" alt="" loading="lazy" decoding="async"></ui-avatar>
+						<ui-avatar><abbr aria-hidden="true">AC</abbr><img src="/assets/images/avatar3.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=64,height=64/assets/images/avatar3.png 1x, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=128,height=128/assets/images/avatar3.png 2x" loading="lazy" decoding="async"></ui-avatar>
 						<span data-part="byline-who"><span>Alex Chen</span><span data-part="verified">Verified purchase</span></span><small data-part="dateline"><time datetime="2026-05-14">May 14, 2026</time></small>
 					</address>
 					
@@ -3481,7 +3566,7 @@
 					</div>
 					<ui-quote data-part="quote"><blockquote><q>Our conversion rates increased by 15% after switching to this UI system.</q></blockquote></ui-quote>
 					<address data-part="byline">
-						<ui-avatar><img src="https://assets.stoumann.dk/img/avatar5.webp" alt="" loading="lazy" decoding="async"></ui-avatar>
+						<ui-avatar><abbr aria-hidden="true">DS</abbr><img src="/assets/images/avatar5.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=64,height=64/assets/images/avatar5.png 1x, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=128,height=128/assets/images/avatar5.png 2x" loading="lazy" decoding="async"></ui-avatar>
 						<span data-part="byline-who"><span>David Smith</span><span>Marketing Lead</span></span>
 					</address>
 					
@@ -3490,7 +3575,7 @@
 		</ui-card>
 		<ui-card variant="col" media="asr(16/9) chip(te)" theme="gray">
 			<cq-box>
-				<ui-media><img src="/assets/images/fittrackpro.png" alt="Fitness tracker on a wrist" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/fittrackpro.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/fittrackpro.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/fittrackpro.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/fittrackpro.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/fittrackpro.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Offer</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/fittrackpro.png" alt="Fitness tracker on a wrist" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/fittrackpro.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/fittrackpro.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/fittrackpro.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/fittrackpro.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/fittrackpro.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/fittrackpro.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Offer</ui-chip></ui-media>
 				<ui-content>
 					
 					<small data-part="eyebrow">Membership</small>
@@ -3517,7 +3602,7 @@
 		</ui-card>
 		<ui-card variant="col" media="asr(16/9) chip(te)">
 			<cq-box>
-				<ui-media><img src="/assets/images/slimfold.png" alt="Slim leather card wallet on a white surface" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/slimfold.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/slimfold.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/slimfold.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/slimfold.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/slimfold.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>MemberProgram</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/slimfold.png" alt="Slim leather card wallet on a white surface" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/slimfold.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/slimfold.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/slimfold.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/slimfold.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/slimfold.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/slimfold.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>MemberProgram</ui-chip></ui-media>
 				<ui-content>
 					<small data-part="eyebrow">Loyalty programme</small>
 					<h3 data-part="headline">Nordlys Rewards</h3>
@@ -3565,7 +3650,7 @@
 		</ui-card>
 		<ui-card variant="col" media="asr(16/9) chip(te)">
 			<cq-box>
-				<ui-media><img src="/assets/images/brewandbean.png" alt="Bright café interior with workspace tables" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/brewandbean.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/brewandbean.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/brewandbean.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/brewandbean.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/brewandbean.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Reservation</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/brewandbean.png" alt="Bright café interior with workspace tables" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/brewandbean.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/brewandbean.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/brewandbean.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/brewandbean.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/brewandbean.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/brewandbean.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Reservation</ui-chip></ui-media>
 				<ui-content>
 					
 					
@@ -3590,7 +3675,7 @@
 	<lay-out md="columns(2) items(start)">
 		<ui-card variant="col" media="asr(4/3) chip(te)">
 			<cq-box>
-				<ui-media><img src="/assets/images/movie_01.png" alt="Echoes of Tomorrow film poster" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=180/assets/images/movie_01.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=240/assets/images/movie_01.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=360/assets/images/movie_01.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=540/assets/images/movie_01.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=900/assets/images/movie_01.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Movie</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/movie_01.png" alt="Echoes of Tomorrow film poster" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=180/assets/images/movie_01.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=240/assets/images/movie_01.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=360/assets/images/movie_01.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=420/assets/images/movie_01.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=540/assets/images/movie_01.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=900/assets/images/movie_01.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Movie</ui-chip></ui-media>
 				<ui-content>
 					
 					
@@ -3614,7 +3699,7 @@
 		</ui-card>
 		<ui-card variant="col" media="asr(16/9) chip(te)">
 			<cq-box>
-				<ui-media><img src="/assets/images/techpeople.png" alt="Nordlight key art — the research team against a future skyline" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/techpeople.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/techpeople.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/techpeople.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/techpeople.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/techpeople.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>TVSeries</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/techpeople.png" alt="Nordlight key art — the research team against a future skyline" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/techpeople.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/techpeople.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/techpeople.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/techpeople.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/techpeople.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/techpeople.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>TVSeries</ui-chip></ui-media>
 				<ui-content>
 					
 					
@@ -3645,7 +3730,7 @@
 		</ui-card>
 		<ui-card variant="col" media="asr(16/9) chip(te)">
 			<cq-box>
-				<ui-media><img src="/assets/images/techpeople.png" alt="Still from Nordlight — the team around a holographic console" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/techpeople.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/techpeople.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/techpeople.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/techpeople.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/techpeople.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>TVEpisode</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/techpeople.png" alt="Still from Nordlight — the team around a holographic console" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/techpeople.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/techpeople.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/techpeople.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/techpeople.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/techpeople.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/techpeople.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>TVEpisode</ui-chip></ui-media>
 				<ui-content>
 					
 					
@@ -3684,7 +3769,7 @@
 	<lay-out md="columns(2) items(start)">
 		<ui-card variant="col" media="asr(1/1) chip(te)">
 			<cq-box>
-				<ui-media><img src="/assets/images/podcast.png" alt="The Calm Mind podcast cover art" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=240/assets/images/podcast.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=320/assets/images/podcast.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=480/assets/images/podcast.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=720/assets/images/podcast.png 720w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>PodcastSeries</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/podcast.png" alt="The Calm Mind podcast cover art" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=240/assets/images/podcast.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=320/assets/images/podcast.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=480/assets/images/podcast.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=560/assets/images/podcast.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=720/assets/images/podcast.png 720w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>PodcastSeries</ui-chip></ui-media>
 				<ui-content>
 					
 					<small data-part="eyebrow">Podcast series</small>
@@ -3692,7 +3777,7 @@
 					<p data-part="summary">A fortnightly conversation about attention, rest, and the parts of modern life that quietly eat both.</p>
 					<p data-part="meta">Fortnightly · 42 episodes since 2022 · <a href="https://calmmind.example/feed.xml">RSS feed</a></p>
 					<address data-part="byline">
-						<ui-avatar><img src="https://assets.stoumann.dk/img/avatar4.webp" alt="" loading="lazy" decoding="async"></ui-avatar>
+						<ui-avatar><abbr aria-hidden="true">IM</abbr><img src="/assets/images/avatar4.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=64,height=64/assets/images/avatar4.png 1x, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=128,height=128/assets/images/avatar4.png 2x" loading="lazy" decoding="async"></ui-avatar>
 						<span data-part="byline-who"><span>Ida Månsson</span><span>Host</span></span>
 					</address>
 					<ul data-part="list" data-icon="podcasts">
@@ -3709,7 +3794,7 @@
 		<ui-card variant="col" media="asr(16/9) chip(te)">
 			<cq-box>
 				<ui-media>
-					<img src="/assets/images/podcast.png" alt="The Calm Mind podcast cover art" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/podcast.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/podcast.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/podcast.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/podcast.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/podcast.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
+					<img src="/assets/images/podcast.png" alt="The Calm Mind podcast cover art" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/podcast.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/podcast.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/podcast.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/podcast.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/podcast.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/podcast.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
 					<audio id="podcast-ep42" src="/assets/audio/podcast.m4a" preload="metadata" aria-label="Digital minimalism, revisited — Episode 42"></audio>
 					<ui-play><button type="button" command="--play-pause" commandfor="podcast-ep42" aria-label="Play episode"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 				<ui-chip data-type>PodcastEpisode</ui-chip></ui-media>
@@ -3727,7 +3812,7 @@
 		</ui-card>
 		<ui-card variant="col" media="asr(1/1) chip(te)" id="schema-musicgroup">
 			<cq-box>
-				<ui-media><img src="/assets/images/band_dreampop.png" alt="Halvmørke — band portrait in violet light" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=240/assets/images/band_dreampop.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=320/assets/images/band_dreampop.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=480/assets/images/band_dreampop.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=720/assets/images/band_dreampop.png 720w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>MusicGroup</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/band_dreampop.png" alt="Halvmørke — band portrait in violet light" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=240/assets/images/band_dreampop.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=320/assets/images/band_dreampop.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=480/assets/images/band_dreampop.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=560/assets/images/band_dreampop.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=720/assets/images/band_dreampop.png 720w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>MusicGroup</ui-chip></ui-media>
 				<ui-content>
 					
 					
@@ -3750,7 +3835,7 @@
 		</ui-card>
 		<ui-card variant="col" media="asr(1/1) chip(te)" id="schema-music">
 			<cq-box>
-				<ui-media><img src="/assets/images/album_slowweather.jpg" alt="Slow Weather — album cover: mist inside a stone chapel seen through the open door, with candlelight at the altar" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=240/assets/images/album_slowweather.jpg 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=320/assets/images/album_slowweather.jpg 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=480/assets/images/album_slowweather.jpg 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=720/assets/images/album_slowweather.jpg 720w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>MusicAlbum</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/album_slowweather.jpg" alt="Slow Weather — album cover: mist inside a stone chapel seen through the open door, with candlelight at the altar" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=240/assets/images/album_slowweather.jpg 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=320/assets/images/album_slowweather.jpg 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=480/assets/images/album_slowweather.jpg 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=560/assets/images/album_slowweather.jpg 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=720/assets/images/album_slowweather.jpg 720w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>MusicAlbum</ui-chip></ui-media>
 				<ui-content>
 					
 					
@@ -3776,7 +3861,39 @@
 	<lay-out md="columns(2) items(start)">
 		<ui-card variant="col" media="asr(4/3) chip(te)">
 			<cq-box>
-				<ui-media><img src="/assets/images/gastronomy.png" alt="The Nordic Pantry book cover" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=180/assets/images/gastronomy.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=240/assets/images/gastronomy.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=360/assets/images/gastronomy.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=540/assets/images/gastronomy.png 720w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Book</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/nordic-table-series.png" alt="The three hardbacks of The Nordic Table laid out on a wooden table among chanterelles, rye bread, salt and root vegetables" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=180/assets/images/nordic-table-series.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=240/assets/images/nordic-table-series.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=360/assets/images/nordic-table-series.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=420/assets/images/nordic-table-series.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=540/assets/images/nordic-table-series.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=900/assets/images/nordic-table-series.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>BookSeries</ui-chip></ui-media>
+				<ui-content>
+					
+					
+					<small data-part="eyebrow">Cookbook series</small>
+					<h3 data-part="headline">The Nordic Table</h3>
+					<p data-part="summary">Three volumes on one larder — the roots, the pantry and the shore, cooked the way a northern kitchen actually runs.</p>
+					<address data-part="byline">
+						<ui-avatar><abbr aria-hidden="true">MH</abbr><img src="/assets/images/avatar4.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=64,height=64/assets/images/avatar4.png 1x, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=128,height=128/assets/images/avatar4.png 2x" loading="lazy" decoding="async"></ui-avatar>
+						<span data-part="byline-who"><span>Mette Holm</span></span>
+					</address>
+					<p data-part="meta">3 books · 2024–2026</p>
+					<div data-part="rating">
+						
+						
+						
+						<input class="ui-rating" type="range" min="1" max="5" value="4.7" step="0.01" disabled aria-hidden="true">
+						<span data-sr>Rated 4.7 out of 5 stars from 2,140 ratings</span>
+						<span aria-hidden="true">4.7 / 5 (2,140 ratings)</span>
+					</div>
+					<ol data-part="list">
+						<li><span>Rooted</span> <small>2024</small></li>
+						<li><a href="#schema-book"><span>The Nordic Pantry</span></a> <small>2025</small></li>
+						<li><span>Coast &amp; Cold</span> <small>2026</small></li>
+					</ol>
+					<p data-part="meta">Publisher: <span>Kbh Press</span></p>
+					<span data-part="tags"><ui-chip>Nordic</ui-chip><ui-chip>Preserving</ui-chip><ui-chip>Root vegetables</ui-chip></span>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card id="schema-book" variant="col" media="asr(4/3) chip(te)">
+			<cq-box>
+				<ui-media><img src="/assets/images/nordic-pantry-book.png" alt="The Nordic Pantry standing on a wooden kitchen table among rye loaves, preserving jars, root vegetables and a bowl of salt" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=180/assets/images/nordic-pantry-book.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=240/assets/images/nordic-pantry-book.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=360/assets/images/nordic-pantry-book.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=420/assets/images/nordic-pantry-book.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=540/assets/images/nordic-pantry-book.png 720w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Book</ui-chip></ui-media>
 				<ui-content>
 					
 					
@@ -3785,7 +3902,7 @@
 					<h3 data-part="headline">The Nordic Pantry</h3>
 					<p data-part="summary">120 recipes built on what a northern larder actually holds — rye, root vegetables, brine and smoke.</p>
 					<address data-part="byline">
-						<ui-avatar><img src="https://assets.stoumann.dk/img/avatar4.webp" alt="" loading="lazy" decoding="async"></ui-avatar>
+						<ui-avatar><abbr aria-hidden="true">MH</abbr><img src="/assets/images/avatar4.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=64,height=64/assets/images/avatar4.png 1x, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=128,height=128/assets/images/avatar4.png 2x" loading="lazy" decoding="async"></ui-avatar>
 						<span data-part="byline-who"><span>Mette Holm</span></span>
 					</address>
 					<p data-part="meta">312 pages · Hardcover · ISBN 978-87-12345-67-8</p>
@@ -3809,7 +3926,7 @@
 		</ui-card>
 		<ui-card id="schema-comicseries" variant="col" media="asr(2/3) chip(te)">
 			<cq-box>
-				<ui-media><img src="/assets/images/cssman-cover-1.png" alt="CSS Man #1 — the hero shields his eyes on a rooftop while Jayess watches from a water tower" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=360/assets/images/cssman-cover-1.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=480/assets/images/cssman-cover-1.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=720/assets/images/cssman-cover-1.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=1080/assets/images/cssman-cover-1.png 720w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>ComicSeries</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/cssman-cover-1.png" alt="CSS Man #1 — the hero shields his eyes on a rooftop while Jayess watches from a water tower" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=360/assets/images/cssman-cover-1.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=480/assets/images/cssman-cover-1.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=720/assets/images/cssman-cover-1.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=840/assets/images/cssman-cover-1.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=1080/assets/images/cssman-cover-1.png 720w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>ComicSeries</ui-chip></ui-media>
 				<ui-content>
 					
 					
@@ -3824,7 +3941,7 @@
 		</ui-card>
 		<ui-card id="schema-comicissue" variant="col" media="asr(2/3) chip(te)">
 			<cq-box>
-				<ui-media><img src="/assets/images/cssman-cover-2.png" alt="CSS Man #2 — a night rooftop under the brace signal, Jayess looming over the skyline" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=360/assets/images/cssman-cover-2.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=480/assets/images/cssman-cover-2.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=720/assets/images/cssman-cover-2.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=1080/assets/images/cssman-cover-2.png 720w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>ComicIssue</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/cssman-cover-2.png" alt="CSS Man #2 — a night rooftop under the brace signal, Jayess looming over the skyline" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=360/assets/images/cssman-cover-2.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=480/assets/images/cssman-cover-2.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=720/assets/images/cssman-cover-2.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=840/assets/images/cssman-cover-2.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=1080/assets/images/cssman-cover-2.png 720w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>ComicIssue</ui-chip></ui-media>
 				<ui-content>
 					
 					
@@ -3845,10 +3962,10 @@
 		<ui-card variant="col" media="asr(16/9) nav(mrk) nav(arw) chip(te)">
 			<cq-box>
 				<ui-media>
-					<img src="/assets/images/spring.jpg" alt="Blooming cherry trees in spring" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/spring.jpg 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/spring.jpg 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/spring.jpg 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/spring.jpg 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/spring.jpg 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
-					<img src="/assets/images/summer.jpg" alt="Sunlit meadow in summer" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/summer.jpg 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/summer.jpg 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/summer.jpg 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/summer.jpg 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/summer.jpg 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
-					<img src="/assets/images/autumn.jpg" alt="Golden forest in autumn" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/autumn.jpg 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/autumn.jpg 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/autumn.jpg 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/autumn.jpg 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/autumn.jpg 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
-					<img src="/assets/images/winter.jpg" alt="Snow-covered pines in winter" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/winter.jpg 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/winter.jpg 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/winter.jpg 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/winter.jpg 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/winter.jpg 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
+					<img src="/assets/images/spring.jpg" alt="Blooming cherry trees in spring" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/spring.jpg 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/spring.jpg 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/spring.jpg 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/spring.jpg 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/spring.jpg 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/spring.jpg 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
+					<img src="/assets/images/summer.jpg" alt="Sunlit meadow in summer" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/summer.jpg 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/summer.jpg 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/summer.jpg 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/summer.jpg 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/summer.jpg 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/summer.jpg 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
+					<img src="/assets/images/autumn.jpg" alt="Golden forest in autumn" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/autumn.jpg 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/autumn.jpg 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/autumn.jpg 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/autumn.jpg 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/autumn.jpg 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/autumn.jpg 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
+					<img src="/assets/images/winter.jpg" alt="Snow-covered pines in winter" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/winter.jpg 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/winter.jpg 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/winter.jpg 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/winter.jpg 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/winter.jpg 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/winter.jpg 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
 				<ui-chip data-type>ImageGallery</ui-chip></ui-media>
 				<ui-content>
 					
@@ -3867,7 +3984,7 @@
 	<lay-out md="columns(2) items(start)">
 		<ui-card variant="col" media="asr(16/9) chip(te)">
 			<cq-box>
-				<ui-media><img src="/assets/images/mindfulness.png" alt="Person meditating at sunrise" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/mindfulness.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/mindfulness.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/mindfulness.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/mindfulness.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/mindfulness.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Course</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/mindfulness.png" alt="Person meditating at sunrise" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/mindfulness.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/mindfulness.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/mindfulness.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/mindfulness.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/mindfulness.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/mindfulness.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Course</ui-chip></ui-media>
 				<ui-content>
 					
 					
@@ -3899,7 +4016,7 @@
 		<ui-card variant="col" media="asr(16/9) chip(te)">
 			<cq-box>
 				<ui-media>
-					<img src="/assets/images/a11y.png" alt="Accessibility symbol on a screen" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/a11y.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/a11y.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/a11y.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/a11y.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/a11y.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
+					<img src="/assets/images/a11y.png" alt="Accessibility symbol on a screen" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/a11y.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/a11y.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/a11y.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/a11y.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/a11y.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/a11y.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
 				<ui-chip data-type>EducationalOccupationalCredential</ui-chip></ui-media>
 				<ui-content>
 					
@@ -3917,7 +4034,7 @@
 		</ui-card>
 		<ui-card variant="ovr(ts)" media="asr(1/1) hov(blur) scm(lg) chip(te)">
 			<cq-box>
-				<ui-media><img src="/assets/images/mindfulness.png" alt="Calm illustration of a meditating figure" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=240/assets/images/mindfulness.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=320/assets/images/mindfulness.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=480/assets/images/mindfulness.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=720/assets/images/mindfulness.png 720w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>AchieveAction</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/mindfulness.png" alt="Calm illustration of a meditating figure" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=240/assets/images/mindfulness.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=320/assets/images/mindfulness.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=480/assets/images/mindfulness.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=560/assets/images/mindfulness.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=720/assets/images/mindfulness.png 720w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>AchieveAction</ui-chip></ui-media>
 				<ui-content content="eb(inv)">
 					
 					
@@ -3935,7 +4052,7 @@
 		</ui-card>
 		<ui-card variant="col" media="asr(16/9) chip(te)">
 			<cq-box>
-				<ui-media><img src="/assets/images/quantum.png" alt="Stylised quantum processor" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/quantum.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/quantum.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/quantum.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/quantum.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/quantum.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Quiz</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/quantum.png" alt="Stylised quantum processor" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/quantum.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/quantum.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/quantum.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/quantum.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/quantum.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/quantum.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Quiz</ui-chip></ui-media>
 				<ui-content>
 					
 					
@@ -3973,7 +4090,7 @@
 		<lay-out md="columns(1)" overflow media="nav(end) arw(drk) gate">
 		<ui-card variant="col shd(non)" theme="quantum dark" media="asr(16/9) chip(te)">
 			<cq-box>
-				<ui-media><img src="/assets/images/quantum.png" alt="Stylised quantum processor" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/quantum.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/quantum.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/quantum.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/quantum.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/quantum.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Quiz</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/quantum.png" alt="Stylised quantum processor" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/quantum.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/quantum.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/quantum.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/quantum.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/quantum.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/quantum.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Quiz</ui-chip></ui-media>
 				<ui-content content="wid(2xl)">
 					<small data-part="eyebrow">Question 1 of 3</small>
 					<h3 data-part="headline">Quantum computing — check yourself</h3>
@@ -3994,7 +4111,7 @@
 		</ui-card>
 		<ui-card variant="col shd(non)" theme="quantum dark" media="asr(16/9) chip(te)">
 			<cq-box>
-				<ui-media><img src="/assets/images/quantum.png" alt="Stylised quantum processor" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/quantum.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/quantum.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/quantum.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/quantum.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/quantum.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Quiz</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/quantum.png" alt="Stylised quantum processor" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/quantum.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/quantum.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/quantum.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/quantum.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/quantum.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/quantum.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Quiz</ui-chip></ui-media>
 				<ui-content content="wid(2xl)">
 					<small data-part="eyebrow">Question 2 of 3</small>
 					<h3 data-part="headline">Quantum computing — check yourself</h3>
@@ -4015,7 +4132,7 @@
 		</ui-card>
 		<ui-card variant="col shd(non)" theme="quantum dark" media="asr(16/9) chip(te)">
 			<cq-box>
-				<ui-media><img src="/assets/images/quantum.png" alt="Stylised quantum processor" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/quantum.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/quantum.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/quantum.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/quantum.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/quantum.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Quiz</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/quantum.png" alt="Stylised quantum processor" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/quantum.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/quantum.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/quantum.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/quantum.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/quantum.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/quantum.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Quiz</ui-chip></ui-media>
 				<ui-content content="wid(2xl)">
 					<small data-part="eyebrow">Question 3 of 3</small>
 					<h3 data-part="headline">Quantum computing — check yourself</h3>
@@ -4044,7 +4161,7 @@
 			<details name="quiz-flashcard">
 				<summary>
 					<ui-face>
-						<ui-media><img src="/assets/images/quantum.png" alt="A quantum processor in a cryostat, gold coils descending into blue light" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=180/assets/images/quantum.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=240/assets/images/quantum.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=360/assets/images/quantum.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=540/assets/images/quantum.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=900/assets/images/quantum.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Quiz</ui-chip></ui-media>
+						<ui-media><img src="/assets/images/quantum.png" alt="A quantum processor in a cryostat, gold coils descending into blue light" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=180/assets/images/quantum.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=240/assets/images/quantum.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=360/assets/images/quantum.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=420/assets/images/quantum.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=540/assets/images/quantum.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=900/assets/images/quantum.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Quiz</ui-chip></ui-media>
 						<ui-content>
 							<small data-part="eyebrow">Flashcard</small>
 							<span data-part="headline">What is a qubit?</span>
@@ -4060,7 +4177,7 @@
 		</ui-reveal>
 		<ui-card variant="col" media="asr(16/9) chip(te)">
 			<cq-box>
-				<ui-media><img src="/assets/images/howto.png" alt="Hand holding a radiator key against a valve" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/howto.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/howto.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/howto.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/howto.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/howto.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>HowTo</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/howto.png" alt="Hand holding a radiator key against a valve" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/howto.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/howto.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/howto.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/howto.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/howto.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/howto.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>HowTo</ui-chip></ui-media>
 				<ui-content>
 					
 					
@@ -4102,7 +4219,7 @@
 		</ui-card>
 		<ui-card variant="col" media="asr(16/9) chip(te)">
 			<cq-box>
-				<ui-media><img src="/assets/images/popovers.png" alt="Abstract illustration of layered UI panels" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/popovers.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/popovers.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/popovers.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/popovers.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/popovers.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>DefinedTermSet</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/popovers.png" alt="Abstract illustration of layered UI panels" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/popovers.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/popovers.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/popovers.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/popovers.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/popovers.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/popovers.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>DefinedTermSet</ui-chip></ui-media>
 				<ui-content>
 					
 					<small data-part="eyebrow">Glossary</small>
@@ -4135,7 +4252,7 @@
 	<lay-out md="columns(2) items(start)">
 		<ui-card variant="col" media="asr(16/9) chip(te)">
 			<cq-box>
-				<ui-media><img src="/assets/images/janesmith.png" alt="Portrait of Jane Smith" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/janesmith.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/janesmith.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/janesmith.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/janesmith.png 720w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Person</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/janesmith.png" alt="Portrait of Jane Smith" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/janesmith.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/janesmith.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/janesmith.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/janesmith.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/janesmith.png 720w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Person</ui-chip></ui-media>
 				<ui-content>
 					<small data-part="eyebrow">Team</small>
 					<h3 data-part="headline">Jane Smith</h3>
@@ -4153,7 +4270,7 @@
 		</ui-card>
 		<ui-card id="schema-artist" variant="col" media="asr(2/3) chip(te)">
 			<cq-box>
-				<ui-media><img src="/assets/images/mstanley.png" alt="Milton Stanley at his drawing board, inking a CSS Man page under an angled desk lamp" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=360/assets/images/mstanley.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=480/assets/images/mstanley.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=720/assets/images/mstanley.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=1080/assets/images/mstanley.png 720w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Person</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/mstanley.png" alt="Milton Stanley at his drawing board, inking a CSS Man page under an angled desk lamp" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=360/assets/images/mstanley.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=480/assets/images/mstanley.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=720/assets/images/mstanley.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=840/assets/images/mstanley.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=1080/assets/images/mstanley.png 720w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Person</ui-chip></ui-media>
 				<ui-content>
 					<small data-part="eyebrow">Comic artist</small>
 					<h3 data-part="headline">Milton Stanley</h3>
@@ -4170,7 +4287,7 @@
 		</ui-card>
 		<ui-card variant="col" media="asr(16/9) chip(te)">
 			<cq-box>
-				<ui-media><img src="/assets/images/coorperation.png" alt="Northwind Group team at the Copenhagen headquarters" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/coorperation.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/coorperation.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/coorperation.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/coorperation.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/coorperation.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Organization</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/coorperation.png" alt="Northwind Group team at the Copenhagen headquarters" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/coorperation.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/coorperation.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/coorperation.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/coorperation.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/coorperation.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/coorperation.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Organization</ui-chip></ui-media>
 				<ui-content>
 					
 					
@@ -4250,7 +4367,7 @@
 		</ui-card>
 		<ui-card variant="col" media="asr(16/9) chip(te)">
 			<cq-box>
-				<ui-media><img src="/assets/images/jobposting.png" alt="Team collaborating in a bright office" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/jobposting.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/jobposting.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/jobposting.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/jobposting.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/jobposting.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>JobPosting</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/jobposting.png" alt="Team collaborating in a bright office" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/jobposting.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/jobposting.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/jobposting.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/jobposting.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/jobposting.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/jobposting.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>JobPosting</ui-chip></ui-media>
 				<ui-content>
 					
 					
@@ -4311,7 +4428,7 @@
 		</ui-card>
 		<ui-card variant="col" media="asr(16/9) chip(te)">
 			<cq-box>
-				<ui-media><img src="/assets/images/world.png" alt="World map lit at night" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/world.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/world.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/world.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/world.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/world.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>EventSeries</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/world.png" alt="World map lit at night" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/world.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/world.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/world.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/world.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/world.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/world.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>EventSeries</ui-chip></ui-media>
 				<ui-content>
 					<small data-part="eyebrow">Company history</small>
 					<h3 data-part="headline">A decade of browser.style</h3>
@@ -4357,7 +4474,7 @@
 		</ui-card>
 		<ui-card variant="col" media="asr(16/9) chip(te)">
 			<cq-box>
-				<ui-media><img src="/assets/images/world.png" alt="World map lit at night" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/world.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/world.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/world.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/world.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/world.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>EventSeries</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/world.png" alt="World map lit at night" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/world.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/world.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/world.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/world.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/world.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/world.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>EventSeries</ui-chip></ui-media>
 				<ui-content>
 					<small data-part="eyebrow">Company history</small>
 					<h3 data-part="headline">Horizontal — <code>variant="horizontal"</code></h3>
@@ -4406,7 +4523,7 @@
 	<lay-out md="columns(2) items(start)">
 		<ui-card variant="col" media="asr(16/9) chip(te)">
 			<cq-box>
-				<ui-media><img src="/assets/images/brewandbean.png" alt="Brew &amp; Bean café storefront" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/brewandbean.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/brewandbean.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/brewandbean.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/brewandbean.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/brewandbean.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>CafeOrCoffeeShop</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/brewandbean.png" alt="Brew &amp; Bean café storefront" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/brewandbean.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/brewandbean.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/brewandbean.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/brewandbean.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/brewandbean.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/brewandbean.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>CafeOrCoffeeShop</ui-chip></ui-media>
 				<ui-content>
 					
 					
@@ -4454,7 +4571,7 @@
 		</ui-card>
 		<ui-card variant="col" media="asr(16/9) chip(te)">
 			<cq-box>
-				<ui-media><img src="/assets/images/spicycurry.png" alt="Bowl of coconut chicken curry with mint and coriander" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/spicycurry.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/spicycurry.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/spicycurry.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/spicycurry.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/spicycurry.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Menu</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/spicycurry.png" alt="Bowl of coconut chicken curry with mint and coriander" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/spicycurry.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/spicycurry.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/spicycurry.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/spicycurry.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/spicycurry.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/spicycurry.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Menu</ui-chip></ui-media>
 				<ui-content>
 					<small data-part="eyebrow">Dinner menu</small>
 					<h3 data-part="headline">Brew &amp; Bean kitchen</h3>
@@ -4674,7 +4791,7 @@
 		</ui-card>
 		<ui-card data-view="card-recipe-1" variant="col" media="asr(16/9) chip(te)">
 			<cq-box>
-				<ui-media><img data-view="hero-recipe-1" src="/assets/images/carbonara.png" alt="Plate of spaghetti carbonara" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/carbonara.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/carbonara.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/carbonara.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/carbonara.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/carbonara.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Recipe</ui-chip></ui-media>
+				<ui-media><img data-view="hero-recipe-1" src="/assets/images/carbonara.png" alt="Plate of spaghetti carbonara" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/carbonara.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/carbonara.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/carbonara.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/carbonara.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/carbonara.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/carbonara.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Recipe</ui-chip></ui-media>
 				<ui-content>
 					
 					
@@ -4700,7 +4817,7 @@
 	<lay-out md="columns(2) items(start)">
 		<ui-card variant="col" media="asr(16/9) chip(te)">
 			<cq-box>
-				<ui-media><img src="/assets/images/hammershus.png" alt="Hammershus castle ruin on the cliffs" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/hammershus.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/hammershus.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/hammershus.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/hammershus.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/hammershus.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Place</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/hammershus.png" alt="Hammershus castle ruin on the cliffs" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/hammershus.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/hammershus.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/hammershus.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/hammershus.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/hammershus.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/hammershus.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Place</ui-chip></ui-media>
 				<ui-content>
 					
 					<small data-part="eyebrow">Destination</small>
@@ -4806,7 +4923,7 @@
 		</ui-card>
 		<ui-card variant="col" media="asr(16/9) chip(te)">
 			<cq-box>
-				<ui-media><img src="/assets/images/websummit.png" alt="Conference stage with purple lights" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/websummit.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/websummit.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/websummit.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/websummit.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/websummit.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Event</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/websummit.png" alt="Conference stage with purple lights" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/websummit.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/websummit.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/websummit.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/websummit.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/websummit.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/websummit.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Event</ui-chip></ui-media>
 				<ui-content>
 					
 					
@@ -4833,12 +4950,12 @@
 		<ui-card variant="col" media="asr(16/9) nav(mrk) nav(arw) chip(te)" data-view="card-realestate-1">
 			<cq-box>
 				<ui-media tabindex="-1">
-					<img src="/assets/images/real_01.jpg" alt="Sunset over the canal and rooftops, seen from the apartment" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/real_01.jpg 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/real_01.jpg 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/real_01.jpg 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/real_01.jpg 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/real_01.jpg 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
-					<img src="/assets/images/real_02.jpg" alt="Living room with a pale wood floor, sofa and dining table by the balcony doors" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/real_02.jpg 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/real_02.jpg 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/real_02.jpg 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/real_02.jpg 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/real_02.jpg 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
-					<img src="/assets/images/real_03.jpg" alt="Galley kitchen with an induction hob and a window over the sink" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/real_03.jpg 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/real_03.jpg 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/real_03.jpg 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/real_03.jpg 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/real_03.jpg 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
-					<img src="/assets/images/real_04.jpg" alt="The dining end of the living room, with balcony doors onto the courtyard" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/real_04.jpg 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/real_04.jpg 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/real_04.jpg 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/real_04.jpg 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/real_04.jpg 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
-					<img src="/assets/images/real_05.jpg" alt="The spiral spire of Vor Frelsers Kirke, a few minutes away" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/real_05.jpg 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/real_05.jpg 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/real_05.jpg 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/real_05.jpg 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/real_05.jpg 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
-					<img src="/assets/images/real_06.jpg" alt="Bedroom with a balcony door and a pale wood floor" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/real_06.jpg 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/real_06.jpg 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/real_06.jpg 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/real_06.jpg 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/real_06.jpg 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
+					<img src="/assets/images/real_01.jpg" alt="Sunset over the canal and rooftops, seen from the apartment" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/real_01.jpg 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/real_01.jpg 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/real_01.jpg 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/real_01.jpg 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/real_01.jpg 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/real_01.jpg 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
+					<img src="/assets/images/real_02.jpg" alt="Living room with a pale wood floor, sofa and dining table by the balcony doors" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/real_02.jpg 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/real_02.jpg 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/real_02.jpg 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/real_02.jpg 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/real_02.jpg 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/real_02.jpg 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
+					<img src="/assets/images/real_03.jpg" alt="Galley kitchen with an induction hob and a window over the sink" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/real_03.jpg 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/real_03.jpg 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/real_03.jpg 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/real_03.jpg 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/real_03.jpg 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/real_03.jpg 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
+					<img src="/assets/images/real_04.jpg" alt="The dining end of the living room, with balcony doors onto the courtyard" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/real_04.jpg 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/real_04.jpg 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/real_04.jpg 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/real_04.jpg 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/real_04.jpg 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/real_04.jpg 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
+					<img src="/assets/images/real_05.jpg" alt="The spiral spire of Vor Frelsers Kirke, a few minutes away" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/real_05.jpg 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/real_05.jpg 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/real_05.jpg 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/real_05.jpg 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/real_05.jpg 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/real_05.jpg 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
+					<img src="/assets/images/real_06.jpg" alt="Bedroom with a balcony door and a pale wood floor" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/real_06.jpg 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/real_06.jpg 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/real_06.jpg 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/real_06.jpg 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/real_06.jpg 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/real_06.jpg 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
 					<ui-chip data-type>RealEstateListing</ui-chip>
 				</ui-media>
 				<ui-content><p data-part="meta"><ui-chip theme="pale green" radius="non">New</ui-chip><ui-chip theme="pale accent" radius="non">Open house</ui-chip></p><small data-part="eyebrow">For sale</small><h3 data-part="headline"><a data-part="cover" href="realestate/havnegade-44.html">Top-floor apartment, Havnegade 44</a></h3><p data-part="summary">Three bedrooms and a south-facing terrace over the canal, five minutes from Kongens Nytorv.</p><p data-part="price">DKK 7,250,000 <small>DKK 61,441 per m²</small></p><div><p data-part="meta"><span>118 m²</span> · 3 bedrooms · 2 bathrooms · 5 rooms · built 2018</p><address data-part="address"><span><span>Havnegade 44, 5th floor</span></span><span><span>1058</span> <span>Copenhagen</span></span></address></div><p data-part="meta">Listed Jul 18, 2026 · Nordlys Estate · viewings Saturdays</p></ui-content>
@@ -4848,10 +4965,10 @@
 		<ui-card variant="col" media="asr(16/9) nav(mrk) nav(arw) chip(te)" data-view="card-vacationrental-1">
 			<cq-box>
 				<ui-media tabindex="-1">
-					<img src="/assets/images/rental_01.jpg" alt="The stone farmhouse seen from the garden, with olive trees and bougainvillea" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/rental_01.jpg 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/rental_01.jpg 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/rental_01.jpg 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/rental_01.jpg 720w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
-					<img src="/assets/images/rental_02.jpg" alt="The pool terrace with sun loungers, palms and flowering bougainvillea" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/rental_02.jpg 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/rental_02.jpg 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/rental_02.jpg 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/rental_02.jpg 720w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
-					<img src="/assets/images/rental_03.jpg" alt="A bedroom with exposed stone walls, a wrought-iron bed and shuttered windows" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/rental_03.jpg 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/rental_03.jpg 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/rental_03.jpg 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/rental_03.jpg 720w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
-					<img src="/assets/images/rental_04.jpg" alt="A bathroom in local stone with a walk-in shower and a wooden washstand" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/rental_04.jpg 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/rental_04.jpg 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/rental_04.jpg 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/rental_04.jpg 720w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
+					<img src="/assets/images/rental_01.jpg" alt="The stone farmhouse seen from the garden, with olive trees and bougainvillea" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/rental_01.jpg 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/rental_01.jpg 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/rental_01.jpg 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/rental_01.jpg 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/rental_01.jpg 720w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
+					<img src="/assets/images/rental_02.jpg" alt="The pool terrace with sun loungers, palms and flowering bougainvillea" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/rental_02.jpg 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/rental_02.jpg 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/rental_02.jpg 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/rental_02.jpg 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/rental_02.jpg 720w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
+					<img src="/assets/images/rental_03.jpg" alt="A bedroom with exposed stone walls, a wrought-iron bed and shuttered windows" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/rental_03.jpg 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/rental_03.jpg 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/rental_03.jpg 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/rental_03.jpg 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/rental_03.jpg 720w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
+					<img src="/assets/images/rental_04.jpg" alt="A bathroom in local stone with a walk-in shower and a wooden washstand" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/rental_04.jpg 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/rental_04.jpg 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/rental_04.jpg 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/rental_04.jpg 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/rental_04.jpg 720w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
 					<ui-chip data-type>VacationRental</ui-chip>
 				</ui-media>
 				<ui-content><p data-part="meta"><ui-chip theme="pale green" radius="non">Entire villa</ui-chip><ui-chip theme="pale accent" radius="non">Private pool</ui-chip></p><small data-part="eyebrow">Puglia, Italy</small><h3 data-part="headline"><a data-part="cover" href="rentals/masseria-lucia.html">Masseria Lucia</a></h3><p data-part="summary">A restored stone farmhouse in an olive grove outside Ostuni, with a walled garden and a heated pool.</p><div data-part="rating"><input class="ui-rating" type="range" min="1" max="5" value="4.8" step="0.01" disabled aria-hidden="true"><span data-sr>Rated 4.8 out of 5 stars from 64 ratings</span><span aria-hidden="true">4.8 / 5 (64 ratings)</span></div><p data-part="price">€320–€540 per night</p><div><p data-part="meta"><span>180 m²</span> · 3 bedrooms · 2 bathrooms · 6 rooms · <span>sleeps 6</span></p><ul data-part="list"><li data-icon="king-bed">2 × <span>Queen</span></li><li data-icon="bed">2 × <span>Single</span></li></ul></div><address data-part="address"><span><span>Contrada Lamacoppa 12</span></span><span><span>72017</span> <span>Ostuni</span></span><span><span>Apulia</span></span></address><p data-part="meta">Check-in from 16:00 · check-out by 10:00</p><p data-part="meta">Hosted by <span>Masseria Collective</span></p></ui-content>
@@ -4863,7 +4980,7 @@
 	<lay-out md="columns(2) items(start)">
 		<ui-card variant="col" media="asr(16/9) chip(te)">
 			<cq-box>
-				<ui-media><img src="/assets/images/faq.png" alt="Illustration of question marks and answer panels" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/faq.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/faq.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/faq.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/faq.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/faq.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>FAQPage</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/faq.png" alt="Illustration of question marks and answer panels" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/faq.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/faq.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/faq.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/faq.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/faq.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/faq.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>FAQPage</ui-chip></ui-media>
 				<ui-content>
 					<small data-part="eyebrow">Support</small>
 					<h3 data-part="headline">Frequently asked questions</h3>
@@ -4892,7 +5009,7 @@
 		</ui-card>
 		<ui-card variant="col" media="asr(16/9) chip(te)">
 			<cq-box>
-				<ui-media><img src="/assets/images/qa.png" alt="Developer community forum illustration" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/qa.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/qa.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/qa.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/qa.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/qa.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>QAPage</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/qa.png" alt="Developer community forum illustration" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/qa.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/qa.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/qa.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/qa.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/qa.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/qa.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>QAPage</ui-chip></ui-media>
 				<ui-content>
 					<small data-part="eyebrow">CSS</small>
 					<h3 data-part="headline">How do I center a div in 2026?</h3>
@@ -4919,7 +5036,7 @@
 		</ui-card>
 		<ui-card variant="col" media="asr(16/9) chip(te)">
 			<cq-box>
-				<ui-media><img src="/assets/images/csspoll.png" alt="Illustration of CSS layout features" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/csspoll.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/csspoll.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/csspoll.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/csspoll.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/csspoll.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Question</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/csspoll.png" alt="Illustration of CSS layout features" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/csspoll.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/csspoll.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/csspoll.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/csspoll.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/csspoll.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/csspoll.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Question</ui-chip></ui-media>
 				<ui-content>
 					
 					<small data-part="eyebrow">Community poll</small>
@@ -4944,7 +5061,7 @@
 		</ui-card>
 		<ui-card variant="col" media="asr(16/9) chip(te)">
 			<cq-box>
-				<ui-media><img src="/assets/images/support.png" alt="Support agent at a headset" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/support.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/support.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/support.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/support.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/support.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>ContactPoint</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/support.png" alt="Support agent at a headset" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/support.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/support.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/support.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/support.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/support.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/support.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>ContactPoint</ui-chip></ui-media>
 				<ui-content>
 					
 					
@@ -4964,14 +5081,14 @@
 		</ui-card>
 		<ui-card variant="col" media="asr(16/9) chip(te)">
 			<cq-box>
-				<ui-media><img src="/assets/images/elephants.png" alt="Elephants crossing at a waterhole" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/elephants.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/elephants.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/elephants.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/elephants.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/elephants.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>SocialMediaPosting</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/elephants.png" alt="Elephants crossing at a waterhole" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/elephants.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/elephants.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/elephants.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/elephants.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/elephants.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/elephants.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>SocialMediaPosting</ui-chip></ui-media>
 				<ui-content>
 					
 					
 					<h3 data-part="headline">Waterhole crossing</h3>
 					<ui-quote data-part="quote"><blockquote><q>Waited four hours at the waterhole for this crossing. Worth every minute. 🐘</q></blockquote></ui-quote>
 					<address data-part="byline">
-						<ui-avatar><img src="https://assets.stoumann.dk/img/avatar2.webp" alt="" loading="lazy" decoding="async"></ui-avatar>
+						<ui-avatar><abbr aria-hidden="true">@</abbr><img src="/assets/images/avatar2.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=64,height=64/assets/images/avatar2.png 1x, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=128,height=128/assets/images/avatar2.png 2x" loading="lazy" decoding="async"></ui-avatar>
 						<span data-part="byline-who"><span>@wildlifewatch</span></span><small data-part="dateline"><time datetime="2026-06-28T16:20:00Z">Jun 28, 2026</time></small>
 					</address>
 					<span data-part="tags"><ui-chip>#wildlife</ui-chip><ui-chip>#safari</ui-chip><ui-chip>#photography</ui-chip></span>
@@ -4984,7 +5101,7 @@
 		</ui-card>
 		<ui-card variant="col" media="asr(16/9) chip(te)">
 			<cq-box>
-				<ui-media><img src="/assets/images/quickboil.png" alt="QuickBoil Plus kettle, matte black with copper trim" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/quickboil.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/quickboil.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/quickboil.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/quickboil.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/quickboil.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>DiscussionForumPosting</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/quickboil.png" alt="QuickBoil Plus kettle, matte black with copper trim" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/quickboil.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/quickboil.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/quickboil.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/quickboil.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/quickboil.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/quickboil.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>DiscussionForumPosting</ui-chip></ui-media>
 				<ui-content>
 					<small data-part="eyebrow">Small appliances</small>
 					<h3 data-part="headline">QuickBoil Plus stopped heating after a descale — fixable?</h3>
@@ -4992,7 +5109,7 @@
 					
 					
 					<address data-part="byline">
-						<ui-avatar><img src="https://assets.stoumann.dk/img/avatar1.webp" alt="" loading="lazy" decoding="async"></ui-avatar>
+						<ui-avatar><abbr aria-hidden="true">RH</abbr><img src="/assets/images/avatar1.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=64,height=64/assets/images/avatar1.png 1x, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=128,height=128/assets/images/avatar1.png 2x" loading="lazy" decoding="async"></ui-avatar>
 						<span data-part="byline-who"><span>Rune Halvorsen</span><span>Moderator</span></span><small data-part="dateline"><time datetime="2026-07-02T08:15:00Z">Jul 2, 2026</time></small>
 					</address>
 					<span data-part="tags"><ui-chip>kettle</ui-chip><ui-chip>thermal-fuse</ui-chip><ui-chip>repair</ui-chip></span>
@@ -5007,7 +5124,7 @@
 	<lay-out md="columns(2) items(start)">
 		<ui-card variant="col" media="asr(16/9) chip(te)" theme="black dark">
 			<cq-box>
-				<ui-media><img src="/assets/images/finance.png" alt="Trading charts on a dark screen" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/finance.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/finance.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/finance.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/finance.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/finance.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Observation</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/finance.png" alt="Trading charts on a dark screen" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/finance.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/finance.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/finance.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/finance.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/finance.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/finance.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Observation</ui-chip></ui-media>
 				<ui-content>
 					<small data-part="eyebrow">This quarter</small>
 					<h3 data-part="headline">Monthly active users</h3>
@@ -5023,7 +5140,7 @@
 		</ui-card>
 		<ui-card variant="col" media="asr(16/9) chip(te)">
 			<cq-box>
-				<ui-media><img src="/assets/images/hubble.png" alt="Space telescope imagery of a star field" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/hubble.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/hubble.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/hubble.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/hubble.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/hubble.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Dataset</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/hubble.png" alt="Space telescope imagery of a star field" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/hubble.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/hubble.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/hubble.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/hubble.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/hubble.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/hubble.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Dataset</ui-chip></ui-media>
 				<ui-content>
 					
 					
@@ -5049,7 +5166,7 @@
 		</ui-card>
 		<ui-card id="schema-filelist" variant="col" media="asr(16/9) chip(te)">
 			<cq-box>
-				<ui-media><img src="/assets/images/coorperation.png" alt="Northwind Group team at the Copenhagen headquarters" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/coorperation.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/coorperation.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/coorperation.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/coorperation.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/coorperation.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>ItemList</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/coorperation.png" alt="Northwind Group team at the Copenhagen headquarters" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/coorperation.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/coorperation.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/coorperation.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/coorperation.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/coorperation.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/coorperation.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>ItemList</ui-chip></ui-media>
 				<ui-content>
 					
 					<small data-part="eyebrow">Downloads</small>
@@ -5068,7 +5185,7 @@
 		</ui-card>
 		<ui-card variant="col" media="asr(16/9) chip(te)">
 			<cq-box>
-				<ui-media><img src="/assets/images/mindfulness.png" alt="Person sitting quietly under a tree in a forest" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/mindfulness.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/mindfulness.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/mindfulness.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/mindfulness.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/mindfulness.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>MedicalWebPage</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/mindfulness.png" alt="Person sitting quietly under a tree in a forest" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/mindfulness.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/mindfulness.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/mindfulness.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/mindfulness.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/mindfulness.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/mindfulness.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>MedicalWebPage</ui-chip></ui-media>
 				<ui-content>
 					
 					
@@ -5086,7 +5203,7 @@
 						</ul>
 					</div>
 					<address data-part="byline">
-						<ui-avatar><img src="https://assets.stoumann.dk/img/avatar1.webp" alt="" loading="lazy" decoding="async"></ui-avatar>
+						<ui-avatar><abbr aria-hidden="true">DH</abbr><img src="/assets/images/avatar1.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=64,height=64/assets/images/avatar1.png 1x, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=128,height=128/assets/images/avatar1.png 2x" loading="lazy" decoding="async"></ui-avatar>
 						<span data-part="byline-who"><span>Dr Astrid Hovgaard</span><span>Consultant in sleep medicine</span></span><small data-part="dateline"><span>Medically reviewed</span><time datetime="2026-05-02">May 2, 2026</time></small>
 					</address>
 					<footer data-part="footer">General information only — it does not replace advice from your own doctor.</footer>
@@ -5095,7 +5212,7 @@
 		</ui-card>
 		<ui-card variant="col" media="asr(16/9) chip(te)" theme="black dark">
 			<cq-box>
-				<ui-media><img src="/assets/images/maintainance.png" alt="Maintenance work in progress" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/maintainance.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/maintainance.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/maintainance.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/maintainance.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/maintainance.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>SpecialAnnouncement</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/maintainance.png" alt="Maintenance work in progress" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/maintainance.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/maintainance.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/maintainance.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/maintainance.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/maintainance.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/maintainance.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>SpecialAnnouncement</ui-chip></ui-media>
 				<ui-content>
 					
 					
@@ -5113,7 +5230,7 @@
 		</ui-card>
 		<ui-card variant="col" media="asr(16/9) chip(te)">
 			<cq-box>
-				<ui-media><img src="/assets/images/maintainance.png" alt="Engineer patching a switch in a server rack" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/maintainance.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/maintainance.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/maintainance.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/maintainance.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/maintainance.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Service</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/maintainance.png" alt="Engineer patching a switch in a server rack" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/maintainance.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/maintainance.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/maintainance.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/maintainance.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/maintainance.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/maintainance.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Service</ui-chip></ui-media>
 				<ui-content>
 					
 					<small data-part="eyebrow">Managed hosting</small>

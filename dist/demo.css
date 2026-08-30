@@ -10363,7 +10363,9 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
 @property --_show-counter { syntax: "<number>"; inherits: false; initial-value: 0; }
 @layer bs-component {
   :where(ui-avatar) {
-    --ui-avatar-background: oklch(0.5 0.25 random(auto, 0, 360));
+    @supports (color: oklch(0.5 0.25 random(auto, 0, 360))) {
+      --ui-avatar-background: oklch(0.5 0.25 random(auto, 0, 360));
+    }
     aspect-ratio: 1 / 1;
     background: var(--ui-avatar-background, var(--color-button));
     block-size: var(--ui-avatar-size, 4em);
@@ -13230,16 +13232,16 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       font-style: normal;
       line-height: var(--ui-content-address-line-height, var(--line-height-normal, 1.5));
     }
-    & [data-part=hours] {
-      column-gap: var(--ui-content-hours-column-gap, var(--spacing-md));
+    & :is([data-part=specs], [data-part=hours]) {
+      column-gap: var(--ui-content-specs-column-gap, var(--ui-content-hours-column-gap, var(--spacing-md)));
       display: grid;
-      font-size: var(--ui-content-hours-fs, var(--ui-content-address-fs, calc(var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))) * 0.9)));
+      font-size: var(--ui-content-specs-fs, var(--ui-content-hours-fs, var(--ui-content-address-fs, calc(var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))) * 0.9))));
       font-variant-numeric: tabular-nums;
       grid-template-columns: auto 1fr;
       margin: 0;
-      row-gap: var(--ui-content-hours-row-gap, 0);
+      row-gap: var(--ui-content-specs-row-gap, var(--ui-content-hours-row-gap, 0));
       & dt {
-        color: var(--ui-content-hours-day-ink, var(--ui-content-muted));
+        color: var(--ui-content-specs-label-ink, var(--ui-content-hours-day-ink, var(--ui-content-muted)));
       }
       & dd {
         margin: 0;

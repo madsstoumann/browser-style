@@ -159,6 +159,35 @@ link + `challenge-platform/jsd`): ~90–130 ms TBT, ~5 pts — **pages.dev is th
 score**; don't chase the zone delta in page code. `_headers` is honored on both; GitHub
 Pages (main branch) ignores it.
 
+**Which knob lives where** — settled 2026-08-29 after three rounds of looking in the wrong
+place:
+
+| Where | Controls | Reaches |
+|---|---|---|
+| `_headers` (this repo) | response headers — cache, referrer | **both** hosts |
+| Zone → Rules → **Compression Rules** on `browser.style` | compression, WAF, bot defence | **`v4.browser.style` only** |
+| Pages project settings | builds, domains, functions, `_headers`/`_redirects` | no compression control exists here |
+| — | Cloudflare platform defaults | `pages.dev`, **not configurable** |
+
+Two consequences. **The host you score is the host you cannot configure**: a compression or
+security question raised by a pages.dev run has no pages.dev fix — re-measure on the zone
+before acting. And **never put `Content-Encoding` in `_headers`**: it describes the bytes in
+the body, not metadata to attach, so declaring an encoding the response does not have makes
+the browser fail to decode it. Compression is applied by the edge *after* your headers, and
+Pages does not serve pre-compressed files committed to the build output.
+
+⚠️ **Transfer size cannot tell you the encoding.** Edges compress for speed, not ratio —
+Cloudflare's dynamic brotli is ~q4, nowhere near the q11 a local `brotli` run produces. On
+the 431.9 kB demo bundle: gzip -9 **75.6 kB**, gzip -6 **76.3 kB**, brotli q4 **74.9 kB**,
+brotli q11 **59.6 kB**. A Lighthouse figure of 75.6 kB is therefore consistent with *either*
+gzip or edge brotli, and the q11 number is not headroom anyone can ship — reading it as a
+16 kB "saving" is a trap this repo has already fallen into once. Only `content-encoding` on
+the response settles it:
+
+```bash
+curl -sI -H 'Accept-Encoding: br, gzip' https://v4.browser.style/dist/demo.<hash>.min.css | grep -i content-encoding
+```
+
 Two referrer rules, both load-bearing against the zone's Hotlink Protection (403 on any
 cross-origin Referer): `<meta name="referrer" content="no-referrer">` in the page head
 covers document-initiated fetches, but a **CSS-initiated fetch uses the *stylesheet's*
@@ -166,10 +195,22 @@ referrer policy, not the document's** — carousel thumb backgrounds
 (`--ui-carousel-thumb-url`) broke on pages.dev until `_headers` gave `/dist/*`
 `Referrer-Policy: no-referrer` (`5ac81cea`). A failed `background-image` is silent.
 
+**Demo assets are single-origin — keep them that way.** Byline avatars used to come from
+`assets.stoumann.dk`; 219 references moved onto the zone on 2026-08-29. A third host costs
+three things, in this order: `cdnEligible()` requires a **root-relative** `src`, so an
+off-zone image gets no transform and no `1x/2x` pair at all (the avatars were shipping
+205 px into a 48 px slot); there is no `preconnect` for it, so the first such image pays a
+full DNS + TCP + TLS handshake; and it sits outside the two referrer rules above, with its
+own policy that can 403 independently. Three off-zone sets remain because no local copy
+exists — `img/bw.jpg`, `img/color.jpg`, `img/colors-base.webp` (ui/image-compare,
+ui/color-compare), `img/movie/01–10.jpg` (ui/slideshow) and `audio/accept.mp3`. Copy them
+onto the zone when convenient; do not add new off-zone references. `content/` is legacy and
+out of scope.
+
 ### Images
 
-Contract (full detail: `ui/card/docs/media.md` § Responsive images): five-width srcset
-`240/320/480/720/1200`, `format=auto,quality=80`, `fit=cover` + height only when the frame
+Contract (full detail: `ui/card/docs/media.md` § Responsive images): six-width srcset
+`240/320/480/560/720/1200`, `format=auto,quality=80`, `fit=cover` + height only when the frame
 has `asr()` (no asr = width-only, Cloudflare keeps the natural ratio). Rungs above the
 original's intrinsic width are dropped (`buildSrcset` in `ui/card/srcset.js`, `intrinsic`
 option). The `srcset` must be **in the markup**: the preload scanner sees markup, never a
@@ -181,11 +222,39 @@ src required** — `render.js` `cdnEligible` and
 zone path (404, no fallback). Exactly **one** `loading="eager" fetchpriority="high"` per
 page (the LCP candidate; never lazy a view-transition morph hero); all else
 `loading="lazy" decoding="async"`. Lazy images get `auto, `-prefixed `sizes`; **`auto` is
-spec-invalid on eager** — eager gets the list alone. The fallback list is computed per
+spec-invalid on eager** — eager gets the list alone.
+
+⚠️ **Which makes the EAGER list the only one that has to be accurate, and the LCP image is
+the one that has it.** `sizes=auto` tells the browser to use the element's real rendered
+width, so every lazy image is self-correcting on both baseline engines and its written list
+is a legacy fallback. The eager image has no such escape: whatever the list says *is* what
+the browser budgets. A list that over-declares by even a few CSS px can cost a whole rung —
+`schema.html` declared `100vw` while `body:has(lay-out)`'s `--layout-mi` insets the column
+by 32 px, so at Lighthouse-mobile (412 CSS, DPR 1.75) the browser budgeted 412 × 1.75 = 721,
+missed the 720 rung by **one pixel**, and fetched 1200w for a slot needing 665 — 43 KiB
+wasted on the LCP. Fixed by declaring the truth: `calc(100vw - 2rem)`.
+
+**Audit the eager image, not the page.** Load at 412 × 1.75, compare
+`img.getBoundingClientRect().width * devicePixelRatio` against the chosen `width=` in
+`currentSrc`, and any gap is an over-declared `sizes`. Measured 2026-08-29: **19 of 28 demo
+pages with an eager image over-fetch it**, insets ranging 12–296 px — the inset is
+*page-specific*, so there is no blanket subtraction. Only `schema.html` is fixed; the rest
+are listed in `open-items.md`. The fallback list is computed per
 enclosing `<lay-out>` from `layout/src/srcsets.js` (`generateSrcsets`/`calculateSizes`,
 whose final entry must stay `100vw`). Fixed-size images (48 px thumbs, 64 px avatars) use
 square `1x/2x` pairs, not a width ladder. CSS-background thumbs need their own transform
 URLs — CSS fetches ignore `loading="lazy"` (a 48 px dot once fetched a 1.9 MB PNG).
+
+**Why 560 exists** (added 2026-08-29). The ladder was a clean 1.5× progression
+`240/320/480/720/1200`, and the gap between 480 and 720 was the widest. The demo `sizes`
+resolves to a ~512 px slot on any desktop ≥ 1024 at **DPR 1** — 480 cannot serve it, so
+the browser was forced to 720: **2.1× the pixels it needed**, and every *"larger than it
+needs to be (720×405 for 497×279)"* row PageSpeed reported. Measured after: 11 images on
+schema.html drop 720 → 560 at DPR 1, and **nothing changes at DPR 2 or on mobile** — both
+already pick a rung 560 does not sit between. Cost is one more edge variant per image and,
+because `schema.html`'s srcsets are hand-authored, 71 hand-inserted candidates there (the
+generated pages just rebuild); `schema.compare.js` is what proves the two spellings still
+agree. Adding a rung is otherwise free: `srcset` lists candidates, the browser fetches one.
 
 ### CSS bundle and caching
 

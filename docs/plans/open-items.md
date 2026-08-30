@@ -1563,3 +1563,40 @@ markup-side:
    bundle rebuilds + page regeneration — and the acceptance test: a product page served
    under an enforced `style-src 'self'` CSP shows **zero** violations from package code
    and renders thumb markers with JavaScript disabled.
+---
+
+## 42. Eager `sizes` over-declares on 18 demo pages — the LCP image over-fetches
+
+Found while fixing `schema.html`'s mobile LCP (`docs/performance.md` § Images carries the
+mechanism). A lazy image's `sizes="auto"` self-corrects to the real rendered width; the
+**eager** image cannot use `auto` (spec: it requires `loading=lazy`), so its written list is
+load-bearing. Most demo pages declare a final `100vw` while `body:has(lay-out)` insets the
+column, so the browser budgets more than the slot needs and jumps a rung.
+
+Measured at Lighthouse-mobile emulation (412 CSS px, DPR 1.75) on 2026-08-29 — slot,
+inset, chosen rung vs the rung that would actually serve it:
+
+| Page | slot | inset | chosen | ideal |
+|---|---|---|---|---|
+| `articles/article.html`, `news.html`, `news-paywall.html` | 328 | 84 | 1200 | 720 |
+| `cards.html` | 348 | 64 | 1200 | 720 |
+| `media.collage.html` | 370 | 42 | 1200 | 720 |
+| `article.render.html`, `hero.html`, `media.carousel.builder.html` | 376 | 36 | 1200 | 720 |
+| `content.html`, `media.carousel.html`, `media.html`, `media.hover.html`, `media.lightbox.html`, `media.shape.html`, `schema.quiz.html`, `schema.recipe.html` | 380 | 32 | 1200 | 720 |
+| `media.furniture.html` | 400 | 12 | 1200 | 720 |
+| `media.rtl.html` | 116 | 296 | 1200 | **240** |
+
+**The inset is page-specific — there is no blanket subtraction.** `media.rtl.html` is the
+extreme: a two-column direction comparison, so the frame is a quarter of the viewport and
+it fetches 1200w for a 116 px slot. The nine `32 px` pages share one `sizes` string and one
+inset, so they are one batch; the rest want measuring individually.
+
+Three ways to close it, in preference order:
+1. **Declare the truth per page** — `calc(100vw - <inset>)`. Correct, and what `schema.html`
+   now does. Drifts silently when a layout changes; nothing gates it.
+2. **Gate it.** The audit above is ~30 lines of Playwright; as a check it would catch drift
+   and every future page. This is the durable answer and it does not exist yet.
+3. **A rung near 768.** Mitigation, not a fix — it would make the miss cheaper without making
+   the declaration honest, and it costs another pass over the hand-authored srcsets.
+
+Not urgent: the pages still render sharp, and only the LCP image is affected on each.

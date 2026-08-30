@@ -25,7 +25,7 @@ what a card *looks* like see the `card-preset` model, summarised in § Preset.
 
 ## The storage contract
 
-**One content model, 52 payloads.** Everything shared is a native CMS field; everything
+**One content model, 55 payloads.** Everything shared is a native CMS field; everything
 type-specific lives in a single JSON field called **`details`**, discriminated by
 `schemaType`. A CMS therefore needs one card content type, not fifty-two.
 
@@ -84,7 +84,7 @@ The fields every card has, whatever its type.
 | Field | Type | Loc. | Req. | Control | Lookup / notes |
 |---|---|---|---|---|---|
 | `internalName` | string | no | **yes** | text | the CMS `displayField`; locale-independent, free-form |
-| `schemaType` | select | no | **yes** | select | § Discriminator — 52 values, default `content` |
+| `schemaType` | select | no | **yes** | select | § Discriminator — 55 values, default `content` |
 | `chip` | object \| array | — | — | fieldset / repeater | text-column status flag. **Not the same as `furniture.chip`** |
 | `cover` | url | no | — | url | makes the whole card a link |
 | `eyebrow` | string | yes | — | text | |
@@ -136,11 +136,11 @@ how it looks. Each accepts a free-string `style` token override.
 ## The discriminator
 
 `schemaType` selects the itemtype, the microdata mapping, and which `details` shape applies.
-**54 values, 51 distinct itemtypes** — `profile`/`artist` both emit `Person`,
+**55 values, 52 distinct itemtypes** — `profile`/`artist` both emit `Person`,
 `comparison`/`places`/`filelist` all emit `ItemList`.
 
-`subtype` narrows it. **Only 9 of the 54 types have a subtype allowlist**, so the control is
-conditional on `schemaType` and must be absent for the other 45:
+`subtype` narrows it. **Only 9 of the 55 types have a subtype allowlist**, so the control is
+conditional on `schemaType` and must be absent for the other 46:
 
 | schemaType | Base itemtype | Values |
 |---|---|---|
@@ -525,6 +525,33 @@ ignores a display twin. Do not go hunting for a mapping that does not exist.
 | `fileSize` | string | text |  |
 | `systemRequirements` | text | textarea |  |
 
+#### `software` + `subtype: "VideoGame"` — the game keys
+
+Only emitted when the sharpened itemtype is actually written — an off-allowlist `subtype`
+falls back to `SoftwareApplication`, which is not in these properties' domain.
+
+| Key | Type | Control | Lookup / notes |
+|---|---|---|---|
+| `gamePlatform` | array | repeater | free text — PS5 / Xbox / Switch / PC |
+| `playMode` | array | multiselect | GAME_PLAY_MODES — SinglePlayer, MultiPlayer, CoOp |
+| `numberOfPlayers` | object | fieldset | `{min, max}` → QuantitativeValue |
+| `gameEdition` | string | text | ONE edition name; the buy matrix lives in `editions` |
+| `contentRating` | string | text | PEGI / ESRB |
+| `screenshots` | array | repeater | `{src, alt}` → hidden ImageObject scopes |
+| `trailer` | object | fieldset | `{id, name, description, src, thumbnail, duration, uploadDate}` → VideoObject |
+| `editions` | object | fieldset | `{currency, lowPrice, highPrice, items[]}` → AggregateOffer — § below |
+| `quests` / `characters` / `items` | array | repeater | `{name, description}` → quest / characterAttribute / gameItem, all Thing |
+
+**Buy row** (`editions.items[]`, one `Offer` each):
+
+| Key | Type | Control | Lookup / notes |
+|---|---|---|---|
+| `edition` | string | text | Standard, Deluxe — becomes half the Offer's `name` |
+| `platform` | string | text | the other half; the machine platform list is `gamePlatform` |
+| `seller` | string | text | the storefront → `seller` → Organization. **Not** a platform |
+| `url` | url | url | the store's product page — a real crawlable anchor |
+| `price` / `currency` / `availability` | — | — | per row; currency falls back to `editions.currency` |
+
 ### `organization` — Organization
 
 | Key | Type | Control | Lookup / notes |
@@ -587,6 +614,28 @@ ignores a display twin. Do not go hunting for a mapping that does not exist.
 | `rating` | object | fieldset | → rating |
 | `director` | object | fieldset | {name, label} |
 | `actors` | array | repeater | strings |
+
+### `bookseries` — BookSeries
+
+| Key | Type | Control | Lookup / notes |
+|---|---|---|---|
+| `startDate` | date | date | first volume — the `CreativeWorkSeries` property |
+| `endDate` | date | date | last volume; omit for an open-ended series ("since 2024") |
+| `bookCount` | number | number | prose only — there is **no** count property on the type |
+| `publisher` | string | text | |
+| `rating` | object | fieldset | → rating |
+| `ordered` | boolean | toggle | default **true** — volumes ascend, so ordinals are true |
+| `books` | array | repeater | → series volume |
+
+**Series volume** (`books[]`, one `hasPart` → `Book` scope per row):
+
+| Key | Type | Control | Lookup / notes |
+|---|---|---|---|
+| `name` | string | text | required |
+| `position` | number | number | |
+| `datePublished` | date | date | the visible year is derived from it |
+| `isbn` | string | text | machine-only here — no visible digits, so no data-detector risk |
+| `url` | url | url | renders the row as a crawlable `itemprop="url"` anchor |
 
 ### `book` — Book
 

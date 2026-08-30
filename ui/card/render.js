@@ -70,6 +70,7 @@ export const SCHEMA_TYPES = {
 	podcast: 'PodcastEpisode',
 	movie: 'Movie',
 	book: 'Book',
+	bookseries: 'BookSeries',
 	dataset: 'Dataset',
 	claim: 'ClaimReview',
 	loyalty: 'MemberProgram',
@@ -126,6 +127,11 @@ const ATTENDANCE_MODES = new Set(['Offline', 'Online', 'Mixed']);
 
 /* schema.org BookFormatType members — bookFormat emits only for these */
 const BOOK_FORMATS = new Set(['Hardcover', 'Paperback', 'EBook', 'AudiobookFormat', 'GraphicNovel']);
+
+/* schema.org GamePlayMode members — playMode emits only for these. An invented mode
+   ("BattleRoyale") lands in an itemprop URL, so the same discipline as SUBTYPES. */
+const GAME_PLAY_MODES = new Set(['SinglePlayer', 'MultiPlayer', 'CoOp']);
+const PLAY_MODE_WORDS = { SinglePlayer: 'Single-player', MultiPlayer: 'Multiplayer', CoOp: 'Co-op' };
 
 /* review itemReviewed types — Organization/Service make the review a testimonial */
 const REVIEWED_TYPES = new Set(['Product', 'Organization', 'Service']);
@@ -207,7 +213,7 @@ const SUMMARY_PROP = { review: 'reviewBody', quote: 'text', announcement: 'text'
    owns it: job's eyebrow is display text, `industry` is details.industry. Docs: schema.md § Job.
    Exported for render.test.js, which re-adds the removed `job: 'industry'` entry to prove the
    duplicate-property guard below still holds when this map grows. */
-export const EYEBROW_PROP = { article: 'articleSection', news: 'articleSection', product: 'category', recipe: 'recipeCategory', course: 'about', video: 'genre', movie: 'genre', book: 'genre', tvseries: 'genre', music: 'genre', musicgroup: 'genre', comicseries: 'genre', comicissue: 'genre' };
+export const EYEBROW_PROP = { article: 'articleSection', news: 'articleSection', product: 'category', recipe: 'recipeCategory', course: 'about', video: 'genre', movie: 'genre', book: 'genre', bookseries: 'genre', tvseries: 'genre', music: 'genre', musicgroup: 'genre', comicseries: 'genre', comicissue: 'genre' };
 /* published itemprop: JobPosting/SpecialAnnouncement use datePosted, VideoObject uploadDate */
 const PUBLISHED_PROP = { job: 'datePosted', announcement: 'datePosted', video: 'uploadDate' };
 /* datePosted is typed Date, so a timestamp is out of range; uploadDate takes a DateTime */
@@ -219,7 +225,7 @@ const HEADING_TAGS = new Set(['h2', 'h3', 'h4', 'h5']);
 const ARTICLE_BODY_TYPES = new Set(['article', 'news']);
 /* isAccessibleForFree domain — CreativeWork | Event | Place: every key whose itemtype is one
    (schema.org 30.0 dump). Docs: docs/schema.md § Paywall */
-const PAYWALL_TYPES = new Set(['content', 'article', 'news', 'event', 'recipe', 'review', 'course', 'poll', 'faq', 'quote', 'timeline', 'gallery', 'achievement', 'announcement', 'business', 'location', 'social', 'software', 'video', 'howto', 'qa', 'podcast', 'movie', 'book', 'dataset', 'claim', 'quiz', 'realestate', 'vacationrental', 'menu', 'tvseries', 'tvepisode', 'medical', 'music', 'glossary', 'podcastseries', 'comicseries', 'comicissue']);
+const PAYWALL_TYPES = new Set(['content', 'article', 'news', 'event', 'recipe', 'review', 'course', 'poll', 'faq', 'quote', 'timeline', 'gallery', 'achievement', 'announcement', 'business', 'location', 'social', 'software', 'video', 'howto', 'qa', 'podcast', 'movie', 'book', 'bookseries', 'dataset', 'claim', 'quiz', 'realestate', 'vacationrental', 'menu', 'tvseries', 'tvepisode', 'medical', 'music', 'glossary', 'podcastseries', 'comicseries', 'comicissue']);
 /* types where the image/video belongs to another scope — skip itemprop */
 const NO_IMAGE_PROP = new Set(['review', 'contact']);
 /* A gallery whose data carries licensing emits a full ImageObject per photo, which then
@@ -279,7 +285,11 @@ const attrs = (obj) => Object.entries(obj)
 /* ── image pipeline (SSR srcset) — armed per renderCard() call via options.images.
    Off by default: /cdn-cgi/image/ only resolves on the Cloudflare zone and a failed
    srcset candidate does NOT fall back to src. Docs: docs/media.md § srcset ── */
-const IMG_DEFAULTS = { breakpoints: [240, 320, 480, 720, 1200], format: 'auto', quality: 80, fit: 'cover', base: '', intrinsic: ASSET_SIZES };
+/* 560 closes the 480->720 gap: the demo `sizes` resolves to a ~512px slot on any desktop
+   >=1024 at DPR 1, which 480 cannot serve — so the browser was forced to 720 (2.1x the
+   pixels). Every other case (tablet, mobile, and all DPR>=2) picks the same rung as before.
+   Docs: docs/performance.md § Images */
+const IMG_DEFAULTS = { breakpoints: [240, 320, 480, 560, 720, 1200], format: 'auto', quality: 80, fit: 'cover', base: '', intrinsic: ASSET_SIZES };
 let IMG = null;
 const setImages = (images) => {
 	IMG = images ? { ...IMG_DEFAULTS, ...images, base: images.cdnBase ?? images.base ?? '' } : null;
@@ -800,9 +810,14 @@ const initials = (name) => {
 };
 /* loading/decoding are unconditional — an avatar is always below the fold, and deferring it
    has nothing to do with whether the srcset pipeline is armed. Only srcset is IMG-gated. */
+/* The initials ride ALONG WITH a photo, not instead of it: ui-avatar puts `abbr` and `img`
+   in the same grid cell (`grid-area: 1 / -1`), so the opaque photo covers them — and a photo
+   that fails to load reveals initials on the avatar's plate instead of an empty disc. The
+   abbr stays aria-hidden either way; the name is already in the byline text beside it. */
+const initialsPart = (name) => name ? `<abbr aria-hidden="true">${esc(initials(name))}</abbr>` : '';
 const avatarPart = ({ avatar, name }) => avatar
-	? `<ui-avatar><img src="${esc(avatar)}" alt=""${attrs({ srcset: IMG ? fixedSrcset(avatar, 64) : null, loading: 'lazy', decoding: 'async' })}></ui-avatar>`
-	: (name ? `<ui-avatar><abbr aria-hidden="true">${esc(initials(name))}</abbr></ui-avatar>` : '');
+	? `<ui-avatar>${initialsPart(name)}<img src="${esc(avatar)}" alt=""${attrs({ srcset: IMG ? fixedSrcset(avatar, 64) : null, loading: 'lazy', decoding: 'async' })}></ui-avatar>`
+	: (name ? `<ui-avatar>${initialsPart(name)}</ui-avatar>` : '');
 
 /* byline rows from authors[] — the dateline rides the FIRST author as a second
    line (avatar · name/role over date · reading time), the common editorial shape */
@@ -1694,6 +1709,77 @@ export const realestateSections = (d = {}, fields = {}) => {
 	};
 };
 
+/* ── VideoGame, section by section ────────────────────────────────────────────
+   Same two-consumer contract as realestateSections/vacationrentalSections: the TEASER
+   composes a short subset (DETAILS.software's VideoGame arm), the generated page wraps
+   bands of the strings below. Every band is '' when its data is absent, so a caller can
+   drop it without testing for content.
+
+   THE THREE AXES, which the demo page exists to keep apart — docs/schema.md § Video game:
+     platform  PS5 / PC / Switch  → `gamePlatform` on the GAME (Text|URL|Thing)
+     edition   Standard / Deluxe  → the Offer's own `name`; `gameEdition` is a single Text
+                                    on the item and cannot express a matrix
+     store     Steam / PSN        → NEITHER. A storefront is a `seller` → Organization on
+                                    the Offer, with `url` pointing at its product page.
+   `isVariantOf` is Product/ProductModel only, so the ProductGroup variant markup does NOT
+   reach a VideoGame — the picker UI is reusable, the microdata underneath is Offers. ── */
+export const videogameSections = (d = {}, fields = {}) => {
+	/* hidden ImageObject scopes beside the visible carousel — the ImageGallery card's
+	   shape, so a screenshot carries its caption without duplicating the <img> */
+	const screenshots = (d.screenshots || []).map((shot) =>
+		`<span${scope('screenshot', 'ImageObject')} hidden><link itemprop="contentUrl" href="${esc(shot.src)}">${meta('caption', shot.alt)}</span>`
+	).join('');
+
+	const t = d.trailer;
+	const trailer = !t?.src ? '' : `<div${scope('trailer', 'VideoObject')}>`
+		+ meta('name', t.name) + meta('description', t.description) + meta('duration', t.duration) + meta('uploadDate', t.uploadDate)
+		+ (t.thumbnail ? `<link itemprop="thumbnailUrl" href="${esc(t.thumbnail)}">` : '')
+		+ `<link itemprop="contentUrl" href="${esc(t.src)}">`
+		/* <ui-play> wraps a real <button> + <ui-icon> — the element alone is 0x0 (ui-play.css
+		   styles `& button`). Its one contract is command="--play-pause" + commandfor, driven
+		   by video.js; the `--` prefix keeps the markup valid. Docs: ui/card/AGENTS.md § 9 */
+		+ `<ui-media media="asr(16/9) play(cc)"><video${attrs({ id: t.id || 'trailer', poster: t.thumbnail })} preload="none" playsinline><source src="${esc(t.src)}" type="video/mp4"></video>`
+		+ `<ui-play><button type="button" aria-label="${esc(t.playLabel || 'Play the trailer')}" command="--play-pause" commandfor="${esc(t.id || 'trailer')}"><ui-icon type="play-pause"></ui-icon></button></ui-play></ui-media>`
+		+ '</div>';
+
+	/* one Game property per row list — all three are Thing-ranged, so a row is a name and
+	   at most a description. Nothing here invents a richer type than the vocabulary has. */
+	const things = (rows, prop) => scopedList((rows || []).map((row) =>
+		`<li${scope(prop, 'Thing')}><span itemprop="name">${esc(row.name)}</span>${row.description ? ` — <small itemprop="description">${esc(row.description)}</small>` : ''}</li>`
+	), false);
+
+	const ed = d.editions;
+	const editions = !ed?.items?.length ? '' : `<div${scope('offers', 'AggregateOffer')}>`
+		+ meta('priceCurrency', ed.currency) + meta('lowPrice', ed.lowPrice) + meta('highPrice', ed.highPrice) + meta('offerCount', ed.items.length)
+		+ `<ul data-part="list">${ed.items.map((row) => {
+			const label = [row.edition, row.platform].filter(Boolean).join(' — ');
+			return `<li${scope('offers', 'Offer')}>`
+				+ meta('name', label) + meta('priceCurrency', row.currency || ed.currency)
+				+ meta('availability', availabilityUrl(row.availability || 'in stock'))
+				+ (row.edition ? `<strong>${esc(row.edition)}</strong>` : '')
+				+ (row.platform ? `<span>${esc(row.platform)}</span>` : '')
+				+ (row.seller ? `<span${scope('seller', 'Organization')}><span itemprop="name">${esc(row.seller)}</span></span>` : '')
+				+ `<span data-part="price">${priceValue(row.currency || ed.currency, row.price)}</span>`
+				/* a real anchor, not a meta: an Offer's url must be somewhere a buyer can go */
+				+ (row.url ? `<a class="ui-button" data-variant="accent" itemprop="url" href="${esc(row.url)}">Buy<span data-sr> ${esc(label)}</span></a>` : '')
+				+ '</li>';
+		}).join('')}</ul></div>`;
+
+	/* the teaser's one softwareRequirements line is a SUMMARY; the page splits it into the
+	   three typed SoftwareApplication properties, in the generic two-column `specs` <dl> */
+	const req = d.systemRequirements;
+	const rows = typeof req === 'string' || !req ? [] : [
+		['Processor', 'processorRequirements', req.processor],
+		['Memory', 'memoryRequirements', req.ram],
+		['Storage', 'storageRequirements', req.storage]
+	].filter(([, , value]) => value);
+	const requirements = rows.length
+		? `<dl data-part="specs">${rows.map(([label, prop, value]) => `<dt>${esc(label)}</dt><dd>${meta(prop, value)}${esc(value)}</dd>`).join('')}</dl>`
+		: '';
+
+	return { screenshots, trailer, editions, quests: things(d.quests, 'quest'), characters: things(d.characters, 'characterAttribute'), items: things(d.items, 'gameItem'), requirements };
+};
+
 /* ── VacationRental, section by section ───────────────────────────────────────
    Same two-consumer contract as realestateSections above: the TEASER composes a
    short subset (DETAILS.vacationrental), the generated page wraps bands of the same
@@ -2407,11 +2493,39 @@ const DETAILS = {
 		return html;
 	},
 
-	software(d) {
+	/* `itemtype` is the sharpened name actually written on the scope, so the VideoGame arm
+	   below is gated on it and never on details.subtype: a subtype off the allowlist falls
+	   back to SoftwareApplication, which is NOT in gamePlatform/playMode/gameEdition/
+	   numberOfPlayers' domain. Docs: docs/schema.md § Video game */
+	software(d, fields, parts = {}, itemtype = null) {
+		const game = itemtype === 'VideoGame';
 		let html = meta('applicationCategory', d.applicationCategory)
 			+ (d.operatingSystem || []).map((os) => meta('operatingSystem', os)).join('');
+		const platforms = game ? (d.gamePlatform || []) : [];
+		if (game) {
+			html += platforms.map((platform) => meta('gamePlatform', platform)).join('')
+				+ (d.playMode || []).filter((mode) => GAME_PLAY_MODES.has(mode)).map((mode) => meta('playMode', SCHEMA + mode)).join('')
+				+ meta('gameEdition', d.gameEdition) + meta('contentRating', d.contentRating);
+			/* numberOfPlayers' range is QuantitativeValue — "up to four raiders" was prose
+			   only, the same prose-vs-machine split the book series' count has */
+			const players = d.numberOfPlayers;
+			if (players && (players.min != null || players.max != null)) {
+				html += `<span${scope('numberOfPlayers', 'QuantitativeValue')} hidden>${meta('minValue', players.min)}${meta('maxValue', players.max)}</span>`;
+			}
+		}
 		if (d.version) html += `<p data-part="meta"><ui-chip theme="pale accent">v<span itemprop="softwareVersion">${esc(d.version)}</span></ui-chip></p>`;
-		html += `<p data-part="meta">${esc((d.operatingSystem || []).join(' · '))}${d.fileSize ? ` · ${esc(d.fileSize)}` : ''}</p>`;
+		/* a game's run names PLATFORMS; plain software keeps the operatingSystem run it always had */
+		const run = platforms.length ? platforms : (d.operatingSystem || []);
+		html += `<p data-part="meta">${esc(run.join(' · '))}${d.fileSize ? ` · ${esc(d.fileSize)}` : ''}</p>`;
+		if (game) {
+			const players = d.numberOfPlayers;
+			const span = !players ? null
+				: players.max != null && players.min != null && players.max !== players.min ? `${num(players.min)}–${num(players.max)} players`
+				: players.max === 1 || players.min === 1 && players.max == null ? '1 player'
+				: `${num(players.max ?? players.min)} players`;
+			const bits = [span, ...(d.playMode || []).filter((mode) => GAME_PLAY_MODES.has(mode)).map((mode) => esc(PLAY_MODE_WORDS[mode]))].filter(Boolean).join(' · ');
+			if (bits) html += `<p data-part="meta">${bits}</p>`;
+		}
 		if (d.developer?.name) {
 			html += `<p data-part="meta"${scope('author', 'Organization')}>Developer: <span itemprop="name">${esc(d.developer.name)}</span>${d.developer.website ? meta('url', d.developer.website) : ''}</p>`;
 		}
@@ -2540,6 +2654,39 @@ const DETAILS = {
 		if (d.price) {
 			html += `<p data-part="price"${scope('offers', 'Offer')}>${meta('priceCurrency', d.price.currency)}${meta('availability', SCHEMA + 'InStock')}${priceValue(d.price.currency, d.price.current)}</p>`;
 		}
+		if (d.publisher) html += `<p data-part="meta"${scope('publisher', 'Organization')}>Publisher: <span itemprop="name">${esc(d.publisher)}</span></p>`;
+		return html;
+	},
+
+	/* BookSeries ⊂ CreativeWorkSeries ⊂ (Series, CreativeWork). `startDate`/`endDate` are
+	   CreativeWorkSeries'; the volume list, the rating and the publisher all arrive from
+	   CreativeWork. There is NO count property — `numberOfItems` is ItemList's alone — so
+	   the book count is prose and `hasPart` is the machine answer.
+	   Docs: docs/schema.md § Book series */
+	bookseries(d) {
+		/* author byline renders EARLY via BYLINE_EARLY, same shape as the book card */
+		let html = meta('startDate', d.startDate) + meta('endDate', d.endDate);
+		const from = startYear(d.startDate);
+		const to = startYear(d.endDate);
+		const span = from ? (to && to !== from ? `${esc(from)}–${esc(to)}` : `since ${esc(from)}`) : null;
+		const bits = [
+			d.bookCount != null ? `${num(d.bookCount)} book${d.bookCount === 1 ? '' : 's'}` : null,
+			span
+		].filter(Boolean).join(' · ');
+		if (bits) html += `<p data-part="meta">${bits}</p>`;
+		html += ratingPart('aggregateRating', 'AggregateRating', d.rating);
+		/* Volumes ASCEND, so ordinal markers are true — the album-track default, and
+		   `details.ordered` overrides it per instance. A volume with a url gets a REAL
+		   anchor: only a link is crawlable (the ComicIssue→series rule, run downwards). */
+		html += scopedList((d.books || []).map((book) => {
+			const year = startYear(book.datePublished);
+			return `<li${scope('hasPart', 'Book')}>${meta('position', book.position)}${meta('datePublished', book.datePublished)}${meta('isbn', book.isbn)}`
+				+ (book.url
+					? `<a itemprop="url" href="${esc(book.url)}"><span itemprop="name">${esc(book.name)}</span></a>`
+					: `<span itemprop="name">${esc(book.name)}</span>`)
+				+ (year ? ` <small>${esc(year)}</small>` : '')
+				+ '</li>';
+		}), d.ordered ?? true);
 		if (d.publisher) html += `<p data-part="meta"${scope('publisher', 'Organization')}>Publisher: <span itemprop="name">${esc(d.publisher)}</span></p>`;
 		return html;
 	},
@@ -2995,7 +3142,7 @@ const SUBHEADLINE_SLOT = {
 
 /* byline-early types: author identity precedes the commerce details (book).
    A preset's byline: "lede" opts any type in — the full-article shape. */
-const BYLINE_EARLY = new Set(['book']);
+const BYLINE_EARLY = new Set(['book', 'bookseries']);
 
 /* `places` has NO card-level CTA: the map is the affordance, and each place carries its own
    (a "See More" on a slide). details.center still feeds the no-JS fallback frame. */

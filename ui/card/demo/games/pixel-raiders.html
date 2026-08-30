@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Pixel Raiders</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="text-scale" content="scale">
+	<meta name="description" content="Co-op dungeon crawling for up to four raiders — new Sky Fortress season, cross-play everywhere.">
+	<link rel="stylesheet" href="/dist/demo.8656b5bb.min.css">
+	<!-- no-referrer: the zone hotlink-protects CDN srcset. Docs: docs/performance.md -->
+	<meta name="referrer" content="no-referrer">
+	<link rel="preconnect" href="https://v4.browser.style">
+	<!-- Block first paint (and the view-transition snapshot) until the hero is parsed,
+	     so the card/hero morph targets exist when the browser captures the incoming
+	     page. Without this the snapshot races HTML parsing and the morph degrades to a
+	     plain cross-fade on repeat/bfcache navigations. -->
+	<link rel="expect" href="#hero" blocking="render">
+	<!-- Names the morph targets where typed attr() is unsupported (Safari). MUST be
+	     render-blocking in <head>: the incoming page is snapshotted at first paint,
+	     so a deferred script names the targets too late and the forward morph
+	     degrades to a cross-fade. Docs: ui/base/polyfills/readme.md -->
+	<script type="module" src="/ui/base/polyfills/attr-fallback.min.js" blocking="render"></script>
+	<style>
+		/* cross-document view transitions come from ui-card.css — nothing page-scoped
+		   here, deliberately: see the header comment in products/build.js */
+		body { margin-inline: auto; max-inline-size: 64rem; }
+		.game-view { margin-block-end: var(--spacing-2xl); }
+		.game-view > lay-out { margin-block-start: var(--spacing-xl); }
+		/* The store matrix. Mobile-first: an offer is a three-line BLOCK (edition · platform /
+		   seller / price + Buy), because five columns in 380px minus the plate padding gives
+		   each one ~50px. From 540px the block becomes one row. The children are positioned
+		   by source order — strong, platform, seller, price, Buy — which is fixed by
+		   videogameSections(); a hairline separates offers in the stacked form, where row
+		   grouping is otherwise the only thing telling two offers apart. */
+		#editions [data-part="list"] { display: grid; list-style: none; margin: 0; padding: 0; }
+		#editions [data-part="list"] li {
+			align-items: baseline;
+			border-block-start: 1px solid color-mix(in oklab, currentColor 15%, transparent);
+			column-gap: var(--spacing-sm);
+			display: grid;
+			grid-template-columns: 1fr auto;
+			padding-block: var(--spacing-sm);
+			row-gap: var(--spacing-3xs, 0.125rem);
+		}
+		#editions [data-part="list"] li:first-child { border-block-start: 0; }
+		#editions [data-part="list"] li > :nth-child(4) { grid-column: 1; }          /* edition */
+		#editions [data-part="list"] li > :nth-child(5) { grid-column: 2; text-align: end; } /* platform */
+		#editions [data-part="list"] li > :nth-child(6) { grid-column: 1 / -1; }     /* seller */
+		#editions [data-part="price"] { font-size: 1.125em; font-variant-numeric: tabular-nums; font-weight: 700; }
+		#editions [data-part="list"] li > a { justify-self: end; }
+		@media (min-width: 540px) {
+			#editions [data-part="list"] li {
+				align-items: center;
+				grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1.2fr) auto auto;
+			}
+			#editions [data-part="list"] li > :nth-child(4) { grid-column: 1; }
+			#editions [data-part="list"] li > :nth-child(5) { grid-column: 2; text-align: start; }
+			#editions [data-part="list"] li > :nth-child(6) { grid-column: 3; }
+		}
+	</style>
+	<style>
+		ui-content { --ui-content-muted: color-mix(in oklab, currentColor 85%, transparent); }
+		ui-chip[data-type] { --ui-chip-bg: hsl(0, 0%, 95%); --ui-chip-c: hsl(0, 0%, 13%); }
+	</style>
+</head>
+<body>
+	<nav aria-label="Breadcrumb">
+		<ol data-breadcrumbs itemscope itemtype="https://schema.org/BreadcrumbList">
+			<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+				<a itemprop="item" href="/ui/card/"><span itemprop="name">Card</span></a>
+				<meta itemprop="position" content="1">
+			</li>
+			<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+				<a itemprop="item" href="/ui/card/demo/schema.html"><span itemprop="name">Schema.org</span></a>
+				<meta itemprop="position" content="2">
+			</li>
+			<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+				<span itemprop="name">Pixel Raiders</span>
+				<meta itemprop="position" content="3">
+			</li>
+		</ol>
+	</nav>
+	<main>
+		<article class="game-view" data-view="card-software-1" itemscope itemtype="https://schema.org/VideoGame">
+			<link itemprop="mainEntityOfPage" href="pixel-raiders.html">
+			<ui-card variant="col shd(non)">
+		<cq-box>
+			<ui-media media="asr(16/9) rds(lg) nav lightbox(bs)" id="software-1-media" popover media-open="axis(y) nav(mrk) mrk(tmb) mrk(rail)"><ui-lightbox><button type="button" command="toggle-popover" commandfor="software-1-media" aria-label="View gallery"><ui-icon><svg viewBox="0 0 24 24"><path d="M7 5.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666"/><path d="M4.012 7.26a2.005 2.005 0 0 0 -1.012 1.737v10c0 1.1 .9 2 2 2h10c.75 0 1.158 -.385 1.5 -1"/><path d="M17 7h.01"/><path d="M7 13l3.644 -3.644a1.21 1.21 0 0 1 1.712 0l3.644 3.644"/><path d="M15 12l1.644 -1.644a1.21 1.21 0 0 1 1.712 0l2.644 2.644"/></svg></ui-icon></button></ui-lightbox><img id="hero" data-view="hero-software-1" src="/assets/images/game_01.png" alt="Pixel Raiders key art — four chibi heroes charging forward with swords and staves raised, slimes and a star burst around them" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/game_01.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/game_01.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/game_01.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/game_01.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/game_01.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/game_01.png 1200w" sizes="min(64rem, 100vw)" loading="eager" fetchpriority="high" decoding="async" itemprop="image"></ui-media>
+			<ui-content content="scl(lg)"><small data-part="eyebrow">Adventure game</small><h2 data-part="headline" itemprop="name">Pixel Raiders</h2><p data-part="summary" itemprop="description">Co-op dungeon crawling for up to four raiders — new Sky Fortress season, cross-play everywhere.</p><meta itemprop="applicationCategory" content="GameApplication"><meta itemprop="operatingSystem" content="macOS"><meta itemprop="operatingSystem" content="Windows"><meta itemprop="operatingSystem" content="Switch"><meta itemprop="gamePlatform" content="PlayStation 5"><meta itemprop="gamePlatform" content="Xbox Series X|S"><meta itemprop="gamePlatform" content="Nintendo Switch"><meta itemprop="gamePlatform" content="PC"><meta itemprop="playMode" content="https://schema.org/SinglePlayer"><meta itemprop="playMode" content="https://schema.org/CoOp"><meta itemprop="playMode" content="https://schema.org/MultiPlayer"><meta itemprop="gameEdition" content="Sky Fortress Edition"><meta itemprop="contentRating" content="PEGI 12"><span itemprop="numberOfPlayers" itemscope itemtype="https://schema.org/QuantitativeValue" hidden><meta itemprop="minValue" content="1"><meta itemprop="maxValue" content="4"></span><p data-part="meta"><ui-chip theme="pale accent">v<span itemprop="softwareVersion">2.1</span></ui-chip></p><p data-part="meta">PlayStation 5 · Xbox Series X|S · Nintendo Switch · PC · 2.4 GB</p><p data-part="meta">1–4 players · Single-player · Co-op · Multiplayer</p><p data-part="meta" itemprop="author" itemscope itemtype="https://schema.org/Organization">Developer: <span itemprop="name">Bitburrow Studio</span><meta itemprop="url" content="https://bitburrow.example"></p><meta itemprop="softwareRequirements" content="Apple M1 or Intel i5 · 8 GB RAM · 4 GB free"><p data-part="meta"><strong data-part="key">Requires:</strong> Apple M1 or Intel i5 · 8 GB RAM · 4 GB free</p><span data-part="tags"><ui-chip itemprop="keywords">Game</ui-chip><ui-chip itemprop="keywords">Co-op</ui-chip></span><nav data-part="actions"><a class="ui-button" data-icon="play-arrow" href="#trailer">Watch the trailer</a> <a class="ui-button" data-variant="accent" data-icon="shopping-cart" href="#editions">See editions</a></nav></ui-content>
+		</cq-box>
+	</ui-card>
+			<lay-out lg="ratio(60:40) items(start)">
+				<div id="trailer"><div itemprop="trailer" itemscope itemtype="https://schema.org/VideoObject"><meta itemprop="name" content="Pixel Raiders — Season 3: Sky Fortress"><meta itemprop="description" content="Ninety seconds above the cloud line: the twelve new dungeons, the Stormcaller class and cross-play."><meta itemprop="duration" content="PT1M12S"><meta itemprop="uploadDate" content="2026-08-01"><link itemprop="thumbnailUrl" href="/assets/images/game_01.png"><link itemprop="contentUrl" href="/assets/video/city.mp4"><ui-media media="asr(16/9) play(cc)"><video id="pixel-raiders-trailer" poster="/assets/images/game_01.png" preload="none" playsinline><source src="/assets/video/city.mp4" type="video/mp4"></video><ui-play><button type="button" aria-label="Play the trailer" command="--play-pause" commandfor="pixel-raiders-trailer"><ui-icon type="play-pause"></ui-icon></button></ui-play></ui-media></div></div>
+				<ui-content><h3 data-part="headline">Season 3: Sky Fortress</h3><p>Four raiders, one collapsing sky. <b>Pixel Raiders</b> is a co-op dungeon crawler where every floor is stitched together the moment you drop into it — the same seed, the same rooms, on every platform you own.</p><p>The Sky Fortress season lifts the whole run above the cloud line: twelve new floating dungeons, a class that fights with weather, and a shared progression track that follows your account rather than your console.</p></ui-content>
+			</lay-out>
+			<lay-out md="columns(1)">
+				<ui-card variant="vis(content)" theme="black dark" id="editions" content="scl(lg) pad(lg) md:pad(2xl)"><cq-box><ui-content><h3 data-part="headline">Editions &amp; where to buy</h3><p data-part="summary">One game, two editions, five storefronts. The platform is a property of the game; the shop is the seller on each offer.</p><div itemprop="offers" itemscope itemtype="https://schema.org/AggregateOffer"><meta itemprop="priceCurrency" content="USD"><meta itemprop="lowPrice" content="29"><meta itemprop="highPrice" content="59"><meta itemprop="offerCount" content="7"><ul data-part="list"><li itemprop="offers" itemscope itemtype="https://schema.org/Offer"><meta itemprop="name" content="Standard — PC"><meta itemprop="priceCurrency" content="USD"><meta itemprop="availability" content="https://schema.org/InStock"><strong>Standard</strong><span>PC</span><span itemprop="seller" itemscope itemtype="https://schema.org/Organization"><span itemprop="name">Steam</span></span><span data-part="price"><meta itemprop="price" content="29">$29</span><a class="ui-button" data-variant="accent" itemprop="url" href="https://store.steampowered.example/app/pixel-raiders">Buy<span data-sr> Standard — PC</span></a></li><li itemprop="offers" itemscope itemtype="https://schema.org/Offer"><meta itemprop="name" content="Standard — PC"><meta itemprop="priceCurrency" content="USD"><meta itemprop="availability" content="https://schema.org/InStock"><strong>Standard</strong><span>PC</span><span itemprop="seller" itemscope itemtype="https://schema.org/Organization"><span itemprop="name">Epic Games Store</span></span><span data-part="price"><meta itemprop="price" content="29">$29</span><a class="ui-button" data-variant="accent" itemprop="url" href="https://store.epicgames.example/pixel-raiders">Buy<span data-sr> Standard — PC</span></a></li><li itemprop="offers" itemscope itemtype="https://schema.org/Offer"><meta itemprop="name" content="Standard — PlayStation 5"><meta itemprop="priceCurrency" content="USD"><meta itemprop="availability" content="https://schema.org/InStock"><strong>Standard</strong><span>PlayStation 5</span><span itemprop="seller" itemscope itemtype="https://schema.org/Organization"><span itemprop="name">PlayStation Store</span></span><span data-part="price"><meta itemprop="price" content="29">$29</span><a class="ui-button" data-variant="accent" itemprop="url" href="https://store.playstation.example/pixel-raiders">Buy<span data-sr> Standard — PlayStation 5</span></a></li><li itemprop="offers" itemscope itemtype="https://schema.org/Offer"><meta itemprop="name" content="Standard — Xbox Series X|S"><meta itemprop="priceCurrency" content="USD"><meta itemprop="availability" content="https://schema.org/InStock"><strong>Standard</strong><span>Xbox Series X|S</span><span itemprop="seller" itemscope itemtype="https://schema.org/Organization"><span itemprop="name">Microsoft Store</span></span><span data-part="price"><meta itemprop="price" content="29">$29</span><a class="ui-button" data-variant="accent" itemprop="url" href="https://xbox.example/games/pixel-raiders">Buy<span data-sr> Standard — Xbox Series X|S</span></a></li><li itemprop="offers" itemscope itemtype="https://schema.org/Offer"><meta itemprop="name" content="Standard — Nintendo Switch"><meta itemprop="priceCurrency" content="USD"><meta itemprop="availability" content="https://schema.org/InStock"><strong>Standard</strong><span>Nintendo Switch</span><span itemprop="seller" itemscope itemtype="https://schema.org/Organization"><span itemprop="name">Nintendo eShop</span></span><span data-part="price"><meta itemprop="price" content="34">$34</span><a class="ui-button" data-variant="accent" itemprop="url" href="https://nintendo.example/store/pixel-raiders">Buy<span data-sr> Standard — Nintendo Switch</span></a></li><li itemprop="offers" itemscope itemtype="https://schema.org/Offer"><meta itemprop="name" content="Sky Fortress Deluxe — PC"><meta itemprop="priceCurrency" content="USD"><meta itemprop="availability" content="https://schema.org/InStock"><strong>Sky Fortress Deluxe</strong><span>PC</span><span itemprop="seller" itemscope itemtype="https://schema.org/Organization"><span itemprop="name">Steam</span></span><span data-part="price"><meta itemprop="price" content="59">$59</span><a class="ui-button" data-variant="accent" itemprop="url" href="https://store.steampowered.example/app/pixel-raiders-deluxe">Buy<span data-sr> Sky Fortress Deluxe — PC</span></a></li><li itemprop="offers" itemscope itemtype="https://schema.org/Offer"><meta itemprop="name" content="Sky Fortress Deluxe — PlayStation 5"><meta itemprop="priceCurrency" content="USD"><meta itemprop="availability" content="https://schema.org/LimitedAvailability"><strong>Sky Fortress Deluxe</strong><span>PlayStation 5</span><span itemprop="seller" itemscope itemtype="https://schema.org/Organization"><span itemprop="name">PlayStation Store</span></span><span data-part="price"><meta itemprop="price" content="59">$59</span><a class="ui-button" data-variant="accent" itemprop="url" href="https://store.playstation.example/pixel-raiders-deluxe">Buy<span data-sr> Sky Fortress Deluxe — PlayStation 5</span></a></li></ul></div></ui-content></cq-box></ui-card>
+			</lay-out>
+			<lay-out md="columns(2) items(start)" lg="columns(3) items(start)">
+				<ui-content><h3 data-part="headline">Quests</h3><ul data-part="list"><li itemprop="quest" itemscope itemtype="https://schema.org/Thing"><span itemprop="name">The Cloudbreak</span> — <small itemprop="description">Climb out of the drowned quarter and reach the first floating dungeon.</small></li><li itemprop="quest" itemscope itemtype="https://schema.org/Thing"><span itemprop="name">Ballast and Bone</span> — <small itemprop="description">Cut the anchor chains holding the Fortress to the seabed.</small></li><li itemprop="quest" itemscope itemtype="https://schema.org/Thing"><span itemprop="name">The Long Static</span> — <small itemprop="description">Survive nine floors with the storm rising a level each time you rest.</small></li><li itemprop="quest" itemscope itemtype="https://schema.org/Thing"><span itemprop="name">Sky Burial</span> — <small itemprop="description">Return the Lantern Witch's compass to the room it was made in.</small></li></ul></ui-content>
+				<ui-content><h3 data-part="headline">Classes</h3><ul data-part="list"><li itemprop="characterAttribute" itemscope itemtype="https://schema.org/Thing"><span itemprop="name">Stormcaller</span> — <small itemprop="description">Weather class — calls lightning down the vault lines, weakest in the open.</small></li><li itemprop="characterAttribute" itemscope itemtype="https://schema.org/Thing"><span itemprop="name">Ironvow</span> — <small itemprop="description">Shield-first raider who takes the hit meant for anyone standing behind them.</small></li><li itemprop="characterAttribute" itemscope itemtype="https://schema.org/Thing"><span itemprop="name">Lantern Witch</span> — <small itemprop="description">Sees one room ahead, and can hold a door shut for exactly ten seconds.</small></li><li itemprop="characterAttribute" itemscope itemtype="https://schema.org/Thing"><span itemprop="name">Rook</span> — <small itemprop="description">Scout who trades armour for a second dodge and a longer reach.</small></li></ul></ui-content>
+				<ui-content><h3 data-part="headline">Gear</h3><ul data-part="list"><li itemprop="gameItem" itemscope itemtype="https://schema.org/Thing"><span itemprop="name">Aether Compass</span> — <small itemprop="description">Points at the nearest rift instead of north.</small></li><li itemprop="gameItem" itemscope itemtype="https://schema.org/Thing"><span itemprop="name">Stormglass Lantern</span> — <small itemprop="description">Burns brighter the closer the storm gets — and blinds you at full strength.</small></li><li itemprop="gameItem" itemscope itemtype="https://schema.org/Thing"><span itemprop="name">Raider's Sigil</span> — <small itemprop="description">Carries one death per run back to the party.</small></li></ul></ui-content>
+			</lay-out>
+			<lay-out lg="ratio(40:60) items(start)">
+				<ui-content><h3 data-part="headline">System requirements</h3><dl data-part="specs"><dt>Processor</dt><dd><meta itemprop="processorRequirements" content="Apple M1 or Intel i5">Apple M1 or Intel i5</dd><dt>Memory</dt><dd><meta itemprop="memoryRequirements" content="8 GB">8 GB</dd><dt>Storage</dt><dd><meta itemprop="storageRequirements" content="4 GB">4 GB</dd></dl></ui-content>
+				<ui-content><h3 data-part="headline">Cross-play</h3><p data-part="summary">One account, one save. Progress follows you between every storefront below — the platforms are properties of the game, not five separate products.</p><span itemprop="screenshot" itemscope itemtype="https://schema.org/ImageObject" hidden><link itemprop="contentUrl" href="/assets/images/game_01.png"><meta itemprop="caption" content="Pixel Raiders key art — four chibi heroes charging forward with swords and staves raised, slimes and a star burst around them"></span></ui-content>
+			</lay-out>
+		</article>
+	</main>
+	<!-- video.js polyfills the media invoker commands behind <ui-play>; lightbox.js gives
+	     the popover gallery real DOM controls (native scroll-control pseudos do not follow
+	     a popover into the top layer in Chromium). Neither is render-blocking: they must
+	     not delay the transition snapshot. Docs: docs/media.md, docs/video.md -->
+	<script type="module" src="/ui/card/video.min.js"></script>
+	<script type="module" src="/ui/card/lightbox.min.js"></script>
+</body>
+</html>

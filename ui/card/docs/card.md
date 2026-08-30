@@ -299,7 +299,9 @@ content and belong in the card's `media[]` items. Bare booleans like `clip`, `au
 |----|---------|------|---------------------|
 | `stack` | ui-card | `col` · 16:9 | content, article, recipe, booking, achievement, social, video, qa, podcast, dataset, claim |
 | `stack-boxed-offices` | ui-card | + `parts.office: "box brd"` · `parts.officeTheme: "gray light"` — each office a `data-theme` + `data-box="brd"` plate with a hairline | organization |
-| `showcase` | ui-card | `col` · 4:3 | product, movie, book |
+| `showcase` | ui-card | `col` · 4:3 | product, movie, bookseries, book |
+| `stack-square` | ui-card | `col` · 1:1 | music, musicgroup, podcastseries |
+| `stack-portrait` | ui-card | `col` · 2:3 | comicseries, comicissue |
 | `split` | ui-card | `row spl(1/2)` · 4:3 | news, course, business |
 | `split-reverse` | ui-card | `row-r spl(2/1)` · 1:1 | contact |
 | `portrait` | ui-card | `row spl(1/2)` · 1:1 | review |
@@ -655,6 +657,7 @@ Twelve parts added for the typed cards, all styled in [`content.css`](../content
 | `list` | `<ul>` / `<ol>` ordered; `data-variant="checked"` = ✓ rows (included items), `data-variant="crossed"` = muted ✗ rows (excluded items) — both marks are icon-font glyphs (`--icon-check` / `--icon-close`) falling back to a text ✓/✗ when `icon-font.css` is not linked. Marker themes via `--ui-content-list-marker` (any `list-style-type` string, e.g. `"→ "`; `none` for block-content rows) + `--ui-content-list-marker-ink` (`::marker` color) — string markers ride `list-style-type` because `::marker` `content` never shipped in Safari | recipe, job, course, booking, location, membership, howto, qa, dataset |
 | `links` | `<ul>` of plain related-link rows (hairline dividers) — the envelope `links[]` field; deliberately not buttons, no itemprop. Emitted **before** `actions`: the CTA row always closes the text column. Default marker is the ✓ icon glyph (`--icon-check`, text ✓ fallback); override via `--ui-content-links-marker` (e.g. `'"→ "'`), ink via `--ui-content-links-mark` | any type |
 | `address` | `<address>` of stacked lines: street · postal + locality · country (a 2-letter country code stays machine-only) | business, location, event, contact, organization |
+| `specs` | two-column `<dl>` of label/value pairs — `<dt>` label, `<dd>` value, `tabular-nums`. The generic form: system requirements, product specs, technical data. `hours` below is the SAME rule under a semantic name and the two are **not** interchangeable in markup — `ui/map` reads `[data-part="hours"]` to pull opening hours into a map popup, so an hours table must keep that spelling. Override with `--ui-content-specs-*`, which falls back to `--ui-content-hours-*` | video game (system requirements) |
 | `hours` | two-column `<dl>` — `<dt>` day range, `<dd>` time; one row per opening pattern. Days/times derive from the machine string (`Mo-We 09:00-17:00` → "Mon–Wed 9:00–17:00", `Th 09:00-16:00` → "Thu"), overridable per entry with `days`/`time`. Every row emits a structured `OpeningHoursSpecification`; the flat `openingHours` string only where the type owns it — it is a `LocalBusiness`/`CivicStructure` property, so `location` (plain `Place`) passes `flat: false` | business, location, organization offices |
 | `office` | `<div>` wrapping one `department` → `LocalBusiness`: name + address (in a plain, scope-less wrapper so the office's flex gap separates blocks, not lines — the name must stay on the LocalBusiness, not the PostalAddress), phone, own `hours` table — preset `parts.office: "box brd"` + `parts.officeTheme` turn it into a themed plate with a hairline (`data-theme` + `data-box`, [base/theme.md § Box](../../base/theme.md#box)) | organization |
 | `stat` | `<p>` + `<data>` + unit + trend | statistic |
@@ -946,7 +949,7 @@ navigation; `prefers-reduced-motion` keeps default timing.
 
 | Page | Shows |
 |------|-------|
-| [`schema.html`](../demo/schema.html) | Hand-authored reference — 58 cards, 52 distinct itemtypes, with microdata ([counting rule](schema.md)) |
+| [`schema.html`](../demo/schema.html) | Hand-authored reference — 63 cards, 54 distinct itemtypes, with microdata ([counting rule](schema.md)) |
 | [`render.html`](../demo/render.html) | The 61 cards of [`data/index.json`](../data/index.json) rendered by `render.js` from UCF data + presets |
 | [`carousel.render.html`](../demo/carousel.render.html) · [`video.render.html`](../demo/video.render.html) | The original demo pages recreated data-driven: presets from [`data/card.presets.demo.json`](../data/card.presets.demo.json) (139 presets extracted from the originals) + UCF instances in [`data/demo/`](../data/demo). Each page lists its not-expressible demos in a bottom note. The `media` and `reveal` twins were dropped — [`media.html`](../demo/media.html) and [`../reveal/index.html`](../../reveal/index.html) are the better pages |
 | [`article.render.html`](../demo/article.render.html) + [`articles/`](../demo/articles/) | The article pattern above, live and **fully static** (pre-rendered by `articles/build.js`): teaser cards with stretched-link headlines → cross-document view transition morphs the whole card into the per-article page and back (`card-{id}` + nested `hero-{id}` names via `data-view` + CSS `attr()`), body-instead-of-summary via the `prose` preset, plain `<a>` navigation, zero runtime JS |

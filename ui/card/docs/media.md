@@ -97,7 +97,7 @@ A chunk imported on its own falls back to its own idle scan, so cherry-picking n
 |-----------|------|-------------|
 | `media` | token string | Configures the frame + overlays. Valid on `<ui-media>` **or its `<ui-card>` / `<ui-reveal>` host** (it inherits — but only from the card host, never from other ancestors). See the DSL below. |
 | `cdn` | `on` \| `off` | Force-enable/disable the Cloudflare `srcset` upgrade regardless of host. Default: auto (on only for `*.browser.style`). |
-| `breakpoints` | CSV of widths | Override srcset widths. Default `240,320,480,720,1200`. |
+| `breakpoints` | CSV of widths | Override srcset widths. Default `240,320,480,560,720,1200`. |
 | `format` / `quality` / `fit` | string | Cloudflare transform params. Default `avif` / `80` / `cover`. |
 | `sizes` | string | The `sizes` value. Default `auto`. |
 
@@ -1144,7 +1144,7 @@ The parse layer is purely additive, so prefixing further media tokens later is a
 
 ### Responsive images — Cloudflare `srcset`
 
-Two delivery paths share one contract (widths `240,320,480,720,1200`, `asr()`-derived heights, the `load(eager|lazy)` token, `fetchpriority="high"` on an eager first frame):
+Two delivery paths share one contract (widths `240,320,480,560,720,1200`, `asr()`-derived heights, the `load(eager|lazy)` token, `fetchpriority="high"` on an eager first frame):
 
 **SSR (preferred): `renderCard(ucf, presets, cards, { images })`.** Passing an `images` options bag makes `render.js` emit `srcset`/`sizes`/`loading`/`decoding`/`fetchpriority` directly on every eligible `<img>` (frames via `buildSrcset`, avatars and comparison thumbs as fixed-size `1x/2x` pairs). Omit the bag and the output is byte-identical to the pre-srcset renderer — that keeps local/off-zone pages free of dead `/cdn-cgi/` URLs. `images.cdnBase` prefixes an absolute origin (e.g. `https://v4.browser.style`) so the markup also works on hosts off the zone (pages.dev, localhost); `images.sizes` is the computed fallback list — lazy frames get `auto, ` prepended (Safari has no `sizes="auto"`, eager frames must not use it), typically from layout's `generateSrcsets`/`calculateSizes` bridge (see `layout/docs/card-integration.md` Phase 3). `demo/render.html` and the hand-authored `demo/schema.html` carry the reference output.
 
@@ -1162,7 +1162,7 @@ Two delivery paths share one contract (widths `240,320,480,720,1200`, `asr()`-de
 Config precedence is **attribute → `globalThis.uiMedia` → built-in default**:
 
 ```js
-globalThis.uiMedia = { cdn: true, breakpoints: [240,320,480,720,1200], format: 'avif', quality: 80, fit: 'cover', sizes: 'auto' };
+globalThis.uiMedia = { cdn: true, breakpoints: [240,320,480,560,720,1200], format: 'avif', quality: 80, fit: 'cover', sizes: 'auto' };
 ```
 
 Skipped automatically: images that already have a `srcset`, `data:`/`blob:`/absolute-`http(s)` sources, and non-`<img>` children (`<video>`, `<picture>`, nested `<ui-media>`). No `srcset` token (`asr()` absent) → height is omitted so Cloudflare keeps the natural ratio.

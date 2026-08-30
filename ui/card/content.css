@@ -636,16 +636,18 @@
 			line-height: var(--ui-content-address-line-height, var(--line-height-normal, 1.5));
 		}
 
-		/* hours — Body group: two-column day/time table (opening hours per day) */
-		& [data-part="hours"] {
-			column-gap: var(--ui-content-hours-column-gap, var(--spacing-md));
+		/* specs — Body group: two-column label/value <dl>. `hours` is the SAME shape under a
+		   semantic name — ui/map reads [data-part="hours"] to find opening hours, so the two
+		   names are not interchangeable in markup. Docs: docs/card.md § data-part vocabulary */
+		& :is([data-part="specs"], [data-part="hours"]) {
+			column-gap: var(--ui-content-specs-column-gap, var(--ui-content-hours-column-gap, var(--spacing-md)));
 			display: grid;
-			font-size: var(--ui-content-hours-fs, var(--ui-content-address-fs, calc(var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))) * 0.9)));
+			font-size: var(--ui-content-specs-fs, var(--ui-content-hours-fs, var(--ui-content-address-fs, calc(var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))) * 0.9))));
 			font-variant-numeric: tabular-nums;
 			grid-template-columns: auto 1fr;
 			margin: 0;
-			row-gap: var(--ui-content-hours-row-gap, 0);
-			& dt { color: var(--ui-content-hours-day-ink, var(--ui-content-muted)); }
+			row-gap: var(--ui-content-specs-row-gap, var(--ui-content-hours-row-gap, 0));
+			& dt { color: var(--ui-content-specs-label-ink, var(--ui-content-hours-day-ink, var(--ui-content-muted))); }
 			& dd { margin: 0; }
 		}
 
