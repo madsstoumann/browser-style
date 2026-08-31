@@ -22,7 +22,7 @@ import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { renderCard, vacationrentalSections } from '../../render.js';
-import { CDN_BASE, CONTRAST_STYLE, HEAD_COMMON, VT_HEAD, breadcrumb, descope, esc, withPreset } from '../build.shared.js';
+import { CDN_BASE, CONTRAST_STYLE, HEAD_COMMON, VT_HEAD, breadcrumb, descope, esc, phoneShell, withPreset } from '../build.shared.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const data = (file) => JSON.parse(readFileSync(join(here, '../../data', file), 'utf8'));
@@ -117,7 +117,7 @@ const page = `<!DOCTYPE html>
 		   here, deliberately: see the header comment in products/build.js */
 		body { margin-inline: auto; max-inline-size: 64rem; }
 		.rental-view { margin-block-end: var(--spacing-2xl); }
-		.rental-view > lay-out { margin-block-start: var(--spacing-xl); }
+		.rental-view > lay-out { margin-block-start: var(--spacing-xl); }${phoneShell('.rental-view > ui-card')}
 	</style>
 	${CONTRAST_STYLE}
 </head>

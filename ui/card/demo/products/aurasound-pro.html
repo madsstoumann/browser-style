@@ -34,6 +34,14 @@
 			margin-block: var(--spacing-md);
 			opacity: 0.4;
 		}
+		/* the heading and the rules sit at the column edge — the reviews must too */
+		.reviews > ui-content { --ui-content-pi: 0; }
+		@media (width < 540px) {
+			[data-breadcrumbs] { font-size: 0.625rem; }
+			body:not(:has(lay-out)) .product-view { margin-inline: -2ch; }
+			.product-view { --ui-card-radius: 0; }
+			.product-view ui-media { --ui-media-radius: 0; }
+		}
 	</style>
 	<style>
 		ui-content { --ui-content-muted: color-mix(in oklab, currentColor 85%, transparent); }

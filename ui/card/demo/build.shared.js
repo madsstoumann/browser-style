@@ -26,6 +26,20 @@ export const CONTRAST_STYLE = `<style>
 		ui-chip[data-type] { --ui-chip-bg: hsl(0, 0%, 95%); --ui-chip-c: hsl(0, 0%, 13%); }
 	</style>`;
 
+/* Phone shell (<540px): the hero plate escapes body's gutter so the main image is
+   edge-to-edge and the hero <ui-content>'s own padding is the only text inset; corners go
+   flat and the breadcrumb shrinks. `hero` is the page's plate selector.
+   The -2ch cancels `:where(body) { padding-inline: 2ch }` in ui/base/core.css — and is
+   guarded, because layout.css already zeroes that gutter on any page holding a <lay-out>.
+   rem, not px: these pages opt into text scaling with <meta name="text-scale">. */
+export const phoneShell = (hero) => `
+		@media (width < 540px) {
+			[data-breadcrumbs] { font-size: 0.625rem; }
+			body:not(:has(lay-out)) ${hero} { margin-inline: -2ch; }
+			${hero} { --ui-card-radius: 0; }
+			${hero} ui-media { --ui-media-radius: 0; }
+		}`;
+
 /* names the render-blocking morph-target polyfill + the reduced-motion-safe transition */
 export const VT_HEAD = `<!-- Names the morph targets where typed attr() is unsupported (Safari). MUST be
 	     render-blocking in <head>: the incoming page is snapshotted at first paint,

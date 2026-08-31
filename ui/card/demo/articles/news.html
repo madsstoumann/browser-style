@@ -32,6 +32,18 @@
 		}
 		.article-view > ui-media { margin-block-end: var(--spacing-lg); }
 		main > aside { margin-block-end: var(--spacing-2xl); }
+		@media (width < 540px) {
+			[data-breadcrumbs] { font-size: 0.625rem; }
+			body:not(:has(lay-out)) .article-view { margin-inline: -2ch; }
+			.article-view { --ui-card-radius: 0; }
+			.article-view ui-media { --ui-media-radius: 0; }
+		}
+		/* the plate's padding would inset the hero a second time — the frame bleeds and
+		   ui-content's own padding is the only text inset, as on the product page */
+		@media (width < 540px) {
+			.article-view { padding: 0; }
+			.article-view > ui-media { margin-block-end: 0; }
+		}
 	</style>
 	<style>
 		ui-content { --ui-content-muted: color-mix(in oklab, currentColor 85%, transparent); }

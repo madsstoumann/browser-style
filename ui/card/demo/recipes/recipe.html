@@ -132,6 +132,12 @@
 		.cook-voice output:not(:empty)::before { content: '“'; }
 		.cook-voice output:not(:empty)::after { content: '”'; }
 		button:disabled ui-icon { opacity: .4; }
+		@media (width < 540px) {
+			[data-breadcrumbs] { font-size: 0.625rem; }
+			body:not(:has(lay-out)) .recipe-page > .recipe-view { margin-inline: -2ch; }
+			.recipe-page > .recipe-view { --ui-card-radius: 0; }
+			.recipe-page > .recipe-view ui-media { --ui-media-radius: 0; }
+		}
 	</style>
 	<style>
 		ui-content { --ui-content-muted: color-mix(in oklab, currentColor 85%, transparent); }

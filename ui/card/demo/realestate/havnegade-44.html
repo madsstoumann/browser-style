@@ -27,6 +27,12 @@
 		body { margin-inline: auto; max-inline-size: 64rem; }
 		.listing-view { margin-block-end: var(--spacing-2xl); }
 		.listing-view > lay-out { margin-block-start: var(--spacing-xl); }
+		@media (width < 540px) {
+			[data-breadcrumbs] { font-size: 0.625rem; }
+			body:not(:has(lay-out)) .listing-view > ui-card { margin-inline: -2ch; }
+			.listing-view > ui-card { --ui-card-radius: 0; }
+			.listing-view > ui-card ui-media { --ui-media-radius: 0; }
+		}
 	</style>
 	<style>
 		ui-content { --ui-content-muted: color-mix(in oklab, currentColor 85%, transparent); }

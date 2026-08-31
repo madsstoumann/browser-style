@@ -16,7 +16,7 @@ import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { renderCard } from '../../render.js';
-import { CDN_BASE, CONTRAST_STYLE, HEAD_COMMON, VT_HEAD, breadcrumb, descope, esc, withPreset } from '../build.shared.js';
+import { CDN_BASE, CONTRAST_STYLE, HEAD_COMMON, VT_HEAD, breadcrumb, descope, esc, phoneShell, withPreset } from '../build.shared.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const data = (file) => JSON.parse(readFileSync(join(here, '../../data', file), 'utf8'));
@@ -326,7 +326,7 @@ const STYLES = `
 		.cook-voice output { color: var(--color-accent); font-style: italic; }
 		.cook-voice output:not(:empty)::before { content: '“'; }
 		.cook-voice output:not(:empty)::after { content: '”'; }
-		button:disabled ui-icon { opacity: .4; }`;
+		button:disabled ui-icon { opacity: .4; }${phoneShell('.recipe-page > .recipe-view')}`;
 
 /* ── shell ─────────────────────────────────────────────────────────────────── */
 const page = `<!DOCTYPE html>

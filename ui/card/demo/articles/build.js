@@ -17,7 +17,7 @@ import { fileURLToPath } from 'node:url';
 import { renderCard, resolveItemtype } from '../../render.js';
 import { generateSrcsets, calculateSizes } from '../../../../layout/src/srcsets.js';
 import { srcsetMap, srcsetConfig } from '../../../../layout/layouts-map.js';
-import { CDN_BASE, CONTRAST_STYLE, HEAD_COMMON, breadcrumb, descope, esc, withPreset } from '../build.shared.js';
+import { CDN_BASE, CONTRAST_STYLE, HEAD_COMMON, breadcrumb, descope, esc, phoneShell, withPreset } from '../build.shared.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const data = (file) => JSON.parse(readFileSync(join(here, '../../data', file), 'utf8'));
@@ -85,7 +85,13 @@ const page = (ucf, name) => {
 			padding: var(--spacing-lg);
 		}
 		.article-view > ui-media { margin-block-end: var(--spacing-lg); }
-		main > aside { margin-block-end: var(--spacing-2xl); }
+		main > aside { margin-block-end: var(--spacing-2xl); }${phoneShell('.article-view')}
+		/* the plate's padding would inset the hero a second time — the frame bleeds and
+		   ui-content's own padding is the only text inset, as on the product page */
+		@media (width < 540px) {
+			.article-view { padding: 0; }
+			.article-view > ui-media { margin-block-end: 0; }
+		}
 	</style>
 	${CONTRAST_STYLE}
 </head>

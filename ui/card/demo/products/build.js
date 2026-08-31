@@ -19,7 +19,7 @@ import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { renderCard, reviewItems } from '../../render.js';
-import { CDN_BASE, CONTRAST_STYLE, HEAD_COMMON, VT_HEAD, breadcrumb, descope, esc, withPreset } from '../build.shared.js';
+import { CDN_BASE, CONTRAST_STYLE, HEAD_COMMON, VT_HEAD, breadcrumb, descope, esc, phoneShell, withPreset } from '../build.shared.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const data = (file) => JSON.parse(readFileSync(join(here, '../../data', file), 'utf8'));
@@ -126,7 +126,9 @@ const shell = ({ title, description, styles = '', card, itemtype, view, reviews 
 			border-block-start: var(--border-width, 1px) solid var(--color-border, currentColor);
 			margin-block: var(--spacing-md);
 			opacity: 0.4;
-		}${styles}
+		}
+		/* the heading and the rules sit at the column edge — the reviews must too */
+		.reviews > ui-content { --ui-content-pi: 0; }${phoneShell('.product-view')}${styles}
 	</style>
 	${CONTRAST_STYLE}
 </head>
