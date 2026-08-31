@@ -195,6 +195,14 @@ referrer policy, not the document's** — carousel thumb backgrounds
 (`--ui-carousel-thumb-url`) broke on pages.dev until `_headers` gave `/dist/*`
 `Referrer-Policy: no-referrer` (`5ac81cea`). A failed `background-image` is silent.
 
+The page-wide `no-referrer` has one casualty: **YouTube refuses a referrer-less embed**
+("Video player configuration error", error 153 — enforced since 2025; Vimeo does not
+enforce it yet). So every provider `<iframe>` (and the `<a>` inside a `srcdoc` facade,
+whose document *inherits* the page policy) carries its own
+`referrerpolicy="strict-origin-when-cross-origin"` — the browser default, restored
+per-element — and `video.js` sets the same on the iframes it injects. Only the origin
+leaks to the provider; the CDN images keep the bare Referer they need stripped.
+
 **Demo assets are single-origin — keep them that way.** Byline avatars used to come from
 `assets.stoumann.dk`; 219 references moved onto the zone on 2026-08-29. A third host costs
 three things, in this order: `cdnEligible()` requires a **root-relative** `src`, so an
@@ -447,8 +455,8 @@ before it is worth an `_headers` `Link:` line.
 6. **Demo-page leftovers** — `cards.html` still pulls 24 images from `https://browser.style`
    (v1 host, ~2 MB, cross-origin untransformable): swap to local `/assets` copies if the
    weight matters. `media.video.html`: 14 autoplay `<video>` are the page's *content*
-   (accept the score); its 35 page-relative `youtube-data/`/`vimeo-data/` preview paths are
-   correctly untransformed — root-relativize them to put them on the CDN.
+   (accept the score); its 35 page-relative `../data/youtube-data/`/`../data/vimeo-data/`
+   preview paths are correctly untransformed — root-relativize them to put them on the CDN.
 7. **Card CSS design calls, deliberately left** — nested scrim stacking
    (`--ui-media-scrim-paint` inherits, so nested frames paint stacked pairs;
    `media.tint.css:25,27` suppresses exactly this for tint, scrim has no equivalent) and
