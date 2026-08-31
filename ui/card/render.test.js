@@ -960,6 +960,45 @@ describe('tvseries / tvepisode', () => {
 	});
 });
 
+describe('movieseries', () => {
+	/* director/actor are MovieSeries' OWN properties; the film list, the rating and the
+	   production company arrive from CreativeWork — the BookSeries shape, one medium over */
+	const series = { startDate: '2021-11-19', endDate: '2026-12-11', movieCount: 3, rating: { value: 4.6, count: 21540 }, director: { name: 'Halvor Bruun' }, actors: ['Ellinor Vang', 'Tomas Rask'], productionCompany: 'Fjordlys Studios', movies: [{ position: 1, name: 'The Hollow Crown', datePublished: '2021-11-19' }, { position: 2, name: 'The Ash Roads', datePublished: '2023-12-08', url: '#schema-movie' }, { position: 3, name: 'The Last Ford', datePublished: '2026-12-11' }] };
+
+	test('films ride hasPart → Movie, span and count are prose', () => {
+		const html = render({ schemaType: 'movieseries', headline: 'The Hollow Crown Trilogy', details: series });
+		assert.match(html, /itemtype="https:\/\/schema\.org\/MovieSeries"/);
+		assert.match(html, /<meta itemprop="startDate" content="2021-11-19"><meta itemprop="endDate" content="2026-12-11">/);
+		assert.match(html, /<p data-part="meta">3 films · 2021–2026<\/p>/);
+		assert.match(html, /<li itemprop="hasPart" itemscope itemtype="https:\/\/schema\.org\/Movie"><meta itemprop="position" content="1"><meta itemprop="datePublished" content="2021-11-19"><span itemprop="name">The Hollow Crown<\/span> <small>2021<\/small><\/li>/);
+		assert.match(html, /<a itemprop="url" href="#schema-movie"><span itemprop="name">The Ash Roads<\/span><\/a>/);
+		assert.match(html, /<p data-part="meta" itemprop="productionCompany" itemscope itemtype="https:\/\/schema\.org\/Organization">Production: <span itemprop="name">Fjordlys Studios<\/span><\/p>/);
+		/* no count property exists on the type — the number must stay prose */
+		assert.ok(!html.includes('itemprop="numberOfItems"'));
+		assert.ok(!html.includes('itemprop="numberOfEpisodes"'));
+	});
+
+	test('with card media, every film row reuses the series key art as its image', () => {
+		const html = render({ schemaType: 'movieseries', headline: 'T', media: [{ mediaType: 'image', src: '/assets/images/movie_02.png', alt: 'key art' }], details: series });
+		/* Google requires image on every Movie-typed entity — the series' own art, no per-film asset */
+		assert.equal((html.match(/<link itemprop="image" href="\/assets\/images\/movie_02\.png">/g) || []).length, 3);
+		assert.match(html, /<meta itemprop="datePublished" content="2021-11-19"><link itemprop="image" href="\/assets\/images\/movie_02\.png"><span itemprop="name">The Hollow Crown<\/span>/);
+	});
+
+	test('the film list is ordered, and the switch is data', () => {
+		assert.match(render({ schemaType: 'movieseries', headline: 'T', details: series }), /<ol data-part="list"><li itemprop="hasPart"/);
+		assert.match(render({ schemaType: 'movieseries', headline: 'T', details: { ...series, ordered: false } }), /<ul data-part="list"><li itemprop="hasPart"/);
+	});
+
+	test('an open-ended series says "since", and hostile strings escape', () => {
+		const html = render({ schemaType: 'movieseries', headline: 'T', details: { startDate: '2021-11-19', productionCompany: '<img src=x onerror=alert(1)>', movies: [{ position: 1, name: '<script>bad</script>', datePublished: '2021-11-19' }] } });
+		assert.match(html, /<p data-part="meta">since 2021<\/p>/);
+		assert.ok(!html.includes('<script>bad'));
+		assert.ok(!html.includes('<img src=x'));
+		assert.match(html, /&lt;script&gt;bad&lt;\/script&gt;/);
+	});
+});
+
 describe('medical — MedicalWebPage', () => {
 	const details = {
 		specialty: 'PrimaryCare', lastReviewed: '2026-05-02', lastReviewedDisplay: 'May 2, 2026',

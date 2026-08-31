@@ -15,14 +15,14 @@
     "preset": {
       "$ref": "card-preset/showcase"
     },
-    "eyebrow": "Science fiction",
-    "headline": "Echoes of Tomorrow",
-    "summary": "A signal from a decommissioned satellite starts predicting tomorrow's news — one broadcast at a time.",
+    "eyebrow": "Epic fantasy",
+    "headline": "The Last Ford",
+    "summary": "The fellowship reaches the river no map will name — and the crown claims its price at the crossing.",
     "media": [
       {
         "mediaType": "image",
-        "src": "/assets/images/movie_01.png",
-        "alt": "Echoes of Tomorrow film poster"
+        "src": "/assets/images/movie_04.png",
+        "alt": "The Last Ford film poster — the fellowship wades the river at dusk between two armies"
       }
     ],
     "details": {
@@ -32,11 +32,11 @@
       "durationDisplay": "2 h 14 min",
       "contentRating": "PG-13",
       "director": {
-        "name": "Sofia Lindqvist"
+        "name": "Halvor Bruun"
       },
       "actors": [
-        "Jonas Beck",
-        "Amara Okafor"
+        "Ellinor Vang",
+        "Tomas Rask"
       ],
       "rating": {
         "value": 4.2,

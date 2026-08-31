@@ -10,7 +10,7 @@
 	<meta name="referrer" content="no-referrer">
 	<meta name="format-detection" content="telephone=no">
 	<link rel="preconnect" href="https://v4.browser.style">
-	<meta name="description" content="demo/schema.html rendered with schema="jsonld": the markup carries no microdata, and the same structured data is emitted once as a page-level @graph of 67 nodes in the document head.">
+	<meta name="description" content="demo/schema.html rendered with schema="jsonld": the markup carries no microdata, and the same structured data is emitted once as a page-level @graph of 68 nodes in the document head.">
 	<link rel="alternate" type="text/markdown" href="/ui/card/docs/card.md">
 	<script type="application/ld+json">{
 	"@context": "https://schema.org",
@@ -121,7 +121,7 @@
 		},
 		{
 			"@type": "ClaimReview",
-			"image": "/assets/images/government.png",
+			"image": "/assets/images/claim.png",
 			"datePublished": "2026-07-28",
 			"name": "Did the harbour bridge cost twice its budget?",
 			"description": "Public records show the final cost came in 18% over the approved budget — high, but nowhere near double.",
@@ -437,7 +437,7 @@
 		},
 		{
 			"@type": "Reservation",
-			"image": "/assets/images/brewandbean.png",
+			"image": "/assets/images/booking.png",
 			"totalPrice": "45",
 			"priceCurrency": "USD",
 			"reservationFor": {
@@ -452,14 +452,76 @@
 			}
 		},
 		{
+			"@type": "MovieSeries",
+			"image": "/assets/images/movie_02.png",
+			"startDate": "2021-11-19",
+			"endDate": "2026-02-12",
+			"genre": "Epic fantasy",
+			"name": "The Hollow Crown Trilogy",
+			"description": "Three films, one broken kingdom — a fellowship of exiles walks the ash roads to return a crown nobody living has worn.",
+			"aggregateRating": {
+				"@type": "AggregateRating",
+				"ratingValue": "4.6",
+				"ratingCount": "21540",
+				"bestRating": "5",
+				"worstRating": "1"
+			},
+			"director": {
+				"@type": "Person",
+				"name": "Halvor Bruun"
+			},
+			"actor": [
+				{
+					"@type": "Person",
+					"name": "Ellinor Vang"
+				},
+				{
+					"@type": "Person",
+					"name": "Tomas Rask"
+				}
+			],
+			"hasPart": [
+				{
+					"@type": "Movie",
+					"position": "1",
+					"datePublished": "2021-11-19",
+					"image": "/assets/images/movie_02.png",
+					"name": "The Hollow Crown"
+				},
+				{
+					"@type": "Movie",
+					"position": "2",
+					"datePublished": "2023-12-08",
+					"image": "/assets/images/movie_02.png",
+					"name": "The Ash Roads"
+				},
+				{
+					"@type": "Movie",
+					"position": "3",
+					"datePublished": "2026-02-12",
+					"image": "/assets/images/movie_02.png",
+					"url": "#schema-movie",
+					"name": "The Last Ford"
+				}
+			],
+			"productionCompany": {
+				"@type": "Organization",
+				"name": "Fjordlys Studios"
+			},
+			"keywords": [
+				"Fantasy",
+				"Trilogy"
+			]
+		},
+		{
 			"@type": "Movie",
-			"image": "/assets/images/movie_01.png",
+			"image": "/assets/images/movie_04.png",
 			"duration": "PT2H14M",
 			"contentRating": "PG-13",
 			"dateCreated": "2026-02-12",
-			"genre": "Science fiction",
-			"name": "Echoes of Tomorrow",
-			"description": "A signal from a decommissioned satellite starts predicting tomorrow's news — one broadcast at a time.",
+			"genre": "Epic fantasy",
+			"name": "The Last Ford",
+			"description": "The fellowship reaches the river no map will name — and the crown claims its price at the crossing.",
 			"aggregateRating": {
 				"@type": "AggregateRating",
 				"ratingValue": "4.2",
@@ -469,16 +531,16 @@
 			},
 			"director": {
 				"@type": "Person",
-				"name": "Sofia Lindqvist"
+				"name": "Halvor Bruun"
 			},
 			"actor": [
 				{
 					"@type": "Person",
-					"name": "Jonas Beck"
+					"name": "Ellinor Vang"
 				},
 				{
 					"@type": "Person",
-					"name": "Amara Okafor"
+					"name": "Tomas Rask"
 				}
 			]
 		},
@@ -3065,7 +3127,7 @@
 		},
 		{
 			"@type": "MedicalWebPage",
-			"image": "/assets/images/mindfulness.png",
+			"image": "/assets/images/medical.png",
 			"specialty": "https://schema.org/PrimaryCare",
 			"lastReviewed": "2026-05-02",
 			"medicalAudience": {
@@ -3104,7 +3166,7 @@
 		},
 		{
 			"@type": "SpecialAnnouncement",
-			"image": "/assets/images/maintainance.png",
+			"image": "/assets/images/announcement.png",
 			"datePosted": "2026-07-01",
 			"datePublished": "2026-07-01",
 			"expires": "2026-07-06",
@@ -3194,6 +3256,8 @@
 		ui-content { --ui-content-muted: color-mix(in oklab, currentColor 85%, transparent); }
 		/* type chips keep one look on themed cards too (the theme relay's #666 plate is 4.06:1) */
 		ui-chip[data-type] { --ui-chip-bg: hsl(0, 0%, 95%); --ui-chip-c: hsl(0, 0%, 13%); }
+		/* product save: two-colour toggle (outline → red fill) — page rule, so the card markup stays renderer-identical */
+		[data-view="card-product-1"] ui-save { --ui-save-c-active: var(--ui-theme-red-bg); }
 		ui-chip[data-type=dark] { --ui-chip-bg: hsl(0, 0%, 25%); --ui-chip-c: hsl(0, 0%, 85%); }
 		/* media-less card: pin the type chip top-end (relative — the containing block is the lay-out) */
 		ui-card:not(:has(ui-media)) { position: relative; }
@@ -3240,7 +3304,7 @@
 	<p>This is <a href="schema.html">demo/schema.html</a> rendered with <code>schema=&quot;jsonld&quot;</code>.
 	The markup is identical to <a href="schema.raw.html">schema.raw.html</a> — no <code>itemscope</code>,
 	<code>itemtype</code> or <code>itemprop</code> — and the same structured data is emitted once in
-	<code>&lt;head&gt;</code> as a single <code>@graph</code> of 67 nodes. It is read back out of the
+	<code>&lt;head&gt;</code> as a single <code>@graph</code> of 68 nodes. It is read back out of the
 	microdata by <code>jsonld.js</code>, so it cannot disagree with <a href="schema.html">schema.html</a>.
 	Generated by <code>node ui/card/demo/schema.modes.build.js</code>; do not edit by hand.</p>
 
@@ -3343,7 +3407,7 @@
 		</ui-card>
 		<ui-card variant="col" media="asr(16/9) chip(te)">
 			<cq-box>
-				<ui-media><img src="/assets/images/government.png" alt="City hall press briefing" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/government.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/government.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/government.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/government.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/government.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/government.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>ClaimReview</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/claim.png" alt="Checking the original cost ledger against archive photographs, the harbour bridge behind" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/claim.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/claim.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/claim.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/claim.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/claim.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/claim.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>ClaimReview</ui-chip></ui-media>
 				<ui-content>
 					
 					<small data-part="eyebrow">Fact check</small>
@@ -3463,9 +3527,9 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card id="schema-videogame" variant="col" media="asr(16/9) chip(te)">
+		<ui-card id="schema-videogame" data-view="card-software-1" variant="col" media="asr(16/9) chip(te)">
 			<cq-box>
-				<ui-media><img src="/assets/images/game_01.png" alt="Pixel Raiders key art — chibi heroes charging into battle" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/game_01.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/game_01.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/game_01.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/game_01.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/game_01.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/game_01.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>VideoGame</ui-chip></ui-media>
+				<ui-media><img data-view="hero-software-1" src="/assets/images/game_01.png" alt="Pixel Raiders key art — chibi heroes charging into battle" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/game_01.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/game_01.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/game_01.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/game_01.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/game_01.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/game_01.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>VideoGame</ui-chip></ui-media>
 				<ui-content>
 					
 					
@@ -3650,7 +3714,7 @@
 		</ui-card>
 		<ui-card variant="col" media="asr(16/9) chip(te)">
 			<cq-box>
-				<ui-media><img src="/assets/images/brewandbean.png" alt="Bright café interior with workspace tables" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/brewandbean.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/brewandbean.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/brewandbean.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/brewandbean.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/brewandbean.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/brewandbean.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Reservation</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/booking.png" alt="The Loft meeting room in use — a team around the wooden table, a whiteboard of meeting notes behind" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/booking.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/booking.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/booking.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/booking.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/booking.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/booking.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Reservation</ui-chip></ui-media>
 				<ui-content>
 					
 					
@@ -3675,14 +3739,44 @@
 	<lay-out md="columns(2) items(start)">
 		<ui-card variant="col" media="asr(4/3) chip(te)">
 			<cq-box>
-				<ui-media><img src="/assets/images/movie_01.png" alt="Echoes of Tomorrow film poster" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=180/assets/images/movie_01.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=240/assets/images/movie_01.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=360/assets/images/movie_01.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=420/assets/images/movie_01.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=540/assets/images/movie_01.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=900/assets/images/movie_01.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Movie</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/movie_02.png" alt="The Hollow Crown Trilogy key art — the fellowship assembled before a burning mountain fortress" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=180/assets/images/movie_02.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=240/assets/images/movie_02.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=360/assets/images/movie_02.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=420/assets/images/movie_02.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=540/assets/images/movie_02.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=900/assets/images/movie_02.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>MovieSeries</ui-chip></ui-media>
+				<ui-content>
+					
+					
+					<small data-part="eyebrow">Epic fantasy</small>
+					<h3 data-part="headline">The Hollow Crown Trilogy</h3>
+					<p data-part="summary">Three films, one broken kingdom — a fellowship of exiles walks the ash roads to return a crown nobody living has worn.</p>
+					<p data-part="meta">3 films · 2021–2026</p>
+					<div data-part="rating">
+						
+						
+						
+						<input class="ui-rating" type="range" min="1" max="5" value="4.6" step="0.01" disabled aria-hidden="true">
+						<span data-sr>Rated 4.6 out of 5 stars from 21,540 ratings</span>
+						<span aria-hidden="true">4.6 / 5 (21,540 ratings)</span>
+					</div>
+					<p data-part="meta"><strong data-part="key">Director:</strong> <span>Halvor Bruun</span></p>
+					<p data-part="meta"><strong data-part="key">Starring:</strong> <span><span>Ellinor Vang</span></span>, <span><span>Tomas Rask</span></span></p>
+					<ol data-part="list">
+						<li><span>The Hollow Crown</span> <small>2021</small></li>
+						<li><span>The Ash Roads</span> <small>2023</small></li>
+						<li><a href="#schema-movie"><span>The Last Ford</span></a> <small>2026</small></li>
+					</ol>
+					<p data-part="meta">Production: <span>Fjordlys Studios</span></p>
+					<span data-part="tags"><ui-chip>Fantasy</ui-chip><ui-chip>Trilogy</ui-chip></span>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card id="schema-movie" variant="col" media="asr(4/3) chip(te)">
+			<cq-box>
+				<ui-media><img src="/assets/images/movie_04.png" alt="The Last Ford film poster — the fellowship wades the river at dusk between two armies" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=180/assets/images/movie_04.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=240/assets/images/movie_04.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=360/assets/images/movie_04.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=420/assets/images/movie_04.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=540/assets/images/movie_04.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=900/assets/images/movie_04.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Movie</ui-chip></ui-media>
 				<ui-content>
 					
 					
 					
-					<small data-part="eyebrow">Science fiction</small>
-					<h3 data-part="headline">Echoes of Tomorrow</h3>
-					<p data-part="summary">A signal from a decommissioned satellite starts predicting tomorrow's news — one broadcast at a time.</p>
+					<small data-part="eyebrow">Epic fantasy</small>
+					<h3 data-part="headline">The Last Ford</h3>
+					<p data-part="summary">The fellowship reaches the river no map will name — and the crown claims its price at the crossing.</p>
 					<p data-part="meta">Feb 2026 · 2 h 14 min · PG-13</p>
 					<div data-part="rating">
 						
@@ -3692,8 +3786,8 @@
 						<span data-sr>Rated 4.2 out of 5 stars from 8,817 ratings</span>
 						<span aria-hidden="true">4.2 / 5 (8,817 ratings)</span>
 					</div>
-					<p data-part="meta"><strong data-part="key">Director:</strong> <span>Sofia Lindqvist</span></p>
-					<p data-part="meta"><strong data-part="key">Starring:</strong> <span><span>Jonas Beck</span></span>, <span><span>Amara Okafor</span></span></p>
+					<p data-part="meta"><strong data-part="key">Director:</strong> <span>Halvor Bruun</span></p>
+					<p data-part="meta"><strong data-part="key">Starring:</strong> <span><span>Ellinor Vang</span></span>, <span><span>Tomas Rask</span></span></p>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -5185,7 +5279,7 @@
 		</ui-card>
 		<ui-card variant="col" media="asr(16/9) chip(te)">
 			<cq-box>
-				<ui-media><img src="/assets/images/mindfulness.png" alt="Person sitting quietly under a tree in a forest" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/mindfulness.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/mindfulness.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/mindfulness.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/mindfulness.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/mindfulness.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/mindfulness.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>MedicalWebPage</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/medical.png" alt="An exhausted woman on a park bench, head resting in her hand" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/medical.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/medical.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/medical.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/medical.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/medical.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/medical.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>MedicalWebPage</ui-chip></ui-media>
 				<ui-content>
 					
 					
@@ -5212,7 +5306,7 @@
 		</ui-card>
 		<ui-card variant="col" media="asr(16/9) chip(te)" theme="black dark">
 			<cq-box>
-				<ui-media><img src="/assets/images/maintainance.png" alt="Maintenance work in progress" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/maintainance.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/maintainance.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/maintainance.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/maintainance.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/maintainance.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/maintainance.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>SpecialAnnouncement</ui-chip></ui-media>
+				<ui-media><img src="/assets/images/announcement.png" alt="Stylised diagram of an API outage — a red cross cutting the connection between an app and its database servers" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/announcement.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/announcement.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/announcement.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/announcement.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/announcement.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/announcement.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>SpecialAnnouncement</ui-chip></ui-media>
 				<ui-content>
 					
 					

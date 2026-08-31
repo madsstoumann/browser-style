@@ -245,7 +245,7 @@ ignores a display twin. Do not go hunting for a mapping that does not exist.
 ## Per-type `details`
 
 <!-- details:counts -->
-**4 types are envelope-only** — no `DETAILS` renderer: `content`, `article`, `news`, `quote` (`article` and `news` still accept `details.subtype`, and every PAYWALL_TYPES member accepts `details.paywalled`). The remaining **51** are below.
+**4 types are envelope-only** — no `DETAILS` renderer: `content`, `article`, `news`, `quote` (`article` and `news` still accept `details.subtype`, and every PAYWALL_TYPES member accepts `details.paywalled`). The remaining **52** are below.
 <!-- /details -->
 
 `→ name` in the Lookup column points at § Shared sub-shapes; a `SCREAMING_CASE` name points at
@@ -706,6 +706,31 @@ falls back to `SoftwareApplication`, which is not in these properties' domain.
 | `director` | object | fieldset | {name, label} |
 | `actors` | array | repeater |  |
 <!-- /details -->
+
+### `movieseries` — MovieSeries
+
+<!-- details:fields type=movieseries -->
+| Key | Type | Control | Lookup / notes |
+|---|---|---|---|
+| `startDate` | date | date | first film — the CreativeWorkSeries property |
+| `endDate` | date | date | last film; omit for an open-ended series |
+| `movieCount` | number | number | prose only — no count property on the type |
+| `productionCompany` | string | text |  |
+| `rating` | object | fieldset | {value, max, count} |
+| `director` | object | fieldset | {name, label} |
+| `actors` | array | repeater |  |
+| `ordered` | boolean | toggle | default TRUE — films ascend |
+| `movies` | array | repeater | {position, name, datePublished, url} · one hasPart → Movie scope per row |
+<!-- /details -->
+
+**Series film** (`movies[]`, one `hasPart` → `Movie` scope per row):
+
+| Key | Type | Control | Lookup / notes |
+|---|---|---|---|
+| `name` | string | text | required |
+| `position` | number | number | |
+| `datePublished` | date | date | the visible year is derived from it |
+| `url` | url | url | renders the row as a crawlable `itemprop="url"` anchor |
 
 ### `bookseries` — BookSeries
 

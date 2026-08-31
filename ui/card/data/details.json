@@ -1717,6 +1717,74 @@
 				}
 			}
 		},
+		"movieseries": {
+			"label": "Movie series (MovieSeries)",
+			"group": "Screen",
+			"fields": {
+				"startDate": {
+					"type": "date",
+					"note": "first film — the CreativeWorkSeries property"
+				},
+				"endDate": {
+					"type": "date",
+					"note": "last film; omit for an open-ended series"
+				},
+				"movieCount": {
+					"type": "number",
+					"note": "prose only — no count property on the type"
+				},
+				"productionCompany": {
+					"type": "string"
+				},
+				"rating": {
+					"type": "object",
+					"shape": "rating"
+				},
+				"director": {
+					"type": "object",
+					"fields": {
+						"name": {
+							"type": "string"
+						},
+						"label": {
+							"type": "string"
+						}
+					}
+				},
+				"actors": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				},
+				"ordered": {
+					"type": "boolean",
+					"note": "default TRUE — films ascend"
+				},
+				"movies": {
+					"type": "array",
+					"items": {
+						"fields": {
+							"position": {
+								"type": "number"
+							},
+							"name": {
+								"type": "string"
+							},
+							"datePublished": {
+								"type": "date",
+								"note": "the visible year is derived from it"
+							},
+							"url": {
+								"type": "url",
+								"note": "renders the row as a crawlable itemprop=\"url\" anchor"
+							}
+						}
+					},
+					"note": "one hasPart → Movie scope per row"
+				}
+			}
+		},
 		"book": {
 			"label": "Book",
 			"group": "Page & picture",

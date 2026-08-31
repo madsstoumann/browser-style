@@ -9,7 +9,8 @@
 > 2026-08-19 when `VacationRental` took it to 50 (51 `schemaType` keys; the demo page's
 > cards carry 52 distinct root itemtypes — the count bridge is at the top of `schema.md`),
 > and on 2026-08-24 when the `filelist` card joined — no new itemtype, a fourth `ItemList`
-> (54 keys), and on 2026-08-29 when `BookSeries` took it to 51 itemtypes / 55 keys.
+> (54 keys), and on 2026-08-29 when `BookSeries` took it to 51 itemtypes / 55 keys, and on 2026-08-31
+> when `MovieSeries` took it to 53 itemtypes / 56 keys.
 > The question: how many of the card system's schema.org types have a live Google rich
 > result, which do not, and is it worth adding or reshaping anything to close the gap.
 >
@@ -53,14 +54,14 @@ The inventory itself is generated, not transcribed:
 ```sh
 node --input-type=module -e "
 import { SCHEMA_TYPES } from './ui/card/render.js';
-console.log(new Set(Object.values(SCHEMA_TYPES)).size)"   # → 50
+console.log(new Set(Object.values(SCHEMA_TYPES)).size)"   # → 53
 ```
 
 ---
 
 ## 1. The headline answer
 
-Of **52 distinct itemtypes** across 55 `schemaType` keys (`profile` and `artist` both resolve
+Of **53 distinct itemtypes** across 56 `schemaType` keys (`profile` and `artist` both resolve
 to `Person`; `comparison`, `places` and `filelist` all to `ItemList`):
 
 | Bucket | Count | Meaning |
@@ -187,6 +188,7 @@ Sorted by bucket, then alphabetically. `key` is the `schemaType` discriminator.
 | `Organization` | `organization` | Organization / merchant info; multi-location via `department` | `repo` — 2026-08-05 coverage doc |
 | `Review` | `review` | Review snippet | ⚠ |
 | `BookSeries` | `bookseries` | **Review snippet** — `CreativeWorkSeries` is on that feature's type allowlist, so the series' `aggregateRating` is eligible where a bare `Place`'s is not. No series-specific feature of its own | `repo` — [schema.md § Location](schema.md) carries the allowlist |
+| `MovieSeries` | `movieseries` | **Review snippet** via `CreativeWorkSeries`, same as `BookSeries`. The Movie carousel takes `Movie` items, not a `MovieSeries` — the nested `hasPart` films are properties, not top-level items, so no carousel eligibility. The test still evaluates each nested `Movie` against the feature's requirements, so every film row reuses the series key art as its `image` (critical field) | `repo` — same allowlist reasoning as the row above |
 | `QAPage` | `qa` | Q&A | `repo` — 2026-08-05 coverage doc |
 | `MemberProgram` | `loyalty` | Loyalty program (live June 2025; AU BR CA FR DE MX UK US) | `repo` — schema.md § Loyalty programme, incl. the two tier benefits Google reads |
 | `Movie` | `movie` | Movie carousel | `repo` — 2026-08-05 coverage doc |

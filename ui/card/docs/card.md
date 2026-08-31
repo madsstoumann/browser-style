@@ -500,12 +500,12 @@ full of `<` and `"`.
 
 Rendered reference: [`demo/schema.raw.html`](../demo/schema.raw.html). It is
 `demo/schema.html` with `stripSchema()` run over it — the same function the mode itself
-uses — so the two pages are identical **by construction**: 68 cards, 12 `<lay-out>`s, the
-same 11 sections, byte-identical visible text, and 471 `itemscope` against 0. Every
+uses — so the two pages are identical **by construction**: 75 cards, 13 `<lay-out>`s, the
+same 11 sections, byte-identical visible text, and 498 `itemscope` against 0. Every
 remaining difference between them is structured data.
 
 Its JSON-LD twin is [`demo/schema.jsonld.html`](../demo/schema.jsonld.html) — the same
-markup plus a 63-node `@graph`.
+markup plus a 68-node `@graph`.
 
 Regenerate both with `node ui/card/demo/schema.modes.build.js` after editing `schema.html`;
 `jsonld.test.js` fails if the shipped graph no longer matches.

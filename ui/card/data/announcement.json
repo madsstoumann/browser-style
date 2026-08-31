@@ -19,8 +19,8 @@
     "media": [
       {
         "mediaType": "image",
-        "src": "/assets/images/maintainance.png",
-        "alt": "Maintenance work in progress"
+        "src": "/assets/images/announcement.png",
+        "alt": "Stylised diagram of an API outage — a red cross cutting the connection between an app and its database servers"
       }
     ],
     "headline": "Scheduled maintenance — July 5",

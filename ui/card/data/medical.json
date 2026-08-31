@@ -12,15 +12,17 @@
   "fields": {
     "internalName": "Demo — Health article",
     "schemaType": "medical",
-    "preset": { "$ref": "card-preset/stack" },
+    "preset": {
+      "$ref": "card-preset/stack"
+    },
     "eyebrow": "Health library",
     "headline": "Chronic insomnia: what actually helps",
     "summary": "Why sleeping tablets are no longer first-line treatment, and what a course of CBT-I involves week by week.",
     "media": [
       {
         "mediaType": "image",
-        "src": "/assets/images/mindfulness.png",
-        "alt": "Person sitting quietly under a tree in a forest"
+        "src": "/assets/images/medical.png",
+        "alt": "An exhausted woman on a park bench, head resting in her hand"
       }
     ],
     "details": {
@@ -28,15 +30,30 @@
       "lastReviewed": "2026-05-02",
       "lastReviewedDisplay": "May 2, 2026",
       "reviewedLabel": "Medically reviewed",
-      "audience": { "type": "Patient", "name": "Adults with persistent sleep problems" },
+      "audience": {
+        "type": "Patient",
+        "name": "Adults with persistent sleep problems"
+      },
       "about": {
         "type": "MedicalCondition",
         "name": "Chronic insomnia",
         "aspects": [
-          { "type": "signOrSymptom", "text": "Trouble falling asleep three or more nights a week, for three months or longer" },
-          { "type": "signOrSymptom", "text": "Waking in the early hours and being unable to get back to sleep" },
-          { "type": "riskFactor", "text": "Shift work, chronic pain, anxiety, late caffeine" },
-          { "type": "possibleTreatment", "text": "Cognitive behavioural therapy for insomnia (CBT-I), 6–8 weeks" }
+          {
+            "type": "signOrSymptom",
+            "text": "Trouble falling asleep three or more nights a week, for three months or longer"
+          },
+          {
+            "type": "signOrSymptom",
+            "text": "Waking in the early hours and being unable to get back to sleep"
+          },
+          {
+            "type": "riskFactor",
+            "text": "Shift work, chronic pain, anxiety, late caffeine"
+          },
+          {
+            "type": "possibleTreatment",
+            "text": "Cognitive behavioural therapy for insomnia (CBT-I), 6–8 weeks"
+          }
         ]
       },
       "reviewedBy": {

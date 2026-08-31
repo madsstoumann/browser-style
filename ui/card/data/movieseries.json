@@ -1,0 +1,53 @@
+{
+  "$schema": "../../../cms/baseline/models/card.schema.json",
+  "id": "movieseries-1",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-08-31T12:00:00Z",
+    "updatedAt": "2026-08-31T12:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Media"
+  },
+  "fields": {
+    "internalName": "Demo — Movie series",
+    "schemaType": "movieseries",
+    "preset": {
+      "$ref": "card-preset/showcase"
+    },
+    "eyebrow": "Epic fantasy",
+    "headline": "The Hollow Crown Trilogy",
+    "summary": "Three films, one broken kingdom — a fellowship of exiles walks the ash roads to return a crown nobody living has worn.",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/movie_02.png",
+        "alt": "The Hollow Crown Trilogy key art — the fellowship assembled before a burning mountain fortress"
+      }
+    ],
+    "details": {
+      "startDate": "2021-11-19",
+      "endDate": "2026-02-12",
+      "movieCount": 3,
+      "productionCompany": "Fjordlys Studios",
+      "rating": {
+        "value": 4.6,
+        "count": 21540,
+        "max": 5
+      },
+      "director": {
+        "name": "Halvor Bruun"
+      },
+      "actors": [
+        "Ellinor Vang",
+        "Tomas Rask"
+      ],
+      "movies": [
+        { "position": 1, "name": "The Hollow Crown", "datePublished": "2021-11-19" },
+        { "position": 2, "name": "The Ash Roads", "datePublished": "2023-12-08" },
+        { "position": 3, "name": "The Last Ford", "datePublished": "2026-02-12", "url": "#schema-movie" }
+      ]
+    },
+    "tags": ["Fantasy", "Trilogy"]
+  }
+}

@@ -69,6 +69,7 @@ export const SCHEMA_TYPES = {
 	qa: 'QAPage',
 	podcast: 'PodcastEpisode',
 	movie: 'Movie',
+	movieseries: 'MovieSeries',
 	book: 'Book',
 	bookseries: 'BookSeries',
 	dataset: 'Dataset',
@@ -213,7 +214,7 @@ const SUMMARY_PROP = { review: 'reviewBody', quote: 'text', announcement: 'text'
    owns it: job's eyebrow is display text, `industry` is details.industry. Docs: schema.md § Job.
    Exported for render.test.js, which re-adds the removed `job: 'industry'` entry to prove the
    duplicate-property guard below still holds when this map grows. */
-export const EYEBROW_PROP = { article: 'articleSection', news: 'articleSection', product: 'category', recipe: 'recipeCategory', course: 'about', video: 'genre', movie: 'genre', book: 'genre', bookseries: 'genre', tvseries: 'genre', music: 'genre', musicgroup: 'genre', comicseries: 'genre', comicissue: 'genre' };
+export const EYEBROW_PROP = { article: 'articleSection', news: 'articleSection', product: 'category', recipe: 'recipeCategory', course: 'about', video: 'genre', movie: 'genre', movieseries: 'genre', book: 'genre', bookseries: 'genre', tvseries: 'genre', music: 'genre', musicgroup: 'genre', comicseries: 'genre', comicissue: 'genre' };
 /* published itemprop: JobPosting/SpecialAnnouncement use datePosted, VideoObject uploadDate */
 const PUBLISHED_PROP = { job: 'datePosted', announcement: 'datePosted', video: 'uploadDate' };
 /* datePosted is typed Date, so a timestamp is out of range; uploadDate takes a DateTime */
@@ -225,7 +226,7 @@ const HEADING_TAGS = new Set(['h2', 'h3', 'h4', 'h5']);
 const ARTICLE_BODY_TYPES = new Set(['article', 'news']);
 /* isAccessibleForFree domain — CreativeWork | Event | Place: every key whose itemtype is one
    (schema.org 30.0 dump). Docs: docs/schema.md § Paywall */
-export const PAYWALL_TYPES = new Set(['content', 'article', 'news', 'event', 'recipe', 'review', 'course', 'poll', 'faq', 'quote', 'timeline', 'gallery', 'achievement', 'announcement', 'business', 'location', 'social', 'software', 'video', 'howto', 'qa', 'podcast', 'movie', 'book', 'bookseries', 'dataset', 'claim', 'quiz', 'realestate', 'vacationrental', 'menu', 'tvseries', 'tvepisode', 'medical', 'music', 'glossary', 'podcastseries', 'comicseries', 'comicissue']);
+export const PAYWALL_TYPES = new Set(['content', 'article', 'news', 'event', 'recipe', 'review', 'course', 'poll', 'faq', 'quote', 'timeline', 'gallery', 'achievement', 'announcement', 'business', 'location', 'social', 'software', 'video', 'howto', 'qa', 'podcast', 'movie', 'movieseries', 'book', 'bookseries', 'dataset', 'claim', 'quiz', 'realestate', 'vacationrental', 'menu', 'tvseries', 'tvepisode', 'medical', 'music', 'glossary', 'podcastseries', 'comicseries', 'comicissue']);
 /* types where the image/video belongs to another scope — skip itemprop */
 const NO_IMAGE_PROP = new Set(['review', 'contact']);
 /* A gallery whose data carries licensing emits a full ImageObject per photo, which then
@@ -2635,6 +2636,41 @@ export const DETAILS = {
 		if (bits) html += `<p data-part="meta">${esc(bits)}</p>`;
 		html += ratingPart('aggregateRating', 'AggregateRating', d.rating);
 		return html + creditsPart(d);
+	},
+
+	/* MovieSeries ⊂ CreativeWorkSeries ⊂ (Series, CreativeWork). director/actor are the
+	   series' OWN properties (the shared cast); startDate/endDate CreativeWorkSeries';
+	   the film list, rating and production company arrive from CreativeWork. There is NO
+	   count property — the film count is prose and `hasPart` is the machine answer.
+	   Docs: docs/schema.md § Movie series */
+	movieseries(d, fields) {
+		/* every film row reuses the series' own key art as its image — Google evaluates each
+		   nested Movie against its Movie requirements, where image is REQUIRED; franchise art
+		   is each film's honest image and needs no per-film asset. Docs: docs/schema.md § Movie series */
+		const img = fields?.media?.[0]?.src;
+		let html = meta('startDate', d.startDate) + meta('endDate', d.endDate);
+		const from = startYear(d.startDate);
+		const to = startYear(d.endDate);
+		const span = from ? (to && to !== from ? `${esc(from)}–${esc(to)}` : `since ${esc(from)}`) : null;
+		const bits = [
+			d.movieCount != null ? `${num(d.movieCount)} film${d.movieCount === 1 ? '' : 's'}` : null,
+			span
+		].filter(Boolean).join(' · ');
+		if (bits) html += `<p data-part="meta">${bits}</p>`;
+		html += ratingPart('aggregateRating', 'AggregateRating', d.rating) + creditsPart(d);
+		/* Films ASCEND, so ordinal markers are true — the bookseries volume rule; a film
+		   with a url gets a REAL anchor: only a link is crawlable */
+		html += scopedList((d.movies || []).map((movie) => {
+			const year = startYear(movie.datePublished);
+			return `<li${scope('hasPart', 'Movie')}>${meta('position', movie.position)}${meta('datePublished', movie.datePublished)}${img ? `<link itemprop="image" href="${esc(img)}">` : ''}`
+				+ (movie.url
+					? `<a itemprop="url" href="${esc(movie.url)}"><span itemprop="name">${esc(movie.name)}</span></a>`
+					: `<span itemprop="name">${esc(movie.name)}</span>`)
+				+ (year ? ` <small>${esc(year)}</small>` : '')
+				+ '</li>';
+		}), d.ordered ?? true);
+		if (d.productionCompany) html += `<p data-part="meta"${scope('productionCompany', 'Organization')}>Production: <span itemprop="name">${esc(d.productionCompany)}</span></p>`;
+		return html;
 	},
 
 	book(d) {

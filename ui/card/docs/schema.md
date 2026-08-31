@@ -15,26 +15,26 @@
 > goals as `AchieveAction` — target and progress as `object`/`result` `QuantitativeValue`
 > scopes, a `<progress>` bar or `<ui-progress-circular>` ring as the visible face).
 
-**Four counts, four different quantities — do not conflate them.** The page carries **63
-cards** with **54 distinct root itemtypes**; a structured-data validator reports **67 items**;
-the renderer knows **55 `schemaType` keys**. Last validated by hand on 2026-08-28, at 62 cards: validator.schema.org reported the 66 items of that revision, and Google's Rich Results Test **73** valid items — more, because it also counts the nested `LocalBusiness`/`Product` entities as items (`open-items.md` § 36). The `BookSeries` card added on 2026-08-29 takes the mechanical counts to the numbers above and is **not** yet in either validator's tally: both hosts are blocked at that session's egress (the offline route is the vocabulary dump — see [Types authored markup-first](#types-authored-markup-first)), so its itemprops were checked against the schema.org 30.0 dump instead. Re-run both validators next time they are reachable.
+**Four counts, four different quantities — do not conflate them.** The page carries **64
+cards** with **55 distinct root itemtypes**; a structured-data validator reports **68 items**;
+the renderer knows **56 `schemaType` keys**. Last validated by hand on 2026-08-28, at 62 cards: validator.schema.org reported the 66 items of that revision, and Google's Rich Results Test **73** valid items — more, because it also counts the nested `LocalBusiness`/`Product` entities as items (`open-items.md` § 36). The `BookSeries` card added on 2026-08-29 and the `MovieSeries` card added on 2026-08-31 take the mechanical counts to the numbers above and are **not** yet in either validator's tally: both hosts were unreachable at those sessions (the offline route is the vocabulary dump — see [Types authored markup-first](#types-authored-markup-first)), so their itemprops were checked against the schema.org 30.0 dump instead. Re-run both validators next time they are reachable.
 
 | Count | What it measures | Reproduce it |
 |---|---|---|
-| **63** | card hosts on the page — `<ui-card>` plus the one `<ui-reveal>` | `grep -oE '<ui-(card\|reveal)[^>]*itemtype="[^"]*"' ui/card/demo/schema.html \| grep -vc 'itemprop='` |
-| **67** | top-level microdata items — **what schema.org's validator reports** | `grep -o '<[a-z-]*[^<>]*itemscope[^<>]*>' ui/card/demo/schema.html \| grep -v 'itemprop=' \| grep -c 'itemtype='` |
-| **54** | distinct root `itemtype` values | `grep -oE '<ui-(card\|reveal)[^>]*itemtype="[^"]*"' ui/card/demo/schema.html \| grep -v 'itemprop=' \| grep -o 'itemtype="[^"]*"' \| sort -u \| wc -l` |
-| **55** | `schemaType` keys `render.js` supports (`SCHEMA_TYPES`) | `node -e "import('./ui/card/render.js').then(m => console.log(Object.keys(m.SCHEMA_TYPES).length))"` |
+| **64** | card hosts on the page — `<ui-card>` plus the one `<ui-reveal>` | `grep -oE '<ui-(card\|reveal)[^>]*itemtype="[^"]*"' ui/card/demo/schema.html \| grep -vc 'itemprop='` |
+| **68** | top-level microdata items — **what schema.org's validator reports** | `grep -o '<[a-z-]*[^<>]*itemscope[^<>]*>' ui/card/demo/schema.html \| grep -v 'itemprop=' \| grep -c 'itemtype='` |
+| **55** | distinct root `itemtype` values | `grep -oE '<ui-(card\|reveal)[^>]*itemtype="[^"]*"' ui/card/demo/schema.html \| grep -v 'itemprop=' \| grep -o 'itemtype="[^"]*"' \| sort -u \| wc -l` |
+| **56** | `schemaType` keys `render.js` supports (`SCHEMA_TYPES`) | `node -e "import('./ui/card/render.js').then(m => console.log(Object.keys(m.SCHEMA_TYPES).length))"` |
 
 The flashcard Quiz is the page's one **`<ui-reveal>`** host rather than a `<ui-card>` — a
 question on the front face, its answer on the flipside, which is what a flashcard actually is.
 It counts identically in every column below; only the element differs.
 
 **Items ≠ cards.** A validator counts every *top-level* item — an `itemscope` with no `itemprop`
-of its own — so it sees the 63 cards plus **three items that are not cards**: the standalone
+of its own — so it sees the 64 cards plus **three items that are not cards**: the standalone
 `EmployerAggregateRating` on the job card, the page-level `WebSite` (site identity plus the
 sitelinks-searchbox `potentialAction`, which describes the *site*, not any card on it), and the
-page-trail `BreadcrumbList` on the breadcrumb `<ol>` — 67. Nested scopes (`author` → `Person`,
+page-trail `BreadcrumbList` on the breadcrumb `<ol>` — 68. Nested scopes (`author` → `Person`,
 `offers` → `Offer`, …) are properties of their
 parent, not items, and are not counted. The `grep -c 'itemtype='` on the end of that command is
 load-bearing: without it the page's own `<meta name="description">` is counted too, because its
@@ -82,7 +82,7 @@ type — a demo affordance, emitted by `render.js` only when `renderCard` gets `
 
 ## Page structure — eleven sections, and where the heading level comes from
 
-The page groups its 63 cards into **eleven sections by what the thing *is*** — Editorial &
+The page groups its 64 cards into **eleven sections by what the thing *is*** — Editorial &
 journalism · Commerce & offers · Screen · Audio · Page & picture · Learning & reference ·
 People, work & history · Food & drink · Places, events & property · Community & support ·
 Data, health & operations. Each section is a bare `<h2>` followed by its own
@@ -865,9 +865,15 @@ Distinct from FAQ: one `mainEntity` → `Question` with community answers as `<u
 
 Episode metas plus hidden `partOfSeries` → `PodcastSeries`. The episode audio is a chromeless `<audio>` inside `<ui-media>` (scoped `associatedMedia` → `AudioObject`) — the poster stays the visual, and `<ui-play>` drives playback via `command="--play-pause"` (video.js polyfills the media invoker commands until browsers ship them).
 
+### Movie series — `MovieSeries`
+
+`MovieSeries` ⊂ `CreativeWorkSeries` ⊂ (`Series`, `CreativeWork`) — the [BookSeries](#book-series--bookseries) shape one medium over, with one difference: `director` and `actor` are the series' **own** properties (the cast shared across the films), so the credit rows sit on the series scope itself, exactly as they would on a `Movie`. `startDate`/`endDate` are `CreativeWorkSeries`'; the film list, the rating and the `productionCompany` colophon arrive from `CreativeWork`. Eyebrow → `genre`.
+
+⚠️ **There is no count property** — the same trap as every other series type: "3 films" is prose, `hasPart` → `Movie` is the machine answer. Each film carries `position` and `datePublished` on its own `Movie` scope; the list is an `<ol>` by default because films ascend (`details.ordered` overrides per instance), and a film with a `url` gets a real anchor — the BookSeries volume rule. On the demo page film 3 links to the Movie card beside it (`#schema-movie`), the same series → item wiring as BookSeries → Book. Every film row also carries a `<link itemprop="image">` reusing the **series' own key art**: Google's Rich Results Test evaluates each nested `Movie` against the Movie feature's requirements, where `image` is critical — franchise art is each film's honest image, the renderer takes it from the card's own media, and no per-film asset exists or is needed. `aggregateRating` reaches the series through `CreativeWork`, and Google's review-snippet allowlist carries `CreativeWorkSeries`, so the star row is feature-eligible.
+
 ### Movie — `Movie`
 
-Director and cast as `Person` scopes, `contentRating`, release date and an `AggregateRating` star row. Eyebrow → `genre`.
+Director and cast as `Person` scopes, `contentRating`, release date and an `AggregateRating` star row. Eyebrow → `genre`. The demo card is *The Last Ford* — the finale of the MovieSeries card above it, which links here via its `hasPart` film list; that link is why this card carries `id="schema-movie"`.
 
 ### Video game — `VideoGame`
 

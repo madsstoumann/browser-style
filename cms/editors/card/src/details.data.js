@@ -72,6 +72,10 @@ export const SCHEMA_TYPE_GROUPS = [
 				"label": "Movie"
 			},
 			{
+				"value": "movieseries",
+				"label": "Movie series (MovieSeries)"
+			},
+			{
 				"value": "tvseries",
 				"label": "TV series (TVSeries)"
 			},
@@ -2444,6 +2448,101 @@ export const DETAILS_SCHEMAS = {
 				"type": "string",
 				"control": "text"
 			},
+			"control": "repeater"
+		}
+	},
+	"movieseries": {
+		"startDate": {
+			"type": "date",
+			"note": "first film — the CreativeWorkSeries property",
+			"control": "date"
+		},
+		"endDate": {
+			"type": "date",
+			"note": "last film; omit for an open-ended series",
+			"control": "date"
+		},
+		"movieCount": {
+			"type": "number",
+			"note": "prose only — no count property on the type",
+			"control": "number"
+		},
+		"productionCompany": {
+			"type": "string",
+			"control": "text"
+		},
+		"rating": {
+			"type": "object",
+			"control": "fieldset",
+			"fields": {
+				"value": {
+					"type": "number",
+					"label": "Rating",
+					"control": "number"
+				},
+				"max": {
+					"type": "number",
+					"note": "default 5",
+					"control": "number"
+				},
+				"count": {
+					"type": "number",
+					"control": "number"
+				}
+			}
+		},
+		"director": {
+			"type": "object",
+			"fields": {
+				"name": {
+					"type": "string",
+					"control": "text"
+				},
+				"label": {
+					"type": "string",
+					"control": "text"
+				}
+			},
+			"control": "fieldset"
+		},
+		"actors": {
+			"type": "array",
+			"items": {
+				"type": "string",
+				"control": "text"
+			},
+			"control": "repeater"
+		},
+		"ordered": {
+			"type": "boolean",
+			"note": "default TRUE — films ascend",
+			"control": "toggle"
+		},
+		"movies": {
+			"type": "array",
+			"items": {
+				"fields": {
+					"position": {
+						"type": "number",
+						"control": "number"
+					},
+					"name": {
+						"type": "string",
+						"control": "text"
+					},
+					"datePublished": {
+						"type": "date",
+						"note": "the visible year is derived from it",
+						"control": "date"
+					},
+					"url": {
+						"type": "url",
+						"note": "renders the row as a crawlable itemprop=\"url\" anchor",
+						"control": "url"
+					}
+				}
+			},
+			"note": "one hasPart → Movie scope per row",
 			"control": "repeater"
 		}
 	},
@@ -5619,6 +5718,7 @@ export const TYPE_FLAGS = {
 		"qa",
 		"podcast",
 		"movie",
+		"movieseries",
 		"book",
 		"bookseries",
 		"dataset",
