@@ -80,6 +80,17 @@ const page = (ucf, name) => {
 		/* the prose column IS the page column here — the hero bleeds past it, so the
 		   copy must sit on its edge rather than a second 1rem in */
 		.detail-page > lay-out > ui-content { --ui-content-pi: 0; }
+		/* On a phone the byline reads at the size it had on the teaser card this page
+		   morphed from — the meta ramp's default, off the md tier. The prose-article
+		   preset's reading-scale 1em is an inline custom property on the <ui-content>,
+		   so it is re-declared on the row itself, which is nearer in the chain. The
+		   avatar rides that em, so it takes the card's 4em ramp back at the same time. */
+		@media (width < 540px) {
+			.detail-page [data-part="byline"] {
+				--ui-avatar-size: 4em;
+				--ui-content-byline-fs: calc(var(--ui-content-fs-md) * 0.82);
+			}
+		}
 		main > aside { margin-block-end: var(--spacing-2xl); }
 	</style>
 	${CONTRAST_STYLE}
