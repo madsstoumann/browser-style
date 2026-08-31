@@ -1465,9 +1465,107 @@ markup-first rule), move the other, add the pair. Two ambiguities need an `id=` 
 Re-run the sweep with a scratch copy of `schema.compare.js` whose `PAIRS` is the candidate
 list — ~2 min per card for the small rows.
 
+
+## 40. `:has()` arguments that name DSL attributes — DONE 2026-08-29
+
+**Implemented as proposed, same branch — zero-JS.** The 10 lightbox `asr()` mirrors are
+deleted; the renderer echoes a frame-placed `asr()` token onto the host at build time
+(`render.js` `lightboxHostMedia`), so the placeholder ratio rides plain inheritance —
+verified with JavaScript disabled (a first-iteration lightbox.js relay was replaced the
+same day; hand-authored frame placement falls back to `3 / 2` unless the author follows
+the documented host-token rule). The cover `nav` rule in `content.css` is host-arm only
+(constraint documented in `card.md` § cover), the PiP rule keys on `ui-play[open]` alone,
+and `tokens.lint.js` now fails on any `media=`/`content=` needle inside a `:has()`
+argument (11 errors against the pre-fix sheets, 0 after). **Measured after: the `media=`
+token flip is 2.0 ms / 39 elements (was 36.4 ms / 534); the lightbox toggle is
+452 → 420 ms** — its remainder is the `media-open=` swap's re-match volume, tracked as
+`style-performance.md` §8.3. Original finding below, kept for the record.
+
+**Measured 2026-08, full data in `docs/style-performance.md` (§4, §6, §8).** Blink tracks
+the attribute names that appear inside `:has()` arguments; mutating such an attribute
+anywhere re-evaluates `:has()` state at page scale. The bundle currently names `media` in
+11 `:has()` needles (the 10 lightbox `asr()` placeholder-ratio rules in
+`ui/card/media.lightbox.css` plus the `nav` arm in `ui/card/content.css`), `variant` in 4,
+`data-part` in 4 and `aria-pressed` in 1. Consequence, measured on `schema.html`: one
+`media=` or `variant=` token flipped on one card costs **~36 ms / ~534 elements**, and a
+nonsense token costs the same — pure invalidation. Deleting the 73 `:has()` rules (or
+flattening only the `media`-referencing ones) collapses the flip to **~2.3 ms / 39
+elements**, with all 1,067 `[media*=]` rules still active. The same mechanism is why the
+lightbox toggle recalcs 4,344 elements (452 ms) and `shared.js`'s `aria-pressed` writes
+pay it on every play/pause.
+
+Proposed fix (`style-performance.md` §8.1): move the attribute needle out of the `:has()`
+argument — the plain `[media~="asr(…)"]` host rules set a custom property
+(`--ui-lightbox-placeholder-ar`) unconditionally, and one `:has(ui-media:popover-open)`
+rule consumes it; same treatment for `nav`, `variant`, `data-part`, `aria-pressed` arms.
+Then guard it: extend `tokens.lint.js` to fail on any DSL-attribute needle inside a
+`:has()` argument (§8.2). No token vocabulary change, no markup change. Verify with the
+flip-ab harness inlined in `style-performance.md` §9c (expect ~36 → ~2 ms).
+
+## 41. Strict-CSP readiness — remove the renderer's `style=` emission (PLANNED, not started)
+
+**The question that prompted this (2026-08-29):** can the layout/card system run under a
+strict `Content-Security-Policy: style-src` with no `'unsafe-inline'`? **Audited answer:
+runtime style *updates* are already safe — every JS write in `layout/`, `ui/base`,
+`ui/card`, `ui/carousel`, `ui/map`, `ui/play`, `ui/dark-mode`, `ui/gui` is CSSOM
+(`el.style.setProperty` / `adoptedStyleSheets`), which `style-src` does not govern, and
+`setAttribute('style', …)` appears nowhere in the repo.** What blocks strict CSP is
+markup-side:
+
+- **(a) `render.js` emits `style="--…"` at six sites** — `styleAttr(preset.styles)` on
+  hosts (render.js:3153, 3231, 3281, 3293, 3308; 4 published + 31 demo presets carry
+  `"styles"`) and the per-slide `--ui-carousel-thumb-url` for `mrk(tmb)` (render.js:1202).
+- **(b)** `ui/carousel/polyfill/carousel.js:22-25` creates a `<style>` element (the
+  native-support suppression branch).
+- **(c)** other directives the packages need regardless: `font-src data:` (the opt-in
+  icon font, `ui/icon/icon-font.css`) and `img-src data:` (dist bundles inline SVGs —
+  `scripts/css-bundle.js` `--loader:.svg=dataurl`; the unbundled sources use file URLs).
+- **(d)** two documented escape hatches teach `style=` spellings
+  (`--ui-lightbox-placeholder-ar`; the `container: bs-card / inline-size` opt-in).
+- Demo pages are separately non-strict (38/39 card demo pages have inline `<style>`,
+  ~20 carry hand-authored `style=`, three schema pages inline the typed-attr polyfill as
+  a classic script, five carry `speculationrules`) — demo-only, hashable, out of scope.
+
+**The plan (execution-ready, CSS-first throughout):**
+
+1. **Preset `styles` → generated stylesheet.** Emit `data-preset="<name>"` on the host
+   instead of `style=`; generate `ui/card/presets.css` from the preset JSONs
+   (`:where([data-preset="…"]) { --…: …; }`, zero-specificity, `@layer bs-component`,
+   imported by `ui-card.css`); drop the five `styleAttr` call sites; regenerate SSR
+   pages; update the `schema.html` testimonial reference card (`--ui-rating-c`) so
+   `schema.compare.js` stays green.
+2. **Carousel thumbs → build-emitted per-page CSS.** Typed `attr()` CANNOT carry this —
+   verified in Chromium 141: `type(<url>)` does not parse (`CSS.supports` false), and
+   every laundering route (`type(*)`/`type(<string>)` through a custom property into
+   `background-image`, or `src()`) computes to `none` under the spec's attr-tainting
+   rule (deliberate anti-exfiltration design — do not re-litigate). Instead: render.js
+   ensures a frame id when `mrk(tmb)` + `options.images` are active and pushes one rule
+   per slide (`#<frameId> > :nth-child(…) { --ui-carousel-thumb-url: url("…") }`,
+   slide index computed against the NOT_SLIDE exclusions) into a caller-supplied
+   `options.images.thumbRules` sink; the SSR builders write the collected rules as a
+   per-page external stylesheet (`style-src 'self'`; a hashed inline `<style>` is the
+   documented alternative); `ui/carousel/polyfill/carousel-controls.js:157` reads via
+   `getComputedStyle(slide)` so the polyfill sees stylesheet-delivered values; native
+   `::scroll-marker` thumbs then work with JS disabled. Update the `_headers` comment
+   documenting the old style=-attribute coupling; check render.test for slide-`style=`
+   assertions. Without a sink the renderer emits nothing (never the old `style=`); the
+   polyfill's `img.currentSrc` derivation remains the last resort.
+3. **Polyfill `<style>` → constructed sheet.** `new CSSStyleSheet()` +
+   `document.adoptedStyleSheets` (precedent: `ui/map/engine.js:39-41`).
+4. **`docs/csp.md`** — the CSP contract: minimum directives after the fixes
+   (`style-src 'self'`; `font-src data:` only with the icon font; `img-src data:` for
+   dist bundles, or link the unbundled sheets to avoid it), the CSP-safe spellings for
+   both escape hatches (host `asr()` token instead of `--ui-lightbox-placeholder-ar`
+   inline; `data-preset` instead of `preset.styles` inline), and the demo-page
+   exceptions.
+5. **Gates when implemented:** SSR snapshot (expected diff: `style=` → `data-preset`,
+   thumb `style=` gone), `render.test.js`, `schema.compare.js`, tokens build ×2 + lint,
+   bundle rebuilds + page regeneration — and the acceptance test: a product page served
+   under an enforced `style-src 'self'` CSP shows **zero** violations from package code
+   and renders thumb markers with JavaScript disabled.
 ---
 
-## 40. Eager `sizes` over-declares on 18 demo pages — the LCP image over-fetches
+## 42. Eager `sizes` over-declares on 18 demo pages — the LCP image over-fetches
 
 Found while fixing `schema.html`'s mobile LCP (`docs/performance.md` § Images carries the
 mechanism). A lazy image's `sizes="auto"` self-corrects to the real rendered width; the

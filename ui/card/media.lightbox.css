@@ -83,18 +83,9 @@
 	:where(ui-card, ui-reveal):where([media*="asr("]):has(ui-media:popover-open) :is(cq-box, summary)::before {
 		min-block-size: 0;
 	}
-	/* SELF-ARM asr() — --ui-media-ar sits on the promoted frame, out of the ::before's
-	   reach, so mirror the nine canonical ratios via :has() */
-	:where(ui-card, ui-reveal):has(ui-media[media*="asr("]:popover-open) :is(cq-box, summary)::before { min-block-size: 0; }
-	:where(ui-card, ui-reveal):has(ui-media[media~="asr(1/1)"]:popover-open)  :is(cq-box, summary)::before { --ui-lightbox-placeholder-ar: 1 / 1; }
-	:where(ui-card, ui-reveal):has(ui-media[media~="asr(1/2)"]:popover-open)  :is(cq-box, summary)::before { --ui-lightbox-placeholder-ar: 1 / 2; }
-	:where(ui-card, ui-reveal):has(ui-media[media~="asr(6/7)"]:popover-open)  :is(cq-box, summary)::before { --ui-lightbox-placeholder-ar: 6 / 7; }
-	:where(ui-card, ui-reveal):has(ui-media[media~="asr(3/4)"]:popover-open)  :is(cq-box, summary)::before { --ui-lightbox-placeholder-ar: 3 / 4; }
-	:where(ui-card, ui-reveal):has(ui-media[media~="asr(4/3)"]:popover-open)  :is(cq-box, summary)::before { --ui-lightbox-placeholder-ar: 4 / 3; }
-	:where(ui-card, ui-reveal):has(ui-media[media~="asr(3/2)"]:popover-open)  :is(cq-box, summary)::before { --ui-lightbox-placeholder-ar: 3 / 2; }
-	:where(ui-card, ui-reveal):has(ui-media[media~="asr(2/3)"]:popover-open)  :is(cq-box, summary)::before { --ui-lightbox-placeholder-ar: 2 / 3; }
-	:where(ui-card, ui-reveal):has(ui-media[media~="asr(16/9)"]:popover-open) :is(cq-box, summary)::before { --ui-lightbox-placeholder-ar: 16 / 9; }
-	:where(ui-card, ui-reveal):has(ui-media[media~="asr(21/9)"]:popover-open) :is(cq-box, summary)::before { --ui-lightbox-placeholder-ar: 21 / 9; }
+	/* SELF-ARM asr(): the renderer echoes the token on the HOST (never :has() mirrors —
+	   a [media…] needle in a :has() argument taxes every media= write, style-performance.md §8.1);
+	   hand-authored escape hatch: --ui-lightbox-placeholder-ar */
 
 	/* === CAROUSEL CONTROLS — native pseudos don't follow the frame into the top
 	   layer, so lightbox.js injects real elements. Docs: docs/media.md === */

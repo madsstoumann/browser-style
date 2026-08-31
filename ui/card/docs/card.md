@@ -887,14 +887,22 @@ rest ([`article.render.html`](../demo/article.render.html) is the working demo):
   positioned instead, which re-anchors the same `::after` to it:
 
   ```css
-  :where(ui-card[media*="nav"], ui-card:has(ui-media[media*="nav"]))
-    :has([data-part~="cover"]) ui-content { position: relative; }
+  :where(ui-card):has([data-part~="cover"])
+    &[media*="nav"] ui-content { position: relative; }
   ```
 
   The consequence is deliberate: on those cards **tapping the photo no longer
   navigates** — the headline link still does. A full-card cover over a scroller is
   a defect rather than a choice, so the engine prevents it instead of asking each
   author to remember.
+
+  **The `nav` token goes on the HOST on a cover card.** The rule is host-arm only —
+  there is deliberately no `:has(ui-media[media*="nav"])` twin for a frame-placed
+  `nav`, because a `media` needle inside a `:has()` argument makes *every* `media=`
+  write on the page re-evaluate `:has()` state (~35 ms measured —
+  [`/docs/style-performance.md`](../../../docs/style-performance.md) §8.1; the lint
+  enforces it). No shipped page combines a cover with a frame-placed `nav`; if you
+  author one, hoist the `nav` token to the host.
 
   **Focus rings the card, not the link.** A `:focus-visible` cover suppresses its
   own outline and paints a card-sized dashed ring — the `--ui-card-focus-*`
