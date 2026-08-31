@@ -125,6 +125,7 @@ which is why the native `::scroll-marker` path has never been audited
 | `docs/token-comparison.md` | Naming rationale vs Tailwind v4 / Open Props |
 | `docs/html-head.md` | What the demo-page `<head>` carries and why — incl. why `theme-color` is rejected |
 | `docs/llms-txt.md` | `llms.txt`, markdown alternates and the crawler policy behind `robots.txt` |
+| `docs/zaraz.md` | GA4 page tracking via Cloudflare Zaraz — edge-injected, config-as-code (`scripts/zaraz/`), humans-only layers |
 | `docs/plans/open-items.md` | The one live backlog (implemented plans are deleted, not archived) |
 
 **Skills live in `.claude/skills/`** — invoke them instead of reconstructing a procedure:
