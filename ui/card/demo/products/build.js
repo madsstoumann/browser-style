@@ -47,13 +47,27 @@ const file = (slug) => `silk-gown-${slug}.html`;
 
 /* the other three colourways — cross-page navigation, so no itemprop: these are not
    properties of this page's item, and isVariantOf below already ties the family together.
-   Each swatch is that colourway's REAL photo, served from the local file with NO cdn
-   srcset: a failed candidate never falls back to src, so a CDN srcset leaves the swatches
-   blank off the zone. The four 509px originals are already in cache — schema.html's
-   collage, the page you arrive from, loads exactly these. */
+   Each swatch is that colourway's REAL photo. It used to be served from the local 509px
+   file with NO srcset, on the premise that "the four originals are already in cache —
+   schema.html's collage loads exactly these". That premise died when the collage was
+   paired with its data and inherited the renderer's CDN srcset: the swatches became four
+   COLD 509px PNGs displayed at 80px. They now take a 1x/2x pair at the display size, the
+   shape fixedSrcset() emits for avatars.
+   The old note also claimed a CDN srcset "leaves the swatches blank off the zone". That
+   does not survive _headers' own finding: an <img srcset> is DOCUMENT-initiated, obeys the
+   page's <meta name="referrer" content="no-referrer"> and loads on pages.dev — only CSS
+   background-image uses the STYLESHEET's policy and gets hotlink-403'd. Every other image
+   on schema.html already proves it. Docs: /_headers, docs/performance.md § Images */
+/* swatch srcset — a 1x/2x pair at the ONE rendered size (5rem), not the responsive
+   ladder: a swatch never changes size. Same shape fixedSrcset() emits for avatars. */
+const SWATCH_PX = 80;
+const swatchSrcset = (slug) => [1, 2]
+	.map((dpr) => `${CDN_BASE}/cdn-cgi/image/format=auto,quality=80,fit=cover,width=${SWATCH_PX * dpr},height=${SWATCH_PX * dpr}/assets/images/silkgown-${slug}.png ${dpr}x`)
+	.join(', ');
+
 const siblings = (current) => `<nav class="variant-swatches" aria-label="Other colourways">
 					${COLORS.filter((c) => c.slug !== current).map((c) => `<a href="${file(c.slug)}">
-						<img src="/assets/images/silkgown-${c.slug}.png" alt="" width="509" height="509" loading="lazy" decoding="async">
+						<img src="/assets/images/silkgown-${c.slug}.png" alt="" srcset="${swatchSrcset(c.slug)}" width="509" height="509" loading="lazy" decoding="async">
 						<span>${esc(c.name)}</span>
 					</a>`).join('\n\t\t\t\t\t')}
 				</nav>`;

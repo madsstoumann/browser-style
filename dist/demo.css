@@ -6784,9 +6784,10 @@
     }
     &:is([variant~="speech(l)"], [variant~="speech(r)"]),
     :where([media*="sticker(spl)"], [media*="sticker(spr)"]) & {
-      --ui-sticker-fs: 30cqi;
+      --ui-sticker-fs: 36cqi;
       --ui-sticker-p: 0.6em 0.7em;
       aspect-ratio: 5 / 4;
+      block-size: auto;
       border-radius: var(--ui-sticker-radius, var(--radius-lg, 0.75em));
       min-block-size: auto;
       position: relative;
@@ -10363,7 +10364,9 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
 @property --_show-counter { syntax: "<number>"; inherits: false; initial-value: 0; }
 @layer bs-component {
   :where(ui-avatar) {
-    --ui-avatar-background: oklch(0.5 0.25 random(auto, 0, 360));
+    @supports (color: oklch(0.5 0.25 random(auto, 0, 360))) {
+      --ui-avatar-background: oklch(0.5 0.25 random(auto, 0, 360));
+    }
     aspect-ratio: 1 / 1;
     background: var(--ui-avatar-background, var(--color-button));
     block-size: var(--ui-avatar-size, 4em);
@@ -11987,7 +11990,7 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
       }
     }
   }
-  :where(ui-media:not(:has(:is(ui-play[open], ui-play button[aria-pressed=true])))) .ui-media-tools button[command=--pip] {
+  :where(ui-media:not(:has(ui-play[open]))) .ui-media-tools button[command=--pip] {
     display: none;
   }
   :where(ui-media) .ui-media-tools .ui-media-cc,
@@ -12386,36 +12389,6 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
   }
   :where(ui-card, ui-reveal):where([media*="asr("]):has(ui-media:popover-open) :is(cq-box, summary)::before {
     min-block-size: 0;
-  }
-  :where(ui-card, ui-reveal):has(ui-media[media*="asr("]:popover-open) :is(cq-box, summary)::before {
-    min-block-size: 0;
-  }
-  :where(ui-card, ui-reveal):has(ui-media[media~="asr(1/1)"]:popover-open) :is(cq-box, summary)::before {
-    --ui-lightbox-placeholder-ar: 1 / 1;
-  }
-  :where(ui-card, ui-reveal):has(ui-media[media~="asr(1/2)"]:popover-open) :is(cq-box, summary)::before {
-    --ui-lightbox-placeholder-ar: 1 / 2;
-  }
-  :where(ui-card, ui-reveal):has(ui-media[media~="asr(6/7)"]:popover-open) :is(cq-box, summary)::before {
-    --ui-lightbox-placeholder-ar: 6 / 7;
-  }
-  :where(ui-card, ui-reveal):has(ui-media[media~="asr(3/4)"]:popover-open) :is(cq-box, summary)::before {
-    --ui-lightbox-placeholder-ar: 3 / 4;
-  }
-  :where(ui-card, ui-reveal):has(ui-media[media~="asr(4/3)"]:popover-open) :is(cq-box, summary)::before {
-    --ui-lightbox-placeholder-ar: 4 / 3;
-  }
-  :where(ui-card, ui-reveal):has(ui-media[media~="asr(3/2)"]:popover-open) :is(cq-box, summary)::before {
-    --ui-lightbox-placeholder-ar: 3 / 2;
-  }
-  :where(ui-card, ui-reveal):has(ui-media[media~="asr(2/3)"]:popover-open) :is(cq-box, summary)::before {
-    --ui-lightbox-placeholder-ar: 2 / 3;
-  }
-  :where(ui-card, ui-reveal):has(ui-media[media~="asr(16/9)"]:popover-open) :is(cq-box, summary)::before {
-    --ui-lightbox-placeholder-ar: 16 / 9;
-  }
-  :where(ui-card, ui-reveal):has(ui-media[media~="asr(21/9)"]:popover-open) :is(cq-box, summary)::before {
-    --ui-lightbox-placeholder-ar: 21 / 9;
   }
   ui-media[popover][data-ui-carousel-polyfill] {
     scroll-marker-group: none;
@@ -13260,16 +13233,16 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       font-style: normal;
       line-height: var(--ui-content-address-line-height, var(--line-height-normal, 1.5));
     }
-    & [data-part=hours] {
-      column-gap: var(--ui-content-hours-column-gap, var(--spacing-md));
+    & :is([data-part=specs], [data-part=hours]) {
+      column-gap: var(--ui-content-specs-column-gap, var(--ui-content-hours-column-gap, var(--spacing-md)));
       display: grid;
-      font-size: var(--ui-content-hours-fs, var(--ui-content-address-fs, calc(var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))) * 0.9)));
+      font-size: var(--ui-content-specs-fs, var(--ui-content-hours-fs, var(--ui-content-address-fs, calc(var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))) * 0.9))));
       font-variant-numeric: tabular-nums;
       grid-template-columns: auto 1fr;
       margin: 0;
-      row-gap: var(--ui-content-hours-row-gap, 0);
+      row-gap: var(--ui-content-specs-row-gap, var(--ui-content-hours-row-gap, 0));
       & dt {
-        color: var(--ui-content-hours-day-ink, var(--ui-content-muted));
+        color: var(--ui-content-specs-label-ink, var(--ui-content-hours-day-ink, var(--ui-content-muted)));
       }
       & dd {
         margin: 0;
@@ -13406,7 +13379,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     & ui-media :is(ui-chip, ui-sticker, ui-beacon):not(:has(a, button)) {
       pointer-events: none;
     }
-    &:is([media*=nav], :has(ui-media[media*=nav])) ui-content:not(:where(ui-media *)) {
+    &[media*=nav] ui-content:not(:where(ui-media *)) {
       position: relative;
     }
     :where(ui-media:where([media*=nav], :is(ui-card, ui-reveal)[media*=nav] *)) > & [data-part~=cover]::after {

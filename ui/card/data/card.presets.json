@@ -150,6 +150,13 @@
       "variant": "col",
       "media": "asr(1/1)"
     },
+    "stack-portrait": {
+      "name": "Stack Portrait Preset",
+      "description": "Column card with a 2:3 portrait media frame — book jackets, cover art, standing portraits",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(2/3)"
+    },
     "panel-subtle": {
       "name": "Panel Subtle Preset",
       "description": "Content-only, off-white surface, large type — quotes",

@@ -5,8 +5,8 @@ preview loop** for a `provider="vimeo"`/`provider="youtube"` frame — and how t
 clips for Vimeo, YouTube, and plain native videos. The API helpers below are **reference
 sketches** to implement server-side — there is no shipped `vimeo.js`.
 
-Demos: [video.html](../demo/media.video.html). Loop clips live in `vimeo-data/previews/` and
-`youtube-data/previews/` (both **gitignored** — signed/derived snapshots).
+Demos: [video.html](../demo/media.video.html). Loop clips live in `data/vimeo-data/previews/`
+and `data/youtube-data/previews/` (both **gitignored** — signed/derived snapshots).
 
 > **Security.** Everything that hits the API needs a Vimeo **access token** — a
 > **server-side secret** (e.g. `VIMEO_ACCESS_TOKEN` in `.env`). Never expose it to the
@@ -253,7 +253,7 @@ don't need a chrome-less native player — nothing to sign, captions included.
 
 - **Expiry:** progressive/HLS/VTT links die (~24h). Fetch per request; never hardcode in
   committed HTML (any Vimeo `src`/`poster`/VTT in the demos is a snapshot and will 404 later —
-  regenerate with `fetchVimeo`). The committed `vimeo-data/` clips + VTTs are gitignored snapshots.
+  regenerate with `fetchVimeo`). The local `data/vimeo-data/` clips + VTTs are gitignored snapshots.
 - **Ownership:** `files`/`play` are populated only for videos on the token's account. Public
   videos you don't own give you posters (and the iframe `provider="vimeo" video="ID"` path),
   but not progressive files.

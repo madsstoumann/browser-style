@@ -70,7 +70,9 @@
 			&[command="--cc"]         { --_glyph: var(--ui-media-tool-cc); }
 		}
 	}
-	:where(ui-media:not(:has(:is(ui-play[open], ui-play button[aria-pressed="true"])))) .ui-media-tools button[command="--pip"] { display: none; }
+	/* ui-play[open] only — no [aria-pressed] twin in the :has() arg: shared.js toggles
+	   both in one statement, and the attribute needle taxed every play/pause (style-performance.md §8.1) */
+	:where(ui-media:not(:has(ui-play[open]))) .ui-media-tools button[command="--pip"] { display: none; }
 
 	/* CC language switcher — customizable <select> styled as a disc */
 	:where(ui-media) .ui-media-tools .ui-media-cc,

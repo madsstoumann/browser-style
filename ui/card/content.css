@@ -636,16 +636,18 @@
 			line-height: var(--ui-content-address-line-height, var(--line-height-normal, 1.5));
 		}
 
-		/* hours — Body group: two-column day/time table (opening hours per day) */
-		& [data-part="hours"] {
-			column-gap: var(--ui-content-hours-column-gap, var(--spacing-md));
+		/* specs — Body group: two-column label/value <dl>. `hours` is the SAME shape under a
+		   semantic name — ui/map reads [data-part="hours"] to find opening hours, so the two
+		   names are not interchangeable in markup. Docs: docs/card.md § data-part vocabulary */
+		& :is([data-part="specs"], [data-part="hours"]) {
+			column-gap: var(--ui-content-specs-column-gap, var(--ui-content-hours-column-gap, var(--spacing-md)));
 			display: grid;
-			font-size: var(--ui-content-hours-fs, var(--ui-content-address-fs, calc(var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))) * 0.9)));
+			font-size: var(--ui-content-specs-fs, var(--ui-content-hours-fs, var(--ui-content-address-fs, calc(var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))) * 0.9))));
 			font-variant-numeric: tabular-nums;
 			grid-template-columns: auto 1fr;
 			margin: 0;
-			row-gap: var(--ui-content-hours-row-gap, 0);
-			& dt { color: var(--ui-content-hours-day-ink, var(--ui-content-muted)); }
+			row-gap: var(--ui-content-specs-row-gap, var(--ui-content-hours-row-gap, 0));
+			& dt { color: var(--ui-content-specs-label-ink, var(--ui-content-hours-day-ink, var(--ui-content-muted))); }
 			& dd { margin: 0; }
 		}
 
@@ -816,9 +818,10 @@
 		   the cover, so the arrows work while the swipe is dead. Positioning the text
 		   column re-anchors the same ::after to it, no second rule needed.
 		   Tapping the photo stops navigating; the headline link still does.
-		   The :not() is the COLLAGE BOUNDARY — :has() matches ancestors, so a frame full of
-		   nested cards drags this rule onto their text columns too. Docs: docs/card.md § cover */
-		&:is([media*="nav"], :has(ui-media[media*="nav"])) ui-content:not(:where(ui-media *)) { position: relative; }
+		   HOST ARM ONLY — no :has(ui-media[media*="nav"]) twin: a media needle in a :has()
+		   argument taxes every media= write (style-performance.md §8.1). On a cover card,
+		   nav goes on the HOST. Docs: docs/card.md § cover */
+		&[media*="nav"] ui-content:not(:where(ui-media *)) { position: relative; }
 
 		/* A card that IS a slide keeps its swipe. Two reasons the re-anchor above cannot help
 		   here: the scroller is the PARENT frame, not this card's own media, so the selector

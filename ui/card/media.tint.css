@@ -43,7 +43,8 @@
 	@media (hover: hover) {
 		:where([media*="hov(tint)"]) ui-media::before,
 		:where(ui-media[media*="hov(tint)"])::before {
-			transition: opacity var(--_hv-dur, var(--duration-slower)) var(--_hv-ease, var(--ease-out));
+			/* own easing — the engine's --_hv-ease is ease-out, which front-loads an opacity fade */
+			transition: opacity var(--_hv-dur, var(--duration-slower)) var(--_hv-tint-ease, var(--ease-in-out));
 		}
 		:where([media*="hov(tint)"]:is(:hover, :focus-within)) ui-media::before,
 		:where(ui-media[media*="hov(tint)"]:is(:hover, :focus-within))::before { opacity: 0; }

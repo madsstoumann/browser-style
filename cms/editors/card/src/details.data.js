@@ -114,6 +114,10 @@ export const SCHEMA_TYPE_GROUPS = [
 				"label": "Book"
 			},
 			{
+				"value": "bookseries",
+				"label": "Book series (BookSeries)"
+			},
+			{
 				"value": "comicseries",
 				"label": "Comic series (ComicSeries)"
 			},
@@ -1983,6 +1987,50 @@ export const DETAILS_SCHEMAS = {
 			"type": "string",
 			"control": "text"
 		},
+		"gamePlatform": {
+			"type": "array",
+			"items": {
+				"type": "string",
+				"control": "text"
+			},
+			"note": "VideoGame only",
+			"control": "repeater"
+		},
+		"playMode": {
+			"type": "array",
+			"items": {
+				"type": "select",
+				"lookup": "GAME_PLAY_MODES",
+				"control": "select"
+			},
+			"note": "VideoGame only — off-list values dropped",
+			"control": "repeater"
+		},
+		"gameEdition": {
+			"type": "string",
+			"note": "VideoGame only",
+			"control": "text"
+		},
+		"contentRating": {
+			"type": "string",
+			"note": "VideoGame only, e.g. PEGI 12",
+			"control": "text"
+		},
+		"numberOfPlayers": {
+			"type": "object",
+			"note": "VideoGame only → QuantitativeValue",
+			"fields": {
+				"min": {
+					"type": "number",
+					"control": "number"
+				},
+				"max": {
+					"type": "number",
+					"control": "number"
+				}
+			},
+			"control": "fieldset"
+		},
 		"systemRequirements": {
 			"type": "object",
 			"also": [
@@ -2465,6 +2513,85 @@ export const DETAILS_SCHEMAS = {
 					"control": "text"
 				}
 			}
+		}
+	},
+	"bookseries": {
+		"startDate": {
+			"type": "date",
+			"note": "first volume — the CreativeWorkSeries property",
+			"control": "date"
+		},
+		"endDate": {
+			"type": "date",
+			"note": "last volume; omit for an open-ended series",
+			"control": "date"
+		},
+		"bookCount": {
+			"type": "number",
+			"note": "prose only — no count property on the type",
+			"control": "number"
+		},
+		"publisher": {
+			"type": "string",
+			"control": "text"
+		},
+		"rating": {
+			"type": "object",
+			"control": "fieldset",
+			"fields": {
+				"value": {
+					"type": "number",
+					"label": "Rating",
+					"control": "number"
+				},
+				"max": {
+					"type": "number",
+					"note": "default 5",
+					"control": "number"
+				},
+				"count": {
+					"type": "number",
+					"control": "number"
+				}
+			}
+		},
+		"ordered": {
+			"type": "boolean",
+			"note": "default TRUE — volumes ascend",
+			"control": "toggle"
+		},
+		"books": {
+			"type": "array",
+			"items": {
+				"fields": {
+					"position": {
+						"type": "number",
+						"control": "number"
+					},
+					"name": {
+						"type": "string",
+						"control": "text"
+					},
+					"datePublished": {
+						"type": "date",
+						"note": "the visible year is derived from it",
+						"control": "date"
+					},
+					"isbn": {
+						"type": "string",
+						"label": "ISBN",
+						"note": "machine-only — no visible digits",
+						"control": "text"
+					},
+					"url": {
+						"type": "url",
+						"note": "renders the row as a crawlable itemprop=\"url\" anchor",
+						"control": "url"
+					}
+				}
+			},
+			"note": "one hasPart → Book scope per row",
+			"control": "repeater"
 		}
 	},
 	"dataset": {
@@ -4980,6 +5107,20 @@ export const LOOKUPS = {
 			"label": "Video game"
 		}
 	],
+	"GAME_PLAY_MODES": [
+		{
+			"value": "SinglePlayer",
+			"label": "Single player"
+		},
+		{
+			"value": "MultiPlayer",
+			"label": "Multi player"
+		},
+		{
+			"value": "CoOp",
+			"label": "Co op"
+		}
+	],
 	"SUBTYPES.organization": [
 		{
 			"value": "NGO",
@@ -5479,6 +5620,7 @@ export const TYPE_FLAGS = {
 		"podcast",
 		"movie",
 		"book",
+		"bookseries",
 		"dataset",
 		"claim",
 		"quiz",

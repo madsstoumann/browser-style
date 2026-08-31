@@ -4,7 +4,7 @@
   "model": "card",
   "meta": {
     "createdAt": "2026-07-04T12:00:00Z",
-    "updatedAt": "2026-07-05T09:00:00Z",
+    "updatedAt": "2026-08-29T12:00:00Z",
     "locale": "en-US",
     "status": "published",
     "folder": "Cards/Software"
@@ -18,6 +18,7 @@
     "flipside": {
       "$ref": "card/software-flipside-1"
     },
+    "cover": "games/pixel-raiders.html",
     "eyebrow": "Adventure game",
     "headline": "Pixel Raiders",
     "summary": "Co-op dungeon crawling for up to four raiders — new Sky Fortress season, cross-play everywhere.",
@@ -39,6 +40,7 @@
       }
     ],
     "details": {
+      "subtype": "VideoGame",
       "version": "2.1",
       "applicationCategory": "GameApplication",
       "operatingSystem": [
@@ -46,6 +48,23 @@
         "Windows",
         "Switch"
       ],
+      "gamePlatform": [
+        "PlayStation 5",
+        "Xbox Series X|S",
+        "Nintendo Switch",
+        "PC"
+      ],
+      "playMode": [
+        "SinglePlayer",
+        "CoOp",
+        "MultiPlayer"
+      ],
+      "numberOfPlayers": {
+        "min": 1,
+        "max": 4
+      },
+      "gameEdition": "Sky Fortress Edition",
+      "contentRating": "PEGI 12",
       "fileSize": "2.4 GB",
       "developer": {
         "name": "Bitburrow Studio",

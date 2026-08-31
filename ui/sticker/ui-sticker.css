@@ -244,9 +244,10 @@
 		/* speech bubble — media aliases spl/spr (flat, no nested parens in media=) */
 		&:is([variant~="speech(l)"], [variant~="speech(r)"]),
 		:where([media*="sticker(spl)"], [media*="sticker(spr)"]) & {
-			--ui-sticker-fs: 30cqi;
+			--ui-sticker-fs: 36cqi;
 			--ui-sticker-p: 0.6em 0.7em;
 			aspect-ratio: 5 / 4;
+			block-size: auto; /* the base's explicit block-size would kill the 5/4 aspect */
 			border-radius: var(--ui-sticker-radius, var(--radius-lg, 0.75em));
 			min-block-size: auto;
 			position: relative;

@@ -26,6 +26,26 @@ export default {
 		3750,
 		2500
 	],
+	"/assets/images/avatar1.png": [
+		200,
+		200
+	],
+	"/assets/images/avatar2.png": [
+		200,
+		200
+	],
+	"/assets/images/avatar3.png": [
+		200,
+		200
+	],
+	"/assets/images/avatar4.png": [
+		200,
+		200
+	],
+	"/assets/images/avatar5.png": [
+		200,
+		200
+	],
 	"/assets/images/band_alternative.png": [
 		941,
 		1672
@@ -241,6 +261,14 @@ export default {
 	"/assets/images/mstanley.png": [
 		1050,
 		1498
+	],
+	"/assets/images/nordic-pantry-book.png": [
+		1122,
+		1402
+	],
+	"/assets/images/nordic-table-series.png": [
+		1536,
+		1024
 	],
 	"/assets/images/podcast.png": [
 		1264,

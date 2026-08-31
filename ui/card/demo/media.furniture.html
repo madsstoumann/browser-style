@@ -12,7 +12,7 @@
 	<meta name="referrer" content="no-referrer">
 	<!-- preconnect: CDN handshake parallel to the CSS download. Docs: docs/performance.md -->
 	<link rel="preconnect" href="https://v4.browser.style">
-	<link rel="stylesheet" href="/dist/demo.890c384c.min.css">
+	<link rel="stylesheet" href="/dist/demo.d7ea0927.min.css">
 	<!-- Package entry points — play/save pull in <ui-icon> themselves. -->
 	<style>
 		code { font-size: 0.9em; }
@@ -310,14 +310,6 @@
 		</ui-card>
 	</lay-out>
 
-	<script type="module">
-		// Invoker toggle glue for the save furniture (command does not bubble).
-		document.addEventListener('command', (e) => {
-			if (e.command !== '--save') return;
-			const btn = e.source;
-			btn.setAttribute('aria-pressed', btn.getAttribute('aria-pressed') !== 'true');
-		}, true);
-	</script>
 	</section>
 
 	<section>
@@ -325,34 +317,34 @@
 	     Sticker — <ui-sticker>
 	     ============================================================ -->
 	<h2>Sticker — <code>&lt;ui-sticker&gt;</code></h2>
-	<p>A disc, or a starburst with <code>variant="sh:burst"</code> (good for discounts). Position + hue via <code>sticker(&lt;pos&gt;)</code> / <code>sticker(&lt;hue&gt;)</code>. A card can address one chip and one sticker together.</p>
+	<p>A disc, or a starburst with <code>variant="sh:burst"</code> (good for discounts). Position + hue via <code>sticker(&lt;pos&gt;)</code> / <code>sticker(&lt;hue&gt;)</code>. A card can address one chip and one sticker together. The default lead ratio suits short <code>&lt;strong&gt;</code> words (<code>40%</code>, <code>NEW</code>); a 4+ letter lead overflows a disc, so tune it with the standalone <code>font-lead="md"</code> size attribute (see <a href="../../sticker/">ui/sticker</a> § typography).</p>
 	<p>Full component: <a href="../../sticker/">ui/sticker</a>.</p>
 	<lay-out md="columns(2)" lg="columns(3)">
-		<ui-card variant="col" media="asr(4/3) sticker(ts) sticker(red) chip(be) chip(green)">
+		<ui-card variant="col" media="asr(4/3) sticker(ts) sticker(red) sticker(lg) chip(be) chip(green) chip(sm)">
 			<cq-box>
 				<ui-media>
 					<img src="/assets/images/aurasoundpro.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/aurasoundpro.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/aurasoundpro.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/aurasoundpro.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/aurasoundpro.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/aurasoundpro.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
-					<ui-sticker>Featured</ui-sticker>
+					<ui-sticker font-lead="md"><small>TOP</small><strong>PICK</strong></ui-sticker>
 					<ui-chip>New</ui-chip>
 				</ui-media>
 				<ui-content><small data-part="eyebrow">Audio</small><h2 data-part="headline">Sticker + chip</h2></ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card variant="col" media="asr(4/3) sticker(te) sticker(red)">
+		<ui-card variant="col" media="asr(4/3) sticker(te) sticker(red) sticker(xl)">
 			<cq-box>
 				<ui-media>
 					<img src="/assets/images/ergochair.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/ergochair.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/ergochair.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/ergochair.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/ergochair.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/ergochair.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
-					<ui-sticker variant="sh:burst">-28%</ui-sticker>
+					<ui-sticker variant="sh:burst"><small>SAVE</small><strong>28%</strong></ui-sticker>
 				</ui-media>
 				<ui-content><small data-part="eyebrow">Furniture</small><h2 data-part="headline">Starburst sticker</h2></ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card variant="col" media="asr(4/3) chip(bs) chip(accent) sticker(te) sticker(orange)">
+		<ui-card variant="col" media="asr(4/3) chip(bs) chip(accent) chip(sm) sticker(te) sticker(orange) sticker(xl)">
 			<cq-box>
 				<ui-media>
 					<img src="/assets/images/brewandbean.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/brewandbean.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/brewandbean.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/brewandbean.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/brewandbean.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/brewandbean.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
 					<ui-chip>Editor's pick</ui-chip>
-					<ui-sticker>Sale</ui-sticker>
+					<ui-sticker font-lead="md"><small>SPRING</small><strong>SALE</strong></ui-sticker>
 				</ui-media>
 				<ui-content><small data-part="eyebrow">Café</small><h2 data-part="headline">Accent chip + orange sticker</h2></ui-content>
 			</cq-box>
@@ -366,9 +358,9 @@
 		<code>&lt;ui-sticker&gt;</code> needs no <code>variant</code> attribute. Combine with
 		<code>sticker(&lt;hue&gt;)</code> and <code>sticker(&lt;pos&gt;)</code>.</p>
 	<lay-out md="columns(2)" lg="columns(3)">
-		<ui-card variant="col" media="asr(4/3) sticker(ts) sticker(sh:burst) sticker(green)"><cq-box><ui-media><img src="/assets/images/aurasoundpro.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/aurasoundpro.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/aurasoundpro.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/aurasoundpro.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/aurasoundpro.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/aurasoundpro.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-sticker><small>SAVE</small><strong>20%</strong></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Audio</small><h2 data-part="headline">sticker(sh:burst)</h2></ui-content></cq-box></ui-card>
-		<ui-card variant="col" media="asr(4/3) sticker(ts) sticker(sh:heart) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/ergochair.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/ergochair.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/ergochair.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/ergochair.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/ergochair.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-sticker><small>XMAS</small><strong>$50</strong></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Furniture</small><h2 data-part="headline">sticker(sh:heart)</h2></ui-content></cq-box></ui-card>
-		<ui-card variant="col" media="asr(4/3) sticker(ts) sticker(spl) sticker(blue)"><cq-box><ui-media><img src="/assets/images/brewandbean.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/brewandbean.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/brewandbean.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/brewandbean.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/brewandbean.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/brewandbean.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-sticker><small>NEW</small><strong>SALE</strong></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Café</small><h2 data-part="headline">sticker(spl)</h2></ui-content></cq-box></ui-card>
+		<ui-card variant="col" media="asr(4/3) sticker(ts) sticker(sh:burst) sticker(green) sticker(xl)"><cq-box><ui-media><img src="/assets/images/aurasoundpro.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/aurasoundpro.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/aurasoundpro.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/aurasoundpro.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/aurasoundpro.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/aurasoundpro.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-sticker><small>SAVE</small><strong>20%</strong></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Audio</small><h2 data-part="headline">sticker(sh:burst)</h2></ui-content></cq-box></ui-card>
+		<ui-card variant="col" media="asr(4/3) sticker(ts) sticker(sh:heart) sticker(red) sticker(xl)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/ergochair.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/ergochair.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/ergochair.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/ergochair.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/ergochair.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-sticker><small>XMAS</small><strong>$50</strong></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Furniture</small><h2 data-part="headline">sticker(sh:heart)</h2></ui-content></cq-box></ui-card>
+		<ui-card variant="col" media="asr(4/3) sticker(ts) sticker(spl) sticker(blue) sticker(xl)"><cq-box><ui-media><img src="/assets/images/brewandbean.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/brewandbean.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/brewandbean.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/brewandbean.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/brewandbean.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/brewandbean.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-sticker><small>NEW</small><strong>SALE</strong></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Café</small><h2 data-part="headline">sticker(spl)</h2></ui-content></cq-box></ui-card>
 	</lay-out>
 
 	<p><code>sticker(fit)</code> uses native <code>text-fit</code> to grow every line to the box width — no fixed

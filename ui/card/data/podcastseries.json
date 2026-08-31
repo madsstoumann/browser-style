@@ -34,7 +34,7 @@
       "host": {
         "name": "Ida Månsson",
         "role": "Host",
-        "avatar": "https://assets.stoumann.dk/img/avatar4.webp"
+        "avatar": "/assets/images/avatar4.png"
       },
       "note": "New episodes every other Thursday.",
       "episodes": [

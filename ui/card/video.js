@@ -136,6 +136,7 @@ export function initEmbeds(frames) {
 			if (!id) return;
 			const iframe = document.createElement('iframe');
 			iframe.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+			iframe.referrerPolicy = 'strict-origin-when-cross-origin'; // page-level no-referrer breaks YT embeds (error 153) — docs/performance.md
 			iframe.setAttribute('allowfullscreen', '');
 			iframe.title = media.getAttribute('data-title') || (provider === 'vimeo' ? 'Vimeo video player' : 'YouTube video player');
 			iframe.src = provider === 'vimeo'

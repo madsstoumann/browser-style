@@ -8,11 +8,11 @@
 	<meta name="color-scheme" content="light dark">
 	<meta name="description" content="A museum landing page built from ui-media ui-card: native full-clip split cards (hero + Autumn) with our play/PiP/fullscreen tools, and provider=vimeo iframe embeds that open the real Vimeo player.">
 	<link rel="alternate" type="text/markdown" href="/ui/card/docs/video.md">
-	<!-- no-referrer: the zone hotlink-protects CDN srcset. Docs: docs/performance.md -->
+	<!-- no-referrer: the zone hotlink-protects CDN srcset; embeds override per-element (YT error 153). Docs: docs/performance.md -->
 	<meta name="referrer" content="no-referrer">
 	<!-- preconnect: CDN handshake parallel to the CSS download. Docs: docs/performance.md -->
 	<link rel="preconnect" href="https://v4.browser.style">
-	<link rel="stylesheet" href="/dist/demo.890c384c.min.css">
+	<link rel="stylesheet" href="/dist/demo.d7ea0927.min.css">
 	<link rel="stylesheet" href="../media.shapes.css">
 	<link rel="stylesheet" href="../media.tint.css">
 	<style>
@@ -52,7 +52,7 @@
 			<ui-chip>native video</ui-chip>
 		</ui-media>
 		<ui-media media="asr(16/9) rds(lg) vid(fls) vid(pip)">
-			<video src="https://assets.stoumann.dk/video/river.mp4" poster="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/river.png" preload="none" muted loop playsinline></video>
+			<video src="/assets/video/river.mp4" poster="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/river.png" preload="none" muted loop playsinline></video>
 			<ui-play><button type="button" aria-label="Play/pause"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 			<ui-chip>native custom</ui-chip>
 		</ui-media>
@@ -62,7 +62,7 @@
 			<ui-chip>autoplay</ui-chip>
 		</ui-media>
 		<ui-media media="asr(16/9) rds(lg) vid(fls) vid(pip)">
-			<video src="https://assets.stoumann.dk/video/river.mp4" poster="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/hubble.png" preload="none" muted loop playsinline></video>
+			<video src="/assets/video/river.mp4" poster="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/hubble.png" preload="none" muted loop playsinline></video>
 			<ui-play><button type="button" aria-label="Play/pause"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 			<ui-chip>custom poster</ui-chip>
 		</ui-media>
@@ -77,7 +77,7 @@
 			<cq-box>
 				<ui-media provider="youtube" video="VTCIStB6y8s">
 					<img data-preview src="https://i.ytimg.com/vi/VTCIStB6y8s/maxresdefault.jpg" alt="" loading="lazy">
-					<iframe loading="lazy" src="https://www.youtube-nocookie.com/embed/VTCIStB6y8s" allow="accelerometer; autoplay; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture; web-share" title="YouTube player"></iframe>
+					<iframe loading="lazy" referrerpolicy="strict-origin-when-cross-origin" src="https://www.youtube-nocookie.com/embed/VTCIStB6y8s" allow="accelerometer; autoplay; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture; web-share" title="YouTube player"></iframe>
 					<ui-play><button type="button" aria-label="Play video"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 					<ui-chip>youtube</ui-chip>
 				</ui-media>
@@ -88,7 +88,7 @@
 			<cq-box>
 				<ui-media provider="youtube" video="5b4YcLB4DVI">
 					<img data-preview src="https://i.ytimg.com/vi/5b4YcLB4DVI/maxresdefault.jpg" alt="" loading="lazy">
-					<iframe loading="lazy" src="https://www.youtube-nocookie.com/embed/5b4YcLB4DVI" allow="accelerometer; autoplay; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture; web-share" title="YouTube player"></iframe>
+					<iframe loading="lazy" referrerpolicy="strict-origin-when-cross-origin" src="https://www.youtube-nocookie.com/embed/5b4YcLB4DVI" allow="accelerometer; autoplay; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture; web-share" title="YouTube player"></iframe>
 					<ui-play><button type="button" aria-label="Play video"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 					<ui-chip>youtube</ui-chip>
 				</ui-media>
@@ -116,7 +116,7 @@
 				.yt i { display: block; inline-size: calc(4em / 3); aspect-ratio: 1; background: #fff; clip-path: polygon(16% 0%, 15% 100%, 100% 50%); }
 				a:hover .yt, a:focus .yt { background: #d10029; }
 			</style>
-			<a href='https://www.youtube-nocookie.com/embed/VTCIStB6y8s?autoplay=1&amp;mute=1&amp;playsinline=1' aria-label='Play video'>
+			<a href='https://www.youtube-nocookie.com/embed/VTCIStB6y8s?autoplay=1&amp;mute=1&amp;playsinline=1' referrerpolicy='strict-origin-when-cross-origin' aria-label='Play video'>
 				<span class='yt'><i></i></span>
 			</a>
 		">
@@ -144,7 +144,7 @@
 					.vm i { display: block; inline-size: calc(4em / 3); aspect-ratio: 1; background: #fff; clip-path: polygon(16% 0%, 15% 100%, 100% 50%); }
 					a:hover .vm, a:focus .vm { background: #138fb8; }
 				</style>
-				<a href='https://player.vimeo.com/video/845207657?autoplay=1&amp;muted=1&amp;playsinline=1' aria-label='Play video'>
+				<a href='https://player.vimeo.com/video/845207657?autoplay=1&amp;muted=1&amp;playsinline=1' referrerpolicy='strict-origin-when-cross-origin' aria-label='Play video'>
 					<span class='vm'><i></i></span>
 				</a>
 			">
@@ -161,11 +161,11 @@
 		<ui-card variant="col" media="asr(16/9) play(lg) chip(red)" content="pad(md) md:pad(lg)">
 			<cq-box>
 				<ui-media provider="youtube" video="VTCIStB6y8s">
-					<video data-preview poster="youtube-data/previews/VTCIStB6y8s.jpg" autoplay muted loop playsinline>
-						<source src="youtube-data/previews/VTCIStB6y8s.webm" type="video/webm">
-						<source src="youtube-data/previews/VTCIStB6y8s.mp4" type="video/mp4">
+					<video data-preview poster="../data/youtube-data/previews/VTCIStB6y8s.jpg" autoplay muted loop playsinline>
+						<source src="../data/youtube-data/previews/VTCIStB6y8s.webm" type="video/webm">
+						<source src="../data/youtube-data/previews/VTCIStB6y8s.mp4" type="video/mp4">
 					</video>
-					<iframe loading="lazy" src="https://www.youtube-nocookie.com/embed/VTCIStB6y8s" allow="accelerometer; autoplay; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture; web-share" title="YouTube player"></iframe>
+					<iframe loading="lazy" referrerpolicy="strict-origin-when-cross-origin" src="https://www.youtube-nocookie.com/embed/VTCIStB6y8s" allow="accelerometer; autoplay; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture; web-share" title="YouTube player"></iframe>
 					<ui-play><button type="button" aria-label="Play video"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 					<ui-chip>youtube</ui-chip>
 				</ui-media>
@@ -175,11 +175,11 @@
 		<ui-card variant="col" media="asr(16/9) play(lg) chip(red)" content="pad(md) md:pad(lg)">
 			<cq-box>
 				<ui-media provider="youtube" video="beYbnNT_02U">
-					<video data-preview poster="youtube-data/previews/beYbnNT_02U.jpg" autoplay muted loop playsinline>
-						<source src="youtube-data/previews/beYbnNT_02U.webm" type="video/webm">
-						<source src="youtube-data/previews/beYbnNT_02U.mp4" type="video/mp4">
+					<video data-preview poster="../data/youtube-data/previews/beYbnNT_02U.jpg" autoplay muted loop playsinline>
+						<source src="../data/youtube-data/previews/beYbnNT_02U.webm" type="video/webm">
+						<source src="../data/youtube-data/previews/beYbnNT_02U.mp4" type="video/mp4">
 					</video>
-					<iframe loading="lazy" src="https://www.youtube-nocookie.com/embed/beYbnNT_02U" allow="accelerometer; autoplay; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture; web-share" title="YouTube player"></iframe>
+					<iframe loading="lazy" referrerpolicy="strict-origin-when-cross-origin" src="https://www.youtube-nocookie.com/embed/beYbnNT_02U" allow="accelerometer; autoplay; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture; web-share" title="YouTube player"></iframe>
 					<ui-play><button type="button" aria-label="Play video"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 					<ui-chip>youtube</ui-chip>
 				</ui-media>
@@ -190,12 +190,12 @@
 
 	<ui-card class="split" variant="col lg:row spl(1/1)" media="asr(16/9) vid(pip) vid(fls) play(lg)" content="pad(md) lg:pad(lg)">
 		<cq-box>
-			<ui-media provider="vimeo" src="vimeo-data/previews/696468083.full.mp4" loop muted>
-				<video data-preview poster="vimeo-data/previews/696468083.jpg" autoplay muted loop playsinline>
-					<source src="vimeo-data/previews/696468083.webm" type="video/webm">
-					<source src="vimeo-data/previews/696468083.mp4" type="video/mp4">
+			<ui-media provider="vimeo" src="../data/vimeo-data/previews/696468083.full.mp4" loop muted>
+				<video data-preview poster="../data/vimeo-data/previews/696468083.jpg" autoplay muted loop playsinline>
+					<source src="../data/vimeo-data/previews/696468083.webm" type="video/webm">
+					<source src="../data/vimeo-data/previews/696468083.mp4" type="video/mp4">
 				</video>
-				<video id="film-696468083" data-track="featured-film" preload="none" src="vimeo-data/previews/696468083.full.mp4" poster="vimeo-data/previews/696468083.jpg" playsinline></video>
+				<video id="film-696468083" data-track="featured-film" preload="none" src="../data/vimeo-data/previews/696468083.full.mp4" poster="../data/vimeo-data/previews/696468083.jpg" playsinline></video>
 				<ui-play><button type="button" command="--play-pause" commandfor="film-696468083" aria-label="Play film"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 				<ui-chip>vimeo native · track</ui-chip>
 			</ui-media>
@@ -210,13 +210,13 @@
 
 	<ui-card class="split" variant="col lg:row-r spl(1/1)" media="asr(16/9) vid(cc) vid(pip) vid(fls) play(lg)" content="pad(md) lg:pad(lg)">
 		<cq-box>
-			<ui-media provider="vimeo" src="vimeo-data/previews/1012727854.full.mp4" loop muted>
-				<video data-preview poster="vimeo-data/previews/1012727854.jpg" autoplay muted loop playsinline>
-					<source src="vimeo-data/previews/1012727854.webm" type="video/webm">
-					<source src="vimeo-data/previews/1012727854.mp4" type="video/mp4">
+			<ui-media provider="vimeo" src="../data/vimeo-data/previews/1012727854.full.mp4" loop muted>
+				<video data-preview poster="../data/vimeo-data/previews/1012727854.jpg" autoplay muted loop playsinline>
+					<source src="../data/vimeo-data/previews/1012727854.webm" type="video/webm">
+					<source src="../data/vimeo-data/previews/1012727854.mp4" type="video/mp4">
 				</video>
-				<video id="film-1012727854" data-track="autumn" preload="none" src="vimeo-data/previews/1012727854.full.mp4" poster="vimeo-data/previews/1012727854.jpg" playsinline>
-					<track kind="subtitles" srclang="da" label="Dansk" src="vimeo-data/subtitles/1012727854.da.vtt" default>
+				<video id="film-1012727854" data-track="autumn" preload="none" src="../data/vimeo-data/previews/1012727854.full.mp4" poster="../data/vimeo-data/previews/1012727854.jpg" playsinline>
+					<track kind="subtitles" srclang="da" label="Dansk" src="../data/vimeo-data/subtitles/1012727854.da.vtt" default>
 				</video>
 				<ui-play><button type="button" command="--play-pause" commandfor="film-1012727854" aria-label="Play film"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 					<ui-chip>vimeo native · track</ui-chip>
@@ -248,11 +248,11 @@
 		<ui-card variant="col" media="asr(16/9) chip(ts) chip(green) play(lg)" content="pad(md) md:pad(lg)">
 			<cq-box>
 				<ui-media provider="vimeo" video="845207657">
-					<video data-preview poster="vimeo-data/previews/845207657.jpg" autoplay muted loop playsinline>
-						<source src="vimeo-data/previews/845207657.webm" type="video/webm">
-						<source src="vimeo-data/previews/845207657.mp4" type="video/mp4">
+					<video data-preview poster="../data/vimeo-data/previews/845207657.jpg" autoplay muted loop playsinline>
+						<source src="../data/vimeo-data/previews/845207657.webm" type="video/webm">
+						<source src="../data/vimeo-data/previews/845207657.mp4" type="video/mp4">
 					</video>
-					<iframe loading="lazy" src="https://player.vimeo.com/video/845207657" allow="fullscreen; picture-in-picture; encrypted-media" title="Vimeo player"></iframe>
+					<iframe loading="lazy" referrerpolicy="strict-origin-when-cross-origin" src="https://player.vimeo.com/video/845207657" allow="fullscreen; picture-in-picture; encrypted-media" title="Vimeo player"></iframe>
 					<ui-play><button type="button" aria-label="Play film"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 					<ui-chip>vimeo iframe</ui-chip>
 				</ui-media>
@@ -262,11 +262,11 @@
 		<ui-card variant="col" media="asr(16/9) sticker(te) play(lg)" content="pad(md) md:pad(lg)">
 			<cq-box>
 				<ui-media provider="vimeo" video="696120095">
-					<video data-preview poster="vimeo-data/previews/696120095.jpg" autoplay muted loop playsinline>
-						<source src="vimeo-data/previews/696120095.webm" type="video/webm">
-						<source src="vimeo-data/previews/696120095.mp4" type="video/mp4">
+					<video data-preview poster="../data/vimeo-data/previews/696120095.jpg" autoplay muted loop playsinline>
+						<source src="../data/vimeo-data/previews/696120095.webm" type="video/webm">
+						<source src="../data/vimeo-data/previews/696120095.mp4" type="video/mp4">
 					</video>
-					<iframe loading="lazy" src="https://player.vimeo.com/video/696120095" allow="fullscreen; picture-in-picture; encrypted-media" title="Vimeo player"></iframe>
+					<iframe loading="lazy" referrerpolicy="strict-origin-when-cross-origin" src="https://player.vimeo.com/video/696120095" allow="fullscreen; picture-in-picture; encrypted-media" title="Vimeo player"></iframe>
 					<ui-play><button type="button" aria-label="Play film"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 					<ui-chip>vimeo iframe</ui-chip>
 				</ui-media>
@@ -286,7 +286,7 @@
 		<cq-box>
 			<ui-media provider="vimeo" video="695669200">
 				<img data-preview src="https://i.vimeocdn.com/video/1407823587-0ed01f093c174f759119f4e0d2a481010c9fe69ddee2b2f9c384988b829294e6-d_1920x1080?&amp;r=pad&amp;region=us" alt="" loading="lazy">
-				<iframe loading="lazy" src="https://player.vimeo.com/video/695669200" allow="fullscreen; picture-in-picture; encrypted-media" title="Vimeo player"></iframe>
+				<iframe loading="lazy" referrerpolicy="strict-origin-when-cross-origin" src="https://player.vimeo.com/video/695669200" allow="fullscreen; picture-in-picture; encrypted-media" title="Vimeo player"></iframe>
 				<ui-play><button type="button" aria-label="Play film"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 				<ui-chip>vimeo iframe</ui-chip>
 			</ui-media>
@@ -310,9 +310,9 @@
 	<ui-card class="split" variant="col lg:row spl(1/1)" media="asr(1/1) rds(md) vid(cc) vid(pip) vid(fls) play(lg)" content="pad(md) lg:pad(lg)">
 		<cq-box>
 			<ui-media provider="vimeo">
-				<video id="cc-746542514" data-track="out-of-chaos" preload="metadata" playsinline poster="vimeo-data/previews/746542514.jpg" src="vimeo-data/previews/746542514.full.mp4">
-					<track kind="subtitles" srclang="da" label="Dansk" src="vimeo-data/subtitles/746542514.da.vtt" default>
-					<track kind="captions" srclang="en" label="English" src="vimeo-data/subtitles/746542514.en-x-autogen.vtt">
+				<video id="cc-746542514" data-track="out-of-chaos" preload="metadata" playsinline poster="../data/vimeo-data/previews/746542514.jpg" src="../data/vimeo-data/previews/746542514.full.mp4">
+					<track kind="subtitles" srclang="da" label="Dansk" src="../data/vimeo-data/subtitles/746542514.da.vtt" default>
+					<track kind="captions" srclang="en" label="English" src="../data/vimeo-data/subtitles/746542514.en-x-autogen.vtt">
 				</video>
 				<ui-play><button type="button" command="--play-pause" commandfor="cc-746542514" aria-label="Play film"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 					<ui-chip>vimeo native · track</ui-chip>
@@ -346,29 +346,29 @@
 	</div>
 	<lay-out md="columns(2)" lg="columns(3)">
 		<ui-media provider="vimeo" video="746542514" media="asr(1/1) rds(md) chip(bs)">
-			<video data-preview poster="vimeo-data/previews/746542514.jpg" autoplay muted loop playsinline>
-				<source src="vimeo-data/previews/746542514.webm" type="video/webm">
-				<source src="vimeo-data/previews/746542514.mp4" type="video/mp4">
+			<video data-preview poster="../data/vimeo-data/previews/746542514.jpg" autoplay muted loop playsinline>
+				<source src="../data/vimeo-data/previews/746542514.webm" type="video/webm">
+				<source src="../data/vimeo-data/previews/746542514.mp4" type="video/mp4">
 			</video>
-			<iframe loading="lazy" src="https://player.vimeo.com/video/746542514?h=e4a87ed0c3" allow="fullscreen; picture-in-picture; encrypted-media" title="Vimeo player"></iframe>
+			<iframe loading="lazy" referrerpolicy="strict-origin-when-cross-origin" src="https://player.vimeo.com/video/746542514?h=e4a87ed0c3" allow="fullscreen; picture-in-picture; encrypted-media" title="Vimeo player"></iframe>
 			<ui-play><button type="button" aria-label="Play film"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 			<ui-chip>vimeo iframe</ui-chip>
 		</ui-media>
 		<ui-media provider="vimeo" video="794832552" media="asr(1/1) rds(md) sticker(te) sticker(accent)">
-			<video data-preview poster="vimeo-data/previews/794832552.jpg" autoplay muted loop playsinline>
-				<source src="vimeo-data/previews/794832552.webm" type="video/webm">
-				<source src="vimeo-data/previews/794832552.mp4" type="video/mp4">
+			<video data-preview poster="../data/vimeo-data/previews/794832552.jpg" autoplay muted loop playsinline>
+				<source src="../data/vimeo-data/previews/794832552.webm" type="video/webm">
+				<source src="../data/vimeo-data/previews/794832552.mp4" type="video/mp4">
 			</video>
-			<iframe loading="lazy" src="https://player.vimeo.com/video/794832552" allow="fullscreen; picture-in-picture; encrypted-media" title="Vimeo player"></iframe>
+			<iframe loading="lazy" referrerpolicy="strict-origin-when-cross-origin" src="https://player.vimeo.com/video/794832552" allow="fullscreen; picture-in-picture; encrypted-media" title="Vimeo player"></iframe>
 			<ui-play><button type="button" aria-label="Play film"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 			<ui-chip>vimeo iframe</ui-chip>
 		</ui-media>
 		<ui-media provider="vimeo" video="789027225" media="asr(1/1) rds(md) chip(bs) chip(black)">
-			<video data-preview poster="vimeo-data/previews/789027225.jpg" autoplay muted loop playsinline>
-				<source src="vimeo-data/previews/789027225.webm" type="video/webm">
-				<source src="vimeo-data/previews/789027225.mp4" type="video/mp4">
+			<video data-preview poster="../data/vimeo-data/previews/789027225.jpg" autoplay muted loop playsinline>
+				<source src="../data/vimeo-data/previews/789027225.webm" type="video/webm">
+				<source src="../data/vimeo-data/previews/789027225.mp4" type="video/mp4">
 			</video>
-			<iframe loading="lazy" src="https://player.vimeo.com/video/789027225" allow="fullscreen; picture-in-picture; encrypted-media" title="Vimeo player"></iframe>
+			<iframe loading="lazy" referrerpolicy="strict-origin-when-cross-origin" src="https://player.vimeo.com/video/789027225" allow="fullscreen; picture-in-picture; encrypted-media" title="Vimeo player"></iframe>
 			<ui-play><button type="button" aria-label="Play film"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 			<ui-chip>vimeo iframe</ui-chip>
 		</ui-media>
@@ -393,7 +393,7 @@
 			<ui-chip>hov(blur)</ui-chip>
 		</ui-media>
 		<ui-media media="asr(16/9) rds(lg) sticker(te) sticker(red) chip(bs)">
-			<video src="https://assets.stoumann.dk/video/river.mp4" poster="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/river.png" autoplay muted loop playsinline></video>
+			<video src="/assets/video/river.mp4" poster="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/river.png" autoplay muted loop playsinline></video>
 			<ui-sticker><small>NEW</small><strong>4K</strong></ui-sticker>
 			<ui-chip>sticker(red)</ui-chip>
 		</ui-media>

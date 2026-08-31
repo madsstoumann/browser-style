@@ -13,7 +13,17 @@
 
 @layer bs-component {
 	:where(ui-avatar) {
-		--ui-avatar-background: oklch(0.5 0.25 random(auto, 0, 360));
+		/* The random hue is the FALLBACK PLATE — it shows when a photo fails, and behind the
+		   initials when there is no photo at all. `random()` is CSS Values 5: Safari 26 has
+		   it, Chromium 150 does not, and both are on the baseline. It must therefore be
+		   GATED, not declared flat: a custom property accepts any token stream, so an
+		   unsupported random() is not invalid HERE — it makes the consuming `background`
+		   invalid at computed-value time (i.e. transparent) and var()'s own fallback never
+		   fires. Gated, the `var(--color-button)` below is reached and every engine gets a
+		   plate. Docs: readme.md */
+		@supports (color: oklch(0.5 0.25 random(auto, 0, 360))) {
+			--ui-avatar-background: oklch(0.5 0.25 random(auto, 0, 360));
+		}
 		aspect-ratio: 1 / 1;
 		background: var(--ui-avatar-background, var(--color-button));
 		block-size: var(--ui-avatar-size, 4em);

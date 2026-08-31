@@ -21,14 +21,14 @@
     "authors": [
       {
         "name": "Mette Holm",
-        "avatar": "https://assets.stoumann.dk/img/avatar4.webp"
+        "avatar": "/assets/images/avatar4.png"
       }
     ],
     "media": [
       {
         "mediaType": "image",
-        "src": "/assets/images/gastronomy.png",
-        "alt": "The Nordic Pantry book cover"
+        "src": "/assets/images/nordic-pantry-book.png",
+        "alt": "The Nordic Pantry standing on a wooden kitchen table among rye loaves, preserving jars, root vegetables and a bowl of salt"
       }
     ],
     "actions": [

@@ -136,6 +136,36 @@ const lintSubtypes = (errors) => {
 	}
 };
 
+/* Runtime-mutated DSL attributes must not appear inside :has() arguments — the
+   name lands in Blink's :has() invalidation set and every write to that attribute
+   then re-evaluates :has() state page-wide. Docs: /docs/style-performance.md §8.2 */
+const HAS_FORBIDDEN = /\[(media|content)[*~]?=/;
+const lintHasArguments = (source, file, errors) => {
+	let from = 0;
+	for (;;) {
+		const start = source.indexOf(':has(', from);
+		if (start === -1) return;
+		/* balance parens from the opening one, skipping quoted strings — needles like
+		   [media*="asr("] carry an unbalanced paren inside the quotes */
+		let i = start + 5, depth = 1, quote = null;
+		while (i < source.length && depth > 0) {
+			const ch = source[i];
+			if (quote) { if (ch === quote) quote = null; }
+			else if (ch === '"' || ch === "'") quote = ch;
+			else if (ch === '(') depth++;
+			else if (ch === ')') depth--;
+			i++;
+		}
+		const arg = source.slice(start + 5, i - 1);
+		const match = arg.match(HAS_FORBIDDEN);
+		if (match) {
+			const line = source.slice(0, start).split('\n').length;
+			errors.push(`${file}:${line}: [${match[1]}…] inside a :has() argument — taxes every ${match[1]}= write page-wide; set a flag with a plain rule instead (docs/style-performance.md §8.1)`);
+		}
+		from = i;
+	}
+};
+
 export const lintTokens = () => {
 	const manifest = readManifest();
 	const errors = [];
@@ -192,6 +222,17 @@ export const lintTokens = () => {
 				if (!hit) errors.push(`${file}:${index + 1}: [${attr}${op}="${needle}"] resolves to no manifest token`);
 			}
 		});
+
+		/* ── 3b. no runtime-mutated DSL attribute inside a :has() argument ──
+		   Blink registers every attribute name that appears in a :has() argument and
+		   re-evaluates :has() state PAGE-WIDE when such an attribute mutates — measured
+		   at ~35 ms per media= write on schema.html before the §8.1 rework. media= is
+		   rewritten at runtime (lightbox.js) and content= is the other cascade-mutable
+		   axis; variant= is host-authored and never written at runtime, so it stays
+		   allowed. Whole-source scan (a :has() can span lines), quote-aware paren
+		   balancing (needles like "asr(" carry an unbalanced paren inside the string).
+		   Docs: /docs/style-performance.md §8.1-§8.2 */
+		lintHasArguments(source, file, errors);
 	}
 
 	/* ── 4. slide-exclusion list sync ── */

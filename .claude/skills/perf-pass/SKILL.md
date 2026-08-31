@@ -23,7 +23,10 @@ the *procedure*.
    different behaviour — `/cdn-cgi/image/` transforms work on the **custom domain only**
    (404 on pages.dev and localhost), and the zone injects bot-defense into HTML worth
    ~90–130 ms TBT and ~5 points. **pages.dev is the page's clean score**; do not chase the
-   zone delta in page code.
+   zone delta in page code. **The host you score is the host you cannot configure** —
+   compression and security settings are zone-only, so a finding from a pages.dev run has no
+   pages.dev fix. Which knob lives where, and why a transfer size cannot tell you the
+   encoding: `docs/performance.md` § Hosts and the CDN.
 3. **Baseline first — always.** 3 Lighthouse runs on the clean host, plus
    `node ui/card/render.snapshot.js . /tmp/ssr-before.txt` if `render.js` may be touched.
    A change without a before-number is not an optimisation, it is a guess.
@@ -32,7 +35,7 @@ the *procedure*.
 
 **Images — usually the entire problem.** Originals in `/assets/images/` average ~1.4 MB;
 any page using them raw is broken by default. Use the srcset contract in
-`docs/performance.md`: Cloudflare transforms, widths 240/320/480/720/1200, `format=auto`,
+`docs/performance.md`: Cloudflare transforms, widths 240/320/480/560/720/1200, `format=auto`,
 `quality=80`, `fit=cover` with the height from the `asr()` ratio, absolute
 `https://v4.browser.style/cdn-cgi/image/…` URLs (a root-relative candidate 404s off-zone,
 **and a failed srcset candidate never falls back to `src`**). Compute `sizes` from the

@@ -20,7 +20,7 @@ import { mediaStr } from './shared.js';
 const HOST_SUFFIX = 'browser.style';
 
 const DEFAULTS = {
-	breakpoints: [240, 320, 480, 720, 1200],
+	breakpoints: [240, 320, 480, 560, 720, 1200],
 	format: 'avif',
 	quality: 80,
 	fit: 'cover',
