@@ -17,7 +17,7 @@ import { fileURLToPath } from 'node:url';
 import { renderCard, resolveItemtype } from '../../render.js';
 import { generateSrcsets, calculateSizes } from '../../../../layout/src/srcsets.js';
 import { srcsetMap, srcsetConfig } from '../../../../layout/layouts-map.js';
-import { CDN_BASE, CONTRAST_STYLE, HEAD_COMMON, breadcrumb, descope, esc, phoneShell, withPreset } from '../build.shared.js';
+import { CDN_BASE, CONTRAST_STYLE, HEAD_COMMON, PAGE_STYLE, VT_HEAD, breadcrumb, descope, esc, withPreset } from '../build.shared.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const data = (file) => JSON.parse(readFileSync(join(here, '../../data', file), 'utf8'));
@@ -44,6 +44,7 @@ const page = (ucf, name) => {
 	   tag already is too, so BOTH morph-named elements exist at snapshot.
 	   The hero is the page's LCP element and morph target — always eager. */
 	const hero = descope(renderCard(withPreset(ucf, 'media'), presets, undefined, { images: PROSE_IMAGES }))
+		.replace('<ui-media', '<ui-media class="detail-plate"')
 		.replace('<img', `<img id="hero" data-view="hero-${ucf.id}"`)
 		.replace(' loading="lazy"', ' loading="eager" fetchpriority="high"')
 		.replace('sizes="auto, ', 'sizes="'); /* `auto` is spec-invalid on eager images */
@@ -69,29 +70,17 @@ const page = (ucf, name) => {
 	     the incoming page. Without this the snapshot races HTML parsing and the
 	     morph degrades to a plain cross-fade on repeat/bfcache navigations. -->
 	<link rel="expect" href="#hero" blocking="render">
-	<!-- Names the morph targets where typed attr() is unsupported (Safari). MUST be
-	     render-blocking in <head>: the incoming page is snapshotted at first paint,
-	     so a deferred script names the targets too late and the forward morph
-	     degrades to a cross-fade. Docs: ui/base/polyfills/readme.md -->
-	<script type="module" src="/ui/base/polyfills/attr-fallback.min.js" blocking="render"></script>
+	${VT_HEAD}
 	<style>
 		/* cross-document view transitions (@view-transition, the [data-view]
-		   attr() naming rule and group timing) come from ui-card.css */
-		body { margin-inline: auto; max-inline-size: var(--width-prose, 65ch); }
-		.article-view {
-			background: var(--ui-card-bg, var(--color-surface, #fff));
-			border-radius: var(--ui-card-radius, var(--radius-2xl));
-			margin-block-end: var(--spacing-2xl);
-			padding: var(--spacing-lg);
-		}
-		.article-view > ui-media { margin-block-end: var(--spacing-lg); }
-		main > aside { margin-block-end: var(--spacing-2xl); }${phoneShell('.article-view')}
-		/* the plate's padding would inset the hero a second time — the frame bleeds and
-		   ui-content's own padding is the only text inset, as on the product page */
-		@media (width < 540px) {
-			.article-view { padding: 0; }
-			.article-view > ui-media { margin-block-end: 0; }
-		}
+		   attr() naming rule and group timing) come from ui-card.css.
+		   The prose measure is the page COLUMN here — the layout knob, not a body
+		   override. See the PAGE_STYLE header in ../build.shared.js */
+		:root { --layout-bleed-mw: var(--width-prose, 65ch); }${PAGE_STYLE}
+		/* the prose column IS the page column here — the hero bleeds past it, so the
+		   copy must sit on its edge rather than a second 1rem in */
+		.detail-page > lay-out > ui-content { --ui-content-pi: 0; }
+		main > aside { margin-block-end: var(--spacing-2xl); }
 	</style>
 	${CONTRAST_STYLE}
 </head>
@@ -102,13 +91,15 @@ const page = (ucf, name) => {
 		{ name: title }
 	])}
 	<main>
-	<article class="article-view" data-view="card-${ucf.id}" itemscope itemtype="https://schema.org/${itemtype}">
+	<article class="detail-page" data-view="card-${ucf.id}" itemscope itemtype="https://schema.org/${itemtype}">
 		<link itemprop="mainEntityOfPage" href="${name}.html">
 		<div itemprop="publisher" itemscope itemtype="https://schema.org/Organization" hidden>
 			<meta itemprop="name" content="The Daily Ledger">
 		</div>
 		${hero}
-		${prose}
+		<lay-out>
+			${prose}
+		</lay-out>
 	</article>
 	${wall}
 	</main>

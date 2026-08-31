@@ -1,9 +1,12 @@
 /**
- * Page-shell pieces shared by the SSR demo-page builders (articles/, products/, realestate/, rentals/, offices/, recipes/).
+ * The page shell shared by every SSR detail-page builder — articles/, products/, games/,
+ * realestate/, rentals/, offices/, recipes/.
  *
  * Extracted verbatim from articles/build.js when products/build.js needed the same
  * head, the same contrast overrides and the same descope rule — two copies of a page
- * convention drift, and the convention is the point.
+ * convention drift, and the convention is the point. PAGE_STYLE below carries that
+ * further: one structure (.detail-page > .detail-plate + <lay-out> bands), one set of
+ * names, and the page column left to the layout system rather than re-declared here.
  */
 
 /* shared head fragment: bundle CSS + hotlink-safe referrer + srcset-origin preconnect.
@@ -26,18 +29,30 @@ export const CONTRAST_STYLE = `<style>
 		ui-chip[data-type] { --ui-chip-bg: hsl(0, 0%, 95%); --ui-chip-c: hsl(0, 0%, 13%); }
 	</style>`;
 
-/* Phone shell (<540px): the hero plate escapes body's gutter so the main image is
-   edge-to-edge and the hero <ui-content>'s own padding is the only text inset; corners go
-   flat and the breadcrumb shrinks. `hero` is the page's plate selector.
-   The -2ch cancels `:where(body) { padding-inline: 2ch }` in ui/base/core.css — and is
-   guarded, because layout.css already zeroes that gutter on any page holding a <lay-out>.
-   rem, not px: these pages opt into text scaling with <meta name="text-scale">. */
-export const phoneShell = (hero) => `
+/* THE PAGE SHELL, shared by every detail page — one structure, one set of names:
+   <body> > <nav data-breadcrumbs> + <main> > <article class="detail-page"> >
+   the hero, then <lay-out> bands. `.detail-plate` marks a full-width plate — the hero,
+   and any band card that reads as one (the game page's store matrix): on a phone it
+   leaves the page column and squares its corners.
+
+   The page COLUMN is the layout system's, not ours: `body:has(lay-out)` in
+   @layer layout.base derives it from the --layout-mi / --layout-bleed-mw knobs. A page
+   <style> is UNLAYERED, so re-declaring body's inline sizing there silently clobbers
+   that rule — which is why every one of these pages used to carry its own gutter and
+   the phone bleed needed a per-page selector and a :has() guard. Set page width with
+   :root { --layout-bleed-mw } instead. Docs: layout/docs/card-integration.md, and the
+   header comment in layout/src/pages/reveal-stack.html. */
+export const PAGE_STYLE = `
+		.detail-page, .detail-page > section { display: grid; row-gap: var(--spacing-xl); }
+		.detail-page { margin-block-end: var(--spacing-2xl); }
+		.detail-page .band-title { font-size: 1.25rem; margin: 0 0 var(--spacing-md); }
 		@media (width < 540px) {
 			[data-breadcrumbs] { font-size: 0.625rem; }
-			body:not(:has(lay-out)) ${hero} { margin-inline: -2ch; }
-			${hero} { --ui-card-radius: 0; }
-			${hero} ui-media { --ui-media-radius: 0; }
+			/* the hero leaves the page column. Below 540px body's gutter is always
+			   --layout-mi, so the negative is exact; lay-out[bleed] lands one gutter
+			   short of the end edge — docs/plans/open-items.md */
+			.detail-plate { --ui-card-radius: 0; margin-inline: calc(-1 * var(--layout-mi)); }
+			:is(.detail-plate, .detail-plate ui-media) { --ui-media-radius: 0; }
 		}`;
 
 /* names the render-blocking morph-target polyfill + the reduced-motion-safe transition */

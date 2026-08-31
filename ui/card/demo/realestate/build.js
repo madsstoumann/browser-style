@@ -23,7 +23,7 @@ import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { renderCard, realestateSections } from '../../render.js';
-import { CDN_BASE, CONTRAST_STYLE, HEAD_COMMON, VT_HEAD, breadcrumb, descope, esc, phoneShell, withPreset } from '../build.shared.js';
+import { CDN_BASE, CONTRAST_STYLE, HEAD_COMMON, PAGE_STYLE, VT_HEAD, breadcrumb, descope, esc, withPreset } from '../build.shared.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const data = (file) => JSON.parse(readFileSync(join(here, '../../data', file), 'utf8'));
@@ -59,6 +59,7 @@ const { fields } = ucf;
 const listingOnly = { ...ucf, fields: { ...fields, body: undefined, cover: undefined, details: { ...fields.details, property: undefined } } };
 
 const galleryCard = renderCard(withPreset(listingOnly, 'realestate-page'), presets, undefined, USE_CDN ? { images: IMAGES } : {})
+	.replace('<ui-card', '<ui-card class="detail-plate"')
 	/* first slide only: the LCP element and the morph target — always eager */
 	.replace('<img', `<img id="hero" data-view="hero-${VIEW}"`)
 	.replace(' loading="lazy"', ' loading="eager" fetchpriority="high"')
@@ -107,10 +108,7 @@ const page = `<!DOCTYPE html>
 	<style>
 		/* cross-document view transitions (@view-transition, the [data-view] attr()
 		   naming rule and group timing) come from ui-card.css — nothing page-scoped
-		   here, deliberately: see the header comment in products/build.js */
-		body { margin-inline: auto; max-inline-size: 64rem; }
-		.listing-view { margin-block-end: var(--spacing-2xl); }
-		.listing-view > lay-out { margin-block-start: var(--spacing-xl); }${phoneShell('.listing-view > ui-card')}
+		   here, deliberately: see the header comment in products/build.js */${PAGE_STYLE}
 	</style>
 	${CONTRAST_STYLE}
 </head>
@@ -121,7 +119,7 @@ const page = `<!DOCTYPE html>
 		{ name: TITLE }
 	])}
 	<main>
-		<article class="listing-view" data-view="card-${VIEW}" itemscope itemtype="https://schema.org/RealEstateListing">
+		<article class="detail-page" data-view="card-${VIEW}" itemscope itemtype="https://schema.org/RealEstateListing">
 			<link itemprop="mainEntityOfPage" href="havnegade-44.html">
 			${descope(galleryCard)}
 			<!-- ONE mainEntity scope wrapping every band that carries a residence property:

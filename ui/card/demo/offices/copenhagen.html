@@ -16,14 +16,16 @@
 	     degrades to a cross-fade. Docs: ui/base/polyfills/readme.md -->
 	<script type="module" src="/ui/base/polyfills/attr-fallback.min.js" blocking="render"></script>
 	<style>
-		body { margin-inline: auto; max-inline-size: 64rem; }
-		.office-view { margin-block-end: var(--spacing-2xl); }
-		.office-view > lay-out { margin-block-start: var(--spacing-xl); }
+		.detail-page, .detail-page > section { display: grid; row-gap: var(--spacing-xl); }
+		.detail-page { margin-block-end: var(--spacing-2xl); }
+		.detail-page .band-title { font-size: 1.25rem; margin: 0 0 var(--spacing-md); }
 		@media (width < 540px) {
 			[data-breadcrumbs] { font-size: 0.625rem; }
-			body:not(:has(lay-out)) .office-view > ui-card { margin-inline: -2ch; }
-			.office-view > ui-card { --ui-card-radius: 0; }
-			.office-view > ui-card ui-media { --ui-media-radius: 0; }
+			/* the hero leaves the page column. Below 540px body's gutter is always
+			   --layout-mi, so the negative is exact; lay-out[bleed] lands one gutter
+			   short of the end edge — docs/plans/open-items.md */
+			.detail-plate { --ui-card-radius: 0; margin-inline: calc(-1 * var(--layout-mi)); }
+			:is(.detail-plate, .detail-plate ui-media) { --ui-media-radius: 0; }
 		}
 	</style>
 	<style>
@@ -49,9 +51,9 @@
 		</ol>
 	</nav>
 	<main>
-		<article class="office-view" data-view="card-office-copenhagen" itemscope itemtype="https://schema.org/LocalBusiness">
+		<article class="detail-page" data-view="card-office-copenhagen" itemscope itemtype="https://schema.org/LocalBusiness">
 			<link itemprop="mainEntityOfPage" href="copenhagen.html">
-			<ui-card variant="col lg:row lg:spl(1/1) shd(non)">
+			<ui-card class="detail-plate" variant="col lg:row lg:spl(1/1) shd(non)">
 		<cq-box>
 			<ui-media media="asr(4/3) rds(lg)"><iframe src="https://www.openstreetmap.org/export/embed.html?bbox=12.593807,55.704505,12.604793,55.710695&amp;layer=mapnik&amp;marker=55.7076,12.5993" title="Map of the Copenhagen studio, Sundkaj 9" loading="lazy" itemprop="hasMap"></iframe></ui-media>
 			<ui-content content="scl(lg)"><small data-part="eyebrow">Studio</small><h2 data-part="headline" itemprop="name">Copenhagen</h2><p data-part="summary" itemprop="description">Our first studio, on the quay at Sundkaj. Six floors of daylight, a workshop in the basement and a coffee machine that predates the company.</p><div itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates" hidden><meta itemprop="latitude" content="55.7076"><meta itemprop="longitude" content="12.5993"></div><address data-part="address" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress"><span><span itemprop="streetAddress">Sundkaj 9</span></span><span><span itemprop="postalCode">2150</span> <span itemprop="addressLocality">Copenhagen</span></span><meta itemprop="addressCountry" content="DK"></address><dl data-part="hours"><dt>Mon–Fri</dt><dd><meta itemprop="openingHours" content="Mo-Fr 09:00-17:00"><span itemprop="openingHoursSpecification" itemscope itemtype="https://schema.org/OpeningHoursSpecification" hidden><meta itemprop="dayOfWeek" content="https://schema.org/Monday"><meta itemprop="dayOfWeek" content="https://schema.org/Tuesday"><meta itemprop="dayOfWeek" content="https://schema.org/Wednesday"><meta itemprop="dayOfWeek" content="https://schema.org/Thursday"><meta itemprop="dayOfWeek" content="https://schema.org/Friday"><meta itemprop="opens" content="09:00"><meta itemprop="closes" content="17:00"></span>9:00–17:00</dd><dt>Sat</dt><dd><meta itemprop="openingHours" content="Sa 10:00-14:00"><span itemprop="openingHoursSpecification" itemscope itemtype="https://schema.org/OpeningHoursSpecification" hidden><meta itemprop="dayOfWeek" content="https://schema.org/Saturday"><meta itemprop="opens" content="10:00"><meta itemprop="closes" content="14:00"></span>10:00–14:00</dd></dl><nav data-part="actions"><a class="ui-button" data-icon="call" itemprop="telephone" href="tel:+4535551290">+45 35 55 12 90</a> <meta itemprop="email" content="copenhagen@example.com"><a class="ui-button" data-variant="accent" data-icon="mail" href="mailto:copenhagen@example.com">Email</a></nav><span data-part="tags"><ui-chip itemprop="keywords">Copenhagen</ui-chip><ui-chip itemprop="keywords">Studio</ui-chip></span></ui-content>

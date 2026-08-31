@@ -19,7 +19,7 @@ import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { renderCard, reviewItems } from '../../render.js';
-import { CDN_BASE, CONTRAST_STYLE, HEAD_COMMON, VT_HEAD, breadcrumb, descope, esc, phoneShell, withPreset } from '../build.shared.js';
+import { CDN_BASE, CONTRAST_STYLE, HEAD_COMMON, PAGE_STYLE, VT_HEAD, breadcrumb, descope, esc, withPreset } from '../build.shared.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const data = (file) => JSON.parse(readFileSync(join(here, '../../data', file), 'utf8'));
@@ -90,7 +90,7 @@ const productCard = (ucf, { preset, view }) => {
 	   (details.subtype), the headphones a plain Product, and only the render knows which */
 	const itemtype = raw.match(/itemtype="(https:\/\/schema\.org\/\w+)"/)?.[1] || 'https://schema.org/Product';
 	const html = descope(raw)
-		.replace('<ui-card', '<ui-card class="product-view"')
+		.replace('<ui-card', '<ui-card class="detail-plate"')
 		/* first slide only: the LCP element and the morph target — always eager */
 		.replace('<img', `<img id="hero" data-view="hero-${view}"`)
 		.replace(' loading="lazy"', ' loading="eager" fetchpriority="high"')
@@ -116,10 +116,7 @@ const shell = ({ title, description, styles = '', card, itemtype, view, reviews 
 	<style>
 		/* cross-document view transitions (@view-transition, the [data-view] attr()
 		   naming rule and group timing) come from ui-card.css — nothing page-scoped
-		   here, deliberately: see the header comment in products/build.js */
-		body { margin-inline: auto; max-inline-size: 64rem; }
-		.product-page { margin-block-end: var(--spacing-2xl); }
-		.reviews-heading { margin-block: var(--spacing-xl) var(--spacing-md); }
+		   here, deliberately: see the header comment in products/build.js */${PAGE_STYLE}
 		/* one column; the rule is the separator, so the column itself needs no gap */
 		.reviews > hr {
 			border: 0;
@@ -127,8 +124,8 @@ const shell = ({ title, description, styles = '', card, itemtype, view, reviews 
 			margin-block: var(--spacing-md);
 			opacity: 0.4;
 		}
-		/* the heading and the rules sit at the column edge — the reviews must too */
-		.reviews > ui-content { --ui-content-pi: 0; }${phoneShell('.product-view')}${styles}
+		/* the band title and the rules sit at the column edge — the reviews must too */
+		.reviews > ui-content { --ui-content-pi: 0; }${styles}
 	</style>
 	${CONTRAST_STYLE}
 </head>
@@ -139,7 +136,7 @@ const shell = ({ title, description, styles = '', card, itemtype, view, reviews 
 		{ name: title }
 	])}
 	<main>
-		<article class="product-page" data-view="card-${view}" itemscope itemtype="${itemtype}">
+		<article class="detail-page" data-view="card-${view}" itemscope itemtype="${itemtype}">
 			${card}${reviews}
 		</article>
 	</main>
@@ -197,9 +194,11 @@ const reviewsBand = (ucf) => {
 	const items = reviewItems(ucf.fields.details?.reviews);
 	if (!items.length) return '';
 	/* <hr> BETWEEN, never after the last — a trailing rule reads as "more below" */
-	return `\n\t\t\t<h2 class="reviews-heading">Reviews</h2>
-			<div class="reviews">${items.map((review, index) => `${index ? '\n\t\t\t\t<hr>' : ''}\n\t\t\t\t<ui-content>${review}</ui-content>`).join('')}
-			</div>`;
+	return `\n\t\t\t<lay-out>
+				<h2 class="band-title">Reviews</h2>
+				<div class="reviews">${items.map((review, index) => `${index ? '\n\t\t\t\t\t<hr>' : ''}\n\t\t\t\t\t<ui-content>${review}</ui-content>`).join('')}
+				</div>
+			</lay-out>`;
 };
 
 const title = (ucf) => String(ucf.fields.headline).replace(/<[^>]+>/g, '');

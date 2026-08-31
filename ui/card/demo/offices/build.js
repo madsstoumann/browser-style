@@ -21,7 +21,7 @@ import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { renderCard } from '../../render.js';
-import { CONTRAST_STYLE, HEAD_COMMON, VT_HEAD, breadcrumb, descope, esc, phoneShell, withPreset } from '../build.shared.js';
+import { CONTRAST_STYLE, HEAD_COMMON, PAGE_STYLE, VT_HEAD, breadcrumb, descope, esc, withPreset } from '../build.shared.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const data = (file) => JSON.parse(readFileSync(join(here, '../../data', file), 'utf8'));
@@ -36,7 +36,8 @@ const TITLE = `${ucf.fields.headline} studio`;
 /* the card carries the whole LocalBusiness: map frame, address, hours, telephone and the
    "Open in Maps" CTA. descope() strips its itemscope so the <article> below owns it —
    one scope per subject, exactly as the sibling pages do. */
-const officeCard = renderCard(withPreset(ucf, 'office-page'), presets, undefined, {});
+const officeCard = renderCard(withPreset(ucf, 'office-page'), presets, undefined, {})
+	.replace('<ui-card', '<ui-card class="detail-plate"');
 
 /* Page-only prose. schemaType `content` and no itemprop: the card's summary already
    carries itemprop="description", so this copy stays unmarked and the property is
@@ -61,10 +62,7 @@ const page = `<!DOCTYPE html>
 	<meta name="description" content="${esc(ucf.fields.summary)}">
 	${HEAD_COMMON}
 	${VT_HEAD}
-	<style>
-		body { margin-inline: auto; max-inline-size: 64rem; }
-		.office-view { margin-block-end: var(--spacing-2xl); }
-		.office-view > lay-out { margin-block-start: var(--spacing-xl); }${phoneShell('.office-view > ui-card')}
+	<style>${PAGE_STYLE}
 	</style>
 	${CONTRAST_STYLE}
 </head>
@@ -75,7 +73,7 @@ const page = `<!DOCTYPE html>
 		{ name: TITLE }
 	])}
 	<main>
-		<article class="office-view" data-view="card-${VIEW}" itemscope itemtype="https://schema.org/LocalBusiness">
+		<article class="detail-page" data-view="card-${VIEW}" itemscope itemtype="https://schema.org/LocalBusiness">
 			<link itemprop="mainEntityOfPage" href="copenhagen.html">
 			${descope(officeCard)}
 			<lay-out lg="ratio(60:40) items(start)">

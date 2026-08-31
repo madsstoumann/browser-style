@@ -21,14 +21,16 @@
 	<style>
 		/* cross-document view transitions come from ui-card.css — nothing page-scoped
 		   here, deliberately: see the header comment in products/build.js */
-		body { margin-inline: auto; max-inline-size: 64rem; }
-		.rental-view { margin-block-end: var(--spacing-2xl); }
-		.rental-view > lay-out { margin-block-start: var(--spacing-xl); }
+		.detail-page, .detail-page > section { display: grid; row-gap: var(--spacing-xl); }
+		.detail-page { margin-block-end: var(--spacing-2xl); }
+		.detail-page .band-title { font-size: 1.25rem; margin: 0 0 var(--spacing-md); }
 		@media (width < 540px) {
 			[data-breadcrumbs] { font-size: 0.625rem; }
-			body:not(:has(lay-out)) .rental-view > ui-card { margin-inline: -2ch; }
-			.rental-view > ui-card { --ui-card-radius: 0; }
-			.rental-view > ui-card ui-media { --ui-media-radius: 0; }
+			/* the hero leaves the page column. Below 540px body's gutter is always
+			   --layout-mi, so the negative is exact; lay-out[bleed] lands one gutter
+			   short of the end edge — docs/plans/open-items.md */
+			.detail-plate { --ui-card-radius: 0; margin-inline: calc(-1 * var(--layout-mi)); }
+			:is(.detail-plate, .detail-plate ui-media) { --ui-media-radius: 0; }
 		}
 	</style>
 	<style>
@@ -54,9 +56,9 @@
 		</ol>
 	</nav>
 	<main>
-		<article class="rental-view" data-view="card-vacationrental-1" itemscope itemtype="https://schema.org/VacationRental">
+		<article class="detail-page" data-view="card-vacationrental-1" itemscope itemtype="https://schema.org/VacationRental">
 			<link itemprop="url" href="masseria-lucia.html">
-			<ui-card variant="col shd(non)" media="asr(4/3)">
+			<ui-card class="detail-plate" variant="col shd(non)" media="asr(4/3)">
 		<cq-box>
 			<ui-media media="asr(4/3) rds(lg) nav lightbox(bs)" id="vacationrental-1-media" popover><ui-lightbox><button type="button" command="toggle-popover" commandfor="vacationrental-1-media" aria-label="View all 4 photos"><ui-icon><svg viewBox="0 0 24 24"><path d="M7 5.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666"/><path d="M4.012 7.26a2.005 2.005 0 0 0 -1.012 1.737v10c0 1.1 .9 2 2 2h10c.75 0 1.158 -.385 1.5 -1"/><path d="M17 7h.01"/><path d="M7 13l3.644 -3.644a1.21 1.21 0 0 1 1.712 0l3.644 3.644"/><path d="M15 12l1.644 -1.644a1.21 1.21 0 0 1 1.712 0l2.644 2.644"/></svg></ui-icon></button></ui-lightbox><img id="hero" data-view="hero-vacationrental-1" src="/assets/images/rental_01.jpg" alt="The stone farmhouse seen from the garden, with olive trees and bougainvillea" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=180/assets/images/rental_01.jpg 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=240/assets/images/rental_01.jpg 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=360/assets/images/rental_01.jpg 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=420/assets/images/rental_01.jpg 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=540/assets/images/rental_01.jpg 720w" sizes="min(64rem, 100vw)" loading="eager" fetchpriority="high" decoding="async" itemprop="image"><img src="/assets/images/rental_02.jpg" alt="The pool terrace with sun loungers, palms and flowering bougainvillea" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=180/assets/images/rental_02.jpg 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=240/assets/images/rental_02.jpg 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=360/assets/images/rental_02.jpg 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=420/assets/images/rental_02.jpg 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=540/assets/images/rental_02.jpg 720w" sizes="auto, min(64rem, 100vw)" loading="lazy" decoding="async" itemprop="image"><img src="/assets/images/rental_03.jpg" alt="A bedroom with exposed stone walls, a wrought-iron bed and shuttered windows" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=180/assets/images/rental_03.jpg 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=240/assets/images/rental_03.jpg 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=360/assets/images/rental_03.jpg 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=420/assets/images/rental_03.jpg 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=540/assets/images/rental_03.jpg 720w" sizes="auto, min(64rem, 100vw)" loading="lazy" decoding="async" itemprop="image"><img src="/assets/images/rental_04.jpg" alt="A bathroom in local stone with a walk-in shower and a wooden washstand" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=180/assets/images/rental_04.jpg 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=240/assets/images/rental_04.jpg 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=360/assets/images/rental_04.jpg 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=420/assets/images/rental_04.jpg 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=540/assets/images/rental_04.jpg 720w" sizes="auto, min(64rem, 100vw)" loading="lazy" decoding="async" itemprop="image"></ui-media>
 			<ui-content content="scl(lg)"><p data-part="meta"><ui-chip theme="pale green" radius="non">Entire villa</ui-chip><ui-chip theme="pale accent" radius="non">Private pool</ui-chip></p><small data-part="eyebrow">Puglia, Italy</small><h3 data-part="headline" itemprop="name">Masseria Lucia</h3><p data-part="summary" itemprop="description">A restored stone farmhouse in an olive grove outside Ostuni, with a walled garden and a heated pool.</p><meta itemprop="additionalType" content="HolidayVillageRental"><meta itemprop="identifier" content="MSL-2026-04"><meta itemprop="latitude" content="40.7297"><meta itemprop="longitude" content="17.5794"><meta itemprop="knowsLanguage" content="en-GB"><meta itemprop="knowsLanguage" content="it-IT"><div data-part="rating" itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
@@ -88,7 +90,7 @@
 				<ui-content><h2 data-part="headline">Where it is</h2><address data-part="address" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress"><span><span itemprop="streetAddress">Contrada Lamacoppa 12</span></span><span><span itemprop="postalCode">72017</span> <span itemprop="addressLocality">Ostuni</span></span><span><span itemprop="addressRegion">Apulia</span></span><meta itemprop="addressCountry" content="IT"></address><p data-part="meta"><meta itemprop="checkinTime" content="16:00:00+02:00">Check-in from 16:00 · <meta itemprop="checkoutTime" content="10:00:00+02:00">check-out by 10:00</p><nav data-part="actions"><a class="ui-button" data-variant="accent" href="https://www.google.com/maps/search/?api=1&amp;query=40.7297,17.5794" target="_blank" rel="noopener">Open in Maps</a></nav></ui-content>
 				<ui-media media="asr(4/3) rds(lg)"><iframe src="https://www.openstreetmap.org/export/embed.html?bbox=17.576653,40.727619,17.582147,40.731781&amp;layer=mapnik&amp;marker=40.7297,17.5794" title="Map of Masseria Lucia" loading="lazy" itemprop="hasMap"></iframe></ui-media>
 			</lay-out>
-			<h2>Guest reviews</h2>
+			<h2 class="band-title">Guest reviews</h2>
 			<lay-out md="columns(2) items(start)">
 				<ui-content><div itemprop="review" itemscope itemtype="https://schema.org/Review"><div data-part="rating" itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
 		<meta itemprop="ratingValue" content="5">

@@ -22,7 +22,7 @@ import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { renderCard, vacationrentalSections } from '../../render.js';
-import { CDN_BASE, CONTRAST_STYLE, HEAD_COMMON, VT_HEAD, breadcrumb, descope, esc, phoneShell, withPreset } from '../build.shared.js';
+import { CDN_BASE, CONTRAST_STYLE, HEAD_COMMON, PAGE_STYLE, VT_HEAD, breadcrumb, descope, esc, withPreset } from '../build.shared.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const data = (file) => JSON.parse(readFileSync(join(here, '../../data', file), 'utf8'));
@@ -66,6 +66,7 @@ const headerOnly = { ...ucf, fields: { ...fields, body: undefined, cover: undefi
 } } };
 
 const galleryCard = renderCard(withPreset(headerOnly, 'realestate-page'), presets, undefined, USE_CDN ? { images: IMAGES } : {})
+	.replace('<ui-card', '<ui-card class="detail-plate"')
 	/* first slide only: the LCP element and the morph target — always eager */
 	.replace('<img', `<img id="hero" data-view="hero-${VIEW}"`)
 	.replace(' loading="lazy"', ' loading="eager" fetchpriority="high"')
@@ -114,10 +115,7 @@ const page = `<!DOCTYPE html>
 	${VT_HEAD}
 	<style>
 		/* cross-document view transitions come from ui-card.css — nothing page-scoped
-		   here, deliberately: see the header comment in products/build.js */
-		body { margin-inline: auto; max-inline-size: 64rem; }
-		.rental-view { margin-block-end: var(--spacing-2xl); }
-		.rental-view > lay-out { margin-block-start: var(--spacing-xl); }${phoneShell('.rental-view > ui-card')}
+		   here, deliberately: see the header comment in products/build.js */${PAGE_STYLE}
 	</style>
 	${CONTRAST_STYLE}
 </head>
@@ -128,14 +126,14 @@ const page = `<!DOCTYPE html>
 		{ name: TITLE }
 	])}
 	<main>
-		<article class="rental-view" data-view="card-${VIEW}" itemscope itemtype="https://schema.org/VacationRental">
+		<article class="detail-page" data-view="card-${VIEW}" itemscope itemtype="https://schema.org/VacationRental">
 			<link itemprop="url" href="masseria-lucia.html">
 			${descope(galleryCard)}
 			<!-- ONE scope: every band below is a property of the same rental. Only the rooms
 			     nest, inside containsPlace, and each property is stated exactly once. -->
 			<section${s.unit.attrs}>${s.unit.metas}${roomsBand}${storyBand}
 			</section>${placeBand}
-			<h2>Guest reviews</h2>${reviewsBand}
+			<h2 class="band-title">Guest reviews</h2>${reviewsBand}
 		</article>
 	</main>
 	<!-- Native scroll-control pseudos do NOT follow a popover frame into the top layer

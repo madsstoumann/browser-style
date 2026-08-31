@@ -24,9 +24,17 @@
 		/* cross-document view transitions (@view-transition, the [data-view] attr()
 		   naming rule and group timing) come from ui-card.css — nothing page-scoped
 		   here, deliberately: see the header comment in products/build.js */
-		body { margin-inline: auto; max-inline-size: 64rem; }
-		.product-page { margin-block-end: var(--spacing-2xl); }
-		.reviews-heading { margin-block: var(--spacing-xl) var(--spacing-md); }
+		.detail-page, .detail-page > section { display: grid; row-gap: var(--spacing-xl); }
+		.detail-page { margin-block-end: var(--spacing-2xl); }
+		.detail-page .band-title { font-size: 1.25rem; margin: 0 0 var(--spacing-md); }
+		@media (width < 540px) {
+			[data-breadcrumbs] { font-size: 0.625rem; }
+			/* the hero leaves the page column. Below 540px body's gutter is always
+			   --layout-mi, so the negative is exact; lay-out[bleed] lands one gutter
+			   short of the end edge — docs/plans/open-items.md */
+			.detail-plate { --ui-card-radius: 0; margin-inline: calc(-1 * var(--layout-mi)); }
+			:is(.detail-plate, .detail-plate ui-media) { --ui-media-radius: 0; }
+		}
 		/* one column; the rule is the separator, so the column itself needs no gap */
 		.reviews > hr {
 			border: 0;
@@ -34,14 +42,8 @@
 			margin-block: var(--spacing-md);
 			opacity: 0.4;
 		}
-		/* the heading and the rules sit at the column edge — the reviews must too */
+		/* the band title and the rules sit at the column edge — the reviews must too */
 		.reviews > ui-content { --ui-content-pi: 0; }
-		@media (width < 540px) {
-			[data-breadcrumbs] { font-size: 0.625rem; }
-			body:not(:has(lay-out)) .product-view { margin-inline: -2ch; }
-			.product-view { --ui-card-radius: 0; }
-			.product-view ui-media { --ui-media-radius: 0; }
-		}
 		/* the colourway switcher — cross-page navigation, not a content part.
 		   Caption UNDER the swatch: the row reads as a set of choices, and each
 		   label sits with the photo it names instead of between two of them. */
@@ -92,8 +94,8 @@
 		</ol>
 	</nav>
 	<main>
-		<article class="product-page" data-view="card-variant-indigo" itemscope itemtype="https://schema.org/ProductGroup">
-			<ui-card class="product-view" variant="col lg:row lg:spl(1/1) shd(non)" media="asr(2/3)">
+		<article class="detail-page" data-view="card-variant-indigo" itemscope itemtype="https://schema.org/ProductGroup">
+			<ui-card class="detail-plate" variant="col lg:row lg:spl(1/1) shd(non)" media="asr(2/3)">
 		<cq-box>
 			<ui-media media="asr(2/3) rds(lg) clip axis(y) nav(mrk) mrk(tmb) mrk(rail) mrk(lg) tmb(2/3) lightbox(bs)" id="product-indigo-media" popover media-open="nav mrk(tmb) mrk(blw) mrk(lg)"><ui-lightbox><button type="button" command="toggle-popover" commandfor="product-indigo-media" aria-label="View the Indigo Floral gallery"><ui-icon><svg viewBox="0 0 24 24"><path d="M7 5.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666"/><path d="M4.012 7.26a2.005 2.005 0 0 0 -1.012 1.737v10c0 1.1 .9 2 2 2h10c.75 0 1.158 -.385 1.5 -1"/><path d="M17 7h.01"/><path d="M7 13l3.644 -3.644a1.21 1.21 0 0 1 1.712 0l3.644 3.644"/><path d="M15 12l1.644 -1.644a1.21 1.21 0 0 1 1.712 0l2.644 2.644"/></svg></ui-icon></button></ui-lightbox><img id="hero" data-view="hero-variant-indigo" src="/assets/images/silkgown-indigo-front.png" alt="Persistence Silk Gown in Indigo Floral, front view, full length" style="--ui-carousel-thumb-url: url('https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=160/assets/images/silkgown-indigo-front.png')" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=360/assets/images/silkgown-indigo-front.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=480/assets/images/silkgown-indigo-front.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=720/assets/images/silkgown-indigo-front.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=840/assets/images/silkgown-indigo-front.png 560w" sizes="(min-width: 720px) 30rem, 100vw" loading="eager" fetchpriority="high" decoding="async" itemprop="image"><img src="/assets/images/silkgown-indigo-side.png" alt="Persistence Silk Gown in Indigo Floral, side view, showing the bias-cut drape and slit" style="--ui-carousel-thumb-url: url('https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=160/assets/images/silkgown-indigo-side.png')" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=360/assets/images/silkgown-indigo-side.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=480/assets/images/silkgown-indigo-side.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=720/assets/images/silkgown-indigo-side.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=840/assets/images/silkgown-indigo-side.png 560w" sizes="auto, (min-width: 720px) 30rem, 100vw" loading="lazy" decoding="async" itemprop="image"><img src="/assets/images/silkgown-indigo-back.png" alt="Persistence Silk Gown in Indigo Floral, back view, full length" style="--ui-carousel-thumb-url: url('https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=160/assets/images/silkgown-indigo-back.png')" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=360/assets/images/silkgown-indigo-back.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=480/assets/images/silkgown-indigo-back.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=720/assets/images/silkgown-indigo-back.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=840/assets/images/silkgown-indigo-back.png 560w" sizes="auto, (min-width: 720px) 30rem, 100vw" loading="lazy" decoding="async" itemprop="image"></ui-media>
 			<ui-content content="scl(lg)">
@@ -129,9 +131,10 @@
 				</ui-content>
 		</cq-box>
 	</ui-card>
-			<h2 class="reviews-heading">Reviews</h2>
-			<div class="reviews">
-				<ui-content><div itemprop="review" itemscope itemtype="https://schema.org/Review"><div data-part="rating" itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
+			<lay-out>
+				<h2 class="band-title">Reviews</h2>
+				<div class="reviews">
+					<ui-content><div itemprop="review" itemscope itemtype="https://schema.org/Review"><div data-part="rating" itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
 		<meta itemprop="ratingValue" content="5">
 		
 		<meta itemprop="bestRating" content="5"><meta itemprop="worstRating" content="1">
@@ -139,8 +142,8 @@
 		<span data-sr>Rated 5 out of 5 stars</span>
 		<span aria-hidden="true">5 / 5</span>
 	</div><p data-part="meta"><span itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Nadia Fenwick</span></span> · <meta itemprop="datePublished" content="2026-07-09">July 9, 2026 · Verified purchase</p><p data-part="subheadline" itemprop="name">The indigo is deeper in person</p><p data-part="summary" itemprop="reviewBody">Photographs read almost navy; in daylight it is a proper inky indigo with the floral picked out in a lighter thread. Wore it to a summer wedding and was asked about it four times.</p></div></ui-content>
-				<hr>
-				<ui-content><div itemprop="review" itemscope itemtype="https://schema.org/Review"><div data-part="rating" itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
+					<hr>
+					<ui-content><div itemprop="review" itemscope itemtype="https://schema.org/Review"><div data-part="rating" itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
 		<meta itemprop="ratingValue" content="4">
 		
 		<meta itemprop="bestRating" content="5"><meta itemprop="worstRating" content="1">
@@ -148,7 +151,8 @@
 		<span data-sr>Rated 4 out of 5 stars</span>
 		<span aria-hidden="true">4 / 5</span>
 	</div><p data-part="meta"><span itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Beatrix Ohl</span></span> · <meta itemprop="datePublished" content="2026-06-22">June 22, 2026 · Verified purchase</p><p data-part="subheadline" itemprop="name">Size up if you are between</p><p data-part="summary" itemprop="reviewBody">The silk hangs beautifully and the seams are clean inside and out. Cut is narrow across the shoulders, so I swapped the M for an L and it is now perfect.</p></div></ui-content>
-			</div>
+				</div>
+			</lay-out>
 		</article>
 	</main>
 	<!-- Native scroll-control pseudos do NOT follow a popover frame into the top layer

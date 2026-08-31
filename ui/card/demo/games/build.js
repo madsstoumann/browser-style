@@ -23,7 +23,7 @@ import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { renderCard, videogameSections } from '../../render.js';
-import { CDN_BASE, CONTRAST_STYLE, HEAD_COMMON, VT_HEAD, breadcrumb, descope, esc, phoneShell, withPreset } from '../build.shared.js';
+import { CDN_BASE, CONTRAST_STYLE, HEAD_COMMON, PAGE_STYLE, VT_HEAD, breadcrumb, descope, esc, withPreset } from '../build.shared.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const data = (file) => JSON.parse(readFileSync(join(here, '../../data', file), 'utf8'));
@@ -57,6 +57,7 @@ const { fields } = ucf;
 const heroUcf = { ...ucf, fields: { ...fields, flipside: undefined, body: undefined, cover: undefined } };
 
 const heroCard = renderCard(withPreset(heroUcf, 'game-page'), presets, undefined, USE_CDN ? { images: IMAGES } : {})
+	.replace('<ui-card', '<ui-card class="detail-plate"')
 	/* first slide only: the LCP element and the morph target — always eager */
 	.replace('<img', `<img id="hero" data-view="hero-${VIEW}"`)
 	.replace(' loading="lazy"', ' loading="eager" fetchpriority="high"')
@@ -83,7 +84,7 @@ const trailerBand = !s.trailer ? '' : band('lg="ratio(60:40) items(start)"',
 /* the store matrix. theme="black dark" is the arcade plate — the shared nine-hue axis,
    not an ad-hoc colour; `light`/`dark` pin the scheme so the inks stay AA either way. */
 const editionsBand = !s.editions ? '' : band('md="columns(1)"',
-	`\n\t\t\t\t<ui-card variant="vis(content)" theme="black dark" id="editions" content="scl(lg) md:pad(2xl)"><cq-box><ui-content><h3 data-part="headline">Editions &amp; where to buy</h3><p data-part="summary">One game, two editions, five storefronts. The platform is a property of the game; the shop is the seller on each offer.</p>${s.editions}</ui-content></cq-box></ui-card>`);
+	`\n\t\t\t\t<ui-card class="detail-plate" variant="vis(content)" theme="black dark" id="editions" content="scl(lg) md:pad(2xl)"><cq-box><ui-content><h3 data-part="headline">Editions &amp; where to buy</h3><p data-part="summary">One game, two editions, five storefronts. The platform is a property of the game; the shop is the seller on each offer.</p>${s.editions}</ui-content></cq-box></ui-card>`);
 
 const worldBand = band('md="columns(2) items(start)" lg="columns(3) items(start)"',
 	column('Quests', s.quests) + column('Classes', s.characters) + column('Gear', s.items));
@@ -112,10 +113,7 @@ const page = `<!DOCTYPE html>
 	${VT_HEAD}
 	<style>
 		/* cross-document view transitions come from ui-card.css — nothing page-scoped
-		   here, deliberately: see the header comment in products/build.js */
-		body { margin-inline: auto; max-inline-size: 64rem; }
-		.game-view { margin-block-end: var(--spacing-2xl); }
-		.game-view > lay-out { margin-block-start: var(--spacing-xl); }
+		   here, deliberately: see the header comment in products/build.js */${PAGE_STYLE}
 		/* The store matrix. Mobile-first: an offer is a three-line BLOCK (edition · platform /
 		   seller / price + Buy), because five columns in 380px minus the plate padding gives
 		   each one ~50px. From 540px the block becomes one row. The children are positioned
@@ -146,13 +144,10 @@ const page = `<!DOCTYPE html>
 			#editions [data-part="list"] li > :nth-child(4) { grid-column: 1; }
 			#editions [data-part="list"] li > :nth-child(5) { grid-column: 2; text-align: start; }
 			#editions [data-part="list"] li > :nth-child(6) { grid-column: 3; }
-		}${phoneShell('.game-view > ui-card')}
-		/* the store plate IS the page column on a phone — square corners, and the card's own
-		   25rem container tier (crossed at a ~400px viewport) must not re-add pad(2xl) */
-		@media (width < 540px) {
-			#editions { --ui-card-radius: 0; }
-			#editions > cq-box { --ui-content-p: var(--spacing-md); }
 		}
+		/* the store plate spans the viewport on a phone (.detail-plate), so its own 25rem
+		   container tier — crossed at a ~400px viewport — must not re-add pad(2xl) */
+		@media (width < 540px) { #editions > cq-box { --ui-content-p: var(--spacing-md); } }
 	</style>
 	${CONTRAST_STYLE}
 </head>
@@ -163,7 +158,7 @@ const page = `<!DOCTYPE html>
 		{ name: TITLE }
 	])}
 	<main>
-		<article class="game-view" data-view="card-${VIEW}" itemscope itemtype="https://schema.org/VideoGame">
+		<article class="detail-page" data-view="card-${VIEW}" itemscope itemtype="https://schema.org/VideoGame">
 			<link itemprop="mainEntityOfPage" href="pixel-raiders.html">
 			${descope(heroCard)}${trailerBand}${editionsBand}${worldBand}${specBand}
 		</article>

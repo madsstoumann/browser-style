@@ -22,28 +22,25 @@
 	<script type="module" src="/ui/base/polyfills/attr-fallback.min.js" blocking="render"></script>
 	<style>
 		/* cross-document view transitions (@view-transition, the [data-view]
-		   attr() naming rule and group timing) come from ui-card.css */
-		body { margin-inline: auto; max-inline-size: var(--width-prose, 65ch); }
-		.article-view {
-			background: var(--ui-card-bg, var(--color-surface, #fff));
-			border-radius: var(--ui-card-radius, var(--radius-2xl));
-			margin-block-end: var(--spacing-2xl);
-			padding: var(--spacing-lg);
-		}
-		.article-view > ui-media { margin-block-end: var(--spacing-lg); }
-		main > aside { margin-block-end: var(--spacing-2xl); }
+		   attr() naming rule and group timing) come from ui-card.css.
+		   The prose measure is the page COLUMN here — the layout knob, not a body
+		   override. See the PAGE_STYLE header in ../build.shared.js */
+		:root { --layout-bleed-mw: var(--width-prose, 65ch); }
+		.detail-page, .detail-page > section { display: grid; row-gap: var(--spacing-xl); }
+		.detail-page { margin-block-end: var(--spacing-2xl); }
+		.detail-page .band-title { font-size: 1.25rem; margin: 0 0 var(--spacing-md); }
 		@media (width < 540px) {
 			[data-breadcrumbs] { font-size: 0.625rem; }
-			body:not(:has(lay-out)) .article-view { margin-inline: -2ch; }
-			.article-view { --ui-card-radius: 0; }
-			.article-view ui-media { --ui-media-radius: 0; }
+			/* the hero leaves the page column. Below 540px body's gutter is always
+			   --layout-mi, so the negative is exact; lay-out[bleed] lands one gutter
+			   short of the end edge — docs/plans/open-items.md */
+			.detail-plate { --ui-card-radius: 0; margin-inline: calc(-1 * var(--layout-mi)); }
+			:is(.detail-plate, .detail-plate ui-media) { --ui-media-radius: 0; }
 		}
-		/* the plate's padding would inset the hero a second time — the frame bleeds and
-		   ui-content's own padding is the only text inset, as on the product page */
-		@media (width < 540px) {
-			.article-view { padding: 0; }
-			.article-view > ui-media { margin-block-end: 0; }
-		}
+		/* the prose column IS the page column here — the hero bleeds past it, so the
+		   copy must sit on its edge rather than a second 1rem in */
+		.detail-page > lay-out > ui-content { --ui-content-pi: 0; }
+		main > aside { margin-block-end: var(--spacing-2xl); }
 	</style>
 	<style>
 		ui-content { --ui-content-muted: color-mix(in oklab, currentColor 85%, transparent); }
@@ -68,16 +65,18 @@
 		</ol>
 	</nav>
 	<main>
-	<article class="article-view" data-view="card-news-paywall" itemscope itemtype="https://schema.org/NewsArticle">
+	<article class="detail-page" data-view="card-news-paywall" itemscope itemtype="https://schema.org/NewsArticle">
 		<link itemprop="mainEntityOfPage" href="news-paywall.html">
 		<div itemprop="publisher" itemscope itemtype="https://schema.org/Organization" hidden>
 			<meta itemprop="name" content="The Daily Ledger">
 		</div>
-		<ui-media media="asr(21/9) rds(lg)"><img id="hero" data-view="hero-news-paywall" src="/assets/images/finance.png" alt="City skyline at night behind a wall of stock-market candlestick charts" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=103/assets/images/finance.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=137/assets/images/finance.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=206/assets/images/finance.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=240/assets/images/finance.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=309/assets/images/finance.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=514/assets/images/finance.png 1200w" sizes="(min-width: 720px) 42rem, 100vw" loading="eager" fetchpriority="high" decoding="async" itemprop="image"><meta itemprop="name" content="Who pays for the carbon tariff — and who keeps the rebate"></ui-media>
-		<ui-content content="scl(lg) gate" style="--ui-avatar-size: 3.25em; --ui-content-byline-fs: 1em"><p data-part="meta"><ui-chip theme="black">Subscribers only</ui-chip></p><small data-part="eyebrow" itemprop="articleSection">Economy</small><h2 data-part="headline" itemprop="headline"><a data-part="cover" href="articles/news-paywall.html">Who pays for the carbon tariff — and who keeps the rebate</a></h2><meta itemprop="description" content="The rebate mechanism that unlocked the climate deal, modelled sector by sector with the figures the negotiators would not publish."><address data-part="byline" itemprop="author" itemscope itemtype="https://schema.org/Person">
+		<ui-media class="detail-plate" media="asr(21/9) rds(lg)"><img id="hero" data-view="hero-news-paywall" src="/assets/images/finance.png" alt="City skyline at night behind a wall of stock-market candlestick charts" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=103/assets/images/finance.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=137/assets/images/finance.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=206/assets/images/finance.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=240/assets/images/finance.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=309/assets/images/finance.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=514/assets/images/finance.png 1200w" sizes="(min-width: 720px) 42rem, 100vw" loading="eager" fetchpriority="high" decoding="async" itemprop="image"><meta itemprop="name" content="Who pays for the carbon tariff — and who keeps the rebate"></ui-media>
+		<lay-out>
+			<ui-content content="scl(lg) gate" style="--ui-avatar-size: 3.25em; --ui-content-byline-fs: 1em"><p data-part="meta"><ui-chip theme="black">Subscribers only</ui-chip></p><small data-part="eyebrow" itemprop="articleSection">Economy</small><h2 data-part="headline" itemprop="headline"><a data-part="cover" href="articles/news-paywall.html">Who pays for the carbon tariff — and who keeps the rebate</a></h2><meta itemprop="description" content="The rebate mechanism that unlocked the climate deal, modelled sector by sector with the figures the negotiators would not publish."><address data-part="byline" itemprop="author" itemscope itemtype="https://schema.org/Person">
 		<ui-avatar><abbr aria-hidden="true">JR</abbr><img src="/assets/images/avatar5.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=64,height=64/assets/images/avatar5.png 1x, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=128,height=128/assets/images/avatar5.png 2x" loading="lazy" decoding="async"></ui-avatar>
 		<span data-part="byline-who"><span itemprop="name">Jonas Rahbek</span><span itemprop="jobTitle">Economics editor</span></span><small data-part="dateline"><time datetime="2026-07-02T05:30:00Z">Jul 2, 2026</time><span data-part="reading-time">6 min read</span></small>
 	</address><div data-part="body" itemprop="articleBody"><p>The tariff's headline rate was the easy part. What decided the negotiation was the rebate: exporters recover tariff costs against verified decarbonisation investment, which means the mechanism's real cost lands on whoever cannot prove they invested.</p><p>Our sector-by-sector model, built from the coalition's own working papers, puts steel and cement in line for rebates worth more than they pay in — and leaves agriculture, which has no comparable capital programme, carrying the net bill.</p><p>The numbers are not small. On the working papers' central scenario the steel sector recovers 112% of its tariff exposure by year three, cement 104%, chemicals 97%. Agriculture, with no decarbonisation ledger to draw on, recovers 9% — and pays the balance through input costs it cannot pass on.</p></div><meta itemprop="datePublished" content="2026-07-02T05:30:00Z"><meta itemprop="dateModified" content="2026-07-02T07:10:00Z"><meta itemprop="isAccessibleForFree" content="https://schema.org/False"><div itemprop="hasPart" itemscope itemtype="https://schema.org/WebPageElement" hidden><meta itemprop="isAccessibleForFree" content="https://schema.org/False"><meta itemprop="cssSelector" content="[data-part=body]"></div></ui-content>
+		</lay-out>
 	</article>
 	<aside aria-label="Subscribe"><ui-card variant="vis(content)" theme="black dark" itemscope itemtype="https://schema.org/Offer">
 		<cq-box>

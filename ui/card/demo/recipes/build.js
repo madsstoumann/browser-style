@@ -16,7 +16,7 @@ import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { renderCard } from '../../render.js';
-import { CDN_BASE, CONTRAST_STYLE, HEAD_COMMON, VT_HEAD, breadcrumb, descope, esc, phoneShell, withPreset } from '../build.shared.js';
+import { CDN_BASE, CONTRAST_STYLE, HEAD_COMMON, PAGE_STYLE, VT_HEAD, breadcrumb, descope, esc, withPreset } from '../build.shared.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const data = (file) => JSON.parse(readFileSync(join(here, '../../data', file), 'utf8'));
@@ -121,7 +121,7 @@ const cardOnly = { ...ucf, fields: { ...fields, cover: undefined, actions: undef
 	details: { prepTime: d.prepTime, cookTime: d.cookTime, servings: d.servings } } };
 
 const card = descope(renderCard(withPreset(cardOnly, 'recipe-page'), presets, undefined, USE_CDN ? { images: IMAGES } : {}))
-	.replace('<ui-card', '<ui-card class="recipe-view"')
+	.replace('<ui-card', '<ui-card class="detail-plate"')
 	/* the LCP element and the morph target — always eager */
 	.replace('<img', `<img id="hero" data-view="hero-${VIEW}"`)
 	.replace(' loading="lazy"', ' loading="eager" fetchpriority="high"')
@@ -219,13 +219,11 @@ const cookMode = `
    recipe.js from the invoking button) put the transform origin ON the button, so the panel
    grows from where it was asked for. `display` lives in the open state ONLY. */
 const STYLES = `
-		body { margin-inline: auto; max-inline-size: 64rem; padding-block-end: 6rem; }
-		@media (max-width: 540px) { body { padding-block-end: 9rem; } }
-		.recipe-page { display: grid; gap: var(--spacing-xl); margin-block-end: var(--spacing-2xl); }
-		.band-title { font-size: 1.25rem; margin: 0 0 var(--spacing-md); }
+		/* block axis only — the fixed .bar's clearance. Never the inline axis: that is
+		   the layout system's page column. See PAGE_STYLE in ../build.shared.js */
+		body { padding-block-end: 6rem; }
+		@media (width < 540px) { body { padding-block-end: 9rem; } }${PAGE_STYLE}
 		.band :where(h3) { margin: 0; }
-		.bands { display: grid; gap: var(--spacing-xl); }
-		@media (min-width: 720px) { .bands { grid-template-columns: 2fr 3fr; align-items: start; } }
 
 		/* ingredients */
 		.servings { align-items: center; display: flex; flex-wrap: wrap; gap: var(--spacing-sm); margin-block-end: var(--spacing-md); }
@@ -326,7 +324,7 @@ const STYLES = `
 		.cook-voice output { color: var(--color-accent); font-style: italic; }
 		.cook-voice output:not(:empty)::before { content: '“'; }
 		.cook-voice output:not(:empty)::after { content: '”'; }
-		button:disabled ui-icon { opacity: .4; }${phoneShell('.recipe-page > .recipe-view')}`;
+		button:disabled ui-icon { opacity: .4; }`;
 
 /* ── shell ─────────────────────────────────────────────────────────────────── */
 const page = `<!DOCTYPE html>
@@ -358,10 +356,10 @@ const page = `<!DOCTYPE html>
 		{ name: TITLE }
 	])}
 	<main>
-		<article class="recipe-page" data-view="card-${VIEW}" data-id="${esc(ucf.id)}" itemscope itemtype="https://schema.org/Recipe">
+		<article class="detail-page recipe-page" data-view="card-${VIEW}" data-id="${esc(ucf.id)}" itemscope itemtype="https://schema.org/Recipe">
 			<link itemprop="mainEntityOfPage" href="recipe.html?id=${esc(ucf.id)}">
 			${card}
-			<div class="bands">${ingredientsBand}${stepsBand}</div>
+			<lay-out lg="ratio(40:60) items(start)">${ingredientsBand}${stepsBand}</lay-out>
 		</article>${controlsBar}${cookMode}
 	</main>
 	<!-- Everything above works without it: checkboxes, native popover open/close, the step
