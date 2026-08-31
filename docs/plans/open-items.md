@@ -388,8 +388,9 @@ is a new card type** — all three are page-level furniture.
 - **`BreadcrumbList` — the clear win.** Still live, and it applies to *every* page rather than
   one type. `ui/breadcrumbs` emits **zero microdata** today: the markup is already
   `<nav aria-label="Breadcrumb"><ol data-breadcrumbs><li><a>`, so it needs `BreadcrumbList` /
-  `ListItem` / `position` / `item` attributes and nothing else. The six single-entity demo
-  pages (`demo/articles/*.html`, `demo/products/*.html`) carry no breadcrumb at all.
+  `ListItem` / `position` / `item` attributes and nothing else. The single-entity demo pages
+  do carry a trail, but `breadcrumb()` in `demo/build.shared.js` hand-authors the microdata —
+  so the gap is the component, not the pages.
 - **`ProfilePage`.** Google's profile result wants a `ProfilePage` host around the `Person`;
   `profile` and `artist` emit a bare `Person` — correct as a component, insufficient as a page.
 - **`ItemList` as a carousel host.** The surviving half of the Course feature (*Course list*,
