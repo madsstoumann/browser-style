@@ -2162,7 +2162,7 @@ describe('one property, one value', () => {
 			...JSON.parse(readFileSync(new URL('card.presets.demo.json', dir), 'utf8')).presets
 		};
 		const files = [
-			...readdirSync(dir).filter((f) => f.endsWith('.json') && !f.startsWith('card.presets') && f !== 'index.json' && f !== 'tokens.json').map((f) => new URL(f, dir)),
+			...readdirSync(dir).filter((f) => f.endsWith('.json') && !f.startsWith('card.presets') && f !== 'index.json' && f !== 'tokens.json' && f !== 'details.json').map((f) => new URL(f, dir)),
 			...readdirSync(new URL('demo/', dir)).filter((f) => f.endsWith('.json')).map((f) => new URL(`demo/${f}`, dir))
 		];
 		assert.ok(files.length > 100, `expected the whole corpus, got ${files.length}`);
@@ -2339,7 +2339,7 @@ describe('data detectors', () => {
 			...JSON.parse(readFileSync(new URL('card.presets.demo.json', dir), 'utf8')).presets
 		};
 		const files = [
-			...readdirSync(dir).filter((f) => f.endsWith('.json') && !f.startsWith('card.presets') && f !== 'index.json' && f !== 'tokens.json').map((f) => new URL(f, dir)),
+			...readdirSync(dir).filter((f) => f.endsWith('.json') && !f.startsWith('card.presets') && f !== 'index.json' && f !== 'tokens.json' && f !== 'details.json').map((f) => new URL(f, dir)),
 			...readdirSync(new URL('demo/', dir)).filter((f) => f.endsWith('.json')).map((f) => new URL(`demo/${f}`, dir))
 		];
 		assert.ok(files.length > 100, `expected the whole corpus, got ${files.length}`);
@@ -2477,7 +2477,7 @@ describe('srcset intrinsic cap', () => {
 		const sizes = JSON.parse(readFileSync(new URL('./data/assets.json', import.meta.url), 'utf8')).sizes;
 		const images = { cdnBase: 'https://v4.browser.style', sizes: '100vw' };
 		const files = readdirSync(new URL('./data/', import.meta.url))
-			.filter((f) => f.endsWith('.json') && !f.startsWith('card.presets') && !['index.json', 'tokens.json', 'assets.json'].includes(f));
+			.filter((f) => f.endsWith('.json') && !f.startsWith('card.presets') && !['index.json', 'tokens.json', 'assets.json', 'details.json'].includes(f));
 		const presets = JSON.parse(readFileSync(new URL('./data/card.presets.json', import.meta.url), 'utf8')).presets;
 		let checked = 0;
 		for (const file of files) {
@@ -2878,7 +2878,7 @@ describe('schema modes', () => {
 		...JSON.parse(readFileSync(new URL('card.presets.demo.json', DIR), 'utf8')).presets
 	};
 	const cards = [
-		...readdirSync(DIR).filter((f) => f.endsWith('.json') && !f.startsWith('card.presets') && f !== 'index.json' && f !== 'tokens.json').map((f) => new URL(f, DIR)),
+		...readdirSync(DIR).filter((f) => f.endsWith('.json') && !f.startsWith('card.presets') && f !== 'index.json' && f !== 'tokens.json' && f !== 'details.json').map((f) => new URL(f, DIR)),
 		...readdirSync(new URL('demo/', DIR)).filter((f) => f.endsWith('.json')).map((f) => new URL(`demo/${f}`, DIR))
 	].map((file) => {
 		const ucf = JSON.parse(readFileSync(file, 'utf8'));

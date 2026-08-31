@@ -4,14 +4,13 @@
 	<title>Editor Card</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-	<meta name="description" content="Editor Card">
+	<meta name="description" content="Editor Card — the card model's schemaType + details editor">
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/ui/base/index.css">
 	<script type="importmap">
 		{
 			"imports": {
-				"@browser.style/editor-shared": "../shared/index.js",
-				"@browser.style/icon/icons.data.js": "../../../ui/icon/icons.data.js"
+				"@browser.style/editor-shared": "../shared/index.js"
 			}
 		}
 	</script>
@@ -19,8 +18,10 @@
 <body>
 	<h1>Editor Card</h1>
 	<p>
-		A visual editor for <code>Content Card</code> data models.
-		See the <a href="demo.html">demo page</a> for an example with pre-loaded data.
+		The card model's <code>schemaType</code> + <code>details</code> editor —
+		one card content type per CMS, a grouped dropdown of every schema.org card type,
+		and the type-specific data in a single JSON field.
+		See the <a href="demo.html">demo page</a> to load any instance from the card corpus.
 	</p>
 
 	<editor-card></editor-card>

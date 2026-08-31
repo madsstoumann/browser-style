@@ -1,7 +1,7 @@
 {
   "name": "@browser.style/editor-card",
-  "version": "1.0.0",
-  "description": "A web component for visually editing Content Card data models with schema-driven forms.",
+  "version": "2.0.0",
+  "description": "The card model's schemaType + details editor — a web component for CMS embedding, generated from the ui/card details manifest.",
   "type": "module",
   "main": "./src/index.js",
   "module": "./src/index.js",

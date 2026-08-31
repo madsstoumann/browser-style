@@ -33,6 +33,7 @@
     "./render.js": "./render.js",
     "./data/tokens.json": "./data/tokens.json",
     "./data/tokens.data.js": "./data/tokens.data.js",
+    "./data/details.json": "./data/details.json",
     "./index.min.js": "./index.min.js",
     "./carousel.min.js": "./carousel.min.js",
     "./hover.min.js": "./hover.min.js",

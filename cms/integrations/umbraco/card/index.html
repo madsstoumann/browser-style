@@ -38,6 +38,11 @@
      * - Child (this) sends: { type: 'valueChanged', value: {...} }
      * - Child (this) sends: { type: 'ready' }
      * - Child (this) sends: { type: 'resize', height: number }
+     *
+     * The payload is { schemaType, details } (editor-card v2). init/setValue accept
+     * the object or a JSON string (Umbraco stores stringified JSON); valueChanged
+     * carries the object, and the 'state' reply carries the JSON string
+     * (editor.value). Legacy { type, ... } payloads load without loss.
      */
 
     const app = document.getElementById('app');

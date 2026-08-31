@@ -1,258 +1,81 @@
-# Editor Card Web Component
+# Editor Card
 
-A visual web component for editing Content Card data models. Generates schema-driven forms for 25+ card types with support for nested objects, arrays, and form association.
+`<editor-card>` — the card model's **`schemaType` + `details` editor** for CMS embedding.
 
-## Features
+The card content model (`cms/baseline/models/card.schema.json`) is **one** model for all 54
+schema.org card types: shared envelope fields are native CMS fields, and everything
+type-specific lives in a single JSON field called `details`, discriminated by `schemaType`.
+This component edits exactly that pair — a dropdown of every schema type (grouped by the
+eleven subject sections of `ui/card/demo/schema.html`) and a per-type form for `details` —
+so a CMS needs one card content type, not fifty-four.
 
-- **Schema-Driven Forms**: Automatically generates form fields from JSON schemas
-- **25+ Card Types**: Article, Product, Event, Recipe, Job, FAQ, and more
-- **Nested Data Support**: Handle complex nested objects and arrays
-- **Form Associated**: Works with native HTML forms via `ElementInternals`
-- **Auto Type Locking**: When a card type is set, the type selector is locked
-- **Dynamic Arrays**: Add/remove items with intuitive controls
-- **Real-Time Preview**: See JSON output as you edit
-- **Clean UI**: Matching design with other Editor components
-
-## Installation
-
-```bash
-npm install @browser.style/editor-card
-```
+## Usage
 
 ```html
-<script type="module" src="https://unpkg.com/@browser.style/editor-card/src/index.js"></script>
-```
-
-## Basic Usage
-
-```html
-<!-- Empty card (user selects type) -->
-<editor-card></editor-card>
-
-<!-- Pre-populated with data (type auto-locked) -->
-<editor-card value='{
-  "type": "article",
-  "article": {
-    "authors": [
-      { "name": "John Smith", "role": "Senior Editor" }
-    ]
-  }
-}'></editor-card>
-```
-
-## Attributes
-
-### `value`
-
-JSON string containing the card data. When the JSON includes a valid `type` property, the type selector is automatically locked.
-
-```html
-<editor-card value='{
-  "type": "product",
-  "product": {
-    "sku": "PROD-001234",
-    "product": {
-      "availability": "In Stock",
-      "price": {
-        "current": "299.00",
-        "currency": "USD"
-      }
-    }
-  }
-}'></editor-card>
-```
-
-## Supported Card Types
-
-| Type | Description |
-|------|-------------|
-| `achievement` | Certifications, badges, awards |
-| `announcement` | System announcements, notifications |
-| `article` | Blog posts, articles with authors |
-| `booking` | Service bookings, reservations |
-| `business` | Business listings with contact info |
-| `comparison` | Product/service comparisons |
-| `contact` | Contact information cards |
-| `course` | Educational courses |
-| `event` | Events with dates and locations |
-| `faq` | Question and answer pairs |
-| `gallery` | Image galleries |
-| `job` | Job postings |
-| `location` | Places, venues, addresses |
-| `membership` | Subscription plans |
-| `news` | News articles |
-| `poll` | Voting/survey options |
-| `product` | E-commerce products |
-| `profile` | User/person profiles |
-| `quote` | Quotations with attribution |
-| `recipe` | Cooking recipes |
-| `review` | Product/service reviews |
-| `social` | Social media posts |
-| `software` | Software applications |
-| `statistic` | Metrics and KPIs |
-| `timeline` | Chronological events |
-
-## Events
-
-### `change` and `input`
-
-Dispatched whenever the card data changes.
-
-```javascript
-const card = document.querySelector('editor-card');
-
-card.addEventListener('change', (event) => {
-  console.log('Card data:', event.detail);
-  // { type: 'article', article: { authors: [...] } }
-});
-```
-
-## JavaScript API
-
-### Properties
-
-#### `value` (getter/setter)
-
-Get or set the card data as a JSON string.
-
-```javascript
-const card = document.querySelector('editor-card');
-
-// Get current value
-const json = card.value;
-
-// Set new value
-card.value = JSON.stringify({
-  type: 'recipe',
-  recipe: {
-    content: { text: ['2 cups flour', '1 cup sugar'] },
-    recipe: { prepTime: '15 minutes', cookTime: '30 minutes' }
-  }
-});
-```
-
-#### `lockType` (getter)
-
-Returns `true` if the type selector is locked (read-only).
-
-```javascript
-console.log(card.lockType); // true if type is set
-```
-
-## Form Integration
-
-The component is form-associated, meaning it works with native HTML forms:
-
-```html
-<form id="card-form">
-  <editor-card name="cardData"></editor-card>
-  <button type="submit">Save</button>
-</form>
-
-<script>
-  document.getElementById('card-form').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    console.log('Card data:', formData.get('cardData'));
-  });
+<script type="importmap">
+	{ "imports": { "@browser.style/editor-shared": "https://browser.style/cms/editors/shared/index.js" } }
 </script>
+<script type="module" src="https://browser.style/cms/editors/card/src/index.js"></script>
+
+<editor-card></editor-card>
 ```
 
-## CMS Integration (Contentful)
+## Value contract
 
-When mounted in Contentful or similar CMS, the component:
+The payload is `{ schemaType, details }`.
 
-1. Receives a blank value or JSON via the `value` attribute
-2. If the JSON contains a valid `type`, the type selector is automatically locked
-3. Users can only edit data for the locked type
-4. Changes emit `change` and `input` events for the CMS to capture
+- **`value` property (setter)** accepts an object *or* a JSON string — Contentful hands the
+  stored object over directly, Umbraco/Optimizely/Storyblok store stringified JSON.
+- **`value` property (getter)** and the form-associated value are a **JSON string**.
+- **`change` / `input` events** (`bubbles`, `composed`) carry an **object**
+  `detail: { schemaType, details }` — pass it straight to a JSON field's `setValue()`.
+- **`ready`** — a promise resolved once styles are adopted and the first render is done
+  (the Umbraco wrapper awaits it).
+- **`locked` attribute** — disables the schemaType dropdown. Locking is **opt-in** (the 1.x
+  editor auto-locked on load); the whole point of one model + a dropdown is that authors
+  pick the type.
 
-```javascript
-// Contentful App SDK example
-import { init } from 'contentful-ui-extensions-sdk';
+### Round-trip guarantees
 
-init((sdk) => {
-  const card = document.querySelector('editor-card');
+- **Unknown `details` keys pass through untouched** — renderer-only keys, future keys, or a
+  team's own extensions survive an edit session verbatim, key order included.
+- A key is only written when the user edits its field; clearing a field **deletes** the key,
+  unless the loaded payload carried it explicitly (an explicit `false` can differ from a
+  renderer default, e.g. `ordered`).
+- Machine date-times render as text inputs, not `datetime-local` — corpus values carry
+  seconds and timezone offsets the native control cannot represent.
 
-  // Load existing value
-  const value = sdk.field.getValue();
-  if (value) {
-    card.setAttribute('value', JSON.stringify(value));
-  }
+### Legacy payloads
 
-  // Save changes
-  card.addEventListener('change', (e) => {
-    sdk.field.setValue(e.detail);
-  });
-});
-```
+A 1.x payload (`{ type, article: {…} }`) loads without loss: a known `type` is adopted as
+`schemaType` and every other key is preserved verbatim under `details`. The old nested
+shapes map to no panel fields — the data is kept, not migrated.
 
-## Schema Structure
+## Where the form comes from
 
-Each card type has a schema defining its fields:
+`src/details.data.js` is **generated** — do not edit it. The source of truth is
+`ui/card/data/details.json` (the details manifest); `node ui/card/details.build.js`
+regenerates the schemas, the grouped dropdown and every lookup vocabulary
+(`SUBTYPES`, `ATTENDANCE_MODES`, `MEDICAL_SPECIALTIES`, … from `ui/card/render.js`, icon
+names from `ui/icon/icons.data.js`), and `node ui/card/details.lint.js` fails the build
+when the manifest, the renderer and the `ui/card/data/` corpus disagree. Adding a schema
+type is the `add-schema` skill; the editor picks it up by regeneration, never by hand.
 
-```javascript
-{
-  article: {
-    title: 'Article Details',
-    properties: {
-      authors: {
-        type: 'array',
-        title: 'Authors',
-        itemTitle: 'Author',  // Displayed as "Author 1", "Author 2"
-        items: {
-          type: 'object',
-          properties: {
-            name: { type: 'string', title: 'Name', placeholder: 'John Smith' },
-            role: { type: 'string', title: 'Role', placeholder: 'Senior Editor' }
-          }
-        }
-      }
-    }
-  }
-}
-```
+Conditional behaviour, all declared in the manifest: the details panel swaps per type;
+`subtype` appears only on the nine `SUBTYPES` families; `paywalled` is injected on every
+`PAYWALL_TYPES` member; `requires` gates (e.g. `places.slide` needs `slides`) hide fields
+until their sibling is set; the four `SUBHEADLINE_SLOT` types show a hint that their
+brand/artist/jobTitle fields fill the envelope subheadline. Free-shape fields
+(`places.items`, `map`, `mapMedia`, `geo.links`) render as raw JSON textareas.
 
-### Supported Field Types
+## CMS wrappers
 
-| Type | Renders As |
-|------|------------|
-| `string` | `<input type="text">` |
-| `string` with `format: 'date'` | `<input type="date">` |
-| `string` with `enum` | `<select>` |
-| `number` | `<input type="number">` |
-| `object` | Nested fieldset |
-| `array` | Repeatable items with Add/Remove |
-
-## Styling
-
-The component uses CSS custom properties from `@browser.style/editor-shared`:
-
-```css
-editor-card {
-  --editor-accent: hsl(211, 100%, 95%);
-  --editor-buttonface: #efefef;
-  --editor-bdrs: 0.5rem;
-  --editor-gap: 1rem;
-  --editor-ff-mono: ui-monospace, monospace;
-  --editor-status-danger: hsl(0, 80%, 50%);
-}
-```
+`cms/integrations/contentful/card/` and `cms/integrations/umbraco/card/` bind this
+component to a JSON field and denormalise the chosen `schemaType` into a sibling field so
+the CMS can filter on it. See `cms/integrations/AGENTS.md` for the pattern (it ports
+directly to Contentstack and Storyblok).
 
 ## Demo
 
-Open [demo.html](./demo.html) to see the component in action with pre-populated examples for various card types.
-
-## Browser Support
-
-Modern browsers with support for:
-- Web Components (Custom Elements v1)
-- Shadow DOM
-- ES Modules
-- CSS Custom Properties
-- ElementInternals
-
-## Related Components
-
-- [editor-shared](../editor-shared/) - Shared utilities and styles
-- [content-card](../content-card/) - Component for rendering content cards
+`demo.html` loads any instance from `ui/card/data/` and shows a live round-trip readout;
+`index.html` is a bare usage page.

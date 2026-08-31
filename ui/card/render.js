@@ -123,18 +123,18 @@ export const resolveItemtype = (fields) => {
 };
 
 /* schema.org EventAttendanceModeEnumeration stems */
-const ATTENDANCE_MODES = new Set(['Offline', 'Online', 'Mixed']);
+export const ATTENDANCE_MODES = new Set(['Offline', 'Online', 'Mixed']);
 
 /* schema.org BookFormatType members — bookFormat emits only for these */
-const BOOK_FORMATS = new Set(['Hardcover', 'Paperback', 'EBook', 'AudiobookFormat', 'GraphicNovel']);
+export const BOOK_FORMATS = new Set(['Hardcover', 'Paperback', 'EBook', 'AudiobookFormat', 'GraphicNovel']);
 
 /* schema.org GamePlayMode members — playMode emits only for these. An invented mode
    ("BattleRoyale") lands in an itemprop URL, so the same discipline as SUBTYPES. */
-const GAME_PLAY_MODES = new Set(['SinglePlayer', 'MultiPlayer', 'CoOp']);
+export const GAME_PLAY_MODES = new Set(['SinglePlayer', 'MultiPlayer', 'CoOp']);
 const PLAY_MODE_WORDS = { SinglePlayer: 'Single-player', MultiPlayer: 'Multiplayer', CoOp: 'Co-op' };
 
 /* review itemReviewed types — Organization/Service make the review a testimonial */
-const REVIEWED_TYPES = new Set(['Product', 'Organization', 'Service']);
+export const REVIEWED_TYPES = new Set(['Product', 'Organization', 'Service']);
 
 /* ── enumeration / itemtype allowlists for the markup-first types.
    Every one of these lands in a schema.org URL or an itemtype, so none may ever
@@ -143,26 +143,26 @@ const REVIEWED_TYPES = new Set(['Product', 'Organization', 'Service']);
 /* schema.org TierBenefitEnumeration — the complete set is these four. All four are
    valid vocabulary; Google reads only Points and Price, so a tier whose ONLY benefits
    are Returns/Shipping is ineligible. Docs: docs/schema.md § Loyalty programme */
-const TIER_BENEFITS = new Set(['TierBenefitLoyaltyPoints', 'TierBenefitLoyaltyPrice', 'TierBenefitLoyaltyReturns', 'TierBenefitLoyaltyShipping']);
+export const TIER_BENEFITS = new Set(['TierBenefitLoyaltyPoints', 'TierBenefitLoyaltyPrice', 'TierBenefitLoyaltyReturns', 'TierBenefitLoyaltyShipping']);
 /* schema.org RestrictedDiet members — MenuItem.suitableForDiet takes these by URL */
-const RESTRICTED_DIETS = new Set(['DiabeticDiet', 'GlutenFreeDiet', 'HalalDiet', 'HinduDiet', 'KosherDiet', 'LowCalorieDiet', 'LowFatDiet', 'LowLactoseDiet', 'LowSaltDiet', 'VeganDiet', 'VegetarianDiet']);
+export const RESTRICTED_DIETS = new Set(['DiabeticDiet', 'GlutenFreeDiet', 'HalalDiet', 'HinduDiet', 'KosherDiet', 'LowCalorieDiet', 'LowFatDiet', 'LowLactoseDiet', 'LowSaltDiet', 'VeganDiet', 'VegetarianDiet']);
 /* RealEstateListing.mainEntity — the ACCOMMODATION subtree only. Residence and
    ApartmentComplex are Place, not Accommodation: the block emits yearBuilt, whose
    domain is Accommodation alone, so neither could carry it. (ApartmentComplex is in
    numberOfBedrooms' domain and nothing else here — not worth a per-property gate.) */
-const RESIDENCE_TYPES = new Set(['Accommodation', 'Apartment', 'House', 'SingleFamilyResidence', 'Suite', 'Room']);
+export const RESIDENCE_TYPES = new Set(['Accommodation', 'Apartment', 'House', 'SingleFamilyResidence', 'Suite', 'Room']);
 /* schema.org MusicAlbumProductionType / MusicAlbumReleaseType members */
-const ALBUM_PRODUCTION_TYPES = new Set(['CompilationAlbum', 'DJMixAlbum', 'DemoAlbum', 'LiveAlbum', 'MixtapeAlbum', 'RemixAlbum', 'SoundtrackAlbum', 'SpokenWordAlbum', 'StudioAlbum']);
-const ALBUM_RELEASE_TYPES = new Set(['AlbumRelease', 'BroadcastRelease', 'EPRelease', 'SingleRelease']);
+export const ALBUM_PRODUCTION_TYPES = new Set(['CompilationAlbum', 'DJMixAlbum', 'DemoAlbum', 'LiveAlbum', 'MixtapeAlbum', 'RemixAlbum', 'SoundtrackAlbum', 'SpokenWordAlbum', 'StudioAlbum']);
+export const ALBUM_RELEASE_TYPES = new Set(['AlbumRelease', 'BroadcastRelease', 'EPRelease', 'SingleRelease']);
 /* schema.org MedicalSpecialty members — WebPage.specialty takes a Specialty */
-const MEDICAL_SPECIALTIES = new Set(['Anesthesia', 'Cardiovascular', 'CommunityHealth', 'Dentistry', 'Dermatologic', 'DietNutrition', 'Emergency', 'Endocrine', 'Gastroenterologic', 'Genetic', 'Geriatric', 'Gynecologic', 'Hematologic', 'Infectious', 'LaboratoryScience', 'Midwifery', 'Musculoskeletal', 'Neurologic', 'Nursing', 'Obstetric', 'Oncologic', 'Optometric', 'Otolaryngologic', 'Pathology', 'Pediatric', 'PharmacySpecialty', 'Physiotherapy', 'PlasticSurgery', 'Podiatric', 'PrimaryCare', 'Psychiatric', 'PublicHealth', 'Pulmonary', 'Radiography', 'Renal', 'RespiratoryTherapy', 'Rheumatologic', 'SpeechPathology', 'Surgical', 'Toxicologic', 'Urologic']);
+export const MEDICAL_SPECIALTIES = new Set(['Anesthesia', 'Cardiovascular', 'CommunityHealth', 'Dentistry', 'Dermatologic', 'DietNutrition', 'Emergency', 'Endocrine', 'Gastroenterologic', 'Genetic', 'Geriatric', 'Gynecologic', 'Hematologic', 'Infectious', 'LaboratoryScience', 'Midwifery', 'Musculoskeletal', 'Neurologic', 'Nursing', 'Obstetric', 'Oncologic', 'Optometric', 'Otolaryngologic', 'Pathology', 'Pediatric', 'PharmacySpecialty', 'Physiotherapy', 'PlasticSurgery', 'Podiatric', 'PrimaryCare', 'Psychiatric', 'PublicHealth', 'Pulmonary', 'Radiography', 'Renal', 'RespiratoryTherapy', 'Rheumatologic', 'SpeechPathology', 'Surgical', 'Toxicologic', 'Urologic']);
 /* the three MedicalEntity shapes a MedicalWebPage may be `about` */
-const MEDICAL_ABOUT_TYPES = new Set(['MedicalCondition', 'Drug', 'MedicalProcedure']);
+export const MEDICAL_ABOUT_TYPES = new Set(['MedicalCondition', 'Drug', 'MedicalProcedure']);
 /* MedicalCondition aspect property → the type its value must carry */
-const MEDICAL_ASPECTS = { signOrSymptom: 'MedicalSignOrSymptom', riskFactor: 'MedicalRiskFactor', possibleTreatment: 'MedicalTherapy' };
+export const MEDICAL_ASPECTS = { signOrSymptom: 'MedicalSignOrSymptom', riskFactor: 'MedicalRiskFactor', possibleTreatment: 'MedicalTherapy' };
 /* medicalAudience takes the TYPE MedicalAudience (subtype Patient) — NOT the
    similarly named MedicalAudienceType enumeration (Clinician/MedicalResearcher) */
-const MEDICAL_AUDIENCES = new Set(['MedicalAudience', 'Patient']);
+export const MEDICAL_AUDIENCES = new Set(['MedicalAudience', 'Patient']);
 
 /* Quiz question shapes. `Question` accepts suggestedAnswer AND acceptedAnswer at
    once, so a Quiz can be a flashcard deck (one acceptedAnswer, revealed) or a graded
@@ -170,7 +170,7 @@ const MEDICAL_AUDIENCES = new Set(['MedicalAudience', 'Patient']);
    an EXPLICIT field, not inferred from the presence of options, and it picks both
    itemprop values. schema.org documents exactly three eduQuestionType spellings —
    "Multiple choice", "Open ended", "Flashcard". Docs: docs/schema.md § Quiz */
-const QUIZ_FORMATS = {
+export const QUIZ_FORMATS = {
 	flashcard: { question: 'Flashcard', resource: 'Flashcard' },
 	'multiple-choice': { question: 'Multiple choice', resource: 'Practice problem' }
 };
@@ -225,7 +225,7 @@ const HEADING_TAGS = new Set(['h2', 'h3', 'h4', 'h5']);
 const ARTICLE_BODY_TYPES = new Set(['article', 'news']);
 /* isAccessibleForFree domain — CreativeWork | Event | Place: every key whose itemtype is one
    (schema.org 30.0 dump). Docs: docs/schema.md § Paywall */
-const PAYWALL_TYPES = new Set(['content', 'article', 'news', 'event', 'recipe', 'review', 'course', 'poll', 'faq', 'quote', 'timeline', 'gallery', 'achievement', 'announcement', 'business', 'location', 'social', 'software', 'video', 'howto', 'qa', 'podcast', 'movie', 'book', 'bookseries', 'dataset', 'claim', 'quiz', 'realestate', 'vacationrental', 'menu', 'tvseries', 'tvepisode', 'medical', 'music', 'glossary', 'podcastseries', 'comicseries', 'comicissue']);
+export const PAYWALL_TYPES = new Set(['content', 'article', 'news', 'event', 'recipe', 'review', 'course', 'poll', 'faq', 'quote', 'timeline', 'gallery', 'achievement', 'announcement', 'business', 'location', 'social', 'software', 'video', 'howto', 'qa', 'podcast', 'movie', 'book', 'bookseries', 'dataset', 'claim', 'quiz', 'realestate', 'vacationrental', 'menu', 'tvseries', 'tvepisode', 'medical', 'music', 'glossary', 'podcastseries', 'comicseries', 'comicissue']);
 /* types where the image/video belongs to another scope — skip itemprop */
 const NO_IMAGE_PROP = new Set(['review', 'contact']);
 /* A gallery whose data carries licensing emits a full ImageObject per photo, which then
@@ -844,7 +844,7 @@ const creditsPart = (d) =>
    ComicIssue's OWN properties (shared with ComicStory) and a ComicSeries carries none of
    them, which is why they belong to the ISSUE card and not the series. Order is the
    masthead order, not alphabetical. Docs: docs/schema.md § Comic issue */
-const COMIC_ROLES = [['artist', 'Art'], ['penciler', 'Pencils'], ['inker', 'Inks'], ['letterer', 'Letters'], ['colorist', 'Colours']];
+export const COMIC_ROLES = [['artist', 'Art'], ['penciler', 'Pencils'], ['inker', 'Inks'], ['letterer', 'Letters'], ['colorist', 'Colours']];
 const comicCredits = (d) => {
 	const rows = COMIC_ROLES.filter(([key]) => d[key])
 		.map(([key, label]) => `${keyed(label)}<span${scope(key, 'Person')}><span itemprop="name">${esc(d[key])}</span></span>`);
@@ -1455,7 +1455,7 @@ const availabilityUrl = (availability) =>
 /* ProductGroup variant axes. A variesBy value names a property Google reads FROM the
    variants, so one allowlist drives both: what variesBy may say and what an item emits.
    Allowlisted for the same two reasons as details.subtype — docs/schema.md § Subtypes. */
-const VARIANT_AXES = ['color', 'size', 'material', 'pattern'];
+export const VARIANT_AXES = ['color', 'size', 'material', 'pattern'];
 
 /* One hasVariant row. `item.url` becomes a real anchor, not a meta: Google requires each
    variant be "preselectable directly with a distinct URL", and only a link is crawlable.
@@ -1504,7 +1504,7 @@ const BUTTON_GROUP_VARIANT = 'inline rounded border';
    (../button-group/readme.md), so the preset reaches both instead of a page stylesheet.
    The size lands in a CLASS, so it is allowlisted rather than interpolated. */
 const BUTTON_GROUP_SIZES = new Set(['fs-xxs', 'fs-xs', 'fs-sm', 'fs-md', 'fs-lg']);
-const VARIANT_CONTROLS = new Set(['list', 'buttons', 'collage']);
+export const VARIANT_CONTROLS = new Set(['list', 'buttons', 'collage']);
 /* a collage is the one control with a DATA precondition: every variant needs its own
    image, because the tiles ARE the images. One missing image falls back to the list
    rather than rendering a ragged grid — checked here and in buildMedia, so the two
@@ -1895,7 +1895,7 @@ export const vacationrentalSections = (d = {}, fields = {}) => {
                 RealEstateListing is a WebPage, hence a CreativeWork, which owns `offers`.
    This complements `organization`, which says "this company, and here are its branches";
    `places` says "these N places, on a map". Docs: docs/schema.md § Places ── */
-const PLACE_KINDS = new Set(['business', 'residence']);
+export const PLACE_KINDS = new Set(['business', 'residence']);
 /* RESIDENCE_TYPES is reused verbatim — it already excludes Residence and ApartmentComplex,
    which descend from Place rather than Accommodation and can carry none of the facts below */
 const PLACE_ITEM_TYPES = {
@@ -1906,7 +1906,7 @@ const PLACE_FALLBACK = { business: 'LocalBusiness', residence: 'Accommodation' }
 /* the slide CTA's label — override per card with details.slide.cta */
 const DEFAULT_PLACE_CTA = 'See More';
 /* the complete schema.org ItemListOrderType member set */
-const ITEM_LIST_ORDERS = new Set(['ItemListOrderAscending', 'ItemListOrderDescending', 'ItemListUnordered']);
+export const ITEM_LIST_ORDERS = new Set(['ItemListOrderAscending', 'ItemListOrderDescending', 'ItemListUnordered']);
 
 /* ── filelist: a downloadable-file collection — root ItemList (like comparison/places),
    each file a complete MediaObject: name, contentUrl, contentSize, encodingFormat.
@@ -1915,7 +1915,7 @@ const ITEM_LIST_ORDERS = new Set(['ItemListOrderAscending', 'ItemListOrderDescen
    and neither may ever interpolate author data. An unknown kind falls back to the
    generic `draft` glyph and emits NO encodingFormat: every row still carries a glyph,
    since a partially-iconed list renders mixed markers. Docs: docs/schema.md § File list ── */
-const FILE_TYPES = {
+export const FILE_TYPES = {
 	pdf: { icon: 'picture-as-pdf', mime: 'application/pdf', label: 'PDF' },
 	excel: { icon: 'table-view', mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', label: 'Excel' },
 	word: { icon: 'description', mime: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', label: 'Word' },
@@ -2055,7 +2055,7 @@ const placeSlide = (place, kind, index, look = {}, cardId = null) => {
 		+ '</cq-box></ui-card>';
 };
 
-const DETAILS = {
+export const DETAILS = {
 	product(d, fields, parts, itemtype) {
 		/* PDP order: rating under the title, then price, then stock state */
 		let html = ratingPart('aggregateRating', 'AggregateRating', d.rating);
@@ -3120,7 +3120,7 @@ const DETAILS = {
 const personSubheadline = (d, textTag) => d?.jobTitle
 	? `<${textTag} data-part="subheadline"><span itemprop="jobTitle">${esc(d.jobTitle)}</span>${d.organization ? ` · <span${scope('worksFor', 'Organization')}><span itemprop="name">${esc(d.organization)}</span></span>` : ''}</${textTag}>`
 	: '';
-const SUBHEADLINE_SLOT = {
+export const SUBHEADLINE_SLOT = {
 	profile: personSubheadline,
 	/* an artist card IS a Person — the same row, shared rather than copied */
 	artist: personSubheadline,

@@ -1,0 +1,2924 @@
+{
+	"$comment": "Hand-authored manifest of per-type `details` fields — the machine contract behind cms/baseline/models/card.schema.json's `details` object. `node ui/card/details.build.js` regenerates cms/editors/card/src/details.data.js, the per-type tables in docs/card.model.md and card.schema.json's schemaType options + details digest. `node ui/card/details.lint.js` cross-checks this file against render.js (SCHEMA_TYPES, SUBTYPES, the vocabulary Sets, DETAILS) and every data/*.json instance. Field keys: type (UCM), control (editor widget, defaulted from type), label (defaulted from key), lookup (render.js export, `SUBTYPES.<family>`, ICON_NAMES, or a `vocab` entry below), shape (ref into `shapes`), items (array item spec), fields (inline object sub-fields), display (presentation twin — emits no microdata), noBase (a *Display twin with no machine sibling), requires (sibling key gating visibility), open (free shape — lint skips sub-key checks), also (extra accepted JSON kinds), note (carried into generated docs).",
+	"groups": [
+		"Editorial & journalism",
+		"Commerce & offers",
+		"Screen",
+		"Audio",
+		"Page & picture",
+		"Learning & reference",
+		"People, work & history",
+		"Food & drink",
+		"Places, events & property",
+		"Community & support",
+		"Data, health & operations"
+	],
+	"vocab": {
+		"CONTACT_KINDS": [
+			"email",
+			"phone",
+			"url"
+		],
+		"HUES": [
+			"red",
+			"orange",
+			"green",
+			"blue",
+			"accent",
+			"black",
+			"white",
+			"gray",
+			"slate"
+		],
+		"GOAL_STATUS": [
+			"active",
+			"completed",
+			"failed",
+			"potential"
+		]
+	},
+	"shapes": {
+		"rating": {
+			"fields": {
+				"value": {
+					"type": "number",
+					"label": "Rating"
+				},
+				"max": {
+					"type": "number",
+					"note": "default 5"
+				},
+				"count": {
+					"type": "number"
+				}
+			}
+		},
+		"price": {
+			"fields": {
+				"current": {
+					"type": "number"
+				},
+				"original": {
+					"type": "number"
+				},
+				"currency": {
+					"type": "string"
+				},
+				"discountText": {
+					"type": "string"
+				}
+			}
+		},
+		"geo": {
+			"fields": {
+				"latitude": {
+					"type": "number"
+				},
+				"longitude": {
+					"type": "number"
+				},
+				"url": {
+					"type": "url"
+				},
+				"links": {
+					"type": "array",
+					"open": true,
+					"note": "external-map row: provider ids (google · apple · osm) or {provider, label?, url?}"
+				}
+			}
+		},
+		"address": {
+			"fields": {
+				"streetAddress": {
+					"type": "string"
+				},
+				"postalCode": {
+					"type": "string"
+				},
+				"addressLocality": {
+					"type": "string"
+				},
+				"addressRegion": {
+					"type": "string"
+				},
+				"addressCountry": {
+					"type": "string"
+				}
+			}
+		},
+		"openingHoursRow": {
+			"fields": {
+				"schema": {
+					"type": "string",
+					"note": "e.g. Mo-Fr 09:00-17:00"
+				},
+				"days": {
+					"type": "string"
+				},
+				"time": {
+					"type": "string"
+				},
+				"display": {
+					"type": "string",
+					"display": true
+				}
+			}
+		},
+		"contactRow": {
+			"fields": {
+				"type": {
+					"type": "select",
+					"lookup": "CONTACT_KINDS"
+				},
+				"value": {
+					"type": "string"
+				},
+				"label": {
+					"type": "string"
+				}
+			}
+		},
+		"person": {
+			"fields": {
+				"name": {
+					"type": "string"
+				},
+				"role": {
+					"type": "string"
+				},
+				"avatar": {
+					"type": "url"
+				}
+			}
+		},
+		"listItem": {
+			"scalar": "text",
+			"fields": {
+				"text": {
+					"type": "string"
+				},
+				"icon": {
+					"type": "select",
+					"lookup": "ICON_NAMES"
+				},
+				"href": {
+					"type": "url"
+				},
+				"itemprop": {
+					"type": "string"
+				}
+			}
+		},
+		"reviewRow": {
+			"fields": {
+				"author": {
+					"type": "string"
+				},
+				"rating": {
+					"type": "number"
+				},
+				"max": {
+					"type": "number"
+				},
+				"datePublished": {
+					"type": "date"
+				},
+				"dateDisplay": {
+					"type": "string",
+					"display": true,
+					"noBase": true
+				},
+				"context": {
+					"type": "string"
+				},
+				"headline": {
+					"type": "string"
+				},
+				"body": {
+					"type": "text"
+				}
+			}
+		}
+	},
+	"injected": {
+		"paywalled": {
+			"type": "boolean",
+			"label": "Paywalled",
+			"appliesTo": "PAYWALL_TYPES",
+			"note": "emits isAccessibleForFree: False on CreativeWork / Event / Place itemtypes"
+		}
+	},
+	"types": {
+		"content": {
+			"label": "Content (CreativeWork — fallback)",
+			"group": "Editorial & journalism",
+			"fields": {}
+		},
+		"article": {
+			"label": "Article",
+			"group": "Editorial & journalism",
+			"fields": {
+				"subtype": {
+					"type": "select",
+					"lookup": "SUBTYPES.article"
+				}
+			}
+		},
+		"news": {
+			"label": "News (NewsArticle)",
+			"group": "Editorial & journalism",
+			"fields": {
+				"subtype": {
+					"type": "select",
+					"lookup": "SUBTYPES.news"
+				}
+			}
+		},
+		"product": {
+			"label": "Product",
+			"group": "Commerce & offers",
+			"claimsSubheadline": true,
+			"fields": {
+				"rating": {
+					"type": "object",
+					"shape": "rating"
+				},
+				"price": {
+					"type": "object",
+					"shape": "price"
+				},
+				"availability": {
+					"type": "string"
+				},
+				"validUntil": {
+					"type": "date"
+				},
+				"validUntilDisplay": {
+					"type": "string",
+					"display": true
+				},
+				"sku": {
+					"type": "string",
+					"label": "SKU"
+				},
+				"brand": {
+					"type": "string",
+					"note": "→ Brand.name, rendered in the subheadline slot"
+				},
+				"brandUrl": {
+					"type": "url",
+					"note": "crawlable <a itemprop=\"url\"> around the brand name"
+				},
+				"subtype": {
+					"type": "select",
+					"lookup": "SUBTYPES.product"
+				},
+				"variants": {
+					"type": "object",
+					"note": "ProductGroup — emits only when subtype resolves to ProductGroup",
+					"fields": {
+						"variesBy": {
+							"type": "array",
+							"items": {
+								"type": "select",
+								"lookup": "VARIANT_AXES"
+							}
+						},
+						"productGroupID": {
+							"type": "string",
+							"label": "Product group ID"
+						},
+						"control": {
+							"type": "select",
+							"lookup": "VARIANT_CONTROLS"
+						},
+						"tile": {
+							"type": "string"
+						},
+						"layout": {
+							"type": "string"
+						},
+						"items": {
+							"type": "array",
+							"items": {
+								"fields": {
+									"name": {
+										"type": "string"
+									},
+									"sku": {
+										"type": "string",
+										"label": "SKU"
+									},
+									"color": {
+										"type": "string"
+									},
+									"size": {
+										"type": "string"
+									},
+									"material": {
+										"type": "string"
+									},
+									"pattern": {
+										"type": "string"
+									},
+									"label": {
+										"type": "string",
+										"note": "short picker label (variant control tile)"
+									},
+									"price": {
+										"type": "number"
+									},
+									"currency": {
+										"type": "string"
+									},
+									"availability": {
+										"type": "string"
+									},
+									"url": {
+										"type": "url"
+									},
+									"image": {
+										"type": "url",
+										"also": [
+											"object"
+										],
+										"note": "url, or {src, alt} for the collage tile"
+									}
+								}
+							}
+						}
+					}
+				},
+				"reviews": {
+					"type": "array",
+					"items": {
+						"shape": "reviewRow"
+					},
+					"note": "detail pages only, never the teaser"
+				}
+			}
+		},
+		"event": {
+			"label": "Event",
+			"group": "Places, events & property",
+			"fields": {
+				"startDate": {
+					"type": "datetime"
+				},
+				"endDate": {
+					"type": "datetime"
+				},
+				"dateDisplay": {
+					"type": "string",
+					"display": true,
+					"noBase": true
+				},
+				"attendanceMode": {
+					"type": "select",
+					"lookup": "ATTENDANCE_MODES"
+				},
+				"status": {
+					"type": "string"
+				},
+				"subtype": {
+					"type": "select",
+					"lookup": "SUBTYPES.event"
+				},
+				"location": {
+					"type": "object",
+					"fields": {
+						"name": {
+							"type": "string"
+						},
+						"address": {
+							"type": "string"
+						}
+					}
+				},
+				"organizer": {
+					"type": "object",
+					"fields": {
+						"name": {
+							"type": "string"
+						}
+					}
+				},
+				"offers": {
+					"type": "array",
+					"items": {
+						"fields": {
+							"name": {
+								"type": "string"
+							},
+							"price": {
+								"type": "number"
+							},
+							"currency": {
+								"type": "string"
+							},
+							"availability": {
+								"type": "string"
+							},
+							"validThrough": {
+								"type": "datetime"
+							}
+						}
+					}
+				}
+			}
+		},
+		"recipe": {
+			"label": "Recipe",
+			"group": "Food & drink",
+			"fields": {
+				"prepTime": {
+					"type": "string",
+					"note": "ISO 8601 duration, e.g. PT15M"
+				},
+				"cookTime": {
+					"type": "string",
+					"note": "ISO 8601 duration"
+				},
+				"servings": {
+					"type": "number"
+				},
+				"ingredients": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				},
+				"instructions": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					},
+					"note": "→ HowToStep accordion"
+				}
+			}
+		},
+		"review": {
+			"label": "Review",
+			"group": "Commerce & offers",
+			"fields": {
+				"rating": {
+					"type": "object",
+					"shape": "rating"
+				},
+				"aggregateRating": {
+					"type": "object",
+					"shape": "rating"
+				},
+				"reviewer": {
+					"type": "object",
+					"fields": {
+						"name": {
+							"type": "string"
+						},
+						"title": {
+							"type": "string"
+						},
+						"avatar": {
+							"type": "url"
+						},
+						"verified": {
+							"type": "boolean"
+						}
+					}
+				},
+				"reviewDate": {
+					"type": "date"
+				},
+				"reviewDateDisplay": {
+					"type": "string",
+					"display": true
+				},
+				"reviewerVerifiedText": {
+					"type": "string",
+					"note": "override for the \"Verified purchase\" badge"
+				},
+				"reviewedType": {
+					"type": "select",
+					"lookup": "REVIEWED_TYPES"
+				},
+				"productReviewed": {
+					"type": "string"
+				},
+				"productImage": {
+					"type": "url"
+				},
+				"productPrice": {
+					"type": "object",
+					"fields": {
+						"amount": {
+							"type": "number"
+						},
+						"currency": {
+							"type": "string"
+						},
+						"current": {
+							"type": "number"
+						}
+					}
+				}
+			}
+		},
+		"job": {
+			"label": "Job (JobPosting)",
+			"group": "People, work & history",
+			"fields": {
+				"company": {
+					"type": "string"
+				},
+				"industry": {
+					"type": "string",
+					"note": "suppressed when the envelope owns it"
+				},
+				"employmentType": {
+					"type": "string",
+					"note": "e.g. FULL_TIME"
+				},
+				"employmentTypeDisplay": {
+					"type": "string",
+					"display": true
+				},
+				"location": {
+					"type": "string"
+				},
+				"locationCountry": {
+					"type": "string",
+					"note": "ISO country code"
+				},
+				"salaryRange": {
+					"type": "object",
+					"fields": {
+						"min": {
+							"type": "number"
+						},
+						"max": {
+							"type": "number"
+						},
+						"currency": {
+							"type": "string"
+						},
+						"period": {
+							"type": "string",
+							"note": "e.g. YEAR"
+						},
+						"periodDisplay": {
+							"type": "string",
+							"display": true
+						}
+					}
+				},
+				"applicationDeadline": {
+					"type": "date"
+				},
+				"applicationDeadlineDisplay": {
+					"type": "string",
+					"display": true
+				},
+				"employerRating": {
+					"type": "object",
+					"note": "a 2nd top-level item (EmployerAggregateRating)",
+					"fields": {
+						"value": {
+							"type": "number"
+						},
+						"count": {
+							"type": "number"
+						},
+						"max": {
+							"type": "number"
+						},
+						"organization": {
+							"type": "string"
+						},
+						"sameAs": {
+							"type": "url"
+						}
+					}
+				},
+				"qualifications": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				},
+				"benefits": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				}
+			}
+		},
+		"course": {
+			"label": "Course",
+			"group": "Learning & reference",
+			"fields": {
+				"duration": {
+					"type": "string"
+				},
+				"courseWorkload": {
+					"type": "string"
+				},
+				"difficultyLevel": {
+					"type": "string"
+				},
+				"instructor": {
+					"type": "object",
+					"fields": {
+						"name": {
+							"type": "string"
+						},
+						"title": {
+							"type": "string"
+						}
+					}
+				},
+				"provider": {
+					"type": "string"
+				},
+				"price": {
+					"type": "object",
+					"shape": "price"
+				},
+				"prerequisites": {
+					"type": "array",
+					"items": {
+						"shape": "listItem"
+					}
+				},
+				"learningOutcomes": {
+					"type": "array",
+					"items": {
+						"shape": "listItem"
+					}
+				}
+			}
+		},
+		"booking": {
+			"label": "Booking (Reservation)",
+			"group": "Commerce & offers",
+			"fields": {
+				"serviceName": {
+					"type": "string"
+				},
+				"venue": {
+					"type": "string"
+				},
+				"capacity": {
+					"type": "number"
+				},
+				"duration": {
+					"type": "string"
+				},
+				"price": {
+					"type": "object",
+					"fields": {
+						"hourlyRate": {
+							"type": "number"
+						},
+						"currency": {
+							"type": "string"
+						}
+					}
+				},
+				"amenities": {
+					"type": "array",
+					"items": {
+						"shape": "listItem"
+					}
+				},
+				"cancellationPolicy": {
+					"type": "text"
+				},
+				"specialRequests": {
+					"type": "text"
+				}
+			}
+		},
+		"poll": {
+			"label": "Poll (Question)",
+			"group": "Community & support",
+			"fields": {
+				"options": {
+					"type": "array",
+					"items": {
+						"fields": {
+							"headline": {
+								"type": "string"
+							},
+							"votes": {
+								"type": "number"
+							}
+						}
+					}
+				},
+				"totalVotes": {
+					"type": "number"
+				},
+				"closes": {
+					"type": "date"
+				},
+				"closesDisplay": {
+					"type": "string",
+					"display": true
+				}
+			}
+		},
+		"profile": {
+			"label": "Profile (Person)",
+			"group": "People, work & history",
+			"claimsSubheadline": true,
+			"fields": {
+				"jobTitle": {
+					"type": "string",
+					"note": "subheadline slot"
+				},
+				"organization": {
+					"type": "string",
+					"note": "subheadline slot"
+				},
+				"location": {
+					"type": "string"
+				},
+				"contacts": {
+					"type": "array",
+					"items": {
+						"shape": "contactRow"
+					}
+				}
+			}
+		},
+		"faq": {
+			"label": "FAQ (FAQPage)",
+			"group": "Community & support",
+			"fields": {
+				"items": {
+					"type": "array",
+					"items": {
+						"fields": {
+							"question": {
+								"type": "string"
+							},
+							"answer": {
+								"type": "text"
+							}
+						}
+					},
+					"note": "→ accordion"
+				}
+			}
+		},
+		"quote": {
+			"label": "Quote (Quotation)",
+			"group": "Editorial & journalism",
+			"fields": {}
+		},
+		"timeline": {
+			"label": "Timeline (EventSeries)",
+			"group": "People, work & history",
+			"fields": {
+				"items": {
+					"type": "array",
+					"items": {
+						"fields": {
+							"date": {
+								"type": "date"
+							},
+							"endDate": {
+								"type": "date"
+							},
+							"headline": {
+								"type": "string"
+							},
+							"location": {
+								"type": "string"
+							},
+							"locationUrl": {
+								"type": "url"
+							},
+							"text": {
+								"type": "text"
+							},
+							"theme": {
+								"type": "select",
+								"lookup": "HUES"
+							}
+						}
+					}
+				},
+				"locationUrl": {
+					"type": "url",
+					"note": "emits a VirtualLocation"
+				}
+			}
+		},
+		"gallery": {
+			"label": "Gallery (ImageGallery)",
+			"group": "Page & picture",
+			"fields": {
+				"albumName": {
+					"type": "string"
+				},
+				"totalCount": {
+					"type": "number"
+				},
+				"license": {
+					"type": "url"
+				},
+				"acquireLicensePage": {
+					"type": "url"
+				},
+				"creator": {
+					"type": "string"
+				},
+				"creditText": {
+					"type": "string"
+				},
+				"copyrightNotice": {
+					"type": "string"
+				}
+			}
+		},
+		"statistic": {
+			"label": "Statistic (Observation)",
+			"group": "Data, health & operations",
+			"fields": {
+				"metricName": {
+					"type": "string"
+				},
+				"currentValue": {
+					"type": "number"
+				},
+				"displayValue": {
+					"type": "string",
+					"display": true
+				},
+				"unit": {
+					"type": "string"
+				},
+				"trend": {
+					"type": "string"
+				},
+				"trendPercentage": {
+					"type": "number"
+				},
+				"comparisonPeriod": {
+					"type": "string"
+				},
+				"note": {
+					"type": "text"
+				}
+			}
+		},
+		"achievement": {
+			"label": "Achievement (EducationalOccupationalCredential)",
+			"group": "Learning & reference",
+			"fields": {
+				"status": {
+					"type": "string"
+				},
+				"issuingOrganization": {
+					"type": "string"
+				},
+				"dateEarned": {
+					"type": "date"
+				},
+				"dateEarnedDisplay": {
+					"type": "string",
+					"display": true
+				},
+				"expirationDate": {
+					"type": "date"
+				},
+				"expirationDateDisplay": {
+					"type": "string",
+					"display": true
+				},
+				"skillLevel": {
+					"type": "string"
+				},
+				"credentialId": {
+					"type": "string",
+					"label": "Credential ID"
+				},
+				"verificationUrl": {
+					"type": "url"
+				}
+			}
+		},
+		"goal": {
+			"label": "Goal (AchieveAction)",
+			"group": "Learning & reference",
+			"fields": {
+				"status": {
+					"type": "select",
+					"lookup": "GOAL_STATUS",
+					"note": "mapped to ActionStatusType URLs; anything else emits no actionStatus"
+				},
+				"startDate": {
+					"type": "date"
+				},
+				"endDate": {
+					"type": "date"
+				},
+				"dateRangeDisplay": {
+					"type": "string",
+					"display": true,
+					"noBase": true
+				},
+				"agentName": {
+					"type": "string",
+					"note": "agent → Person"
+				},
+				"target": {
+					"type": "object",
+					"note": "→ QuantitativeValue (the goal)",
+					"fields": {
+						"name": {
+							"type": "string"
+						},
+						"value": {
+							"type": "number"
+						},
+						"unitText": {
+							"type": "string"
+						}
+					}
+				},
+				"current": {
+					"type": "object",
+					"note": "→ QuantitativeValue (progress so far)",
+					"fields": {
+						"value": {
+							"type": "number"
+						},
+						"unitText": {
+							"type": "string"
+						}
+					}
+				},
+				"progressLabel": {
+					"type": "string",
+					"note": "the ring's small caption"
+				},
+				"progressDisplay": {
+					"type": "string",
+					"display": true,
+					"noBase": true,
+					"note": "human line, e.g. \"6 of 10 minutes\""
+				},
+				"hue": {
+					"type": "select",
+					"lookup": "HUES",
+					"note": "ring theme; unknown values drop the attribute"
+				}
+			}
+		},
+		"announcement": {
+			"label": "Announcement (SpecialAnnouncement)",
+			"group": "Data, health & operations",
+			"fields": {
+				"announcementType": {
+					"type": "string"
+				},
+				"priority": {
+					"type": "string"
+				},
+				"priorityDisplay": {
+					"type": "string",
+					"display": true
+				},
+				"effectiveDate": {
+					"type": "object",
+					"fields": {
+						"start": {
+							"type": "date"
+						},
+						"startDisplay": {
+							"type": "string",
+							"display": true
+						},
+						"end": {
+							"type": "date"
+						},
+						"endDisplay": {
+							"type": "string",
+							"display": true
+						}
+					}
+				},
+				"targetAudience": {
+					"type": "string"
+				},
+				"actionRequired": {
+					"type": "text"
+				}
+			}
+		},
+		"business": {
+			"label": "Business (LocalBusiness)",
+			"group": "Food & drink",
+			"fields": {
+				"subtype": {
+					"type": "select",
+					"lookup": "SUBTYPES.business"
+				},
+				"businessType": {
+					"type": "string",
+					"note": "legacy alias — subtype wins; new content should not write it"
+				},
+				"address": {
+					"type": "object",
+					"shape": "address"
+				},
+				"geo": {
+					"type": "object",
+					"control": "geopoint",
+					"shape": "geo"
+				},
+				"telephone": {
+					"type": "string",
+					"control": "tel"
+				},
+				"email": {
+					"type": "string",
+					"control": "email"
+				},
+				"website": {
+					"type": "url"
+				},
+				"priceRange": {
+					"type": "string"
+				},
+				"rating": {
+					"type": "object",
+					"shape": "rating"
+				},
+				"sameAs": {
+					"type": "array",
+					"items": {
+						"type": "url"
+					}
+				},
+				"foundingDate": {
+					"type": "date"
+				},
+				"openingHours": {
+					"type": "array",
+					"items": {
+						"shape": "openingHoursRow"
+					}
+				}
+			}
+		},
+		"comparison": {
+			"label": "Comparison (ItemList)",
+			"group": "Commerce & offers",
+			"fields": {
+				"items": {
+					"type": "array",
+					"items": {
+						"fields": {
+							"name": {
+								"type": "string"
+							},
+							"price": {
+								"type": "string"
+							},
+							"image": {
+								"type": "url"
+							},
+							"score": {
+								"type": "number"
+							},
+							"scoreDisplay": {
+								"type": "string",
+								"display": true
+							}
+						}
+					}
+				},
+				"recommendation": {
+					"type": "string"
+				},
+				"summary": {
+					"type": "text"
+				}
+			}
+		},
+		"contact": {
+			"label": "Contact (ContactPoint)",
+			"group": "Community & support",
+			"fields": {
+				"contactType": {
+					"type": "string"
+				},
+				"department": {
+					"type": "string"
+				},
+				"availableHours": {
+					"type": "string"
+				},
+				"availableHoursDisplay": {
+					"type": "string",
+					"display": true
+				},
+				"responseTime": {
+					"type": "string"
+				},
+				"languages": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					},
+					"also": [
+						"string"
+					],
+					"note": "array OR comma-separated string"
+				},
+				"contactMethods": {
+					"type": "array",
+					"items": {
+						"shape": "contactRow"
+					}
+				}
+			}
+		},
+		"location": {
+			"label": "Location (Place)",
+			"group": "Places, events & property",
+			"fields": {
+				"subtype": {
+					"type": "select",
+					"lookup": "SUBTYPES.location"
+				},
+				"address": {
+					"type": "object",
+					"shape": "address"
+				},
+				"geo": {
+					"type": "object",
+					"control": "geopoint",
+					"shape": "geo",
+					"note": "also feeds the map frame and the external-map link row"
+				},
+				"openingHours": {
+					"type": "array",
+					"items": {
+						"shape": "openingHoursRow"
+					}
+				},
+				"hours": {
+					"type": "string",
+					"note": "plain-string alternative to openingHours"
+				},
+				"contact": {
+					"type": "string"
+				},
+				"amenities": {
+					"type": "array",
+					"items": {
+						"shape": "listItem"
+					}
+				}
+			}
+		},
+		"places": {
+			"label": "Places — a collection on one map (ItemList)",
+			"group": "Places, events & property",
+			"fields": {
+				"kind": {
+					"type": "select",
+					"lookup": "PLACE_KINDS"
+				},
+				"items": {
+					"type": "array",
+					"open": true,
+					"note": "shape depends on kind — LocalBusiness rows (name, url, branchCode, geo, address, telephone, openingHours[]) or residence rows (type ∈ RESIDENCE_TYPES, name, url, image, imageAlt, datePosted, price{amount,currency}, geo, address, floorSize, numberOfBedrooms, numberOfRooms, yearBuilt)"
+				},
+				"center": {
+					"type": "object",
+					"control": "geopoint",
+					"note": "map centre — NOT details.geo",
+					"fields": {
+						"latitude": {
+							"type": "number"
+						},
+						"longitude": {
+							"type": "number"
+						},
+						"url": {
+							"type": "url"
+						}
+					}
+				},
+				"regionDisplay": {
+					"type": "string",
+					"display": true,
+					"noBase": true
+				},
+				"order": {
+					"type": "select",
+					"lookup": "ITEM_LIST_ORDERS"
+				},
+				"ordered": {
+					"type": "boolean"
+				},
+				"description": {
+					"type": "text"
+				},
+				"list": {
+					"type": "string",
+					"note": "\"sr\" renders the list screen-reader-only"
+				},
+				"slides": {
+					"type": "boolean",
+					"note": "turns the frame into a carousel"
+				},
+				"slide": {
+					"type": "object",
+					"requires": "slides",
+					"fields": {
+						"variant": {
+							"type": "string"
+						},
+						"media": {
+							"type": "string"
+						},
+						"content": {
+							"type": "string"
+						},
+						"cta": {
+							"type": "string",
+							"label": "CTA"
+						}
+					}
+				}
+			}
+		},
+		"filelist": {
+			"label": "File list — downloadable files (ItemList)",
+			"group": "Data, health & operations",
+			"fields": {
+				"files": {
+					"type": "array",
+					"items": {
+						"fields": {
+							"name": {
+								"type": "string"
+							},
+							"type": {
+								"type": "select",
+								"lookup": "FILE_TYPES"
+							},
+							"size": {
+								"type": "string",
+								"note": "human string, e.g. 2.4 MB"
+							},
+							"url": {
+								"type": "url"
+							},
+							"download": {
+								"type": "string",
+								"note": "download filename; empty = bare download attribute"
+							}
+						}
+					}
+				},
+				"description": {
+					"type": "text",
+					"note": "fallback only — the envelope summary owns description when filled"
+				},
+				"note": {
+					"type": "text"
+				}
+			}
+		},
+		"membership": {
+			"label": "Membership (Offer)",
+			"group": "Commerce & offers",
+			"fields": {
+				"price": {
+					"type": "object",
+					"fields": {
+						"monthly": {
+							"type": "number"
+						},
+						"yearly": {
+							"type": "number"
+						},
+						"currency": {
+							"type": "string"
+						},
+						"savings": {
+							"type": "string"
+						}
+					}
+				},
+				"trialPeriod": {
+					"type": "string"
+				},
+				"trialText": {
+					"type": "string"
+				},
+				"features": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				},
+				"limitations": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				},
+				"isPopular": {
+					"type": "boolean"
+				},
+				"popularText": {
+					"type": "string"
+				}
+			}
+		},
+		"social": {
+			"label": "Social (SocialMediaPosting)",
+			"group": "Community & support",
+			"fields": {
+				"subtype": {
+					"type": "select",
+					"lookup": "SUBTYPES.social"
+				},
+				"platform": {
+					"type": "string"
+				},
+				"author": {
+					"type": "string",
+					"note": "suppressed when the envelope owns it"
+				}
+			}
+		},
+		"software": {
+			"label": "Software (SoftwareApplication)",
+			"group": "Commerce & offers",
+			"fields": {
+				"subtype": {
+					"type": "select",
+					"lookup": "SUBTYPES.software"
+				},
+				"version": {
+					"type": "string"
+				},
+				"applicationCategory": {
+					"type": "string"
+				},
+				"operatingSystem": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				},
+				"developer": {
+					"type": "object",
+					"fields": {
+						"name": {
+							"type": "string"
+						},
+						"website": {
+							"type": "url"
+						}
+					}
+				},
+				"price": {
+					"type": "object",
+					"fields": {
+						"current": {
+							"type": "number"
+						},
+						"currency": {
+							"type": "string"
+						},
+						"note": {
+							"type": "string"
+						}
+					}
+				},
+				"fileSize": {
+					"type": "string"
+				},
+				"gamePlatform": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					},
+					"note": "VideoGame only"
+				},
+				"playMode": {
+					"type": "array",
+					"items": {
+						"type": "select",
+						"lookup": "GAME_PLAY_MODES"
+					},
+					"note": "VideoGame only — off-list values dropped"
+				},
+				"gameEdition": {
+					"type": "string",
+					"note": "VideoGame only"
+				},
+				"contentRating": {
+					"type": "string",
+					"note": "VideoGame only, e.g. PEGI 12"
+				},
+				"numberOfPlayers": {
+					"type": "object",
+					"note": "VideoGame only → QuantitativeValue",
+					"fields": {
+						"min": {
+							"type": "number"
+						},
+						"max": {
+							"type": "number"
+						}
+					}
+				},
+				"systemRequirements": {
+					"type": "object",
+					"also": [
+						"string"
+					],
+					"note": "one readable line, or {processor, ram, storage}",
+					"fields": {
+						"processor": {
+							"type": "string"
+						},
+						"ram": {
+							"type": "string",
+							"label": "RAM"
+						},
+						"storage": {
+							"type": "string"
+						}
+					}
+				}
+			}
+		},
+		"organization": {
+			"label": "Organization (multi-office)",
+			"group": "People, work & history",
+			"fields": {
+				"subtype": {
+					"type": "select",
+					"lookup": "SUBTYPES.organization"
+				},
+				"foundingDate": {
+					"type": "date"
+				},
+				"foundingDateDisplay": {
+					"type": "string",
+					"display": true
+				},
+				"numberOfEmployees": {
+					"type": "number"
+				},
+				"sameAs": {
+					"type": "array",
+					"items": {
+						"type": "url"
+					}
+				},
+				"email": {
+					"type": "string",
+					"control": "email"
+				},
+				"headquarters": {
+					"type": "object",
+					"fields": {
+						"address": {
+							"type": "object",
+							"shape": "address"
+						},
+						"geo": {
+							"type": "object",
+							"control": "geopoint",
+							"shape": "geo"
+						}
+					}
+				},
+				"offices": {
+					"type": "array",
+					"items": {
+						"fields": {
+							"name": {
+								"type": "string"
+							},
+							"address": {
+								"type": "object",
+								"shape": "address"
+							},
+							"geo": {
+								"type": "object",
+								"control": "geopoint",
+								"shape": "geo"
+							},
+							"telephone": {
+								"type": "string",
+								"control": "tel"
+							},
+							"email": {
+								"type": "string",
+								"control": "email"
+							},
+							"openingHours": {
+								"type": "array",
+								"items": {
+									"shape": "openingHoursRow"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"video": {
+			"label": "Video (VideoObject)",
+			"group": "Screen",
+			"fields": {
+				"durationDisplay": {
+					"type": "string",
+					"display": true,
+					"noBase": true,
+					"note": "the machine duration lives on the media item"
+				},
+				"viewsDisplay": {
+					"type": "string",
+					"display": true,
+					"noBase": true
+				},
+				"creator": {
+					"type": "object",
+					"fields": {
+						"name": {
+							"type": "string"
+						}
+					}
+				}
+			}
+		},
+		"howto": {
+			"label": "How-to (HowTo)",
+			"group": "Learning & reference",
+			"fields": {
+				"totalTime": {
+					"type": "string",
+					"note": "ISO 8601 duration"
+				},
+				"estimatedCost": {
+					"type": "object",
+					"fields": {
+						"value": {
+							"type": "number"
+						},
+						"currency": {
+							"type": "string"
+						}
+					}
+				},
+				"difficulty": {
+					"type": "string"
+				},
+				"supplies": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				},
+				"tools": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				},
+				"steps": {
+					"type": "array",
+					"items": {
+						"fields": {
+							"name": {
+								"type": "string"
+							},
+							"text": {
+								"type": "text"
+							}
+						}
+					},
+					"note": "→ accordion"
+				}
+			}
+		},
+		"qa": {
+			"label": "Q&A (QAPage)",
+			"group": "Community & support",
+			"fields": {
+				"question": {
+					"type": "text"
+				},
+				"upvotes": {
+					"type": "number"
+				},
+				"answers": {
+					"type": "array",
+					"items": {
+						"fields": {
+							"text": {
+								"type": "text"
+							},
+							"author": {
+								"type": "string"
+							},
+							"upvotes": {
+								"type": "number"
+							},
+							"accepted": {
+								"type": "boolean"
+							}
+						}
+					}
+				}
+			}
+		},
+		"podcast": {
+			"label": "Podcast (PodcastEpisode)",
+			"group": "Audio",
+			"fields": {
+				"seriesName": {
+					"type": "string"
+				},
+				"episodeNumber": {
+					"type": "number"
+				},
+				"duration": {
+					"type": "string",
+					"note": "ISO 8601 duration"
+				},
+				"durationDisplay": {
+					"type": "string",
+					"display": true
+				},
+				"audioUrl": {
+					"type": "url"
+				}
+			}
+		},
+		"movie": {
+			"label": "Movie",
+			"group": "Screen",
+			"fields": {
+				"dateReleased": {
+					"type": "date"
+				},
+				"dateReleasedDisplay": {
+					"type": "string",
+					"display": true
+				},
+				"duration": {
+					"type": "string",
+					"note": "ISO 8601 duration"
+				},
+				"durationDisplay": {
+					"type": "string",
+					"display": true
+				},
+				"contentRating": {
+					"type": "string"
+				},
+				"rating": {
+					"type": "object",
+					"shape": "rating"
+				},
+				"director": {
+					"type": "object",
+					"fields": {
+						"name": {
+							"type": "string"
+						},
+						"label": {
+							"type": "string"
+						}
+					}
+				},
+				"actors": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				}
+			}
+		},
+		"book": {
+			"label": "Book",
+			"group": "Page & picture",
+			"fields": {
+				"isbn": {
+					"type": "string",
+					"label": "ISBN",
+					"note": "shown raw — the page carries the format-detection meta (schema.md § Book)"
+				},
+				"numberOfPages": {
+					"type": "number"
+				},
+				"bookFormat": {
+					"type": "select",
+					"lookup": "BOOK_FORMATS"
+				},
+				"bookFormatDisplay": {
+					"type": "string",
+					"display": true
+				},
+				"publisher": {
+					"type": "string"
+				},
+				"rating": {
+					"type": "object",
+					"shape": "rating"
+				},
+				"price": {
+					"type": "object",
+					"shape": "price"
+				}
+			}
+		},
+		"bookseries": {
+			"label": "Book series (BookSeries)",
+			"group": "Page & picture",
+			"fields": {
+				"startDate": {
+					"type": "date",
+					"note": "first volume — the CreativeWorkSeries property"
+				},
+				"endDate": {
+					"type": "date",
+					"note": "last volume; omit for an open-ended series"
+				},
+				"bookCount": {
+					"type": "number",
+					"note": "prose only — no count property on the type"
+				},
+				"publisher": {
+					"type": "string"
+				},
+				"rating": {
+					"type": "object",
+					"shape": "rating"
+				},
+				"ordered": {
+					"type": "boolean",
+					"note": "default TRUE — volumes ascend"
+				},
+				"books": {
+					"type": "array",
+					"items": {
+						"fields": {
+							"position": {
+								"type": "number"
+							},
+							"name": {
+								"type": "string"
+							},
+							"datePublished": {
+								"type": "date",
+								"note": "the visible year is derived from it"
+							},
+							"isbn": {
+								"type": "string",
+								"label": "ISBN",
+								"note": "machine-only — no visible digits"
+							},
+							"url": {
+								"type": "url",
+								"note": "renders the row as a crawlable itemprop=\"url\" anchor"
+							}
+						}
+					},
+					"note": "one hasPart → Book scope per row"
+				}
+			}
+		},
+		"dataset": {
+			"label": "Dataset",
+			"group": "Data, health & operations",
+			"fields": {
+				"license": {
+					"type": "url"
+				},
+				"licenseDisplay": {
+					"type": "string",
+					"display": true
+				},
+				"temporalCoverage": {
+					"type": "string",
+					"note": "ISO 8601 interval"
+				},
+				"temporalCoverageDisplay": {
+					"type": "string",
+					"display": true
+				},
+				"spatialCoverage": {
+					"type": "string"
+				},
+				"variableMeasured": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				},
+				"distribution": {
+					"type": "array",
+					"items": {
+						"fields": {
+							"format": {
+								"type": "string"
+							},
+							"url": {
+								"type": "url"
+							},
+							"size": {
+								"type": "string"
+							}
+						}
+					}
+				}
+			}
+		},
+		"claim": {
+			"label": "Fact check (ClaimReview)",
+			"group": "Editorial & journalism",
+			"fields": {
+				"claim": {
+					"type": "text"
+				},
+				"claimant": {
+					"type": "string"
+				},
+				"reviewDate": {
+					"type": "date"
+				},
+				"verdict": {
+					"type": "object",
+					"fields": {
+						"value": {
+							"type": "number"
+						},
+						"max": {
+							"type": "number"
+						},
+						"label": {
+							"type": "string"
+						}
+					}
+				}
+			}
+		},
+		"loyalty": {
+			"label": "Loyalty programme (MemberProgram)",
+			"group": "Commerce & offers",
+			"fields": {
+				"hostingOrganization": {
+					"type": "string"
+				},
+				"joinUrl": {
+					"type": "url"
+				},
+				"joinText": {
+					"type": "string"
+				},
+				"joinIcon": {
+					"type": "select",
+					"lookup": "ICON_NAMES"
+				},
+				"tiers": {
+					"type": "array",
+					"items": {
+						"fields": {
+							"name": {
+								"type": "string"
+							},
+							"pointsEarned": {
+								"type": "number"
+							},
+							"url": {
+								"type": "url"
+							},
+							"requirement": {
+								"type": "string"
+							},
+							"requirementAmount": {
+								"type": "object",
+								"fields": {
+									"currency": {
+										"type": "string"
+									},
+									"value": {
+										"type": "number"
+									}
+								}
+							},
+							"requirementNote": {
+								"type": "string"
+							},
+							"benefits": {
+								"type": "array",
+								"items": {
+									"fields": {
+										"type": {
+											"type": "select",
+											"lookup": "TIER_BENEFITS"
+										},
+										"text": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"quiz": {
+			"label": "Quiz — flashcards",
+			"group": "Learning & reference",
+			"fields": {
+				"format": {
+					"type": "select",
+					"lookup": "QUIZ_FORMATS",
+					"note": "falls back to flashcard"
+				},
+				"subject": {
+					"type": "string"
+				},
+				"pace": {
+					"type": "string"
+				},
+				"cards": {
+					"type": "array",
+					"items": {
+						"fields": {
+							"question": {
+								"type": "text"
+							},
+							"answer": {
+								"type": "text"
+							},
+							"options": {
+								"type": "array",
+								"items": {
+									"fields": {
+										"text": {
+											"type": "string"
+										},
+										"correct": {
+											"type": "boolean"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"service": {
+			"label": "Service",
+			"group": "Data, health & operations",
+			"fields": {
+				"serviceType": {
+					"type": "string"
+				},
+				"provider": {
+					"type": "string"
+				},
+				"areaServed": {
+					"type": "string"
+				},
+				"catalog": {
+					"type": "object",
+					"fields": {
+						"name": {
+							"type": "string"
+						},
+						"period": {
+							"type": "string"
+						},
+						"items": {
+							"type": "array",
+							"items": {
+								"fields": {
+									"name": {
+										"type": "string"
+									},
+									"price": {
+										"type": "number"
+									},
+									"currency": {
+										"type": "string"
+									},
+									"icon": {
+										"type": "select",
+										"lookup": "ICON_NAMES"
+									}
+								}
+							}
+						}
+					}
+				},
+				"channel": {
+					"type": "object",
+					"fields": {
+						"languages": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						},
+						"processingTime": {
+							"type": "string"
+						},
+						"url": {
+							"type": "url"
+						},
+						"urlText": {
+							"type": "string"
+						},
+						"urlIcon": {
+							"type": "select",
+							"lookup": "ICON_NAMES"
+						},
+						"telephone": {
+							"type": "string",
+							"control": "tel"
+						},
+						"contactType": {
+							"type": "string"
+						}
+					}
+				}
+			}
+		},
+		"realestate": {
+			"label": "Real estate listing (RealEstateListing)",
+			"group": "Places, events & property",
+			"fields": {
+				"property": {
+					"type": "object",
+					"fields": {
+						"type": {
+							"type": "select",
+							"lookup": "RESIDENCE_TYPES"
+						},
+						"name": {
+							"type": "string"
+						},
+						"floorLevel": {
+							"type": "string"
+						},
+						"petsAllowed": {
+							"type": "boolean"
+						},
+						"floorSize": {
+							"type": "number"
+						},
+						"floorSizeUnit": {
+							"type": "string",
+							"note": "UN/CEFACT code, e.g. MTK"
+						},
+						"floorSizeLabel": {
+							"type": "string",
+							"note": "e.g. m²"
+						},
+						"bedrooms": {
+							"type": "number"
+						},
+						"bathrooms": {
+							"type": "number"
+						},
+						"rooms": {
+							"type": "number"
+						},
+						"yearBuilt": {
+							"type": "number"
+						},
+						"address": {
+							"type": "object",
+							"shape": "address"
+						},
+						"geo": {
+							"type": "object",
+							"control": "geopoint",
+							"shape": "geo"
+						},
+						"amenities": {
+							"type": "array",
+							"items": {
+								"shape": "listItem"
+							}
+						}
+					}
+				},
+				"price": {
+					"type": "object",
+					"fields": {
+						"amount": {
+							"type": "number"
+						},
+						"currency": {
+							"type": "string"
+						},
+						"note": {
+							"type": "string"
+						}
+					}
+				},
+				"datePosted": {
+					"type": "date"
+				},
+				"datePostedDisplay": {
+					"type": "string",
+					"display": true
+				},
+				"agent": {
+					"type": "string"
+				},
+				"viewings": {
+					"type": "string"
+				},
+				"availability": {
+					"type": "string"
+				},
+				"map": {
+					"type": "object",
+					"open": true,
+					"note": "map provider options, e.g. {key}"
+				},
+				"mapMedia": {
+					"type": "object",
+					"open": true,
+					"note": "the map frame's media item"
+				}
+			}
+		},
+		"vacationrental": {
+			"label": "Vacation rental (VacationRental)",
+			"group": "Places, events & property",
+			"fields": {
+				"additionalType": {
+					"type": "string"
+				},
+				"identifier": {
+					"type": "string"
+				},
+				"brand": {
+					"type": "string"
+				},
+				"priceRange": {
+					"type": "string"
+				},
+				"checkin": {
+					"type": "string",
+					"control": "time"
+				},
+				"checkout": {
+					"type": "string",
+					"control": "time"
+				},
+				"checkinDisplay": {
+					"type": "string",
+					"display": true
+				},
+				"checkoutDisplay": {
+					"type": "string",
+					"display": true
+				},
+				"languages": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					},
+					"note": "BCP 47 tags"
+				},
+				"rating": {
+					"type": "object",
+					"shape": "rating"
+				},
+				"geo": {
+					"type": "object",
+					"control": "geopoint",
+					"shape": "geo",
+					"note": "rides the ROOT — this type IS a Place"
+				},
+				"address": {
+					"type": "object",
+					"shape": "address"
+				},
+				"property": {
+					"type": "object",
+					"note": "→ containsPlace",
+					"fields": {
+						"additionalType": {
+							"type": "string"
+						},
+						"name": {
+							"type": "string"
+						},
+						"petsAllowed": {
+							"type": "boolean"
+						},
+						"floorSize": {
+							"type": "number"
+						},
+						"floorSizeUnit": {
+							"type": "string"
+						},
+						"floorSizeLabel": {
+							"type": "string"
+						},
+						"bedrooms": {
+							"type": "number"
+						},
+						"bathrooms": {
+							"type": "number"
+						},
+						"rooms": {
+							"type": "number"
+						},
+						"sleeps": {
+							"type": "number"
+						},
+						"beds": {
+							"type": "array",
+							"items": {
+								"fields": {
+									"count": {
+										"type": "number"
+									},
+									"type": {
+										"type": "string"
+									},
+									"icon": {
+										"type": "select",
+										"lookup": "ICON_NAMES"
+									}
+								}
+							}
+						},
+						"amenities": {
+							"type": "array",
+							"items": {
+								"shape": "listItem"
+							}
+						}
+					}
+				},
+				"map": {
+					"type": "object",
+					"open": true,
+					"note": "map provider options, e.g. {key}"
+				},
+				"mapMedia": {
+					"type": "object",
+					"open": true,
+					"note": "the map frame's media item"
+				},
+				"reviews": {
+					"type": "array",
+					"items": {
+						"shape": "reviewRow"
+					},
+					"note": "detail pages only"
+				}
+			}
+		},
+		"menu": {
+			"label": "Menu",
+			"group": "Food & drink",
+			"fields": {
+				"note": {
+					"type": "text"
+				},
+				"sections": {
+					"type": "array",
+					"items": {
+						"fields": {
+							"name": {
+								"type": "string"
+							},
+							"items": {
+								"type": "array",
+								"items": {
+									"fields": {
+										"name": {
+											"type": "string"
+										},
+										"price": {
+											"type": "number"
+										},
+										"currency": {
+											"type": "string"
+										},
+										"label": {
+											"type": "string"
+										},
+										"labelTheme": {
+											"type": "select",
+											"lookup": "HUES"
+										},
+										"labelSize": {
+											"type": "string"
+										},
+										"description": {
+											"type": "text"
+										},
+										"diets": {
+											"type": "array",
+											"items": {
+												"type": "select",
+												"lookup": "RESTRICTED_DIETS"
+											}
+										},
+										"nutrition": {
+											"type": "object",
+											"fields": {
+												"calories": {
+													"type": "string",
+													"note": "an Energy — unit-bearing string, e.g. \"650 calories\""
+												},
+												"proteinContent": {
+													"type": "string"
+												},
+												"servingSize": {
+													"type": "string"
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"tvseries": {
+			"label": "TV series (TVSeries)",
+			"group": "Screen",
+			"fields": {
+				"numberOfSeasons": {
+					"type": "number"
+				},
+				"numberOfEpisodes": {
+					"type": "number"
+				},
+				"startDate": {
+					"type": "date"
+				},
+				"contentRating": {
+					"type": "string"
+				},
+				"rating": {
+					"type": "object",
+					"shape": "rating"
+				},
+				"ordered": {
+					"type": "boolean"
+				},
+				"seasons": {
+					"type": "array",
+					"items": {
+						"fields": {
+							"seasonNumber": {
+								"type": "number"
+							},
+							"numberOfEpisodes": {
+								"type": "number"
+							},
+							"name": {
+								"type": "string"
+							},
+							"display": {
+								"type": "string",
+								"display": true
+							}
+						}
+					}
+				},
+				"director": {
+					"type": "object",
+					"fields": {
+						"name": {
+							"type": "string"
+						},
+						"label": {
+							"type": "string"
+						}
+					}
+				},
+				"actors": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				}
+			}
+		},
+		"tvepisode": {
+			"label": "TV episode (TVEpisode)",
+			"group": "Screen",
+			"fields": {
+				"episodeNumber": {
+					"type": "number"
+				},
+				"duration": {
+					"type": "string",
+					"note": "ISO 8601 duration"
+				},
+				"durationDisplay": {
+					"type": "string",
+					"display": true
+				},
+				"datePublished": {
+					"type": "date"
+				},
+				"datePublishedDisplay": {
+					"type": "string",
+					"display": true
+				},
+				"seriesName": {
+					"type": "string"
+				},
+				"season": {
+					"type": "object",
+					"fields": {
+						"seasonNumber": {
+							"type": "number"
+						},
+						"name": {
+							"type": "string"
+						}
+					}
+				},
+				"director": {
+					"type": "object",
+					"fields": {
+						"name": {
+							"type": "string"
+						},
+						"label": {
+							"type": "string"
+						}
+					}
+				},
+				"actors": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				}
+			}
+		},
+		"medical": {
+			"label": "Health article (MedicalWebPage)",
+			"group": "Data, health & operations",
+			"fields": {
+				"specialty": {
+					"type": "select",
+					"lookup": "MEDICAL_SPECIALTIES"
+				},
+				"lastReviewed": {
+					"type": "date"
+				},
+				"lastReviewedDisplay": {
+					"type": "string",
+					"display": true
+				},
+				"reviewedLabel": {
+					"type": "string"
+				},
+				"audience": {
+					"type": "object",
+					"fields": {
+						"type": {
+							"type": "select",
+							"lookup": "MEDICAL_AUDIENCES"
+						},
+						"name": {
+							"type": "string"
+						}
+					}
+				},
+				"about": {
+					"type": "object",
+					"fields": {
+						"type": {
+							"type": "select",
+							"lookup": "MEDICAL_ABOUT_TYPES"
+						},
+						"name": {
+							"type": "string"
+						},
+						"aspects": {
+							"type": "array",
+							"items": {
+								"fields": {
+									"type": {
+										"type": "select",
+										"lookup": "MEDICAL_ASPECTS"
+									},
+									"text": {
+										"type": "text"
+									}
+								}
+							}
+						}
+					}
+				},
+				"reviewedBy": {
+					"type": "object",
+					"shape": "person"
+				},
+				"disclaimer": {
+					"type": "text"
+				}
+			}
+		},
+		"music": {
+			"label": "Album (MusicAlbum)",
+			"group": "Audio",
+			"claimsSubheadline": true,
+			"fields": {
+				"artist": {
+					"type": "string",
+					"note": "subheadline slot"
+				},
+				"artistUrl": {
+					"type": "url",
+					"note": "subheadline slot"
+				},
+				"numTracks": {
+					"type": "number"
+				},
+				"datePublished": {
+					"type": "date"
+				},
+				"datePublishedDisplay": {
+					"type": "string",
+					"display": true
+				},
+				"durationDisplay": {
+					"type": "string",
+					"display": true,
+					"noBase": true
+				},
+				"productionType": {
+					"type": "select",
+					"lookup": "ALBUM_PRODUCTION_TYPES"
+				},
+				"releaseType": {
+					"type": "select",
+					"lookup": "ALBUM_RELEASE_TYPES"
+				},
+				"ordered": {
+					"type": "boolean"
+				},
+				"tracks": {
+					"type": "array",
+					"items": {
+						"fields": {
+							"name": {
+								"type": "string"
+							},
+							"position": {
+								"type": "number"
+							},
+							"duration": {
+								"type": "string"
+							},
+							"durationDisplay": {
+								"type": "string",
+								"display": true
+							},
+							"artist": {
+								"type": "string"
+							}
+						}
+					}
+				},
+				"note": {
+					"type": "text"
+				}
+			}
+		},
+		"musicgroup": {
+			"label": "Band (MusicGroup)",
+			"group": "Audio",
+			"fields": {
+				"genres": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				},
+				"foundingDate": {
+					"type": "date"
+				},
+				"foundingDateDisplay": {
+					"type": "string",
+					"display": true
+				},
+				"foundingLocation": {
+					"type": "string"
+				},
+				"members": {
+					"type": "array",
+					"items": {
+						"fields": {
+							"role": {
+								"type": "string"
+							},
+							"name": {
+								"type": "string"
+							}
+						}
+					}
+				},
+				"albums": {
+					"type": "array",
+					"items": {
+						"fields": {
+							"name": {
+								"type": "string"
+							},
+							"datePublished": {
+								"type": "date"
+							},
+							"numTracks": {
+								"type": "number"
+							},
+							"url": {
+								"type": "url"
+							},
+							"display": {
+								"type": "string",
+								"display": true
+							}
+						}
+					}
+				},
+				"ordered": {
+					"type": "boolean",
+					"note": "defaults FALSE here"
+				},
+				"sameAs": {
+					"type": "array",
+					"items": {
+						"type": "url"
+					}
+				},
+				"note": {
+					"type": "text"
+				}
+			}
+		},
+		"glossary": {
+			"label": "Glossary (DefinedTermSet)",
+			"group": "Learning & reference",
+			"fields": {
+				"about": {
+					"type": "string"
+				},
+				"note": {
+					"type": "text"
+				},
+				"terms": {
+					"type": "array",
+					"items": {
+						"fields": {
+							"name": {
+								"type": "string"
+							},
+							"termCode": {
+								"type": "string"
+							},
+							"description": {
+								"type": "text"
+							}
+						}
+					},
+					"note": "→ accordion"
+				}
+			}
+		},
+		"podcastseries": {
+			"label": "Podcast series (PodcastSeries)",
+			"group": "Audio",
+			"fields": {
+				"startDate": {
+					"type": "date"
+				},
+				"cadence": {
+					"type": "string"
+				},
+				"episodeCount": {
+					"type": "number"
+				},
+				"feed": {
+					"type": "object",
+					"fields": {
+						"url": {
+							"type": "url"
+						},
+						"text": {
+							"type": "string"
+						}
+					}
+				},
+				"host": {
+					"type": "object",
+					"shape": "person"
+				},
+				"ordered": {
+					"type": "boolean",
+					"note": "defaults FALSE"
+				},
+				"episodes": {
+					"type": "array",
+					"items": {
+						"fields": {
+							"episodeNumber": {
+								"type": "number"
+							},
+							"name": {
+								"type": "string"
+							},
+							"duration": {
+								"type": "string"
+							},
+							"durationDisplay": {
+								"type": "string",
+								"display": true
+							}
+						}
+					}
+				},
+				"note": {
+					"type": "text"
+				}
+			}
+		},
+		"comicseries": {
+			"label": "Comic series (ComicSeries)",
+			"group": "Page & picture",
+			"fields": {
+				"startDate": {
+					"type": "date"
+				},
+				"endDate": {
+					"type": "date"
+				},
+				"cadence": {
+					"type": "string"
+				},
+				"issn": {
+					"type": "string",
+					"label": "ISSN",
+					"note": "shown raw — the page carries the format-detection meta"
+				},
+				"issueCount": {
+					"type": "number"
+				},
+				"publisher": {
+					"type": "string"
+				}
+			}
+		},
+		"comicissue": {
+			"label": "Comic issue (ComicIssue)",
+			"group": "Page & picture",
+			"fields": {
+				"issueNumber": {
+					"type": "number"
+				},
+				"datePublished": {
+					"type": "date"
+				},
+				"datePublishedDisplay": {
+					"type": "string",
+					"display": true
+				},
+				"pagination": {
+					"type": "string"
+				},
+				"variantCover": {
+					"type": "string"
+				},
+				"coverPrice": {
+					"type": "string"
+				},
+				"price": {
+					"type": "object",
+					"fields": {
+						"current": {
+							"type": "number"
+						},
+						"currency": {
+							"type": "string"
+						},
+						"availability": {
+							"type": "string"
+						}
+					}
+				},
+				"series": {
+					"type": "object",
+					"fields": {
+						"name": {
+							"type": "string"
+						},
+						"url": {
+							"type": "url"
+						},
+						"issn": {
+							"type": "string",
+							"label": "ISSN"
+						}
+					}
+				},
+				"artist": {
+					"type": "string",
+					"note": "COMIC_ROLES: labelled Art"
+				},
+				"penciler": {
+					"type": "string",
+					"note": "COMIC_ROLES: labelled Pencils"
+				},
+				"inker": {
+					"type": "string",
+					"note": "COMIC_ROLES: labelled Inks"
+				},
+				"letterer": {
+					"type": "string",
+					"note": "COMIC_ROLES: labelled Letters"
+				},
+				"colorist": {
+					"type": "string",
+					"note": "COMIC_ROLES: labelled Colours"
+				}
+			}
+		},
+		"artist": {
+			"label": "Artist (Person)",
+			"group": "People, work & history",
+			"claimsSubheadline": true,
+			"fields": {
+				"jobTitle": {
+					"type": "string",
+					"note": "subheadline slot"
+				},
+				"organization": {
+					"type": "string",
+					"note": "subheadline slot"
+				},
+				"location": {
+					"type": "string"
+				},
+				"occupation": {
+					"type": "object",
+					"fields": {
+						"name": {
+							"type": "string"
+						},
+						"category": {
+							"type": "string"
+						},
+						"since": {
+							"type": "string"
+						}
+					}
+				},
+				"awards": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				},
+				"sameAs": {
+					"type": "array",
+					"items": {
+						"type": "url"
+					}
+				}
+			}
+		}
+	}
+}

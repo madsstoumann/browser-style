@@ -4,148 +4,70 @@
 	<title>Editor Card - Demo</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-	<meta name="description" content="Editor Card - Demo with pre-loaded data">
+	<meta name="description" content="Editor Card — every schema type, loaded from the card corpus">
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/ui/base/index.css">
 	<script type="importmap">
 		{
 			"imports": {
-				"@browser.style/editor-shared": "../shared/index.js",
-				"@browser.style/icon/icons.data.js": "../../../ui/icon/icons.data.js"
+				"@browser.style/editor-shared": "../shared/index.js"
 			}
 		}
 	</script>
 	<style>
-		.demo-grid {
-			display: grid;
-			gap: 2rem;
-		}
-		.demo-grid > section {
-			border: 1px solid #ddd;
-			border-radius: 0.5rem;
-			padding: 1rem;
-		}
-		.demo-grid h2 {
-			margin-block: 0 1rem;
-			text-transform: capitalize;
-		}
+		.demo-controls { display: flex; gap: 1rem; align-items: end; flex-wrap: wrap; margin-block-end: 2rem; }
+		.demo-controls label { display: grid; gap: .25rem; }
+		#roundtrip[data-state="ok"] { color: green; }
+		#roundtrip[data-state="diff"] { color: crimson; }
 	</style>
 </head>
 <body>
 	<h1>Editor Card: Demo</h1>
-	<p>Examples with pre-loaded data and locked card types.</p>
+	<p>
+		Pick any instance from <code>ui/card/data/</code> — the editor loads its
+		<code>schemaType</code> + <code>details</code>, and the round-trip readout compares
+		the editor's value against the file until you edit something.
+	</p>
 
-	<div class="demo-grid">
-		<section>
-			<h2>Article</h2>
-			<editor-card value='{
-				"type": "article",
-				"article": {
-					"authors": [
-						{ "name": "John Smith", "role": "Senior Editor" },
-						{ "name": "Jane Doe", "role": "Contributing Writer" }
-					]
-				}
-			}'></editor-card>
-		</section>
-
-		<section>
-			<h2>Recipe</h2>
-			<editor-card value='{
-				"type": "recipe",
-				"recipe": {
-					"content": {
-						"text": ["2 cups flour", "1 cup sugar", "3 eggs"]
-					},
-					"recipe": {
-						"prepTime": "15 minutes",
-						"cookTime": "30 minutes",
-						"servings": "8 servings",
-						"instructions": ["Preheat oven to 350°F", "Mix dry ingredients", "Add wet ingredients"]
-					},
-					"authors": [
-						{ "name": "Chef Maria", "role": "Pastry Chef" }
-					]
-				}
-			}'></editor-card>
-		</section>
-
-		<section>
-			<h2>Product</h2>
-			<editor-card value='{
-				"type": "product",
-				"product": {
-					"sku": "PROD-001234",
-					"product": {
-						"availability": "In Stock",
-						"price": {
-							"current": "299.00",
-							"original": "399.00",
-							"currency": "USD",
-							"discountText": "25% off"
-						}
-					}
-				}
-			}'></editor-card>
-		</section>
-
-		<section>
-			<h2>Event</h2>
-			<editor-card value='{
-				"type": "event",
-				"event": {
-					"event": {
-						"startDate": "2025-03-15T09:00",
-						"endDate": "2025-03-15T17:00",
-						"status": "Scheduled",
-						"location": {
-							"name": "Tech Convention Center",
-							"address": "123 Innovation Blvd, San Francisco, CA"
-						},
-						"organizer": {
-							"name": "TechConf Inc."
-						}
-					}
-				}
-			}'></editor-card>
-		</section>
-
-		<section>
-			<h2>FAQ</h2>
-			<editor-card value='{
-				"type": "faq",
-				"faq": {
-					"content": {
-						"text": [
-							{ "headline": "How do I reset my password?", "text": "Click Forgot Password on the login page and follow the instructions." },
-							{ "headline": "What payment methods do you accept?", "text": "We accept Visa, MasterCard, PayPal, and Apple Pay." }
-						]
-					}
-				}
-			}'></editor-card>
-		</section>
-
-		<section>
-			<h2>Job</h2>
-			<editor-card value='{
-				"type": "job",
-				"job": {
-					"company": "InnovateTech",
-					"location": "Remote (US Timezone)",
-					"employmentType": "Full-time",
-					"salaryRange": {
-						"min": 120000,
-						"max": 150000,
-						"currency": "USD",
-						"period": "annually"
-					},
-					"qualifications": ["5+ years React experience", "TypeScript proficiency"],
-					"benefits": ["Health Insurance", "401k matching", "Unlimited PTO"]
-				}
-			}'></editor-card>
-		</section>
+	<div class="demo-controls">
+		<label>Corpus instance
+			<select id="instance"><option value="">— empty editor —</option></select>
+		</label>
+		<label class="toggle"><input type="checkbox" id="locked"> lock type</label>
+		<output id="roundtrip"></output>
 	</div>
 
-	<script type="module" src="./src/index.js"></script>
+	<editor-card id="editor"></editor-card>
+
+	<script type="module">
+		import './src/index.js';
+
+		const editor = document.getElementById('editor');
+		const picker = document.getElementById('instance');
+		const locked = document.getElementById('locked');
+		const readout = document.getElementById('roundtrip');
+		let loaded = null;
+
+		const index = await (await fetch('/ui/card/data/index.json')).json();
+		for (const id of index.cards) picker.add(new Option(id, id));
+
+		const report = () => {
+			if (!loaded) { readout.textContent = ''; return; }
+			const same = editor.value === JSON.stringify(loaded);
+			readout.dataset.state = same ? 'ok' : 'diff';
+			readout.textContent = same ? 'round-trip: byte-equal' : 'round-trip: edited (differs from file)';
+		};
+
+		picker.addEventListener('change', async () => {
+			if (!picker.value) { loaded = null; editor.value = ''; report(); return; }
+			const doc = await (await fetch(`/ui/card/data/${picker.value}.json`)).json();
+			loaded = { schemaType: doc.fields?.schemaType ?? 'content', details: doc.fields?.details ?? {} };
+			editor.value = loaded;
+			report();
+		});
+
+		locked.addEventListener('change', () => editor.toggleAttribute('locked', locked.checked));
+		editor.addEventListener('change', report);
+	</script>
 </body>
 </html>
