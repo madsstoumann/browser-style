@@ -48,13 +48,11 @@
 	   view-timelines keep working. Only the inline axis is clipped; the block axis
 	   stays `visible`, which is the one combination allowed alongside clip.
 
-	   @supports (-webkit-hyphens: none) is the WebKit gate — true in Safari (and in
-	   any iOS browser, all of which are WebKit and share the behaviour), false in
-	   Chrome/Edge/Firefox. Scoped with :has() so the rule is inert on pages that
-	   never bleed. */
-	@supports (-webkit-hyphens: none) {
-		html:has(:is(lay-out, lay-out-group)[bleed]) { overflow-x: clip; }
-	}
+	   UNGATED (was WebKit-only): the bleed width is 100dvi, which includes a
+	   space-taking scrollbar in ANY engine — under overlay scrollbars the rule is
+	   a no-op. Scoped with :has() so it is inert on pages that never bleed.
+	   Docs: open-items § 43. */
+	html:has(:is(lay-out, lay-out-group)[bleed]) { overflow-x: clip; }
 
 	lay-out {
 		--layout-col-rule-c: #CCC;
@@ -137,7 +135,7 @@
 		/* === bleed === */
 		&[bleed] {
 			--layout-mw: 100dvi;
-			--layout-w: calc(100dvi - var(--layout-mi, 0px)); 
+			--layout-w: 100dvi; /* symmetric — the old `- mi` shorted the inline-end by one gutter under overlay scrollbars (open-items § 43) */
 			--_pi: calc((100dvi - var(--layout-bleed-mw, 100dvi)) / 2);
 			background-color: #0000;
 			border-image: conic-gradient(var(--layout-bg, var(--_theme-bg)) 0 0) fill 0//0 100dvi;

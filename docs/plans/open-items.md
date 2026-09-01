@@ -1236,44 +1236,30 @@ Not urgent: the pages still render sharp, and only the LCP image is affected on 
 (Re-verified 2026-09-01: all spot-checked pages still end their eager `sizes` in a bare
 `100vw`; no gate script exists under `scripts/`.)
 
-## 43. `lay-out[bleed]` lands one gutter short of the end edge
+## 43. `lay-out[bleed]` lands one gutter short of the end edge — FIXED 2026-09-01 (Safari check pending)
 
-**Where:** `layout/core/base.css` § bleed (and the generated `layout/dist/layout.css`)
+Two changes in `layout/core/base.css`:
 
-```css
-&[bleed] {
-	--layout-w: calc(100dvi - var(--layout-mi, 0px));
-	margin-inline: min(-1 * var(--layout-mi, 0px), var(--layout-bleed-mw, 100dvi) / 2 - 50dvi);
-}
-```
+1. **`--layout-w: 100dvi`** — the old `calc(100dvi - var(--layout-mi))` subtracted one
+   gutter from a width whose negative margins were symmetric, shorting the inline-end.
+2. **The `overflow-x: clip` gate is now UNGATED** (was `@supports (-webkit-hyphens)`,
+   Safari-only). Making the width symmetric surfaced the documented deeper cause in any
+   engine with space-taking scrollbars: `100dvi` includes the bar, so the band overshoots
+   by exactly its width. The clip is engine-neutral by the gate's own reasoning (clip
+   creates no scroll container) and is a no-op under overlay scrollbars.
 
-The negative margin is applied on **both** inline sides, but the width subtracts **one**
-`--layout-mi`. So a bleed band starts flush at the inline-start edge and stops one gutter
-short at the inline-end. Measured in Chromium on a page with the layout shell intact,
-`--layout-mi: 1rem`, overlay scrollbars, `documentElement.clientWidth` as the reference:
+Verified in Chromium — which, in this instance, ran **space-taking** scrollbars (15px),
+exercising the Safari-class arm directly: every bleed band on `dist/bleed.html` and the
+collage demo sits flush at inline-start with the overshoot equal to the bar width and
+clipped (flush under overlay bars); no horizontal scrollbar; vertical scroll and the
+`reveal-stack` sticky cage pin/release correctly; phone-width invariant holds.
+`base.md`'s `--layout-w` doc updated; layout dist + demo bundle rebuilt.
 
-| viewport | band box | short by |
-|---|---|---|
-| 390 px | `[0, 374]` | 16 px |
-| 800 px | `[0, 784]` | 16 px |
-| 1400 px | `[0, 1384]` | 16 px |
-
-The subtraction reads like a scrollbar allowance — `100dvi` includes a space-taking
-scrollbar while the band's containing block does not — and under a ~16 px space-taking
-scrollbar the two happen to cancel. Under **overlay** scrollbars (Chrome on macOS, every
-phone) there is nothing to cancel and the gap is visible. That is the same
-viewport-vs-container units confusion as the Safari `bleed` note in `docs/v4.md`
-§ Known sharp edges, from the other side.
-
-**Consequence today:** the schema detail pages cannot use `<lay-out bleed>` for their
-full-bleed phone hero. They use `margin-inline: calc(-1 * var(--layout-mi))` on
-`.detail-plate` instead (`ui/card/demo/build.shared.js:54`, § PAGE_STYLE) — exact below 540 px,
-where `body:has(lay-out)`'s `max()` always resolves to `--layout-mi`.
-
-Not fixed here because `bleed` is shipped layout API: the change is one declaration but it
-moves every bleed band on every page that uses one, so it wants its own verification pass
-(`layout/src/pages/bleed.html`, the reveal-stack cage, the Safari `overflow-x: clip` gate)
-and a `layout/dist` rebuild.
+**Pending:** one pass in real Safari with *Show scroll bars: Always* (user's check
+before merge to v4). **Follow-up, optional:** the schema detail pages' `.detail-plate`
+`margin-inline` workaround (`build.shared.js:54`) can now be replaced with
+`<lay-out bleed>`; and the two-units-for-one-quantity cause (container vs viewport
+units) is still the deep fix if it ever bites again.
 
 ## 44. Grid-native overlays (`grid-area: 1/1` + `place-self`) — audit done; one candidate family in `ui/reveal`
 

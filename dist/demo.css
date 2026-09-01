@@ -1821,6 +1821,9 @@
         animation-timeline: view(inline);
         animation-range: entry 5% cover 40%;
       }
+      lay-out[overflow][stagger]:dir(rtl):not(:where(details *, ui-media *)) > *:not(lay-out, ui-carousel-controls) {
+        animation: none;
+      }
       lay-out[stagger]:not([overflow]):not(:where(details *, ui-media *)) {
         view-timeline: --stg-tl;
       }
@@ -4349,10 +4352,8 @@
     display: grid;
     row-gap: calc(attr(data-page-gap type(<number>), attr(page-gap type(<number>), 1)) * var(--layout-space-unit, 1rem));
   }
-  @supports (-webkit-hyphens: none) {
-    html:has(:is(lay-out, lay-out-group)[bleed]) {
-      overflow-x: clip;
-    }
+  html:has(:is(lay-out, lay-out-group)[bleed]) {
+    overflow-x: clip;
   }
   lay-out {
     --layout-col-rule-c: #CCC;
@@ -4380,7 +4381,7 @@
     background: var(--layout-bg, var(--_theme-bg, #0000));
     border-radius: var(--layout-bdrs, 0);
     box-sizing: border-box;
-    color: var(--layout-c, var(--_theme-c, inherit));
+    color: var(--layout-c, var(--_theme-c, var(--_theme-ink, inherit)));
     column-gap: calc(var(--layout-colmg) * var(--layout-space-unit));
     contain: layout inline-size;
     display: grid;
@@ -4421,7 +4422,7 @@
     }
     &[bleed] {
       --layout-mw: 100dvi;
-      --layout-w: calc(100dvi - var(--layout-mi, 0px));
+      --layout-w: 100dvi;
       --_pi: calc((100dvi - var(--layout-bleed-mw, 100dvi)) / 2);
       background-color: #0000;
       border-image: conic-gradient(var(--layout-bg, var(--_theme-bg)) 0 0) fill 0//0 100dvi;
@@ -4657,7 +4658,7 @@
     --_group-pi: max(var(--layout-mi, 1rem), (100dvi - var(--layout-bleed-mw, 1024px)) / 2);
     background: var(--layout-group-bg, var(--layout-bg, var(--_theme-bg, #0000)));
     box-sizing: border-box;
-    color: var(--layout-group-c, var(--layout-c, var(--_theme-c, inherit)));
+    color: var(--layout-group-c, var(--layout-c, var(--_theme-c, var(--_theme-ink, inherit))));
     container-name: bs-card;
     container-type: inline-size;
     display: grid;
@@ -14273,6 +14274,12 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
   :where(ui-card[theme]) {
     --ui-card-bg: var(--_theme-bg, light-dark(var(--color-surface), var(--ui-card-dark-bg, #1f2937)));
     color: var(--_theme-c, var(--_theme-ink, var(--color-text)));
+    --ui-content-list-checked-mark: contrast-color(var(--_theme-bg, var(--color-surface)));
+    --ui-content-list-crossed-mark: contrast-color(var(--_theme-bg, var(--color-surface)));
+  }
+  :where(ui-reveal[theme]) {
+    --ui-content-list-checked-mark: contrast-color(var(--_theme-bg, var(--color-surface)));
+    --ui-content-list-crossed-mark: contrast-color(var(--_theme-bg, var(--color-surface)));
   }
   @container bs-card (inline-size >= 25rem) {
     :where([variant~="md:col"]) :is(cq-box, summary),
