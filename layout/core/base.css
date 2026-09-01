@@ -94,7 +94,7 @@
 		background: var(--layout-bg, var(--_theme-bg, #0000));
 		border-radius: var(--layout-bdrs, 0);
 		box-sizing: border-box;
-		color: var(--layout-c, var(--_theme-c, inherit));
+		color: var(--layout-c, var(--_theme-c, var(--_theme-ink, inherit))); /* full theme chain — same as card/reveal/chip (open-items § 38) */
 		column-gap: calc(var(--layout-colmg) * var(--layout-space-unit));
 		contain: layout inline-size;
 		display: grid;

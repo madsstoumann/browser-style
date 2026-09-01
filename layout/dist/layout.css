@@ -96,7 +96,7 @@
 		background: var(--layout-bg, var(--_theme-bg, #0000));
 		border-radius: var(--layout-bdrs, 0);
 		box-sizing: border-box;
-		color: var(--layout-c, var(--_theme-c, inherit));
+		color: var(--layout-c, var(--_theme-c, var(--_theme-ink, inherit))); /* full theme chain — same as card/reveal/chip (open-items § 38) */
 		column-gap: calc(var(--layout-colmg) * var(--layout-space-unit));
 		contain: layout inline-size;
 		display: grid;
@@ -423,7 +423,7 @@
 
 		background: var(--layout-group-bg, var(--layout-bg, var(--_theme-bg, #0000)));
 		box-sizing: border-box;
-		color: var(--layout-group-c, var(--layout-c, var(--_theme-c, inherit)));
+		color: var(--layout-group-c, var(--layout-c, var(--_theme-c, var(--_theme-ink, inherit))));
 		/* Query container for the header's content= tokens (R-16). The group joins the
 		   CARD query namespace (bs-card — same name ui-card/ui-reveal declare), so the
 		   md:/lg: tiers written in ui/card resolve here without a second vocabulary.

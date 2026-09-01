@@ -301,7 +301,7 @@ These properties allow styling layouts without writing custom selectors. Set the
 - Example: `--layout-bdrs: 8px;`
 
 ### --layout-c
-- Default: `inherit` (via `var(--layout-c, var(--_theme-c, inherit))` — theme ink wins when no explicit value is set)
+- Default: `inherit` (via `var(--layout-c, var(--_theme-c, var(--_theme-ink, inherit)))` — the full theme chain, so a `theme=` plate brings its own ink; `muted` ink is 50%-translucent by design)
 - Description: Text color within the layout.
 - Example: `--layout-c: #333;`
 

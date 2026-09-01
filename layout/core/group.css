@@ -6,7 +6,7 @@
 
 		background: var(--layout-group-bg, var(--layout-bg, var(--_theme-bg, #0000)));
 		box-sizing: border-box;
-		color: var(--layout-group-c, var(--layout-c, var(--_theme-c, inherit)));
+		color: var(--layout-group-c, var(--layout-c, var(--_theme-c, var(--_theme-ink, inherit))));
 		/* Query container for the header's content= tokens (R-16). The group joins the
 		   CARD query namespace (bs-card — same name ui-card/ui-reveal declare), so the
 		   md:/lg: tiers written in ui/card resolve here without a second vocabulary.
