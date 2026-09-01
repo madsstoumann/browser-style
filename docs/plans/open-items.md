@@ -531,16 +531,18 @@ From the deleted 2026-08-15 consistency audit § A; re-verified 2026-08-19 and a
   commented-out legacy block at the top of `ui-gradient-text.css` — the live keyframes
   (`ui-slide-bg`/`ui-breathe-bg`) were already namespaced. Renamed inside the comment
   anyway for consistency if the block is ever revived.
-- **Seven accordion variant spellings are unreachable from a preset — the gap widened.**
-  `ui/card/tokens.lint.js:263-277`'s `PART_VARIANTS` allows seven accordion words
-  (`popover` was added since this was filed), but the sheet implements more:
-  `breakout`, `hide-summary` and the five `spl()` spellings
-  (`ui/accordion/ui-accordion.css:603-607`) all ship and are documented in
-  `ui/accordion/readme.md`, yet a preset naming any of them fails lint as "dead in the
-  browser". Quick half: add the seven words. The durable fix: `PART_VARIANTS` is a
-  hand-typed literal while its neighbours `lintSlideLists`/`lintSubtypes` *parse* their
-  counterpart files — make it parse the component sheets and this class of drift cannot
-  recur (it already recurred once, between the two verifications).
+- **Accordion variant words unreachable from a preset — `breakout` fixed 2026-09-01;
+  the rest turned out to be renderer gaps, not lint drift.** `breakout` is pure CSS and
+  is now in `PART_VARIANTS` (allowlisted, gates green). `hide-summary` and the five
+  `spl()` spellings (`ui-accordion.css:602-606`) are **deliberately excluded, and now
+  documented as such in the lint**: `hide-summary` requires `no-collapse` + a group and
+  `spl()` requires `type="split"` — attributes `render.js`'s `accordion()` (`:866`)
+  never emits, so allowlisting them would let a preset spell a half-functional state.
+  Allowing them means extending the renderer's accordion emission first. The durable
+  lint fix still stands: `PART_VARIANTS` is a hand-typed literal while its neighbours
+  `lintSlideLists`/`lintSubtypes` *parse* their counterpart files — make it parse the
+  component sheets (minus a documented exclusion list) and this class of drift cannot
+  recur.
 
 ## 14. Packaging truth — highlight, badge, and a cross-package `@import` nothing gates
 

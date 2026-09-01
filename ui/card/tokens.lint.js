@@ -263,8 +263,10 @@ const THEME_WORDS = new Set(['red', 'orange', 'green', 'blue', 'accent', 'black'
 const PART_VARIANTS = {
 	quote: new Set(['bigquote', 'breaker', 'code']),
 	/* `popover` is a MODE word, not chrome: render.js strips it and emits <button
-	   popovertarget> + <div popover> pairs instead of <details> (readme.md § Popover mode) */
-	accordion: new Set(['bordered', 'divided', 'rounded', 'pill', 'separate', 'filled', 'popover']),
+	   popovertarget> + <div popover> pairs instead of <details> (readme.md § Popover mode).
+	   Deliberately absent: `hide-summary` (needs no-collapse, which render.js never emits)
+	   and the spl() ratios (need type="split", same) — allowlist them WITH renderer support */
+	accordion: new Set(['bordered', 'breakout', 'divided', 'rounded', 'pill', 'separate', 'filled', 'popover']),
 	buttonGroup: new Set(['inline', 'rounded', 'border', 'outline']),
 	/* the control's other two axes are its own documented API, not card DSL: font-size
 	   utilities from base, and the shared nine-hue theme axis with pale/muted */
