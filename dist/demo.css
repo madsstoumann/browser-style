@@ -8809,38 +8809,41 @@
         color: var(--ui-reveal-content-c, inherit);
       }
     }
+    &:is([variant~="ico(ts)"], [variant~="ico(te)"], [variant~="ico(bs)"], [variant~="ico(be)"], [variant~="icc(ts)"], [variant~="icc(te)"], [variant~="icc(bs)"], [variant~="icc(be)"]) > details > summary > ui-face {
+      grid-area: 1 / 1;
+    }
     &:is([variant~="ico(ts)"], [variant~="ico(te)"], [variant~="ico(bs)"], [variant~="ico(be)"]) > details > summary > ui-icon {
+      grid-area: 1 / 1 / -1 / -1;
       margin: var(--ui-reveal-icon-m);
-      position: absolute;
       z-index: 2;
     }
-    &:is([variant~="ico(ts)"], [variant~="ico(te)"]) > details > summary > ui-icon {
-      inset-block: 0 auto;
+    &[variant~="ico(ts)"] > details > summary > ui-icon {
+      place-self: start start;
     }
-    &:is([variant~="ico(bs)"], [variant~="ico(be)"]) > details > summary > ui-icon {
-      inset-block: auto 0;
+    &[variant~="ico(te)"] > details > summary > ui-icon {
+      place-self: start end;
     }
-    &:is([variant~="ico(ts)"], [variant~="ico(bs)"]) > details > summary > ui-icon {
-      inset-inline: 0 auto;
+    &[variant~="ico(bs)"] > details > summary > ui-icon {
+      place-self: end start;
     }
-    &:is([variant~="ico(te)"], [variant~="ico(be)"]) > details > summary > ui-icon {
-      inset-inline: auto 0;
+    &[variant~="ico(be)"] > details > summary > ui-icon {
+      place-self: end end;
     }
     &:is([variant~="icc(ts)"], [variant~="icc(te)"], [variant~="icc(bs)"], [variant~="icc(be)"]) > details[open] > summary > ui-icon {
-      position: absolute;
+      grid-area: 1 / 1 / -1 / -1;
       z-index: 2;
     }
-    &:is([variant~="icc(ts)"], [variant~="icc(te)"]) > details[open] > summary > ui-icon {
-      inset-block: 0 auto;
+    &[variant~="icc(ts)"] > details[open] > summary > ui-icon {
+      place-self: start start;
     }
-    &:is([variant~="icc(bs)"], [variant~="icc(be)"]) > details[open] > summary > ui-icon {
-      inset-block: auto 0;
+    &[variant~="icc(te)"] > details[open] > summary > ui-icon {
+      place-self: start end;
     }
-    &:is([variant~="icc(ts)"], [variant~="icc(bs)"]) > details[open] > summary > ui-icon {
-      inset-inline: 0 auto;
+    &[variant~="icc(bs)"] > details[open] > summary > ui-icon {
+      place-self: end start;
     }
-    &:is([variant~="icc(te)"], [variant~="icc(be)"]) > details[open] > summary > ui-icon {
-      inset-inline: auto 0;
+    &[variant~="icc(be)"] > details[open] > summary > ui-icon {
+      place-self: end end;
     }
     &[variant~="ico(drk)"] > details > summary > ui-icon,
     &[variant~="icc(drk)"] > details[open] > summary > ui-icon {
@@ -10819,13 +10822,13 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
 /* ui/rating/ui-rating.css */
 @layer bs-component {
   :where(ui-rating, .ui-rating) {
-    --min: attr(min type(<number>), 1);
-    --max: attr(max type(<number>), 5);
-    --value: attr(value type(<number>), 3);
+    --ui-rating-min: attr(min type(<number>), 1);
+    --ui-rating-max: attr(max type(<number>), 5);
+    --ui-rating-value: attr(value type(<number>), 3);
     @supports not (background-color: attr(x type(<color>), red)) {
-      --min: 1;
-      --max: 5;
-      --value: 3;
+      --ui-rating-min: 1;
+      --ui-rating-max: 5;
+      --ui-rating-value: 3;
     }
     --ui-rating-size: var(--size-5);
     --_bgi:
@@ -10834,11 +10837,11 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
         var(--ui-rating-c, var(--color-warning, gold)) 0 var(--_x),
         var(--ui-rating-bg, var(--color-border)) 0 var(--_x));
     --_mask: repeat left center/var(--ui-rating-size) var(--ui-rating-symbol, url(/assets/svg/star.svg));
-    --_x: calc(100% * (var(--value) / var(--max)));
+    --_x: calc(100% * (var(--ui-rating-value) / var(--ui-rating-max)));
     background: none;
     block-size: var(--ui-rating-size);
     display: inline-block;
-    inline-size: calc(var(--ui-rating-size) * var(--max));
+    inline-size: calc(var(--ui-rating-size) * var(--ui-rating-max));
     &:is([symbol=heart], .--heart) {
       --ui-rating-symbol: url(/assets/svg/heart.svg);
       --ui-rating-c: var(--color-error, #c8102e);
