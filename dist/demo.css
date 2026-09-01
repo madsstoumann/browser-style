@@ -1,3 +1,5 @@
+@layer bs-core, bs-component;
+
 /* ui/base/tokens.css */
 @layer bs-core {
   :root {
@@ -336,6 +338,7 @@
 @property --_theme-ink { syntax: "*"; inherits: false; }
 @property --_theme-c { syntax: "*"; inherits: false; }
 @property --_theme-border { syntax: "*"; inherits: false; }
+@property --_theme-bs { syntax: "*"; inherits: false; }
 @property --_theme-bw { syntax: "*"; inherits: false; }
 @layer bs-core {
   :where([theme~=accent], [data-theme~=accent]) {
@@ -4337,7 +4340,7 @@
 /* ui/carousel/index.css */
 
 /* layout/dist/layout.css */
-@layer layout.base, layout.reset, layout.animations, layout.xs, layout.sm, layout.md, layout.lg, layout.xl, layout.xxl;
+@layer layout.base, layout.reset, layout.animations, layout.xs, layout.sm, layout.md, layout.lg, layout.xl, layout.xxl, layout.demo;
 @property --_pg { syntax: "<integer>"; inherits: true; initial-value: 0; }
 @property --_subgrid { syntax: "*"; inherits: false; }
 @property --layout-w { syntax: "*"; inherits: false; }
@@ -10665,7 +10668,7 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
     --ui-progress-bs: .6em;
     --ui-progress-bg: var(--color-border);
     --ui-progress-fill: var(--color-accent);
-    --ui-progress-anim: progress 1.2s linear alternate infinite;
+    --ui-progress-anim: ui-progress 1.2s linear alternate infinite;
     background-color: var(--ui-progress-bg);
     block-size: var(--ui-progress-bs);
     border: 0;
@@ -10718,15 +10721,15 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
       animation: var(--ui-progress-anim);
     }
     [dir=rtl] progress {
-      --ui-progress-anim: progress-rtl 1.2s linear alternate infinite;
+      --ui-progress-anim: ui-progress-rtl 1.2s linear alternate infinite;
     }
   }
-  @keyframes progress {
+  @keyframes ui-progress {
     100% {
       translate: 400%;
     }
   }
-  @keyframes progress-rtl {
+  @keyframes ui-progress-rtl {
     100% {
       translate: -400%;
     }
