@@ -72,6 +72,10 @@ split, add a `REVEAL_FACES` entry.
    `$comment` for the field vocabulary). A new enum `Set` in `render.js` must be `export`ed
    and referenced by name; a vocabulary with no `render.js` home goes in the manifest's
    `vocab` block. This is what the card editor renders — a type missing here has no panel.
+   If an array field's rows are a genuinely shared entity (another card restated by hand),
+   declare `ref: { types, project }` so rows may be `{ "$ref": "card/<id>" }` references —
+   but only with a corpus exemplar proving the projection
+   (`docs/card.model.md` § Referenced rows).
 4. Hand-author the reference card in `ui/card/demo/schema.html`, in the right themed
    section, with `<ui-chip data-type>` as the **last** child of the frame. Give it an `id=`
    only if something links to it.

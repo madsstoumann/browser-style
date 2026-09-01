@@ -38,7 +38,7 @@
       },
       "note": "New episodes every other Thursday.",
       "episodes": [
-        { "episodeNumber": 42, "duration": "PT2M49S", "durationDisplay": "2:49", "name": "Digital minimalism, revisited" },
+        { "$ref": "card/podcast-1" },
         { "episodeNumber": 41, "duration": "PT48M10S", "durationDisplay": "48:10", "name": "The four-day week, two years on" },
         { "episodeNumber": 40, "duration": "PT39M2S", "durationDisplay": "39:02", "name": "What silence does to a room" }
       ]
