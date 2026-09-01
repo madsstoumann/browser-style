@@ -1459,7 +1459,19 @@ mode-switch, and the panel is already grid-stacked in two of the four animation 
 - Marginal: the polyfill `mrk(tml)` dot pseudos (`polyfill/carousel.css:265-287`) could
   grid-stack, but the rail must bleed past the label box — skip.
 
-**Recommendation:** leave layout and the media-frame furniture alone; if the pattern is to
-be cashed in, do the `ui/reveal` `ico()`/`icc()` (+ optionally `scr`) conversion as one
-CSS-only change — light gates (browser-verify both open/closed states at both container
-tiers, RTL spot-check, rebuild the reveal `dist/` bundle + demo bundle).
+**DONE 2026-09-01 — the `ico()`/`icc()` conversion shipped.** Both families are now
+grid-native: `grid-area: 1 / 1 / -1 / -1` + one `place-self` corner rule per spelling,
+replacing `position: absolute` + the four inset-pair rules. One trap surfaced and is
+guarded in a comment: in a template-less summary grid (the `flp` face wrapper) `-1`
+collapses to line 1 and an auto-placed `ui-face` minted a second row (+56px card
+growth) — fixed by pinning `ui-face` to the icon's cell whenever a corner token is
+active, the same both-children-pinned pattern `ovr()` uses. Verified in Chromium:
+closed-state geometry byte-identical across all 38 demo icons, open-state (`icc(te)`
+flip) byte-identical to pre-change, toggle reverts cleanly, and RTL mirrors by
+construction (`te`→left / `bs`→right under `dir="rtl"`). Reveal dist + demo bundle
+rebuilt.
+
+**Left absolute deliberately:** `scr` (its `inset: 0` fill is load-bearing over the
+flp/sld stacked cell — converting buys nothing and risks the inner scroll panel) and
+`grw` (the corner-anchored size transition is the load-bearing part), per the audit's
+own risk ranking. Everything above this paragraph stands as the audit record.

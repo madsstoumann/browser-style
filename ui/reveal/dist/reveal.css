@@ -139,38 +139,41 @@
         color: var(--ui-reveal-content-c, inherit);
       }
     }
+    &:is([variant~="ico(ts)"], [variant~="ico(te)"], [variant~="ico(bs)"], [variant~="ico(be)"], [variant~="icc(ts)"], [variant~="icc(te)"], [variant~="icc(bs)"], [variant~="icc(be)"]) > details > summary > ui-face {
+      grid-area: 1 / 1;
+    }
     &:is([variant~="ico(ts)"], [variant~="ico(te)"], [variant~="ico(bs)"], [variant~="ico(be)"]) > details > summary > ui-icon {
+      grid-area: 1 / 1 / -1 / -1;
       margin: var(--ui-reveal-icon-m);
-      position: absolute;
       z-index: 2;
     }
-    &:is([variant~="ico(ts)"], [variant~="ico(te)"]) > details > summary > ui-icon {
-      inset-block: 0 auto;
+    &[variant~="ico(ts)"] > details > summary > ui-icon {
+      place-self: start start;
     }
-    &:is([variant~="ico(bs)"], [variant~="ico(be)"]) > details > summary > ui-icon {
-      inset-block: auto 0;
+    &[variant~="ico(te)"] > details > summary > ui-icon {
+      place-self: start end;
     }
-    &:is([variant~="ico(ts)"], [variant~="ico(bs)"]) > details > summary > ui-icon {
-      inset-inline: 0 auto;
+    &[variant~="ico(bs)"] > details > summary > ui-icon {
+      place-self: end start;
     }
-    &:is([variant~="ico(te)"], [variant~="ico(be)"]) > details > summary > ui-icon {
-      inset-inline: auto 0;
+    &[variant~="ico(be)"] > details > summary > ui-icon {
+      place-self: end end;
     }
     &:is([variant~="icc(ts)"], [variant~="icc(te)"], [variant~="icc(bs)"], [variant~="icc(be)"]) > details[open] > summary > ui-icon {
-      position: absolute;
+      grid-area: 1 / 1 / -1 / -1;
       z-index: 2;
     }
-    &:is([variant~="icc(ts)"], [variant~="icc(te)"]) > details[open] > summary > ui-icon {
-      inset-block: 0 auto;
+    &[variant~="icc(ts)"] > details[open] > summary > ui-icon {
+      place-self: start start;
     }
-    &:is([variant~="icc(bs)"], [variant~="icc(be)"]) > details[open] > summary > ui-icon {
-      inset-block: auto 0;
+    &[variant~="icc(te)"] > details[open] > summary > ui-icon {
+      place-self: start end;
     }
-    &:is([variant~="icc(ts)"], [variant~="icc(bs)"]) > details[open] > summary > ui-icon {
-      inset-inline: 0 auto;
+    &[variant~="icc(bs)"] > details[open] > summary > ui-icon {
+      place-self: end start;
     }
-    &:is([variant~="icc(te)"], [variant~="icc(be)"]) > details[open] > summary > ui-icon {
-      inset-inline: auto 0;
+    &[variant~="icc(be)"] > details[open] > summary > ui-icon {
+      place-self: end end;
     }
     &[variant~="ico(drk)"] > details > summary > ui-icon,
     &[variant~="icc(drk)"] > details[open] > summary > ui-icon {

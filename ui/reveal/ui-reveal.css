@@ -169,25 +169,33 @@
 
 		/* === variants, asr(), obp(), ar() and op() are inherited from ui-card.css === */
 
-		/* ico() — toggle-icon corner placement · icc() — same spellings, open state */
+		/* ico() — toggle-icon corner placement · icc() — same spellings, open state.
+		   Grid-native (grid-area span + place-self), same mechanism as the in-flow default —
+		   summary is always a grid, so no absolute fork. Docs: readme.md § ico() */
+		/* pin ui-face to the icon's cell: in a template-less summary grid `-1` collapses to
+		   line 1 and an auto-placed face would mint a second row (ovr() pins both children too) */
+		&:is([variant~="ico(ts)"],[variant~="ico(te)"],[variant~="ico(bs)"],[variant~="ico(be)"],
+		     [variant~="icc(ts)"],[variant~="icc(te)"],[variant~="icc(bs)"],[variant~="icc(be)"]) > details > summary > ui-face {
+			grid-area: 1 / 1;
+		}
 		&:is([variant~="ico(ts)"],[variant~="ico(te)"],[variant~="ico(bs)"],[variant~="ico(be)"]) > details > summary > ui-icon {
+			grid-area: 1 / 1 / -1 / -1;
 			margin: var(--ui-reveal-icon-m);
-			position: absolute;
 			z-index: 2;
 		}
-		&:is([variant~="ico(ts)"],[variant~="ico(te)"]) > details > summary > ui-icon { inset-block: 0 auto; }
-		&:is([variant~="ico(bs)"],[variant~="ico(be)"]) > details > summary > ui-icon { inset-block: auto 0; }
-		&:is([variant~="ico(ts)"],[variant~="ico(bs)"]) > details > summary > ui-icon { inset-inline: 0 auto; }
-		&:is([variant~="ico(te)"],[variant~="ico(be)"]) > details > summary > ui-icon { inset-inline: auto 0; }
+		&[variant~="ico(ts)"] > details > summary > ui-icon { place-self: start start; }
+		&[variant~="ico(te)"] > details > summary > ui-icon { place-self: start end; }
+		&[variant~="ico(bs)"] > details > summary > ui-icon { place-self: end start; }
+		&[variant~="ico(be)"] > details > summary > ui-icon { place-self: end end; }
 
 		&:is([variant~="icc(ts)"],[variant~="icc(te)"],[variant~="icc(bs)"],[variant~="icc(be)"]) > details[open] > summary > ui-icon {
-			position: absolute;
+			grid-area: 1 / 1 / -1 / -1;
 			z-index: 2;
 		}
-		&:is([variant~="icc(ts)"],[variant~="icc(te)"]) > details[open] > summary > ui-icon { inset-block: 0 auto; }
-		&:is([variant~="icc(bs)"],[variant~="icc(be)"]) > details[open] > summary > ui-icon { inset-block: auto 0; }
-		&:is([variant~="icc(ts)"],[variant~="icc(bs)"]) > details[open] > summary > ui-icon { inset-inline: 0 auto; }
-		&:is([variant~="icc(te)"],[variant~="icc(be)"]) > details[open] > summary > ui-icon { inset-inline: auto 0; }
+		&[variant~="icc(ts)"] > details[open] > summary > ui-icon { place-self: start start; }
+		&[variant~="icc(te)"] > details[open] > summary > ui-icon { place-self: start end; }
+		&[variant~="icc(bs)"] > details[open] > summary > ui-icon { place-self: end start; }
+		&[variant~="icc(be)"] > details[open] > summary > ui-icon { place-self: end end; }
 
 		/* icon style: drk (the `black` bundle, so it stays dark in both schemes) + sem */
 		&[variant~="ico(drk)"] > details > summary > ui-icon,
