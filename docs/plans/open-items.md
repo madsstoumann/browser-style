@@ -747,12 +747,11 @@ Audit § J, re-verified 2026-08-19 and 2026-09-01. Three parts; the first is the
   mandates the load order in prose only. A one-line `@layer bs-core, bs-component;` at
   the top of `ui/base/index.css` and the card bundle makes it order-independent — which
   is what layout already does. Highest value-per-character in the audit.
-- **`layout.demo` is missing from layout's own order statement.**
-  `layout/dist/layout.css:1` lists nine layers; `layout/demo.css:1` declares a tenth,
-  `layout.demo`, which is therefore ordered by appearance and outranks every `layout.*`
-  layer purely because demo pages link it last. Also worth a comment: `layout.reset`
-  sorts *above* `layout.base` in the statement, inverting the usual reading of those two
-  names.
+- **DONE 2026-09-01 — `layout.demo` is in the order statement.**
+  `generateLayerDeclaration()` (`layout/src/builder.js`) now appends it last — the same
+  rank appearance order gave it, so zero visual change by construction; dist rebuilt and
+  verified in-browser (statement present, demo-layer rules still win). The
+  `layout.reset`-above-`layout.base` inversion got its one-line marker in the same spot.
 - **The disjoint-layers claim needs a caveat.** `ui/card/AGENTS.md:154` says layout and
   card "don't collide … disjoint cascade layers (`layout.*` vs `bs-component`)" — true of
   the layered rules only. `ui/card` ships ten unlayered rules plus an unlayered

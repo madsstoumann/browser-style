@@ -493,10 +493,13 @@ export class LayoutBuilder {
 		return groups
 	}
 	generateLayerDeclaration() {
+		/* layout.reset above layout.base ON PURPOSE: resets must beat base defaults */
 		const baseLayers = ['layout.base', 'layout.reset', 'layout.animations']
 		const breakpointNames = Object.keys(this.config.breakpoints || {})
 		const breakpointLayers = breakpointNames.map(name => `layout.${name}`)
-		return `@layer ${[...baseLayers, ...breakpointLayers].join(', ')};`
+		/* layout.demo last: demo.css declares it and must outrank every layout.* layer
+		   by ORDER, not by link position (open-items § 21) */
+		return `@layer ${[...baseLayers, ...breakpointLayers, 'layout.demo'].join(', ')};`
 	}
 
 	generateLayoutContainerCSS() {

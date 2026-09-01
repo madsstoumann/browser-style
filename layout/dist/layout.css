@@ -1,4 +1,4 @@
-@layer layout.base, layout.reset, layout.animations, layout.xs, layout.sm, layout.md, layout.lg, layout.xl, layout.xxl;
+@layer layout.base, layout.reset, layout.animations, layout.xs, layout.sm, layout.md, layout.lg, layout.xl, layout.xxl, layout.demo;
 
 /* page index within a carousel page — see [overflow][media~="pages"] below (must compute to an
    integer so if(style(--_pg: 0)) can match). NB: named --_pg, not --_pi — --_pi is the
