@@ -788,43 +788,30 @@ renderer-side, none urgent; the shipped and rejected entries stay in git history
   when the layout declares none; the provider-abstracted transform builder (obsolete
   unless multi-CDN becomes a goal).
 
-## 23. `layout/polyfills/attr-fallback.min.js` does not exist — 35 live pages 404 on it
+## 23. `layout/polyfills/attr-fallback.min.js` — the 404 is FIXED 2026-09-01; the drift question remains
 
-**Absorbs item 35 (2026-09-01)** — the two entries described the same defect and had
-drifted into contradicting each other. Merged state, re-verified against the tree:
+**Absorbs item 35** — the two entries described one defect and had drifted into
+contradicting each other.
 
-The file **has never existed** — no commit contains it, no build emits it.
-`layout/polyfills/` holds `attr-fallback.js`, `attr-fallback.css` and `overflow-drag.js`.
-Yet **35 v4 files still request it**: `layout/index.html:14`, 22 pages in `layout/dist/`,
-10 in `layout/src/pages/` — and the *generator*, `layout/src/demo.js` (template sites
-`:23`, `:158`, `:347`), so rebuilding the layout demos **regenerates the 404**. (A
-further 54 references sit in the parked `content/card` build output — left alone
-deliberately; that package's own build would regenerate them.) Every one 404s, so those
-pages run with **no typed-`attr()` fallback in Safari** — missing values, and consuming
-properties dying at computed-value time, not wrong values. Chrome never notices (typed
-`attr()` is native there); that is the whole trap.
+**Fixed:** the file had never existed (no commit, no build emitted it) while **35 v4
+files requested it** — `layout/index.html`, 22 pages in `layout/dist/`, 10 in
+`layout/src/pages/`, and the generator `layout/src/demo.js` — so those pages ran with
+**no typed-`attr()` fallback in Safari** (half the supported matrix; `bleed`, `columns`,
+`rows`, `max-width`, `self`, `size` silently dead there, invisible in Chrome where typed
+`attr()` is native). `layout/build.js` now emits it via the same esbuild route
+`ui/card/build.js` uses, so `npm run build` keeps it current. Verified: the tag resolves
+200 with zero console errors on a dist page. (The 54 references in parked `content/card`
+build output stay untouched deliberately.)
 
-What has been cleaned since the finding: the `ui/card` surface dropped the tag in
-`d30be98f` (rather than repointing it, on the expectation that the
-`scripts/inline-polyfill.js` mechanism would cover it — its `PAGES` allowlist is still
-one page, `:37`, so that coverage never arrived), and `ui/reveal/index.html:22` carries
-the tag commented out. The ~28 pages pointing at
-`/ui/base/polyfills/attr-fallback.min.js` are fine: that file exists and is rebuilt.
-Note the two polyfills cover **disjoint** attribute sets — a page using both `<lay-out>`
-and cards needs both (`ui/base/polyfills/readme.md`).
-
-**Severity, unchanged:** Safari 26.5 is **half the supported matrix** (item 28) and does
-not implement typed `attr()` — `bleed`, `columns`, `rows`, `max-width`, `self`, `size`
-silently not working for half of supported users on 35 pages. Still the
-highest-priority item in this file.
-
-Compounding it: `layout/polyfills/attr-fallback.js` (2.9 kB, untouched since Jul 19) has
-drifted from the actively maintained `ui/base/polyfills/attr-fallback.js` (8.5 kB, still
-moving). **Direction — pick one:** `[quick]` add a minify step to layout's build
-(esbuild, as ui/base does) or point the tags + `demo.js` templates at the unminified
-file; or the structural fix — retire the layout copy and point everything at the
-maintained `ui/base` build, or extend `scripts/inline-polyfill.js` to cover the layout
-polyfill (its header explains why the allowlist is deliberately short).
+**Still open — the drift.** `layout/polyfills/attr-fallback.js` (2.9 kB, untouched since
+Jul 19) is a separate, slower-moving implementation than the actively maintained
+`ui/base/polyfills/attr-fallback.js` (8.5 kB). The two cover **disjoint** attribute sets
+and a page using both `<lay-out>` and cards needs both (`ui/base/polyfills/readme.md`) —
+so "retire the layout copy" means merging its attribute map into the ui/base
+implementation and repointing the 35 tags, or extending `scripts/inline-polyfill.js`
+(its `PAGES` allowlist is deliberately one page; the header explains why). Decide
+whether two implementations stay, now that both at least ship. History and
+`ui/card`-side cleanup (`d30be98f`): git history of this file.
 
 ## 24. `mosaic(photo)` writes a dead property — DONE 2026-08-27
 

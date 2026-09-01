@@ -3,6 +3,7 @@
 import { LayoutBuilder } from './src/builder.js'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import { execFileSync } from 'child_process'
 import { existsSync, writeFileSync, readFileSync } from 'fs'
 import postcss from 'postcss'
 import cssnano from 'cssnano'
@@ -63,6 +64,14 @@ async function build() {
 		writeFileSync(minPath, result.css, 'utf8')
 		console.log(`✓ Generated: ${minPath}`)
 		console.log(`  Size: ${(result.css.length / 1024).toFixed(2)} KB\n`)
+
+		/* polyfills/attr-fallback.min.js — dist pages and src/demo.js templates request it,
+		   but no build ever emitted it, so every page 404'd (open-items § 23). Same esbuild
+		   route as ui/card/build.js. */
+		execFileSync('npx', ['--yes', 'esbuild', 'polyfills/attr-fallback.js', '--minify',
+			'--outfile=polyfills/attr-fallback.min.js', '--log-level=warning'],
+			{ cwd: __dirname, stdio: ['ignore', 'pipe', 'inherit'] })
+		console.log('✓ Generated: polyfills/attr-fallback.min.js\n')
 	} catch (error) {
 		console.error('❌ Build failed:', error.message)
 		process.exit(1)
