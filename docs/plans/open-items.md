@@ -521,9 +521,12 @@ From the deleted 2026-08-15 consistency audit § A; re-verified 2026-08-19 and a
   both ways: pre-fix, a `data-theme="green border"` descendant of
   `theme="red border(dashed)"` rendered **dashed** (inherited); post-fix it renders
   `solid` via the `var(--_theme-bs, solid)` fallback while the host keeps `dashed`.
-- **`ui/rating` declares three unprefixed inheriting globals.** `ui/rating/ui-rating.css:9-11`
-  (and again `:20-22`) declare `--min`, `--max`, `--value` — the three most obvious names
-  in CSS, inheriting into every descendant. Rename to `--ui-rating-*` (or `--_*`).
+- **DONE 2026-09-01 — `ui/rating`'s unprefixed globals renamed** to `--ui-rating-min/-max/
+  -value` (both the typed-`attr()` block and the Safari fallback arm). The rename spans
+  two files by design: `ui/base/polyfills/attr-fallback.js`'s `.ui-rating` map writes the
+  same names on the no-typed-`attr()` path — edited in lockstep, min builds + the inlined
+  copy in the three schema pages regenerated. Verified in-browser: `--_x` computes from
+  the renamed pair on every rating.
 - **DONE 2026-09-01 — unnamespaced `@keyframes` renamed.** `progress`/`progress-rtl` →
   `ui-progress`/`ui-progress-rtl` (`ui/progress/ui-progress.css:66-67` + the
   `--ui-progress-anim` defaults at `:12`/`:63` and the readme's documented default);

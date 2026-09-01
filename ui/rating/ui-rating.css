@@ -6,9 +6,9 @@
  */
 @layer bs-component {
 	:where(ui-rating, .ui-rating) {
-		--min: attr(min type(<number>), 1);
-		--max: attr(max type(<number>), 5);
-		--value: attr(value type(<number>), 3);
+		--ui-rating-min: attr(min type(<number>), 1);
+		--ui-rating-max: attr(max type(<number>), 5);
+		--ui-rating-value: attr(value type(<number>), 3);
 		/* Typed attr() fallback — Safari/Firefox. A custom property PARSES the
 		   literal `attr(…)` stream, so these never go guaranteed-invalid; --_x's
 		   calc() then dies at computed-value time and the gradient stop collapses,
@@ -17,20 +17,20 @@
 		   own min/max/value. Detect on a REAL property — `--x: attr(…)` is true in
 		   Safari too. */
 		@supports not (background-color: attr(x type(<color>), red)) {
-			--min: 1;
-			--max: 5;
-			--value: 3;
+			--ui-rating-min: 1;
+			--ui-rating-max: 5;
+			--ui-rating-value: 3;
 		}
 
 		--ui-rating-size: var(--size-5);
 		--_bgi: linear-gradient(to var(--_dir-e, right), var(--ui-rating-c, var(--color-warning, gold)) 0 var(--_x), var(--ui-rating-bg, var(--color-border)) 0 var(--_x));
 		--_mask: repeat left center/var(--ui-rating-size) var(--ui-rating-symbol, url('/assets/svg/star.svg'));
-		--_x: calc(100% * (var(--value) / var(--max)));
+		--_x: calc(100% * (var(--ui-rating-value) / var(--ui-rating-max)));
 
 		background: none;
 		block-size: var(--ui-rating-size);
 		display: inline-block;
-		inline-size: calc(var(--ui-rating-size) * var(--max));
+		inline-size: calc(var(--ui-rating-size) * var(--ui-rating-max));
 
 		/* symbol — class form kept for the legacy markup */
 		&:is([symbol="heart"], .--heart) {
