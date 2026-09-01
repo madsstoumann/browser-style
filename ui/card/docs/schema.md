@@ -863,7 +863,7 @@ Distinct from FAQ: one `mainEntity` → `Question` with community answers as `<u
 
 ### Podcast — `PodcastEpisode`
 
-Episode metas plus hidden `partOfSeries` → `PodcastSeries`. The episode audio is a chromeless `<audio>` inside `<ui-media>` (scoped `associatedMedia` → `AudioObject`) — the poster stays the visual, and `<ui-play>` drives playback via `command="--play-pause"` (video.js polyfills the media invoker commands until browsers ship them).
+Episode metas plus hidden `partOfSeries` → `PodcastSeries`. The episode audio is an `<audio controls>` inside `<ui-media>` (scoped `associatedMedia` → `AudioObject`), author-hidden while scripting runs (`media.video.css` reproduces the UA's chromeless default) — the poster stays the visual, and `<ui-play>` drives playback via `command="--play-pause"` (video.js polyfills the media invoker commands until browsers ship them). With scripting disabled, `@media (scripting: none)` surfaces the native bar at the frame's block-end and hides the inert `<ui-play>`, so the card plays with no JS at all — exactly one accessible play control exists in either state.
 
 ### Movie series — `MovieSeries`
 
@@ -1669,7 +1669,7 @@ script for it. The `<ol>` is the `BreadcrumbList` — the third non-card top-lev
 
 ### The two end-of-body scripts
 
-Both are optional; every card renders identically without them.
+Both are optional; every card renders identically without them while scripting is *enabled*. With scripting *disabled* the podcast and video cards swap their `<ui-play>` for the media element's native controls via `@media (scripting: none)` — the UA exposes them on `<video>` per spec, audio always ships `controls` — a static query evaluated once, which detects browser capability, not a merely-missing script.
 
 | Script | What it does |
 |---|---|

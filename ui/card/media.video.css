@@ -19,6 +19,21 @@
 		opacity: 1;
 	}
 
+	/* audio — hidden while scripting runs: <ui-play> is the control (video.js) */
+	:where(ui-media) > audio { display: none; }
+	/* no JS: native controls are the affordance (the UA exposes them on video too); the dead invoker goes. Docs: docs/media.md */
+	@media (scripting: none) {
+		:where(ui-media) > audio {
+			display: block;
+			inline-size: 100%; /* the UA sheet pins audio to 300px */
+			inset-block-end: 0;
+			inset-inline: 0;
+			position: absolute;
+			z-index: 2;
+		}
+		:where(ui-media:has(> :is(audio, video))) > ui-play { display: none; }
+	}
+
 	/* play(<size>) — size the <ui-play> control; disjoint from play()'s position args */
 	:where([media*="play(sm)"]) { --ui-play-sz: 2.25em; --ui-play-icon-sz: 1em; }
 	:where([media*="play(md)"]) { --ui-play-sz: 3em;    --ui-play-icon-sz: 1.5em; }

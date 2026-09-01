@@ -1145,6 +1145,14 @@ describe('glossary — DefinedTermSet', () => {
 	});
 });
 
+describe('podcast — PodcastEpisode', () => {
+	/* controls is unconditional on audio — the no-JS fallback (media.video.css hides it while scripting runs) */
+	test('audio always carries controls', () => {
+		const html = render({ schemaType: 'podcast', headline: 'Ep', media: [{ mediaType: 'audio', src: '/a.m4a', alt: 'Ep' }] });
+		assert.match(html, /<audio [^>]*\bcontrols\b/);
+	});
+});
+
 describe('podcastseries — PodcastSeries', () => {
 	const details = { startDate: '2022-01-11', cadence: 'Fortnightly', episodeCount: 42, feed: { url: 'https://calmmind.example/feed.xml', text: 'RSS feed' }, host: { name: 'Ida Månsson', role: 'Host' }, episodes: [{ episodeNumber: 42, duration: 'PT2M49S', durationDisplay: '2:49', name: 'Digital minimalism, revisited' }] };
 	const card = (extra = {}) => render({ schemaType: 'podcastseries', headline: 'The Calm Mind', details: { ...details, ...extra } });

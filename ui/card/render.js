@@ -1204,11 +1204,11 @@ const buildMedia = (fields, type, tokens, preset = {}, frameAttrs = {}, cardId =
 			continue;
 		}
 		if (item.mediaType === 'audio') {
-			/* chromeless <audio> — renders nothing; the poster img stays the visual and
-			   <ui-play> drives playback via command="--play-pause" (video.js mirrors state) */
+			/* <audio controls> hidden while scripting runs (media.video.css) — poster stays the
+			   visual, <ui-play> drives playback; with scripting off the native bar shows */
 			const id = videoId;
 			videoId = null;
-			frames += `<audio${attrs({ id, src, preload: 'metadata', 'aria-label': item.alt || null })}${NO_IMAGE_PROP.has(type) ? '' : scope('associatedMedia', 'AudioObject')}>${NO_IMAGE_PROP.has(type) ? '' : meta('contentUrl', src) + meta('name', item.alt)}</audio>`;
+			frames += `<audio${attrs({ id, src, controls: true, preload: 'metadata', 'aria-label': item.alt || null })}${NO_IMAGE_PROP.has(type) ? '' : scope('associatedMedia', 'AudioObject')}>${NO_IMAGE_PROP.has(type) ? '' : meta('contentUrl', src) + meta('name', item.alt)}</audio>`;
 			continue;
 		}
 		const cdn = cdnEligible(src);

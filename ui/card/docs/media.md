@@ -475,7 +475,7 @@ element has no such axis — `pos` and `hue` are universal; the rest differ per 
 
 #### `<ui-play>` — one contract
 
-Over a `<video>` — or a chromeless `<audio>` (podcast cards) — `<ui-play>` is driven **declaratively** by the Invoker Commands API. The inner `<button>` carries `command="--play-pause"` and `commandfor="<video id>"` — the `--` prefix is the spec's custom-command namespace, used because the proposed bare `play-pause` value does not validate yet; `video.js` handles both spellings:
+Over a `<video>` — or an author-hidden `<audio controls>` (podcast cards; `media.video.css` hides it while scripting runs) — `<ui-play>` is driven **declaratively** by the Invoker Commands API. The inner `<button>` carries `command="--play-pause"` and `commandfor="<video id>"` — the `--` prefix is the spec's custom-command namespace, used because the proposed bare `play-pause` value does not validate yet; `video.js` handles both spellings:
 
 ```html
 <ui-media media="play(cc) play(lg)">
@@ -491,7 +491,7 @@ Over a `<video>` — or a chromeless `<audio>` (podcast cards) — `<ui-play>` i
 - **`video.js` handles the command** — it ships a polyfill for the proposed media commands (`play-pause`, `play`, `pause`, `toggle-muted`) that **auto-disables** once the browser supports them natively.
 - **State is mirrored, never guessed.** The `<video>`'s own `play`/`pause`/`ended` events drive `aria-pressed` on the button and `[open]` on the host, which morphs a `<ui-icon type="play-pause">` glyph purely in CSS.
 - **There is no `ui-play-toggle` event in the card system.** A button carrying `command`/`commandfor` is toggled by the command handler; the card's JS only reflects state, or the two would cancel each other out.
-- **CSS-only fallback** is the authored static button plus the browser's own `<video controls>` if you add it — the frame, the sizing and the placement need no JS at all.
+- **CSS-only fallback** is the authored static button plus the browser's own `<video controls>` if you add it — the frame, the sizing and the placement need no JS at all. With scripting **disabled** the fallback is built in for both media kinds: the HTML spec has the UA expose native controls on a `<video>` regardless of the attribute, audio's `controls` is always emitted (surfacing at the frame's block-end), and `@media (scripting: none)` hides the inert `<ui-play>` on any frame with a native media child — so exactly one accessible play control exists in either state (JS-on keeps today's a11y tree: a hidden `<audio>` was already UA-hidden when chromeless). The query is static — evaluated once at style resolution, zero runtime cost.
 Two shapes sit outside the invoker contract, both because their target isn't an `HTMLMediaElement`:
 
 - **Provider embeds** (`provider="youtube|vimeo"`) use the **click facade** in `video.js` — the click drops the poster, appends `autoplay=1` and hands off to the platform player. An `<iframe>` can't receive a media command.
