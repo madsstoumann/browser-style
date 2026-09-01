@@ -882,18 +882,13 @@ for.
 it to the v4 vocabulary (`[animate]`/`[animate-self]`, `100%`) or delete it and its
 references. Coordinates with item 23, which touches the same directory.
 
-## 27. `layout/dist/layout.min.css` drifts with the unpinned minifier `[quick]`
+## 27. `layout/dist/layout.min.css` drifts with the unpinned minifier — DONE 2026-09-01
 
-2026-08-19 finding, re-read 2026-09-01: the artifact **was** regenerated since
-(`b4d421ec`, 2026-08-27), but the root cause is untouched — `layout/package.json:92-93`
-still declares `cssnano` / `cssnano-preset-advanced` as `^7.0.7`, and the installed
-preset has floated again (7.0.8 at the original finding, **7.0.11** now). The minifier is
-deterministic per version but reorders declarations across versions (measured:
-`animation-timeline` vs `animation-range` inside the scroll-fade rule — semantically
-identical), so "is `dist/` up to date?" still cannot be answered by rebuilding and
-diffing — the check that would catch a genuinely stale bundle is exactly the one this
-noise defeats. **Direction:** pin the minifier exactly, rebuild once, commit; a rebuild
-is then a true no-op until the pin is deliberately moved.
+`cssnano` and `cssnano-preset-advanced` are pinned exactly (7.1.3 / 7.0.11 in
+`layout/package.json`). Verified: `npm run build` reproduces the committed
+`dist/layout.min.css` byte-identically, twice — "is `dist/` up to date?" is answerable
+by rebuild-and-diff again. History (the `^7.0.7` float, the reorder noise it caused) in
+git history of this file.
 
 ## 28. Browser-support baseline — DECIDED 2026-08-19
 
