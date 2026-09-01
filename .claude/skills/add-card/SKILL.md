@@ -173,6 +173,11 @@ In JSON, a list row is a string **or** `{text, icon, href, itemprop}` — see
   (`data/card.presets.json`). Adding one means registering it in `data/index.json` and the
   SSR snapshot gate applies (`node ui/card/render.snapshot.js`). For a **new schemaType**,
   use the `add-schema` skill instead.
+- **Shared detail rows** — in a ref-enabled `details` array (faq items, product variants,
+  podcast episodes, places rows — the generated table in `docs/card.model.md` § Referenced
+  rows), don't restate another card's facts by hand: write `{ "$ref": "card/<id>" }` with
+  per-context keys inline, and register a referenced-only card under `data/index.json`
+  `shared`. `node ui/card/details.lint.js` holds every ref.
 
 ## Verify
 

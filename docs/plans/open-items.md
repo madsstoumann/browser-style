@@ -1640,3 +1640,41 @@ Not fixed here because `bleed` is shipped layout API: the change is one declarat
 moves every bleed band on every page that uses one, so it wants its own verification pass
 (`layout/src/pages/bleed.html`, the reveal-stack cage, the Safari `overflow-x: clip` gate)
 and a `layout/dist` rebuild.
+
+## 44. Referenced detail rows — the remaining duplication ledger
+
+**Where:** `ui/card/data/*.json` · `ui/card/data/details.json` (`ref` declarations) ·
+`docs/card.model.md` § Referenced rows
+
+The 2026-09-01 investigation found 13 hand-duplicated entities across the corpus. Four
+became the referenced-rows exemplars (faq items, collage variants, the series' latest
+episode, the Havnegade 44 map pin — the last fixing four contradictory facts), and the
+comparison card's shifted images were fixed outright. Still duplicated, in rough order of
+drift risk, each a candidate for a `ref` declaration + migration when touched:
+
+- `music.json` ↔ `musicgroup.json.albums[0]` — linked only by same-page hash anchors
+- `tvepisode.json` ↔ `tvseries.json` — season {3, "Terminus"}, byte-identical `actors[]`
+- `comicissue.json.series{name,url,issn}` — a hand-written denormalized ref to
+  `comicseries.json`; its `artist` restates `artist.json`
+- the Copenhagen/Berlin offices — `places-offices.json` ↔ `organization.json.offices` ↔
+  `map.json` ↔ `demo/offices/copenhagen.json` (Saturday hours exist only on the detail
+  page; Berlin disagrees on postcode, geo and phone)
+- "Brew & Bean" — `business.json` + `menu.json` + `booking.json.venue` share only a name
+  string
+- `quiz-mc.json` ↔ `quiz-carousel.json` (3 questions incl. options) and `quiz.json` ↔
+  `quiz-flashcard.json` (card[0])
+- `software.json` ↔ `software-flipside.json` — details copied verbatim despite the
+  flipside ref
+- `comparison.json` prices vs `review.json` ("USD 79" vs 279 for SoundWave Mini — both
+  spellings sit on demo/schema.html, so neither is canonically wrong yet)
+
+Out of the details mechanism's scope, needing their own design:
+
+- **Envelope `authors[]` → profile cards** — `article.json` authors[0] and `profile.json`
+  are the same Jane Smith with two different job titles; an envelope-level ref projection
+  (name/role/avatar ← a profile card) would be the authors' analogue of detail refs.
+- **`demo/products/build.js` GROUP/COLORS constants** — a fifth copy of the colourway list,
+  in code; should derive from `product-group-collage.json`'s now-referenced variants (via
+  the exported `expandDetails`).
+- **Media `alt` drift** — 35 exact `{mediaType, src, alt}` triples repeat across files and
+  the alt text drifts per copy; sharing is by `src` string only.

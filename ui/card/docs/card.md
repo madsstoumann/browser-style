@@ -56,6 +56,20 @@ never had.
 The **hybrid** shape: everything shared is structured; everything type-specific
 lives in one `details` object discriminated by `schemaType`.
 
+### Shared rows by reference
+
+A `details` array field declared with `ref` in `data/details.json` accepts
+`{ "$ref": "card/<id>" }` rows beside inline rows — the UCF `$ref` marker
+([`cms/baseline/pages/UCF.md`](../../../cms/baseline/pages/UCF.md) § Content
+References) pointed at another card, so a FAQ item, a product variant, an
+episode or a map pin can live once and be referenced everywhere. `render.js`
+expands ref rows before the `DETAILS` renderers run: the target card's fields
+project onto the row shape, inline keys on the row win, one level deep like
+`flipside`. Rendering ref-carrying instances needs the id-keyed cards map
+(the 3rd argument of `renderCard`) or the exported `expandDetails`. The full
+contract — projection DSL, lint rules, editor behaviour — is
+[`card.model.md` § Referenced rows](./card.model.md#referenced-rows).
+
 ### Envelope fields
 
 | Field | Type | Notes |
@@ -739,6 +753,12 @@ already exist in [`cms/baseline/content/navigation/`](../../../cms/baseline/cont
 `details.items` — they are card content, not site structure. No renderer code
 for this yet; a `renderNavigation(nav, items, { as, variant })` export is the
 natural next step if needed.
+
+That verdict rules on *provenance*, not on reuse: since the referenced-rows
+mechanism landed, a FAQ item shared across cards stays card content — it
+becomes a lightweight `content` card referenced from each FAQ's
+`details.items` (`card.model.md` § Referenced rows), never a navigation
+model.
 
 ## Article pattern — teaser card → full-page view
 

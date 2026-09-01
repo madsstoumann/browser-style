@@ -242,6 +242,60 @@ ignores a display twin. Do not go hunting for a mapping that does not exist.
 
 ---
 
+## Referenced rows
+
+A repeating entity inside `details` used to be trapped in its card — two FAQ cards could not
+share a question, and the corpus proved the cost: the collage's variant rows hand-duplicated
+the four colourway cards, the podcast series restated its own latest episode, and one
+Copenhagen apartment carried four contradictory facts across two cards. **A details array
+field declared with `ref` in [`data/details.json`](../data/details.json) now accepts
+`{ "$ref": "card/<id>" }` rows beside inline rows** — the UCF `$ref` marker
+(`cms/baseline/pages/UCF.md` § Content References), pointed at another **card**. No new CMS
+model exists or is needed: small entities become lightweight cards (a shared FAQ item is a
+`content` card whose headline is the question and summary the answer), and the one-model
+storage contract above survives intact.
+
+**How a ref row materializes.** Before the `DETAILS` renderers run, `render.js` expands each
+ref row by *projecting* the referenced card's fields onto the row shape — the field's
+`ref.project` map (`rowKey → dot-path` into the target's fields, envelope keys bare,
+`details.…` for type data). A `$richtext` value projects as plain text. **Keys stated inline
+on the ref row win over the projection** — per-context extras (the collage's `label` and
+crop, a map pin's short `name`) stay legal. Expansion is one level deep, like `flipside`: a
+target's own ref rows are never expanded. An unresolvable ref drops the row and leaves a
+loud `<!-- unresolved card ref: … -->` comment; `details.lint.js` rule 11 is the static
+guard (canonical `card/<id>` form, target exists, target's `schemaType` in the field's
+`ref.types` allowlist, target indexed in `data/index.json` `cards`/`shared`).
+
+The declared fields and their projections (generated):
+
+<!-- details:refs -->
+| Field | Ref targets | Projection (rowKey ← target path) |
+|---|---|---|
+| `product.variants.items` | `product` | `name` ← `headline` · `sku` ← `details.variants.productGroupID` · `price` ← `details.price.current` · `currency` ← `details.price.currency` |
+| `faq.items` | `content` | `question` ← `headline` · `answer` ← `summary` |
+| `places.items` | `realestate` | `type` ← `details.property.type` · `price` ← `details.price` · `floorSize` ← `details.property.floorSize` · `numberOfBedrooms` ← `details.property.bedrooms` · `numberOfRooms` ← `details.property.rooms` · `yearBuilt` ← `details.property.yearBuilt` |
+| `podcastseries.episodes` | `podcast` | `name` ← `headline` · `episodeNumber` ← `details.episodeNumber` · `duration` ← `details.duration` · `durationDisplay` ← `details.durationDisplay` |
+<!-- /details -->
+
+**Declare a `ref` only where a real shared entity proves it** — an unexercised projection is
+exactly the drifting duplication this mechanism exists to kill. Candidates the corpus
+inventory identified for future opt-ins: `reviews[]` (product/vacationrental),
+`comparison.items`, `organization.offices`, `glossary.terms`, `quiz.cards`,
+`menu.sections[].items`, `filelist.files`, `musicgroup.albums`/`members`, `music.tracks`,
+`tvseries.seasons`, `service.catalog.items`, `contact.contactMethods`. Follow-up, out of
+scope for `details`: envelope `authors[]` referencing `profile` cards (the corpus has the
+same person with two job titles).
+
+**For an editor**: `<editor-card>` renders a ref row as reference UI — an editable
+`card/<id>` input plus only the override keys present, never the full empty field set — and
+ref-enabled arrays get an "Add reference" affordance. A real entry picker is the CMS
+wrapper's job. **For a build script**: rendering ref-carrying instances requires passing the
+id-keyed cards map to `renderCard` (or pre-flattening with the exported
+`expandDetails(fields, cards)`); `demo/render.html`, the snapshot and the compare gate all
+build that map from `data/index.json` `cards ∪ shared`.
+
+---
+
 ## Per-type `details`
 
 <!-- details:counts -->
