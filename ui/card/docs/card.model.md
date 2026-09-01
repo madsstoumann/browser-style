@@ -390,7 +390,7 @@ ignores a display twin. Do not go hunting for a mapping that does not exist.
 <!-- details:fields type=faq -->
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
-| `items` | array | repeater | {question, answer} · → accordion |
+| `items` | array | repeater | {question, answer} · → accordion; rows may be { "$ref": "card/&lt;id&gt;" } references to shared content cards |
 <!-- /details -->
 
 ### `timeline` — EventSeries
@@ -540,7 +540,7 @@ ignores a display twin. Do not go hunting for a mapping that does not exist.
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
 | `kind` | select | select | PLACE_KINDS |
-| `items` | array | repeater | shape depends on kind — LocalBusiness rows (name, url, branchCode, geo, address, telephone, openingHours[]) or residence rows (type ∈ RESIDENCE_TYPES, name, url, image, imageAlt, datePosted, price{amount,currency}, geo, address, floorSize, numberOfBedrooms, numberOfRooms, yearBuilt) |
+| `items` | array | repeater | shape depends on kind — LocalBusiness rows (name, url, branchCode, geo, address, telephone, openingHours[]) or residence rows (type ∈ RESIDENCE_TYPES, name, url, image, imageAlt, datePosted, price{amount,currency}, geo, address, floorSize, numberOfBedrooms, numberOfRooms, yearBuilt); residence rows may be { "$ref": "card/&lt;id&gt;" } references to realestate cards with per-context keys inline |
 | `center` | object | geopoint | {latitude, longitude, url} · map centre — NOT details.geo |
 | `regionDisplay` | string | text | display twin |
 | `order` | select | select | ITEM_LIST_ORDERS |
