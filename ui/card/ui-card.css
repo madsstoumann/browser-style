@@ -160,6 +160,15 @@
 	:where(ui-card[theme]) {
 		--ui-card-bg: var(--_theme-bg, light-dark(var(--color-surface), var(--ui-card-dark-bg, #1f2937)));
 		color: var(--_theme-c, var(--_theme-ink, var(--color-text))); /* themed plate brings its own ink (chip precedent) */
+		/* checked/crossed marks: the semantic hues can land on their own plate (green-on-green
+		   measured 1.00:1) — resolve against the plate. Set HERE: --_theme-bg is non-inheriting,
+		   so it must substitute on the host. Docs: docs/content.md § Mark colour */
+		--ui-content-list-checked-mark: contrast-color(var(--_theme-bg, var(--color-surface)));
+		--ui-content-list-crossed-mark: contrast-color(var(--_theme-bg, var(--color-surface)));
+	}
+	:where(ui-reveal[theme]) {
+		--ui-content-list-checked-mark: contrast-color(var(--_theme-bg, var(--color-surface)));
+		--ui-content-list-crossed-mark: contrast-color(var(--_theme-bg, var(--color-surface)));
 	}
 
 	/* === RESPONSIVE — md:/lg:, two arms per token; the container NAME is load-bearing.

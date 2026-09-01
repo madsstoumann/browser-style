@@ -1114,47 +1114,21 @@ parser over-reports by two (likely the `department` nodes enumerated twice under
 cause, also no action: the JSON-LD run's "non-critical" Breadcrumbs flag. Full node
 accounting in git history.
 
-## 37. `checked`/`crossed` mark colours are page tokens, not theme tokens
+## 37. `checked`/`crossed` mark colours on themed cards — DONE 2026-09-01 (option b)
 
-`--ui-content-list-checked-mark` defaults to `--color-success`, `--ui-content-list-crossed-mark`
-to `--color-error` — the mark tokens themselves are undeclared consumer hooks read in
-`ui/card/content.css:566` and `:570` (their trailing `currentColor` fallback fires only
-when `tokens.css` is missing, never as a `theme=` arm). The colour tokens they resolve to
-are `:root` `light-dark()` pairs in `ui/base/tokens.css:31-32` — the *same* tokens that
-produce the `theme="green"` / `theme="red"` surfaces. (`contrast-color()` already has a
-precedent a few rules up, `content.css:408-410`, for chip/tag focus ink.)
+`ui-card[theme]` and `ui-reveal[theme]` now set both mark knobs to
+`contrast-color(var(--_theme-bg, var(--color-surface)))` — the mark resolves against the
+plate, legible on every hue. Measured after: `theme="green"` ✓ went **1.00 → ~5.9:1**
+(white on the green plate), `theme="black"` ~13:1; unthemed cards keep the semantic
+green/red. Set on the **host** because `--_theme-bg` is registered non-inheriting — it
+must substitute where it resolves; `:where()` zero-specificity, so consumer overrides
+still win. Docs updated: `content.md` § Mark colour.
 
-`theme=` swaps a card's surface. It does not swap these. Measured on the membership card,
-`::marker` against the surface behind it (Chrome 150, `demo/schema.html`):
-
-| Context | ✓ checked | ✗ crossed |
-|---|---|---|
-| light, card surface `#ededed` | 5.22:1 | 5.85:1 |
-| dark (`prefers-color-scheme`) | 4.62:1 | 3.54:1 |
-| `theme="black"` | 2.40:1 | 2.14:1 |
-| `theme="green"` | **1.00:1 — invisible** | 1.12:1 |
-
-Only the light row clears 4.5:1 on both. Dark passes on ✓ and sits at 3.54:1 on ✗ — over the
-3:1 UI floor, under the body-text one. `theme="green"` paints the success green on a
-success-green surface.
-
-This is not decoration: the mark is the ONLY carrier of the included/excluded distinction. The
-row text never says "included", so an invisible mark is lost meaning.
-
-No live demo hits the failing cases — no themed card currently carries either variant — which
-is why it shipped. A consumer theming a pricing card does hit it immediately.
-
-**Options.** (a) Fall the marks back to `currentColor` whenever `theme=` is present — one
-rule, always legible, loses the red/green signal on themed cards. (b) Resolve them through
-`contrast-color()` against the theme surface — in both baseline engines, keeps a tinted
-signal, needs a per-theme decision about what "success" means on a green card. (c) Add
-`--ui-theme-*-success` / `-error` to the nine-hue bundles in `ui/base/theme.css` — most
-control, most surface area.
-
-Same question applies to any other semantic colour used as ink inside a themed card
+**Still open, out of the decided scope:** the *unthemed dark-mode* ✗ at **3.54:1** —
+over the 3:1 UI floor, under body-text AA. It reads `--color-error`'s dark arm, which is
+the item-29 plate-ink territory (decision (a) there would free the dark arms). And the
+general question stands for any other semantic colour used as ink inside a themed card
 (`ui-chip theme="pale green"` is unaffected — it carries its own paired ink).
-
-Docs: `ui/card/docs/content.md` § Mark colour.
 
 ---
 

@@ -533,17 +533,15 @@ This matters because the mark is the **only** carrier of the included/excluded d
 the row text does not say "included", so an invisible mark is lost meaning, not lost
 decoration.
 
-Until the marks are theme-aware, a themed card must set them itself:
-
-```css
-ui-card[theme] {
-  --ui-content-list-checked-mark: currentColor;
-  --ui-content-list-crossed-mark: currentColor;
-}
-```
-
-`contrast-color()` is in both baseline engines and is the obvious systematic fix; it is not
-wired up here yet. Tracked in `docs/plans/open-items.md`.
+**Themed cards are handled (2026-09-01):** `ui-card[theme]` / `ui-reveal[theme]` set both
+mark knobs to `contrast-color(var(--_theme-bg, var(--color-surface)))` — the mark resolves
+against the plate, so it is legible on every hue (measured: white on `theme="green"` ≈
+5.9:1 where the raw token was 1.00:1). The hue distinction is traded for legibility on
+themed plates; unthemed cards keep the semantic green/red. The setters live on the **host**
+(`ui-card.css` § Themes) because `--_theme-bg` is registered non-inheriting — it must
+substitute where it resolves. Both are `:where()` zero-specificity, so a consumer override
+of either knob still wins. Still open in `docs/plans/open-items.md` § 37: the *unthemed
+dark-mode* ✗ at 3.54:1.
 
 The gap between mark and text is the shared `--ui-content-list-icon-gap` (`0.4em`,
 `letter-spacing` on the marker).

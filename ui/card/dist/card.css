@@ -3022,6 +3022,12 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
   :where(ui-card[theme]) {
     --ui-card-bg: var(--_theme-bg, light-dark(var(--color-surface), var(--ui-card-dark-bg, #1f2937)));
     color: var(--_theme-c, var(--_theme-ink, var(--color-text)));
+    --ui-content-list-checked-mark: contrast-color(var(--_theme-bg, var(--color-surface)));
+    --ui-content-list-crossed-mark: contrast-color(var(--_theme-bg, var(--color-surface)));
+  }
+  :where(ui-reveal[theme]) {
+    --ui-content-list-checked-mark: contrast-color(var(--_theme-bg, var(--color-surface)));
+    --ui-content-list-crossed-mark: contrast-color(var(--_theme-bg, var(--color-surface)));
   }
   @container bs-card (inline-size >= 25rem) {
     :where([variant~="md:col"]) :is(cq-box, summary),
