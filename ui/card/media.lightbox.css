@@ -194,7 +194,7 @@
 	to { clip-path: inset(0 round 0); opacity: 1; }
 }
 
-/* grid-mode hide for the injected DOM controls — UNLAYERED: the polyfill sheet is */
+/* grid-mode hide for the injected DOM controls — UNLAYERED: the polyfill sheet is unlayered, so a layered rule loses. Docs: media.md § Lightbox */
 ui-media[popover]:popover-open:where(
 	[data-lightbox="grid"],
 	:is(

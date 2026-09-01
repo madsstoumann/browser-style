@@ -758,8 +758,8 @@ Audit § J, re-verified 2026-08-19 and 2026-09-01. Three parts; the first is the
   `demo.layout.css`, and `media.carousel.css` has one *precisely because* it must beat
   `@layer layout.base` (its comment says so). Unlayered with no justifying comment:
   `ui/base/theme.css:5-18`, `ui/base/tint.css:36-56`, the `media.lightbox.css`
-  `@keyframes`; and the justification now at `media.lightbox.css:197` is truncated
-  mid-sentence — `/* … UNLAYERED: the polyfill sheet is */`.
+  `@keyframes`. (The truncated justification at `media.lightbox.css:197` was completed
+  2026-09-01.)
 
 ## 22. Card feature gaps — the remainder of the 2026-08-10 ledger
 
