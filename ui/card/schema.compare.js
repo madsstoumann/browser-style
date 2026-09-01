@@ -136,7 +136,18 @@ const PAIRS = [
 	['ItemList#schema-filelist', 'ui/card/data/filelist.json'],
 	/* paired when the boxed-office preset landed — the office plate is PRESET output
 	   (parts.office / parts.officeTheme), so page and renderer must keep one spelling */
-	['Organization', 'ui/card/data/organization.json']
+	['Organization', 'ui/card/data/organization.json'],
+	/* the 2026-09-01 batch — the small-diff rows of open-items § 39, page-as-spec.
+	   Review is keyed by id: the type's second demo card (the testimonial) stays
+	   unpaired. EventSeries#schema-timeline stays UNPAIRED for now: the page's
+	   <ol data-variant="minimal"> + per-item data-theme have no renderer hook yet */
+	['Review#schema-review', 'ui/card/data/review.json'],
+	['Recipe', 'ui/card/data/recipe.json'],
+	['Event', 'ui/card/data/event.json'],
+	['Dataset', 'ui/card/data/dataset.json'],
+	['ImageGallery', 'ui/card/data/gallery.json'],
+	['EducationalOccupationalCredential', 'ui/card/data/achievement.json'],
+	['SpecialAnnouncement', 'ui/card/data/announcement.json']
 ];
 
 /* ── minimal HTML tree parser ── */

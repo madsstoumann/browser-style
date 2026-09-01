@@ -29,6 +29,7 @@
       "license": "https://creativecommons.org/licenses/by/4.0/",
       "licenseDisplay": "CC BY 4.0",
       "temporalCoverage": "2019-01/2025-12",
+      "temporalCoverageDisplay": "Jan 2019 – Dec 2025",
       "spatialCoverage": "Kepler field",
       "variableMeasured": [
         "Transit depth",

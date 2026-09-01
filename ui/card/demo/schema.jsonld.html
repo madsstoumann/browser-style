@@ -313,6 +313,7 @@
 		},
 		{
 			"@type": "Review",
+			"name": "Punches far above its size",
 			"reviewRating": {
 				"@type": "Rating",
 				"ratingValue": "4",
@@ -2104,10 +2105,10 @@
 		{
 			"@type": "Recipe",
 			"image": "/assets/images/carbonara.png",
-			"recipeCategory": "Pasta",
 			"prepTime": "PT15M",
 			"cookTime": "PT20M",
 			"recipeYield": "4",
+			"recipeCategory": "Pasta",
 			"name": "Classic Spaghetti Carbonara",
 			"description": "The Roman original — guanciale, pecorino, eggs and pepper. No cream.",
 			"recipeIngredient": [
@@ -3168,7 +3169,6 @@
 			"@type": "SpecialAnnouncement",
 			"image": "/assets/images/announcement.png",
 			"datePosted": "2026-07-01",
-			"datePublished": "2026-07-01",
 			"expires": "2026-07-06",
 			"spatialCoverage": "Global",
 			"name": "Scheduled maintenance — July 5",
@@ -3592,7 +3592,7 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card variant="col" media="asr(16/9) chip(te)">
+		<ui-card id="schema-review" variant="col" media="asr(16/9) chip(te)">
 			<cq-box>
 				<ui-media><img src="/assets/images/soundwavemini.png" alt="SoundWave Mini speaker" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/soundwavemini.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/soundwavemini.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/soundwavemini.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/soundwavemini.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/soundwavemini.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/soundwavemini.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Review</ui-chip></ui-media>
 				<ui-content>
@@ -3616,7 +3616,7 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card variant="col" style="--ui-rating-c: #e75d26">
+		<ui-card id="schema-review-testimonial" variant="col" style="--ui-rating-c: #e75d26">
 			<ui-chip data-type>Review</ui-chip>
 			<cq-box>
 				<ui-content>
@@ -4520,7 +4520,7 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card variant="col" media="asr(16/9) chip(te)">
+		<ui-card id="schema-timeline" variant="col" media="asr(16/9) chip(te)">
 			<cq-box>
 				<ui-media><img src="/assets/images/world.png" alt="World map lit at night" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/world.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/world.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/world.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/world.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/world.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/world.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>EventSeries</ui-chip></ui-media>
 				<ui-content>
@@ -4566,7 +4566,7 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card variant="col" media="asr(16/9) chip(te)">
+		<ui-card id="schema-timeline-horizontal" variant="col" media="asr(16/9) chip(te)">
 			<cq-box>
 				<ui-media><img src="/assets/images/world.png" alt="World map lit at night" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/world.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/world.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/world.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/world.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/world.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/world.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>EventSeries</ui-chip></ui-media>
 				<ui-content>
@@ -4887,7 +4887,6 @@
 			<cq-box>
 				<ui-media><img data-view="hero-recipe-1" src="/assets/images/carbonara.png" alt="Plate of spaghetti carbonara" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/carbonara.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/carbonara.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/carbonara.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/carbonara.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/carbonara.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/carbonara.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Recipe</ui-chip></ui-media>
 				<ui-content>
-					
 					
 					
 					
@@ -5308,7 +5307,6 @@
 			<cq-box>
 				<ui-media><img src="/assets/images/announcement.png" alt="Stylised diagram of an API outage — a red cross cutting the connection between an app and its database servers" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/announcement.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/announcement.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/announcement.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/announcement.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/announcement.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/announcement.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>SpecialAnnouncement</ui-chip></ui-media>
 				<ui-content>
-					
 					
 					
 					

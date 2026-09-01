@@ -1232,28 +1232,30 @@ when no explicit value is set", which is what the chain *fails* to do.
 
 ---
 
-## 39. `schema.compare.js` — ~20 cards on `schema.html` still diverge from their data
+## 39. `schema.compare.js` — ~13 cards on `schema.html` still diverge from their data
 
-2026-08-28 sweep, updated 2026-09-01: `PAIRS` is now **42 entries**
-(`schema.compare.js:58-139`). Since the sweep, the two hardest rows were closed —
-**ProductGroup** (the 146-line collage, paired in `cecd0ba4`) and **SoftwareApplication**
-(sharpened to `VideoGame#schema-videogame`, `71a98908`). The rest still diverge — page
-and renderer spell the same card differently, which is exactly the drift the comparator
-exists to catch:
+2026-08-28 sweep, worked down 2026-09-01: `PAIRS` is now **49 entries, all green**
+(`node ui/card/schema.compare.js` → 49/49). The whole 2–4-line tier shipped in one
+batch: the four ambiguous cards got ids (`schema-review`, `schema-review-testimonial`,
+`schema-timeline`, `schema-timeline-horizontal`); Review, Recipe and SpecialAnnouncement
+were page-side fixes (missing `itemprop="name"`; recipe eyebrow moved onto the 14-type
+`EYEBROW_PROP` convention; a redundant `datePublished` dropped in favour of the required
+`datePosted`); Dataset, ImageGallery, EducationalOccupationalCredential and the
+announcement's duplicate `datePosted` were data-side; Event was a renderer fix
+(`<span data-part="meta">` → the house `<p data-part="meta">`). Twins regenerated;
+snapshot diff was exactly the five justified blocks.
+
+Still unpaired:
 
 | lines | cards |
 |---|---|
-| 2–4 | Recipe 3 · Event 4 · Dataset 2 · ImageGallery 2 · EducationalOccupationalCredential 3 · SpecialAnnouncement 2 · EventSeries 4 · Review 2 |
+| 4 | EventSeries#schema-timeline — **deferred, needs renderer support**: the page's `<ol data-part="timeline" data-variant="minimal">` and per-item `data-theme="accent"` have no hook in `render.js`'s `timeline()` (it reads `item.theme` but the instance carries none, and there is no timeline-variant seam at all) |
 | 5–8 | VideoObject 5 · Question 6 · Offer 6 · Quotation 6 · ItemList (comparison) 6 · FAQPage 8 · CreativeWork 8 · PodcastEpisode 8 |
 | 12–14 | NewsArticle 12 · Person (profile) 12 · CafeOrCoffeeShop 14 |
 | large | DiscussionForumPosting 54 (`social.json` is the plain post, not the forum card — needs its own instance) |
 
 Per card the fix is the usual one: decide which side is the spec (the page, per the
-markup-first rule), move the other, add the pair. `[quick]` first step: `Review`
-(`schema.html:375`, `:401`) and `EventSeries` (`:1347`, `:1393`) each have two id-less
-cards, so the bare selector cannot pick one — give them an `id=`, then work the 2–4-line
-rows (~2 min each). Re-run the sweep with a scratch copy of `schema.compare.js` whose
-`PAIRS` is the candidate list.
+markup-first rule), move the other, add the pair.
 
 
 ## 40. `:has()` arguments that name DSL attributes — DONE 2026-08-29

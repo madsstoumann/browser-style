@@ -2093,9 +2093,9 @@ export const DETAILS = {
 		const location = d.location?.name
 			? `<span${scope('location', 'Place')}><span itemprop="name">${esc(d.location.name)}</span>${d.location.address ? `<span${scope('address', 'PostalAddress')}>, <span itemprop="addressLocality">${esc(d.location.address)}</span></span>` : ''}</span>`
 			: '';
-		html += `<span data-part="meta">${esc(d.dateDisplay || d.startDate || '')}${location ? ' · ' : ''}${location}</span>`;
+		html += `<p data-part="meta">${esc(d.dateDisplay || d.startDate || '')}${location ? ' · ' : ''}${location}</p>`;
 		if (d.organizer?.name) {
-			html += `<span data-part="meta"${scope('organizer', 'Organization')}>Organizer: <span itemprop="name">${esc(d.organizer.name)}</span></span>`;
+			html += `<p data-part="meta"${scope('organizer', 'Organization')}>Organizer: <span itemprop="name">${esc(d.organizer.name)}</span></p>`;
 		}
 		/* ticket tiers — one Offer scope each (Google reads these for event rich results) */
 		for (const offer of d.offers || []) {

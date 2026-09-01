@@ -372,12 +372,12 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card variant="col" media="asr(16/9) chip(te)" itemscope itemtype="https://schema.org/Review">
+		<ui-card id="schema-review" variant="col" media="asr(16/9) chip(te)" itemscope itemtype="https://schema.org/Review">
 			<cq-box>
 				<ui-media><img src="/assets/images/soundwavemini.png" alt="SoundWave Mini speaker" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/soundwavemini.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/soundwavemini.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/soundwavemini.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/soundwavemini.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/soundwavemini.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/soundwavemini.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Review</ui-chip></ui-media>
 				<ui-content>
 					<small data-part="eyebrow">Verified review</small>
-					<h3 data-part="headline">Punches far above its size</h3>
+					<h3 data-part="headline" itemprop="name">Punches far above its size</h3>
 					<div data-part="rating" itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
 						<meta itemprop="ratingValue" content="4">
 						<meta itemprop="bestRating" content="5">
@@ -398,7 +398,7 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card variant="col" style="--ui-rating-c: #e75d26" itemscope itemtype="https://schema.org/Review">
+		<ui-card id="schema-review-testimonial" variant="col" style="--ui-rating-c: #e75d26" itemscope itemtype="https://schema.org/Review">
 			<ui-chip data-type>Review</ui-chip>
 			<cq-box>
 				<ui-content>
@@ -1344,7 +1344,7 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card variant="col" media="asr(16/9) chip(te)" itemscope itemtype="https://schema.org/EventSeries">
+		<ui-card id="schema-timeline" variant="col" media="asr(16/9) chip(te)" itemscope itemtype="https://schema.org/EventSeries">
 			<cq-box>
 				<ui-media><img src="/assets/images/world.png" alt="World map lit at night" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/world.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/world.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/world.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/world.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/world.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/world.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>EventSeries</ui-chip></ui-media>
 				<ui-content>
@@ -1390,7 +1390,7 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card variant="col" media="asr(16/9) chip(te)" itemscope itemtype="https://schema.org/EventSeries">
+		<ui-card id="schema-timeline-horizontal" variant="col" media="asr(16/9) chip(te)" itemscope itemtype="https://schema.org/EventSeries">
 			<cq-box>
 				<ui-media><img src="/assets/images/world.png" alt="World map lit at night" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/world.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/world.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/world.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/world.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/world.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/world.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>EventSeries</ui-chip></ui-media>
 				<ui-content>
@@ -1720,11 +1720,10 @@
 			<cq-box>
 				<ui-media><img data-view="hero-recipe-1" src="/assets/images/carbonara.png" alt="Plate of spaghetti carbonara" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/carbonara.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/carbonara.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/carbonara.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/carbonara.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/carbonara.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/carbonara.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>Recipe</ui-chip></ui-media>
 				<ui-content>
-					<meta itemprop="recipeCategory" content="Pasta">
 					<meta itemprop="prepTime" content="PT15M">
 					<meta itemprop="cookTime" content="PT20M">
 					<meta itemprop="recipeYield" content="4">
-					<small data-part="eyebrow">Pasta</small>
+					<small data-part="eyebrow" itemprop="recipeCategory">Pasta</small>
 					<h3 data-part="headline" itemprop="name"><a data-part="cover" href="recipes/recipe.html?id=recipe-1">Classic Spaghetti Carbonara</a></h3>
 					<p data-part="summary" itemprop="description">The Roman original — guanciale, pecorino, eggs and pepper. No cream.</p>
 					<p data-part="meta"><strong data-part="key">Prep:</strong> 15 min · <strong data-part="key">Cook:</strong> 20 min · <strong data-part="key">Serves:</strong> 4</p>
@@ -2175,7 +2174,6 @@
 				<ui-media><img src="/assets/images/announcement.png" alt="Stylised diagram of an API outage — a red cross cutting the connection between an app and its database servers" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/announcement.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/announcement.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/announcement.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/announcement.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/announcement.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/announcement.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>SpecialAnnouncement</ui-chip></ui-media>
 				<ui-content>
 					<meta itemprop="datePosted" content="2026-07-01">
-					<meta itemprop="datePublished" content="2026-07-01">
 					<meta itemprop="expires" content="2026-07-06">
 					<meta itemprop="spatialCoverage" content="Global">
 					<small data-part="eyebrow">Maintenance</small>

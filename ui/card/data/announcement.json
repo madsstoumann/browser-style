@@ -25,7 +25,6 @@
     ],
     "headline": "Scheduled maintenance — July 5",
     "summary": "The API will be unavailable Saturday July 5, 02:00–04:00 UTC while we migrate the primary database.",
-    "published": "2026-07-01T00:00:00Z",
     "details": {
       "announcementType": "Maintenance",
       "priority": "high",
