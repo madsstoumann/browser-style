@@ -667,15 +667,16 @@ were corrected in place. The `ui/icon`-in-the-furniture-table row was also fixed
 `components.md:47` now files it under text-area sub-components with an accurate
 description.
 
-What is left:
+What is left (the `demo/index.html` path and the three "`xs` — 240px" claims were fixed
+in place 2026-09-01 — the include pattern now points at `demo/cards.html`, and all three
+breakpoint tables/lists state that `xs` is the un-queried base with only a
+`srcsetMin: 240px`):
 
 | Doc says | Reality |
 |---|---|
-| `DESIGN.md` / `ui/base` docs — no inventory of what `index.css` actually pulls in | `ui/base/index.css` imports **14** files; `theme.css`, `tint.css`, `scroll.css`, `stagger.css` are undocumented as part of the entry point. (`index.css:9-10` also carry unresolved `/* REWORK ? */` / `/* NEEDED ? */` markers) |
-| `ui/card/AGENTS.md:158` — "see `demo/index.html`" | no such file (the demo pages carry no index) — the one broken doc path the audit found |
-| `layout/AGENTS.md:63`, `layout/readme.md:248`, `ui/card/AGENTS.md:153` — "`xs` — 240px" is a breakpoint | the `xs` config entry has no `min`, only `"srcsetMin": "240px"` (`layout.config.json:73-75`); built CSS has media queries at 380/540/720/920/1140 — no 240. `layout/AGENTS.md:143` states it correctly, contradicting `:63` in the same file |
+| `DESIGN.md` / `ui/base` docs — no inventory of what `index.css` actually pulls in | `ui/base/index.css` imports **14** files; `theme.css`, `tint.css`, `scroll.css`, `stagger.css` are undocumented as part of the entry point. (`index.css` also carries unresolved `/* REWORK ? */` / `/* NEEDED ? */` markers) |
 
-Direction: fix each in place. `docs/schema.md`'s counts — each published with the `grep`
+Direction: fix in place. `docs/schema.md`'s counts — each published with the `grep`
 that reproduces it — are the house style every countable claim should copy; the recurring
 lesson from this batch is that hand-maintained numbers rot, so generate or grep-document
 them.

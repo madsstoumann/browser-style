@@ -150,12 +150,12 @@ Multi-card layout is **not** part of the card system. Sections are arranged by t
 
 Two axes, one markup:
 
-- **`<lay-out md= lg=>`** — *viewport* `@media` breakpoints (xs 240 / sm 380 / md 540 / lg 720 / xl 920 / xxl 1140 px) pick the section pattern and give each card a cell. Alignment is a per-breakpoint **builder token** inside those attributes: `items(start|center|end|stretch)`, e.g. `lg="columns(2) items(start)"` (the old standalone `items=` attribute is removed).
+- **`<lay-out md= lg=>`** — *viewport* `@media` breakpoints (xs = un-queried base / sm 380 / md 540 / lg 720 / xl 920 / xxl 1140 px; xs has only a `srcsetMin` of 240px, no media query) pick the section pattern and give each card a cell. Alignment is a per-breakpoint **builder token** inside those attributes: `items(start|center|end|stretch)`, e.g. `lg="columns(2) items(start)"` (the old standalone `items=` attribute is removed).
 - **card `md:` / `lg:`** — *container* queries react to the cell width the layout produced.
 
 Both vocabularies use "md"/"lg" but never co-occur on one element (attribute vs token prefix) — keep both, don't rename. They don't collide technically either: `lay-out` has `contain: layout inline-size` but no `container-type` (cards keep their query root), and the CSS lives in disjoint cascade layers (`layout.*` vs `bs-component`).
 
-Demo include pattern (see `demo/index.html`):
+Demo include pattern (see `demo/cards.html`):
 
 ```html
 <link rel="stylesheet" href="/layout/dist/layout.css">

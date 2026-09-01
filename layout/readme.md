@@ -245,7 +245,7 @@ Use the `lay-out` element with breakpoint attributes:
 
 Default breakpoints (customizable):
 
-- `xs` - 240px
+- `xs` - base, no media query (declared with `srcsetMin: 240px` only — see srcset notes)
 - `sm` - 380px
 - `md` - 540px
 - `lg` - 720px

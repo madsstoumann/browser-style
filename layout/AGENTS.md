@@ -60,7 +60,7 @@ layout/
 
 | Attribute | Breakpoint |
 |-----------|------------|
-| `xs` | 240px |
+| `xs` | base — no media query (its config entry has `srcsetMin: 240px` but no `min`; built CSS emits queries at 380/540/720/920/1140 only) |
 | `sm` | 380px |
 | `md` | 540px |
 | `lg` | 720px |
