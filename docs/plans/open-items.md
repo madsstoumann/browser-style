@@ -214,14 +214,16 @@ The timeline is UA-computed, so there is no CSS lever left.
 RTL demo. It is *not* a position-grid or carousel-control bug: those all mirror
 correctly on the same page.
 
-**New lead (2026-09-01) — test the `trigger` arm in RTL first.** Since this was filed,
-`stagger.css:288-322` gained a `stagger="… trigger"` one-shot arm, gated on
-`@supports (timeline-trigger-name: --t)`: it sets `animation-timeline: auto` on both the
-container (`:297`) and card (`:307`) rules and drives them from
-`timeline-trigger: --stg-card view(inline) entry 25% exit 0%`. Mechanically that is
-option (b) below — the `auto`-timeline path that demonstrably works in RTL — already
-built, but opt-in and never checked under `dir="rtl"`. If it passes, the fix may be a
-routing decision rather than new code.
+**Tested 2026-09-01 — the `trigger` arm does NOT escape the bug.** The
+`stagger="… trigger"` one-shot arm (`stagger.css:288-322`, `timeline-trigger:
+--stg-card view(inline) entry 25% exit 0%`, `animation-timeline: auto`) was measured on
+RTL twins of the repro page: in LTR it fires correctly at load (in-view cards reveal);
+in RTL it shows the **identical failure signature** — cards in view at rest stay at
+opacity 0 forever, only cards arriving by scroll animate in. So Chromium's defect is in
+the underlying `view()`-progress computation on RTL horizontal scrollers, and
+`timeline-trigger` inherits it because its trigger range is the same `view(inline)`.
+Option (b) below therefore means the **scroll-state adapter** specifically (the
+`media="… stagger"` token path), not the trigger arm.
 
 **The call to make.** Either (a) give this adapter an IntersectionObserver fallback that
 marks in-view subjects done — reintroduces JS into a CSS-only engine, and stagger is
@@ -934,38 +936,18 @@ Lighthouse accessibility 100 as the demo-page floor in the `perf-pass` definitio
 
 ---
 
-## 30. `schema.html` — the inline polyfill sits below the stylesheet, serialising CSS and parse
+## 30. `schema.html` inline polyfill below the stylesheet — MEASURED 2026-09-01, closed as noise
 
-**Where:** `ui/card/demo/schema.html` — `<link rel="stylesheet" href="/dist/demo.24b9298d.min.css">`
-at line 15, the `<!-- polyfill:start/end -->` block at lines 42–47 (with an inline
-`<style>` and the render-blocking `<link rel="expect">` between them).
-
-A parser-inserted **classic** `<script>` is blocked by every stylesheet that precedes it, and
-because such a script also blocks the parser, HTML parsing halts with it. The two phases that
-should overlap therefore run in series: the ~62 kB bundle downloads, *then* the 2,482-element
-body is parsed, *then* the page can paint — with the render-blocking
-`<link rel="expect" href="#schema-product-variants">` queued behind that parse. The preload
-scanner keeps scanning ahead the whole time, so subresource discovery is **not** affected;
-this is a DOM-construction cost only.
-
-**The fix is one move, not a rewrite:** relocate the `<!-- polyfill:start -->` … `<!-- polyfill:end -->`
-block above the stylesheet `<link>`. `scripts/inline-polyfill.js` rewrites *between* the
-markers and does not care where they sit, so nothing in the build changes. The polyfill's
-"must run before first paint" guarantee is not weakened by moving it earlier — it is
-strengthened. Its initial `u()` walk finds an empty body either way; the `MutationObserver`
-does the real work.
-
-**Why it is waiting: the magnitude is unknown.** Paint is gated on CSS regardless, so the
-saving is whatever the body parse costs once it is allowed to overlap the download — plausibly
-small, plausibly not on a document this size. Trace it before and after
-(`performance_start_trace`, then `LCPBreakdown` and `RenderBlocking`) rather than shipping it
-as an obvious win. If the delta is inside run-to-run noise, close this item and keep the rule
-as documentation only.
-
-The rule itself is recorded in `docs/performance.md` § JavaScript and the polyfill and in the
-`perf-pass` skill. `ui/card/demo/media.html` has a body-level inline classic script (line 201)
-that is technically subject to the same rule, but head CSS has resolved long before the parser
-reaches it — not worth touching.
+The item's exit condition fired. Traced before/after moving the `<!-- polyfill -->`
+block above the stylesheet `<link>` (Chromium, Slow-4G + 4× CPU emulation, three runs
+per arm): LCP 346/354/407 ms with the block below vs 370/353/376 ms above — medians
+354 vs 370, run-to-run spread ±60 ms. The delta is inside noise, exactly the case the
+item pre-declared: *"If the delta is inside run-to-run noise, close this item and keep
+the rule as documentation only."* The move was reverted; the parser-blocking rule stays
+recorded in `docs/performance.md` § JavaScript and the polyfill and in the `perf-pass`
+skill. (Mechanism, for the record: the preload scanner keeps subresource discovery
+unaffected either way — the serialisation is a DOM-construction cost only, and on this
+page it does not reach LCP.)
 
 ---
 
