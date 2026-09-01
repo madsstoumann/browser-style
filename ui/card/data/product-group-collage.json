@@ -31,52 +31,40 @@
         "productGroupID": "PSG-2026",
         "items": [
           {
-            "name": "Persistence Silk Gown — Indigo Floral",
+            "$ref": "card/product-indigo",
             "url": "products/silk-gown-indigo.html",
-            "sku": "PSG-IND",
             "color": "Indigo Floral",
             "label": "Indigo",
-            "price": 249,
-            "currency": "USD",
             "image": {
               "src": "/assets/images/silkgown-indigo.png",
               "alt": "Persistence Silk Gown in Indigo Floral"
             }
           },
           {
-            "name": "Persistence Silk Gown — Crimson Paisley",
+            "$ref": "card/product-crimson",
             "url": "products/silk-gown-crimson.html",
-            "sku": "PSG-CRI",
             "color": "Crimson Paisley",
             "label": "Crimson",
-            "price": 249,
-            "currency": "USD",
             "image": {
               "src": "/assets/images/silkgown-crimson.png",
               "alt": "Persistence Silk Gown in Crimson Paisley"
             }
           },
           {
-            "name": "Persistence Silk Gown — Emerald Palm",
+            "$ref": "card/product-emerald",
             "url": "products/silk-gown-emerald.html",
-            "sku": "PSG-EME",
             "color": "Emerald Palm",
             "label": "Emerald",
-            "price": 249,
-            "currency": "USD",
             "image": {
               "src": "/assets/images/silkgown-emerald.png",
               "alt": "Persistence Silk Gown in Emerald Palm"
             }
           },
           {
-            "name": "Persistence Silk Gown — Onyx Deco",
+            "$ref": "card/product-onyx",
             "url": "products/silk-gown-onyx.html",
-            "sku": "PSG-ONX",
             "color": "Onyx Deco",
             "label": "Onyx",
-            "price": 249,
-            "currency": "USD",
             "image": {
               "src": "/assets/images/silkgown-onyx.png",
               "alt": "Persistence Silk Gown in Onyx Deco"
