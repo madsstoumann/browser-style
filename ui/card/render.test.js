@@ -3411,3 +3411,91 @@ describe('content models parse', () => {
 		});
 	}
 });
+
+/* Referenced detail rows — { "$ref": "card/<id>" } in ref-enabled arrays (data/details.json
+   `ref` declarations) project the referenced card's fields onto the row shape before the
+   DETAILS renderers run. Docs: docs/card.model.md § Referenced rows */
+describe('referenced detail rows', async () => {
+	const { expandDetails } = await import('./render.js');
+	const target = {
+		id: 'faq-shared-1', model: 'card',
+		fields: { schemaType: 'content', headline: 'How do I reset?', summary: 'Use the reset link.' }
+	};
+	const cards = { 'faq-shared-1': target };
+	const faq = (items) => ({ schemaType: 'faq', headline: 'FAQ', details: { items } });
+
+	test('a $ref row projects the target card onto the row shape', () => {
+		const html = renderCard(faq([{ $ref: 'card/faq-shared-1' }]), {}, cards);
+		assert.ok(html.includes('How do I reset?'));
+		assert.ok(html.includes('Use the reset link.'));
+		assert.ok(!html.includes('$ref'));
+	});
+
+	test('inline keys on the ref row override the projection', () => {
+		const html = renderCard(faq([{ $ref: 'card/faq-shared-1', question: 'Local question?' }]), {}, cards);
+		assert.ok(html.includes('Local question?'));
+		assert.ok(!html.includes('How do I reset?'));
+		assert.ok(html.includes('Use the reset link.'));
+	});
+
+	test('inline and ref rows mix in one array, order preserved', () => {
+		const html = renderCard(faq([
+			{ question: 'Inline first?', answer: 'Yes.' },
+			{ $ref: 'card/faq-shared-1' }
+		]), {}, cards);
+		assert.ok(html.indexOf('Inline first?') < html.indexOf('How do I reset?'));
+	});
+
+	test('an unresolvable ref drops the row and leaves a loud comment', () => {
+		const html = renderCard(faq([{ $ref: 'card/nope' }]), {}, cards);
+		assert.ok(html.includes('<!-- unresolved card ref: card/nope -->'));
+		assert.ok(!html.includes('nope</'));
+		/* hostile ref ids stay escaped inside the comment */
+		const hostile = renderCard(faq([{ $ref: 'card/--><b>x' }]), {}, {});
+		assert.ok(!hostile.includes('<b>x'));
+	});
+
+	test('a bare id is tolerated at runtime (canonical card/<id> is the lint contract)', () => {
+		const html = renderCard(faq([{ $ref: 'faq-shared-1' }]), {}, cards);
+		assert.ok(html.includes('How do I reset?'));
+	});
+
+	test('a richtext headline projects as plain text', () => {
+		const rich = { ...target, id: 'rich-1', fields: { ...target.fields, headline: { $richtext: true, content: 'Bold <b>move</b>', format: 'html' } } };
+		const html = renderCard(faq([{ $ref: 'card/rich-1' }]), {}, { 'rich-1': rich });
+		assert.ok(html.includes('Bold move'));
+		assert.ok(!html.includes('Bold <b>move</b>'));
+	});
+
+	test('expansion is one level deep — a target\'s own ref rows are not expanded', () => {
+		const nested = { id: 'faq-nested', model: 'card', fields: { schemaType: 'faq', headline: 'Nested FAQ', summary: 'Sum', details: { items: [{ $ref: 'card/faq-shared-1' }] } } };
+		const out = expandDetails({ schemaType: 'podcastseries', details: { episodes: [{ $ref: 'card/faq-nested' }] } }, { 'faq-nested': nested, ...cards });
+		/* the episode row projects the nested card's envelope; its details.items stay untouched */
+		assert.equal(out.details.episodes[0].name, 'Nested FAQ');
+		assert.equal(out.details.episodes[0].$ref, undefined);
+	});
+
+	test('expandDetails is the identity for details without refs', () => {
+		const fields = faq([{ question: 'Q', answer: 'A' }]);
+		assert.equal(expandDetails(fields, cards), fields);
+		const noDetails = { schemaType: 'content', headline: 'X' };
+		assert.equal(expandDetails(noDetails, cards), noDetails);
+	});
+
+	test('nested array paths expand (product variants.items)', () => {
+		const product = {
+			id: 'gown-indigo', model: 'card',
+			fields: { schemaType: 'product', headline: 'Gown — Indigo', details: { price: { current: 249, currency: 'USD' }, variants: { productGroupID: 'PSG-IND' } } }
+		};
+		const out = expandDetails({
+			schemaType: 'product',
+			details: { subtype: 'ProductGroup', variants: { variesBy: ['color'], control: 'collage', items: [{ $ref: 'card/gown-indigo', label: 'Indigo' }] } }
+		}, { 'gown-indigo': product });
+		const row = out.details.variants.items[0];
+		assert.equal(row.name, 'Gown — Indigo');
+		assert.equal(row.sku, 'PSG-IND');
+		assert.equal(row.price, 249);
+		assert.equal(row.currency, 'USD');
+		assert.equal(row.label, 'Indigo');
+	});
+});

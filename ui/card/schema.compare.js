@@ -37,7 +37,7 @@
  * Everything else — itemtypes, itemprops, nesting, order, attribute values, and the
  * difference between U+0020 and U+00A0 — is a real difference and is reported.
  */
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 
 const root = process.argv.find((a) => a.startsWith('--root='))?.slice(7) || '.';
@@ -288,12 +288,24 @@ function diff(a, b) {
 	return out;
 }
 
+/* the id-keyed corpus map — flipside and referenced detail rows resolve against it */
+const cards = {};
+for (const folder of ['ui/card/data', 'ui/card/data/demo']) {
+	for (const f of readdirSync(join(root, folder)).sort()) {
+		if (!f.endsWith('.json')) continue;
+		try {
+			const doc = load(join(folder, f));
+			if (doc?.model === 'card' && doc.id) cards[doc.id] = doc;
+		} catch { /* non-instance JSON */ }
+	}
+}
+
 let mismatched = 0;
 for (const [itemtype, file] of PAIRS) {
 	if (only && only !== itemtype) continue;
 	let d;
 	try {
-		d = diff(canon(referenceCard(itemtype)), canon(renderCard(load(file), presets, {}, { images, typeChip: true, mapIcons })));
+		d = diff(canon(referenceCard(itemtype)), canon(renderCard(load(file), presets, cards, { images, typeChip: true, mapIcons })));
 	} catch (error) {
 		console.log(`ERROR  ${itemtype.padEnd(22)} ${error.message}`);
 		mismatched++;
