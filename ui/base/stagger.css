@@ -270,6 +270,13 @@
 				animation-timeline: view(inline);
 				animation-range: entry 5% cover 40%;
 			}
+			/* RTL: Chromium misreports view(inline) progress on an RTL scroller — in-view
+			   cards sit at 0% forever, the section renders blank; the trigger arm inherits
+			   the same defect (measured). Static end state until the engine fixes it —
+			   the same escape reduced-motion takes. Docs: open-items § 5 */
+			lay-out[overflow][stagger]:dir(rtl):not(:where(details *, ui-media *)) > *:not(lay-out, ui-carousel-controls) {
+				animation: none;
+			}
 			/* BLOCK axis — normal page grid. Container publishes a view() timeline;
 			   children stagger via per-sibling animation-range offset (mirrors the
 			   [animate] system). Excludes lay-out grids used as SLIDES inside a

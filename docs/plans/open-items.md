@@ -163,77 +163,24 @@ other two — `bdr` on `<ui-reveal>` painting on `> details`, and group-header b
 riding the responsive `scl()` ladder — were both resolved in the 2026-07-27 closeout
 round. This one was not.
 
-## 5. `stagger=` never fires in RTL — the view-timeline adapter only
+## 5. `stagger=` never fires in RTL — MITIGATED 2026-09-01 (static end state)
 
-**Where:** `ui/base/stagger.css`, the scroll-driven view-timeline adapter — labeled
-inline at `:243` (`=== adapter 3: scroll-DRIVEN reveal ===`; the file header now lists
-only the two *trigger* adapters). The timelines: `view()` on the container at `:264`,
-`view(inline)` on the cards at `:270`, both inside the `@supports` gate at `:251`.
-Repro: `ui/card/demo/media.carousel.html` § *Carousels in `<lay-out>`* with `dir="rtl"`
-on `<html>`.
+**Shipped:** the view-timeline adapter's card rule now has an RTL escape —
+`lay-out[overflow][stagger]:dir(rtl) > * { animation: none }` (`ui/base/stagger.css`,
+inside the same `@supports` gate) — the same escape reduced-motion takes: no animation
+means the natural, visible end state. Verified on RTL/LTR twins of the repro page: RTL
+cards render at opacity 1 at rest (was a blank band); LTR keeps the full scroll-driven
+reveal. The WCAG concern (content invisible at rest in RTL) is resolved.
 
-```html
-<lay-out class="reveal-cards" md="columns(2)" lg="columns(3)"
-         overflow media="nav(blw) arw(bare) pages" stagger="rise">
-```
-
-Under `dir="rtl"` every card stays at the keyframe start — `opacity: 0`,
-`translate: 0 80px` — so the section renders as a blank band. The cards are **there**
-and correct (326×434, right-to-left order, `scrollWidth` 3059 > `clientWidth` 1009, snap
-and controls all fine); they simply never animate in.
-
-**Cause: Chromium misreports view-progress on an RTL horizontal scroller.** Slides that
-are *already in view at rest* are treated as "not yet entered" and sit at 0% progress
-forever. Scroll the carousel and the slides arriving from the far side animate in
-normally (measured 0.988) while the initially-visible ones stay at 0. Confirmed
-Chromium 151.
-
-**Severity, re-read against the 2026-08-19 decisions (items 28–29):** Chromium 151 is
-inside the supported baseline (Chrome 150+), so this is a live bug in a supported engine,
-not a fringe case. And because the failure mode is *content invisible at rest* in
-right-to-left languages, it reads as a WCAG 2.1 AA problem (1.4.13 / content availability)
-rather than a missing flourish. The `prefers-reduced-motion` arm required by the new a11y
-policy also happens to be the cleanest workaround: if reduced-motion renders the end state
-statically, the same escape hatch can serve RTL until Chromium fixes the timeline.
-
-**Not the axis keyword and not the range.** `view(inline)`, `view(x)` and an explicit
-`animation-range: entry 0% cover 30%` all fail identically in RTL and all work in LTR.
-The timeline is UA-computed, so there is no CSS lever left.
-
-**Exactly one adapter is affected.** Sweeping all 13 stagger hosts on that page under
-`dir="rtl"`:
-
-| adapter | `animation-timeline` | RTL |
-|---|---|---|
-| `media="… stagger"` — snap-carousel scroll-state (6 carousels) | `auto` | works |
-| `<lay-out>` block stagger (5 instances) | `auto` | works |
-| **`stagger=` attribute — scroll-driven view timeline (1)** | `view(inline)` | **broken** |
-
-**Pre-existing, not a regression.** Byte-identical at `94d7fa4f`, i.e. before the
-2026-08-04 logical-position work — that round is what surfaced it, by adding the first
-RTL demo. It is *not* a position-grid or carousel-control bug: those all mirror
-correctly on the same page.
-
-**Tested 2026-09-01 — the `trigger` arm does NOT escape the bug.** The
-`stagger="… trigger"` one-shot arm (`stagger.css:288-322`, `timeline-trigger:
---stg-card view(inline) entry 25% exit 0%`, `animation-timeline: auto`) was measured on
-RTL twins of the repro page: in LTR it fires correctly at load (in-view cards reveal);
-in RTL it shows the **identical failure signature** — cards in view at rest stay at
-opacity 0 forever, only cards arriving by scroll animate in. So Chromium's defect is in
-the underlying `view()`-progress computation on RTL horizontal scrollers, and
-`timeline-trigger` inherits it because its trigger range is the same `view(inline)`.
-Option (b) below therefore means the **scroll-state adapter** specifically (the
-`media="… stagger"` token path), not the trigger arm.
-
-**The call to make.** Either (a) give this adapter an IntersectionObserver fallback that
-marks in-view subjects done — reintroduces JS into a CSS-only engine, and stagger is
-deliberately progressive-enhancement; (b) drop the view timeline for inline-axis
-scrollers and route `stagger=` on a `<lay-out overflow>` through an `auto`-timeline
-adapter (the scroll-state adapter the `media=` token uses, or the new `trigger` arm
-above), which is the class that demonstrably works in RTL; or (c) accept it, document
-`stagger=` as LTR-only on horizontal scrollers, and wait for the engine. (b) looks
-cheapest and keeps the no-JS contract — it needs someone to confirm the adapters produce
-the same visual result.
+**The underlying engine bug stands, with the 2026-09-01 experiment on record:** Chromium
+misreports `view()`-progress on RTL horizontal scrollers, and the `stagger="… trigger"`
+one-shot arm (`timeline-trigger`) **inherits the identical failure** — measured: LTR
+fires at load, RTL leaves in-view cards at 0 forever with only scroll-arrivals animating.
+So the defect is in the shared progress computation, not the timeline attachment. If
+animated RTL stagger is ever wanted before the engine fix, the only working route is the
+scroll-state adapter (the `media="… stagger"` token path); remove the `:dir(rtl)` escape
+when Chromium fixes the timeline. Full history, repro and the three rejected CSS levers:
+git history of this file.
 
 ## 6. `carousel.js` still lives in `ui/card` — work item C left half-done
 
