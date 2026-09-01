@@ -979,6 +979,18 @@ at 1×/2×/3× root font-size found zero horizontal overflow everywhere else, in
 `bleed`, `overflow`, `lanes` and every card demo. So this is one layout arm, not a systemic
 sizing problem, and `text-scale` was shipped on that basis (`docs/html-head.md` § 4).
 
+**Re-diagnosed 2026-09-01 — the documented fix does NOT fix it; do not ship it.**
+Tested live at the exact repro (1185px viewport, 48px root font, overflow 111px):
+`min-inline-size: 0` set directly on every `columns()` child leaves
+`grid-template-columns` byte-identical (368.297px ×3) and the overflow untouched. The
+"identical in shape to the masonry-lane bug" framing is wrong for this page: the
+`<lay-out>` reports `inline-size` 1200.91px against a 1009px body with
+`max-inline-size: 100%`, and header/main stretch to the same 1201px — the page shell's
+own grid is propagating the lay-out's min-content upward, so the floor lives somewhere
+inside the cards (or in the shell's track sizing), not in the children's automatic
+minimum. Needs a real min-content trace before any fix is proposed; the guard question
+below is moot until then.
+
 **Why it is waiting:** it is not caused by text scaling — it reproduces at any narrow
 viewport with large enough type — but `min-inline-size: 0` on grid children is not a free
 change. It disables min-content protection for *every* `columns()` child, so a long
