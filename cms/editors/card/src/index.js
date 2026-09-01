@@ -161,6 +161,12 @@ class EditorCard extends HTMLElement {
 			this._emitChange();
 			this.render();
 		}
+		if (action === 'add-ref') {
+			const items = Array.isArray(getPath(this.state.details, path)) ? getPath(this.state.details, path) : [];
+			setPath(this.state.details, path, [...items, { $ref: 'card/' }]);
+			this._emitChange();
+			this.render();
+		}
 		if (action === 'remove') {
 			deletePath(this.state.details, `${path}.${e.target.dataset.index}`);
 			const remaining = getPath(this.state.details, path);
@@ -266,8 +272,22 @@ class EditorCard extends HTMLElement {
 		const items = Array.isArray(value) ? value : [];
 		const spec = field.items ?? {};
 		const addButton = `<button type="button" data-action="add" data-path="${esc(path)}">${esc(this.t('add'))} ${esc((field.label ?? key).toLowerCase())}</button>`;
+		/* a ref-enabled array (data/details.json `ref`) may hold { $ref: "card/<id>" } rows */
+		const addRefButton = field.ref
+			? `<button type="button" data-action="add-ref" data-path="${esc(path)}">${esc(this.t('addReference'))}</button>`
+			: '';
 		const rows = items.map((item, index) => {
 			const remove = `<button type="button" data-action="remove" data-path="${esc(path)}" data-index="${index}">${esc(this.t('remove'))}</button>`;
+			/* a referenced row renders as reference UI — never the full empty field set,
+			   which would silently grow shadow keys beside the $ref. Only override keys
+			   actually present render as inputs; the projection supplies the rest. */
+			if (item && typeof item === 'object' && '$ref' in item) {
+				const overrides = Object.entries(item).filter(([k]) => k !== '$ref')
+					.map(([k, v]) => this._renderField(k, spec.fields?.[k] ?? { type: 'string', control: 'text' }, v, `${path}.${index}.${k}`)).join('');
+				return `<fieldset data-part="item" data-ref><legend>${index + 1} · ${esc(this.t('reference'))}</legend>
+					<label>${esc(this.t('reference'))}<input type="text" value="${esc(item.$ref ?? '')}" data-path="${esc(path)}.${index}.$ref" placeholder="card/<id>"></label>
+					${overrides}<p>${remove}</p></fieldset>`;
+			}
 			/* a listItem-style shape accepts plain strings — render the kind the data has */
 			if (spec.fields && typeof item !== 'string') {
 				const inner = Object.entries(spec.fields)
@@ -277,7 +297,7 @@ class EditorCard extends HTMLElement {
 			if (spec.lookup) return `<div data-part="item">${this._renderSelect(spec, item, `${path}.${index}`)} ${remove}</div>`;
 			return `<div data-part="item"><input type="${INPUT_TYPES[spec.control] ?? 'text'}" value="${esc(item ?? '')}" data-path="${esc(path)}.${index}"> ${remove}</div>`;
 		}).join('');
-		return `<fieldset data-part="group"><legend>${label}</legend>${rows}<p>${addButton}</p></fieldset>`;
+		return `<fieldset data-part="group"><legend>${label}</legend>${rows}<p>${addButton}${addRefButton ? ' ' + addRefButton : ''}</p></fieldset>`;
 	}
 
 	_renderPanel() {

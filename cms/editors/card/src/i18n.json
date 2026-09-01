@@ -5,6 +5,8 @@
 		"select": "Select…",
 		"offList": "off-list",
 		"add": "Add",
+		"addReference": "Add reference",
+		"reference": "Reference",
 		"remove": "Remove",
 		"displayTwin": "display text",
 		"envelopeOnly": "This type has no type-specific fields — everything lives on the card's own fields.",

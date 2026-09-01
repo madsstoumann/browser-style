@@ -90,3 +90,17 @@ test('every corpus instance round-trips byte-equal through the value contract', 
 	}
 	assert.ok(count > 50, `only ${count} instances checked`);
 });
+
+test('referenced detail rows ($ref) pass through the value contract verbatim', () => {
+	const payload = { schemaType: 'faq', details: { items: [
+		{ $ref: 'card/faq-shared-1' },
+		{ $ref: 'card/faq-shared-2', question: 'Override?' },
+		{ question: 'Inline?', answer: 'Yes.' }
+	] } };
+	const parsed = parseValue(JSON.stringify(payload));
+	assert.equal(serializeValue(parsed.schemaType, parsed.details), JSON.stringify(payload));
+	/* an override edit writes beside $ref without touching it */
+	setPath(parsed.details, 'items.0.answer', 'Local answer');
+	assert.equal(parsed.details.items[0].$ref, 'card/faq-shared-1');
+	assert.deepEqual(Object.keys(parsed.details.items[0]), ['$ref', 'answer']);
+});
