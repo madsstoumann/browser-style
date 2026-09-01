@@ -1,0 +1,18 @@
+{
+  "$schema": "../../../cms/baseline/models/card.schema.json",
+  "id": "faq-change-plan",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-09-01T09:00:00Z",
+    "updatedAt": "2026-09-01T09:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Support/FAQ"
+  },
+  "fields": {
+    "internalName": "Shared — FAQ: Can I change my plan later?",
+    "schemaType": "content",
+    "headline": "Can I change my plan later?",
+    "summary": "Yes — upgrades apply immediately, downgrades at the next billing cycle."
+  }
+}

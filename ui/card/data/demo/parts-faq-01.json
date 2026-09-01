@@ -12,22 +12,21 @@
 	"fields": {
 		"internalName": "Parts Demo — FAQ (bordered divided)",
 		"schemaType": "faq",
-		"preset": { "$ref": "card-preset/parts-faq-bordered" },
+		"preset": {
+			"$ref": "card-preset/parts-faq-bordered"
+		},
 		"eyebrow": "Support",
 		"headline": "Frequently asked questions",
 		"details": {
 			"items": [
 				{
-					"question": "How do I reset my password?",
-					"answer": "Use “Forgot password” on the sign-in page. The reset link is valid for one hour."
+					"$ref": "card/faq-reset-password"
 				},
 				{
-					"question": "Can I change my plan later?",
-					"answer": "Yes — upgrades apply immediately, downgrades at the next billing cycle."
+					"$ref": "card/faq-change-plan"
 				},
 				{
-					"question": "Do you offer refunds?",
-					"answer": "Full refund within 30 days, no questions asked."
+					"$ref": "card/faq-refunds"
 				}
 			]
 		}
