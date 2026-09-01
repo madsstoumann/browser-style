@@ -9,7 +9,7 @@
 		--ui-progress-bs: .6em;
 		--ui-progress-bg: var(--color-border);
 		--ui-progress-fill: var(--color-accent);
-		--ui-progress-anim: progress 1.2s linear alternate infinite;
+		--ui-progress-anim: ui-progress 1.2s linear alternate infinite;
 		background-color: var(--ui-progress-bg);
 		block-size: var(--ui-progress-bs);
 		border: 0;
@@ -60,9 +60,9 @@
 			animation: var(--ui-progress-anim);
 		}
 		[dir=rtl] progress {
-			--ui-progress-anim: progress-rtl 1.2s linear alternate infinite;
+			--ui-progress-anim: ui-progress-rtl 1.2s linear alternate infinite;
 		}
 	}
-	@keyframes progress { 100% { translate: 400%; } }
-	@keyframes progress-rtl { 100% { translate: -400%; } }
+	@keyframes ui-progress { 100% { translate: 400%; } }
+	@keyframes ui-progress-rtl { 100% { translate: -400%; } }
 }

@@ -524,12 +524,13 @@ From the deleted 2026-08-15 consistency audit § A; re-verified 2026-08-19 and a
 - **`ui/rating` declares three unprefixed inheriting globals.** `ui/rating/ui-rating.css:9-11`
   (and again `:20-22`) declare `--min`, `--max`, `--value` — the three most obvious names
   in CSS, inheriting into every descendant. Rename to `--ui-rating-*` (or `--_*`).
-- **Unnamespaced `@keyframes`.** `ui/progress/ui-progress.css:66-67` (`progress`,
-  `progress-rtl`) and `ui/gradient-text/ui-gradient-text.css:16` (`move-bg`). `@keyframes`
-  is document-global and last-declared wins — a page defining `@keyframes progress`
-  silently takes over the indeterminate bar. `gradient-text` uses both conventions in one
-  file (`ui-slide-bg`/`ui-breathe-bg` at `:68-69` are correct), the tell that this is
-  drift, not a decision.
+- **DONE 2026-09-01 — unnamespaced `@keyframes` renamed.** `progress`/`progress-rtl` →
+  `ui-progress`/`ui-progress-rtl` (`ui/progress/ui-progress.css:66-67` + the
+  `--ui-progress-anim` defaults at `:12`/`:63` and the readme's documented default);
+  verified running in-browser. The `move-bg` half was a false positive: it sits inside a
+  commented-out legacy block at the top of `ui-gradient-text.css` — the live keyframes
+  (`ui-slide-bg`/`ui-breathe-bg`) were already namespaced. Renamed inside the comment
+  anyway for consistency if the block is ever revived.
 - **Seven accordion variant spellings are unreachable from a preset — the gap widened.**
   `ui/card/tokens.lint.js:263-277`'s `PART_VARIANTS` allows seven accordion words
   (`popover` was added since this was filed), but the sheet implements more:

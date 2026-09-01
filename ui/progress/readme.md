@@ -56,7 +56,7 @@ Or via CSS `@import`:
 | `--ui-progress-bs` | `.6em` | Track block-size (height); the radius derives from it |
 | `--ui-progress-bg` | `var(--color-border)` | Track color |
 | `--ui-progress-fill` | `var(--color-accent)` | Value / runner color |
-| `--ui-progress-anim` | `progress 1.2s linear alternate infinite` | Indeterminate runner animation |
+| `--ui-progress-anim` | `ui-progress 1.2s linear alternate infinite` | Indeterminate runner animation |
 
 ```css
 progress {
