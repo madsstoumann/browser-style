@@ -1,3 +1,6 @@
+/* no-typed-attr() fallback values for <lay-out> — loaded by attr-fallback.js in
+   Safari/Firefox only. KEEP IN SYNC with the attr() fallbacks in core/base.css.
+   Animation params live in ui/base/polyfills, not here. Docs: open-items § 26 */
 @layer layout.base {
 	lay-out {
 		--layout-bleed: 0;
@@ -6,7 +9,7 @@
 		--layout-gtr: auto;
 		--layout-mbe: 0;
 		--layout-mbs: 0;
-		--layout-mw: 100vw;
+		--layout-mw: 100%;
 		--layout-pbe: 0;
 		--layout-pbs: 0;
 		--layout-pi: 0;
@@ -19,17 +22,3 @@
 	}
 }
 
-@layer layout.animations {
-	[animation] {
-		--_dg: 100deg;
-		--_tx: 55px;
-		--_ty: 110px;
-		--_txv: 100vw;
-		--_tyv: 100vh;
-		--_zi: 0.6;
-		--_zo: 1.2;
-		--_animr: entry 0% entry 75%;
-		--_animrs: entry 0%;
-		--_animre: entry 75%;
-	}
-}

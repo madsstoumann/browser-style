@@ -856,21 +856,19 @@ allowlist (breakpoint-accurate, slightly more builder surface); and/or (b) drop 
 dead `var(--layout-gtc, …)` fallback so both arms fail identically instead of
 diverging. Either makes the failure consistent; (a) makes it disappear.
 
-## 26. `layout/polyfills/attr-fallback.css` targets an attribute that no longer exists
+## 26. `layout/polyfills/attr-fallback.css` — FIXED 2026-09-01
 
-2026-08-19 finding, re-verified 2026-09-01 (refs exact). The no-typed-`attr()` fallback sheet's animation block
-(`attr-fallback.css:22-35`) selects **`[animation]`** — an attribute removed in v4; the
-live spellings are `animate=`/`animate-self=`, and the engine those `--_dg`/`--_tx`/…
-parameters feed now lives in `ui/base/animations.css`, not in this package. The block
-styles nothing. Separately, `:9` declares `--layout-mw: 100vw` where `core/base.css:70`'s
-own fallback is `100%` — under a space-taking scrollbar the two disagree by the scrollbar
-width, the exact reference mismatch the Safari bleed workaround in `core/base.css` exists
-for.
-
-**Direction:** decide whether this sheet still has a job now that
-`ui/base/polyfills/attr-fallback.js` writes per-element values back — then either update
-it to the v4 vocabulary (`[animate]`/`[animate-self]`, `100%`) or delete it and its
-references. Coordinates with item 23, which touches the same directory.
+Both defects corrected, made urgent by item 23's fix (the sheet is now actually loaded
+in Safari): the dead `[animation]` block was deleted — the attribute was removed in v4
+and **nothing in the layout package reads `--_dg`/`--_tx`/… at all**; animation-param
+fallbacks belong to `ui/base/polyfills` — and `--layout-mw` now says `100%`, matching
+`core/base.css`'s own typed-`attr()` fallback (the `100vw` disagreed by the scrollbar
+width under space-taking scrollbars — the same two-units-for-one-quantity class as the
+Safari bleed workaround). The sheet carries a KEEP IN SYNC header pointing at
+`core/base.css`. Residual observation, not acted on: `attr-fallback.js`'s attribute map
+still carries the matching dead animation entries (`degree`, `trans-x`, …) — inert
+inline-var writes on attributes no layout page uses; prune them if the polyfill is ever
+touched again (coordinates with item 23's drift question).
 
 ## 27. `layout/dist/layout.min.css` drifts with the unpinned minifier — DONE 2026-09-01
 
