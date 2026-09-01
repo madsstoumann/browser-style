@@ -1640,3 +1640,62 @@ Not fixed here because `bleed` is shipped layout API: the change is one declarat
 moves every bleed band on every page that uses one, so it wants its own verification pass
 (`layout/src/pages/bleed.html`, the reveal-stack cage, the Safari `overflow-x: clip` gate)
 and a `layout/dist` rebuild.
+
+## 44. Grid-native overlays (`grid-area: 1/1` + `place-self`) — audit done; one candidate family in `ui/reveal`
+
+2026-09-01 audit, prompted by the no-JS `<audio controls>` work: could the absolute+inset
+overlay rules across layout / ui-card / furniture move to grid-item stacking
+(`grid-area: 1/1` + `place-self`, optionally `contain: size`)? Every `position:` rule in
+scope was catalogued (13 in layout+base+reveal+carousel, ~12 in the card sheets, plus the
+furniture packages' internals). Verdict: **the pattern is already the house style wherever
+it fits; the remaining absolute positioning is load-bearing — except one family.**
+
+**Already implemented** (the precedents any future work should copy):
+`stack()` (`layout/core/base.css:126` — `--layout-ga: 1/1` per child, the canonical form);
+the card's `ovr()` (`ui/card/ui-card.css:129-148` — `--ui-card-stack: 1/1` + logical
+keyword pairs, zero RTL arms); `ui-avatar` (`grid-area: 1/-1` + `place-self: center`);
+`ui-icon`; `lay-out-group`'s header link (`core/group.css:71-79`); reveal's `flp`/`sld`
+panels (`::details-content { grid-area: 1/-1 }`, `ui-reveal.css:325`, `:396`).
+`contain: size` appears **nowhere** in the repo; `ovr()` solves the shared-cell sizing
+hazard with `inline-size: 100%; min-inline-size: 0` instead (`ui-card.css:156`).
+
+**Structurally impossible:** `::scroll-marker-group` / `::scroll-button()`
+(`ui/carousel/carousel.css:244`, `:635` — UA pseudos of a scroll container, no in-flow box
+exists; `anchor()` is the mechanism), reveal `pop` and the open lightbox
+(`position: fixed` to the viewport), `[data-sr]`.
+
+**Blocked by the container switching display modes — this covers ALL media-frame
+furniture.** `ui-media` is grid by default but **flex** in `nav` mode
+(`media.carousel.css:12`), where grid placement does not exist and an in-flow child becomes
+a snap slide and shifts `sibling-index()` (which `pages` paging and `mrk(dyn)` read). The
+furniture rule is also a *descendant* selector (`media.css:132`), reaching furniture inside
+nested collage tiles — grid placement only reaches direct children. Migrating
+chip/sticker/beacon/save/play/lightbox for the plain frame would still need the absolute
+path kept for carousel mode plus a nested-frame story: **two mechanisms instead of one.**
+The prize — deleting the single `:dir(rtl)` arm at `media.css:140` (`--_fx`, the physical
+`translate` sign) — is not worth that fork. Same verdict for the scrim/tint pseudos, the
+`.ui-media-tools` row, the polyfill's sticky host, and the no-JS audio bar
+(whose `inline-size: 100%` is load-bearing: the UA sheet pins `audio` to `width: 300px`,
+so inset-stretching alone does not fill the frame — measured 2026-09-01).
+
+**The candidate family — `ui/reveal`.** `details`/`summary` are grids that never
+mode-switch, and the panel is already grid-stacked in two of the four animation families:
+
+- **`ico()`/`icc()`** (`ui-reveal.css:173-190`): the default icon is already an in-flow
+  grid item (`justify-self: end`, `:125`); the tokens only yank it absolute to pick a
+  corner. `grid-area: 1/-1` + `place-self: start start | start end | end start | end end`
+  replaces `position: absolute` + the four inset-pair rules and makes the default and the
+  positioned icon **one mechanism** — the real win.
+- **`scr`** (`:347-353`): in `flp`/`sld` the pseudo is *already* `grid-area: 1/-1`; the
+  rule converts it back to absolute purely for `inset: 0` fill — `place-self: stretch`
+  should do the same. Verify the inner scroll panel survives.
+- **`grw`** (`:409-452`): the `--_scale-*` inset quadruple maps onto the same four
+  `place-self` corners, but the corner-anchored `block-size`/`inline-size` transition is
+  the load-bearing part — possible, riskiest, least gain. Fine to leave.
+- Marginal: the polyfill `mrk(tml)` dot pseudos (`polyfill/carousel.css:265-287`) could
+  grid-stack, but the rail must bleed past the label box — skip.
+
+**Recommendation:** leave layout and the media-frame furniture alone; if the pattern is to
+be cashed in, do the `ui/reveal` `ico()`/`icc()` (+ optionally `scr`) conversion as one
+CSS-only change — light gates (browser-verify both open/closed states at both container
+tiers, RTL spot-check, rebuild the reveal `dist/` bundle + demo bundle).
