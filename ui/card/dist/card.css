@@ -1,3 +1,5 @@
+@layer bs-core, bs-component;
+
 /* media.css */
 @layer bs-component {
   :where(ui-card, ui-reveal) :where(ui-card, ui-reveal) {

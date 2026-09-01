@@ -1,3 +1,5 @@
+/* layer order — link-order independent: bs-core must sort below bs-component (open-items § 21) */
+@layer bs-core, bs-component;
 @import './tokens.css';
 @import './easings.css';
 @import './theme.css';

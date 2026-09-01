@@ -1,3 +1,5 @@
+@layer bs-core, bs-component;
+
 /* tokens.css */
 @layer bs-core {
   :root {

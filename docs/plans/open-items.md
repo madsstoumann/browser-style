@@ -739,14 +739,12 @@ build time (`tokens.build.js` already writes generated headers) or delete the co
 
 Audit § J, re-verified 2026-08-19 and 2026-09-01. Three parts; the first is the cheap one.
 
-- **No `@layer` order statement exists in `ui/base` or `ui/card`** — not in `index.css`,
-  not in the dist bundles (both open directly with `@layer bs-core {` /
-  `@layer bs-component {`). Layer order is therefore first-appearance, i.e. `<link>`
-  order: a page linking `card.css` before `base.css` sorts `bs-component` first, and
-  every `bs-core` rule in base then outranks the card engine. `ui/card/AGENTS.md`
-  mandates the load order in prose only. A one-line `@layer bs-core, bs-component;` at
-  the top of `ui/base/index.css` and the card bundle makes it order-independent — which
-  is what layout already does. Highest value-per-character in the audit.
+- **DONE 2026-09-01 — `@layer bs-core, bs-component;` leads all four package entries**
+  (`ui/base`, `ui/card`, `ui/carousel`, `ui/reveal` `index.css` + rebuilt dists — all
+  four because layer order is fixed by *first appearance*, so any statement-less
+  bs-component bundle linked before base would still pin the wrong order). Verified in
+  Chromium: pre-fix, card-before-base gave a `theme="red"` card dark ink on the red
+  plate (bs-core won); post-fix both link orders render identical white-on-red.
 - **DONE 2026-09-01 — `layout.demo` is in the order statement.**
   `generateLayerDeclaration()` (`layout/src/builder.js`) now appends it last — the same
   rank appearance order gave it, so zero visual change by construction; dist rebuilt and

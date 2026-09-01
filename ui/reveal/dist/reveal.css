@@ -1,3 +1,5 @@
+@layer bs-core, bs-component;
+
 /* ui-reveal.css */
 @property --_rvl { syntax: "*"; inherits: false; }
 @layer bs-component {

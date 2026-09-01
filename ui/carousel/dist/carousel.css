@@ -1,3 +1,5 @@
+@layer bs-core, bs-component;
+
 /* carousel.css */
 @layer bs-component {
   :where(ui-card, ui-reveal, ui-media, lay-out[overflow]) {
