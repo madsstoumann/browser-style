@@ -336,6 +336,7 @@
 @property --_theme-ink { syntax: "*"; inherits: false; }
 @property --_theme-c { syntax: "*"; inherits: false; }
 @property --_theme-border { syntax: "*"; inherits: false; }
+@property --_theme-bs { syntax: "*"; inherits: false; }
 @property --_theme-bw { syntax: "*"; inherits: false; }
 @layer bs-core {
   :where([theme~=accent], [data-theme~=accent]) {

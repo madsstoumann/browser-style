@@ -516,12 +516,11 @@ From the deleted 2026-08-15 consistency audit § A; re-verified 2026-08-19 and a
 2026-09-01. These are typing, not decisions — recorded so the delete loses nothing.
 (The fourth bullet's durable fix is the only non-quick part.)
 
-- **`--_theme-bs` is the one theme variable that leaks.** `ui/base/theme.css:5-18`
-  registers fourteen `--_theme-*` properties with `inherits: false`; `--_theme-bs` —
-  written `:126-128`, read `:109` — is not among them, so it inherits:
-  `theme="red border(dashed)"` on a container gives a dashed border to every descendant
-  that reads it, the exact opposite of `ui/base/theme.md`'s "an un-themed child does not
-  pick up an ancestor's theme". One line — register it beside its siblings.
+- **DONE 2026-09-01 — `--_theme-bs` no longer leaks.** Registered beside its fifteen
+  siblings (`ui/base/theme.css:18`, `syntax: "*"; inherits: false`). Verified in-browser
+  both ways: pre-fix, a `data-theme="green border"` descendant of
+  `theme="red border(dashed)"` rendered **dashed** (inherited); post-fix it renders
+  `solid` via the `var(--_theme-bs, solid)` fallback while the host keeps `dashed`.
 - **`ui/rating` declares three unprefixed inheriting globals.** `ui/rating/ui-rating.css:9-11`
   (and again `:20-22`) declare `--min`, `--max`, `--value` — the three most obvious names
   in CSS, inheriting into every descendant. Rename to `--ui-rating-*` (or `--_*`).
