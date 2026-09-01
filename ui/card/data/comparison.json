@@ -31,21 +31,21 @@
           "price": "USD 79",
           "score": 92,
           "scoreDisplay": "9.2",
-          "image": "/assets/images/quickboil.png"
+          "image": "/assets/images/speakers-1.png"
         },
         {
           "name": "AuraSound Go",
           "price": "USD 99",
           "score": 85,
           "scoreDisplay": "8.5",
-          "image": "/assets/images/soundwavemini.png"
+          "image": "/assets/images/speakers-2.png"
         },
         {
           "name": "QuickBoom 2",
           "price": "USD 69",
           "score": 78,
           "scoreDisplay": "7.8",
-          "image": "/assets/images/slimfold.png"
+          "image": "/assets/images/speakers-3.png"
         }
       ],
       "recommendation": "SoundWave Mini",
