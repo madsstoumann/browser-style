@@ -78,4 +78,6 @@ directly to Contentstack and Storyblok).
 ## Demo
 
 `demo.html` loads any instance from `ui/card/data/` and shows a live round-trip readout;
-`index.html` is a bare usage page.
+`demo.cms.html` plays the CMS host — the envelope groups as native form fields (pale green,
+`data-theme="green pale"`) beside the single JSON `details` field, with a whole-entry
+round-trip readout; `index.html` is a bare usage page.

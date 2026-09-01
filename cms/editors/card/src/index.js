@@ -321,7 +321,12 @@ class EditorCard extends HTMLElement {
 				`<option value="${esc(o.value)}"${o.value === type ? ' selected' : ''}>${esc(o.label)}</option>`).join('')}</optgroup>`).join('');
 
 		this._removeEventListeners();
-		this.shadowRoot.innerHTML = `
+		/* parse via <template>: shadowRoot.innerHTML uses fragment parsing, which inherits a
+		   form-element pointer from the HOST's ancestors — inside a page-level <form> (any CMS
+		   entry form) the shadow <form> tag would be silently dropped and the delegated
+		   listeners would have nothing to attach to. Template contents have no such pointer. */
+		const template = document.createElement('template');
+		template.innerHTML = `
 			<form>
 				<label>${esc(this.t('schemaType'))}
 					<select data-type="schema-type"${this.locked ? ' disabled' : ''}>
@@ -332,6 +337,7 @@ class EditorCard extends HTMLElement {
 				${this._renderPanel()}
 			</form>
 			<details><summary>${esc(this.t('valueSummary'))}</summary><pre><code></code></pre></details>`;
+		this.shadowRoot.replaceChildren(template.content);
 		this._updatePreview();
 		this._addEventListeners();
 	}
