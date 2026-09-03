@@ -218,6 +218,7 @@ Argument vocabularies, **generated from `data/tokens.json`** so they can't drift
 | `flp()` | **mode** | h v hv | — |
 | `hov()` | **mode** | zoom pan track drift tilt tilt-out tilt-in rot-r rot-l shape shape-rev gray blur bright sat dim tint | — |
 | `rds()` | **size** | non sm md lg xl 2xl full pill sm-sq md-sq lg-sq xl-sq | — |
+| `rds()` | **mode** | prg | — |
 | `scm()` | **pos** | ts tc te cs cc ce bs bc be | — |
 | `scm()` | **size** | sm md lg xl | — |
 | `scm()` | **tone** | shr lgt med drk sld | — |
@@ -287,7 +288,7 @@ Composes the two primitives — arrangement, split, visibility, overlay, theme, 
 | `vis(content)` | show only the content (hide media) |
 | `ovr()` | `ts tc te · cs cc ce · bs bc be` — stack content over media at one of 9 **logical** positions; sets the matching default scrim direction. (The six physical spellings `tl tr cl cr bl br` were removed in v5; `tc`/`cc`/`bc` are spelled the same in both grids.) |
 | `theme=` | shared theme axis: a colour (`red … black`) + `pale`/`muted`/`light`/`dark` modifiers. Surface + ink; ink crosses into the content namespace. See [theme.md](../base/theme.md). (Replaces the old `variant="thm(…)"` spelling, removed in v4) |
-| `rds()` | `non sm md lg xl 2xl full pill` (round) · `sm-sq md-sq lg-sq xl-sq` (squircle, `corner-shape: superellipse()`) — corner radius. The old `rds(none)` spelling was removed in v5 |
+| `rds()` | `non sm md lg xl 2xl full pill` (round) · `sm-sq md-sq lg-sq xl-sq` (squircle, `corner-shape: superellipse()`) · `prg` (progressive — ramps from square to `--ui-media-radius-max` across the container's width) — corner radius. The old `rds(none)` spelling was removed in v5 |
 
 ```html
 <ui-card variant="row spl(1/2) rds(lg)" theme="gray" media="asr(4/3)" content="scl(lg) pad(lg)"> … </ui-card>
@@ -449,12 +450,13 @@ The core surface — frame, layout, overlay furniture, scrim, themes, type ramp 
 | `color-mix()` (themes, muted ink) | Chrome 111+, Firefox 113+, Safari 16.2+ |
 | `::scroll-marker` / `::scroll-button` + `anchor()` (carousel markers/arrows) | Chromium-only |
 | `corner-shape: superellipse()` (`rds(*-sq)` squircles) | Chrome 135+ |
+| `progress()` (`rds(prg)` progressive radius) | Chrome 152 verified; without it the ramp drops and the corners render square |
 | `text-box: cap alphabetic` (leading trim) | Chrome 133+ |
 | `@container style()` (`hov()`, `shp()`'s clip, `marquee()` placement) | Chrome 111+, Safari 18+, Firefox 128+ |
 
 **v5 support posture:** in v5 those three token families moved from duplicated selectors to an inherited `--_*` flag read by a `@container style()` query, so the token works identically whether it sits on the host or on `<ui-media>`. On **older Firefox** they now no-op — the frame simply renders un-hovered / un-clipped. Nothing else is affected: images, aspect ratio, scrim, furniture and every carousel control avoid style queries entirely. `tnt` and `hov(tint)` were migrated too and then **reverted** — they paint on `ui-media::before`, and WebKit does not evaluate a pseudo-element's style query against its originating element at first paint. Full rationale and the list of tokens that can never migrate: [`docs/media.md` § v5 support posture](docs/media.md#v5-support-posture--style-queries).
 
-**Graceful degradation:** the carousel always remains a native, swipeable scroll-snap row even without `::scroll-marker` / `anchor()` (the markers/arrows simply don't appear). The scrim and the overlay markers are pure CSS and need no JS. Squircle corners fall back to the bespoke radius without the superellipse shape. Where `cqi` / `color-mix()` are unavailable, the type ramp resolves at its preferred value and ink falls back to the inherited color — the layout stays intact.
+**Graceful degradation:** the carousel always remains a native, swipeable scroll-snap row even without `::scroll-marker` / `anchor()` (the markers/arrows simply don't appear). The scrim and the overlay markers are pure CSS and need no JS. Squircle corners fall back to the bespoke radius without the superellipse shape. Without `progress()`, `rds(prg)` drops its declaration and the corners render square. Where `cqi` / `color-mix()` are unavailable, the type ramp resolves at its preferred value and ink falls back to the inherited color — the layout stays intact.
 
 ---
 

@@ -129,7 +129,7 @@ drift from the CSS. (`md:/lg:` is the container-query prefix column: only `asr()
 |---|---|---|---|---|---|---|---|
 | `asr()` | aspect | **ratio** 1/1 1/2 6/7 3/4 4/3 3/2 2/3 16/9 21/9 | — | — | --ui-media-ar | md: lg: (ratio) | — |
 | `obp()` | position | **pos** ts tc te cs cc ce bs bc be | — | — | --ui-media-op | — | — |
-| `rds()` | corners | **size** non sm md lg xl 2xl full pill sm-sq md-sq lg-sq xl-sq | — | — | --ui-media-radius --ui-media-squircle-exp | — | — |
+| `rds()` | corners | **size** non sm md lg xl 2xl full pill sm-sq md-sq lg-sq xl-sq · **mode** prg | — | — | --ui-media-radius --ui-media-squircle-exp | — | — |
 | `obf()` | fit | **mode** cover contain fill none | — | — | --ui-media-fit | — | — |
 | `flp()` | flip | **mode** h v hv | — | — | --ui-media-fl-x --ui-media-fl-y | — | — |
 | `shp()` | shape | **shape** pt-d pt-u pt-l pt-r cut-r cut-l skew-r skew-l para rhomb inset hex chev-l chev-r arr-l arr-r star plus minus close bolt msg frame frame-in blinds-h blinds-v curve-d curve-u curve-r curve-l circle circ-45 | — | — | --ui-media-shape --ui-shape-morph --_shp --_shp-full --_r4 --_r5 --_r5l --_r5r --_ell --_shp-clip | — | — |
@@ -231,11 +231,44 @@ The queries are **named**: `@container bs-card (inline-size >= 25rem)`. An *unna
 Inside `<ui-card>`/`<ui-reveal>` the **parent** rounds and clips the frame (via its own `variant="rds(…)"`), so you don't set corners on the media. A **standalone** `<ui-media>` can round its own corners with `rds()` — the same scale as the card:
 
 ```
-rds(sm)  rds(md)  rds(lg)  rds(xl)  rds(2xl)  rds(full)  rds(pill)
+rds(non) rds(sm)  rds(md)  rds(lg)  rds(xl)  rds(2xl)  rds(full)  rds(pill)
 rds(sm-sq)  rds(md-sq)  rds(lg-sq)  rds(xl-sq)      ← squircle (superellipse corner-shape)
+rds(prg)                                            ← progressive (see below)
 ```
 
 The plain steps map to the global `--radius-*` tokens; the `-sq` variants add a bespoke radius plus `corner-shape: superellipse()` (Chrome 135+, degrades to the rounded radius). Arbitrary corners via the escape hatch: `style="--ui-media-radius: 1rem"`.
+
+##### Progressive radius — `rds(prg)`
+
+`rds(prg)` is the one value that is not a fixed step. Instead of a radius it declares a **ramp across the container's width**, so a narrow frame is square and a wide one is fully rounded — with no media query and no breakpoint:
+
+```css
+--ui-media-radius: calc(
+    progress(100cqi, var(--ui-media-radius-wmin, 32rem), var(--ui-media-radius-wmax, 64rem))
+    * var(--ui-media-radius-max, var(--radius-4xl)));
+```
+
+At or below `wmin` the radius is `0`; at or above `wmax` it is `max`; in between it interpolates. `progress()` clamps to `[0, 1]`, so it neither undershoots nor overshoots and needs no `clamp()` wrapper. Three knobs, all plain custom properties:
+
+| Property | Default | Meaning |
+|---|---|---|
+| `--ui-media-radius-max` | `var(--radius-4xl)` (2rem) | the radius at full saturation |
+| `--ui-media-radius-wmin` | `32rem` (512px) | container width at or below which the frame is square |
+| `--ui-media-radius-wmax` | `64rem` (1024px) | container width at or above which the radius is `max` |
+
+**`100cqi` is the nearest ancestor *size container*, not the frame itself.** Only `<ui-card>`, `<ui-reveal>` and `<lay-out-group>` establish one; `<lay-out>`, `<ui-media>`, `<ui-content>` and `<cq-box>` are transparent. So a `<ui-media>` inside a `lg:row` card reads the **card's** width, not the half-width frame — set `--ui-media-radius-wmin`/`-wmax` accordingly, or put the token on a frame whose container is its own box. With no container ancestor `cqi` falls back to the viewport, which still ramps sensibly rather than going inert.
+
+Because `cqi` is a container unit it **excludes the scrollbar**, so this has none of the scrollbar skew that a `100dvi`-based formulation suffers (see `layout/AGENTS.md` § Browser quirks for that class of bug).
+
+The idiomatic host is a full-bleed group, where the container width tracks the viewport up to the page max-width:
+
+```html
+<lay-out-group bleed>
+  <ui-media media="asr(21/9) rds(prg)" style="--ui-media-radius-max: 2.5rem"> … </ui-media>
+</lay-out-group>
+```
+
+Composes with a squircle — `rds(lg-sq) rds(prg)` keeps `corner-shape: superellipse()` and takes the progressive radius, because the shape rule matches the stem-less `-sq)` needle. Available on `media=` and `variant=`; **not** on `content=`, the one place the three `rds()` scales are deliberately not in lock-step.
 
 Add **`clip`** to also apply `clip-path: inset(0 round …)` at that same radius — a **scroll container** (carousel) can drop its rounded corners mid-scroll because `border-radius` + `overflow` compositing lets the scrolled content bleed past the corner; `clip-path` clips reliably. It's a boolean token that reuses the `rds()` value (`--ui-media-radius`, falling back to the card radius), so `rds(2xl) clip` rounds *and* clips. (`round()` has no superellipse, so a `-sq` frame clips as a plain round.) Note: `clip-path` also clips anything overlaid at the very edge, so keep controls/furniture inset.
 
@@ -1284,6 +1317,7 @@ All modern browsers for the core frame, overlays, and scrim.
 | `aspect-ratio` | Chrome 88+, Firefox 89+, Safari 15+ |
 | `sizes="auto"` (responsive `srcset`) | Chrome 121+, Firefox 101+; elsewhere falls back to the default `sizes` |
 | `corner-shape: superellipse` (`rds(*-sq)`) | Chrome 135+; degrades to the rounded radius |
+| `progress()` (`rds(prg)`) | Chrome 152 verified; a non-supporting engine drops `--ui-media-radius`, falling back to square corners |
 | Container queries (responsive host) | Chrome 105+, Firefox 110+, Safari 16+ |
 | `::scroll-marker` / `::scroll-button` (carousel controls) | Chromium-only; **degrades to a swipeable scroller** elsewhere |
 | `anchor()` positioning (carousel controls) | Chromium-only (same gate) |

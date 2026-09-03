@@ -88,7 +88,7 @@
 	:where([media*="obp(te)"], [media*="obp(ce)"], [media*="obp(be)"]) { --_obp-i: var(--_dir-e, right); }
 	:where([media*="obp("]) { --ui-media-op: var(--_obp-i, center) var(--_obp-b, center); }
 
-	/* rds() — KEEP IN LOCK-STEP with ui-card.css + content.css. Standalone frame only */
+	/* rds() sizes — KEEP IN LOCK-STEP with ui-card.css + content.css. Standalone frame only */
 	:where([media*="rds(non)"]) { --ui-media-radius: 0; }
 	:where([media*="rds(sm)"])   { --ui-media-radius: var(--radius-sm); }
 	:where([media*="rds(md)"])   { --ui-media-radius: var(--radius-md); }
@@ -102,6 +102,12 @@
 	:where([media*="rds(md-sq)"]) { --ui-media-radius: var(--radius-md-sq); --ui-media-squircle-exp: var(--squircle-md); }
 	:where([media*="rds(lg-sq)"]) { --ui-media-radius: var(--radius-lg-sq); --ui-media-squircle-exp: var(--squircle-lg); }
 	:where([media*="rds(xl-sq)"]) { --ui-media-radius: var(--radius-xl-sq); --ui-media-squircle-exp: var(--squircle-xl); }
+	/* rds(prg) — radius ramps with the CONTAINER's width (cqi, scrollbar-free). Docs: docs/media.md § Progressive radius */
+	:where([media*="rds(prg)"]) {
+		--ui-media-radius: calc(
+			progress(100cqi, var(--ui-media-radius-wmin, 32rem), var(--ui-media-radius-wmax, 64rem))
+			* var(--ui-media-radius-max, var(--radius-4xl)));
+	}
 	:where([media*="-sq)"]) ui-media,
 	:where(ui-media[media*="-sq)"]) { corner-shape: superellipse(var(--ui-media-squircle-exp, 1.8)); }
 

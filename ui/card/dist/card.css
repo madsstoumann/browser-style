@@ -151,6 +151,9 @@
     --ui-media-radius: var(--radius-xl-sq);
     --ui-media-squircle-exp: var(--squircle-xl);
   }
+  :where([media*="rds(prg)"]) {
+    --ui-media-radius: calc( progress(100cqi, var(--ui-media-radius-wmin, 32rem), var(--ui-media-radius-wmax, 64rem)) * var(--ui-media-radius-max, var(--radius-4xl)));
+  }
   :where([media*="-sq)"]) ui-media,
   :where(ui-media[media*="-sq)"]) {
     corner-shape: superellipse(var(--ui-media-squircle-exp, 1.8));
@@ -2846,6 +2849,9 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
   :where([variant~="rds(xl-sq)"]) {
     --ui-card-radius: var(--radius-xl-sq);
     --ui-card-squircle-exp: var(--squircle-xl);
+  }
+  :where([variant~="rds(prg)"]) {
+    --ui-card-radius: calc( progress(100cqi, var(--ui-card-radius-wmin, 32rem), var(--ui-card-radius-wmax, 64rem)) * var(--ui-card-radius-max, var(--radius-4xl)));
   }
   :where(ui-card[variant*="-sq)"]) {
     corner-shape: superellipse(var(--ui-card-squircle-exp, 1.8));

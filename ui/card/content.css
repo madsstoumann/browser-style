@@ -94,7 +94,7 @@
 	:where([content~="tal(ctr)"])   { --ui-content-text-align: center; }
 	:where([content~="tal(end)"])   { --ui-content-text-align: end; }
 
-	/* === CORNERS — rds(). KEEP IN LOCK-STEP with ui-card.css and media.css === */
+	/* === CORNERS — rds() sizes. KEEP IN LOCK-STEP with ui-card.css and media.css; rds(prg) is media=/variant= only, on purpose === */
 	:where([content*="rds(non)"]) { --ui-content-radius: 0; }
 	:where([content*="rds(sm)"])   { --ui-content-radius: var(--radius-sm); }
 	:where([content*="rds(md)"])   { --ui-content-radius: var(--radius-md); }

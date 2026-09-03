@@ -1164,6 +1164,7 @@ is live. One value per token instance — `chip(ts) chip(red)`, never `chip(ts r
 | `asr()` | **ratio** | 1/1 1/2 6/7 3/4 4/3 3/2 2/3 16/9 21/9 | — |
 | `obp()` | **pos** | ts tc te cs cc ce bs bc be | — |
 | `rds()` | **size** | non sm md lg xl 2xl full pill sm-sq md-sq lg-sq xl-sq | — |
+| `rds()` | **mode** | prg | — |
 | `obf()` | **mode** | cover contain fill none | — |
 | `flp()` | **mode** | h v hv | — |
 | `shp()` | **shape** | pt-d pt-u pt-l pt-r cut-r cut-l skew-r skew-l para rhomb inset hex chev-l chev-r arr-l arr-r star plus minus close bolt msg frame frame-in blinds-h blinds-v curve-d curve-u curve-r curve-l circle circ-45 | — |
@@ -1243,6 +1244,7 @@ is live. One value per token instance — `chip(ts) chip(red)`, never `chip(ts r
 | token | arg class | values | aliases |
 |---|---|---|---|
 | `rds()` | **size** | non sm md lg xl 2xl full pill sm-sq md-sq lg-sq xl-sq | — |
+| `rds()` | **mode** | prg | — |
 | `shd()` | **size** | non sm md lg xl | — |
 | `bdr()` | **size** | sm md lg | — |
 | `bdr()` | **tone** | lgt drk | — |

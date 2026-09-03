@@ -12,12 +12,15 @@
 	<meta name="referrer" content="no-referrer">
 	<!-- preconnect: CDN handshake parallel to the CSS download. Docs: docs/performance.md -->
 	<link rel="preconnect" href="https://v4.browser.style">
-	<link rel="stylesheet" href="/dist/demo.24b9298d.min.css">
+	<link rel="stylesheet" href="/dist/demo.37fa8cf8.min.css">
 	<link rel="stylesheet" href="../media.shapes.css">
 	<style>
 		/* scm() demo: scrim colour = a hue (colour dropdown) at an alpha (intensity
 		   dropdown); the size dropdown sets the gradient stops. All three write CSS
 		   vars onto #scrim-grid, which the cards inherit. */
+		/* rds(prg) demo: drop [bleed]'s --layout-mi padding FLOOR so the frame is edge-to-edge
+		   on mobile. Padding only — the escape margin must stay stock or the page overflows. */
+		.rds-prg-demo { padding-inline: max(0px, (100dvi - var(--layout-bleed-mw, 1024px)) / 2); }
 		.scrim-demo { --scrim-hue: 0 0 0; }
 		.scrim-demo ui-card { --ui-media-scrim-color: rgb(var(--scrim-hue) / var(--scrim-a, 0.78)); }
 		.scrim-controls { display: flex; flex-wrap: wrap; gap: var(--spacing-lg); margin-block-end: var(--spacing-xl); }
@@ -99,7 +102,15 @@
 		<ui-media media="asr(4/3) rds(lg-sq) chip(bc)"><img src="/assets/images/river.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=180/assets/images/river.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=240/assets/images/river.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=360/assets/images/river.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=540/assets/images/river.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=900/assets/images/river.png 1200w" sizes="auto, (min-width: 720px) min(25vw, 256px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip>rds(lg-sq)</ui-chip></ui-media>
 		<ui-media media="asr(4/3) rds(xl-sq) chip(bc)"><img src="/assets/images/river.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=180/assets/images/river.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=240/assets/images/river.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=360/assets/images/river.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=540/assets/images/river.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=900/assets/images/river.png 1200w" sizes="auto, (min-width: 720px) min(25vw, 256px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip>rds(xl-sq)</ui-chip></ui-media>
 	</lay-out>
+
+	<h3>Progressive — <code>rds(prg)</code></h3>
+	<p><strong>Resize the window.</strong> Not a step but a ramp across the container's width: square at <code>--ui-media-radius-wmin</code> (32rem), full <code>--ui-media-radius-max</code> at <code>--ui-media-radius-wmax</code> (64rem). <code>100cqi</code> reads the nearest container — here the full-bleed <code>&lt;lay-out-group&gt;</code>, so the frame's own width drives it.</p>
+	<lay-out-group bleed class="rds-prg-demo" xs="pbs(2) pbe(2)">
+		<ui-media media="asr(21/9) rds(prg) chip(bc)" style="--ui-media-radius-max: 2.5rem"><img src="/assets/images/river.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=103/assets/images/river.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=137/assets/images/river.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=206/assets/images/river.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=309/assets/images/river.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=514/assets/images/river.png 1200w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1600,height=686/assets/images/river.png 1600w" sizes="100vw" loading="lazy" decoding="async"><ui-chip>rds(prg)</ui-chip></ui-media>
+	</lay-out-group>
 	</section>
+
+
 
 	<!-- ============================================================
 	     obp() — object-position

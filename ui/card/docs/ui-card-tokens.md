@@ -43,7 +43,7 @@ attribute and therefore the same table; they are explained under *Reveal tokens*
 <!-- tokens:summary attr=variant -->
 | token | axis | args | aliases | bare | writes | md:/lg: | deprecated |
 |---|---|---|---|---|---|---|---|
-| `rds()` | corners | **size** non sm md lg xl 2xl full pill sm-sq md-sq lg-sq xl-sq | — | — | --ui-card-radius --ui-card-squircle-exp | — | — |
+| `rds()` | corners | **size** non sm md lg xl 2xl full pill sm-sq md-sq lg-sq xl-sq · **mode** prg | — | — | --ui-card-radius --ui-card-squircle-exp | — | — |
 | `shd()` | elevation | **size** non sm md lg xl | — | — | --ui-card-shadow | — | — |
 | `bdr()` | border | **size** sm md lg · **tone** lgt drk | — | yes | --ui-card-border-width --ui-card-border-color | — | — |
 | `spl()` | split | **ratio** 1/1 1/2 2/1 1/3 3/1 | — | — | --ui-card-split | md: lg: (ratio) | — |
@@ -139,14 +139,18 @@ so inheriting the overlay's white would make it vanish. Colour button variants (
 |-------|---------|----------|
 | `--ui-card-radius` | `var(--radius-2xl)` | corner radius |
 | `--ui-card-squircle-exp` | `1.8` | superellipse exponent for `-sq` variants |
+| `--ui-card-radius-max` | `var(--radius-4xl)` | `rds(prg)` only — the radius at full saturation |
+| `--ui-card-radius-wmin` | `32rem` | `rds(prg)` only — container width at or below which the card is square |
+| `--ui-card-radius-wmax` | `64rem` | `rds(prg)` only — container width at or above which the radius is `max` |
 
 - **Round** (global radius scale): `rds(non · sm · md · lg · xl · 2xl · full · pill)`. The old `rds(none)` spelling was **removed in v5** — migrate to `rds(non)`. The same scale exists on `media=` (standalone frame) and `content=` (standalone content corners), and the alias is gone on all three.
 - **Squircle** (bespoke radius + `corner-shape: superellipse()`): `rds(sm-sq · md-sq · lg-sq · xl-sq)` → radii `1.25 / 2 / 2.8 / 3.5rem` with exponents `1.5 / 1.7 / 1.8 / 2`. `ui-reveal` reads `--ui-card-squircle-exp` to apply the same corner-shape to its `<details>`.
+- **Progressive**: `rds(prg)` — not a step but a ramp across the container's width: square at `--ui-card-radius-wmin`, `--ui-card-radius-max` at `--ui-card-radius-wmax`. See below; `media=` has the same value, `content=` deliberately does not.
 
 > **Three `rds()` blocks, one scale — keep them in lock-step.** `ui-card.css`
 > (`--ui-card-*`), `media.css` (`--ui-media-*`) and `content.css` (`--ui-content-*`) each
-> ship the same ladder against a different namespace, and a token added to one must be added
-> to all three. The single manifest source lands with R-13; until then the three comment
+> ship the same ladder against a different namespace, and a SIZE token added to one must be
+> added to all three. The one sanctioned exception is `rds(prg)` (`media=` + `variant=` only). The single manifest source lands with R-13; until then the three comment
 > markers are the contract. What they do **not** own is the values: `--radius-*`,
 > `--radius-*-sq` and `--squircle-*` all come from `ui/base/tokens.css`, the canonical scale
 > — the blocks only route a token arg to a namespace.
@@ -168,6 +172,30 @@ so inheriting the overlay's white would make it vanish. Colour button variants (
 > it keeps a dual arm permanently (`corner-shape`'s subject *is* the element carrying the
 > attribute; a container cannot restyle itself). A nested frame under `clip` is forced back to
 > `--ui-media-radius: 0`.
+
+### Progressive radius — `rds(prg)`
+
+```css
+--ui-card-radius: calc(
+    progress(100cqi, var(--ui-card-radius-wmin, 32rem), var(--ui-card-radius-wmax, 64rem))
+    * var(--ui-card-radius-max, var(--radius-4xl)));
+```
+
+A ramp across the container's inline size rather than a fixed step: square at or below `wmin`, `max` at or above `wmax`, interpolating between. `progress()` clamps to `[0, 1]`, so no `clamp()` wrapper is needed. It replaces the media query + two `rds()` values a full-bleed hero used to need.
+
+**A card measures its *ancestor* container, not itself.** `<ui-card>` and `<ui-reveal>` do establish an inline-size container, but an element is never its own query container, so `100cqi` on a card resolves against whatever size container sits above it — a `<lay-out-group>`, or an outer card/reveal. `<lay-out>` is deliberately not a container. That is **exact for the full-width hero this token is for**, and **over-reads for a card in a multi-column grid** (every card in the row sees the same group width). In a grid, put `rds(prg)` on the media frame instead, or set `--ui-card-radius-max` per card. With no container ancestor `cqi` falls back to the viewport.
+
+`cqi` excludes the scrollbar, so there is no scrollbar skew here — unlike any `100dvi`-based measure (`layout/AGENTS.md` § Browser quirks).
+
+```html
+<lay-out-group bleed>
+  <lay-out>
+    <ui-card variant="rds(prg)" style="--ui-card-radius-max: 2.5rem"> … </ui-card>
+  </lay-out>
+</lay-out-group>
+```
+
+Composes with a squircle: `rds(lg-sq) rds(prg)` keeps `corner-shape: superellipse()` (the shape rule matches the stem-less `-sq)` needle) and takes the progressive radius.
 
 ## Border — `bdr`
 

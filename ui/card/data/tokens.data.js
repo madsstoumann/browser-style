@@ -108,6 +108,9 @@ export default {
 							"md-sq",
 							"lg-sq",
 							"xl-sq"
+						],
+						"mode": [
+							"prg"
 						]
 					},
 					"argAliases": {},
@@ -130,11 +133,11 @@ export default {
 					"deprecated": false,
 					"canonical": null,
 					"sources": [
-						"ui/card/media.css:110",
-						"ui/card/media.css:119",
-						"ui/card/media.css:123"
+						"ui/card/media.css:92-103",
+						"ui/card/media.css:104",
+						"ui/card/media.css:109-110"
 					],
-					"notes": "corner-shape: superellipse() is applied by a stem-less needle [media*=\"-sq)\"] (media.css, dual arm), not by rds( itself. The dual arm is permanent: corner-shape's subject IS <ui-media>, so R-14 step 4's flag pattern cannot reach it (a container cannot restyle itself). Serves the STANDALONE frame; inside a card the host's overflow:hidden owns the corners (see the parallel --ui-card-* scale, ui-card.css:64-80). A nested frame under clip= gets --ui-media-radius:0 (media.css:50)."
+					"notes": "corner-shape: superellipse() is applied by a stem-less needle [media*=\"-sq)\"] (media.css, dual arm), not by rds( itself. The dual arm is permanent: corner-shape's subject IS <ui-media>, so R-14 step 4's flag pattern cannot reach it (a container cannot restyle itself). Serves the STANDALONE frame; inside a card the host's overflow:hidden owns the corners (see the parallel --ui-card-* scale, ui-card.css:46-59). A nested frame under clip= gets --ui-media-radius:0 (media.css:66). rds(prg) is the one PROGRESSIVE value: instead of a fixed step it ramps 0 -> --ui-media-radius-max (default --radius-4xl) across the CONTAINER's inline size — progress(100cqi, --ui-media-radius-wmin (default 32rem), --ui-media-radius-wmax (default 64rem)), clamped to [0,1] by progress(). A narrow frame is square, a wide one is fully rounded, with no media query. It measures the nearest ancestor SIZE container (ui-card / ui-reveal / lay-out-group — <lay-out>, <ui-media>, <ui-content> and <cq-box> are transparent), so a <ui-media> in a split row card reads the CARD's width, not the frame's; with no container ancestor cqi falls back to the viewport, which still ramps sensibly. cqi excludes the scrollbar, so unlike a viewport-unit formulation this has no scrollbar skew. Composes with a -sq value (rds(lg-sq) rds(prg) keeps the superellipse). Deliberately NOT mirrored on content= — the one place the three rds blocks are not in lock-step."
 				},
 				"obf": {
 					"axis": "fit",
@@ -1749,6 +1752,9 @@ export default {
 							"md-sq",
 							"lg-sq",
 							"xl-sq"
+						],
+						"mode": [
+							"prg"
 						]
 					},
 					"argAliases": {},
@@ -1770,16 +1776,17 @@ export default {
 					"deprecated": false,
 					"canonical": null,
 					"sources": [
-						"ui/card/ui-card.css:64",
-						"ui/card/ui-card.css:65-71",
-						"ui/card/ui-card.css:76-79",
-						"ui/card/ui-card.css:80",
+						"ui/card/ui-card.css:46",
+						"ui/card/ui-card.css:47-53",
+						"ui/card/ui-card.css:54-57",
+						"ui/card/ui-card.css:58-62",
+						"ui/card/ui-card.css:63",
 						"ui/reveal/ui-reveal.css:74",
 						"ui/reveal/ui-reveal.css:253-255",
 						"ui/reveal/ui-reveal.css:292",
 						"ui/reveal/ui-reveal.css:296"
 					],
-					"notes": "Arg rules are whole-token (~=); the SHAPE application is a separate SUBSTRING rule `:where(ui-card[variant*=\"-sq)\"]) { corner-shape: superellipse(var(--ui-card-squircle-exp,1.8)) }` (ui/card/ui-card.css:80), mirrored on `ui-reveal[variant*=\"-sq)\"] > details` (ui/reveal/ui-reveal.css:253) and on the exp-pop placeholder (ui/reveal/ui-reveal.css:296) — that is the only real property this token sets. Radius/exponent VALUES (--radius-*, --radius-*-sq, --squircle-*) live in ui/base/tokens.css; these rules only route an arg to a namespace. --ui-card-radius is also consumed by <ui-reveal>'s `> details` border-radius (ui/reveal/ui-reveal.css:74). The same scale exists on media= and content=; the rds(none) alias was removed in v5 on all three attributes — `non` is the only spelling. variant= is host-only by design — it arranges the two children, so there is no self arm on <ui-media>/<ui-content>."
+					"notes": "Arg rules are whole-token (~=); the SHAPE application is a separate SUBSTRING rule `:where(ui-card[variant*=\"-sq)\"]) { corner-shape: superellipse(var(--ui-card-squircle-exp,1.8)) }` (ui/card/ui-card.css:80), mirrored on `ui-reveal[variant*=\"-sq)\"] > details` (ui/reveal/ui-reveal.css:253) and on the exp-pop placeholder (ui/reveal/ui-reveal.css:296) — that is the only real property this token sets. Radius/exponent VALUES (--radius-*, --radius-*-sq, --squircle-*) live in ui/base/tokens.css; these rules only route an arg to a namespace. --ui-card-radius is also consumed by <ui-reveal>'s `> details` border-radius (ui/reveal/ui-reveal.css:74). The same scale exists on media= and content=; the rds(none) alias was removed in v5 on all three attributes — `non` is the only spelling. variant= is host-only by design — it arranges the two children, so there is no self arm on <ui-media>/<ui-content>. rds(prg) is the one PROGRESSIVE value: instead of a fixed step it ramps 0 -> --ui-card-radius-max (default --radius-4xl) across the container's inline size — progress(100cqi, --ui-card-radius-wmin (default 32rem), --ui-card-radius-wmax (default 64rem)), clamped to [0,1] by progress(). CAVEAT specific to this arm: an element is never its own query container, so a <ui-card> reads its ANCESTOR container's width (a lay-out-group, or an outer card/reveal), not its own. That is exact for the full-width hero this token is for, and over-reads for a card in a multi-column grid — put rds(prg) on the media frame instead, or set --ui-card-radius-max per card. With no container ancestor cqi falls back to the viewport. cqi excludes the scrollbar, so there is no scrollbar skew. Composes with a -sq value (rds(lg-sq) rds(prg) keeps the superellipse). Deliberately NOT mirrored on content= — the one place the three rds blocks are not in lock-step."
 				},
 				"shd": {
 					"axis": "elevation",
@@ -3253,11 +3260,11 @@ export default {
 					"deprecated": false,
 					"canonical": null,
 					"sources": [
-						"ui/card/content.css:111-123",
-						"ui/card/content.css:124-125",
-						"ui/card/content.css:132"
+						"ui/card/content.css:98-109",
+						"ui/card/content.css:110",
+						"ui/card/content.css:111-112"
 					],
-					"notes": "NEW this round (R-10b) and aimed at the STANDALONE <ui-content> — inside a card the host rounds itself and clips the inner areas via overflow: hidden, so the default 0 is inert there. SUBSTRING matched (`[content*=\"rds(sm)\"]`), unlike every other content token except scr's companion arms: safe because rds() has no md:/lg: forms to shadow and `rds(sm)` is not a substring of `rds(sm-sq)` (the closing paren separates them). Same scale as variant='s and media='s rds(); the rds(none) alias was removed in v5 on all three attributes, so `non` is the only spelling. Values come from ui/base/tokens.css. The -sq shape rule is a second substring selector on `-sq)` with both arms (`:where([content*=\"-sq)\"]) ui-content` and `:where(ui-content[content*=\"-sq)\"])`) and is this token's real property (corner-shape: superellipse)."
+					"notes": "NEW this round (R-10b) and aimed at the STANDALONE <ui-content> — inside a card the host rounds itself and clips the inner areas via overflow: hidden, so the default 0 is inert there. SUBSTRING matched (`[content*=\"rds(sm)\"]`), unlike every other content token except scr's companion arms: safe because rds() has no md:/lg: forms to shadow and `rds(sm)` is not a substring of `rds(sm-sq)` (the closing paren separates them). Same scale as variant='s and media='s rds(); the rds(none) alias was removed in v5 on all three attributes, so `non` is the only spelling. Values come from ui/base/tokens.css. The -sq shape rule is a second substring selector on `-sq)` with both arms (`:where([content*=\"-sq)\"]) ui-content` and `:where(ui-content[content*=\"-sq)\"])`) and is this token's real property (corner-shape: superellipse). The progressive value rds(prg) exists on media= and variant= only — content= is the deliberate exception, so the three scales are in lock-step on the twelve SIZE args but not on the mode arg. Adding it here is one CSS rule plus one manifest line if it is ever wanted."
 				},
 				"plc": {
 					"axis": "placement",
