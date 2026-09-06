@@ -1,6 +1,6 @@
 ---
 name: perf-pass
-description: Use when auditing or improving page performance in this repo — a low Lighthouse or PageSpeed score, poor LCP/INP/CLS, heavy images, render-blocking resources, always-running animations, or a final check before shipping a new demo page.
+description: Use when auditing or improving page performance in this repo — a low Lighthouse or PageSpeed score, poor LCP/INP/CLS, heavy images, render-blocking resources, always-running animations, a page over its transfer-weight budget, or a final check before shipping a new demo page.
 argument-hint: <page path or URL>
 allowed-tools: Read, Edit, Bash, Glob, Grep, AskUserQuestion
 ---
@@ -9,8 +9,9 @@ allowed-tools: Read, Edit, Bash, Glob, Grep, AskUserQuestion
 
 Policy — which properties composite, the `will-change` rules, the measured cost of every
 always-running animation, the responsive-image contract, the caching contract — lives in
-**`docs/performance.md`**. Read it before touching an animation or a header. This skill is
-the *procedure*.
+**`docs/performance.md`**. Read it before touching an animation or a header. The transfer-weight
+budget, the rating scale and the W3C Web Sustainability Guidelines status map live in
+**`docs/sustainability.md`**. This skill is the *procedure*.
 
 ## 0. Before touching anything
 
@@ -29,7 +30,10 @@ the *procedure*.
    encoding: `docs/performance.md` § Hosts and the CDN.
 3. **Baseline first — always.** 3 Lighthouse runs on the clean host, plus
    `node ui/card/render.snapshot.js . /tmp/ssr-before.txt` if `render.js` may be touched.
-   A change without a before-number is not an optimisation, it is a guess.
+   Keep one `lh.json` from a run against **`v4.browser.style`** — `node scripts/co2.js lh.json`
+   is the before-weight (transforms 404 on pages.dev, so image bytes are only real on the
+   zone; score on pages.dev, weigh on the zone). A change without a before-number is not an
+   optimisation, it is a guess.
 
 ## 1. Work the checklist in impact order
 
@@ -96,6 +100,16 @@ npx -y lighthouse "<url>" --quiet --only-categories=performance \
 **Median of 3.** Single runs swing ±3–5 points; local Apple-silicon runs land 10–20 points
 above PSI on the same URL. Do not chase a one-run delta.
 
+Weight — from the same JSON, no extra run:
+
+```bash
+node scripts/co2.js ./lh.json            # transfer KB, requests, third-party KB, gCO2e, rating, budget line
+node scripts/co2.js a.json b.json …      # several runs → a markdown table (the baseline-table format)
+```
+
+Bytes do not swing between runs the way scores do; one run is enough for weight. The tiers
+and the recorded baselines are `docs/sustainability.md` § 2.
+
 ## 3. Ground truth beats scores
 
 - **Check `naturalWidth > 0` and 4xx counts, not `currentSrc`.** `currentSrc` is set even
@@ -111,11 +125,15 @@ above PSI on the same URL. Do not chase a one-run delta.
 ## 4. Definition of done (per page)
 
 1. Lighthouse performance in the high 90s **and** accessibility 100 on pages.dev, 3-run median.
-2. Zero 4xx in the network log; the LCP image has `naturalWidth > 0`.
-3. Zero console errors or warnings on the page and its render-driven twin.
-4. Snapshot and token gates clean; demo bundle rebuilt if component CSS changed.
-5. Generated pages regenerated from their builder, never hand-patched.
-6. Anything still open recorded in `docs/plans/open-items.md`; durable policy learned in the
-   pass folded into `docs/performance.md`.
-7. Changes left in the working tree — the user reviews before committing (a push rebuilds
+2. Transfer weight inside the page's tier in `docs/sustainability.md` § 2 — component and demo
+   pages: rating A, ≤ 531 KB on `v4.browser.style`; media-heavy pages by design: no regression
+   against the recorded baseline, and the new number written back into the table.
+3. Zero 4xx in the network log; the LCP image has `naturalWidth > 0`.
+4. Zero console errors or warnings on the page and its render-driven twin.
+5. Snapshot and token gates clean; demo bundle rebuilt if component CSS changed.
+6. Generated pages regenerated from their builder, never hand-patched.
+7. Anything still open recorded in `docs/plans/open-items.md`; durable policy learned in the
+   pass folded into `docs/performance.md` — or into `docs/sustainability.md` when it is budget
+   or disclosure policy.
+8. Changes left in the working tree — the user reviews before committing (a push rebuilds
    Cloudflare Pages).

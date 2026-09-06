@@ -1699,3 +1699,58 @@ mode-switch, and the panel is already grid-stacked in two of the four animation 
 be cashed in, do the `ui/reveal` `ico()`/`icc()` (+ optionally `scr`) conversion as one
 CSS-only change — light gates (browser-verify both open/closed states at both container
 tiers, RTL spot-check, rebuild the reveal `dist/` bundle + demo bundle).
+
+## 45. WSG gaps — disclosure files, a real 404, the budget's second half
+
+**Where:** repo root (`404.html`, `sitemap.xml`, `humans.txt`, `carbon.txt`,
+`.well-known/security.txt`, `site.webmanifest`, `_headers`), `ui/base/*.css`
+(`prefers-contrast`), `ui/beacon` (a stop control). Filed 2026-09-04 from the audit in
+`docs/sustainability.md`, which holds the status per guideline and the evidence.
+
+The W3C Web Sustainability Guidelines (WSG) are met by construction almost everywhere
+(`docs/sustainability.md` § 3). What is left is site-level and one-shot — none of it is a
+`perf-pass` matter, which is why there is no `wsg-audit` skill. Each letter is independent;
+none is urgent.
+
+- **(a) A real 404.** There is no `404.html`, so Cloudflare Pages serves `index.html` **with
+  HTTP 200** for every unknown path — `/carbon.txt`, `/sitemap.xml`, `/humans.txt`,
+  `/security.txt` all "exist" as the homepage plus the bundle (verified with `curl`
+  2026-09-04). WSG 4.4. Fix: a small `404.html` at the repo root; Pages then answers 404 with
+  it. Check `docs/html-head.md` for what its `<head>` should carry.
+- **(b) Disclosure files.** WSG 3.13 lists `sitemap.xml`, `humans.txt`, `security.txt` and
+  `carbon.txt` as expected/beneficial. `carbon.txt` v0.5 is TOML:
+  `version = "0.5"` + `[org] disclosures = [{ doc_type = "web-page", url =
+  "https://v4.browser.style/docs/sustainability.md" }]` — the `.md` is already served as
+  `text/markdown` (`docs/llms-txt.md` § 4). `security.txt` belongs at
+  `/.well-known/security.txt` (RFC 9116, needs `Contact:` and `Expires:`). `sitemap.xml` can
+  be generated from the demo-page list `scripts/hash-asset.js` already walks. Do (a) first or
+  the files keep "existing" either way.
+- **(c) `/ui/*` cache rule** — `docs/performance.md` § 3 item 2 is the single home for it;
+  cross-reference only. Today the unhashed `/ui/*` sheets fall to the Pages default
+  `max-age=1800`.
+- **(d) `site.webmanifest` is dead** — unlinked and its icons are missing
+  (`docs/html-head.md` § 6). Fix the icons and link it, or delete it; WSG 3.13 counts a
+  broken expected file as worse than none.
+- **(e) `prefers-contrast`** — WSG 3.9 names it beside `prefers-reduced-motion` and
+  `prefers-color-scheme`, both of which the base sheets handle; there is no
+  `prefers-contrast` arm anywhere. Decision: whether the theme axis wants a `more` arm
+  (borders and muted text) or the `forced-colors` handling already covers the need.
+- **(f) Request budget** — `docs/sustainability.md` § 2 gates transfer KB and records
+  requests. Set a request tier once the sweep covers every page family.
+- **(g) Third-party facades** — OSM on `schema.place.html`, YouTube/Vimeo on
+  `media.video.html`: § 33 owns it (WSG 3.5.2, "load third-party content only when the user
+  interacts with it").
+- **(h) A user stop for always-running `ui-beacon` animations** — WSG 2.10.3 wants
+  start/pause/stop for moving content. They honour `prefers-reduced-motion`; they have no
+  in-page control. Cheapest honest answer: document that the OS setting *is* the control and
+  keep the animations opt-in per card; the alternative is a page-level toggle.
+- **(i) Two analytics systems at the edge.** Every page loads Zaraz→GA4 (`/cdn-cgi/zaraz/s.js`,
+  7 KB, page views, consent-gated) *and* the Cloudflare Web Analytics beacon
+  (`static.cloudflareinsights.com/beacon.min.js`, 10 KB, cookieless RUM), plus bot-defence
+  (~11 KB). None is in the repo; all are zone settings. WSG 2.6.3 says remove analytics that
+  is not necessary — decide whether one of the two goes. Zone dashboard change, zero repo
+  edits; re-run the `docs/sustainability.md` § 2 sweep afterwards.
+
+**Recommendation:** ship (a) and (b) together as one small change — four static files and a
+404 page, no build step — then (d). (c), (f), (g), (h), (i) wait on the decisions named above;
+(e) is a design call.

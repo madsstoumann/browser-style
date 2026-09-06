@@ -122,6 +122,7 @@ which is why the native `::scroll-marker` path has never been audited
 | `DESIGN.md` | The design-token reference — every global token family |
 | `docs/guide.md` | Narrative guide: card → section → page |
 | `docs/performance.md` | CPU/GPU policy, `will-change` rules, measured animation costs |
+| `docs/sustainability.md` | The W3C Web Sustainability Guidelines mapped to this repo — status per guideline, the transfer-weight budget and rating scale, the disclosure-file audit |
 | `docs/token-comparison.md` | Naming rationale vs Tailwind v4 / Open Props |
 | `docs/html-head.md` | What the demo-page `<head>` carries and why — incl. why `theme-color` is rejected |
 | `docs/llms-txt.md` | `llms.txt`, markdown alternates and the crawler policy behind `robots.txt` |

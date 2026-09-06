@@ -378,6 +378,11 @@ and container queries. The microdata itself (a quarter of schema.html's elements
   62 kB gzip) — local FCP carries a ~3 s penalty; deployed numbers are the real ones. Fresh
   port per CSS change (Chromium serves stale `@import`ed sheets even after reload —
   `docs/v4.md`). `playwright-core` is not installed on this machine — use the MCP tools.
+- Transfer weight: `node scripts/co2.js lh.json` reads the Lighthouse JSON already produced
+  and prints transfer KB, requests, third-party KB and the Sustainable Web Design rating. The
+  budget, the tiers and the baseline table live in `docs/sustainability.md` § 2. Weight is
+  measured on **`v4.browser.style`** — the transforms 404 on pages.dev, so image bytes are
+  only real on the zone; scores stay on pages.dev.
 - Repo gates when touching `render.js`/presets/data: snapshot
   (`node ui/card/render.snapshot.js . /tmp/after.txt` + `cmp` — diffs must be exactly the
   intended blocks), tokens (`node ui/card/tokens.build.js && node ui/card/tokens.lint.js`,
