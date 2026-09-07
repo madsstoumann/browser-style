@@ -89,7 +89,7 @@ const MEASURE = /(\d+(?:[.,]\d+)?)\s?(kg|g|ml|l|°C|cm)\b/g;
 const measureSpans = (escaped) => escaped.replace(MEASURE, (m, n, u) =>
 	`<span data-qty="${n.replace(',', '.')}" data-unit="${u}" data-fixed>${n} ${u}</span>`);
 
-/* ── icons: the icon font (ui/icon/icons.json → icon-font.css, in the demo bundle) — one weight for every glyph ── */
+/* ── icons: the icon font (ui/icon/icons.json → icon-font.css, its own /dist/ sheet) — one weight for every glyph ── */
 const glyph = (name) => `<span data-icon="${name}" aria-hidden="true"></span>`;
 const iconButton = ({ command, target, label, icon, pressed, extra = '' }) =>
 	`<button class="ui-button" type="button" data-variant="icon" command="${command}" commandfor="${target}" aria-label="${esc(label)}" title="${esc(label)}"${pressed != null ? ` aria-pressed="${pressed}"` : ''}${extra}>${icon}</button>`;

@@ -16,7 +16,11 @@
    so a stable filename would let a shipped CSS change stay invisible behind a cached
    copy. This template is rewritten too because the page builders
    emit it — miss it and the next build silently reverts five generated pages. */
-export const HEAD_COMMON = `<link rel="stylesheet" href="/dist/demo.37fa8cf8.min.css">
+/* Two sheets, not one: the icon webfont is hashed separately so it survives a bundle
+   rehash. It MUST come second — it declares @layer bs-component, and loading it first
+   would create that layer ahead of bs-core. Docs: ui/icon/readme.md § Icon font */
+export const HEAD_COMMON = `<link rel="stylesheet" href="/dist/demo.0ac323ab.min.css">
+	<link rel="stylesheet" href="/dist/icon-font.c6950688.min.css">
 	<!-- no-referrer: the zone hotlink-protects CDN srcset. Docs: docs/performance.md -->
 	<meta name="referrer" content="no-referrer">
 	<link rel="preconnect" href="https://v4.browser.style">`;

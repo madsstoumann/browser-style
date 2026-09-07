@@ -447,8 +447,8 @@ Horizontally-directional icons mirror automatically under `[dir="rtl"]` so they 
 <link rel="stylesheet" href="…/@browser.style/icon/icon-font.css">
 ```
 
-It ships 30 subset [Material Symbols](https://github.com/google/material-design-icons)
-glyphs (Apache-2.0) as an inline base64 `@font-face` — **7,823 B of CSS, zero extra
+It ships 72 subset [Material Symbols](https://github.com/google/material-design-icons)
+glyphs (Apache-2.0) as an inline base64 `@font-face` — **16,610 B of CSS, zero extra
 requests** — plus a catalog:
 
 ```css
@@ -467,6 +467,20 @@ a[href^="tel:"]::before { content: var(--icon); }        /* generated content */
 Both inherit `color` from their element, since a glyph is text. Used by
 `@browser.style/card` for list markers and the `tel:` / `mailto:` icons —
 [content.md § Icon markers](../card/docs/content.md).
+
+**How browser.style itself loads it.** The demo pages link it as a second, separately
+hashed sheet — `/dist/icon-font.<hash>.min.css`, built from `ui/card/demo/icon-font.entry.css`
+— and NOT through the demo bundle, which it used to be `@import`ed into. The bundle
+content-rehashes on every CSS change (15 times in one recent quarter) while this sheet has
+changed 8 times in the repo's history, so welding them together re-shipped ~8.6 kB of
+brotli'd font data on every deploy. Two `<link>`s cost one extra parallel request and buy a
+sheet that is fetched once and then never again under `/dist/*`'s year-long `immutable`.
+
+The `@font-face` stays base64 on purpose: a real `.woff2` `url()` is a binary asset
+`scripts/css-bundle.js` will not follow, and consumers who link the npm path need one
+self-contained file. The entry sheet opens with `@layer bs-core, bs-component;` so that
+loading it before the rest of the CSS cannot create `bs-component` ahead of `bs-core` and
+invert base's cascade — link order stays a convention, not a trap.
 
 ### Why the glyphs are baseline-shifted
 

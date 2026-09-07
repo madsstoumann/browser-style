@@ -15,7 +15,7 @@
   ],
   "scripts": {
     "build": "npm run build -w @browser.style/base -w @browser.style/carousel -w @browser.style/card -w @browser.style/reveal -w @browser.style/layout",
-    "build:demo-css": "node scripts/css-bundle.js . ui/card/demo/demo.css demo && node scripts/hash-asset.js dist/demo.min.css",
+    "build:demo-css": "node scripts/css-bundle.js . ui/card/demo/demo.css demo && node scripts/hash-asset.js dist/demo.min.css && node scripts/css-bundle.js . ui/card/demo/icon-font.entry.css icon-font && node scripts/hash-asset.js dist/icon-font.min.css",
     "build:demo": "node ui/card/build.js && npm run build:demo-css && node scripts/inline-polyfill.js",
     "dev:demo": "node scripts/dev-demo.js",
     "test": "npm run test --workspaces --if-present",

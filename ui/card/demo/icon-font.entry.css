@@ -1,0 +1,7 @@
+/* Site copy of the opt-in icon webfont — its own hashed /dist/ asset, so it survives
+ * every demo-bundle rehash. Layer statement FIRST: link order must not invert base's
+ * cascade. Docs: ui/icon/readme.md § Icon font
+ * @author Mads Stoumann
+ */
+@layer bs-core, bs-component;
+@import '../../icon/icon-font.css';

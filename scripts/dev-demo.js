@@ -15,6 +15,10 @@
  * the references, which is the state that must be committed — never ship a bundle
  * whose bytes disagree with its hash.
  *
+ * NOT watched: /dist/icon-font.<hash>.min.css, the second sheet every demo page links.
+ * It is generated from ui/icon/icons.json by python and changes only when the icon SET
+ * does — run `npm run build:demo-css` after `npm run build:icons`.
+ *
  * Usage:  npm run dev:demo        (Ctrl-C to stop)
  */
 

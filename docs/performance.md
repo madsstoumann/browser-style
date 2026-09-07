@@ -188,6 +188,24 @@ the response settles it:
 curl -sI -H 'Accept-Encoding: br, gzip' https://v4.browser.style/dist/demo.<hash>.min.css | grep -i content-encoding
 ```
 
+**Re-verified 2026-09-07** — an agent reported "Cloudflare is not delivering the CSS with
+brotli". It is; the report was reading transfer size, which is exactly the trap above.
+Live bytes for `/dist/demo.37fa8cf8.min.css` (441,504 raw), both hosts:
+
+| Accept-Encoding | v4.browser.style | pages.dev | local reference |
+|---|---|---|---|
+| `br` | 76,734 | 76,739 | q4 = 76,676 · q11 = 61,130 |
+| `gzip` | 77,456 | 77,457 | gzip -9 = 77,445 |
+| `zstd` only | **uncompressed** | **uncompressed** | zstd -6 = 72,512 |
+
+Three things worth keeping. The two hosts agree to within 5 bytes, so a compression question
+never needs both. **Zstandard is not enabled** — a `zstd`-only request comes back with no
+`content-encoding` at all; a Compression Rule ordering `Zstandard, Brotli, Gzip` would be
+worth ~5% but is a **zone-only** knob, so it could never reach pages.dev, the scoring host.
+And the edge's ratio is not uniformly better than gzip: on `ui/base/dist/base.min.css`
+(77,710 raw) the edge sends **16,160 B** of brotli where a local `gzip -9` makes **15,709 B**
+— q4 brotli loses to gzip on that file. Precompression remains rejected (§ 3).
+
 Two referrer rules, both load-bearing against the zone's Hotlink Protection (403 on any
 cross-origin Referer): `<meta name="referrer" content="no-referrer">` in the page head
 covers document-initiated fetches, but a **CSS-initiated fetch uses the *stylesheet's*

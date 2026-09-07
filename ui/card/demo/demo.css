@@ -1,5 +1,6 @@
 /* All-demo CSS bundle entry — every package in ui/card/components.md, in page <link> order.
  * Build: npm run build:demo-css  ->  /dist/demo{,.min}.css (repo root). Docs: ui/card/components.md
+ * The icon WEBFONT is deliberately NOT here — it is a second page <link>, icon-font.entry.css.
  * @author Mads Stoumann
  */
 @import '../../base/index.css';
@@ -14,7 +15,6 @@
 @import '../../map/ui-map.css';
 @import '../../marquee/ui-marquee.css';
 @import '../../icon/index.css';
-@import '../../icon/icon-font.css';
 @import '../../reveal/ui-reveal.css';
 @import '../../accordion/ui-accordion.css';
 @import '../../quote/ui-quote.css';

@@ -124,8 +124,12 @@ purpose (WSG 3.12). Its `--grey` flag prints the comparable grey figure.
 <!-- baseline:end -->
 
 Reading the table: every tier-1 page is inside the A line with headroom; `schema.html` — the
-heaviest page that is *not* media-by-design — spends 199 KB of its 359 on images, 77 on the
-bundle, 42 on the document. **Every page carries ~28 KB of edge-injected script that is not in
+heaviest page that is *not* media-by-design — spends 199 KB of its 359 on images, 77 on CSS,
+42 on the document. **The CSS is two requests since 2026-09-07**, not one: the demo bundle
+(68.0 KB brotli) plus the separately hashed icon webfont (8.5 KB), split so the font is not
+re-shipped on every bundle rehash — `ui/icon/readme.md` § Icon font. Cold-load weight is
+unchanged (−87 B, +1 parallel request), so these rows stand until the next measured sweep;
+the win is on repeat visits after a deploy. **Every page carries ~28 KB of edge-injected script that is not in
 the repo:** the 10.3 KB of "third-party" is the Cloudflare Web Analytics beacon
 (`static.cloudflareinsights.com/beacon.min.js`); Lighthouse counts the rest as first-party
 because it is same-origin — Zaraz (`/cdn-cgi/zaraz/s.js`, 7 KB, GA4 page views behind a

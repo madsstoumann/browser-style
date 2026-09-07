@@ -19,6 +19,9 @@
  * is deliberately separate from scripts/css-bundle.js for exactly that reason —
  * five callers share that bundler, only one of them is a website.
  *
+ * Two site assets go through this: dist/demo.min.css and dist/icon-font.min.css (the
+ * opt-in icon webfont, kept out of the bundle so it survives a rehash — ui/icon/readme.md).
+ *
  * Usage:  node scripts/hash-asset.js <file>          e.g. dist/demo.min.css
  */
 
