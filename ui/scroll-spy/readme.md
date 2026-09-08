@@ -2,7 +2,9 @@
 
 CSS-first **scroll-spy navigation** — "on this page" links whose active state follows the section in view, driven by scroll timelines. No JavaScript, no observers, no Shadow DOM. A sticky bar by default, a side rail with `variant="rail"`, and a per-section progress fill that measures how far through *that* section the reader is.
 
-Used by `@browser.style/card` demo pages with a lot of content (the real-estate listing).
+**Status: standalone demo, not yet a package.** It ships no `package.json`, is not a workspace
+member and is not published — `index.html` is the whole story. Wiring it into the card demo
+pages (the real-estate listing was the candidate) is a separate step.
 
 ## Features
 
@@ -17,25 +19,22 @@ Used by `@browser.style/card` demo pages with a lot of content (the real-estate 
 
 ## Install
 
-```bash
-npm install @browser.style/scroll-spy
+Not on the registry. Link the sheet from the repo, after `@browser.style/base`:
+
+```html
+<link rel="stylesheet" href="/ui/base/index.css">
+<link rel="stylesheet" href="/ui/scroll-spy/ui-scroll-spy.css">
 ```
 
-Peer dependency:
-
-```bash
-npm install @browser.style/base
-```
-
-> `@browser.style/base` provides the design token system (colors, spacing, borders, etc.) and the `--_dir-s`/`--_dir-e` direction resolver the progress fill uses.
+> `@browser.style/base` is a required peer — it provides the design token system (colors, spacing, borders, etc.) and the `--_dir-s`/`--_dir-e` direction resolver the progress fill uses. Load it first.
 
 ---
 
 ## Usage
 
 ```html
-<link rel="stylesheet" href="@browser.style/base/index.css">
-<link rel="stylesheet" href="@browser.style/scroll-spy/index.css">
+<link rel="stylesheet" href="/ui/base/index.css">
+<link rel="stylesheet" href="/ui/scroll-spy/ui-scroll-spy.css">
 
 <nav data-scroll-spy aria-label="On this page">
 	<ol>
@@ -53,8 +52,8 @@ npm install @browser.style/base
 Or via CSS `@import`:
 
 ```css
-@import '@browser.style/base';
-@import '@browser.style/scroll-spy/style';
+@import '/ui/base/index.css';
+@import '/ui/scroll-spy/index.css';
 ```
 
 ### The binding contract
