@@ -72,6 +72,9 @@
     "places-homes"
   ],
   "shared": [
-    "software-flipside"
+    "software-flipside",
+    "faq-reset-password",
+    "faq-change-plan",
+    "faq-refunds"
   ]
 }

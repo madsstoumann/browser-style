@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Editor Card - CMS host demo</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="The card entry as a CMS sees it — pale-green native envelope fields beside the single JSON details field">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/ui/base/index.css">
+	<script type="importmap">
+		{
+			"imports": {
+				"@browser.style/editor-shared": "../shared/index.js"
+			}
+		}
+	</script>
+	<style>
+		body { margin-inline: auto; max-inline-size: 70rem; padding: 1rem; }
+		.demo-controls { display: flex; gap: 1rem; align-items: end; flex-wrap: wrap; margin-block: 1.5rem; }
+		.demo-controls label { display: grid; gap: .25rem; }
+		#roundtrip[data-state="ok"] { color: green; }
+		#roundtrip[data-state="diff"] { color: crimson; }
+		.legend { display: flex; gap: 1.5rem; flex-wrap: wrap; font-size: smaller; }
+		.legend span { align-items: center; display: inline-flex; gap: .5ch; }
+		.legend i { block-size: 1em; border: 1px solid var(--color-border); border-radius: .25em; display: inline-block; inline-size: 1.6em; }
+		.entry { display: grid; gap: 1rem; margin-block: 1rem; }
+		fieldset { border: 0; display: grid; gap: .75rem; margin: 0; min-inline-size: 0; }
+		fieldset > legend { float: inline-start; font-weight: 500; inline-size: 100%; margin-block-end: .5rem; }
+		fieldset small { color: GrayText; }
+		.cols { display: grid; gap: .75rem; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); }
+		.summary-row { display: flex; flex-wrap: wrap; font-size: smaller; gap: .35ch; margin: 0; }
+		.summary-row dt { font-weight: 500; }
+		.summary-row dt::after { content: ':'; }
+		.summary-row dd { margin: 0; margin-inline-end: 1.5ch; }
+		[data-part="details-group"] { background: hsl(200, 23%, 97%); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--spacing-md); }
+		editor-card { display: block; }
+	</style>
+</head>
+<body>
+	<h1>Editor Card: the entry as a CMS sees it</h1>
+	<p>
+		The card content model is <strong>one</strong> model: everything shared is a native CMS
+		field — the <em>envelope</em> — and everything type-specific lives in a single JSON field
+		called <code>details</code>, edited by <code>&lt;editor-card&gt;</code>. This page plays the
+		CMS host: the envelope groups below are ordinary form fields (in a real CMS, Contentful or
+		Umbraco renders these natively), and the Type&nbsp;Details group is the one JSON field.
+		<a href="demo.html">Plain editor demo</a> · <a href="index.html">usage</a>.
+	</p>
+	<p class="legend">
+		<span><i data-theme="green pale"></i> native CMS fields (the envelope)</span>
+		<span><i style="background: hsl(200, 23%, 97%)"></i> the single JSON <code>details</code> field</span>
+	</p>
+
+	<div class="demo-controls">
+		<label>Corpus instance
+			<select id="instance"><option value="">— empty entry —</option></select>
+		</label>
+		<output id="roundtrip"></output>
+	</div>
+
+	<form class="entry">
+		<fieldset data-theme="green pale" data-box="brd">
+			<legend>Basics</legend>
+			<div class="cols">
+				<label>Internal name<input type="text" data-path="internalName"></label>
+				<label>Eyebrow<input type="text" data-path="eyebrow"></label>
+			</div>
+			<label>Headline<input type="text" maxlength="256" data-path="headline"></label>
+			<label>Subheadline<input type="text" data-path="subheadline"></label>
+			<label>Summary<textarea rows="3" data-path="summary"></textarea></label>
+			<small>The schema type itself is picked in the details editor below — CMS wrappers denormalise it into a sibling field for filtering.</small>
+		</fieldset>
+
+		<fieldset data-theme="green pale" data-box="brd">
+			<legend>Body &amp; Dates</legend>
+			<label>Body<textarea rows="4" data-path="body"></textarea></label>
+			<div class="cols">
+				<label>Published<input type="text" data-path="published" placeholder="2026-01-31T09:00:00Z"></label>
+				<label>Modified<input type="text" data-path="modified" placeholder="2026-01-31T09:00:00Z"></label>
+				<label>Reading time<input type="text" data-path="readingTime"></label>
+			</div>
+		</fieldset>
+
+		<fieldset data-theme="green pale" data-box="brd">
+			<legend>Media</legend>
+			<dl class="summary-row" id="summary-media"></dl>
+			<small>Media items and overlay furniture are structured native fields (asset pickers, repeaters) — summarised read-only here.</small>
+		</fieldset>
+
+		<fieldset data-theme="green pale" data-box="brd">
+			<legend>People &amp; Engagement</legend>
+			<dl class="summary-row" id="summary-authors"></dl>
+			<div class="cols">
+				<label>Views<input type="number" data-path="engagement.viewCount"></label>
+				<label>Likes<input type="number" data-path="engagement.likeCount"></label>
+				<label>Shares<input type="number" data-path="engagement.shareCount"></label>
+				<label>Comments<input type="number" data-path="engagement.commentCount"></label>
+			</div>
+		</fieldset>
+
+		<fieldset data-theme="green pale" data-box="brd">
+			<legend>Navigation</legend>
+			<label>Tags <small>(comma-separated)</small><input type="text" data-path="tags"></label>
+			<label>Cover link<input type="url" data-path="cover"></label>
+			<dl class="summary-row" id="summary-navigation"></dl>
+			<small><code>chip</code> and <code>cover</code> sit in no CMS layout group — the form is driven from the model's properties, the groups only order it.</small>
+		</fieldset>
+
+		<fieldset data-part="details-group">
+			<legend>Type Details — one JSON field</legend>
+			<editor-card id="editor"></editor-card>
+			<dl class="summary-row" id="summary-refs"></dl>
+		</fieldset>
+	</form>
+
+	<details><summary>Combined card fields</summary><pre><code id="combined"></code></pre></details>
+
+	<script type="module">
+		import './src/index.js';
+
+		const editor = document.getElementById('editor');
+		const picker = document.getElementById('instance');
+		const readout = document.getElementById('roundtrip');
+		const combined = document.getElementById('combined');
+		const form = document.querySelector('.entry');
+		let loaded = null;   /* pristine JSON string of doc.fields */
+		let working = {};    /* the live entry, key order preserved */
+
+		const isRichtext = (v) => v && typeof v === 'object' && v.$richtext;
+
+		/* dt/dd rows built with textContent only — never innerHTML with data */
+		const summarize = (id, pairs) => {
+			const dl = document.getElementById(id);
+			dl.replaceChildren(...pairs.flatMap(([term, value]) => {
+				const dt = document.createElement('dt');
+				dt.textContent = term;
+				const dd = document.createElement('dd');
+				dd.textContent = value;
+				return [dt, dd];
+			}));
+		};
+
+		const summaries = () => {
+			const media = working.media ?? [];
+			const furniture = Object.keys(working.furniture ?? {});
+			summarize('summary-media', [
+				['media', media.length ? media.map((m) => m.mediaType ?? 'image').join(', ') : '—'],
+				['furniture', furniture.length ? furniture.join(', ') : '—']
+			]);
+			const authors = working.authors ?? [];
+			summarize('summary-authors', [
+				['authors', authors.length ? authors.map((a) => a.role ? `${a.name} (${a.role})` : a.name).join(', ') : '—']
+			]);
+			summarize('summary-navigation', [
+				['actions', String((working.actions ?? []).length)],
+				['links', String((working.links ?? []).length)],
+				['chip', working.chip ? (Array.isArray(working.chip) ? working.chip.map((c) => c.text).join(', ') : working.chip.text ?? '—') : '—']
+			]);
+			summarize('summary-refs', [
+				['preset', working.preset?.$ref ?? '—'],
+				['flipside', working.flipside?.$ref ?? '—']
+			]);
+		};
+
+		const report = () => {
+			combined.textContent = JSON.stringify(working, null, 2);
+			if (!loaded) { readout.textContent = ''; return; }
+			const same = JSON.stringify(working) === loaded;
+			readout.dataset.state = same ? 'ok' : 'diff';
+			readout.textContent = same ? 'entry round-trip: byte-equal' : 'entry round-trip: edited (differs from file)';
+		};
+
+		/* value in the working copy for one bound input */
+		const read = (path) => {
+			if (path === 'body') return isRichtext(working.body) ? working.body.content ?? '' : working.body ?? '';
+			if (path === 'tags') {
+				const tags = working.tags ?? [];
+				return tags.every((t) => typeof t === 'string') ? tags.join(', ') : '';
+			}
+			if (path.startsWith('engagement.')) return working.engagement?.[path.slice('engagement.'.length)] ?? '';
+			return working[path] ?? '';
+		};
+
+		const write = (path, raw) => {
+			if (path === 'body') {
+				if (isRichtext(working.body)) working.body.content = raw;
+				else if (raw === '') delete working.body;
+				else working.body = raw;
+				return;
+			}
+			if (path === 'tags') {
+				const tags = raw.split(',').map((t) => t.trim()).filter(Boolean);
+				if (tags.length) working.tags = tags;
+				else delete working.tags;
+				return;
+			}
+			if (path.startsWith('engagement.')) {
+				const key = path.slice('engagement.'.length);
+				if (raw === '') { if (working.engagement) delete working.engagement[key]; }
+				else (working.engagement ??= {})[key] = Number(raw);
+				if (working.engagement && !Object.keys(working.engagement).length) delete working.engagement;
+				return;
+			}
+			if (raw === '') delete working[path];
+			else working[path] = raw;
+		};
+
+		const bind = () => {
+			for (const input of form.querySelectorAll('[data-path]')) {
+				const value = read(input.dataset.path);
+				input.value = value;
+				/* object tags exist in the corpus ({name, url}) — the comma input can't hold them */
+				if (input.dataset.path === 'tags') input.disabled = !(working.tags ?? []).every((t) => typeof t === 'string');
+			}
+			summaries();
+		};
+
+		form.addEventListener('input', (event) => {
+			const path = event.target.dataset.path;
+			if (!path) return;
+			write(path, event.target.value);
+			report();
+		});
+		form.addEventListener('submit', (event) => event.preventDefault());
+
+		editor.addEventListener('change', (event) => {
+			working.schemaType = event.detail.schemaType;
+			working.details = event.detail.details;
+			report();
+		});
+
+		const index = await (await fetch('/ui/card/data/index.json')).json();
+		for (const id of index.cards) picker.add(new Option(id, id));
+
+		picker.addEventListener('change', async () => {
+			if (!picker.value) {
+				loaded = null;
+				working = {};
+				editor.value = '';
+				bind();
+				report();
+				return;
+			}
+			const doc = await (await fetch(`/ui/card/data/${picker.value}.json`)).json();
+			loaded = JSON.stringify(doc.fields ?? {});
+			working = structuredClone(doc.fields ?? {});
+			editor.value = { schemaType: working.schemaType ?? 'content', details: working.details ?? {} };
+			bind();
+			report();
+		});
+
+		report();
+	</script>
+</body>
+</html>

@@ -1,5 +1,5 @@
 /* Lints data/details.json (the per-type `details` manifest) against render.js and the corpus.
- * Ten rules — 1-9 are errors (exit 1), 10 is advisory (warnings only):
+ * Twelve rules — 1-9, 11 and 12 are errors (exit 1), 10 is advisory (warnings only):
  *   1 manifest types ⇔ SCHEMA_TYPES, both directions + order; groups sane
  *   2 subtype fields ⇔ SUBTYPES families, each ref naming its own type
  *   3 every lookup / appliesTo / shape reference resolves; no orphan shapes
@@ -10,12 +10,16 @@
  *   8 card.schema.json schemaType options + counts in sync
  *   9 the committed details.data.js ⇔ an in-memory rebuild
  *  10 advisory: keys each DETAILS renderer reads but the manifest lacks; group ⇔ schema.html
- * Run: node ui/card/details.lint.js  (details.build.js first — rule 9 compares its output) */
+ *  11 referenced rows: every $ref in a ref-enabled array is canonical card/<id>, resolves in
+ *     the corpus, targets an allowed schemaType, is indexed for demo/render.html, no self-ref;
+ *     manifest ref.types/project sanity; advisory: projection paths resolve on each target
+ *  12 the committed data/details.refs.data.js ⇔ an in-memory rebuild
+ * Run: node ui/card/details.lint.js  (details.build.js first — rules 9/12 compare its output) */
 
 import { readdirSync, readFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 import * as R from './render.js';
-import { readManifest, buildDetails, renderDataFile } from './details.build.js';
+import { readManifest, buildDetails, renderDataFile, renderRefsFile } from './details.build.js';
 
 const dir = new URL('.', import.meta.url).pathname;
 const DATA_FILE = dir + '../../cms/editors/card/src/details.data.js';
@@ -125,6 +129,11 @@ const types = manifest.types;
 		}
 		if (kind === 'array' && field.items) {
 			value.forEach((item, i) => {
+				if (item && typeof item === 'object' && '$ref' in item) {
+					/* referenced row — form + target checked by rule 11; here only placement */
+					if (!field.ref) err(6, `${file} ${path}[${i}]: $ref row in a field with no ref declaration`);
+					return;
+				}
 				if (typeof item === 'string' && (field.items.scalar || field.items.type)) {
 					if (field.items.type && KIND_FOR_TYPE[field.items.type] !== 'string' && !field.items.scalar)
 						err(6, `${file} ${path}[${i}]: string item, manifest says ${field.items.type}`);
@@ -238,6 +247,82 @@ const types = manifest.types;
 				warn(10, `${key}: group "${type.group}" but its schema.html cards sit under ${[...sectionsOf[key]].join(' / ')}`);
 		}
 	} catch { warn(10, 'demo/schema.html not readable — group check skipped'); }
+}
+
+/* ── 11 · referenced rows ($ref in ref-enabled details arrays) ── */
+{
+	const atPath = (obj, path) => path.split('.').reduce((o, k) => (o == null ? o : o[k]), obj);
+
+	/* the corpus, id-keyed, plus the set of ids demo/render.html can load (index cards ∪ shared) */
+	const corpus = {};
+	const files = [];
+	for (const folder of ['data/', 'data/demo/']) {
+		for (const file of readdirSync(dir + folder).filter((f) => f.endsWith('.json')).sort()) {
+			let doc;
+			try { doc = JSON.parse(readFileSync(dir + folder + file, 'utf8')); } catch { continue; }
+			if (doc?.model !== 'card' || !doc.id) continue;
+			corpus[doc.id] = doc;
+			files.push({ file: folder + file, doc });
+		}
+	}
+	let indexedIds = new Set();
+	try {
+		const index = JSON.parse(readFileSync(dir + 'data/index.json', 'utf8'));
+		for (const name of [...(index.cards ?? []), ...(index.shared ?? [])]) {
+			try { indexedIds.add(JSON.parse(readFileSync(dir + `data/${name}.json`, 'utf8')).id); } catch { /* missing file caught elsewhere */ }
+		}
+	} catch { warn(11, 'data/index.json not readable — indexed-id check skipped'); }
+
+	/* manifest side: ref.types are real type keys; project targets fit the row shape */
+	for (const [type, paths] of Object.entries(built.refs)) {
+		for (const [path, spec] of Object.entries(paths)) {
+			for (const t of spec.types ?? []) if (!(t in types)) err(11, `${type}.${path}: ref type "${t}" is not a manifest type`);
+			if (!spec.types?.length) err(11, `${type}.${path}: ref declares no types`);
+			if (!spec.project || !Object.keys(spec.project).length) err(11, `${type}.${path}: ref declares no project map`);
+			const arrayField = atPath({ fields: built.schemas[type] }, 'fields.' + path);
+			if (arrayField && !arrayField.open && arrayField.items?.fields) {
+				for (const key of Object.keys(spec.project ?? {}))
+					if (!(key in arrayField.items.fields)) err(11, `${type}.${path}: project target "${key}" is not a row field`);
+			}
+		}
+	}
+
+	/* corpus side: every $ref row resolves, canonically, to an allowed, indexed target */
+	for (const { file, doc } of files) {
+		const fields = doc.fields ?? {};
+		const key = (fields.schemaType in R.SCHEMA_TYPES) ? fields.schemaType : 'content';
+		const specs = built.refs[key];
+		if (!specs || !fields.details) continue;
+		for (const [path, spec] of Object.entries(specs)) {
+			const rows = atPath(fields.details, path);
+			if (!Array.isArray(rows)) continue;
+			rows.forEach((row, i) => {
+				if (!row || typeof row !== 'object' || !('$ref' in row)) return;
+				const ref = row.$ref;
+				if (typeof ref !== 'string' || !/^card\/[A-Za-z0-9_-]+$/.test(ref)) {
+					err(11, `${file} ${path}[${i}]: $ref "${ref}" is not canonical card/<id>`);
+					return;
+				}
+				const id = ref.slice('card/'.length);
+				const target = corpus[id];
+				if (!target) { err(11, `${file} ${path}[${i}]: $ref "${ref}" resolves to no corpus instance`); return; }
+				if (id === doc.id) err(11, `${file} ${path}[${i}]: self-reference`);
+				const targetType = (target.fields?.schemaType in R.SCHEMA_TYPES) ? target.fields.schemaType : 'content';
+				if (!spec.types.includes(targetType)) err(11, `${file} ${path}[${i}]: target "${id}" is "${targetType}", allowed: ${spec.types.join('|')}`);
+				if (indexedIds.size && !indexedIds.has(id)) err(11, `${file} ${path}[${i}]: target "${id}" not in data/index.json cards/shared — demo/render.html cannot resolve it`);
+				for (const [rowKey, projPath] of Object.entries(spec.project))
+					if (!(rowKey in row) && atPath(target.fields ?? {}, projPath) === undefined)
+						warn(11, `${file} ${path}[${i}]: projection ${rowKey} ← ${projPath} resolves to nothing on "${id}"`);
+			});
+		}
+	}
+}
+
+/* ── 12 · generated refs mirror in sync ── */
+{
+	let committed = '';
+	try { committed = readFileSync(dir + 'data/details.refs.data.js', 'utf8'); } catch { /* missing counts as stale */ }
+	if (committed !== renderRefsFile()) err(12, 'ui/card/data/details.refs.data.js is stale (run details.build.js)');
 }
 
 for (const line of warnings) console.warn('warn ' + line);

@@ -1,5 +1,6 @@
 /* Generates everything derived from data/details.json (the per-type `details` manifest):
  *   ../../cms/editors/card/src/details.data.js — the editor's schemas + materialized lookups
+ *   data/details.refs.data.js — the renderer's ref-projection table (expandRefs in render.js)
  *   the schemaType options + details digest inside cms/baseline/models/card.schema.json
  *   the marker-delimited per-type tables inside the hand-authored docs (<!-- details:… -->)
  * Run: node ui/card/details.build.js  (idempotent — a second run is a no-op). Lint: details.lint.js */
@@ -12,6 +13,7 @@ import { ICON_NAMES } from '../icon/icons.data.js';
 const dir = new URL('.', import.meta.url).pathname;
 const SRC = dir + 'data/details.json';
 const DATA = dir + '../../cms/editors/card/src/details.data.js';
+const REFS = dir + 'data/details.refs.data.js';
 const SCHEMA = dir + '../../cms/baseline/models/card.schema.json';
 /* marker-injection scan roots — a missing root fails SILENTLY (tables stop updating) */
 const DOC_DIRS = [dir, dir + 'docs/', dir + '../../cms/editors/card/'];
@@ -112,6 +114,28 @@ const resolveField = (field, shapes) => {
 	return out;
 };
 
+/* ref-projection table: type → array-field dot-path → { types, project }. Refs may sit on
+   array fields reached through OBJECT nesting only (variants.items) — a ref under an array
+   ROW spec has no addressable path for expandRefs, so it is a build error. */
+export const collectRefs = (manifest) => {
+	const refs = {};
+	const walk = (type, fields, path, inRow) => {
+		for (const [key, field] of Object.entries(fields || {})) {
+			if (!field || typeof field !== 'object') continue;
+			const fieldPath = path ? `${path}.${key}` : key;
+			if (field.ref) {
+				if (inRow) throw new Error(`details: ${type}.${fieldPath} declares ref inside an array row spec — unsupported`);
+				if (field.type !== 'array') throw new Error(`details: ${type}.${fieldPath} declares ref on a non-array field`);
+				(refs[type] ??= {})[fieldPath] = field.ref;
+			}
+			if (field.fields) walk(type, field.fields, fieldPath, inRow);
+			if (field.items?.fields) walk(type, field.items.fields, fieldPath, true);
+		}
+	};
+	for (const [type, def] of Object.entries(manifest.types)) walk(type, def.fields, '', false);
+	return refs;
+};
+
 export const buildDetails = (manifest = readManifest()) => {
 	const lookups = resolveLookups(manifest);
 	const groups = manifest.groups.map((label) => ({
@@ -134,7 +158,7 @@ export const buildDetails = (manifest = readManifest()) => {
 		const { appliesTo, ...field } = f;
 		return [k, { ...resolveField(field, manifest.shapes), appliesTo }];
 	}));
-	return { manifest, lookups, groups, schemas, flags, injected };
+	return { manifest, lookups, groups, schemas, flags, injected, refs: collectRefs(manifest) };
 };
 
 /* ── cms/editors/card/src/details.data.js ── */
@@ -153,6 +177,15 @@ const renderData = ({ groups, schemas, lookups, flags, injected }) => {
 };
 
 const writeData = (build) => { writeFileSync(DATA, renderData(build)); return DATA; };
+
+/* ── data/details.refs.data.js (render.js imports it — the expandRefs projection table) ── */
+
+const renderRefs = ({ refs }) => `/* GENERATED from ui/card/data/details.json by ui/card/details.build.js — do not edit.
+ * Ref-projection table for expandRefs in render.js: type → details array path →
+ * { types: allowed target schemaTypes, project: rowKey → dot-path into the target's fields }. */
+export default ${JSON.stringify(refs, null, '\t')};\n`;
+
+const writeRefs = (build) => { writeFileSync(REFS, renderRefs(build)); return REFS; };
 
 /* ── cms/baseline/models/card.schema.json (schemaType options + details digest) ── */
 
@@ -176,7 +209,10 @@ export const detailsDigest = (manifest) => {
 		+ 'details.subtype (allowlisted schema.org subtype) exists for exactly the SUBTYPES families in render.js: '
 		+ Object.keys(R.SUBTYPES).join(', ') + '. '
 		+ 'details.paywalled (boolean) is accepted on every type whose itemtype is a CreativeWork, Event or Place (PAYWALL_TYPES in render.js) and emits isAccessibleForFree: False. '
-		+ 'Keys ending in "Display" are presentation twins and emit no microdata. Per-type keys, compact: '
+		+ 'Keys ending in "Display" are presentation twins and emit no microdata. '
+		+ 'Array fields declaring `ref` accept { "$ref": "card/<id>" } rows beside inline rows — the referenced card\'s fields project onto the row shape (the manifest\'s ref.project), and inline keys on the row win: '
+		+ Object.entries(collectRefs(manifest)).flatMap(([type, paths]) => Object.keys(paths).map((p) => `${type}.${p}`)).join(', ') + '. '
+		+ 'Per-type keys, compact: '
 		+ lines.join(' | ');
 };
 
@@ -322,7 +358,16 @@ const BLOCKS = {
 		return `**${envelopeOnly.length} types are envelope-only** — no \`DETAILS\` renderer: ${envelopeOnly.map((t) => `\`${t}\``).join(', ')} `
 			+ `(\`article\` and \`news\` still accept \`details.subtype\`, and every PAYWALL_TYPES member accepts \`details.paywalled\`). `
 			+ `The remaining **${detailed}** are below.`;
-	}
+	},
+
+	refs: (build) => table(
+		['Field', 'Ref targets', 'Projection (rowKey ← target path)'],
+		Object.entries(build.refs).flatMap(([type, paths]) => Object.entries(paths).map(([path, spec]) => [
+			`\`${type}.${path}\``,
+			spec.types.map((t) => `\`${t}\``).join(' '),
+			Object.entries(spec.project).map(([k, p]) => `\`${k}\` ← \`${p}\``).join(' · ')
+		]))
+	)
 };
 
 const options = (raw) => Object.fromEntries([...raw.matchAll(/([a-z]+)=([^\s]+)/g)].map(([, k, v]) => [k, v]));
@@ -349,12 +394,13 @@ const injectDocs = (build) => {
 
 export const build = () => {
 	const built = buildDetails();
-	const written = [writeData(built), writeCardSchema(built.manifest), ...injectDocs(built)];
+	const written = [writeData(built), writeRefs(built), writeCardSchema(built.manifest), ...injectDocs(built)];
 	return { built, written };
 };
 
 /* exported for details.lint.js rule 9 (committed file ⇔ in-memory rebuild) */
 export const renderDataFile = () => renderData(buildDetails());
+export const renderRefsFile = () => renderRefs(buildDetails());
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
 	const { built, written } = build();

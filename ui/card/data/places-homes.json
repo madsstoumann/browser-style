@@ -36,19 +36,14 @@
       "regionDisplay": "5 homes · Indre By & Christianshavn",
       "items": [
         {
-          "type": "Apartment",
+          "$ref": "card/realestate-1",
           "name": "Havnegade 44",
           "url": "realestate/havnegade-44.html?home=havnegade-44",
           "image": "/assets/images/real_01.jpg",
           "imageAlt": "Havnegade 44, Copenhagen",
           "datePosted": "2026-08-02",
-          "price": { "currency": "DKK", "amount": 7950000 },
           "geo": { "latitude": 55.6761, "longitude": 12.5911, "url": "https://www.google.com/maps/search/?api=1&query=55.6761,12.5911" },
-          "address": { "streetAddress": "Havnegade 44", "postalCode": "1058", "addressLocality": "Copenhagen", "addressCountry": "DK" },
-          "floorSize": 118,
-          "numberOfBedrooms": 2,
-          "numberOfRooms": 4,
-          "yearBuilt": 1932
+          "address": { "streetAddress": "Havnegade 44", "postalCode": "1058", "addressLocality": "Copenhagen", "addressCountry": "DK" }
         },
         {
           "type": "Apartment",

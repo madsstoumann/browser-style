@@ -465,6 +465,17 @@ export const DETAILS_SCHEMAS = {
 							}
 						}
 					},
+					"ref": {
+						"types": [
+							"product"
+						],
+						"project": {
+							"name": "headline",
+							"sku": "details.variants.productGroupID",
+							"price": "details.price.current",
+							"currency": "details.price.currency"
+						}
+					},
 					"control": "repeater"
 				}
 			},
@@ -1103,7 +1114,16 @@ export const DETAILS_SCHEMAS = {
 					}
 				}
 			},
-			"note": "→ accordion",
+			"ref": {
+				"types": [
+					"content"
+				],
+				"project": {
+					"question": "headline",
+					"answer": "summary"
+				}
+			},
+			"note": "→ accordion; rows may be { \"$ref\": \"card/<id>\" } references to shared content cards",
 			"control": "repeater"
 		}
 	},
@@ -1743,7 +1763,20 @@ export const DETAILS_SCHEMAS = {
 		"items": {
 			"type": "array",
 			"open": true,
-			"note": "shape depends on kind — LocalBusiness rows (name, url, branchCode, geo, address, telephone, openingHours[]) or residence rows (type ∈ RESIDENCE_TYPES, name, url, image, imageAlt, datePosted, price{amount,currency}, geo, address, floorSize, numberOfBedrooms, numberOfRooms, yearBuilt)",
+			"ref": {
+				"types": [
+					"realestate"
+				],
+				"project": {
+					"type": "details.property.type",
+					"price": "details.price",
+					"floorSize": "details.property.floorSize",
+					"numberOfBedrooms": "details.property.bedrooms",
+					"numberOfRooms": "details.property.rooms",
+					"yearBuilt": "details.property.yearBuilt"
+				}
+			},
+			"note": "shape depends on kind — LocalBusiness rows (name, url, branchCode, geo, address, telephone, openingHours[]) or residence rows (type ∈ RESIDENCE_TYPES, name, url, image, imageAlt, datePosted, price{amount,currency}, geo, address, floorSize, numberOfBedrooms, numberOfRooms, yearBuilt); residence rows may be { \"$ref\": \"card/<id>\" } references to realestate cards with per-context keys inline",
 			"control": "repeater"
 		},
 		"center": {
@@ -4034,6 +4067,17 @@ export const DETAILS_SCHEMAS = {
 						"display": true,
 						"control": "text"
 					}
+				}
+			},
+			"ref": {
+				"types": [
+					"podcast"
+				],
+				"project": {
+					"name": "headline",
+					"episodeNumber": "details.episodeNumber",
+					"duration": "details.duration",
+					"durationDisplay": "details.durationDisplay"
 				}
 			},
 			"control": "repeater"

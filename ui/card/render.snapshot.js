@@ -30,10 +30,20 @@ for (const f of readdirSync(dataDir).sort())
 for (const f of readdirSync(join(dataDir, 'demo')).sort())
 	if (f.endsWith('.json')) files.push(join('ui/card/data/demo', f));
 
+/* the id-keyed corpus map — flipside and referenced detail rows resolve against it,
+   same map demo/render.html builds */
+const cards = {};
+for (const f of files) {
+	try {
+		const doc = load(f);
+		if (doc?.model === 'card' && doc.id) cards[doc.id] = doc;
+	} catch { /* unparsable files fail loudly in the render loop below */ }
+}
+
 let snap = '', ok = 0, fail = 0;
 for (const f of files) {
 	try {
-		snap += `===== ${f} =====\n${renderCard(load(f), presets)}\n`;
+		snap += `===== ${f} =====\n${renderCard(load(f), presets, cards)}\n`;
 		ok++;
 	} catch (error) {
 		snap += `===== ${f} =====\nERROR: ${error.message}\n`;

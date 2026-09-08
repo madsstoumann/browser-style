@@ -1,0 +1,18 @@
+{
+  "$schema": "../../../cms/baseline/models/card.schema.json",
+  "id": "faq-refunds",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-09-01T09:00:00Z",
+    "updatedAt": "2026-09-01T09:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Support/FAQ"
+  },
+  "fields": {
+    "internalName": "Shared — FAQ: Do you offer refunds?",
+    "schemaType": "content",
+    "headline": "Do you offer refunds?",
+    "summary": "Full refund within 30 days, no questions asked."
+  }
+}
