@@ -40,7 +40,7 @@
         "current": 249,
         "currency": "USD"
       },
-      "availability": "In stock",
+      "availability": "InStock",
       "rating": {
         "value": 4.7,
         "count": 312,
@@ -88,7 +88,7 @@
             "size": "L",
             "price": 269,
             "currency": "USD",
-            "availability": "Out of stock"
+            "availability": "OutOfStock"
           }
         ]
       }

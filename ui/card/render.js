@@ -1451,8 +1451,24 @@ const buildTail = (fields, type) => {
 const availabilityHue = (availability) =>
 	/(in)/i.test(availability || '') ? 'green' : /(low|limited|few)/i.test(availability || '') ? 'orange' : 'red';
 
-const availabilityUrl = (availability) =>
-	SCHEMA + (/(in)/i.test(availability || '') ? 'InStock' : /(low|limited)/i.test(availability || '') ? 'LimitedAvailability' : 'OutOfStock');
+/* schema.org ItemAvailability, complete. Exported so data/details.json can point a
+   lookup at it: the editor's dropdown and the renderer then read one list, the same
+   arrangement VARIANT_AXES uses. https://schema.org/ItemAvailability */
+export const ITEM_AVAILABILITY = ['BackOrder', 'Discontinued', 'InStock', 'InStoreOnly',
+	'LimitedAvailability', 'MadeToOrder', 'OnlineOnly', 'OutOfStock', 'PreOrder', 'PreSale',
+	'Reserved', 'SoldOut'];
+const AVAILABILITY_SET = new Set(ITEM_AVAILABILITY);
+
+/* A canonical value passes straight through. The fuzzy fallback is for free-text data
+   written before the vocabulary was enumerated ("In stock", "Low stock") and is checked
+   SECOND — it collapses twelve values into three, and its /(in)/i arm matches
+   "Discontinued", which would otherwise publish a discontinued product as InStock. */
+const availabilityUrl = (availability) => {
+	const value = String(availability ?? '').trim();
+	if (AVAILABILITY_SET.has(value)) return SCHEMA + value;
+	return SCHEMA + (/\b(in|available)\b/i.test(value) ? 'InStock'
+		: /(low|limited)/i.test(value) ? 'LimitedAvailability' : 'OutOfStock');
+};
 
 /* ProductGroup variant axes. A variesBy value names a property Google reads FROM the
    variants, so one allowlist drives both: what variesBy may say and what an item emits.

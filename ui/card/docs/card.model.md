@@ -312,13 +312,13 @@ build that map from `data/index.json` `cards ∪ shared`.
 |---|---|---|---|
 | `rating` | object | fieldset | {value, max, count} |
 | `price` | object | fieldset | {current, original, currency, discountText} |
-| `availability` | string | text |  |
+| `availability` | select | select | ITEM_AVAILABILITY |
 | `validUntil` | date | date |  |
 | `validUntilDisplay` | string | text | display twin |
 | `sku` | string | text |  |
 | `brand` | string | text | → Brand.name, rendered in the subheadline slot |
 | `brandUrl` | url | url | crawlable &lt;a itemprop="url"&gt; around the brand name |
-| `subtype` | select | select | SUBTYPES.product |
+| `subtype` | select | select | PRODUCT_SUBTYPES |
 | `variants` | object | fieldset | {variesBy, productGroupID, control, tile, layout, items} · ProductGroup — emits only when subtype resolves to ProductGroup |
 | `reviews` | array | repeater | {author, rating, max, datePublished, dateDisplay, context, headline, body} · detail pages only, never the teaser |
 <!-- /details -->
@@ -895,7 +895,7 @@ falls back to `SoftwareApplication`, which is not in these properties' domain.
 | `datePostedDisplay` | string | text | display twin |
 | `agent` | string | text |  |
 | `viewings` | string | text |  |
-| `availability` | string | text |  |
+| `availability` | select | select | ITEM_AVAILABILITY |
 | `map` | object | fieldset | map provider options, e.g. {key} |
 | `mapMedia` | object | fieldset | the map frame's media item |
 <!-- /details -->
@@ -1112,6 +1112,8 @@ editor is the only place a mistake is catchable.
 |---|---|---|
 | `CONTACT_KINDS` | profile contact | `email` `phone` `url` |
 | `ICON_NAMES` | course booking location loyalty service realestate vacationrental | 72 values — read from the generated LOOKUPS |
+| `ITEM_AVAILABILITY` | product event realestate comicissue | `BackOrder` `Discontinued` `InStock` `InStoreOnly` `LimitedAvailability` `MadeToOrder` `OnlineOnly` `OutOfStock` `PreOrder` `PreSale` `Reserved` `SoldOut` |
+| `PRODUCT_SUBTYPES` | product | `ProductGroup` |
 | `VARIANT_AXES` | product | `color` `size` `material` `pattern` |
 | `VARIANT_CONTROLS` | product | `list` `buttons` `collage` |
 | `ATTENDANCE_MODES` | event | `Offline` `Online` `Mixed` |

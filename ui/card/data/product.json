@@ -63,7 +63,7 @@
         "currency": "USD",
         "discountText": "Save 20%"
       },
-      "availability": "In stock",
+      "availability": "InStock",
       "rating": {
         "value": 4.5,
         "count": 1247,

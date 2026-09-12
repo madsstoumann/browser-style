@@ -35,6 +35,9 @@
 			"completed",
 			"failed",
 			"potential"
+		],
+		"PRODUCT_SUBTYPES": [
+			"ProductGroup"
 		]
 	},
 	"shapes": {
@@ -248,7 +251,8 @@
 					"shape": "price"
 				},
 				"availability": {
-					"type": "string"
+					"type": "select",
+					"lookup": "ITEM_AVAILABILITY"
 				},
 				"validUntil": {
 					"type": "date"
@@ -271,7 +275,7 @@
 				},
 				"subtype": {
 					"type": "select",
-					"lookup": "SUBTYPES.product"
+					"lookup": "PRODUCT_SUBTYPES"
 				},
 				"variants": {
 					"type": "object",
@@ -332,7 +336,8 @@
 										"type": "string"
 									},
 									"availability": {
-										"type": "string"
+										"type": "select",
+										"lookup": "ITEM_AVAILABILITY"
 									},
 									"url": {
 										"type": "url"
@@ -347,7 +352,9 @@
 								}
 							},
 							"ref": {
-								"types": ["product"],
+								"types": [
+									"product"
+								],
 								"project": {
 									"name": "headline",
 									"sku": "details.variants.productGroupID",
@@ -426,7 +433,8 @@
 								"type": "string"
 							},
 							"availability": {
-								"type": "string"
+								"type": "select",
+								"lookup": "ITEM_AVAILABILITY"
 							},
 							"validThrough": {
 								"type": "datetime"
@@ -778,7 +786,9 @@
 						}
 					},
 					"ref": {
-						"types": ["content"],
+						"types": [
+							"content"
+						],
 						"project": {
 							"question": "headline",
 							"answer": "summary"
@@ -1215,7 +1225,9 @@
 					"type": "array",
 					"open": true,
 					"ref": {
-						"types": ["realestate"],
+						"types": [
+							"realestate"
+						],
 						"project": {
 							"type": "details.property.type",
 							"price": "details.price",
@@ -2250,7 +2262,8 @@
 					"type": "string"
 				},
 				"availability": {
-					"type": "string"
+					"type": "select",
+					"lookup": "ITEM_AVAILABILITY"
 				},
 				"map": {
 					"type": "object",
@@ -2866,7 +2879,9 @@
 						}
 					},
 					"ref": {
-						"types": ["podcast"],
+						"types": [
+							"podcast"
+						],
 						"project": {
 							"name": "headline",
 							"episodeNumber": "details.episodeNumber",
@@ -2939,7 +2954,8 @@
 							"type": "string"
 						},
 						"availability": {
-							"type": "string"
+							"type": "select",
+							"lookup": "ITEM_AVAILABILITY"
 						}
 					}
 				},

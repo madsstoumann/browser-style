@@ -342,8 +342,9 @@ export const DETAILS_SCHEMAS = {
 			}
 		},
 		"availability": {
-			"type": "string",
-			"control": "text"
+			"type": "select",
+			"lookup": "ITEM_AVAILABILITY",
+			"control": "select"
 		},
 		"validUntil": {
 			"type": "date",
@@ -371,7 +372,7 @@ export const DETAILS_SCHEMAS = {
 		},
 		"subtype": {
 			"type": "select",
-			"lookup": "SUBTYPES.product",
+			"lookup": "PRODUCT_SUBTYPES",
 			"control": "select"
 		},
 		"variants": {
@@ -448,8 +449,9 @@ export const DETAILS_SCHEMAS = {
 								"control": "text"
 							},
 							"availability": {
-								"type": "string",
-								"control": "text"
+								"type": "select",
+								"lookup": "ITEM_AVAILABILITY",
+								"control": "select"
 							},
 							"url": {
 								"type": "url",
@@ -595,8 +597,9 @@ export const DETAILS_SCHEMAS = {
 						"control": "text"
 					},
 					"availability": {
-						"type": "string",
-						"control": "text"
+						"type": "select",
+						"lookup": "ITEM_AVAILABILITY",
+						"control": "select"
 					},
 					"validThrough": {
 						"type": "datetime",
@@ -3195,8 +3198,9 @@ export const DETAILS_SCHEMAS = {
 			"control": "text"
 		},
 		"availability": {
-			"type": "string",
-			"control": "text"
+			"type": "select",
+			"lookup": "ITEM_AVAILABILITY",
+			"control": "select"
 		},
 		"map": {
 			"type": "object",
@@ -4153,8 +4157,9 @@ export const DETAILS_SCHEMAS = {
 					"control": "text"
 				},
 				"availability": {
-					"type": "string",
-					"control": "text"
+					"type": "select",
+					"lookup": "ITEM_AVAILABILITY",
+					"control": "select"
 				}
 			},
 			"control": "fieldset"
@@ -4612,38 +4617,60 @@ export const LOOKUPS = {
 			"label": "Review news article"
 		}
 	],
-	"SUBTYPES.product": [
+	"ITEM_AVAILABILITY": [
+		{
+			"value": "BackOrder",
+			"label": "Back order"
+		},
+		{
+			"value": "Discontinued",
+			"label": "Discontinued"
+		},
+		{
+			"value": "InStock",
+			"label": "In stock"
+		},
+		{
+			"value": "InStoreOnly",
+			"label": "In store only"
+		},
+		{
+			"value": "LimitedAvailability",
+			"label": "Limited availability"
+		},
+		{
+			"value": "MadeToOrder",
+			"label": "Made to order"
+		},
+		{
+			"value": "OnlineOnly",
+			"label": "Online only"
+		},
+		{
+			"value": "OutOfStock",
+			"label": "Out of stock"
+		},
+		{
+			"value": "PreOrder",
+			"label": "Pre order"
+		},
+		{
+			"value": "PreSale",
+			"label": "Pre sale"
+		},
+		{
+			"value": "Reserved",
+			"label": "Reserved"
+		},
+		{
+			"value": "SoldOut",
+			"label": "Sold out"
+		}
+	],
+	"PRODUCT_SUBTYPES": [
 		{
 			"value": "ProductGroup",
 			"label": "Product group"
-		},
-		{
-			"value": "ProductModel",
-			"label": "Product model"
-		},
-		{
-			"value": "IndividualProduct",
-			"label": "Individual product"
-		},
-		{
-			"value": "Vehicle",
-			"label": "Vehicle"
-		},
-		{
-			"value": "Car",
-			"label": "Car"
-		},
-		{
-			"value": "Motorcycle",
-			"label": "Motorcycle"
-		},
-		{
-			"value": "Drug",
-			"label": "Drug"
-		},
-		{
-			"value": "DietarySupplement",
-			"label": "Dietary supplement"
 		}
 	],
 	"VARIANT_AXES": [

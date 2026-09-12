@@ -12,7 +12,9 @@
   "fields": {
     "internalName": "Demo — Comic issue",
     "schemaType": "comicissue",
-    "preset": { "$ref": "card-preset/stack-portrait" },
+    "preset": {
+      "$ref": "card-preset/stack-portrait"
+    },
     "eyebrow": "Superhero",
     "headline": "Dark Mode Rising",
     "summary": "Jayess kills the stylesheet and the city goes dark. CSS Man has one cascade left — and the brace signal is still burning over the rooftops.",
@@ -24,7 +26,13 @@
       }
     ],
     "actions": [
-      { "link": { "text": "Buy now" }, "style": "primary", "icon": "shopping-cart" }
+      {
+        "link": {
+          "text": "Buy now"
+        },
+        "style": "primary",
+        "icon": "shopping-cart"
+      }
     ],
     "details": {
       "issueNumber": 2,
@@ -33,7 +41,11 @@
       "pagination": "32",
       "coverPrice": "10¢",
       "variantCover": "Newsstand edition",
-      "price": { "current": 4.99, "currency": "USD", "availability": "in stock" },
+      "price": {
+        "current": 4.99,
+        "currency": "USD",
+        "availability": "InStock"
+      },
       "series": {
         "name": "CSS Man",
         "url": "#schema-comicseries",
@@ -45,6 +57,9 @@
       "letterer": "Artie Kemp",
       "colorist": "Dot Halliday"
     },
-    "tags": ["Silver Age", "Dark Mode"]
+    "tags": [
+      "Silver Age",
+      "Dark Mode"
+    ]
   }
 }
