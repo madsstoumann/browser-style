@@ -61,7 +61,7 @@ export const resolveLookups = (manifest) => {
 		if (source instanceof Set) { lookups[name] = toOptions(name, [...source]); return; }
 		if (Array.isArray(source)) { lookups[name] = toOptions(name, source); return; }
 		if (source && typeof source === 'object') {
-			/* FILE_TYPES carries its own labels; QUIZ_FORMATS / MEDICAL_ASPECTS are keyed maps */
+			/* FILE_TYPES carries its own labels (ITEM_AVAILABILITY too); QUIZ_FORMATS / MEDICAL_ASPECTS are keyed maps */
 			const labels = Object.fromEntries(Object.entries(source).map(([k, v]) => [k, v?.label ?? labelFor(name, k)]));
 			lookups[name] = toOptions(name, Object.keys(source), labels);
 			return;

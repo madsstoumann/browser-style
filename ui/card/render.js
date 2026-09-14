@@ -106,7 +106,9 @@ export const SUBTYPES = {
 	location: new Set(['TouristAttraction', 'TouristDestination', 'LandmarksOrHistoricalBuildings', 'Accommodation', 'Apartment', 'House', 'SingleFamilyResidence', 'Room', 'Suite', 'Residence', 'ApartmentComplex', 'GatedResidenceCommunity', 'CivicStructure', 'Park', 'Beach', 'Campground', 'Church', 'Museum', 'Airport', 'TrainStation', 'Mountain', 'EventVenue', 'StadiumOrArena']),
 	news: new Set(['ReportageNewsArticle', 'OpinionNewsArticle', 'AnalysisNewsArticle', 'BackgroundNewsArticle', 'ReviewNewsArticle']),
 	organization: new Set(['NGO', 'Corporation', 'OnlineStore', 'OnlineBusiness', 'EducationalOrganization', 'School', 'CollegeOrUniversity', 'GovernmentOrganization', 'NewsMediaOrganization', 'MedicalOrganization', 'ResearchOrganization', 'PerformingGroup', 'MusicGroup', 'SportsOrganization', 'SportsTeam', 'Airline', 'LibrarySystem', 'WorkersUnion', 'PoliticalParty', 'FundingScheme', 'Consortium', 'Project']),
-	product: new Set(['ProductGroup', 'ProductModel', 'IndividualProduct', 'Vehicle', 'Car', 'Motorcycle', 'Drug', 'DietarySupplement']),
+	/* ProductGroup only — narrowed HERE, not in the manifest, so the editor dropdown and this
+	   allowlist cannot disagree. Why the other seven went: docs/schema.md § Subtypes. */
+	product: new Set(['ProductGroup']),
 	social: new Set(['DiscussionForumPosting', 'BlogPosting', 'LiveBlogPosting']),
 	software: new Set(['MobileApplication', 'WebApplication', 'VideoGame'])
 };
@@ -1447,17 +1449,45 @@ const buildTail = (fields, type) => {
 
 /* ── type-specific detail renderers — return part strings ── */
 
-/* stock state → theme hue: green in stock · orange low/limited · red out */
-const availabilityHue = (availability) =>
-	/(in)/i.test(availability || '') ? 'green' : /(low|limited|few)/i.test(availability || '') ? 'orange' : 'red';
+/* schema.org ItemAvailability, complete — canonical value → display label. Exported so
+   data/details.json can point a lookup at it: the editor's dropdown, the visible chip and
+   the microdata then read one list, the same arrangement VARIANT_AXES uses. The label is
+   what demo/schema.html specifies a Product chip says. https://schema.org/ItemAvailability */
+export const ITEM_AVAILABILITY = {
+	BackOrder: { label: 'Back order' },
+	Discontinued: { label: 'Discontinued' },
+	InStock: { label: 'In stock' },
+	InStoreOnly: { label: 'In store only' },
+	LimitedAvailability: { label: 'Limited availability' },
+	MadeToOrder: { label: 'Made to order' },
+	OnlineOnly: { label: 'Online only' },
+	OutOfStock: { label: 'Out of stock' },
+	PreOrder: { label: 'Pre-order' },
+	PreSale: { label: 'Pre-sale' },
+	Reserved: { label: 'Reserved' },
+	SoldOut: { label: 'Sold out' }
+};
+const AVAILABILITY_SET = new Set(Object.keys(ITEM_AVAILABILITY));
 
-/* schema.org ItemAvailability, complete. Exported so data/details.json can point a
-   lookup at it: the editor's dropdown and the renderer then read one list, the same
-   arrangement VARIANT_AXES uses. https://schema.org/ItemAvailability */
-export const ITEM_AVAILABILITY = ['BackOrder', 'Discontinued', 'InStock', 'InStoreOnly',
-	'LimitedAvailability', 'MadeToOrder', 'OnlineOnly', 'OutOfStock', 'PreOrder', 'PreSale',
-	'Reserved', 'SoldOut'];
-const AVAILABILITY_SET = new Set(ITEM_AVAILABILITY);
+/* A canonical value renders as its label — never the CamelCase token. Free text written
+   before the vocabulary existed passes through as authored. */
+const availabilityLabel = (availability) => {
+	const value = String(availability ?? '').trim();
+	return ITEM_AVAILABILITY[value]?.label ?? value;
+};
+
+/* stock state → theme hue. Canonical values are bucketed by name; everything outside the
+   two sets is red. The fuzzy arm is the same second-chance fallback availabilityUrl uses,
+   and for the same reason it cannot test /(in)/i — that matches "Discontinued". */
+const AVAILABILITY_GREEN = new Set(['InStock', 'InStoreOnly', 'OnlineOnly']);
+const AVAILABILITY_ORANGE = new Set(['LimitedAvailability']);
+const availabilityHue = (availability) => {
+	const value = String(availability ?? '').trim();
+	if (AVAILABILITY_SET.has(value)) return AVAILABILITY_GREEN.has(value) ? 'green'
+		: AVAILABILITY_ORANGE.has(value) ? 'orange' : 'red';
+	return /\b(in|available)\b/i.test(value) ? 'green'
+		: /(low|limited|few)/i.test(value) ? 'orange' : 'red';
+};
 
 /* A canonical value passes straight through. The fuzzy fallback is for free-text data
    written before the vocabulary was enumerated ("In stock", "Low stock") and is checked
@@ -2085,7 +2115,7 @@ export const DETAILS = {
 			/* the validity belongs to the offer — directly under the price, not the stock row */
 			if (d.validUntilDisplay) html += `<p data-part="meta"><small>Valid until ${esc(d.validUntilDisplay)}</small></p>`;
 		}
-		if (d.availability) html += `<p data-part="meta"><ui-chip theme="pale ${availabilityHue(d.availability)}">${esc(d.availability)}</ui-chip></p>`;
+		if (d.availability) html += `<p data-part="meta"><ui-chip theme="pale ${availabilityHue(d.availability)}">${esc(availabilityLabel(d.availability))}</ui-chip></p>`;
 		/* sku is machine-readable only — no visible number on the card */
 		if (d.sku) html += meta('sku', d.sku);
 		/* hasVariant/variesBy/productGroupID are ProductGroup-ONLY properties, so the gate is

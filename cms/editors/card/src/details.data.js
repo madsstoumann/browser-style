@@ -372,7 +372,7 @@ export const DETAILS_SCHEMAS = {
 		},
 		"subtype": {
 			"type": "select",
-			"lookup": "PRODUCT_SUBTYPES",
+			"lookup": "SUBTYPES.product",
 			"control": "select"
 		},
 		"variants": {
@@ -2589,6 +2589,15 @@ export const DETAILS_SCHEMAS = {
 			"note": "shown raw — the page carries the format-detection meta (schema.md § Book)",
 			"control": "text"
 		},
+		"datePublished": {
+			"type": "date",
+			"control": "date"
+		},
+		"datePublishedDisplay": {
+			"type": "string",
+			"display": true,
+			"control": "text"
+		},
 		"numberOfPages": {
 			"type": "number",
 			"control": "number"
@@ -4652,11 +4661,11 @@ export const LOOKUPS = {
 		},
 		{
 			"value": "PreOrder",
-			"label": "Pre order"
+			"label": "Pre-order"
 		},
 		{
 			"value": "PreSale",
-			"label": "Pre sale"
+			"label": "Pre-sale"
 		},
 		{
 			"value": "Reserved",
@@ -4667,7 +4676,7 @@ export const LOOKUPS = {
 			"label": "Sold out"
 		}
 	],
-	"PRODUCT_SUBTYPES": [
+	"SUBTYPES.product": [
 		{
 			"value": "ProductGroup",
 			"label": "Product group"

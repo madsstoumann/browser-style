@@ -195,6 +195,21 @@ describe('product variants', () => {
 		assert.match(html, /<meta itemprop="availability" content="https:\/\/schema\.org\/OutOfStock">/);
 	});
 
+	/* the chip is the only place availability is READ by a human — a canonical value must
+	   resolve to its label, never the CamelCase token. demo/schema.html specifies "In stock". */
+	test('the availability chip shows a label, not the vocabulary token', () => {
+		const chip = (availability) => render({ schemaType: 'product', headline: 'Coat', details: { availability } })
+			.match(/<ui-chip theme="pale (\w+)">([^<]*)<\/ui-chip>/);
+		assert.deepEqual(chip('InStock').slice(1), ['green', 'In stock']);
+		assert.deepEqual(chip('OutOfStock').slice(1), ['red', 'Out of stock']);
+		assert.deepEqual(chip('LimitedAvailability').slice(1), ['orange', 'Limited availability']);
+		/* the /(in)/i arm used to paint this green — "Discont(in)ued" */
+		assert.deepEqual(chip('Discontinued').slice(1), ['red', 'Discontinued']);
+		/* pre-vocabulary free text still colours, and still reads as authored */
+		assert.deepEqual(chip('In stock').slice(1), ['green', 'In stock']);
+		assert.deepEqual(chip('Low stock').slice(1), ['orange', 'Low stock']);
+	});
+
 	/* THE gate. hasVariant/variesBy/productGroupID are ProductGroup-ONLY properties, so the
 	   block is gated on the RESOLVED itemtype — details.subtype and details.variants can
 	   never disagree. Skipping is not silent: a fixed comment says why they vanished. */
@@ -207,9 +222,13 @@ describe('product variants', () => {
 		assert.ok(!html.includes('productGroupID'), 'productGroupID is not a Product property');
 		assert.ok(html.includes(IGNORED), 'the skip must leave a signal in the output');
 	});
-	test('variants under a sibling product subtype are skipped too', () => {
+	/* the family is ProductGroup-only: the seven schema.org siblings (Vehicle, Drug, …) are
+	   valid vocabulary but serve businesses this library does not. Pinned here so a
+	   re-widening is a deliberate edit — docs/schema.md § Subtypes. */
+	test('the product subtype allowlist is ProductGroup-only', () => {
+		assert.deepEqual([...SUBTYPES.product], ['ProductGroup']);
 		const html = render({ schemaType: 'product', headline: 'Coupe', details: { subtype: 'Vehicle', variants } });
-		assert.match(html, /itemtype="https:\/\/schema\.org\/Vehicle"/);
+		assert.match(html, /itemtype="https:\/\/schema\.org\/Product"/);
 		assert.ok(!html.includes('hasVariant'));
 		assert.ok(html.includes(IGNORED));
 	});

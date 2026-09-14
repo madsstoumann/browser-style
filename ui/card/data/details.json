@@ -35,9 +35,6 @@
 			"completed",
 			"failed",
 			"potential"
-		],
-		"PRODUCT_SUBTYPES": [
-			"ProductGroup"
 		]
 	},
 	"shapes": {
@@ -275,7 +272,7 @@
 				},
 				"subtype": {
 					"type": "select",
-					"lookup": "PRODUCT_SUBTYPES"
+					"lookup": "SUBTYPES.product"
 				},
 				"variants": {
 					"type": "object",
@@ -1832,6 +1829,13 @@
 					"type": "string",
 					"label": "ISBN",
 					"note": "shown raw — the page carries the format-detection meta (schema.md § Book)"
+				},
+				"datePublished": {
+					"type": "date"
+				},
+				"datePublishedDisplay": {
+					"type": "string",
+					"display": true
 				},
 				"numberOfPages": {
 					"type": "number"

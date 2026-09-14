@@ -301,12 +301,14 @@ Google's *Vacation rental* feature is fed through its partner programme, not by 
 See [schema.md § Vacation rental](schema.md).
 
 Note also that the SUBTYPE families already cover vertical ground a naive reading would call
-missing: `product` allowlists `Vehicle`/`Car`/`Motorcycle`, `social` allowlists
-`DiscussionForumPosting`, `software` allowlists `MobileApplication`/`WebApplication`/`VideoGame`,
-and `business` allowlists 60 `LocalBusiness` subtypes — hotels, restaurants, the medical and
-local-service trades (`Plumber`, `Attorney`, `HairSalon`…). The 2026-08 round that added most of
-them came from the schema.org usage statistics, not the gallery: every subtype in the 100K–1M
-bucket of a base we render ([schema.md § Subtypes](schema.md)).
+missing: `social` allowlists `DiscussionForumPosting`, `software` allowlists
+`MobileApplication`/`WebApplication`/`VideoGame`, and `business` allowlists 60
+`LocalBusiness` subtypes — hotels, restaurants, the medical and local-service trades
+(`Plumber`, `Attorney`, `HairSalon`…). The 2026-08 round that added most of them came from
+the schema.org usage statistics, not the gallery: every subtype in the 100K–1M bucket of a base
+we render ([schema.md § Subtypes](schema.md)). `product` went the other way in 2026-09 and now
+allowlists `ProductGroup` alone — `Vehicle`/`Car`/`Motorcycle` were dropped, which is
+consistent with Vehicle listing being deliberately off the list above.
 
 ---
 

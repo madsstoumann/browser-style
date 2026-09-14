@@ -302,6 +302,12 @@ on the flipside path resolves a different object than the one that produced the 
 Every entry below was verified against the schema.org vocabulary as a transitive subclass of
 the base type. Add to a list only after checking the same.
 
+Vocabulary-valid is not sufficient. `product` carried seven more subtypes until 2026-09 —
+`ProductModel`, `IndividualProduct`, `Vehicle`, `Car`, `Motorcycle`, `Drug`,
+`DietarySupplement` — and they were removed because they serve businesses this library does
+not: dealerships, pharma, spec sheets, one-of-a-kind stock. A subtype earns its place by being
+renderable here, not by existing. `ProductGroup` stays because `hasVariant` is gated on it.
+
 The 2026-08 additions — `software`'s first list, the local-service trades under `business`,
 `EventVenue`/`StadiumOrArena`, `BroadcastEvent` — were picked from the [schema.org usage
 statistics](https://schema.org/docs/usage_stats.html) (July 2026 release): every subtype in the
@@ -317,7 +323,7 @@ were already covered.
 | `location` | `Place` | TouristAttraction, TouristDestination, LandmarksOrHistoricalBuildings, Accommodation, Apartment, House, SingleFamilyResidence, Room, Suite, Residence, ApartmentComplex, GatedResidenceCommunity, CivicStructure, Park, Beach, Campground, Church, Museum, Airport, TrainStation, Mountain, EventVenue, StadiumOrArena |
 | `news` | `NewsArticle` | ReportageNewsArticle, OpinionNewsArticle, AnalysisNewsArticle, BackgroundNewsArticle, ReviewNewsArticle |
 | `organization` | `Organization` | NGO, Corporation, OnlineStore, OnlineBusiness, EducationalOrganization, School, CollegeOrUniversity, GovernmentOrganization, NewsMediaOrganization, MedicalOrganization, ResearchOrganization, PerformingGroup, MusicGroup, SportsOrganization, SportsTeam, Airline, LibrarySystem, WorkersUnion, PoliticalParty, FundingScheme, Consortium, Project |
-| `product` | `Product` | ProductGroup, ProductModel, IndividualProduct, Vehicle, Car, Motorcycle, Drug, DietarySupplement |
+| `product` | `Product` | ProductGroup |
 | `social` | `SocialMediaPosting` | DiscussionForumPosting, BlogPosting, LiveBlogPosting |
 | `software` | `SoftwareApplication` | MobileApplication, WebApplication, VideoGame |
 
@@ -392,6 +398,14 @@ Envelope `summary` as `<ui-quote>` wrapping `<blockquote itemprop="text">` + aut
 
 Offer + AggregateRating, discount `<ui-sticker>`, save toggle. Proposed parts: `price`, `rating`. `details.brand` renders under the headline in the **subheadline slot** as `brand → Brand` (`name`, plus a crawlable `<a itemprop="url">` when `brandUrl` is set) — the album card’s `artist`/`artistUrl` shape, and the PDP convention of brand above the fold rather than down among price and stock. Google lists `brand` as recommended for merchant listings; a chip on the media stays an editor’s `furniture.chip` choice, never the machine property.
 
+**`details.availability` has two faces, and they are not the same string.** The microdata is
+the schema.org `ItemAvailability` URL; the visible `<ui-chip>` is the human label from the
+same table in `render.js` (`InStock` → "In stock"), tinted green for `InStock`/`InStoreOnly`/
+`OnlineOnly`, orange for `LimitedAvailability`, red for the rest. A value outside the
+vocabulary — free text written before it existed — is published through a fuzzy fallback and
+shown as authored. Neither the fallback nor the hue may test a bare `in`: "Discontinued"
+contains one, and did once publish as `InStock`.
+
 **Individual reviews are a detail-page property.** `details.reviews[]` renders nowhere on the
 teaser — `DETAILS.product` never reads it — and the five generated product pages compose it into a
 band under the card through the shared [`reviewItems()`](#reviews) emitter. `review` is in domain of
@@ -412,7 +426,7 @@ variant group carries every property the plain product card already emits. Demo 
   "variants": {
     "variesBy": ["color", "size"],
     "productGroupID": "NL-COAT",
-    "items": [{ "name": "…, Ivory, S", "url": "/gown?color=ivory&size=s", "sku": "PSG-01-IVY-S", "color": "Ivory", "size": "S", "price": 249, "currency": "USD", "availability": "Out of stock" }]
+    "items": [{ "name": "…, Ivory, S", "url": "/gown?color=ivory&size=s", "sku": "PSG-01-IVY-S", "color": "Ivory", "size": "S", "price": 249, "currency": "USD", "availability": "OutOfStock" }]
   }
 }
 ```

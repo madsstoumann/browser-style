@@ -318,7 +318,7 @@ build that map from `data/index.json` `cards ∪ shared`.
 | `sku` | string | text |  |
 | `brand` | string | text | → Brand.name, rendered in the subheadline slot |
 | `brandUrl` | url | url | crawlable &lt;a itemprop="url"&gt; around the brand name |
-| `subtype` | select | select | PRODUCT_SUBTYPES |
+| `subtype` | select | select | SUBTYPES.product |
 | `variants` | object | fieldset | {variesBy, productGroupID, control, tile, layout, items} · ProductGroup — emits only when subtype resolves to ProductGroup |
 | `reviews` | array | repeater | {author, rating, max, datePublished, dateDisplay, context, headline, body} · detail pages only, never the teaser |
 <!-- /details -->
@@ -816,6 +816,8 @@ falls back to `SoftwareApplication`, which is not in these properties' domain.
 | Key | Type | Control | Lookup / notes |
 |---|---|---|---|
 | `isbn` | string | text | shown raw — the page carries the format-detection meta (schema.md § Book) |
+| `datePublished` | date | date |  |
+| `datePublishedDisplay` | string | text | display twin |
 | `numberOfPages` | number | number |  |
 | `bookFormat` | select | select | BOOK_FORMATS |
 | `bookFormatDisplay` | string | text | display twin |
@@ -1113,7 +1115,6 @@ editor is the only place a mistake is catchable.
 | `CONTACT_KINDS` | profile contact | `email` `phone` `url` |
 | `ICON_NAMES` | course booking location loyalty service realestate vacationrental | 72 values — read from the generated LOOKUPS |
 | `ITEM_AVAILABILITY` | product event realestate comicissue | `BackOrder` `Discontinued` `InStock` `InStoreOnly` `LimitedAvailability` `MadeToOrder` `OnlineOnly` `OutOfStock` `PreOrder` `PreSale` `Reserved` `SoldOut` |
-| `PRODUCT_SUBTYPES` | product | `ProductGroup` |
 | `VARIANT_AXES` | product | `color` `size` `material` `pattern` |
 | `VARIANT_CONTROLS` | product | `list` `buttons` `collage` |
 | `ATTENDANCE_MODES` | event | `Offline` `Online` `Mixed` |
