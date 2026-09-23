@@ -32,7 +32,7 @@ const SHEETS = [
 	['ui/card/media.hover.css', ALL], ['ui/card/media.shapes.css', ALL], ['ui/card/media.tint.css', ALL],
 	['ui/card/media.video.css', ALL], ['ui/card/ui-card.css', ALL],
 	['ui/reveal/ui-reveal.css', ALL], ['ui/reveal/index.css', ALL],
-	['ui/chip/ui-chip.css', MEDIA_ONLY], ['ui/sticker/ui-sticker.css', MEDIA_ONLY],
+	['ui/chip/ui-chip.css', MEDIA_ONLY], ['ui/ai/ui-ai.css', MEDIA_ONLY], ['ui/sticker/ui-sticker.css', MEDIA_ONLY],
 	['ui/save/ui-save.css', MEDIA_ONLY], ['ui/beacon/ui-beacon.css', MEDIA_ONLY],
 	['ui/marquee/ui-marquee.css', MEDIA_ONLY], ['ui/play/ui-play.css', MEDIA_ONLY],
 	['ui/lightbox/ui-lightbox.css', MEDIA_ONLY],

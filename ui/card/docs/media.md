@@ -137,6 +137,7 @@ drift from the CSS. (`md:/lg:` is the container-query prefix column: only `asr()
 | `tnt()` | tint | **hue** red orange green blue accent black white gray slate | — | yes | --ui-media-tint-color --_tnt --_hv-tint | — | — |
 | `scm()` | scrim | **pos** ts tc te cs cc ce bs bc be · **size** sm md lg xl · **tone** shr lgt med drk sld | — | yes | --ui-media-scrim --ui-media-scrim-paint --ui-media-scrim-color --ui-media-scrim-fade --ui-media-scrim-mid-stop --ui-media-scrim-end-stop --ui-media-scrim-cc-a --ui-media-scrim-cc-b | — | — |
 | `chip()` | furniture | **pos** ts tc te cs cc ce bs bc be · **hue** red orange green blue accent black white gray slate · **mode** pale muted · **variant** lgt out · **size** sm lg xl 2xl · **disc** non rnd pll crc sqr | — | — | --ui-chip-* --_theme-base-bg --_theme-base-c --_theme-bg --_theme-c | — | — |
+| `ai()` | furniture | **pos** ts tc te cs cc ce bs bc be · **hue** red orange green blue accent black white gray slate · **face** label icon pill · **size** lg xl | — | — | --ui-ai-* --_theme-base-bg --_theme-base-c | — | — |
 | `sticker()` | furniture | **pos** ts tc te cs cc ce bs bc be · **hue** red orange green blue accent black white gray slate · **mode** pale muted · **size** sm lg xl 2xl 3xl · **disc** non rnd pll crc sqr · **shape** text spl spr sh:burst sh:blob sh:spark sh:sunburst sh:heart sh:&lt;custom&gt; · **flag** fit | — | — | --ui-sticker-* --_theme-base-bg --_theme-base-c --_theme-bg --_theme-c | — | — |
 | `save()` | furniture | **pos** ts tc te cs cc ce bs bc be · **hue** red orange green blue accent black white gray slate · **size** sm lg xl · **disc** non rnd crc sqr | — | — | --ui-save-c --ui-save-c-active --ui-save-sz --ui-save-circle-* | — | — |
 | `play()` | furniture | **pos** ts tc te cs cc ce bs bc be · **hue** red orange green blue accent black white gray slate · **size** sm md lg xl · **disc** non rnd pll crc sqr | — | — | --ui-play-sz --ui-play-icon-sz --ui-play-bg --ui-play-c --ui-play-radius --ui-play-corner --_play-block --_play-inline --_play-justify --_play-size | — | — |
@@ -352,7 +353,9 @@ Every `()` token is *sugar* over a custom property, so any value that has no tok
 
 ## Overlay furniture
 
-The media area hosts **six overlay elements** — `<ui-chip>`, `<ui-beacon>`, `<ui-sticker>`, `<ui-save>`, `<ui-play>`, `<ui-lightbox>`. They carry **only their text/glyph** — position and theme come from the parent `media=` string (so a `<ui-card>` can configure them and the config inherits down).
+The media area hosts **seven overlay elements** — `<ui-chip>`, `<ui-beacon>`, `<ui-sticker>`, `<ui-save>`, `<ui-play>`, `<ui-lightbox>`, `<ui-ai>`. They carry **only their text/glyph** — position and theme come from the parent `media=` string (so a `<ui-card>` can configure them and the config inherits down).
+
+`<ui-ai>` is the EU AI Act disclosure label and the one element whose *content* is itself tokens: its own `options=` says what is true of the media (`edited|generated`, `partial`, `required`, `artistic`, `voice music footage script`), written by `render.js` from a media item's `ai` object, while `ai(…)` on `media=` stays the look (cell, `label|icon|pill` face, hue, `lg|xl` size). Default cell `bc`; default size is the smallest readable, 11px, in rem. Full contract: [`../../ai/readme.md`](../../ai/readme.md); demo: [`demo/media.ai.html`](../demo/media.ai.html).
 
 ### Furniture vs band — `<ui-marquee>` is not furniture
 

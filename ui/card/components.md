@@ -24,6 +24,7 @@ grouped by role. Paths are relative to `ui/`, matching how the demos link them
 
 | Package | Element | Stylesheet |
 |---|---|---|
+| `ui/ai` | `<ui-ai>` — EU AI Act disclosure label; `render.js` emits it from a media item's `ai` object. Zero JS | `ai/ui-ai.css` |
 | `ui/badge` | `<ui-badge>` — count badge; `render.js` emits it inside a furniture `<ui-chip>` (`furniture.chip.badge`). Declared peer | `badge/ui-badge.css` |
 | `ui/beacon` | `<ui-beacon>` | `beacon/ui-beacon.css` |
 | `ui/chip` | `<ui-chip>` | `chip/ui-chip.css` |
@@ -79,3 +80,4 @@ grouped by role. Paths are relative to `ui/`, matching how the demos link them
   timeline, rating, progress, gradient-text, icon, reveal) — and
   [`demo/media.furniture.html`](./demo/media.furniture.html) — the media-furniture set
   (beacon, chip, play, save, sticker, marquee). Neither links the other's packages.
+  `<ui-ai>` has its own page, [`demo/media.ai.html`](./demo/media.ai.html).

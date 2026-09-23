@@ -300,7 +300,7 @@
         top: calc(anchor(bottom) - var(--ui-carousel-overlay-gap) - var(--ui-carousel-marker-size));
         z-index: 3;
       }
-      & > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker {
+      & > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker {
         background: var(--ui-carousel-marker-bg);
         block-size: var(--ui-carousel-marker-size);
         border: var(--ui-carousel-marker-border);
@@ -310,7 +310,7 @@
         cursor: pointer;
         inline-size: var(--ui-carousel-marker-size);
       }
-      & > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
+      & > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
         background: var(--ui-carousel-marker-active);
       }
     }
@@ -347,50 +347,50 @@
     :where(ui-media, lay-out[overflow]):where([media*="mrk(bar)"])::scroll-marker-group {
       top: calc(anchor(bottom) - var(--ui-carousel-overlay-gap) - var(--ui-carousel-marker-size));
     }
-    :where(ui-card, ui-reveal):where([media*="mrk(pll)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker,
-    :where(ui-media, lay-out[overflow]):where([media*="mrk(pll)"]) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker {
+    :where(ui-card, ui-reveal):where([media*="mrk(pll)"]) :where(ui-media) > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker,
+    :where(ui-media, lay-out[overflow]):where([media*="mrk(pll)"]) > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker {
       background: var(--ui-carousel-pill-track);
       block-size: var(--ui-carousel-pill-height);
       border-radius: var(--radius-pill, 100px);
       inline-size: var(--ui-carousel-pill-width);
     }
     @media (prefers-reduced-motion: no-preference) {
-      :where(ui-card, ui-reveal):where([media*="mrk(pll)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
-      :where(ui-media, lay-out[overflow]):where([media*="mrk(pll)"]) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
+      :where(ui-card, ui-reveal):where([media*="mrk(pll)"]) :where(ui-media) > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
+      :where(ui-media, lay-out[overflow]):where([media*="mrk(pll)"]) > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
         animation: ui-carousel-pill-fill var(--ui-carousel-autoplay) linear forwards;
         animation-play-state: var(--ui-carousel-play-state, running);
         background: linear-gradient(var(--ui-carousel-pill-fill), var(--ui-carousel-pill-fill)) no-repeat 0 0 / 0% 100% var(--ui-carousel-pill-track);
       }
     }
     @media (prefers-reduced-motion: reduce) {
-      :where(ui-card, ui-reveal):where([media*="mrk(pll)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
-      :where(ui-media, lay-out[overflow]):where([media*="mrk(pll)"]) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
+      :where(ui-card, ui-reveal):where([media*="mrk(pll)"]) :where(ui-media) > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
+      :where(ui-media, lay-out[overflow]):where([media*="mrk(pll)"]) > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
         background-color: var(--ui-carousel-pill-fill);
       }
     }
-    :where(ui-card, ui-reveal):where([media*="mrk(hyb)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker,
-    :where(ui-media, lay-out[overflow]):where([media*="mrk(hyb)"]) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker {
+    :where(ui-card, ui-reveal):where([media*="mrk(hyb)"]) :where(ui-media) > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker,
+    :where(ui-media, lay-out[overflow]):where([media*="mrk(hyb)"]) > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker {
       transition: inline-size var(--duration-normal, 200ms) var(--ease-in-out, ease-in-out), border-radius var(--duration-normal, 200ms) var(--ease-in-out, ease-in-out);
     }
-    :where(ui-card, ui-reveal):where([media*="mrk(hyb)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
-    :where(ui-media, lay-out[overflow]):where([media*="mrk(hyb)"]) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
-    :where(ui-card, ui-reveal):where([media*="mrk(hyb)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:focus-visible,
-    :where(ui-media, lay-out[overflow]):where([media*="mrk(hyb)"]) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:focus-visible {
+    :where(ui-card, ui-reveal):where([media*="mrk(hyb)"]) :where(ui-media) > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
+    :where(ui-media, lay-out[overflow]):where([media*="mrk(hyb)"]) > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
+    :where(ui-card, ui-reveal):where([media*="mrk(hyb)"]) :where(ui-media) > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:focus-visible,
+    :where(ui-media, lay-out[overflow]):where([media*="mrk(hyb)"]) > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:focus-visible {
       background: var(--ui-carousel-pill-track);
       border-radius: var(--radius-pill, 100px);
       inline-size: var(--ui-carousel-hyb-width, calc(var(--ui-carousel-pill-width) * 1.35));
     }
     @media (prefers-reduced-motion: no-preference) {
-      :where(ui-card, ui-reveal):where([media*="mrk(hyb)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
-      :where(ui-media, lay-out[overflow]):where([media*="mrk(hyb)"]) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
+      :where(ui-card, ui-reveal):where([media*="mrk(hyb)"]) :where(ui-media) > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
+      :where(ui-media, lay-out[overflow]):where([media*="mrk(hyb)"]) > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
         animation: ui-carousel-pill-fill var(--ui-carousel-autoplay) linear forwards;
         animation-play-state: var(--ui-carousel-play-state, running);
         background: linear-gradient(var(--ui-carousel-pill-fill), var(--ui-carousel-pill-fill)) no-repeat 0 0 / 0% 100% var(--ui-carousel-pill-track);
       }
     }
     @media (prefers-reduced-motion: reduce) {
-      :where(ui-card, ui-reveal):where([media*="mrk(hyb)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
-      :where(ui-media, lay-out[overflow]):where([media*="mrk(hyb)"]) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
+      :where(ui-card, ui-reveal):where([media*="mrk(hyb)"]) :where(ui-media) > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
+      :where(ui-media, lay-out[overflow]):where([media*="mrk(hyb)"]) > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
         background-color: var(--ui-carousel-pill-fill);
       }
     }
@@ -410,8 +410,8 @@
       :where(ui-media, lay-out[overflow]):where([media*="mrk(dyn)"])::scroll-marker-group {
         position-anchor: --ui-carousel-dyn;
       }
-      :where(ui-card, ui-reveal):where([media*="mrk(dyn)"]) :where(ui-media:has(> :nth-child(6 of :not(ui-beacon, ui-chip, ui-lightbox, ui-marquee, ui-play, ui-save, ui-sticker, [data-clone])))),
-      :where(ui-media, lay-out[overflow]):where([media*="mrk(dyn)"]):where(:has(> :nth-child(6 of :not(ui-beacon, ui-chip, ui-lightbox, ui-marquee, ui-play, ui-save, ui-sticker, [data-clone])))) {
+      :where(ui-card, ui-reveal):where([media*="mrk(dyn)"]) :where(ui-media:has(> :nth-child(6 of :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-marquee, ui-play, ui-save, ui-sticker, [data-clone])))),
+      :where(ui-media, lay-out[overflow]):where([media*="mrk(dyn)"]):where(:has(> :nth-child(6 of :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-marquee, ui-play, ui-save, ui-sticker, [data-clone])))) {
         animation: ui-carousel-dyn-progress linear both;
         animation-timeline: scroll(self inline);
         &::scroll-marker-group {
@@ -419,7 +419,7 @@
           inline-size: var(--_dyn-window);
           overflow: clip;
         }
-        & > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker {
+        & > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker {
           display: block;
           flex: 0 0 auto;
           --_dyn-c: clamp(1, var(--ui-carousel-dyn-progress) * (sibling-count() - 1), sibling-count() - 2);
@@ -428,7 +428,7 @@
           opacity: clamp(var(--ui-carousel-dyn-edge-opacity, 0.7), 1.6 - 0.3 * var(--_dyn-d), 1);
           scale: clamp(var(--ui-carousel-dyn-min-scale, 0.4), 1 + var(--ui-carousel-dyn-step, 0.3) - var(--ui-carousel-dyn-step, 0.3) * var(--_dyn-d), 1);
         }
-        & > :nth-child(1 of :not(ui-beacon, ui-chip, ui-lightbox, ui-marquee, ui-play, ui-save, ui-sticker, [data-clone]))::scroll-marker {
+        & > :nth-child(1 of :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-marquee, ui-play, ui-save, ui-sticker, [data-clone]))::scroll-marker {
           margin-inline-start: calc(-1 * var(--_dyn-pitch) * clamp(0, var(--ui-carousel-dyn-progress) * (sibling-count() - 1) - 2, sibling-count() - 5));
         }
       }
@@ -440,8 +440,8 @@
       overscroll-behavior-x: contain;
       scrollbar-width: thin;
     }
-    :where(ui-card, ui-reveal):where([media*="mrk(tmb)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker,
-    :where(ui-media, lay-out[overflow]):where([media*="mrk(tmb)"]) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker {
+    :where(ui-card, ui-reveal):where([media*="mrk(tmb)"]) :where(ui-media) > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker,
+    :where(ui-media, lay-out[overflow]):where([media*="mrk(tmb)"]) > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker {
       aspect-ratio: var(--ui-carousel-thumb-ratio, 4 / 3);
       background: var(--ui-carousel-thumb-url) center / cover no-repeat var(--ui-carousel-thumb-bg, rgb(0 0 0 / 0.2));
       block-size: var(--ui-carousel-thumb-size, 2.25rem);
@@ -453,32 +453,32 @@
       opacity: var(--ui-carousel-thumb-opacity, 1);
       transition: border-color var(--duration-fast, 100ms) var(--ease-default, ease), opacity var(--duration-fast, 100ms) var(--ease-default, ease);
     }
-    :where(ui-card, ui-reveal):where([media*="mrk(tmb)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
-    :where(ui-media, lay-out[overflow]):where([media*="mrk(tmb)"]) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
+    :where(ui-card, ui-reveal):where([media*="mrk(tmb)"]) :where(ui-media) > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
+    :where(ui-media, lay-out[overflow]):where([media*="mrk(tmb)"]) > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
       background: linear-gradient(var(--ui-carousel-thumb-timer, #fff), var(--ui-carousel-thumb-timer, #fff)) bottom left / var(--ui-carousel-thumb-timer-progress, 0) var(--ui-carousel-thumb-timer-height, 3px) no-repeat, var(--ui-carousel-thumb-url) center / cover no-repeat var(--ui-carousel-thumb-bg, rgb(0 0 0 / 0.2));
       border-color: var(--ui-carousel-thumb-border-color-active, #fff);
       opacity: 1;
     }
     @media (prefers-reduced-motion: no-preference) {
-      :where(ui-card, ui-reveal):where([media*="mrk(tmb)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
-      :where(ui-media, lay-out[overflow]):where([media*="mrk(tmb)"]) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
+      :where(ui-card, ui-reveal):where([media*="mrk(tmb)"]) :where(ui-media) > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
+      :where(ui-media, lay-out[overflow]):where([media*="mrk(tmb)"]) > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
         animation: var(--ui-carousel-thumb-timer-name, none) var(--ui-carousel-autoplay) linear forwards;
         animation-play-state: var(--ui-carousel-play-state, running);
       }
     }
-    :where(ui-card, ui-reveal):where([media*="mrk(tmb)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker):is(video, :has(video))::scroll-marker,
-    :where(ui-media, lay-out[overflow]):where([media*="mrk(tmb)"]) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker):is(video, :has(video))::scroll-marker {
+    :where(ui-card, ui-reveal):where([media*="mrk(tmb)"]) :where(ui-media) > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker):is(video, :has(video))::scroll-marker,
+    :where(ui-media, lay-out[overflow]):where([media*="mrk(tmb)"]) > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker):is(video, :has(video))::scroll-marker {
       background: var(--ui-carousel-thumb-play, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='11' fill='%23000' fill-opacity='.5'/%3E%3Cpath d='M9.5 7.5v9l7-4.5z' fill='%23fff'/%3E%3C/svg%3E")) center / var(--ui-carousel-thumb-play-size, 45%) no-repeat, var(--ui-carousel-thumb-url) center / cover no-repeat var(--ui-carousel-thumb-bg, rgb(0 0 0 / 0.2));
     }
-    :where(ui-card, ui-reveal):where([media*="mrk(tmb)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker):is(video, :has(video))::scroll-marker:target-current,
-    :where(ui-media, lay-out[overflow]):where([media*="mrk(tmb)"]) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker):is(video, :has(video))::scroll-marker:target-current {
+    :where(ui-card, ui-reveal):where([media*="mrk(tmb)"]) :where(ui-media) > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker):is(video, :has(video))::scroll-marker:target-current,
+    :where(ui-media, lay-out[overflow]):where([media*="mrk(tmb)"]) > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker):is(video, :has(video))::scroll-marker:target-current {
       background:
         var(--ui-carousel-thumb-play, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='11' fill='%23000' fill-opacity='.5'/%3E%3Cpath d='M9.5 7.5v9l7-4.5z' fill='%23fff'/%3E%3C/svg%3E")) center / var(--ui-carousel-thumb-play-size, 45%) no-repeat,
         linear-gradient(var(--ui-carousel-thumb-timer, #fff), var(--ui-carousel-thumb-timer, #fff)) bottom left / var(--ui-carousel-thumb-timer-progress, 0) var(--ui-carousel-thumb-timer-height, 3px) no-repeat,
         var(--ui-carousel-thumb-url) center / cover no-repeat var(--ui-carousel-thumb-bg, rgb(0 0 0 / 0.2));
     }
-    :where(ui-card, ui-reveal):where([media*="mrk(lbl)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker,
-    :where(ui-media, lay-out[overflow]):where([media*="mrk(lbl)"]) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker {
+    :where(ui-card, ui-reveal):where([media*="mrk(lbl)"]) :where(ui-media) > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker,
+    :where(ui-media, lay-out[overflow]):where([media*="mrk(lbl)"]) > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker {
       align-items: center;
       background: var(--ui-carousel-label-bg, transparent);
       block-size: auto;
@@ -504,8 +504,8 @@
     :where(ui-media, lay-out[overflow]):where([media*="mrk(lbl)"]) > img:not([aria-label])::scroll-marker {
       content: attr(alt);
     }
-    :where(ui-card, ui-reveal):where([media*="mrk(lbl)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
-    :where(ui-media, lay-out[overflow]):where([media*="mrk(lbl)"]) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
+    :where(ui-card, ui-reveal):where([media*="mrk(lbl)"]) :where(ui-media) > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
+    :where(ui-media, lay-out[overflow]):where([media*="mrk(lbl)"]) > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
       align-items: center;
       background: var(--ui-carousel-label-bg-current, rgb(255 255 255 / 0.25));
       block-size: auto;
@@ -536,8 +536,8 @@
       scroll-padding-inline: var(--ui-carousel-label-group-gap, var(--ui-carousel-marker-gap));
       scrollbar-width: var(--ui-carousel-label-group-scrollbar, none);
     }
-    :where(ui-card, ui-reveal):where([media*="mrk(tml)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker,
-    :where(ui-media, lay-out[overflow]):where([media*="mrk(tml)"]) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker {
+    :where(ui-card, ui-reveal):where([media*="mrk(tml)"]) :where(ui-media) > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker,
+    :where(ui-media, lay-out[overflow]):where([media*="mrk(tml)"]) > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker {
       --_tml-c: round(calc(var(--ui-carousel-tml-dot-size, 0.7rem) / 2), 1px);
       --_tml-r: calc(var(--_tml-c) - var(--ui-carousel-tml-line-width, 2px));
       --_tml-rail-y: round(calc(var(--_tml-c) - var(--ui-carousel-tml-line-width, 2px) / 2), 1px);
@@ -588,8 +588,8 @@
     :where(ui-media, lay-out[overflow]):where([media*="mrk(tml)"]) > :only-child::scroll-marker {
       --_tml-rail-img: none;
     }
-    :where(ui-card, ui-reveal):where([media*="mrk(tml)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
-    :where(ui-media, lay-out[overflow]):where([media*="mrk(tml)"]) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
+    :where(ui-card, ui-reveal):where([media*="mrk(tml)"]) :where(ui-media) > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
+    :where(ui-media, lay-out[overflow]):where([media*="mrk(tml)"]) > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
       --_tml-c: round(calc(var(--ui-carousel-tml-dot-size, 0.7rem) / 2), 1px);
       --_tml-rail-y: round(calc(var(--_tml-c) - var(--ui-carousel-tml-line-width, 2px) / 2), 1px);
       background:
@@ -612,8 +612,8 @@
       text-decoration: none;
       white-space: nowrap;
     }
-    :where(ui-card, ui-reveal):where([media*="mrk(tml)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:focus-visible,
-    :where(ui-media, lay-out[overflow]):where([media*="mrk(tml)"]) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:focus-visible {
+    :where(ui-card, ui-reveal):where([media*="mrk(tml)"]) :where(ui-media) > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:focus-visible,
+    :where(ui-media, lay-out[overflow]):where([media*="mrk(tml)"]) > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:focus-visible {
       outline: var(--ring-width, 2px) solid var(--ring-color, currentColor);
       outline-offset: calc(-1 * var(--ring-width, 2px));
     }
@@ -980,8 +980,8 @@
         top: anchor(top);
       }
     }
-    :where(ui-card, ui-reveal):where([media*="axis(y)"][media*="mrk(rail)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker,
-    :where(ui-media, lay-out[overflow]):where([media*="axis(y)"][media*="mrk(rail)"]) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker {
+    :where(ui-card, ui-reveal):where([media*="axis(y)"][media*="mrk(rail)"]) :where(ui-media) > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker,
+    :where(ui-media, lay-out[overflow]):where([media*="axis(y)"][media*="mrk(rail)"]) > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker {
       flex: 0 1 auto;
       min-block-size: var(--ui-carousel-thumb-min, 2.5rem);
     }
@@ -992,8 +992,8 @@
       inline-size: auto;
       scrollbar-width: var(--ui-carousel-tml-group-scrollbar, none);
     }
-    :where(ui-card, ui-reveal):where([media*="axis(y)"][media*="mrk(tml)"][media*="mrk(rail)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker,
-    :where(ui-media, lay-out[overflow]):where([media*="axis(y)"][media*="mrk(tml)"][media*="mrk(rail)"]) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker {
+    :where(ui-card, ui-reveal):where([media*="axis(y)"][media*="mrk(tml)"][media*="mrk(rail)"]) :where(ui-media) > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker,
+    :where(ui-media, lay-out[overflow]):where([media*="axis(y)"][media*="mrk(tml)"][media*="mrk(rail)"]) > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker {
       align-content: center;
       background:
         radial-gradient(
@@ -1020,8 +1020,8 @@
     :where(ui-media, lay-out[overflow]):where([media*="axis(y)"][media*="mrk(tml)"][media*="mrk(rail)"]) > :only-child::scroll-marker {
       --_tml-rail-img: none;
     }
-    :where(ui-card, ui-reveal):where([media*="axis(y)"][media*="mrk(tml)"][media*="mrk(rail)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
-    :where(ui-media, lay-out[overflow]):where([media*="axis(y)"][media*="mrk(tml)"][media*="mrk(rail)"]) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
+    :where(ui-card, ui-reveal):where([media*="axis(y)"][media*="mrk(tml)"][media*="mrk(rail)"]) :where(ui-media) > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
+    :where(ui-media, lay-out[overflow]):where([media*="axis(y)"][media*="mrk(tml)"][media*="mrk(rail)"]) > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
       background:
         radial-gradient(
           circle at var(--_dir-s, left) var(--_tml-c) top 50%,
@@ -1200,8 +1200,8 @@
       justify-self: anchor-center;
       position-anchor: --ui-carousel-bar;
     }
-    :where(ui-card, ui-reveal):where([media*="mrk(bar)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker,
-    :where(ui-media, lay-out[overflow]):where([media*="mrk(bar)"]) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker {
+    :where(ui-card, ui-reveal):where([media*="mrk(bar)"]) :where(ui-media) > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker,
+    :where(ui-media, lay-out[overflow]):where([media*="mrk(bar)"]) > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker {
       background: linear-gradient(var(--ui-carousel-marker-bg) 0 0) no-repeat center / 100% var(--ui-carousel-bar-track-size, 1px);
       block-size: 100%;
       border: 0;
@@ -1209,12 +1209,12 @@
       flex: 1 1 0;
       inline-size: auto;
     }
-    :where(ui-card, ui-reveal):where([media*="mrk(bar)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
-    :where(ui-media, lay-out[overflow]):where([media*="mrk(bar)"]) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
+    :where(ui-card, ui-reveal):where([media*="mrk(bar)"]) :where(ui-media) > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
+    :where(ui-media, lay-out[overflow]):where([media*="mrk(bar)"]) > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
       background: linear-gradient(var(--ui-carousel-marker-active) 0 0) no-repeat center / 100% var(--ui-carousel-bar-size, 3px);
     }
-    :where(ui-card, ui-reveal):where([media*="mrk(bar)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:focus-visible,
-    :where(ui-media, lay-out[overflow]):where([media*="mrk(bar)"]) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:focus-visible {
+    :where(ui-card, ui-reveal):where([media*="mrk(bar)"]) :where(ui-media) > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:focus-visible,
+    :where(ui-media, lay-out[overflow]):where([media*="mrk(bar)"]) > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:focus-visible {
       outline: var(--ring-width, 2px) solid var(--ring-color, currentColor);
       outline-offset: calc(-1 * var(--ring-width, 2px));
     }

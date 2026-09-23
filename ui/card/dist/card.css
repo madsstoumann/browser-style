@@ -196,13 +196,13 @@
     }
   }
   :where(ui-media) {
-    & :is(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker) {
+    & :is(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker) {
       --_g: var(--ui-media-overlay-gap, 0.75rem);
       --_fx: -50%;
       position: absolute;
       z-index: 2;
     }
-    &:dir(rtl) :is(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker) {
+    &:dir(rtl) :is(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker) {
       --_fx: 50%;
     }
     & :is(ui-beacon, ui-chip) {
@@ -222,13 +222,19 @@
       inset-block-end: var(--_g);
       inset-inline-start: var(--_g);
     }
+    & ui-ai {
+      inset-block-end: var(--_g);
+      inset-inline-start: 50%;
+      translate: var(--_fx) 0;
+    }
   }
   :where([media*="chip(ts)"]) ui-chip,
   :where([media*="sticker(ts)"]) ui-sticker,
   :where([media*="save(ts)"]) ui-save,
   :where([media*="play(ts)"]) ui-play,
   :where([media*="beacon(ts)"]) ui-beacon,
-  :where([media*="lightbox(ts)"]) ui-lightbox {
+  :where([media*="lightbox(ts)"]) ui-lightbox,
+  :where([media*="ai(ts)"]) ui-ai {
     inset-block: var(--_g) auto;
     inset-inline: var(--_g) auto;
     translate: none;
@@ -238,7 +244,8 @@
   :where([media*="save(tc)"]) ui-save,
   :where([media*="play(tc)"]) ui-play,
   :where([media*="beacon(tc)"]) ui-beacon,
-  :where([media*="lightbox(tc)"]) ui-lightbox {
+  :where([media*="lightbox(tc)"]) ui-lightbox,
+  :where([media*="ai(tc)"]) ui-ai {
     inset-block: var(--_g) auto;
     inset-inline: 50% auto;
     translate: var(--_fx) 0;
@@ -248,7 +255,8 @@
   :where([media*="save(te)"]) ui-save,
   :where([media*="play(te)"]) ui-play,
   :where([media*="beacon(te)"]) ui-beacon,
-  :where([media*="lightbox(te)"]) ui-lightbox {
+  :where([media*="lightbox(te)"]) ui-lightbox,
+  :where([media*="ai(te)"]) ui-ai {
     inset-block: var(--_g) auto;
     inset-inline: auto var(--_g);
     translate: none;
@@ -258,7 +266,8 @@
   :where([media*="save(cs)"]) ui-save,
   :where([media*="play(cs)"]) ui-play,
   :where([media*="beacon(cs)"]) ui-beacon,
-  :where([media*="lightbox(cs)"]) ui-lightbox {
+  :where([media*="lightbox(cs)"]) ui-lightbox,
+  :where([media*="ai(cs)"]) ui-ai {
     inset-block: 50% auto;
     inset-inline: var(--_g) auto;
     translate: 0 -50%;
@@ -268,7 +277,8 @@
   :where([media*="save(cc)"]) ui-save,
   :where([media*="play(cc)"]) ui-play,
   :where([media*="beacon(cc)"]) ui-beacon,
-  :where([media*="lightbox(cc)"]) ui-lightbox {
+  :where([media*="lightbox(cc)"]) ui-lightbox,
+  :where([media*="ai(cc)"]) ui-ai {
     inset-block: 50% auto;
     inset-inline: 50% auto;
     translate: var(--_fx) -50%;
@@ -278,7 +288,8 @@
   :where([media*="save(ce)"]) ui-save,
   :where([media*="play(ce)"]) ui-play,
   :where([media*="beacon(ce)"]) ui-beacon,
-  :where([media*="lightbox(ce)"]) ui-lightbox {
+  :where([media*="lightbox(ce)"]) ui-lightbox,
+  :where([media*="ai(ce)"]) ui-ai {
     inset-block: 50% auto;
     inset-inline: auto var(--_g);
     translate: 0 -50%;
@@ -288,7 +299,8 @@
   :where([media*="save(bs)"]) ui-save,
   :where([media*="play(bs)"]) ui-play,
   :where([media*="beacon(bs)"]) ui-beacon,
-  :where([media*="lightbox(bs)"]) ui-lightbox {
+  :where([media*="lightbox(bs)"]) ui-lightbox,
+  :where([media*="ai(bs)"]) ui-ai {
     inset-block: auto var(--_g);
     inset-inline: var(--_g) auto;
     translate: none;
@@ -298,7 +310,8 @@
   :where([media*="save(bc)"]) ui-save,
   :where([media*="play(bc)"]) ui-play,
   :where([media*="beacon(bc)"]) ui-beacon,
-  :where([media*="lightbox(bc)"]) ui-lightbox {
+  :where([media*="lightbox(bc)"]) ui-lightbox,
+  :where([media*="ai(bc)"]) ui-ai {
     inset-block: auto var(--_g);
     inset-inline: 50% auto;
     translate: var(--_fx) 0;
@@ -308,7 +321,8 @@
   :where([media*="save(be)"]) ui-save,
   :where([media*="play(be)"]) ui-play,
   :where([media*="beacon(be)"]) ui-beacon,
-  :where([media*="lightbox(be)"]) ui-lightbox {
+  :where([media*="lightbox(be)"]) ui-lightbox,
+  :where([media*="ai(be)"]) ui-ai {
     inset-block: auto var(--_g);
     inset-inline: auto var(--_g);
     translate: none;
@@ -855,7 +869,7 @@
     scroll-snap-type: x mandatory;
     scrollbar-width: thin;
   }
-  ui-media:where([media*=nav], :is(ui-card, ui-reveal)[media*=nav] *) > :not(audio, ui-beacon, ui-chip, ui-lightbox, ui-marquee, ui-play, ui-save, ui-sticker) {
+  ui-media:where([media*=nav], :is(ui-card, ui-reveal)[media*=nav] *) > :not(audio, ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-marquee, ui-play, ui-save, ui-sticker) {
     block-size: 100%;
     flex: 0 0 100%;
     inline-size: 100%;
@@ -876,8 +890,8 @@
       scroll-snap-align: start;
     }
   }
-  :where(ui-card, ui-reveal):where([media*="nav(blw)"], [media*="mrk(blw)"], [media*="arw(blw)"], [media*="nav(abv)"], [media*="mrk(abv)"], [media*="arw(abv)"]) ui-media > :not(audio, ui-beacon, ui-chip, ui-lightbox, ui-marquee, ui-play, ui-save, ui-sticker, ui-carousel-controls),
-  :where(ui-media, lay-out[overflow]):where([media*="nav(blw)"], [media*="mrk(blw)"], [media*="arw(blw)"], [media*="nav(abv)"], [media*="mrk(abv)"], [media*="arw(abv)"]) > :not(audio, ui-beacon, ui-chip, ui-lightbox, ui-marquee, ui-play, ui-save, ui-sticker, ui-carousel-controls) {
+  :where(ui-card, ui-reveal):where([media*="nav(blw)"], [media*="mrk(blw)"], [media*="arw(blw)"], [media*="nav(abv)"], [media*="mrk(abv)"], [media*="arw(abv)"]) ui-media > :not(audio, ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-marquee, ui-play, ui-save, ui-sticker, ui-carousel-controls),
+  :where(ui-media, lay-out[overflow]):where([media*="nav(blw)"], [media*="mrk(blw)"], [media*="arw(blw)"], [media*="nav(abv)"], [media*="mrk(abv)"], [media*="arw(abv)"]) > :not(audio, ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-marquee, ui-play, ui-save, ui-sticker, ui-carousel-controls) {
     align-self: stretch;
     block-size: auto;
   }
@@ -1195,7 +1209,7 @@
     &::scroll-button(*) {
       display: none;
     }
-    > :not(ui-beacon, ui-chip, ui-lightbox, ui-marquee, ui-play, ui-save, ui-sticker) {
+    > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-marquee, ui-play, ui-save, ui-sticker) {
       aspect-ratio: var(--ui-lightbox-tile-ar, 3 / 2);
       block-size: auto;
       flex: none;
@@ -1212,8 +1226,8 @@
     > [data-clone] {
       display: none;
     }
-    > :not(ui-beacon, ui-chip, ui-lightbox, ui-marquee, ui-play, ui-save, ui-sticker),
-    > :not(ui-beacon, ui-chip, ui-lightbox, ui-marquee, ui-play, ui-save, ui-sticker) ui-content > * {
+    > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-marquee, ui-play, ui-save, ui-sticker),
+    > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-marquee, ui-play, ui-save, ui-sticker) ui-content > * {
       filter: none;
       opacity: 1;
       scale: none;

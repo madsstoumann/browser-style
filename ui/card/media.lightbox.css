@@ -138,7 +138,7 @@
 		&::scroll-button(*) { display: none; }
 
 		/* slides become tiles — undo the flex sizing. KEEP IN SYNC with NOT_SLIDE. */
-		> :not(ui-beacon, ui-chip, ui-lightbox, ui-marquee, ui-play, ui-save, ui-sticker) {
+		> :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-marquee, ui-play, ui-save, ui-sticker) {
 			aspect-ratio: var(--ui-lightbox-tile-ar, 3 / 2);
 			block-size: auto;
 			flex: none;
@@ -156,8 +156,8 @@
 		> [data-clone] { display: none; }
 		/* stagger guard — grid mode drops snapping, which would strand tiles at
 		   opacity 0; real-specificity pin, mirroring stagger.css's pages escape */
-		> :not(ui-beacon, ui-chip, ui-lightbox, ui-marquee, ui-play, ui-save, ui-sticker),
-		> :not(ui-beacon, ui-chip, ui-lightbox, ui-marquee, ui-play, ui-save, ui-sticker) ui-content > * {
+		> :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-marquee, ui-play, ui-save, ui-sticker),
+		> :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-marquee, ui-play, ui-save, ui-sticker) ui-content > * {
 			filter: none;
 			opacity: 1;
 			scale: none;

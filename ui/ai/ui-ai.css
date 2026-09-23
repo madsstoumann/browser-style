@@ -1,0 +1,82 @@
+/**
+ * ui-ai — EU AI Act disclosure label (media furniture). Docs: readme.md
+ * @version 1.0.0 · @author Mads Stoumann
+ */
+@layer bs-component {
+	/* black by default (the EU icon's own colour) — zero specificity, so every ai(<hue>) below wins */
+	:where(ui-ai:not([theme])) { --_theme-base-bg: var(--ui-theme-black-bg); --_theme-base-c: var(--ui-theme-black-c); }
+
+	:where(ui-ai) {
+		/* ───────── A. Base — options= carries the facts, media="ai(…)" the look; aria-description is for AT only ───────── */
+		--ui-ai-plate: var(--_theme-base-bg);
+		--ui-ai-ink: var(--_theme-base-c);
+		--_fs: var(--ui-ai-font-size, 0.6875rem);
+		--_icon: url(icons/ai.svg);
+		--_ratio: 1;
+		align-items: center;
+		background: var(--ui-ai-plate);
+		border-radius: var(--ui-ai-radius, var(--radius-pill, 999px));
+		color: var(--ui-ai-ink);
+		column-gap: 0.4em;
+		display: inline-flex;
+		font-family: var(--ui-ai-font-family, var(--font-form));
+		font-size: var(--_fs);
+		font-weight: var(--ui-ai-font-weight, var(--font-weight-medium));
+		line-height: var(--line-height-snug, 1.2);
+		/* bottom cells clear a video's native controls */
+		margin-block-end: var(--ui-ai-lift, 0px);
+		min-block-size: 24px;
+		padding: var(--ui-ai-padding, 0.4em 0.7em 0.4em 0.4em);
+		user-select: none;
+		white-space: nowrap;
+		/* EU icon as a mask — shape in ink, letters knocked out to the plate */
+		&::before {
+			aspect-ratio: var(--_ratio);
+			background: var(--ui-ai-ink);
+			block-size: var(--ui-ai-icon-size, calc(var(--_fs) * 1.15));
+			content: "";
+			flex: none;
+			mask: var(--_icon) center / contain no-repeat;
+		}
+
+		/* ───────── B. Furniture axes — `&[attr]` standalone · `[media*="ai(…)"] &` card token ───────── */
+
+		/* colour — nine hues; a card's theme= never leaks in */
+		&[theme] { --ui-ai-plate: var(--_theme-bg); --ui-ai-ink: var(--_theme-c, var(--_theme-ink)); }
+		:where([media*="ai(red)"])    & { --_theme-base-bg: var(--ui-theme-red-bg);    --_theme-base-c: var(--ui-theme-red-c); }
+		:where([media*="ai(orange)"]) & { --_theme-base-bg: var(--ui-theme-orange-bg); --_theme-base-c: var(--ui-theme-orange-c); }
+		:where([media*="ai(green)"])  & { --_theme-base-bg: var(--ui-theme-green-bg);  --_theme-base-c: var(--ui-theme-green-c); }
+		:where([media*="ai(blue)"])   & { --_theme-base-bg: var(--ui-theme-blue-bg);   --_theme-base-c: var(--ui-theme-blue-c); }
+		:where([media*="ai(accent)"]) & { --_theme-base-bg: var(--ui-theme-accent-bg); --_theme-base-c: var(--ui-theme-accent-c); }
+		:where([media*="ai(gray)"])   & { --_theme-base-bg: var(--ui-theme-gray-bg);   --_theme-base-c: var(--ui-theme-gray-c); }
+		:where([media*="ai(slate)"])  & { --_theme-base-bg: var(--ui-theme-slate-bg);  --_theme-base-c: var(--ui-theme-slate-c); }
+		:where([media*="ai(black)"])  & { --_theme-base-bg: var(--ui-theme-black-bg);  --_theme-base-c: var(--ui-theme-black-c); }
+		:where([media*="ai(white)"])  & { --_theme-base-bg: var(--ui-theme-white-bg);  --_theme-base-c: var(--ui-theme-white-c); }
+
+		/* size — rem, so a small card never shrinks it; the default is the smallest readable (11px), sizes only grow */
+		&[size~="lg"], :where([media*="ai(lg)"]) & { --ui-ai-font-size: 0.8125rem; }
+		&[size~="xl"], :where([media*="ai(xl)"]) & { --ui-ai-font-size: 1rem; }
+
+		/* face — label (default) · icon · pill. Legal floor: required and not artistic keeps its words */
+		&:where(:not([options~="required"]), [options~="artistic"]):is([face~="icon"], :where([media*="ai(icon)"]) *) { --ui-ai-icon-size: max(24px, calc(var(--_fs) * 2.2)); }
+		/* pill — the EU "AI GENERATED" / "AI MODIFIED" artwork; English only, so other languages keep the label */
+		&:lang(en):is([face~="pill"], :where([media*="ai(pill)"]) *) {
+			--_icon: url(icons/ai-generated.svg);
+			--_ratio: 1384.24 / 266.41;
+			--ui-ai-icon-size: max(24px, calc(var(--_fs) * 2.4));
+			&:is([options~="edited"], [options~="partial"]) { --_icon: url(icons/ai-modified.svg); --_ratio: 1230.56 / 266.41; }
+		}
+		/* artwork faces — plate-coloured knockout over an ink backing 1px inside it; the word stays for AT at font-size 0 */
+		&:where(:not([options~="required"]), [options~="artistic"]):is([face~="icon"], :where([media*="ai(icon)"]) *),
+		&:lang(en):is([face~="pill"], :where([media*="ai(pill)"]) *) {
+			background: var(--ui-ai-ink) content-box;
+			font-size: 0;
+			min-block-size: 0;
+			padding: 1px;
+			&::before { background: var(--ui-ai-plate); margin: -1px; }
+		}
+	}
+
+	/* a video's native controls own the bottom edge */
+	:where(ui-media:has(> video[controls])) > ui-ai { --ui-ai-lift: 3rem; }
+}

@@ -1,0 +1,25 @@
+{
+	"$comment": "The EU AI Act disclosure truth table (Art. 50(4), Art. 3(60)). Input: a media item's four fields and its mediaType. Output: the <ui-ai options> tokens (null = no element) and the English first-layer word. Both renderers are tested against this file: ui/card/render.js aiOptions()/aiLabel(), and any port of them. Rows follow cms-browser-style docs/UMBRACOAI.md §8.3 (rows 1–8) and §8.4 (recordings).",
+	"cases": [
+		{ "name": "1 none", "mediaType": "image", "ai": { "involvement": "none", "depictsReal": true, "artistic": true }, "options": null, "label": null },
+		{ "name": "1 empty", "mediaType": "image", "ai": {}, "options": null, "label": null },
+		{ "name": "2 edited, voluntary", "mediaType": "image", "ai": { "involvement": "edited" }, "options": "edited", "label": "Edited with AI" },
+		{ "name": "3 generated, voluntary", "mediaType": "image", "ai": { "involvement": "generated" }, "options": "generated", "label": "AI-generated" },
+		{ "name": "4 edited deep fake", "mediaType": "image", "ai": { "involvement": "edited", "depictsReal": true }, "options": "edited required", "label": "Edited with AI" },
+		{ "name": "5 generated deep fake", "mediaType": "image", "ai": { "involvement": "generated", "depictsReal": true }, "options": "generated required", "label": "AI-generated" },
+		{ "name": "6 edited deep fake, artistic", "mediaType": "image", "ai": { "involvement": "edited", "depictsReal": true, "artistic": true }, "options": "edited required artistic", "label": "Edited with AI" },
+		{ "name": "7 generated deep fake, artistic", "mediaType": "image", "ai": { "involvement": "generated", "depictsReal": true, "artistic": true }, "options": "generated required artistic", "label": "AI-generated" },
+		{ "name": "8 artistic, not real", "mediaType": "image", "ai": { "involvement": "generated", "artistic": true }, "options": "generated", "label": "AI-generated" },
+		{ "name": "elements ignored on an image", "mediaType": "image", "ai": { "involvement": "generated", "elements": ["voice"] }, "options": "generated", "label": "AI-generated" },
+		{ "name": "recording, whole, required", "mediaType": "video", "ai": { "involvement": "generated", "depictsReal": true }, "options": "generated required", "label": "AI-generated" },
+		{ "name": "recording, voice + footage, required", "mediaType": "video", "ai": { "involvement": "generated", "depictsReal": true, "elements": ["voice", "footage"] }, "options": "generated required voice footage", "label": "AI-generated voice and footage" },
+		{ "name": "real footage, synthetic narrator: partial", "mediaType": "video", "ai": { "involvement": "generated", "depictsReal": true, "elements": ["voice"] }, "options": "generated partial required voice", "label": "AI-generated voice" },
+		{ "name": "music and script only: never a deep fake", "mediaType": "video", "ai": { "involvement": "generated", "depictsReal": true, "elements": ["music", "script"] }, "options": "generated partial music script", "label": "AI-generated music and script" },
+		{ "name": "the podcast: voice + script, invented host", "mediaType": "audio", "ai": { "involvement": "generated", "elements": ["voice", "script"] }, "options": "generated voice script", "label": "AI-generated voice and script" },
+		{ "name": "a cloned real voice", "mediaType": "audio", "ai": { "involvement": "generated", "depictsReal": true, "elements": ["voice", "script"] }, "options": "generated required voice script", "label": "AI-generated voice and script" },
+		{ "name": "edited recording, parts named", "mediaType": "audio", "ai": { "involvement": "edited", "depictsReal": true, "elements": ["voice"] }, "options": "edited required voice", "label": "Voice edited with AI" },
+		{ "name": "three parts", "mediaType": "video", "ai": { "involvement": "generated", "elements": ["voice", "music", "footage"] }, "options": "generated voice music footage", "label": "AI-generated voice, music and footage" },
+		{ "name": "unknown element dropped", "mediaType": "video", "ai": { "involvement": "generated", "elements": ["voice", "smell"] }, "options": "generated partial voice", "label": "AI-generated voice" },
+		{ "name": "case-insensitive input", "mediaType": "video", "ai": { "involvement": "Generated with AI", "depictsReal": true, "elements": ["Voice", "Footage"] }, "options": "generated required voice footage", "label": "AI-generated voice and footage" }
+	]
+}

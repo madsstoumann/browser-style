@@ -102,6 +102,7 @@
     "@browser.style/carousel": "^1.0.0",
     "@browser.style/common": "^1.0.13",
     "@browser.style/accordion": "^5.0.0",
+    "@browser.style/ai": "^1.0.0",
     "@browser.style/avatar": "^4.0.0",
     "@browser.style/badge": "^4.0.0",
     "@browser.style/beacon": "^5.0.0",

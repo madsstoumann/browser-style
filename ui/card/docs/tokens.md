@@ -10,7 +10,7 @@ sit on. Notes below each table carry the per-token caveats.
 
 ## `media=`
 
-28 stems · 6 bare flags
+29 stems · 6 bare flags
 
 | token | axis | args | aliases | bare | writes | md:/lg: | hosts | requiresJs | deprecated |
 |---|---|---|---|---|---|---|---|---|---|
@@ -24,6 +24,7 @@ sit on. Notes below each table carry the per-token caveats.
 | `tnt()` | tint | **hue** red orange green blue accent black white gray slate | — | yes | --ui-media-tint-color --_tnt --_hv-tint | — | ui-media ui-card ui-reveal | — | — |
 | `scm()` | scrim | **pos** ts tc te cs cc ce bs bc be · **size** sm md lg xl · **tone** shr lgt med drk sld | — | yes | --ui-media-scrim --ui-media-scrim-paint --ui-media-scrim-color --ui-media-scrim-fade --ui-media-scrim-mid-stop --ui-media-scrim-end-stop --ui-media-scrim-cc-a --ui-media-scrim-cc-b | — | ui-media ui-card ui-reveal | — | — |
 | `chip()` | furniture | **pos** ts tc te cs cc ce bs bc be · **hue** red orange green blue accent black white gray slate · **mode** pale muted · **variant** lgt out · **size** sm lg xl 2xl · **disc** non rnd pll crc sqr | — | — | --ui-chip-* --_theme-base-bg --_theme-base-c --_theme-bg --_theme-c | — | ui-media ui-card ui-reveal | — | — |
+| `ai()` | furniture | **pos** ts tc te cs cc ce bs bc be · **hue** red orange green blue accent black white gray slate · **face** label icon pill · **size** lg xl | — | — | --ui-ai-* --_theme-base-bg --_theme-base-c | — | ui-media ui-card ui-reveal | — | — |
 | `sticker()` | furniture | **pos** ts tc te cs cc ce bs bc be · **hue** red orange green blue accent black white gray slate · **mode** pale muted · **size** sm lg xl 2xl 3xl · **disc** non rnd pll crc sqr · **shape** text spl spr sh:burst sh:blob sh:spark sh:sunburst sh:heart sh:&lt;custom&gt; · **flag** fit | — | — | --ui-sticker-* --_theme-base-bg --_theme-base-c --_theme-bg --_theme-c | — | ui-media ui-card ui-reveal | — | — |
 | `save()` | furniture | **pos** ts tc te cs cc ce bs bc be · **hue** red orange green blue accent black white gray slate · **size** sm lg xl · **disc** non rnd crc sqr | — | — | --ui-save-c --ui-save-c-active --ui-save-sz --ui-save-circle-* | — | ui-media ui-card ui-reveal | — | — |
 | `play()` | furniture | **pos** ts tc te cs cc ce bs bc be · **hue** red orange green blue accent black white gray slate · **size** sm md lg xl · **disc** non rnd pll crc sqr | — | — | --ui-play-sz --ui-play-icon-sz --ui-play-bg --ui-play-c --ui-play-radius --ui-play-corner --_play-block --_play-inline --_play-justify --_play-size | — | ui-media ui-card ui-reveal | — | — |
@@ -80,6 +81,9 @@ sit on. Notes below each table carry the per-token caveats.
 
 **`chip`** *(substring-matched, self arm)* — Default area ts. Position args live in media.css (shared 9-grid rule, real inset/translate props); every other axis lives in ui/chip/ui-chip.css paired with the standalone attribute form (&[theme]/&[variant]/&[size]/&[radius]). No chip(md) — md is the default size. chip(slate) is a canonical hue with its own --ui-theme-slate-* bundle (ui-chip.css). The chip(dark)/chip(light)/chip(subtle) aliases were removed in v5.
 <sub>ui/card/media.css:170 · ui/chip/ui-chip.css:46 · ui/chip/ui-chip.css:99</sub>
+
+**`ai`** *(substring-matched, self arm)* — EU AI Act disclosure label. Default area bc. The FACTS are not tokens: they ride the element's own options= (edited|generated, partial, required, artistic, voice music footage script), written by render.js from a media item's `ai` object (aiOptions, truth table ui/ai/data/cases.json). ai(…) is only the LOOK. face: label (default, icon + word) · icon (icon only; the word stays in the markup at font-size 0 for AT) · pill (the EU "AI GENERATED"/"AI MODIFIED" artwork, :lang(en) only). The legal floor is CSS: a required, non-artistic label ignores ai(icon). No pale/muted: the label keeps full-contrast ink. Size is rem-based and the DEFAULT is the smallest readable (0.6875rem, 11px) — the card's own scale never shrinks it further — so the axis only grows: ai(lg) 13px, ai(xl) 16px; there is no ai(sm). Markup is one element and one text node — <ui-ai options aria-description>word</ui-ai>; the details ride aria-description for AT only, never painted. A frame with a native-controls <video> lifts the label clear of them (--ui-ai-lift).
+<sub>ui/card/media.css:137 · ui/ai/ui-ai.css:1</sub>
 
 **`sticker`** *(substring-matched, self arm)* — Default area te. sh: is an OPEN prefix — the generic rule [media*="sticker(sh:"] (ui-sticker.css:231) sets up the ::before fill, so a custom sh:<name> + --ui-sticker-clip-path needs no CSS edit (render.js:214 classifies any sh:* as axis 'shape'). spl/spr are the flat media= aliases for variant="speech(l|r)" (nested parens are illegal in a media= token). sticker(fit) opts into text-fit: grow (@supports-gated) and has NO class in render.js FURNITURE_AXIS. sticker(fit) is a TYPESETTING flag (text-fit: grow per-line-all, @supports-gated, ui-sticker.css:170-176), independent of the pale/muted plate tones — hence its own `flag` arg class. sticker(slate) is a canonical hue with its own --ui-theme-slate-* bundle; the sticker(dark)/sticker(light)/sticker(subtle) aliases were removed in v5.
 <sub>ui/card/media.css:170 · ui/sticker/ui-sticker.css:86 · ui/sticker/ui-sticker.css:231</sub>

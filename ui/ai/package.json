@@ -1,0 +1,48 @@
+{
+  "name": "@browser.style/ai",
+  "version": "1.0.0",
+  "description": "CSS-first EU AI Act disclosure label: the Commission's AI icons as masks, a two-layer label (word + popover), and the legal floor in CSS. Zero JavaScript.",
+  "type": "module",
+  "style": "index.css",
+  "exports": {
+    ".": {
+      "style": "./index.css"
+    },
+    "./style": "./index.css",
+    "./index.css": "./index.css",
+    "./data/cases.json": "./data/cases.json"
+  },
+  "files": [
+    "index.css",
+    "ui-ai.css",
+    "icons/",
+    "data/"
+  ],
+  "scripts": {
+    "build:icons": "node icons.build.js",
+    "test": "node icons.build.js --check"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "browser.style",
+    "ai",
+    "eu-ai-act",
+    "disclosure",
+    "label",
+    "css-first"
+  ],
+  "author": "Mads Stoumann",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/ai"
+  },
+  "homepage": "https://browser.style/ui/ai",
+  "peerDependencies": {
+    "@browser.style/base": "^1.0.11"
+  }
+}

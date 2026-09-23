@@ -3,7 +3,7 @@
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
-import renderCard, { resolveItemtype, SUBTYPES, EYEBROW_PROP, vacationrentalSections, videogameSections as vidgameSections } from './render.js';
+import renderCard, { aiOptions, aiLabel, resolveItemtype, SUBTYPES, EYEBROW_PROP, vacationrentalSections, videogameSections as vidgameSections } from './render.js';
 import { buildSrcset, maxUsableWidth } from './srcset.js';
 
 /* Render a bare fields object with no preset — the DEFAULT_PRESET stack card. */
@@ -3524,5 +3524,56 @@ describe('referenced detail rows', async () => {
 		assert.equal(row.price, 249);
 		assert.equal(row.currency, 'USD');
 		assert.equal(row.label, 'Indigo');
+	});
+});
+
+/* EU AI Act disclosure — the truth table is data (ui/ai/data/cases.json), shared with every
+   port of aiOptions()/aiLabel(); the markup tests hold the two layers and the id wiring. */
+describe('ai disclosure (<ui-ai>)', () => {
+	const { cases } = JSON.parse(readFileSync(new URL('../ai/data/cases.json', import.meta.url), 'utf8'));
+
+	for (const c of cases) {
+		test(`truth table: ${c.name}`, () => {
+			assert.equal(aiOptions(c.ai, c.mediaType), c.options);
+			assert.equal(aiLabel(c.ai, c.mediaType), c.label);
+		});
+	}
+
+	const card = (media, id = 'c1') => renderCard(
+		{ id, fields: { schemaType: 'article', headline: 'X', media, preset: { $ref: 'card-preset/p' } } },
+		{ p: { element: 'ui-card', media: 'asr(4/3)' } }, {});
+
+	test('no ai, or involvement None, emits nothing', () => {
+		assert.ok(!card([{ mediaType: 'image', src: '/a.png', alt: 'a' }]).includes('<ui-ai'));
+		assert.ok(!card([{ mediaType: 'image', src: '/a.png', alt: 'a', ai: { involvement: 'None', depictsReal: true } }]).includes('<ui-ai'));
+	});
+
+	test('a disclosed image: one element, the word as text, the details for AT only', () => {
+		const html = card([{ mediaType: 'image', src: '/a.png', alt: 'a', ai: { involvement: 'generated', depictsReal: true } }]);
+		assert.match(html, /<ui-ai options="generated required" aria-description="This image was generated with AI\. It shows or imitates real people, objects, places or events, and is not authentic\.">AI-generated<\/ui-ai>/);
+		assert.ok(!/<ui-ai[^>]*(tabindex|popover|id=)/.test(html), 'no tab stop, no popover, no id');
+		assert.ok(!html.includes('aria-describedby'), 'the image is not rewired');
+	});
+
+	test('the data overrides the words (a CMS passes its own dictionary)', () => {
+		const html = card([{ mediaType: 'image', src: '/a.png', alt: 'a', ai: { involvement: 'edited', label: 'Redigeret med AI', details: ['Billedet er redigeret med AI.'] } }]);
+		assert.match(html, /<ui-ai options="edited" aria-description="Billedet er redigeret med AI\.">Redigeret med AI<\/ui-ai>/);
+	});
+
+	test('no card id needed — the markup is the same', () => {
+		const html = renderCard(
+			{ fields: { schemaType: 'article', headline: 'X', media: [{ mediaType: 'image', src: '/a.png', alt: 'a', ai: { involvement: 'generated' } }], preset: { $ref: 'card-preset/p' } } },
+			{ p: { element: 'ui-card' } }, {});
+		assert.match(html, /<ui-ai options="generated" aria-description="This image was generated with AI\.">AI-generated<\/ui-ai>/);
+	});
+
+	test('a carousel: one label per frame, the required slide speaks, elements unioned', () => {
+		const html = card([
+			{ mediaType: 'image', src: '/a.png', alt: 'a', ai: { involvement: 'generated' } },
+			{ mediaType: 'video', src: '/v.mp4', alt: 'v', ai: { involvement: 'generated', depictsReal: true, elements: ['voice'] } },
+			{ mediaType: 'image', src: '/b.png', alt: 'b' }
+		]);
+		assert.equal(html.match(/<ui-ai /g).length, 1);
+		assert.match(html, /<ui-ai options="generated partial required voice" aria-description="The voice is generated with AI\. It shows or imitates/);
 	});
 });

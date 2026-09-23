@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>UI: AI disclosure</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="color-scheme" content="light dark">
+	<meta name="description" content="&lt;ui-ai&gt; standalone: the EU AI Act disclosure label with its own face=, size= and theme= attributes.">
+	<link rel="alternate" type="text/markdown" href="readme.md">
+	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="ui-ai.css">
+	<style>
+		body { max-inline-size: 60rem; margin-inline: auto; padding: 2rem 1rem; }
+		.row { align-items: center; display: flex; flex-wrap: wrap; gap: 1rem; margin-block: 1rem 2rem; }
+	</style>
+</head>
+<body>
+	<h1>UI: AI disclosure</h1>
+	<p>Standalone <code>&lt;ui-ai&gt;</code>: the look comes from the element's own <code>face=</code>, <code>size=</code> and <code>theme=</code>. On a card the same axes are <code>ai(…)</code> tokens — see <a href="../card/demo/media.ai.html">the card demo</a>.</p>
+
+	<h2>Faces</h2>
+	<div class="row">
+		<ui-ai options="generated" aria-description="This image was generated with AI.">AI-generated</ui-ai>
+		<ui-ai options="generated" face="icon" aria-description="This image was generated with AI.">AI-generated</ui-ai>
+		<ui-ai options="generated" face="pill" aria-description="This image was generated with AI.">AI-generated</ui-ai>
+		<ui-ai options="edited" face="pill" aria-description="This image was edited with AI.">Edited with AI</ui-ai>
+	</div>
+
+	<h2>The legal floor</h2>
+	<p>A required label ignores <code>face="icon"</code>; an artistic one may use it.</p>
+	<div class="row">
+		<ui-ai options="edited required" face="icon" aria-description="This image was edited with AI. It shows or imitates real people, objects, places or events, and is not authentic.">Edited with AI</ui-ai>
+		<ui-ai options="edited required artistic" face="icon" aria-description="This image was edited with AI. It is an artistic or fictional work.">Edited with AI</ui-ai>
+	</div>
+
+	<h2>Size and theme</h2>
+	<div class="row">
+		<ui-ai options="generated">AI-generated</ui-ai>
+		<ui-ai options="generated" size="lg">AI-generated</ui-ai>
+		<ui-ai options="generated" size="xl">AI-generated</ui-ai>
+		<ui-ai options="generated" theme="white">AI-generated</ui-ai>
+		<ui-ai options="generated" theme="blue">AI-generated</ui-ai>
+		<ui-ai options="generated" theme="red">AI-generated</ui-ai>
+	</div>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>UI: Card — AI disclosure</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="text-scale" content="scale">
+	<meta name="color-scheme" content="light dark">
+	<meta name="description" content="&lt;ui-ai&gt; — the EU AI Act disclosure label as media furniture: options= carries the facts (edited|generated, partial, required, artistic, voice music footage script), media=&quot;ai(…)&quot; the look (position, face, hue, size), and the CSS keeps the legal floor.">
+	<link rel="alternate" type="text/markdown" href="/ui/ai/readme.md">
+	<link rel="stylesheet" href="/dist/demo.cb6ada09.min.css">
+	<link rel="stylesheet" href="/dist/icon-font.c6950688.min.css">
+	<style>code { font-size: 0.9em; }</style>
+</head>
+<body data-layout-root data-page-gap="2">
+	<header>
+		<h1>UI: Card — AI disclosure</h1>
+		<p><code>&lt;ui-ai&gt;</code> labels AI-generated and AI-edited media for the EU AI Act (Art. 50). The element's own <code>options=</code> says what is <em>true</em> — written by the renderer from the media item's <code>ai</code> fields — and the parent <code>media=</code> says how it <em>looks</em>: <code>ai(&lt;cell&gt;)</code>, <code>ai(label|icon|pill)</code>, <code>ai(&lt;hue&gt;)</code>, <code>ai(lg|xl)</code>. The icons are the Commission's own, as CSS masks. Icon and word are the whole legal duty; the details ride <code>aria-description</code>, for screen readers only.</p>
+	</header>
+<main data-layout-root data-page-gap="2">
+	<section>
+	<h2>What is required, case by case</h2>
+	<p>Only a deep fake must be labelled — AI content that shows or imitates something real. Row 1 (no AI) renders nothing. Row 8 (artistic, not real) is the same as rows 2–3. Rows follow the truth table in <code>ui/ai/data/cases.json</code>.</p>
+	<lay-out md="columns(2)" lg="columns(3)">
+		<ui-card variant="col" media="asr(4/3)"><cq-box><ui-media><img src="/assets/images/city.png" alt="" loading="lazy" decoding="async"><ui-ai options="edited" aria-description="This image was edited with AI.">Edited with AI</ui-ai></ui-media><ui-content><small data-part="eyebrow">Row 2</small><h3 data-part="headline">Edited, not real</h3><p data-part="summary"><code>options=&quot;edited&quot;</code> Voluntary. The quiet label.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="col" media="asr(4/3)"><cq-box><ui-media><img src="/assets/images/city.png" alt="" loading="lazy" decoding="async"><ui-ai options="generated" aria-description="This image was generated with AI.">AI-generated</ui-ai></ui-media><ui-content><small data-part="eyebrow">Row 3</small><h3 data-part="headline">Generated, not real</h3><p data-part="summary"><code>options=&quot;generated&quot;</code> Voluntary. The quiet label.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="col" media="asr(4/3)"><cq-box><ui-media><img src="/assets/images/city.png" alt="" loading="lazy" decoding="async"><ui-ai options="edited required" aria-description="This image was edited with AI. It shows or imitates real people, objects, places or events, and is not authentic.">Edited with AI</ui-ai></ui-media><ui-content><small data-part="eyebrow">Row 4</small><h3 data-part="headline">Edited deep fake</h3><p data-part="summary"><code>options=&quot;edited required&quot;</code> <strong>Required.</strong> Words visible from first paint.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="col" media="asr(4/3)"><cq-box><ui-media><img src="/assets/images/city.png" alt="" loading="lazy" decoding="async"><ui-ai options="generated required" aria-description="This image was generated with AI. It shows or imitates real people, objects, places or events, and is not authentic.">AI-generated</ui-ai></ui-media><ui-content><small data-part="eyebrow">Row 5</small><h3 data-part="headline">Generated deep fake</h3><p data-part="summary"><code>options=&quot;generated required&quot;</code> <strong>Required.</strong> Words visible from first paint.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="col" media="asr(4/3)"><cq-box><ui-media><img src="/assets/images/city.png" alt="" loading="lazy" decoding="async"><ui-ai options="edited required artistic" aria-description="This image was edited with AI. It shows or imitates real people, objects, places or events, and is not authentic. It is an artistic or fictional work.">Edited with AI</ui-ai></ui-media><ui-content><small data-part="eyebrow">Row 6</small><h3 data-part="headline">Edited deep fake, artistic</h3><p data-part="summary"><code>options=&quot;edited required artistic&quot;</code> Required, gently — may shrink to the icon.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="col" media="asr(4/3)"><cq-box><ui-media><img src="/assets/images/city.png" alt="" loading="lazy" decoding="async"><ui-ai options="generated required artistic" aria-description="This image was generated with AI. It shows or imitates real people, objects, places or events, and is not authentic. It is an artistic or fictional work.">AI-generated</ui-ai></ui-media><ui-content><small data-part="eyebrow">Row 7</small><h3 data-part="headline">Generated deep fake, artistic</h3><p data-part="summary"><code>options=&quot;generated required artistic&quot;</code> Required, gently — may shrink to the icon.</p></ui-content></cq-box></ui-card>
+	</lay-out>
+	</section>
+
+	<section>
+	<h2>Faces — and the legal floor</h2>
+	<p><code>ai(icon)</code> shrinks a voluntary or artistic label to the EU disc; the word stays in the markup for screen readers. A <strong>required</strong> label ignores it: icon and word are what the law asks for, at first exposure.</p>
+	<lay-out md="columns(2)" lg="columns(3)">
+		<ui-card variant="col" media="asr(4/3) ai(label)"><cq-box><ui-media><img src="/assets/images/autumn.jpg" alt="" loading="lazy" decoding="async"><ui-ai options="generated" aria-description="This image was generated with AI.">AI-generated</ui-ai></ui-media><ui-content><small data-part="eyebrow">Voluntary</small><h3 data-part="headline"><code>ai(label)</code></h3><p data-part="summary">Icon and word — the default.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="col" media="asr(4/3) ai(label)"><cq-box><ui-media><img src="/assets/images/autumn.jpg" alt="" loading="lazy" decoding="async"><ui-ai options="edited required" aria-description="This image was edited with AI. It shows or imitates real people, objects, places or events, and is not authentic.">Edited with AI</ui-ai></ui-media><ui-content><small data-part="eyebrow">Required</small><h3 data-part="headline"><code>ai(label)</code></h3><p data-part="summary">Icon and word.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="col" media="asr(4/3) ai(icon)"><cq-box><ui-media><img src="/assets/images/autumn.jpg" alt="" loading="lazy" decoding="async"><ui-ai options="generated" aria-description="This image was generated with AI.">AI-generated</ui-ai></ui-media><ui-content><small data-part="eyebrow">Voluntary</small><h3 data-part="headline"><code>ai(icon)</code></h3><p data-part="summary">Icon only — the word is still there for screen readers.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="col" media="asr(4/3) ai(icon)"><cq-box><ui-media><img src="/assets/images/autumn.jpg" alt="" loading="lazy" decoding="async"><ui-ai options="edited required" aria-description="This image was edited with AI. It shows or imitates real people, objects, places or events, and is not authentic.">Edited with AI</ui-ai></ui-media><ui-content><small data-part="eyebrow">Required</small><h3 data-part="headline"><code>ai(icon)</code></h3><p data-part="summary"><strong>The legal floor:</strong> a required label ignores <code>ai(icon)</code> and keeps its words.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="col" media="asr(4/3) ai(pill)"><cq-box><ui-media><img src="/assets/images/autumn.jpg" alt="" loading="lazy" decoding="async"><ui-ai options="generated" aria-description="This image was generated with AI.">AI-generated</ui-ai></ui-media><ui-content><small data-part="eyebrow">Voluntary</small><h3 data-part="headline"><code>ai(pill)</code></h3><p data-part="summary">The EU "AI GENERATED" artwork.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="col" media="asr(4/3) ai(pill)"><cq-box><ui-media><img src="/assets/images/autumn.jpg" alt="" loading="lazy" decoding="async"><ui-ai options="edited required" aria-description="This image was edited with AI. It shows or imitates real people, objects, places or events, and is not authentic.">Edited with AI</ui-ai></ui-media><ui-content><small data-part="eyebrow">Required</small><h3 data-part="headline"><code>ai(pill)</code></h3><p data-part="summary">The EU "AI MODIFIED" artwork — it carries the words itself.</p></ui-content></cq-box></ui-card>
+	</lay-out>
+	</section>
+
+	<section>
+	<h2>Recordings</h2>
+	<lay-out md="columns(2)">
+		<ui-card variant="col" media="asr(16/9)"><cq-box><ui-media><video src="/assets/video/city.mp4" poster="/assets/poster/byzone.avif" controls playsinline preload="metadata"></video><ui-ai options="generated partial required voice" aria-description="The voice is generated with AI. It shows or imitates real people, objects, places or events, and is not authentic.">AI-generated voice</ui-ai></ui-media><ui-content><small data-part="eyebrow">Video · real footage, cloned narrator</small><h3 data-part="headline">Partial, required</h3><p data-part="summary"><code>options=&quot;generated partial required voice&quot;</code>. <code>partial</code> picks the EU "modified" artwork for <code>ai(pill)</code>; the label is lifted clear of the native controls.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="col" media="asr(16/9)"><cq-box><ui-media><img src="/assets/images/podcast.png" alt="" loading="lazy" decoding="async"><audio src="/assets/audio/podcast.m4a" controls preload="metadata"></audio><ui-ai options="generated voice script" aria-description="The voice and script are generated with AI.">AI-generated voice and script</ui-ai></ui-media><ui-content><small data-part="eyebrow">Audio · invented host</small><h3 data-part="headline">The podcast</h3><p data-part="summary"><code>options=&quot;generated voice script&quot;</code>. Voluntary: the voice resembles nobody. Clone a real presenter and it turns required.</p></ui-content></cq-box></ui-card>
+	</lay-out>
+	</section>
+
+	<section lang="da">
+	<h2 lang="en">Other languages</h2>
+	<lay-out md="columns(2)">
+		<ui-card variant="col" media="asr(4/3) ai(pill)"><cq-box><ui-media><img src="/assets/images/city.png" alt="" loading="lazy" decoding="async"><ui-ai options="generated" aria-description="Billedet er genereret med AI.">AI-genereret</ui-ai></ui-media><ui-content><small data-part="eyebrow">lang="da"</small><h3 data-part="headline"><code>ai(pill)</code> → label</h3><p data-part="summary">The EU pills are English only, so a Danish page keeps the disc and its own word.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="col" media="asr(4/3) ai(pill)"><cq-box><ui-media><img src="/assets/images/city.png" alt="" loading="lazy" decoding="async"><ui-ai options="edited required" aria-description="Billedet er redigeret med AI.">Redigeret med AI</ui-ai></ui-media><ui-content><small data-part="eyebrow">lang="da"</small><h3 data-part="headline"><code>ai(pill)</code> → label</h3><p data-part="summary">The EU pills are English only, so a Danish page keeps the disc and its own word.</p></ui-content></cq-box></ui-card>
+	</lay-out>
+	</section>
+
+	<section>
+	<h2>Hues</h2>
+	<p>Black by default — the EU icon's own colour. A card's <code>theme=</code> never leaks in; <code>ai(&lt;hue&gt;)</code> is the only way to colour it.</p>
+	<lay-out md="columns(3)" lg="columns(3)">
+		<ui-card variant="col" media="asr(4/3) ai(black)"><cq-box><ui-media><img src="/assets/images/brewandbean.png" alt="" loading="lazy" decoding="async"><ui-ai options="generated" aria-description="This image was generated with AI.">AI-generated</ui-ai></ui-media><ui-content><small data-part="eyebrow">Hue</small><h3 data-part="headline"><code>ai(black)</code></h3></ui-content></cq-box></ui-card>
+		<ui-card variant="col" media="asr(4/3) ai(white)"><cq-box><ui-media><img src="/assets/images/brewandbean.png" alt="" loading="lazy" decoding="async"><ui-ai options="generated" aria-description="This image was generated with AI.">AI-generated</ui-ai></ui-media><ui-content><small data-part="eyebrow">Hue</small><h3 data-part="headline"><code>ai(white)</code></h3></ui-content></cq-box></ui-card>
+		<ui-card variant="col" media="asr(4/3) ai(gray)"><cq-box><ui-media><img src="/assets/images/brewandbean.png" alt="" loading="lazy" decoding="async"><ui-ai options="generated" aria-description="This image was generated with AI.">AI-generated</ui-ai></ui-media><ui-content><small data-part="eyebrow">Hue</small><h3 data-part="headline"><code>ai(gray)</code></h3></ui-content></cq-box></ui-card>
+		<ui-card variant="col" media="asr(4/3) ai(slate)"><cq-box><ui-media><img src="/assets/images/brewandbean.png" alt="" loading="lazy" decoding="async"><ui-ai options="generated" aria-description="This image was generated with AI.">AI-generated</ui-ai></ui-media><ui-content><small data-part="eyebrow">Hue</small><h3 data-part="headline"><code>ai(slate)</code></h3></ui-content></cq-box></ui-card>
+		<ui-card variant="col" media="asr(4/3) ai(red)"><cq-box><ui-media><img src="/assets/images/brewandbean.png" alt="" loading="lazy" decoding="async"><ui-ai options="generated" aria-description="This image was generated with AI.">AI-generated</ui-ai></ui-media><ui-content><small data-part="eyebrow">Hue</small><h3 data-part="headline"><code>ai(red)</code></h3></ui-content></cq-box></ui-card>
+		<ui-card variant="col" media="asr(4/3) ai(orange)"><cq-box><ui-media><img src="/assets/images/brewandbean.png" alt="" loading="lazy" decoding="async"><ui-ai options="generated" aria-description="This image was generated with AI.">AI-generated</ui-ai></ui-media><ui-content><small data-part="eyebrow">Hue</small><h3 data-part="headline"><code>ai(orange)</code></h3></ui-content></cq-box></ui-card>
+		<ui-card variant="col" media="asr(4/3) ai(green)"><cq-box><ui-media><img src="/assets/images/brewandbean.png" alt="" loading="lazy" decoding="async"><ui-ai options="generated" aria-description="This image was generated with AI.">AI-generated</ui-ai></ui-media><ui-content><small data-part="eyebrow">Hue</small><h3 data-part="headline"><code>ai(green)</code></h3></ui-content></cq-box></ui-card>
+		<ui-card variant="col" media="asr(4/3) ai(blue)"><cq-box><ui-media><img src="/assets/images/brewandbean.png" alt="" loading="lazy" decoding="async"><ui-ai options="generated" aria-description="This image was generated with AI.">AI-generated</ui-ai></ui-media><ui-content><small data-part="eyebrow">Hue</small><h3 data-part="headline"><code>ai(blue)</code></h3></ui-content></cq-box></ui-card>
+		<ui-card variant="col" media="asr(4/3) ai(accent)"><cq-box><ui-media><img src="/assets/images/brewandbean.png" alt="" loading="lazy" decoding="async"><ui-ai options="generated" aria-description="This image was generated with AI.">AI-generated</ui-ai></ui-media><ui-content><small data-part="eyebrow">Hue</small><h3 data-part="headline"><code>ai(accent)</code></h3></ui-content></cq-box></ui-card>
+	</lay-out>
+	</section>
+
+	<section>
+	<h2>Position</h2>
+	<p>The shared 9-cell grid. <code>bc</code> is the default: no other furniture claims it.</p>
+	<lay-out md="columns(3)" lg="columns(3)">
+		<ui-card variant="col" media="asr(4/3) ai(ts)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt="" loading="lazy" decoding="async"><ui-ai options="generated" aria-description="This image was generated with AI.">AI-generated</ui-ai></ui-media><ui-content><small data-part="eyebrow">Cell</small><h3 data-part="headline"><code>ai(ts)</code></h3></ui-content></cq-box></ui-card>
+		<ui-card variant="col" media="asr(4/3) ai(tc)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt="" loading="lazy" decoding="async"><ui-ai options="generated" aria-description="This image was generated with AI.">AI-generated</ui-ai></ui-media><ui-content><small data-part="eyebrow">Cell</small><h3 data-part="headline"><code>ai(tc)</code></h3></ui-content></cq-box></ui-card>
+		<ui-card variant="col" media="asr(4/3) ai(te)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt="" loading="lazy" decoding="async"><ui-ai options="generated" aria-description="This image was generated with AI.">AI-generated</ui-ai></ui-media><ui-content><small data-part="eyebrow">Cell</small><h3 data-part="headline"><code>ai(te)</code></h3></ui-content></cq-box></ui-card>
+		<ui-card variant="col" media="asr(4/3) ai(cs)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt="" loading="lazy" decoding="async"><ui-ai options="generated" aria-description="This image was generated with AI.">AI-generated</ui-ai></ui-media><ui-content><small data-part="eyebrow">Cell</small><h3 data-part="headline"><code>ai(cs)</code></h3></ui-content></cq-box></ui-card>
+		<ui-card variant="col" media="asr(4/3) ai(cc)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt="" loading="lazy" decoding="async"><ui-ai options="generated" aria-description="This image was generated with AI.">AI-generated</ui-ai></ui-media><ui-content><small data-part="eyebrow">Cell</small><h3 data-part="headline"><code>ai(cc)</code></h3></ui-content></cq-box></ui-card>
+		<ui-card variant="col" media="asr(4/3) ai(ce)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt="" loading="lazy" decoding="async"><ui-ai options="generated" aria-description="This image was generated with AI.">AI-generated</ui-ai></ui-media><ui-content><small data-part="eyebrow">Cell</small><h3 data-part="headline"><code>ai(ce)</code></h3></ui-content></cq-box></ui-card>
+		<ui-card variant="col" media="asr(4/3) ai(bs)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt="" loading="lazy" decoding="async"><ui-ai options="generated" aria-description="This image was generated with AI.">AI-generated</ui-ai></ui-media><ui-content><small data-part="eyebrow">Cell</small><h3 data-part="headline"><code>ai(bs)</code></h3></ui-content></cq-box></ui-card>
+		<ui-card variant="col" media="asr(4/3) ai(bc)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt="" loading="lazy" decoding="async"><ui-ai options="generated" aria-description="This image was generated with AI.">AI-generated</ui-ai></ui-media><ui-content><small data-part="eyebrow">Default</small><h3 data-part="headline"><code>ai(bc)</code></h3></ui-content></cq-box></ui-card>
+		<ui-card variant="col" media="asr(4/3) ai(be)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt="" loading="lazy" decoding="async"><ui-ai options="generated" aria-description="This image was generated with AI.">AI-generated</ui-ai></ui-media><ui-content><small data-part="eyebrow">Cell</small><h3 data-part="headline"><code>ai(be)</code></h3></ui-content></cq-box></ui-card>
+	</lay-out>
+	</section>
+</main>
+</body>
+</html>
