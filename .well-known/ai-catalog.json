@@ -1,0 +1,53 @@
+{
+  "specVersion": "1.0",
+  "host": {
+    "displayName": "browser.style",
+    "documentationUrl": "https://v4.browser.style/llms.txt"
+  },
+  "entries": [
+    {
+      "identifier": "urn:air:browser.style:skills:add-card",
+      "displayName": "add-card",
+      "type": "text/markdown; profile=\"urn:air:agent-skills\"",
+      "url": "https://raw.githubusercontent.com/madsstoumann/browser-style/v4/.claude/skills/add-card/SKILL.md",
+      "description": "Agent skill for authoring <ui-card>, <ui-media>, <ui-content> and <ui-reveal> markup or card JSON instances: choosing variant= / media= / content= / theme= tokens, overlay furniture, data-part content, icon markers and presets, and diagnosing a token that has no effect.",
+      "tags": ["css", "design-system", "custom-elements", "card", "agent-skill"],
+      "capabilities": ["AuthorCardMarkup", "ChooseCardTokens", "DiagnoseCardToken"],
+      "representativeQueries": [
+        "write a browser.style card with a 16:9 image and a chip",
+        "which tokens does the ui-card media attribute accept",
+        "why does my ui-card variant token have no effect",
+        "horizontal product card with a save button at the top end"
+      ]
+    },
+    {
+      "identifier": "urn:air:browser.style:skills:add-layout",
+      "displayName": "add-layout",
+      "type": "text/markdown; profile=\"urn:air:agent-skills\"",
+      "url": "https://raw.githubusercontent.com/madsstoumann/browser-style/v4/.claude/skills/add-layout/SKILL.md",
+      "description": "Agent skill for placing <lay-out> and <lay-out-group> markup: choosing a grid pattern (columns, grid, bento, mosaic, asym, ratio, lanes, auto, stack), breakpoint attributes, spacing tokens, bleed, subgrid and overflow carousel controls, and diagnosing a layout token that has no effect at some breakpoint.",
+      "tags": ["css", "design-system", "custom-elements", "layout", "agent-skill"],
+      "capabilities": ["AuthorLayoutMarkup", "ChooseLayoutPattern", "DiagnoseLayoutToken"],
+      "representativeQueries": [
+        "three column grid on large screens that stacks on mobile with browser.style",
+        "browser.style lay-out breakpoints and grid patterns",
+        "make a bento layout with lay-out",
+        "why does my lay-out attribute do nothing at the md breakpoint"
+      ]
+    },
+    {
+      "identifier": "urn:air:browser.style:models:card-schema",
+      "displayName": "Card content model",
+      "type": "application/schema+json",
+      "url": "https://v4.browser.style/cms/baseline/models/card.schema.json",
+      "description": "JSON Schema for the universal card format every ui-card is rendered from: the content model a CMS, an editor or an agent produces card instances against, including the schema.org type vocabulary.",
+      "tags": ["json-schema", "content-model", "schema.org", "cms"],
+      "capabilities": ["ValidateCardInstance"],
+      "representativeQueries": [
+        "JSON schema for a browser.style card",
+        "which fields does a browser.style card instance have",
+        "browser.style card content model schema.org types"
+      ]
+    }
+  ]
+}

@@ -10,6 +10,8 @@ User-agent: Google-Gemini-CLI
 User-agent: opencode
 User-agent: Trae
 Allow: /llms.txt
+Allow: /.well-known/ard.json
+Allow: /.well-known/ai-catalog.json
 Allow: /docs/
 Allow: /ui/card/docs/
 Allow: /layout/docs/

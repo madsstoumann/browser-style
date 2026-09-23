@@ -7,7 +7,10 @@ Audited 2026-08-19. Every claim below is dated, because this area moves and most
 public advice is written as if it does not.
 
 > **Short version.** `llms.txt` is not read by AI answer engines, and Google Search
-> ignores it — but Lighthouse audits it, so we keep it. The
+> ignores it — but Lighthouse audits it, so we keep it. Lighthouse 13.5 also fetches an
+> ARD manifest (`/.well-known/ai-catalog.json`), and because this site has no `404.html`
+> a *missing* file came back as the homepage with HTTP 200 — "malformed JSON". We now ship
+> the manifest (§ 3.3). The
 > `<link rel="alternate" type="text/markdown">` tag has no measured readership; we ship
 > it anyway on the pages where a real doc already exists, because the `.md` files were
 > already being served and the tag costs one line. Content negotiation
@@ -103,12 +106,13 @@ concern is the relevant one.
 
 ## 3. The Lighthouse Agentic Browsing audit
 
-Four checks, reported as a fractional pass-ratio rather than a 0–100 score, because
+Five checks, reported as a fractional pass-ratio rather than a 0–100 score, because
 "the standards for the agentic web are still emerging":
 
 | Audit | Checks |
 |---|---|
 | `llms.txt` | Exists, and follows the recommended shape |
+| ARD manifest (`ard-schema`, 13.5+) | The Agentic Resource Discovery catalog parses and validates — § 3.3 |
 | WebMCP | Forms carry declarative WebMCP annotations; registered tools surfaced |
 | Accessibility for agents | The accessibility tree is well-formed |
 | Layout stability | CLS |
@@ -138,6 +142,53 @@ or dashes: the parser does not count those as links at all.
 | Length | 898 chars ✅ |
 
 **But it only passes on one host.** See § 5.
+
+### 3.3 The ARD manifest — `/.well-known/ard.json` and `ai-catalog.json`
+
+Lighthouse 13.5 (PageSpeed Insights, Chrome 156 DevTools) added an **Agent Discoverability**
+audit for the [Agentic Resource Discovery](https://agenticresourcediscovery.org/spec/)
+(ARD) catalog. Its gatherer resolves the catalog in this order — a robots.txt `Agentmap:`
+line, `<link rel="ai-catalog">`, an HTTP `Link: …; rel="ai-catalog"` header, then the
+fallback `/.well-known/ai-catalog.json` — fetches it, and hands the body to the spec's
+conformance tester. A fetch that returns a non-200 status is "not applicable"; a 200 is
+parsed.
+
+**How a file that did not exist failed as "malformed JSON" (2026-09-23).** There is no
+`404.html`, so Cloudflare Pages serves `index.html` **with HTTP 200** for every unknown
+path (open-items § 45 (a), verified there with `curl`). The audit therefore received the
+homepage for `/.well-known/ai-catalog.json` and reported `Unexpected token '<',
+"<!DOCTYPE "… is not valid JSON`. The soft-404 is the cause; the manifest is the fix
+that also removes the symptom.
+
+**What we ship.** Two byte-identical files, because the spec and the auditor disagree on
+the name: ARD 0.91 (Aug 2026) made `/.well-known/ard.json` the path a consumer MUST
+fetch and demoted `ai-catalog.json` to an optional legacy fallback, while Lighthouse 13.5
+still fetches only the legacy name. Keep them identical — `cmp` them in the check below.
+
+| File | Who reads it |
+|---|---|
+| `/.well-known/ard.json` | ARD 0.91 consumers and registries (the mandated path) |
+| `/.well-known/ai-catalog.json` | Lighthouse / PageSpeed Insights, HTTP Archive, pre-0.91 consumers |
+
+The manifest carries `specVersion` + `host` (required by the stricter
+`ai-catalog.schema.json` Lighthouse validates against; ARD 0.91 itself requires only
+`entries`) and three entries: the two **authoring skills** — `add-card` and `add-layout`,
+typed `text/markdown; profile="urn:air:agent-skills"`, which is ARD's standard type for
+an Agent Skills `SKILL.md`, pointing at the files in this repo on GitHub — and the card
+content model, `cms/baseline/models/card.schema.json`, as `application/schema+json`.
+The rest of the documentation is not catalogued as entries: ARD's vocabulary is agent
+cards, MCP server cards, skills and registries, and a bare `text/markdown` entry draws a
+"not a standard discovery type" warning (Lighthouse scores warnings 0.9). The docs are
+reached through `host.documentationUrl` → `llms.txt` instead. Every entry carries 2–5
+`representativeQueries`; the tester warns without them.
+
+**Deliberately no `Agentmap:` in `robots.txt`.** It would make discovery explicit, but
+Lighthouse's SEO `robots.txt` audit throws on any directive outside its safelist
+(`user-agent`, `allow`, `disallow`, `sitemap`, `crawl-delay`, `clean-param`, `host`,
+`request-rate`, `visit-time`, `noindex`, `content-signal`) — one line would trade a
+passing SEO audit for a discovery signal the well-known fallback already provides.
+Revisit when the safelist gains `agentmap`. The coding-agent group in `robots.txt` does
+allow both manifest paths, alongside `llms.txt`.
 
 ---
 
@@ -226,6 +277,11 @@ This file records a 2026-08-19 reading of a moving target. Revisit if any of the
   `.md` addressing worth automating).
 - Lighthouse Agentic Browsing leaves "under development", or its `llms.txt` audit starts
   enforcing content-type or structure beyond the three conditions in § 3.1.
+- Lighthouse's `ard-schema` audit moves to ARD 0.91 (fetches `ard.json`, or its
+  `robots.txt` safelist gains `agentmap`) — then `ai-catalog.json` can go, and an
+  `Agentmap:` line becomes safe (§ 3.3).
+- A `404.html` lands (open-items § 45 (a)) — the soft-404 that produced the "malformed
+  JSON" report goes with it.
 - Google Search reverses its position on machine-readable files.
 - The repo gains a server or Pages Function — at which point `Accept: text/markdown` is
   cheap and should be reconsidered first, being the best-evidenced mechanism.
@@ -244,6 +300,14 @@ curl -sI https://v4.browser.style/ui/card/docs/media.md | grep -i content-type
 
 # the apex gap
 curl -so /dev/null -w '%{http_code}\n' https://browser.style/llms.txt   # 404 today
+
+# the ARD manifest: both names serve JSON, and the same JSON
+cmp .well-known/ard.json .well-known/ai-catalog.json && echo identical
+for f in ard.json ai-catalog.json; do
+  curl -s "https://v4.browser.style/.well-known/$f" | python3 -m json.tool >/dev/null && echo "$f ok"
+done
+# spec conformance (needs `pip install jsonschema`; clone github.com/ards-project/ard-spec)
+python3 ard-spec/conformance/bin/conformance-test manifest .well-known/ard.json
 ```
 
 ---
@@ -258,3 +322,6 @@ curl -so /dev/null -w '%{http_code}\n' https://browser.style/llms.txt   # 404 to
 - [Search Engine Land — Google adds llms.txt check to Lighthouse (Mueller quote)](https://searchengineland.com/google-llms-txt-chrome-lighthouse-478246)
 - [Evil Martians — How to make your website visible to LLMs](https://evilmartians.com/chronicles/how-to-make-your-website-visible-to-llms)
 - [llmstxt.org](https://llmstxt.org/)
+- [Agentic Resource Discovery specification (0.91)](https://agenticresourcediscovery.org/spec/) — schemas and the conformance tester in [ards-project/ard-spec](https://github.com/ards-project/ard-spec)
+- [Lighthouse `ard-schema` audit and gatherer](https://github.com/GoogleChrome/lighthouse/tree/main/core/audits/agentic) — and [issue #17251](https://github.com/GoogleChrome/lighthouse/issues/17251) on its lag behind ARD 0.91
+- [Search Engine Journal — Lighthouse adds the ARD audit](https://www.searchenginejournal.com/google-lighthouse-ai-agent-resource-discovery-audit/590274/)

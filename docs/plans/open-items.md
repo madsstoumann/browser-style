@@ -1716,7 +1716,10 @@ none is urgent.
   HTTP 200** for every unknown path — `/carbon.txt`, `/sitemap.xml`, `/humans.txt`,
   `/security.txt` all "exist" as the homepage plus the bundle (verified with `curl`
   2026-09-04). WSG 4.4. Fix: a small `404.html` at the repo root; Pages then answers 404 with
-  it. Check `docs/html-head.md` for what its `<head>` should carry.
+  it. Check `docs/html-head.md` for what its `<head>` should carry. **It has bitten once
+  already (2026-09-23):** PageSpeed's new ARD audit fetched `/.well-known/ai-catalog.json`,
+  got the homepage with a 200, and reported the site's *missing* manifest as "malformed
+  JSON". The manifest now exists (`docs/llms-txt.md` § 3.3); the soft-404 does not.
 - **(b) Disclosure files.** WSG 3.13 lists `sitemap.xml`, `humans.txt`, `security.txt` and
   `carbon.txt` as expected/beneficial. `carbon.txt` v0.5 is TOML:
   `version = "0.5"` + `[org] disclosures = [{ doc_type = "web-page", url =
