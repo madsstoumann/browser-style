@@ -11,13 +11,12 @@ import { fileURLToPath } from 'node:url';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const source = join(here, '../../assets/ai');
-/* crop = the shape's own bounding box (SVGGraphicsElement.getBBox() on the cls-1 path): the
-   originals pad it inside the viewBox — the disc fills 64% of its canvas, the pills 47% — which a
-   mask would draw as dead space. Re-measure if the Commission ever reissues the files. */
+/* crop = the disc's own bounding box (SVGGraphicsElement.getBBox() on the cls-1 path): the
+   original pads it inside the viewBox — the disc fills 64% of its canvas — which a mask would draw
+   as dead space. Re-measure if the Commission ever reissues the file. One icon since 2.0: the
+   GENERATED / MODIFIED words are live text. */
 const ICONS = {
-	'ai.svg': ['LABEL_AI_black.svg', '89.28 100.72 365.49 365.49'],
-	'ai-generated.svg': ['LABEL_AI GENERATED_black.svg', '207.3 144.36 1384.24 266.41'],
-	'ai-modified.svg': ['LABEL_AI MODIFIED_black.svg', '231.11 144.36 1230.56 266.41']
+	'ai.svg': ['LABEL_AI_black.svg', '89.28 100.72 365.49 365.49']
 };
 
 const derive = (svg, name, viewBox) => {

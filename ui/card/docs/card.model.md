@@ -1238,7 +1238,6 @@ is live. One value per token instance — `chip(ts) chip(red)`, never `chip(ts r
 | `chip()` | **disc** | non rnd pll crc sqr | — |
 | `ai()` | **pos** | ts tc te cs cc ce bs bc be | — |
 | `ai()` | **hue** | red orange green blue accent black white gray slate | — |
-| `ai()` | **face** | label icon pill | — |
 | `ai()` | **size** | lg xl | — |
 | `sticker()` | **pos** | ts tc te cs cc ce bs bc be | — |
 | `sticker()` | **hue** | red orange green blue accent black white gray slate | — |

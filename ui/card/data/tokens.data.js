@@ -562,11 +562,6 @@ export default {
 							"gray",
 							"slate"
 						],
-						"face": [
-							"label",
-							"icon",
-							"pill"
-						],
 						"size": [
 							"lg",
 							"xl"
@@ -596,7 +591,7 @@ export default {
 						"ui/card/media.css:137",
 						"ui/ai/ui-ai.css:1"
 					],
-					"notes": "EU AI Act disclosure label. Default area bc. The FACTS are not tokens: they ride the element's own options= (edited|generated, partial, required, artistic, voice music footage script), written by render.js from a media item's `ai` object (aiOptions, truth table ui/ai/data/cases.json). ai(…) is only the LOOK. face: label (default, icon + word) · icon (icon only; the word stays in the markup at font-size 0 for AT) · pill (the EU \"AI GENERATED\"/\"AI MODIFIED\" artwork, :lang(en) only). The legal floor is CSS: a required, non-artistic label ignores ai(icon). No pale/muted: the label keeps full-contrast ink. Size is rem-based and the DEFAULT is the smallest readable (0.6875rem, 11px) — the card's own scale never shrinks it further — so the axis only grows: ai(lg) 13px, ai(xl) 16px; there is no ai(sm). Markup is one element and one text node — <ui-ai options aria-description>word</ui-ai>; the details ride aria-description for AT only, never painted. A frame with a native-controls <video> lifts the label clear of them (--ui-ai-lift)."
+					"notes": "EU AI Act disclosure label. Default area bc. No face tokens: the CONTENT decides — a text node shows the EU icon plus that text, as written (the renderer's default words are \"GENERATED\" / \"MODIFIED\"; a CMS may pass a phrase such as \"Voice rendered with AI\"), an empty element shows the icon alone (:empty). The word comes from render.js aiLabel() (truth table ui/ai/data/cases.json), which always writes one, so the legal floor (a deep fake keeps its word) lives in the renderer, not in CSS. The icon's alt text (content: \"\" / \"AI\") puts \"AI\" in the accessible name. No pale/muted: the label keeps full-contrast ink. Size is rem-based and the DEFAULT is the smallest readable (0.6875rem, 11px) — the card's own scale never shrinks it further — so the axis only grows: ai(lg) 13px, ai(xl) 16px; there is no ai(sm). Markup is one element and at most one text node — <ui-ai aria-description>word</ui-ai>; the details ride aria-description for AT only, never painted. A frame with a native-controls <video> lifts the label clear of them (--ui-ai-lift). The face tokens ai(label|icon|pill) and the options= attribute were removed in @browser.style/ai 2.0 — ui/ai/migration.md."
 				},
 				"sticker": {
 					"axis": "furniture",

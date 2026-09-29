@@ -1,7 +1,7 @@
 {
   "name": "@browser.style/ai",
-  "version": "1.0.0",
-  "description": "CSS-first EU AI Act disclosure label: the Commission's AI icons as masks, a two-layer label (word + popover), and the legal floor in CSS. Zero JavaScript.",
+  "version": "2.0.0",
+  "description": "CSS-first EU AI Act disclosure label: the Commission's AI icon as a mask plus a word, or the icon alone. Zero JavaScript.",
   "type": "module",
   "style": "index.css",
   "exports": {
@@ -16,7 +16,8 @@
     "index.css",
     "ui-ai.css",
     "icons/",
-    "data/"
+    "data/",
+    "migration.md"
   ],
   "scripts": {
     "build:icons": "node icons.build.js",

@@ -1121,12 +1121,14 @@ const buildFurniture = (furniture, fields, tokens, mediaId, videoId = null) => {
 
 /* ── EU AI Act disclosure (<ui-ai>) ──
    A media item's `ai` object — { involvement, depictsReal, artistic, elements[] } — becomes
-   the options= facts on <ui-ai>; the look is the preset's ai(…) tokens. Only a deep fake
-   MUST be labelled (Art. 50(4)): it resembles something real (depictsReal) and a part a
-   person takes as authentic is synthetic — the whole item, or its voice or footage. Music
-   and a script alone never are. `partial` marks real footage with synthetic parts, which
-   takes the EU "AI modified" artwork even when involvement says generated. The truth table
-   is data — ui/ai/data/cases.json — and any port of these functions is held to it. */
+   the word next to the EU icon plus the aria-description sentences; the look is the preset's
+   ai(…) tokens. Only a deep fake MUST be labelled (Art. 50(4)): it resembles something real
+   (depictsReal) and a part a person takes as authentic is synthetic — the whole item, or its
+   voice or footage. Music and a script alone never are. `partial` marks real footage with
+   synthetic parts, which reads "MODIFIED" even when involvement says generated. The renderer
+   always writes a word, so a deep fake always keeps it — CSS shows the icon alone only for an
+   empty element. The truth table is data — ui/ai/data/cases.json — and any port of these
+   functions is held to it. */
 const AI_ELEMENTS = ['voice', 'music', 'footage', 'script'];
 const AI_RECORDING = new Set(['video', 'audio']);
 const aiFacts = (ai, mediaType) => {
@@ -1146,22 +1148,14 @@ const aiFacts = (ai, mediaType) => {
 		elements
 	};
 };
-export const aiOptions = (ai, mediaType = 'image') => {
-	const facts = aiFacts(ai, mediaType);
-	if (!facts) return null;
-	return [facts.involvement, facts.partial && 'partial', facts.required && 'required', facts.artistic && 'artistic', ...facts.elements]
-		.filter(Boolean).join(' ');
-};
 const listOf = (words) => words.length < 2 ? words.join('') : `${words.slice(0, -1).join(', ')} and ${words.at(-1)}`;
-const capital = (text) => text.charAt(0).toUpperCase() + text.slice(1);
-/* the first layer — English fallback; ai.label overrides (a CMS passes its dictionary word) */
+/* the word — the EU pair GENERATED | MODIFIED in English, capitals as on the EU artwork; ai.label
+   overrides (a CMS passes its dictionary word, or a phrase such as "Voice rendered with AI"). */
 export const aiLabel = (ai, mediaType = 'image') => {
 	const facts = aiFacts(ai, mediaType);
 	if (!facts) return null;
 	if (ai.label) return String(ai.label);
-	const parts = listOf(facts.elements);
-	if (facts.involvement === 'generated') return parts ? `AI-generated ${parts}` : 'AI-generated';
-	return parts ? `${capital(parts)} edited with AI` : 'Edited with AI';
+	return facts.involvement === 'generated' && !facts.partial ? 'GENERATED' : 'MODIFIED';
 };
 /* the details — English fallback sentences; ai.details (string or array) overrides */
 const aiDetails = (ai, mediaType, facts) => {
@@ -1175,6 +1169,11 @@ const aiDetails = (ai, mediaType, facts) => {
 		facts.artistic && 'It is an artistic or fictional work.'
 	].filter(Boolean);
 };
+/* the aria-description — every detail beyond the word, for assistive technology only */
+export const aiDescription = (ai, mediaType = 'image') => {
+	const facts = aiFacts(ai, mediaType);
+	return facts ? aiDetails(ai, mediaType, facts).join(' ') : null;
+};
 /* One label per frame. A carousel's slides can differ, so the strongest item speaks for the
    frame: a required one first, then any; the elements of every disclosed item are unioned. */
 const aiOf = (media = []) => {
@@ -1184,14 +1183,14 @@ const aiOf = (media = []) => {
 	const elements = [...new Set(disclosed.flatMap((item) => item.ai.elements || []))];
 	return { ai: { ...lead.ai, elements }, mediaType: lead.mediaType || 'image' };
 };
-/* <ui-ai options="…" aria-description="…">word</ui-ai> — icon + word is the whole legal duty
+/* <ui-ai aria-description="…">word</ui-ai> — icon + word is the whole legal duty
    (Art. 50(4): disclose THAT it is generated or manipulated), so that is all that is shown.
    The details are for assistive technology only: aria-description, never painted, no tab stop. */
 const buildAi = (media) => {
 	const source = aiOf(media);
 	if (!source) return '';
 	const { ai, mediaType } = source;
-	return `<ui-ai${attrs({ options: aiOptions(ai, mediaType), 'aria-description': aiDetails(ai, mediaType, aiFacts(ai, mediaType)).join(' ') })}>${esc(aiLabel(ai, mediaType))}</ui-ai>`;
+	return `<ui-ai${attrs({ 'aria-description': aiDescription(ai, mediaType) })}>${esc(aiLabel(ai, mediaType))}</ui-ai>`;
 };
 
 /* <ui-lightbox> is emitted SEPARATELY and placed BEFORE the slides: in a nav
