@@ -6,7 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="text-scale" content="scale">
 	<meta name="color-scheme" content="light dark">
-	<meta name="description" content="Overlay furniture inside &lt;ui-media&gt;: beacon (live status), chip (pill label), play, save (bookmark toggle) and sticker (disc / burst) — positioned via the 9-code grid and themed via the media= token.">
+	<meta name="description" content="Overlay furniture inside &lt;ui-media&gt;: ai (EU AI Act disclosure label), beacon (live status), chip (pill label), play, save (bookmark toggle) and sticker (disc / burst) — positioned via the 9-code grid and themed via the media= token.">
 	<link rel="alternate" type="text/markdown" href="/ui/card/docs/media.md">
 	<!-- no-referrer: the zone hotlink-protects CDN srcset. Docs: docs/performance.md -->
 	<meta name="referrer" content="no-referrer">
@@ -38,7 +38,7 @@
 <body data-layout-root data-page-gap="2">
 	<header>
 		<h1>UI: Card — Media furniture</h1>
-		<p>Overlay elements inside <code>&lt;ui-media&gt;</code>: <code>&lt;ui-beacon&gt;</code>, <code>&lt;ui-chip&gt;</code>, <code>&lt;ui-marquee&gt;</code>, <code>&lt;ui-play&gt;</code>, <code>&lt;ui-save&gt;</code>, <code>&lt;ui-sticker&gt;</code>. All configured from the parent <code>media=</code> token as <code>&lt;el&gt;(&lt;value&gt;)</code> — position on the 9-code grid (<code>ts tc te · cs cc ce · bs bc be</code>), plus hue, size etc.:</p>
+		<p>Overlay elements inside <code>&lt;ui-media&gt;</code>: <code>&lt;ui-ai&gt;</code>, <code>&lt;ui-beacon&gt;</code>, <code>&lt;ui-chip&gt;</code>, <code>&lt;ui-marquee&gt;</code>, <code>&lt;ui-play&gt;</code>, <code>&lt;ui-save&gt;</code>, <code>&lt;ui-sticker&gt;</code>. All configured from the parent <code>media=</code> token as <code>&lt;el&gt;(&lt;value&gt;)</code> — position on the 9-code grid (<code>ts tc te · cs cc ce · bs bc be</code>), plus hue, size etc.:</p>
 	</header>
 <main data-layout-root data-page-gap="2">
 
@@ -53,6 +53,36 @@
 		<ui-card variant="vis(media)" media="asr(1/1) sticker(bc) sticker(gray)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/ergochair.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/ergochair.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/ergochair.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/ergochair.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/ergochair.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-sticker><small>PLACE</small><strong>BC</strong></ui-sticker></ui-media></cq-box></ui-card>
 		<ui-card variant="vis(media)" media="asr(1/1) sticker(be) sticker(black)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/ergochair.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/ergochair.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/ergochair.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/ergochair.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/ergochair.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-sticker><small>PLACE</small><strong>BE</strong></ui-sticker></ui-media></cq-box></ui-card>
 	</lay-out>
+
+	<section>
+	<!-- ============================================================
+	     AI — <ui-ai>
+	     ============================================================ -->
+	<h2>AI — <code>&lt;ui-ai&gt;</code></h2>
+	<p>The EU AI Act disclosure label. Position with <code>ai(&lt;pos&gt;)</code> (default <code>bc</code>), colour
+		with <code>ai(&lt;hue&gt;)</code> (default <code>black</code>); the text is the word or a short phrase, an empty element the icon alone.</p>
+	<p>Full component: <a href="../../ai/">ui/ai</a> · every case: <a href="media.ai.html">media.ai.html</a>.</p>
+	<lay-out md="columns(2)" lg="columns(3)">
+		<ui-card variant="col" media="asr(4/3)">
+			<cq-box>
+				<ui-media><img src="/assets/images/aurasoundpro.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/aurasoundpro.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/aurasoundpro.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/aurasoundpro.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/aurasoundpro.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/aurasoundpro.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-ai aria-description="This image was generated with AI.">GENERATED</ui-ai></ui-media>
+				<ui-content><small data-part="eyebrow">Voluntary · defaults</small><h2 data-part="headline">GENERATED — bc, black</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) ai(te) chip(ts) chip(green)">
+			<cq-box>
+				<ui-media><img src="/assets/images/ergochair.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/ergochair.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/ergochair.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/ergochair.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/ergochair.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/ergochair.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip>New</ui-chip><ui-ai aria-description="This image was edited with AI.">Retouched</ui-ai></ui-media>
+				<ui-content><small data-part="eyebrow">Voluntary</small><h2 data-part="headline">ai(te) + chip(ts) chip(green)</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) ai(bs) ai(white) sticker(te) sticker(red)">
+			<cq-box>
+				<ui-media><img src="/assets/images/brewandbean.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/brewandbean.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/brewandbean.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/brewandbean.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/brewandbean.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/brewandbean.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-sticker><small>SAVE</small><strong>20%</strong></ui-sticker><ui-ai aria-description="This image was edited with AI. It shows or imitates real people, objects, places or events, and is not authentic.">MODIFIED</ui-ai></ui-media>
+				<ui-content><small data-part="eyebrow">Required</small><h2 data-part="headline">ai(bs) ai(white) + sticker(te) sticker(red)</h2></ui-content>
+			</cq-box>
+		</ui-card>
+	</lay-out>
+	</section>
 
 	<section>
 	<h2>Beacon — <code>&lt;ui-beacon&gt;</code></h2>
@@ -370,6 +400,53 @@
 		<ui-card variant="col" media="asr(4/3) sticker(te) sticker(fit) sticker(lg) sticker(blue)"><cq-box><ui-media><img src="/assets/images/aurasoundpro.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/aurasoundpro.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/aurasoundpro.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/aurasoundpro.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/aurasoundpro.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/aurasoundpro.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-sticker><small>UP TO</small><strong>40%</strong><span>OFF</span></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Audio</small><h2 data-part="headline">sticker(fit)</h2></ui-content></cq-box></ui-card>
 		<ui-card variant="col" media="asr(4/3) sticker(te) sticker(fit) sticker(lg) sticker(sh:burst) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/ergochair.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/ergochair.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/ergochair.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/ergochair.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/ergochair.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-sticker><small>MEGA</small><strong>SALE</strong></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Furniture</small><h2 data-part="headline">sticker(fit) + burst</h2></ui-content></cq-box></ui-card>
 		<ui-card variant="col" media="asr(4/3) sticker(te) sticker(fit) sticker(lg) sticker(green)"><cq-box><ui-media><img src="/assets/images/brewandbean.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/brewandbean.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/brewandbean.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/brewandbean.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/brewandbean.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/brewandbean.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-sticker><strong>NEW</strong></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Café</small><h2 data-part="headline">sticker(fit) single line</h2></ui-content></cq-box></ui-card>
+	</lay-out>
+	</section>
+
+	<section>
+	<!-- ============================================================
+	     Combined — several elements on one frame
+	     ============================================================ -->
+	<h2>Combined</h2>
+	<p>Real cards stack several elements on one frame. Give each its own cell — the defaults collide:
+		chip and beacon share <code>ts</code>, sticker and save share <code>te</code>.</p>
+	<lay-out md="columns(2)" lg="columns(3)">
+		<ui-card id="combo-cam" variant="col" media="asr(4/3) chip(ts) chip(black) chip(sm) sticker(te) sticker(red) sticker(xl) save(be) ai(bs)">
+			<cq-box>
+				<ui-media><img src="/assets/images/adventurecam.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/adventurecam.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/adventurecam.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/adventurecam.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/adventurecam.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/adventurecam.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip>Bestseller</ui-chip><ui-sticker><small>SAVE</small><strong>25%</strong></ui-sticker><ui-save><button type="button" command="--save" commandfor="combo-cam" aria-label="Add AdventureCam 4K to favorites"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save><ui-ai aria-description="This image was generated with AI.">GENERATED</ui-ai></ui-media>
+				<ui-content><small data-part="eyebrow">Webshop</small><h2 data-part="headline">AdventureCam 4K</h2><p data-part="summary">Label, discount, wishlist and a generated product render — four corners, one each. <code>chip(ts) chip(black) chip(sm) sticker(te) sticker(red) sticker(xl) save(be) ai(bs)</code></p></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card id="combo-rental" variant="col" media="asr(4/3) chip(ts) chip(white) chip(sm) save(te) ai(bs)">
+			<cq-box>
+				<ui-media><img src="/assets/images/rental_01.jpg" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/rental_01.jpg 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/rental_01.jpg 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/rental_01.jpg 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/rental_01.jpg 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/rental_01.jpg 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip>Guest favourite</ui-chip><ui-save><button type="button" command="--save" commandfor="combo-rental" aria-label="Save Masseria Lucia to a wishlist"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save><ui-ai aria-description="This image was edited with AI. It shows or imitates real people, objects, places or events, and is not authentic.">Sky replaced with AI</ui-ai></ui-media>
+				<ui-content><small data-part="eyebrow">Rental</small><h2 data-part="headline">Masseria Lucia, Puglia</h2><p data-part="summary">A retouched photo of a real place is a deep fake — its label must stay visible. <code>chip(ts) chip(white) chip(sm) save(te) ai(bs)</code></p></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card id="combo-news" variant="col" media="asr(4/3) beacon(sld) beacon(red) beacon(bln) beacon(sm) save(te) ai(bs)">
+			<cq-box>
+				<ui-media><img src="/assets/images/government.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/government.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/government.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/government.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/government.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/government.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-beacon>LIVE</ui-beacon><ui-play><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play><ui-save><button type="button" command="--save" commandfor="combo-news" aria-label="Watch the address later"><ui-icon type="shape" shape="bookmark" variant="outline"></ui-icon></button></ui-save><ui-ai aria-description="The voice is generated with AI. It shows or imitates real people, objects, places or events, and is not authentic.">Voice rendered with AI</ui-ai></ui-media>
+				<ui-content><small data-part="eyebrow">Live · dubbed</small><h2 data-part="headline">Prime minister's address, live in English</h2><p data-part="summary">Live indicator, play, watch-later — and a cloned voice translating a real speaker. <code>beacon(sld) beacon(red) beacon(bln) beacon(sm) save(te) ai(bs)</code></p></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card id="combo-salad" variant="col" media="asr(4/3) chip(ts) chip(green) chip(sm) sticker(te) sticker(sh:burst) sticker(orange) sticker(xl) save(be) ai(bs)">
+			<cq-box>
+				<ui-media><img src="/assets/images/summersalad.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/summersalad.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/summersalad.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/summersalad.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/summersalad.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/summersalad.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip>Vegan</ui-chip><ui-sticker><small>ONLY</small><strong>15m</strong></ui-sticker><ui-save><button type="button" command="--save" commandfor="combo-salad" aria-label="Bookmark Summer salad"><ui-icon type="shape" shape="bookmark" variant="outline"></ui-icon></button></ui-save><ui-ai aria-description="This image was generated with AI.">GENERATED</ui-ai></ui-media>
+				<ui-content><small data-part="eyebrow">Recipe</small><h2 data-part="headline">Summer salad with basil</h2><p data-part="summary">Diet chip, time burst, bookmark — and a styled shot that shows no real dish. <code>chip(ts) chip(green) chip(sm) sticker(te) sticker(sh:burst) sticker(orange) sticker(xl) save(be) ai(bs)</code></p></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card id="combo-podcast" variant="col" media="asr(4/3) chip(ts) chip(accent) chip(sm) save(te) ai(bc)">
+			<cq-box>
+				<ui-media><img src="/assets/images/podcast.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/podcast.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/podcast.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/podcast.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/podcast.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/podcast.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip>New episode</ui-chip><ui-play><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play><ui-save><button type="button" command="--save" commandfor="combo-podcast" aria-label="Add episode to queue"><ui-icon type="shape" shape="bookmark" variant="outline"></ui-icon></button></ui-save><ui-ai aria-description="The voice and script are generated with AI.">Synthetic voice</ui-ai></ui-media>
+				<ui-content><small data-part="eyebrow">Podcast</small><h2 data-part="headline">Signal &amp; Noise, episode 42</h2><p data-part="summary">An invented host resembles nobody, so the label is voluntary — <code>bc</code> sits under <code>cc</code> play. <code>chip(ts) chip(accent) chip(sm) save(te) ai(bc)</code></p></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card id="combo-event" variant="col" media="asr(4/3) beacon(sld) beacon(orange) beacon(pls) beacon(sm) sticker(te) sticker(blue) sticker(xl) save(be) ai(bs)">
+			<cq-box>
+				<ui-media><img src="/assets/images/websummit.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=240/assets/images/websummit.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=320/assets/images/websummit.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=480/assets/images/websummit.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=720/assets/images/websummit.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,width=1200/assets/images/websummit.png 1200w" sizes="auto, (min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-beacon>Few tickets left</ui-beacon><ui-sticker font-lead="md"><small>EARLY</small><strong>BIRD</strong></ui-sticker><ui-save><button type="button" command="--save" commandfor="combo-event" aria-label="Add Web Summit to favourites"><ui-icon type="shape" shape="star" variant="outline"></ui-icon></button></ui-save><ui-ai aria-description="This image was generated with AI.">GENERATED</ui-ai></ui-media>
+				<ui-content><small data-part="eyebrow">Event</small><h2 data-part="headline">Web Summit, Lisbon</h2><p data-part="summary">Live status, offer, favourite — and a generated key visual that shows nothing real. <code>beacon(sld) beacon(orange) beacon(pls) beacon(sm) sticker(te) sticker(blue) sticker(xl) save(be) ai(bs)</code></p></ui-content>
+			</cq-box>
+		</ui-card>
 	</lay-out>
 	</section>
 
