@@ -620,6 +620,9 @@ All optional — sensible defaults baked in. Set via `style="--token: value"` on
 | `--ui-carousel-marker-bg` | `rgb(255 255 255 / 0.5)` | Inactive marker |
 | `--ui-carousel-marker-active` | `#fff` | Active marker |
 | `--ui-carousel-marker-border` | `0` | Marker border |
+| `--ui-carousel-marker-ring-width` | `0` | Ring round each dot — a spread `box-shadow` natively, an inset `outline` in the polyfill; no layout shift, focus ring untouched |
+| `--ui-carousel-marker-ring-color` | `#0000` | Ring colour (inactive dots) |
+| `--ui-carousel-marker-ring-color-active` | `--ui-carousel-marker-ring-color` | Ring colour on the current dot |
 | `--ui-carousel-pill-width` | `1.5rem` | Pill width |
 | `--ui-carousel-pill-height` | `0.35rem` | Pill height |
 | `--ui-carousel-pill-track` | `rgb(255 255 255 / 0.35)` | Pill track (unfilled) |

@@ -122,12 +122,19 @@ ui-carousel-controls [data-dot] {
 	box-sizing: content-box;
 	margin: calc(-1 * var(--_hit-b)) calc(-1 * var(--_hit-i));
 	padding: var(--_hit-b) var(--_hit-i);
+	/* ring: a box-shadow would hug the 24px hit box, so an outline pulled in by the hit
+	   padding draws it round the painted dot instead (native uses a spread shadow) */
+	outline: var(--ui-carousel-marker-ring-width, 0) solid var(--ui-carousel-marker-ring-color, #0000);
+	outline-offset: calc(-1 * round(up, var(--_hit-b), 1px)); /* engines snap the offset to whole px — round toward the dot so no gap shows */
 }
 ui-carousel-controls [data-dot][aria-current] {
 	background: var(--ui-carousel-marker-active);
 	background-clip: content-box; /* the shorthand resets it — keep the paint on the visual box */
 	background-origin: content-box;
+	outline-color: var(--ui-carousel-marker-ring-color-active, var(--ui-carousel-marker-ring-color, #0000));
 }
+/* the ring borrows outline — keyboard focus gets the UA ring back */
+ui-carousel-controls [data-dot]:focus-visible { outline: revert; outline-offset: revert; }
 
 /* dot shape: pill — :target-current fill timer becomes [aria-current] */
 :where(ui-card, ui-reveal):where([media*="mrk(pll)"]) ui-media ui-carousel-controls [data-dot],

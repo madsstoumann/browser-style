@@ -12,7 +12,7 @@
 	<meta name="referrer" content="no-referrer">
 	<!-- preconnect: CDN handshake parallel to the CSS download. Docs: docs/performance.md -->
 	<link rel="preconnect" href="https://v4.browser.style">
-	<link rel="stylesheet" href="/dist/demo.854d72de.min.css">
+	<link rel="stylesheet" href="/dist/demo.e43dde0a.min.css">
 	<link rel="stylesheet" href="/dist/icon-font.c6950688.min.css">
 	<style>
 		section {
@@ -854,9 +854,9 @@
 	     COLOURWAYS — per-slide dot colour
 	     ════════════════════════════════════════════════════════════ -->
 	<h2 id="colourways">Colourways — unique colored dot per slide</h2>
-	<p>Set <code>--ui-carousel-marker-bg</code> + <code>--ui-carousel-marker-active</code> inline per slide; each <code>::scroll-marker</code> inherits its slide's colour.</p>
+	<p>Set <code>--ui-carousel-marker-bg</code> + <code>--ui-carousel-marker-active</code> inline per slide; each <code>::scroll-marker</code> inherits its slide's colour. A white ring via <code>--ui-carousel-marker-ring-*</code> on the host.</p>
 	<lay-out md="columns(2)">
-		<ui-card variant="col" media="asr(3/4) axis(y) nav mrk(lg)" content="scl(sm)">
+		<ui-card variant="col" media="asr(3/4) axis(y) nav mrk(lg)" style="--ui-carousel-marker-ring-width: 2px; --ui-carousel-marker-ring-color: rgb(255 255 255 / 0.25); --ui-carousel-marker-ring-color-active: #fff" content="scl(sm)">
 			<cq-box><ui-media>
 				<img src="/assets/images/phone-blue.svg" alt="Phone in blue" width="900" height="1200" loading="lazy" decoding="async" style="--ui-carousel-marker-bg: color-mix(in oklab, #2f6fe0 40%, #0000); --ui-carousel-marker-active: #2f6fe0">
 				<img src="/assets/images/phone-orange.svg" alt="Phone in orange" width="900" height="1200" loading="lazy" decoding="async" style="--ui-carousel-marker-bg: color-mix(in oklab, #f2782a 40%, #0000); --ui-carousel-marker-active: #f2782a">
@@ -864,14 +864,14 @@
 			</ui-media>
 			<ui-content><small data-part="eyebrow">axis(y) nav mrk(lg)</small><h3 data-part="headline">Vertical</h3></ui-content></cq-box>
 		</ui-card>
-		<ui-media media="asr(3/4) rds(lg) clip axis(y) nav(mrk) mrk(xl)">
+		<ui-media media="asr(3/4) rds(lg) clip axis(y) nav(mrk) mrk(xl)" style="--ui-carousel-marker-ring-width: 2px; --ui-carousel-marker-ring-color: rgb(255 255 255 / 0.25); --ui-carousel-marker-ring-color-active: #fff">
 			<img src="/assets/images/phone-blue.svg" alt="Phone in blue" width="900" height="1200" loading="lazy" decoding="async" style="--ui-carousel-marker-bg: color-mix(in oklab, #2f6fe0 40%, #0000); --ui-carousel-marker-active: #2f6fe0">
 			<img src="/assets/images/phone-orange.svg" alt="Phone in orange" width="900" height="1200" loading="lazy" decoding="async" style="--ui-carousel-marker-bg: color-mix(in oklab, #f2782a 40%, #0000); --ui-carousel-marker-active: #f2782a">
 			<img src="/assets/images/phone-green.svg" alt="Phone in green" width="900" height="1200" loading="lazy" decoding="async" style="--ui-carousel-marker-bg: color-mix(in oklab, #2ea36b 40%, #0000); --ui-carousel-marker-active: #2ea36b">
 		</ui-media>
 	</lay-out>
 	<lay-out md="columns(2)">
-		<ui-card variant="col" media="asr(3/4) nav mrk(lg)" content="scl(sm)">
+		<ui-card variant="col" media="asr(3/4) nav mrk(lg)" style="--ui-carousel-marker-ring-width: 2px; --ui-carousel-marker-ring-color: rgb(255 255 255 / 0.25); --ui-carousel-marker-ring-color-active: #fff" content="scl(sm)">
 			<cq-box><ui-media>
 				<img src="/assets/images/phone-blue.svg" alt="Phone in blue" width="900" height="1200" loading="lazy" decoding="async" style="--ui-carousel-marker-bg: color-mix(in oklab, #2f6fe0 40%, #0000); --ui-carousel-marker-active: #2f6fe0">
 				<img src="/assets/images/phone-orange.svg" alt="Phone in orange" width="900" height="1200" loading="lazy" decoding="async" style="--ui-carousel-marker-bg: color-mix(in oklab, #f2782a 40%, #0000); --ui-carousel-marker-active: #f2782a">
@@ -879,7 +879,7 @@
 			</ui-media>
 			<ui-content><small data-part="eyebrow">nav mrk(lg)</small><h3 data-part="headline">Horizontal</h3></ui-content></cq-box>
 		</ui-card>
-		<ui-card variant="col" media="asr(3/4) nav arw(arr) mrk(lg)" content="scl(sm)">
+		<ui-card variant="col" media="asr(3/4) nav arw(arr) mrk(lg)" style="--ui-carousel-marker-ring-width: 2px; --ui-carousel-marker-ring-color: rgb(255 255 255 / 0.25); --ui-carousel-marker-ring-color-active: #fff" content="scl(sm)">
 			<cq-box><ui-media>
 				<img src="/assets/images/phone-blue.svg" alt="Phone in blue" width="900" height="1200" loading="lazy" decoding="async" style="--ui-carousel-marker-bg: color-mix(in oklab, #2f6fe0 40%, #0000); --ui-carousel-marker-active: #2f6fe0">
 				<img src="/assets/images/phone-orange.svg" alt="Phone in orange" width="900" height="1200" loading="lazy" decoding="async" style="--ui-carousel-marker-bg: color-mix(in oklab, #f2782a 40%, #0000); --ui-carousel-marker-active: #f2782a">

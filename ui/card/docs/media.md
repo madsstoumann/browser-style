@@ -1012,6 +1012,9 @@ The split is deliberate: the control chrome is shared with `<lay-out overflow>`,
 | `--ui-carousel-marker-size` | `0.6rem` | marker diameter (the `mrk(sm\|md\|lg\|xl)` scale sets this **and** the pill + thumb sizes together) |
 | `--ui-carousel-marker-gap` | `0.5rem` | gap between dots |
 | `--ui-carousel-marker-border` | `0` | marker border |
+| `--ui-carousel-marker-ring-width` | `0` | ring round each dot (spread shadow; polyfill: inset outline) |
+| `--ui-carousel-marker-ring-color` | `#0000` | ring colour |
+| `--ui-carousel-marker-ring-color-active` | `--ui-carousel-marker-ring-color` | ring colour on the current dot |
 | `--ui-carousel-marker-inset` | `--ui-carousel-overlay-gap` (`1rem` under `mrk(tmb)`) | corner inset for the overlay marker group (`mrk(ts…be)`) |
 | `--ui-carousel-pill-width` | `1.5rem` | `mrk(pll)` width |
 | `--ui-carousel-pill-height` | `0.35rem` | `mrk(pll)` height |

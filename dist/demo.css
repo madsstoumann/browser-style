@@ -3380,6 +3380,7 @@
         block-size: var(--ui-carousel-marker-size);
         border: var(--ui-carousel-marker-border);
         border-radius: var(--radius-circle, 50%);
+        box-shadow: 0 0 0 var(--ui-carousel-marker-ring-width, 0) var(--ui-carousel-marker-ring-color, #0000);
         color: inherit;
         content: "";
         cursor: pointer;
@@ -3387,6 +3388,7 @@
       }
       & > :not(ui-ai, ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
         background: var(--ui-carousel-marker-active);
+        box-shadow: 0 0 0 var(--ui-carousel-marker-ring-width, 0) var(--ui-carousel-marker-ring-color-active, var(--ui-carousel-marker-ring-color, #0000));
       }
     }
     @media (width < 540px) {
@@ -3396,6 +3398,7 @@
         block-size: var(--ui-carousel-marker-size);
         border: var(--ui-carousel-marker-border);
         border-radius: var(--radius-circle, 50%);
+        box-shadow: 0 0 0 var(--ui-carousel-marker-ring-width, 0) var(--ui-carousel-marker-ring-color, #0000);
         color: inherit;
         content: "";
         cursor: pointer;
@@ -3404,6 +3407,7 @@
       :where(ui-card, ui-reveal):where([media~=pages]) :where(ui-media) > lay-out > *::scroll-marker:target-current,
       ui-media:where([media~=pages]) > lay-out > *::scroll-marker:target-current {
         background: var(--ui-carousel-marker-active);
+        box-shadow: 0 0 0 var(--ui-carousel-marker-ring-width, 0) var(--ui-carousel-marker-ring-color-active, var(--ui-carousel-marker-ring-color, #0000));
       }
     }
     ui-media ui-media {
