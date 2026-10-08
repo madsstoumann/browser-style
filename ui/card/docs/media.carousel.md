@@ -359,6 +359,12 @@ mechanism follows from the markup shape.
   Under `prefers-reduced-motion: reduce` the fill is shown static (no animation).
 - Sizes `mrk(sm|md|lg|xl)` set `--ui-carousel-marker-size` + matching pill width/height **and**
   `--ui-carousel-thumb-size` (`md` = default) — one scale for dots, pills and thumbnails.
+- **Per-slide dot colour (colourways).** `--ui-carousel-marker-bg` / `--ui-carousel-marker-active`
+  can be set inline on a slide instead of the host: a `::scroll-marker` is a pseudo-element of its
+  slide and inherits the slide's custom properties, so each dot takes its own colour — no token,
+  no JS (e.g. `style="--ui-carousel-marker-bg: color-mix(in oklab, #f2782a 40%, #0000); --ui-carousel-marker-active: #f2782a"`).
+  Same mechanism as `--ui-carousel-thumb-url`; the polyfill copies both vars from the slide's
+  inline style onto its `<button>` dot. Demo: media.carousel.html § Colourways.
 - **`mrk(tmb)` — image thumbnails.** Each marker becomes a picture set per-slide via
   `--ui-carousel-thumb-url` (on the slide `<img>` or the slide `<ui-card>`); it inherits to that
   slide's `::scroll-marker`. Sized by `--ui-carousel-thumb-size` × `--ui-carousel-thumb-ratio`,

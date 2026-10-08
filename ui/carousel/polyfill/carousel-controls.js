@@ -153,8 +153,10 @@ export function initControls(scroller, options = {}) {
 		group.setAttribute('aria-label', 'Slides');
 		dotEls = slides.map((slide, i) => {
 			const dot = button('dot', `Go to slide ${i + 1}`);
-			// mrk(tmb): each slide carries its thumbnail vars inline — copy to its dot
-			for (const prop of ['--ui-carousel-thumb-url', '--ui-carousel-thumb-ratio']) {
+			// per-slide marker vars live inline on the slide (native ::scroll-marker inherits
+			// them; a real <button> dot does not) — copy to its dot: mrk(tmb) thumbnails and
+			// per-slide dot colours (a colourway carousel)
+			for (const prop of ['--ui-carousel-thumb-url', '--ui-carousel-thumb-ratio', '--ui-carousel-marker-bg', '--ui-carousel-marker-active']) {
 				const v = slide.style.getPropertyValue(prop);
 				if (v) dot.style.setProperty(prop, v);
 			}
