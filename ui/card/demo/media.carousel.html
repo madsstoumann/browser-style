@@ -169,6 +169,7 @@
 			<strong>More</strong>
 			<ol>
 				<li><a href="#vertical">Vertical — axis(y)</a></li>
+				<li><a href="#colourways">Colourways</a></li>
 				<li><a href="#stagger">Stagger</a></li>
 			</ol>
 		</div>
@@ -848,8 +849,12 @@
 			</ui-media>
 	</lay-out>
 
-	<h3 id="colourways">Colourways — one phone, a dot per colour</h3>
-	<p>Each slide sets its own dot colour inline: <code>--ui-carousel-marker-bg</code> (inactive) and <code>--ui-carousel-marker-active</code> (current). A <code>::scroll-marker</code> is a pseudo-element <em>of its slide</em>, so it inherits the slide's custom properties — the same per-slide mechanism as <code>mrk(tmb)</code>'s <code>--ui-carousel-thumb-url</code>. The Safari polyfill copies both vars onto its <code>&lt;button&gt;</code> dots.</p>
+	<hr>
+	<!-- ════════════════════════════════════════════════════════════
+	     COLOURWAYS — per-slide dot colour
+	     ════════════════════════════════════════════════════════════ -->
+	<h2 id="colourways">Colourways — unique colored dot per slide</h2>
+	<p>Set <code>--ui-carousel-marker-bg</code> + <code>--ui-carousel-marker-active</code> inline per slide; each <code>::scroll-marker</code> inherits its slide's colour.</p>
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(3/4) axis(y) nav mrk(lg)" content="scl(sm)">
 			<cq-box><ui-media>
@@ -857,13 +862,31 @@
 				<img src="/assets/images/phone-orange.svg" alt="Phone in orange" width="900" height="1200" loading="lazy" decoding="async" style="--ui-carousel-marker-bg: color-mix(in oklab, #f2782a 40%, #0000); --ui-carousel-marker-active: #f2782a">
 				<img src="/assets/images/phone-green.svg" alt="Phone in green" width="900" height="1200" loading="lazy" decoding="async" style="--ui-carousel-marker-bg: color-mix(in oklab, #2ea36b 40%, #0000); --ui-carousel-marker-active: #2ea36b">
 			</ui-media>
-			<ui-content><small data-part="eyebrow">axis(y) nav mrk(lg)</small><h3 data-part="headline">Phone X — three colours</h3><p data-part="summary">Blue, orange or green. Same phone, colour-matched dots.</p></ui-content></cq-box>
+			<ui-content><small data-part="eyebrow">axis(y) nav mrk(lg)</small><h3 data-part="headline">Vertical</h3></ui-content></cq-box>
 		</ui-card>
 		<ui-media media="asr(3/4) rds(lg) clip axis(y) nav(mrk) mrk(xl)">
 			<img src="/assets/images/phone-blue.svg" alt="Phone in blue" width="900" height="1200" loading="lazy" decoding="async" style="--ui-carousel-marker-bg: color-mix(in oklab, #2f6fe0 40%, #0000); --ui-carousel-marker-active: #2f6fe0">
 			<img src="/assets/images/phone-orange.svg" alt="Phone in orange" width="900" height="1200" loading="lazy" decoding="async" style="--ui-carousel-marker-bg: color-mix(in oklab, #f2782a 40%, #0000); --ui-carousel-marker-active: #f2782a">
 			<img src="/assets/images/phone-green.svg" alt="Phone in green" width="900" height="1200" loading="lazy" decoding="async" style="--ui-carousel-marker-bg: color-mix(in oklab, #2ea36b 40%, #0000); --ui-carousel-marker-active: #2ea36b">
 		</ui-media>
+	</lay-out>
+	<lay-out md="columns(2)">
+		<ui-card variant="col" media="asr(3/4) nav mrk(lg)" content="scl(sm)">
+			<cq-box><ui-media>
+				<img src="/assets/images/phone-blue.svg" alt="Phone in blue" width="900" height="1200" loading="lazy" decoding="async" style="--ui-carousel-marker-bg: color-mix(in oklab, #2f6fe0 40%, #0000); --ui-carousel-marker-active: #2f6fe0">
+				<img src="/assets/images/phone-orange.svg" alt="Phone in orange" width="900" height="1200" loading="lazy" decoding="async" style="--ui-carousel-marker-bg: color-mix(in oklab, #f2782a 40%, #0000); --ui-carousel-marker-active: #f2782a">
+				<img src="/assets/images/phone-green.svg" alt="Phone in green" width="900" height="1200" loading="lazy" decoding="async" style="--ui-carousel-marker-bg: color-mix(in oklab, #2ea36b 40%, #0000); --ui-carousel-marker-active: #2ea36b">
+			</ui-media>
+			<ui-content><small data-part="eyebrow">nav mrk(lg)</small><h3 data-part="headline">Horizontal</h3></ui-content></cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(3/4) nav arw(arr) mrk(lg)" content="scl(sm)">
+			<cq-box><ui-media>
+				<img src="/assets/images/phone-blue.svg" alt="Phone in blue" width="900" height="1200" loading="lazy" decoding="async" style="--ui-carousel-marker-bg: color-mix(in oklab, #2f6fe0 40%, #0000); --ui-carousel-marker-active: #2f6fe0">
+				<img src="/assets/images/phone-orange.svg" alt="Phone in orange" width="900" height="1200" loading="lazy" decoding="async" style="--ui-carousel-marker-bg: color-mix(in oklab, #f2782a 40%, #0000); --ui-carousel-marker-active: #f2782a">
+				<img src="/assets/images/phone-green.svg" alt="Phone in green" width="900" height="1200" loading="lazy" decoding="async" style="--ui-carousel-marker-bg: color-mix(in oklab, #2ea36b 40%, #0000); --ui-carousel-marker-active: #2ea36b">
+			</ui-media>
+			<ui-content><small data-part="eyebrow">nav arw(arr) mrk(lg)</small><h3 data-part="headline">Horizontal, full arrow</h3></ui-content></cq-box>
+		</ui-card>
 	</lay-out>
 
 	<hr>
