@@ -1,7 +1,7 @@
 /**
  * <ui-search-bot> — a conversation on a search box: a question in, a streamed answer (SSE) and its sources out.
  * Wraps a <ui-search> (its form asks) or brings its own form; light DOM, four modes. Docs: readme.md
- * @version 2.0.0 · @author Mads Stoumann
+ * @version 2.1.0 · @author Mads Stoumann
  */
 
 const LABELS = {
@@ -22,6 +22,7 @@ const LABELS = {
 	dislike: 'Poor answer',
 	copy: 'Copy',
 	share: 'Share',
+	source: 'Source',
 	error: 'The assistant is not available right now.',
 };
 
@@ -135,6 +136,9 @@ const svg = (name) => {
 	}
 	return icon;
 };
+
+/* the bot's buttons that take an author's icon: <svg slot="icon-trigger"> etc. as a direct child */
+const SLOTS = { trigger: 'ai', history: 'history', new: 'plus', close: 'close', submit: 'send', stop: 'stop' };
 
 /* `code`, **strong**, *em*, [text](url) and bare http(s) URLs, as nodes */
 const inline = (text) => {
@@ -463,6 +467,7 @@ export default class UiSearchBot extends HTMLElement {
 			const m = line.match(/^\[(\d+)\]\s*(\S+)/);
 			if (m && safeUrl(m[2])) map[m[1]] = safeUrl(m[2]);
 		}
+		const cited = at !== -1;
 		const fragment = document.createDocumentFragment();
 		let list = null;
 		for (const raw of body) {
@@ -471,22 +476,27 @@ export default class UiSearchBot extends HTMLElement {
 			if (bullet) {
 				const tag = /^\d/.test(line) ? 'ol' : 'ul';
 				if (!list || list.tagName.toLowerCase() !== tag) fragment.append(list = el(tag));
-				list.append(this.#line(el('li'), bullet[1], refs, map));
+				list.append(this.#line(el('li'), bullet[1], refs, map, cited));
 			} else {
 				list = null;
 				const heading = line.match(/^#{1,6}\s+(.+)/);
-				if (heading) fragment.append(this.#line(el('p', {}, el('strong')).firstChild, heading[1], refs, map).parentElement);
-				else if (line) fragment.append(this.#line(el('p'), line, refs, map));
+				if (heading) fragment.append(this.#line(el('p', {}, el('strong')).firstChild, heading[1], refs, map, cited).parentElement);
+				else if (line) fragment.append(this.#line(el('p'), line, refs, map, cited));
 			}
 		}
 		const keep = [...container.querySelectorAll(':scope > ul[data-bot="results"], :scope > [data-bot="component"]')];
 		container.replaceChildren(fragment, ...keep);
 	}
 
-	#line(node, text, refs, map) {
+	/* with a trailer, each [n] is a chip: a link when the trailer gives it a URL, named after its hit */
+	#line(node, text, refs, map, cited) {
 		for (const part of text.split(/(\[\d+\])/g)) {
 			const m = part.match(/^\[(\d+)\]$/);
-			if (m && map[m[1]]) node.append(el('a', { href: map[m[1]], 'data-bot': 'ref', text: refs[map[m[1]]] || m[1] }));
+			if (m && map[m[1]]) {
+				const name = refs[map[m[1]]];
+				const label = `${this.#labelOf('source')} ${m[1]}`;
+				node.append(el('a', { href: map[m[1]], 'data-bot': 'ref', title: name || null, 'aria-label': name ? `${label}: ${name}` : label, text: m[1] }));
+			} else if (m && cited) node.append(el('span', { 'data-bot': 'ref', text: m[1] }));
 			else node.append(inline(part));
 		}
 		return node;
@@ -604,6 +614,7 @@ export default class UiSearchBot extends HTMLElement {
 	#plain(li) {
 		const clone = li.cloneNode(true);
 		for (const extra of clone.querySelectorAll('[data-bot="actions"], [data-bot="error"]')) extra.remove();
+		for (const ref of clone.querySelectorAll('[data-bot="ref"]')) ref.textContent = `[${ref.textContent}]`;
 		return clone.textContent.replace(/\s+\n/g, '\n').trim();
 	}
 
@@ -677,6 +688,14 @@ export default class UiSearchBot extends HTMLElement {
 
 	/* ── the markup ───────────────────────────────────────────────────────── */
 
+	/* the author's icon for a button (moved in, a direct child with slot="icon-<name>"), else the built-in one */
+	#icon(name) {
+		const own = this.querySelector(`:scope > [slot="icon-${name}"]`);
+		if (!own) return svg(SLOTS[name]);
+		own.setAttribute('aria-hidden', 'true');
+		return own;
+	}
+
 	#build() {
 		const id = `ui-search-bot-${this.#uid}`;
 		const options = new Set((this.getAttribute('options') ?? (this.#dialog ? 'close new history' : 'new history')).split(/\s+/));
@@ -685,7 +704,7 @@ export default class UiSearchBot extends HTMLElement {
 		if (this.#dialog) {
 			/* with a wrapped box: Ask beside it; alone: the floating trigger */
 			if (this.#wrapped) this.#search.after(el('button', { type: 'button', 'data-bot': 'ask', text: this.#labelOf('ask') }));
-			else this.append(el('button', { type: 'button', 'data-bot': 'trigger', commandfor: id, command: 'show-modal', 'aria-label': this.#labelOf('question') }, svg('ai')));
+			else this.append(el('button', { type: 'button', 'data-bot': 'trigger', commandfor: id, command: 'show-modal', 'aria-label': this.#labelOf('question') }, this.#icon('trigger')));
 		}
 
 		this.#panel = this.#dialog
@@ -695,12 +714,12 @@ export default class UiSearchBot extends HTMLElement {
 		this.#header = el('div', { 'data-bot': 'header' });
 		if (options.has('history') && this.hasAttribute('preserve-history')) {
 			this.#header.append(
-				el('button', { type: 'button', 'data-bot': 'history', popovertarget: `${id}-history`, 'aria-label': this.#labelOf('history') }, svg('history')),
+				el('button', { type: 'button', 'data-bot': 'history', popovertarget: `${id}-history`, 'aria-label': this.#labelOf('history') }, this.#icon('history')),
 				this.#historyList = el('ul', { id: `${id}-history`, 'data-bot': 'history-list', popover: true, 'aria-label': this.#labelOf('history') }));
 		}
-		if (options.has('new')) this.#header.append(el('button', { type: 'button', 'data-bot': 'new', 'aria-label': this.#labelOf('new') }, svg('plus')));
-		this.#header.append(this.#stop = el('button', { type: 'button', 'data-bot': 'stop', hidden: true, 'aria-label': this.#labelOf('stop') }, svg('stop')));
-		if (this.#dialog && options.has('close')) this.#header.append(el('button', { type: 'button', 'data-bot': 'close', commandfor: id, command: 'close', 'aria-label': this.#labelOf('close') }, svg('close')));
+		if (options.has('new')) this.#header.append(el('button', { type: 'button', 'data-bot': 'new', 'aria-label': this.#labelOf('new') }, this.#icon('new')));
+		this.#header.append(this.#stop = el('button', { type: 'button', 'data-bot': 'stop', hidden: true, 'aria-label': this.#labelOf('stop') }, this.#icon('stop')));
+		if (this.#dialog && options.has('close')) this.#header.append(el('button', { type: 'button', 'data-bot': 'close', commandfor: id, command: 'close', 'aria-label': this.#labelOf('close') }, this.#icon('close')));
 
 		this.#conversation = el('ol', { 'data-bot': 'conversation', 'aria-live': 'polite' });
 		this.#panel.append(this.#header, this.#conversation);
@@ -713,7 +732,7 @@ export default class UiSearchBot extends HTMLElement {
 				: el('input', { type: 'search', id: `${id}-q`, name: 'q', required: true, autocomplete: 'off', enterkeyhint: 'send', placeholder: this.#labelOf('placeholder') });
 			this.#form = el('form', { 'data-bot': 'form' }, [
 				this.#legend, this.#input,
-				el('button', { type: 'submit', 'data-bot': 'send', 'aria-label': this.#labelOf('send') }, svg('send')),
+				el('button', { type: 'submit', 'data-bot': 'send', 'aria-label': this.#labelOf('send') }, this.#icon('submit')),
 			]);
 			this.#panel.append(this.#form);
 		}

@@ -1,6 +1,6 @@
 /**
  * ui-search-bot — a conversation on a search box: trigger, panel (dialog or inline), the thread, its form.
- * Docs: readme.md · @version 2.0.0 · @author Mads Stoumann
+ * Docs: readme.md · @version 2.1.0 · @author Mads Stoumann
  */
 @layer bs-component {
 	:where(ui-search-bot) {
@@ -22,11 +22,26 @@
 	}
 	:where(ui-search-bot > [data-bot="ask"]) { anchor-name: --ui-search-bot-trigger; white-space: nowrap; }
 
-	/* theme= re-published into the panel's own tokens (convert-to-v4 § theme) */
+	/* theme= re-published into the panel's and the trigger's tokens; the host itself never paints — readme.md § Theme */
 	:where(ui-search-bot[theme]) {
 		--ui-search-bot-bg: var(--_theme-bg, var(--color-surface));
 		--ui-search-bot-c: var(--_theme-c, var(--color-text));
+		--ui-search-bot-trigger-bg: var(--_theme-base-bg, var(--color-button));
+		--ui-search-bot-trigger-c: var(--_theme-base-c, var(--color-button-text));
+		--ui-search-bot-bdf: var(--_theme-bdf, none);
+		/* plates mixed from the text, so `ink` on a dark hue keeps them readable */
+		--ui-search-bot-button-bg: color-mix(in srgb, currentColor 10%, transparent);
+		--ui-search-bot-code-bg: color-mix(in srgb, currentColor 10%, transparent);
+		--ui-search-bot-ref-bg: color-mix(in srgb, currentColor 12%, transparent);
+		--ui-search-bot-user-bg: color-mix(in srgb, currentColor 10%, transparent);
+		backdrop-filter: none;
+		background-color: transparent;
+		color: inherit;
 	}
+	:where(ui-search-bot[theme] > dialog[data-bot="panel"]) { backdrop-filter: var(--ui-search-bot-bdf, none); }
+
+	/* an author's icon waits, hidden, until the bot moves it into its button */
+	:where(ui-search-bot > [slot^="icon-"]) { display: none; }
 
 	/* the floating trigger, on the nine-cell position grid — readme.md § Position */
 	:where(ui-search-bot > [data-bot="trigger"]) {
@@ -235,8 +250,27 @@
 		row-gap: var(--spacing-sm);
 		& > :is(p, ul, ol) { margin: 0; }
 		& > :is(ul, ol) { padding-inline-start: var(--spacing-lg); }
-		& code { background: var(--color-surface-alt); border-radius: var(--radius-xs); font-family: var(--font-mono); padding: .1em .3em; }
+		& code { background: var(--ui-search-bot-code-bg, var(--color-surface-alt)); border-radius: var(--radius-xs); font-family: var(--font-mono); padding: .1em .3em; }
 		& a { color: var(--color-link); }
+		/* a citation: one small chip per [n] */
+		& [data-bot="ref"] {
+			background: var(--ui-search-bot-ref-bg, var(--color-surface-alt));
+			border-radius: var(--radius-xs);
+			color: var(--ui-search-bot-ref-c, inherit);
+			display: inline-block;
+			font-size: var(--font-size-xs);
+			font-variant-numeric: tabular-nums;
+			font-weight: var(--font-weight-semibold);
+			line-height: 1;
+			margin-inline-start: .2em;
+			min-inline-size: 1.4em;
+			padding: .25em .35em;
+			text-align: center;
+			text-decoration: none;
+			vertical-align: .15em;
+		}
+		& a[data-bot="ref"]:is(:hover, :focus-visible) { background: var(--color-button); color: var(--color-button-text); }
+		& [data-bot="ref"] + [data-bot="ref"] { margin-inline-start: .15em; }
 	}
 
 	/* three dots while nothing has arrived */
@@ -323,10 +357,10 @@
 		&:hover { background: var(--color-button); color: var(--color-button-text); }
 		&:focus-visible { outline: var(--ring-width) solid var(--ring-color); outline-offset: var(--ring-offset); }
 		&[hidden] { display: none; }
-		& > svg {
-			block-size: var(--ui-search-bot-icon, var(--size-5));
+		& > :is(svg, [slot]) { block-size: var(--ui-search-bot-icon, var(--size-5)); inline-size: var(--ui-search-bot-icon, var(--size-5)); }
+		/* the built-in outlines; an author's icon keeps its own fill and stroke */
+		& > svg:not([slot]) {
 			fill: none;
-			inline-size: var(--ui-search-bot-icon, var(--size-5));
 			stroke: currentColor;
 			stroke-linecap: round;
 			stroke-linejoin: round;
@@ -339,7 +373,7 @@
 		color: var(--ui-search-bot-trigger-c, var(--color-button-text));
 		padding: var(--spacing-sm);
 	}
-	:where(ui-search-bot :is([data-bot="trigger"], [data-bot="stop"]) > svg) { fill: currentColor; stroke: none; }
+	:where(ui-search-bot :is([data-bot="trigger"], [data-bot="stop"]) > svg:not([slot])) { fill: currentColor; stroke: none; }
 
 	@keyframes ui-search-bot-dots {
 		20% { background-position: 0% 0%, 50% 50%, 100% 50%; }

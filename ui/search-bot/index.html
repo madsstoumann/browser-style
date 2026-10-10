@@ -67,7 +67,7 @@
 				label-ask="Spørg" label-question="Stil et spørgsmål" label-follow-up="Stil et opfølgende spørgsmål" label-placeholder="Skriv dit spørgsmål"
 				label-send="Send" label-stop="Stop" label-stopped="Svaret blev stoppet" label-thinking="Tænker…" label-new="Nyt spørgsmål"
 				label-history="Tidligere spørgsmål" label-no-history="Ingen gemte samtaler" label-delete="Slet" label-close="Luk"
-				label-like="Godt svar" label-dislike="Dårligt svar" label-copy="Kopiér" label-share="Del" label-error="Assistenten svarer ikke lige nu."></ui-search-bot>
+				label-like="Godt svar" label-dislike="Dårligt svar" label-copy="Kopiér" label-share="Del" label-source="Kilde" label-error="Assistenten svarer ikke lige nu."></ui-search-bot>
 		</section>
 
 		<section>
@@ -76,13 +76,22 @@
 		</section>
 
 		<section>
+			<h2>Icons and colour</h2>
+			<p>Any of the bot's buttons takes your icon: a direct child with <code>slot="icon-trigger"</code>, <code>icon-history</code>, <code>icon-new</code>, <code>icon-close</code>, <code>icon-submit</code> or <code>icon-stop</code> is moved into that button and keeps its own fill and stroke. The chatbot carries a chat bubble, the full-screen one a magnifier. <code>theme=</code> paints the panel and the trigger, never the host: the chatbot is <code>theme="blue pale"</code>, a solid blue button and a pale blue panel.</p>
+		</section>
+
+		<section>
 			<h2>The stream</h2>
-			<p><code>api=</code> is the endpoint; the adapter named by <code>provider=</code> (<code>nlweb</code>, the default, or <code>aisearch</code>) builds the query string and reads each message. The endpoint answers <code>text/event-stream</code>: hits first (<code>result_batch</code>), then the summary in pieces (<code>summary</code>), then <code>complete</code>. A trailing <code>References</code> block of <code>[n] url</code> lines turns every <code>[n]</code> in the text into a link. See <a href="readme.md">readme.md § The stream</a>.</p>
+			<p><code>api=</code> is the endpoint; the adapter named by <code>provider=</code> (<code>nlweb</code>, the default, or <code>aisearch</code>) builds the query string and reads each message. The endpoint answers <code>text/event-stream</code>: hits first (<code>result_batch</code>), then the summary in pieces (<code>summary</code>), then <code>complete</code>. A trailing <code>References</code> block of <code>[n] url</code> lines turns every <code>[n]</code> in the text into a small numbered chip that links to that page, named after its hit. See <a href="readme.md">readme.md § The stream</a>.</p>
 		</section>
 	</main>
 
-	<ui-search-bot id="brand" mode="chatbot" position="be" context="brand" api="/ask" preserve-history preserve-state feedback share></ui-search-bot>
-	<ui-search-bot id="live" mode="search" position="bs" api="https://wild-flower-99ce-nlweb.stoumann.workers.dev/ask" provider="nlweb" preserve-history preserve-state feedback share label-question="Ask the live NLWeb demo"></ui-search-bot>
+	<ui-search-bot id="brand" mode="chatbot" position="be" context="brand" api="/ask" theme="blue pale" preserve-history preserve-state feedback share>
+		<svg slot="icon-trigger" viewBox="0 0 24 24" fill="currentColor"><path d="M18 3a4 4 0 0 1 4 4v8a4 4 0 0 1 -4 4h-4.724l-4.762 2.857a1 1 0 0 1 -1.508 -.743l-.006 -.114v-2h-1a4 4 0 0 1 -3.995 -3.8l-.005 -.2v-8a4 4 0 0 1 4 -4zm-2.8 9.286a1 1 0 0 0 -1.414 .014a2.5 2.5 0 0 1 -3.572 0a1 1 0 0 0 -1.428 1.4a4.5 4.5 0 0 0 6.428 0a1 1 0 0 0 -.014 -1.414m-5.69 -4.286h-.01a1 1 0 1 0 0 2h.01a1 1 0 0 0 0 -2m5 0h-.01a1 1 0 0 0 0 2h.01a1 1 0 0 0 0 -2"/></svg>
+	</ui-search-bot>
+	<ui-search-bot id="live" mode="search" position="bs" api="https://wild-flower-99ce-nlweb.stoumann.workers.dev/ask" provider="nlweb" preserve-history preserve-state feedback share label-question="Ask the live NLWeb demo">
+		<svg slot="icon-trigger" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"/><path d="M21 21l-6 -6"/></svg>
+	</ui-search-bot>
 
 	<script type="module">
 		import '/ui/search/ui-search.js';
@@ -107,7 +116,7 @@
 		for (const box of document.querySelectorAll('ui-search[api="/ui/search/data/demo.json"]')) box.transform = transform;
 
 		/* … and a mock SSE source speaking NLWeb's three messages, word by word */
-		const BRAND = 'Browser.style is a CSS-first component library: design tokens, container queries, cascade layers and light-DOM custom elements, so page CSS and frameworks reach everything. **No Shadow DOM**, zero-specificity selectors and `theme=` across every component. This answer is canned — point `api=` at a real stream to get one that is not.';
+		const BRAND = 'Browser.style is a CSS-first component library: design tokens, container queries, cascade layers and light-DOM custom elements, so page CSS and frameworks reach everything [1]. **No Shadow DOM**, zero-specificity selectors and `theme=` across every component [2]. This answer is canned — point `api=` at a real stream to get one that is not.\n\nReferences\n[1] /ui/card/\n[2] /ui/base/theme.md';
 		const stream = (url) => {
 			const params = new URL(url).searchParams;
 			const query = params.get('query') || '';

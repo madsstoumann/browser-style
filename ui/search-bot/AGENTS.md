@@ -33,8 +33,16 @@ form); nothing of that markup survives, so do not pattern-match from a page that
   becomes nodes through `inline()`; `safeUrl()` gates every `href` and `src` (http, https, relative).
   Icons are path data turned into SVG nodes, never markup strings. There is no `innerHTML` in the
   file; keep it that way.
-- **`[n]` links need the References trailer.** `#renderSummary` maps `[n] url` lines to `[n]` in
-  the text and names the link after the hit with that URL. No trailer, no link: the `[n]` stays text.
+- **`[n]` chips need the References trailer.** `#renderSummary` maps `[n] url` lines to `[n]` in
+  the text; each becomes `[data-bot="ref"]` showing the number, linked when the trailer gives a URL,
+  with `title`/`aria-label` from the hit with that URL. No trailer: the `[n]` stays text. Never put
+  the hit's name in the chip's text — adjacent chips then run together ("235" or "CardsPresets").
+- **Author icons are moved, never cloned.** `#icon(name)` takes `:scope > [slot="icon-<name>"]` into
+  its button once, at build. The CSS styles only `svg:not([slot])`, so an author's fill and stroke
+  survive; an unclaimed slot child stays `display: none`.
+- **The host never paints its theme.** Universal paint (`ui/base/theme.css`, bs-core) fills any
+  `[theme]`; the bot resets the host from bs-component and re-publishes into inheriting
+  `--ui-search-bot-*` tokens, because the `--_theme-*` vars do not inherit.
 - **The summary node is replaced at the end.** While streaming, one text node grows; at `complete`
   (or Stop, or error) it is parsed and replaced, keeping `ul[data-bot="results"]` and components.
 - **Words come from `label-*`, read once at build.** Changing a label attribute later changes
