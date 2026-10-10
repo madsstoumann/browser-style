@@ -104,6 +104,7 @@ export default class UiSearch extends HTMLElement {
 		this.#status.setAttribute('role', 'status');
 
 		this.#form.addEventListener('submit', this);
+		this.#form.addEventListener('formdata', this);
 		this.#input.addEventListener('input', this);
 		this.addEventListener('keydown', this);
 		if (!this.contains(target)) target.addEventListener('keydown', this);
@@ -124,6 +125,7 @@ export default class UiSearch extends HTMLElement {
 		if (event.type === 'submit') this.#onSubmit(event);
 		else if (event.type === 'input') this.#onInput();
 		else if (event.type === 'keydown') this.#onKeydown(event);
+		else if (event.type === 'formdata') this.#onFormData(event);
 	}
 
 	/** Run the form's current query now, against `api`. Resolves with the normalised response, or null. */
@@ -235,6 +237,13 @@ export default class UiSearch extends HTMLElement {
 		const result = await this.search();
 		if (!result) return { error: this.#label('error') };
 		return Array.isArray(result.response) ? { items: result.response } : result.response;
+	}
+
+	/* empty fields leave every request, native submit included: a shared link is ?q=…, not ?q=…&type= */
+	#onFormData({ formData }) {
+		const kept = [...formData].filter(([, value]) => value !== '');
+		for (const key of new Set(formData.keys())) formData.delete(key);
+		for (const [key, value] of kept) formData.append(key, value);
 	}
 
 	#onInput() {

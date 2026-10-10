@@ -21,3 +21,4 @@ writes: `<search>` › `<form>` › label, `input[name]`, button, filters. The p
 - **Results are links, not a combobox.** Arrow keys are a shortcut; do not add `role="listbox"`/`option` without the whole APG combobox pattern.
 - **An agent's answer is the response, not the rows.** `#answer()` returns `result.response` as the endpoint (or `transform`) gave it, so fields the element never draws (a product's `sku`, price) reach the agent. Errors are returned as `{ error }`, never thrown: WebMCP hands an agent nothing from a rejection.
 - **`suggest` is for typing only.** `search()`, a submit, `sync-url` and an agent all use `api`; only the debounced `input` search reads `suggest`.
+- **Empty fields never leave the form.** `#onFormData` strips them on the `formdata` event, which fires for the native submit and for every `new FormData(form)` here (requests, `sync-url`). Results links stay `?q=…`; do not reintroduce a hidden field that always has a value (put it in `api=`).

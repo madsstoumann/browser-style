@@ -78,8 +78,13 @@ Write them yourself, server-side, and the script fills those instead.
 
 ## Request
 
-`GET {api}?q=…&{every other named field}&take={take}` with `Accept: application/json`. A newer
-search aborts the one in flight; a late answer to an old query is dropped.
+`GET {api}?q=…&{every other named field}&take={take}` with `Accept: application/json`. Query
+parameters already in `api` (or `suggest`) are kept, so a value the visitor never changes, such as
+`culture`, belongs there and not in a hidden field. A newer search aborts the one in flight; a late
+answer to an old query is dropped.
+
+Empty fields are left out of every request, the form's own native submit included, so a shared
+results link reads `/search?q=sea` and not `/search?q=sea&type=`.
 
 ## Response
 
