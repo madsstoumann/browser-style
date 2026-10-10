@@ -1,0 +1,350 @@
+/**
+ * ui-search-bot — a conversation on a search box: trigger, panel (dialog or inline), the thread, its form.
+ * Docs: readme.md · @version 2.0.0 · @author Mads Stoumann
+ */
+@layer bs-component {
+	:where(ui-search-bot) {
+		--ui-search-bot-gap: var(--spacing-sm);
+		--ui-search-bot-morph: var(--duration-slow);
+		--ui-search-bot-offset: var(--spacing-lg);
+		/* one name per instance: the top-layer panel must find ITS trigger, not the last one on the page */
+		anchor-scope: --ui-search-bot-trigger, --ui-search-bot-history;
+		display: block;
+		position: relative;
+	}
+
+	/* a wrapped box with its Ask button beside it */
+	:where(ui-search-bot:has(> ui-search + [data-bot="ask"])) {
+		align-items: end;
+		column-gap: var(--ui-search-bot-gap);
+		display: grid;
+		grid-template-columns: 1fr auto;
+	}
+	:where(ui-search-bot > [data-bot="ask"]) { anchor-name: --ui-search-bot-trigger; white-space: nowrap; }
+
+	/* theme= re-published into the panel's own tokens (convert-to-v4 § theme) */
+	:where(ui-search-bot[theme]) {
+		--ui-search-bot-bg: var(--_theme-bg, var(--color-surface));
+		--ui-search-bot-c: var(--_theme-c, var(--color-text));
+	}
+
+	/* the floating trigger, on the nine-cell position grid — readme.md § Position */
+	:where(ui-search-bot > [data-bot="trigger"]) {
+		anchor-name: --ui-search-bot-trigger;
+		inset: auto;
+		position: fixed;
+		z-index: var(--z-index-3);
+	}
+	:where(ui-search-bot[position^="t"] > [data-bot="trigger"]) { inset-block-start: var(--ui-search-bot-offset); }
+	:where(ui-search-bot:is([position^="b"], :not([position])) > [data-bot="trigger"]) { inset-block-end: var(--ui-search-bot-offset); }
+	:where(ui-search-bot[position^="c"] > [data-bot="trigger"]) { inset-block: 0; margin-block: auto; }
+	:where(ui-search-bot[position$="s"] > [data-bot="trigger"]) { inset-inline-start: var(--ui-search-bot-offset); }
+	:where(ui-search-bot:is([position$="e"], :not([position])) > [data-bot="trigger"]) { inset-inline-end: var(--ui-search-bot-offset); }
+	:where(ui-search-bot[position$="c"] > [data-bot="trigger"]) { inset-inline: 0; margin-inline: auto; }
+
+	/* ── the panel ─────────────────────────────────────────────────────────── */
+
+	:where(ui-search-bot > [data-bot="panel"]) {
+		box-sizing: border-box;
+		color: var(--ui-search-bot-c, var(--color-text));
+		display: grid;
+		grid-template-rows: auto 1fr auto;
+		row-gap: var(--ui-search-bot-gap);
+	}
+
+	/* inline: under the box, in the page; shows once there is a thread (or a form of its own) */
+	:where(ui-search-bot > div[data-bot="panel"]) {
+		margin-block-start: var(--ui-search-bot-gap);
+		&:has(> [data-bot="conversation"]:empty) > [data-bot="header"] { display: none; }
+		&:has(> [data-bot="conversation"]:empty):not(:has(> [data-bot="form"])) { display: none; }
+	}
+	:where(ui-search-bot:has(> ui-search + [data-bot="ask"]) > [data-bot="panel"]) { grid-column: 1 / -1; }
+
+	:where(ui-search-bot > dialog[data-bot="panel"]) {
+		--ui-search-bot-h: 100dvb;
+		--ui-search-bot-w: 100dvi;
+		background: var(--ui-search-bot-bg, var(--color-surface));
+		block-size: var(--ui-search-bot-h);
+		border: var(--border-width) solid var(--ui-search-bot-bdc, var(--color-border));
+		border-radius: var(--ui-search-bot-radius, 0);
+		box-shadow: var(--shadow-xl);
+		inline-size: var(--ui-search-bot-w);
+		inset: calc((100dvb - var(--ui-search-bot-h)) / 2) auto auto calc((100dvi - var(--ui-search-bot-w)) / 2);
+		margin: 0;
+		max-block-size: 100dvb;
+		max-inline-size: 100dvi;
+		overflow: clip;
+		padding: 0;
+		position-anchor: --ui-search-bot-trigger;
+		&:not([open]) { display: none; }
+		&::backdrop {
+			backdrop-filter: var(--ui-search-bot-backdrop-blur, var(--blur-md));
+			background: var(--ui-search-bot-backdrop, var(--color-overlay));
+		}
+	}
+
+	/* overlay: a centred window */
+	:where(ui-search-bot[mode="overlay"] > dialog[data-bot="panel"]) {
+		--ui-search-bot-h: min(85dvb, 48rem);
+		--ui-search-bot-w: min(100dvi - 2 * var(--ui-search-bot-offset), var(--width-3xl));
+		--ui-search-bot-radius: var(--radius-xl);
+	}
+
+	/* chatbot: docked by its trigger, on the trigger's side of the screen */
+	:where(ui-search-bot[mode="chatbot"] > dialog[data-bot="panel"]) {
+		--ui-search-bot-h: min(80dvb, 37.5rem);
+		--ui-search-bot-w: min(100dvi - 2 * var(--ui-search-bot-offset), var(--width-sm));
+		--ui-search-bot-radius: var(--radius-xl);
+		inset: auto;
+		margin: var(--spacing-xs);
+		position-area: block-start span-inline-start;
+		position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
+		&::backdrop { backdrop-filter: none; background: transparent; }
+	}
+	:where(ui-search-bot[mode="chatbot"][position^="t"] > dialog[data-bot="panel"]) { position-area: block-end span-inline-start; }
+	:where(ui-search-bot[mode="chatbot"][position$="s"] > dialog[data-bot="panel"]) { position-area: block-start span-inline-end; }
+	:where(ui-search-bot[mode="chatbot"][position^="t"][position$="s"] > dialog[data-bot="panel"]) { position-area: block-end span-inline-end; }
+	:where(ui-search-bot[mode="chatbot"][position$="c"] > dialog[data-bot="panel"]) { position-area: block-start span-all; }
+	:where(ui-search-bot[mode="chatbot"][position^="t"][position$="c"] > dialog[data-bot="panel"]) { position-area: block-end span-all; }
+
+	/* the morph: the panel grows out of its trigger and shrinks back — readme.md § Modes */
+	@media (prefers-reduced-motion: no-preference) {
+		:where(ui-search-bot > dialog[data-bot="panel"]) {
+			transition:
+				block-size var(--ui-search-bot-morph) var(--ease-in-out),
+				border-radius var(--ui-search-bot-morph) var(--ease-in-out),
+				display var(--ui-search-bot-morph) allow-discrete,
+				inline-size var(--ui-search-bot-morph) var(--ease-in-out),
+				inset var(--ui-search-bot-morph) var(--ease-in-out),
+				opacity var(--ui-search-bot-morph) var(--ease-in-out),
+				overlay var(--ui-search-bot-morph) allow-discrete;
+			&:not([open]) { block-size: anchor-size(block, 3rem); border-radius: var(--radius-circle); inline-size: anchor-size(inline, 3rem); opacity: 0; }
+			@starting-style {
+				&[open] { block-size: anchor-size(block, 3rem); border-radius: var(--radius-circle); inline-size: anchor-size(inline, 3rem); opacity: 0; }
+			}
+			&::backdrop {
+				transition:
+					backdrop-filter var(--ui-search-bot-morph) var(--ease-in-out),
+					background var(--ui-search-bot-morph) var(--ease-in-out),
+					display var(--ui-search-bot-morph) allow-discrete,
+					overlay var(--ui-search-bot-morph) allow-discrete;
+			}
+			@starting-style {
+				&[open]::backdrop { backdrop-filter: none; background: transparent; }
+			}
+		}
+		/* a window shrinks to where its trigger is */
+		:where(ui-search-bot:not([mode="chatbot"]) > dialog[data-bot="panel"]) {
+			&:not([open]) { inset-block-start: anchor(self-start, 50%); inset-inline-start: anchor(self-start, 50%); }
+			@starting-style {
+				&[open] { inset-block-start: anchor(self-start, 50%); inset-inline-start: anchor(self-start, 50%); }
+			}
+		}
+		/* what is inside fades in after the frame has grown */
+		:where(ui-search-bot > dialog[data-bot="panel"] > *) { transition: opacity calc(var(--ui-search-bot-morph) / 2) var(--ease-out) calc(var(--ui-search-bot-morph) * .7); }
+		:where(ui-search-bot > dialog[data-bot="panel"]:not([open]) > *) { opacity: 0; }
+		@starting-style {
+			:where(ui-search-bot > dialog[data-bot="panel"][open] > *) { opacity: 0; }
+		}
+	}
+
+	/* ── header ────────────────────────────────────────────────────────────── */
+
+	:where(ui-search-bot [data-bot="header"]) {
+		align-items: center;
+		display: flex;
+		gap: var(--spacing-xs);
+		padding: var(--ui-search-bot-gap);
+		& > [data-bot="close"] { margin-inline-start: auto; }
+	}
+	:where(ui-search-bot > dialog[data-bot="panel"] > [data-bot="header"]) { border-block-end: var(--border-width) solid var(--ui-search-bot-bdc, var(--color-border)); }
+	:where(ui-search-bot > div[data-bot="panel"] > [data-bot="header"]) { padding-inline: 0; }
+
+	:where(ui-search-bot [data-bot="history"]) { anchor-name: --ui-search-bot-history; }
+	:where(ui-search-bot [data-bot="history-list"]) {
+		background: var(--ui-search-bot-bg, var(--color-surface));
+		border: var(--border-width) solid var(--ui-search-bot-bdc, var(--color-border));
+		border-radius: var(--radius-md);
+		box-shadow: var(--shadow-lg);
+		color: var(--ui-search-bot-c, var(--color-text));
+		display: none;
+		inset: auto;
+		list-style: none;
+		margin: var(--spacing-xs) 0 0;
+		max-block-size: 60dvb;
+		max-inline-size: var(--width-xs);
+		overflow-y: auto;
+		padding: var(--spacing-xs);
+		position-anchor: --ui-search-bot-history;
+		position-area: block-end span-inline-end;
+		position-try-fallbacks: flip-block, flip-inline;
+		&:popover-open { display: grid; }
+		& > li { color: var(--color-text-muted); font-size: var(--font-size-sm); padding: var(--spacing-xs) var(--spacing-sm); }
+		& > li[data-key] {
+			align-items: center;
+			color: inherit;
+			display: grid;
+			font-size: inherit;
+			gap: var(--spacing-xs);
+			grid-template-columns: 1fr auto;
+			padding: 0;
+		}
+		& [data-bot="history-open"] {
+			background: none;
+			border: 0;
+			border-radius: var(--radius-sm);
+			color: inherit;
+			cursor: pointer;
+			font: inherit;
+			overflow: hidden;
+			padding: var(--spacing-xs) var(--spacing-sm);
+			text-align: start;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			&:hover { background: var(--color-surface-alt); }
+		}
+	}
+
+	/* ── the thread ────────────────────────────────────────────────────────── */
+
+	:where(ui-search-bot [data-bot="conversation"]) {
+		display: grid;
+		inline-size: 100%;
+		list-style: none;
+		margin: 0;
+		max-inline-size: var(--ui-search-bot-prose, var(--width-prose));
+		overflow-y: auto;
+		overscroll-behavior: contain;
+		padding: 0 var(--ui-search-bot-gap);
+		place-self: start center;
+		row-gap: var(--spacing-md);
+		&:empty { display: none; }
+	}
+	:where(ui-search-bot > div[data-bot="panel"] > [data-bot="conversation"]) { padding-inline: 0; place-self: start; }
+
+	:where(ui-search-bot [data-bot="user"]) {
+		background: var(--ui-search-bot-user-bg, var(--color-surface-alt));
+		border-radius: var(--radius-lg);
+		justify-self: end;
+		max-inline-size: 80%;
+		padding: var(--spacing-xs) var(--spacing-md);
+	}
+
+	:where(ui-search-bot [data-bot="response"]) {
+		display: grid;
+		row-gap: var(--spacing-sm);
+		& > :is(p, ul, ol) { margin: 0; }
+		& > :is(ul, ol) { padding-inline-start: var(--spacing-lg); }
+		& code { background: var(--color-surface-alt); border-radius: var(--radius-xs); font-family: var(--font-mono); padding: .1em .3em; }
+		& a { color: var(--color-link); }
+	}
+
+	/* three dots while nothing has arrived */
+	:where(ui-search-bot [data-bot="response"][data-pending])::before {
+		--_dot: no-repeat radial-gradient(circle closest-side, currentColor 90%, transparent);
+		animation: ui-search-bot-dots 1s linear infinite;
+		aspect-ratio: 2;
+		background: var(--_dot) 0% 50%, var(--_dot) 50% 50%, var(--_dot) 100% 50%;
+		background-size: calc(100% / 3) 50%;
+		content: "";
+		display: block;
+		inline-size: 2.5rem;
+	}
+	@media (prefers-reduced-motion: reduce) {
+		:where(ui-search-bot [data-bot="response"][data-pending])::before { animation: none; }
+	}
+
+	:where(ui-search-bot [data-bot="results"]) {
+		display: grid;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		row-gap: var(--spacing-sm);
+		& > li > a {
+			color: inherit;
+			column-gap: var(--ui-search-bot-gap);
+			display: grid;
+			text-decoration: none;
+			&:has(> img) { grid-template-columns: auto 1fr; }
+			&:hover strong { text-decoration: underline; }
+		}
+		& img {
+			aspect-ratio: 1;
+			block-size: auto;
+			border-radius: var(--radius-md);
+			inline-size: var(--ui-search-bot-thumb, 3.5rem);
+			object-fit: cover;
+		}
+		& span { display: grid; row-gap: var(--spacing-xs); }
+		& strong { font-weight: var(--font-weight-semibold); }
+		& small { color: var(--color-text-muted); font-size: var(--font-size-sm); }
+	}
+
+	:where(ui-search-bot [data-bot="stopped"]) { color: var(--color-text-muted); font-size: var(--font-size-sm); }
+	:where(ui-search-bot [data-bot="error"]) { color: var(--color-error); font-size: var(--font-size-sm); }
+
+	:where(ui-search-bot [data-bot="actions"]) {
+		display: flex;
+		gap: var(--spacing-xs);
+		& > button { --ui-search-bot-icon: 1em; }
+		& > [aria-pressed="true"] { background: var(--color-button); color: var(--color-button-text); }
+	}
+
+	/* ── the form ──────────────────────────────────────────────────────────── */
+
+	:where(ui-search-bot [data-bot="form"]) {
+		align-items: end;
+		column-gap: var(--ui-search-bot-gap);
+		display: grid;
+		grid-template-columns: 1fr auto;
+		inline-size: 100%;
+		margin-inline: auto;
+		max-inline-size: var(--ui-search-bot-prose, var(--width-prose));
+		padding: var(--ui-search-bot-gap);
+		row-gap: var(--label-gap, var(--spacing-xs));
+		& > label { grid-column: 1 / -1; }
+		& > :is(input, textarea) { min-inline-size: 0; }
+		& > textarea { field-sizing: content; max-block-size: 8lh; resize: none; }
+	}
+	:where(ui-search-bot > div[data-bot="panel"] > [data-bot="form"]) { padding-inline: 0; }
+
+	/* ── buttons ───────────────────────────────────────────────────────────── */
+
+	:where(ui-search-bot button[data-bot]:not([data-bot="ask"], [data-bot="history-open"])) {
+		aspect-ratio: 1;
+		background: var(--ui-search-bot-button-bg, var(--color-surface-alt));
+		border: 0;
+		border-radius: var(--radius-circle);
+		color: inherit;
+		cursor: pointer;
+		display: inline-grid;
+		padding: var(--spacing-xs);
+		place-items: center;
+		&:hover { background: var(--color-button); color: var(--color-button-text); }
+		&:focus-visible { outline: var(--ring-width) solid var(--ring-color); outline-offset: var(--ring-offset); }
+		&[hidden] { display: none; }
+		& > svg {
+			block-size: var(--ui-search-bot-icon, var(--size-5));
+			fill: none;
+			inline-size: var(--ui-search-bot-icon, var(--size-5));
+			stroke: currentColor;
+			stroke-linecap: round;
+			stroke-linejoin: round;
+			stroke-width: 2;
+		}
+	}
+	:where(ui-search-bot > [data-bot="trigger"]) {
+		background: var(--ui-search-bot-trigger-bg, var(--color-button));
+		box-shadow: var(--shadow-lg);
+		color: var(--ui-search-bot-trigger-c, var(--color-button-text));
+		padding: var(--spacing-sm);
+	}
+	:where(ui-search-bot :is([data-bot="trigger"], [data-bot="stop"]) > svg) { fill: currentColor; stroke: none; }
+
+	@keyframes ui-search-bot-dots {
+		20% { background-position: 0% 0%, 50% 50%, 100% 50%; }
+		40% { background-position: 0% 100%, 50% 0%, 100% 50%; }
+		60% { background-position: 0% 50%, 50% 100%, 100% 0%; }
+		80% { background-position: 0% 50%, 50% 50%, 100% 100%; }
+	}
+}
