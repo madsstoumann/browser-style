@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/search-bot",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "A conversation on a search box: <ui-search-bot> streams an answer and its sources (SSE) to the question a wrapped <ui-search> form, or its own, asks — inline, as an overlay, full-screen or docked",
   "type": "module",
   "module": "index.js",

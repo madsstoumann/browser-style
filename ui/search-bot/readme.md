@@ -64,7 +64,7 @@ The script builds the rest, in the light DOM, as `data-bot=` parts:
     <ol data-bot="conversation" aria-live="polite">
       <li data-bot="user">somewhere to sleep by the sea</li>
       <li data-bot="response">
-        <p>… <a data-bot="ref" href="…">Masseria Lucia</a> …</p>
+        <p>… <a data-bot="ref" href="…" title="Masseria Lucia" aria-label="Source 1: Masseria Lucia">1</a> …</p>
         <ul data-bot="results"><li><a href="…"><img …><span><strong>name</strong><small>description</small></span></a></li></ul>
         <div data-bot="actions">…</div>
       </li>
@@ -92,7 +92,7 @@ The script builds the rest, in the light DOM, as `data-bot=` parts:
 | `preserve-state` | boolean | — | with `preserve-history`: the open panel and its thread come back after a reload |
 | `feedback` | boolean | — | like and dislike on every answer (`ui-search-bot:feedback`) |
 | `share` | boolean | — | copy, and share where `navigator.share` exists |
-| `theme` | a browser.style hue | — | paints the panel (`ui/base/theme.css`) |
+| `theme` | a browser.style hue and its modifiers | — | paints the panel and the floating trigger, never the host (§ Theme) |
 | `label-*` | text | English | every word the bot shows (§ Words) |
 | `id` | | `ui-search-bot` | the storage prefix: two bots with different ids keep separate histories |
 
@@ -116,6 +116,48 @@ One grid, shared with the card system's furniture: block `t`/`c`/`b` then inline
 `position="be"` is the end corner in both directions and mirrors in RTL. The floating trigger sits
 in that cell, `--ui-search-bot-offset` from the edges; a `chatbot` panel opens on the trigger's side
 and falls back to the other when there is no room.
+
+### Icons
+
+Every icon button takes your own icon: a direct child with one of these `slot=` names is moved into
+that button when the bot builds. It keeps its own `fill` and `stroke` (only the built-in outlines are
+styled), is sized by `--ui-search-bot-icon` and gets `aria-hidden="true"`; the button keeps its
+`aria-label`. Until then, and when its button is not built (no `preserve-history`, no `close` in
+`options`), it stays hidden.
+
+| `slot` | Button | Built-in |
+|---|---|---|
+| `icon-trigger` | the floating trigger (standalone, dialog modes) | sparkles |
+| `icon-history` | Earlier questions | clock |
+| `icon-new` | New question | plus |
+| `icon-close` | Close (dialog modes) | cross |
+| `icon-submit` | Send, on the bot's own form | paper plane |
+| `icon-stop` | Stop, while an answer streams | square |
+
+```html
+<ui-search-bot mode="chatbot" position="bs" api="/api/ask">
+  <svg slot="icon-trigger" viewBox="0 0 24 24" fill="currentColor"><path d="…"/></svg>
+</ui-search-bot>
+```
+
+The Ask button beside a wrapped box is a word, not an icon.
+
+### Theme
+
+`theme=` is the shared axis from `ui/base/theme.css`: a hue (`red orange green blue accent black
+white gray slate`) and its modifiers (`pale`, `muted`, `ink`, `glass`, `light`, `dark`). The bot
+re-publishes it, and the host itself never paints (its box is the page's, around a wrapped search
+box):
+
+| Theme value | Goes to |
+|---|---|
+| the final fill (`pale`, `muted`, `glass` applied) | `--ui-search-bot-bg`, the panel and the history list |
+| the paired text, only with `ink` | `--ui-search-bot-c` (else the page's text colour, re-toned by `light`/`dark`) |
+| the hue itself, solid | `--ui-search-bot-trigger-bg` / `--ui-search-bot-trigger-c`, the floating trigger |
+| the `glass` material | `--ui-search-bot-bdf`, the panel's `backdrop-filter` |
+
+`theme="blue pale"` is a solid blue button and a pale blue panel; `theme="slate ink"` a slate panel
+with light text.
 
 ## The stream
 
@@ -145,7 +187,11 @@ References
 [2] https://example.com/other
 ```
 
-turns every `[1]` in the text into a link named after the hit with that URL, when there is one.
+turns every `[1]` in the text into a small numbered chip (`data-bot="ref"`) linking to that URL; its
+`title` and `aria-label` name the hit with that URL, when there is one ("Source 1: Masseria Lucia").
+A trailer URL may be relative: it resolves against the page, so an endpoint can answer for whatever
+host the visitor is on. A `[n]` the trailer has no URL for is a chip without a link; with no trailer
+at all, `[n]` stays text. Copy and Share write chips back as `[n]`.
 
 **Your own adapter**: `provider="./my-adapter.js"` imports a module exporting `buildRequest(api,
 query, context, options)` → a URL and `parseEvent(json)` → `{ type: 'chunk', text } | { type:
@@ -173,6 +219,7 @@ Every string is a `label-*` attribute, read when the bot builds (set them in the
 | `label-history` / `label-no-history` | Earlier questions / No saved conversations |
 | `label-like` / `label-dislike` | Good answer / Poor answer |
 | `label-copy` / `label-share` | Copy / Share |
+| `label-source` | Source (a citation chip's accessible name: "Source 1: page name") |
 | `label-error` | The assistant is not available right now. |
 
 ## Script API
@@ -230,7 +277,9 @@ blocked.
 | `--ui-search-bot-user-bg` | `--color-surface-alt` | the question bubble |
 | `--ui-search-bot-thumb` | `3.5rem` | a hit's picture |
 | `--ui-search-bot-button-bg` | `--color-surface-alt` | the icon buttons |
-| `--ui-search-bot-trigger-bg` / `--ui-search-bot-trigger-c` | `--color-button` / `--color-button-text` | the floating trigger |
+| `--ui-search-bot-trigger-bg` / `--ui-search-bot-trigger-c` | `--color-button` / `--color-button-text` | the floating trigger; `theme=` sets both |
+| `--ui-search-bot-ref-bg` / `--ui-search-bot-ref-c` | `--color-surface-alt` / inherit | a citation chip |
+| `--ui-search-bot-bdf` | `none` | the panel's `backdrop-filter`; `theme="… glass"` sets it |
 | `--ui-search-bot-icon` | `--size-5` | icon size |
 | `--ui-search-bot-backdrop` / `--ui-search-bot-backdrop-blur` | `--color-overlay` / `--blur-md` | behind an overlay or full-screen panel |
 
@@ -241,8 +290,9 @@ blocked.
   block after the form.
 - The thread is an `aria-live="polite"` list marked `aria-busy` while an answer streams, so a
   screen reader gets the finished answer, not every token. Errors are `role="alert"`.
-- Every icon button has an `aria-label`; like and dislike carry `aria-pressed`. Hits are links; a
-  hit's picture is decorative (`alt=""`).
+- Every icon button has an `aria-label`; like and dislike carry `aria-pressed`. An author's icon is
+  `aria-hidden`. Hits are links; a hit's picture is decorative (`alt=""`). A citation chip's
+  accessible name contains its number and names its page.
 - The open and close animation, the backdrop blur and the waiting dots stop under
   `prefers-reduced-motion: reduce`.
 - Logical properties throughout; `position` cells mirror in RTL.
