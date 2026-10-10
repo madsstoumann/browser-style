@@ -97,6 +97,7 @@
 - Radial Menu (`radial-menu`)
 - Scroll (`scroll`)
 - Scroll Mask (`scroll-mask`)
+- Search (`search`)
 - Step (`step`)
 - Form Step (`form-step`)
 - Tab Bar (`tab-bar`)
