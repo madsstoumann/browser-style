@@ -61,6 +61,7 @@ Write them yourself, server-side, and the script fills those instead.
 | Attribute | Values | Default | What it does |
 |---|---|---|---|
 | `api` | URL | none | the JSON endpoint. Absent: no fetching, the form submits natively |
+| `suggest` | URL | `api` | the endpoint for as-you-type searches only. Submit, `search()` and agents use `api` |
 | `trigger` | `submit`, `input`, `input submit` | `submit` | `input`: search as you type. `submit`: search on Enter instead of submitting. Without `submit`, Enter submits the form to `action` |
 | `min` | number | the input's `minlength`, else `3` | characters before a search runs |
 | `debounce` | ms | `300` | pause after typing before an `input` search |
@@ -105,6 +106,7 @@ search aborts the one in flight; a late answer to an old query is dropped.
 | `total` | number | no | the count in the status line; default `items.length` |
 | `mode` | string | no | passed through in the event, e.g. `semantic`, `keyword`, `hybrid` |
 | `terms` | string[] | no | the words to mark with `highlight`; default the query's words of three letters or more |
+| anything else | any | no | never drawn; kept in `response` for the event, `search()` and agents |
 
 A backend that answers in another shape is mapped with `transform` (below).
 
@@ -113,13 +115,13 @@ A backend that answers in another shape is mapped with `transform` (below).
 | Member | Kind | What it does |
 |---|---|---|
 | `transform` | property, `(json, params) => response` | maps any JSON onto the response above; may be async |
-| `search()` | method, returns `Promise<response \| null>` | runs the form's current query now |
+| `search()` | method, returns `Promise<result \| null>` | runs the form's current query now, against `api`. `result` is `{ items, total, mode, terms, response }`: the normalised fields, plus `response`, the JSON as the endpoint (or `transform`) gave it |
 | `clear()` | method | empties status and results, cancels what is in flight |
 | `form` | getter | the wrapped `<form>` |
 
 | Event | `detail` | When |
 |---|---|---|
-| `ui-search:results` | `{ query, params, items, total, mode, terms }` | after a response is drawn |
+| `ui-search:results` | `{ query, params, items, total, mode, terms, response }` | after a response is drawn |
 | `ui-search:error` | `{ query, error }` | the request failed or the JSON did not parse |
 
 Both bubble and are composed.
@@ -219,6 +221,41 @@ Agents and other consumers still read the action. For the browser's own address 
 OpenSearch description (`<link rel="search" type="application/opensearchdescription+xml">`) on
 every page.
 
+## Agents (WebMCP)
+
+WebMCP lets a browser's agent call a page's forms as tools. The attributes are the page's own,
+on the form; the element only answers the agent.
+
+```html
+<form action="/search" method="get" toolname="search_site" toolautosubmit
+      tooldescription="Search this site's pages and products. Returns name, URL, summary and type per hit.">
+  <label for="site-q">Search the site</label>
+  <input type="search" id="site-q" name="q" required minlength="3"
+         toolparamdescription="What to look for, in words or a product name.">
+  <button>Search</button>
+</form>
+```
+
+| Attribute | On | What it does |
+|---|---|---|
+| `toolname` | `<form>` | the tool's name. **One per page**: two forms with one name collide, so a page with a header box and a results-page box names one of them |
+| `tooldescription` | `<form>` | what the tool does and what it returns, for the agent |
+| `toolautosubmit` | `<form>` | the agent's call runs without the person pressing Search |
+| `toolparamdescription` | a field | that parameter's description; without it, the field's label |
+
+Every named field is a parameter of the tool, so a `<select name="type">` filter becomes its `type`.
+
+| An agent submits | The element |
+|---|---|
+| with `api` set | answers with `event.respondWith()` instead of navigating: `response`, every field the endpoint sent (a product's `sku` and price included), not only the ones it draws. The results are drawn too, so the person sees what the agent found |
+| with no `api` | does nothing: the browser submits to `action` |
+| a query under `min` | answers `{ "error": "The query needs at least 3 characters." }` |
+| and the request fails | answers `{ "error": label-error }`. Errors are values: an agent gets nothing from a thrown error |
+
+While an agent fills the form, `:tool-form-active` draws a dashed ring around it in
+`--ui-search-progress`. Browsers without WebMCP ignore all of it. As of October 2026 Chrome and Edge
+ship WebMCP as an origin trial.
+
 ## Accessibility
 
 - `<search>` maps to the `search` landmark. With more than one on a page, give each an `aria-label` (and do not repeat the word "search": the role is announced).
@@ -234,7 +271,7 @@ every page.
 | Backend | `trigger` | Why |
 |---|---|---|
 | keyword index (Lucene, Examine) | `input` | cheap per request; type-ahead reads well |
-| semantic (embeddings) | `submit` | every new query is an embedding call, and a half-typed sentence means little. A backend that offers both can answer typing with keywords and Enter with meaning (`input submit`, filters via a hidden field) |
+| semantic (embeddings) | `submit` | every new query is an embedding call, and a half-typed sentence means little. A backend that offers both answers typing with keywords and Enter with meaning: `suggest` for the keyword URL, `api` for the other |
 | static JSON | `input` with `transform` | as on the demo page |
 
 ## Browser support

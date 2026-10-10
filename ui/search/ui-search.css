@@ -112,6 +112,13 @@
 		:where(ui-search[data-state="loading"] search > form) { animation: none; background-size: 100% 2px; }
 	}
 
+	/* WebMCP: the form an agent is filling — readme.md § Agents */
+	:where(ui-search search > form:tool-form-active) {
+		border-radius: var(--ui-search-radius, var(--input-radius));
+		outline: var(--ring-width, 2px) dashed var(--ui-search-progress, var(--color-accent));
+		outline-offset: var(--ring-offset, 2px);
+	}
+
 	/* popover: the panel floats under the field while the search has focus */
 	:where(ui-search[variant~="popover"]) {
 		& search { position: relative; }

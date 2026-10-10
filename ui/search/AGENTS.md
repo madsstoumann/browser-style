@@ -19,3 +19,5 @@ writes: `<search>` › `<form>` › label, `input[name]`, button, filters. The p
 - **Data is text.** Rows are built with `createElement` + `textContent`; `<mark>` comes from splitting text nodes; URLs pass `safeUrl()` (http, https, relative) before they reach `href` or `src`.
 - **Stale answers are dropped** by a sequence number, and the previous request is aborted. Keep both: abort alone does not stop a `transform` that is already running.
 - **Results are links, not a combobox.** Arrow keys are a shortcut; do not add `role="listbox"`/`option` without the whole APG combobox pattern.
+- **An agent's answer is the response, not the rows.** `#answer()` returns `result.response` as the endpoint (or `transform`) gave it, so fields the element never draws (a product's `sku`, price) reach the agent. Errors are returned as `{ error }`, never thrown: WebMCP hands an agent nothing from a rejection.
+- **`suggest` is for typing only.** `search()`, a submit, `sync-url` and an agent all use `api`; only the debounced `input` search reads `suggest`.

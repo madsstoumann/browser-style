@@ -38,9 +38,9 @@
 		<strong>Browser.style</strong>
 		<ui-search api="data/demo.json" trigger="input" variant="bar popover" highlight take="5">
 			<search aria-label="Site">
-				<form action="./" method="get">
+				<form action="./" method="get" toolname="search_site" toolautosubmit tooldescription="Search browser.style's pages, components and products. Returns name, URL, summary and type per hit; a product hit may also carry sku, price, currency and availability.">
 					<label for="header-q">Search the site</label>
-					<input type="search" id="header-q" name="q" placeholder="Try “somewhere to sleep by the sea”" required minlength="3" maxlength="200" autocomplete="off" enterkeyhint="search">
+					<input type="search" id="header-q" name="q" placeholder="Try “somewhere to sleep by the sea”" required minlength="3" maxlength="200" autocomplete="off" enterkeyhint="search" toolparamdescription="What to look for, in words or a product name.">
 					<button>Search</button>
 				</form>
 			</search>
@@ -109,6 +109,11 @@
 					</form>
 				</search>
 			</ui-search>
+		</section>
+
+		<section>
+			<h2>Agents</h2>
+			<p>The header's form is also a WebMCP tool, <code>search_site</code>: <code>toolname</code>, <code>tooldescription</code> and <code>toolautosubmit</code> on the form, <code>toolparamdescription</code> on the field. When a browser's agent submits it, the element answers with the whole response instead of leaving the page, extra fields included (the silk gown's <code>product</code>), and draws the results for the person to see. Browsers without WebMCP ignore the attributes. One tool per page. See <a href="readme.md">readme.md § Agents</a>.</p>
 		</section>
 
 		<section>

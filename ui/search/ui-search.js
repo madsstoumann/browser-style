@@ -126,10 +126,13 @@ export default class UiSearch extends HTMLElement {
 		else if (event.type === 'keydown') this.#onKeydown(event);
 	}
 
-	/** Run the form's current query now. Resolves with the normalised response, or null. */
-	async search() {
+	/** Run the form's current query now, against `api`. Resolves with the normalised response, or null. */
+	search() {
+		return this.#run(this.getAttribute('api'));
+	}
+
+	async #run(api) {
 		clearTimeout(this.#timer);
-		const api = this.getAttribute('api');
 		const query = this.#input.value.trim();
 		if (!api || query.length < this.#min) {
 			this.clear();
@@ -152,7 +155,8 @@ export default class UiSearch extends HTMLElement {
 			if (!response.ok) throw new Error(`HTTP ${response.status}`);
 			const json = await response.json();
 			if (sequence !== this.#sequence) return null;
-			const result = normalise(this.transform ? await this.transform(json, params) : json);
+			const data = this.transform ? await this.transform(json, params) : json;
+			const result = { ...normalise(data), response: data };
 			this.#draw(result.items, result.terms ?? query.split(/\s+/));
 			this.#state(result.items.length ? 'results' : 'empty');
 			this.#say(this.#count(result.total, query));
@@ -206,8 +210,15 @@ export default class UiSearch extends HTMLElement {
 	}
 
 	#onSubmit(event) {
+		const api = this.getAttribute('api');
+		/* WebMCP: an agent's submit is answered with the response instead of a navigation */
+		if (api && event.agentInvoked && typeof event.respondWith === 'function') {
+			event.preventDefault();
+			event.respondWith(this.#answer());
+			return;
+		}
 		/* Without `submit` in trigger= the form submits natively, to its action= — the results page */
-		if (!this.#tokens.includes('submit') || !this.getAttribute('api')) return;
+		if (!this.#tokens.includes('submit') || !api) return;
 		event.preventDefault();
 		if (this.hasAttribute('sync-url')) {
 			const url = new URL(location.href);
@@ -215,6 +226,15 @@ export default class UiSearch extends HTMLElement {
 			history.replaceState(history.state, '', url);
 		}
 		this.search();
+	}
+
+	/* the tool result: the whole response, every field kept; errors are values, never throws */
+	async #answer() {
+		const min = this.#min;
+		if (this.#input.value.trim().length < min) return { error: `The query needs at least ${min} characters.` };
+		const result = await this.search();
+		if (!result) return { error: this.#label('error') };
+		return Array.isArray(result.response) ? { items: result.response } : result.response;
 	}
 
 	#onInput() {
@@ -227,7 +247,8 @@ export default class UiSearch extends HTMLElement {
 			this.clear();
 			return;
 		}
-		this.#timer = setTimeout(() => this.search(), int(this.getAttribute('debounce'), DEFAULTS.debounce));
+		const api = this.getAttribute('suggest') || this.getAttribute('api');
+		this.#timer = setTimeout(() => this.#run(api), int(this.getAttribute('debounce'), DEFAULTS.debounce));
 	}
 
 	/* Arrow keys walk from the field into the result links and back; Escape closes the results first.
