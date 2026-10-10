@@ -1,89 +1,137 @@
 <!DOCTYPE html>
 <html lang="en-US" dir="ltr">
 <head>
-	<title>Search Bot</title>
+	<title>UI: Search Bot</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="color-scheme" content="light dark">
-	<meta name="description" content="Search overlay and chatbot component with adapter-based SSE streaming">
-	<meta name="view-transition" content="same-origin">
+	<meta name="description" content="&lt;ui-search-bot&gt;: a conversation on a search box — a streamed answer and its sources under the question a &lt;ui-search&gt; form, or its own, asks; inline, overlay, full-screen or docked.">
+	<link rel="alternate" type="text/markdown" href="readme.md">
 	<link rel="stylesheet" href="/ui/base/index.css">
-	<script type="module" src="./src/index.js"></script>
+	<link rel="stylesheet" href="/ui/search/ui-search.css">
+	<link rel="stylesheet" href="ui-search-bot.css">
 	<style>
-    html {
-			min-height: 100dvh;
-			background: linear-gradient(rgb(0, 0, 0) 0%, rgb(0, 0, 80) 63.153%, rgb(0, 0, 166) 100%);
-			background-size: cover;
-			
-    }
-		body {
-			background: #0000;
-			color: #FFF;
-		}
+		body { margin-inline: auto; max-inline-size: 48rem; padding: 2rem 1rem 8rem; }
+		.site-header { align-items: center; border-block-end: 1px solid var(--color-border); display: flex; flex-wrap: wrap; gap: .75rem 1.5rem; padding-block: 1rem; }
+		.site-header strong { white-space: nowrap; }
+		.site-header ui-search-bot { flex: 1 1 22rem; }
+		section + section { margin-block-start: 3rem; }
 	</style>
 </head>
 <body>
-	<h1>UI: Components</h1>
+	<header class="site-header">
+		<strong>Browser.style</strong>
+		<!-- The header box, with Ask beside it: Enter asks too (trigger="submit"); the answer opens in a centred window -->
+		<ui-search-bot id="site" mode="overlay" context="site" api="/ask" trigger="submit" preserve-history feedback share>
+			<ui-search api="/ui/search/data/demo.json" trigger="input" variant="bar popover" highlight take="5">
+				<search aria-label="Site">
+					<form action="./" method="get" toolname="search_site" toolautosubmit tooldescription="Search browser.style's pages, components and products.">
+						<label for="header-q">Search the site</label>
+						<input type="search" id="header-q" name="q" placeholder="Try “somewhere to sleep by the sea”" required minlength="3" maxlength="200" autocomplete="off" enterkeyhint="search" toolparamdescription="What to look for, in words or a product name.">
+						<button>Search</button>
+					</form>
+				</search>
+			</ui-search>
+		</ui-search-bot>
+	</header>
 
-	<h2>Search Bot</h2>
-	<p>Search overlay and chatbot component with adapter-based SSE streaming.</p>
+	<main>
+		<h1>UI: Search Bot</h1>
+		<p><code>&lt;ui-search-bot&gt;</code> puts a conversation on top of a search box. It wraps a <a href="/ui/search/"><code>&lt;ui-search&gt;</code></a> — the form that works without script, is the <code>?q=</code> link, the <code>SearchAction</code> target and the WebMCP tool — and, with script and an <code>api=</code>, streams an answer to the same question: a summary in words, the pages it came from, follow-ups. Four modes: <code>inline</code> under the box, <code>overlay</code> (a window), <code>search</code> (full screen), <code>chatbot</code> (docked by a floating button). Without a box to wrap it brings its own form. This page has no backend: a mock stream reads <code>/ui/search/data/demo.json</code>.</p>
 
-	<search-bot
-		api="https://wild-flower-99ce-nlweb.stoumann.workers.dev"
-		feedback
-		id="blog"
-		mode="inline"
-		options="close history new"
-		position="top left"
-		preserve-history
-		preserve-state
-		provider="nlweb"
-		share
-	>
-	</search-bot>
+		<section>
+			<h2>Header: Ask beside the box</h2>
+			<p>The header above wraps today's search box. Typing shows quick results (that is <code>&lt;ui-search&gt;</code>); the <strong>Ask</strong> button, or Enter with <code>trigger="submit"</code>, opens the answer in an overlay with its own field for follow-ups. <code>context="site"</code> is sent along, so the endpoint knows what to answer from. An agent's submit (WebMCP) is left to the form, which answers with the search response.</p>
+		</section>
 
-	<search-bot
-		api="https://wild-flower-99ce-nlweb.stoumann.workers.dev"
-		feedback
-		id="blog"
-		mode="search"
-		options="close history new"
-		position="top left"
-		preserve-history
-		preserve-state
-		provider="nlweb"
-		share
-	>
-	</search-bot>
+		<section>
+			<h2>Inline, on a results page</h2>
+			<p><code>mode="inline"</code>: the wrapped form <em>is</em> the input, and the answer streams in under it, in the page. Enter asks (the bot takes the submit before <code>&lt;ui-search&gt;</code> runs its search), the box is cleared, and with <code>sync-url</code> on the box the address still becomes <code>?q=…</code>, so the link opens the plain results without script.</p>
+			<ui-search-bot id="page" mode="inline" context="site" api="/ask" preserve-history feedback>
+				<ui-search api="/ui/search/data/demo.json" trigger="submit" sync-url highlight take="8">
+					<search aria-label="Results">
+						<form action="./" method="get">
+							<label for="page-q">Search for</label>
+							<input type="search" id="page-q" name="q" required minlength="3" maxlength="200" autocomplete="off" enterkeyhint="search">
+							<button>Search</button>
+						</form>
+					</search>
+				</ui-search>
+			</ui-search-bot>
+		</section>
 
-	<search-bot
-		api="https://wild-flower-99ce-nlweb.stoumann.workers.dev"
-		feedback
-		id="blog"
-		mode="overlay"
-		options="close history new"
-		position="top right"
-		preserve-history
-		preserve-state
-		provider="nlweb"
-	>
-		<svg slot="icon-trigger" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
-	</search-bot>
+		<section>
+			<h2>Standalone, in Danish</h2>
+			<p>No box to wrap: the bot draws its own form. Every word comes from a <code>label-*</code> attribute; <code>multiline</code> swaps the field for a textarea where Enter sends and Shift+Enter breaks the line.</p>
+			<ui-search-bot id="da" mode="inline" context="brand" api="/ask" multiline lang="da"
+				label-ask="Spørg" label-question="Stil et spørgsmål" label-follow-up="Stil et opfølgende spørgsmål" label-placeholder="Skriv dit spørgsmål"
+				label-send="Send" label-stop="Stop" label-stopped="Svaret blev stoppet" label-thinking="Tænker…" label-new="Nyt spørgsmål"
+				label-history="Tidligere spørgsmål" label-no-history="Ingen gemte samtaler" label-delete="Slet" label-close="Luk"
+				label-like="Godt svar" label-dislike="Dårligt svar" label-copy="Kopiér" label-share="Del" label-error="Assistenten svarer ikke lige nu."></ui-search-bot>
+		</section>
 
-	<search-bot
-		api="https://wpp-search.stoumann.workers.dev"
-		feedback
-		id="wpp"
-		max-results="5"
-		mode="chatbot"
-		options="close divider history new submit"
-		position="bottom right"
-		preserve-history
-		preserve-state
-		provider="aisearch"
-		rewrite="false"
-	>
-		<svg slot="icon-trigger" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M18 3a4 4 0 0 1 4 4v8a4 4 0 0 1 -4 4h-4.724l-4.762 2.857a1 1 0 0 1 -1.508 -.743l-.006 -.114v-2h-1a4 4 0 0 1 -3.995 -3.8l-.005 -.2v-8a4 4 0 0 1 4 -4zm-2.8 9.286a1 1 0 0 0 -1.414 .014a2.5 2.5 0 0 1 -3.572 0a1 1 0 0 0 -1.428 1.4a4.5 4.5 0 0 0 6.428 0a1 1 0 0 0 -.014 -1.414m-5.69 -4.286h-.01a1 1 0 1 0 0 2h.01a1 1 0 0 0 0 -2m5 0h-.01a1 1 0 0 0 0 2h.01a1 1 0 0 0 0 -2" /></svg>
-	</search-bot>
+		<section>
+			<h2>Floating: chatbot and full screen</h2>
+			<p>Bottom right, <code>mode="chatbot"</code> docks a panel by its trigger (<code>position="be"</code>, the nine-cell grid <code>ts tc te / cs cc ce / bs bc be</code>). Bottom left, <code>mode="search"</code> grows to the full screen — that one streams from a live <a href="https://github.com/nlweb-ai/NLWeb">NLWeb</a> worker, so it needs the network. Both remember the thread (<code>preserve-history</code>) and reopen where they were (<code>preserve-state</code>).</p>
+		</section>
+
+		<section>
+			<h2>The stream</h2>
+			<p><code>api=</code> is the endpoint; the adapter named by <code>provider=</code> (<code>nlweb</code>, the default, or <code>aisearch</code>) builds the query string and reads each message. The endpoint answers <code>text/event-stream</code>: hits first (<code>result_batch</code>), then the summary in pieces (<code>summary</code>), then <code>complete</code>. A trailing <code>References</code> block of <code>[n] url</code> lines turns every <code>[n]</code> in the text into a link. See <a href="readme.md">readme.md § The stream</a>.</p>
+		</section>
+	</main>
+
+	<ui-search-bot id="brand" mode="chatbot" position="be" context="brand" api="/ask" preserve-history preserve-state feedback share></ui-search-bot>
+	<ui-search-bot id="live" mode="search" position="bs" api="https://wild-flower-99ce-nlweb.stoumann.workers.dev/ask" provider="nlweb" preserve-history preserve-state feedback share label-question="Ask the live NLWeb demo"></ui-search-bot>
+
+	<script type="module">
+		import '/ui/search/ui-search.js';
+		import './ui-search-bot.js';
+
+		/* The demo's "backend": the keyword scoring from ui/search's demo … */
+		const STOP = new Set(['the', 'and', 'for', 'with', 'something', 'somewhere', 'what', 'where', 'which', 'how', 'can', 'you', 'about']);
+		const words = (text) => text.toLowerCase().split(/[^\p{L}\p{N}]+/u).filter((w) => w.length > 2 && !STOP.has(w));
+		const score = (items, query, type = '') => {
+			const q = words(query);
+			return items
+				.filter((item) => !type || item.type === type)
+				.map((item) => ({ item, score: q.filter((w) => words(`${item.name} ${item.type} ${item.description} ${item.keywords}`).some((h) => h.startsWith(w))).length }))
+				.filter((hit) => hit.score > 0)
+				.sort((a, b) => b.score - a.score)
+				.map((hit) => hit.item);
+		};
+		const transform = (json, params) => {
+			const hits = score(json.items, params.get('q') || '', params.get('type') || '');
+			return { items: hits.slice(0, Number(params.get('take')) || 8), total: hits.length, terms: words(params.get('q') || '') };
+		};
+		for (const box of document.querySelectorAll('ui-search[api="/ui/search/data/demo.json"]')) box.transform = transform;
+
+		/* … and a mock SSE source speaking NLWeb's three messages, word by word */
+		const BRAND = 'Browser.style is a CSS-first component library: design tokens, container queries, cascade layers and light-DOM custom elements, so page CSS and frameworks reach everything. **No Shadow DOM**, zero-specificity selectors and `theme=` across every component. This answer is canned — point `api=` at a real stream to get one that is not.';
+		const stream = (url) => {
+			const params = new URL(url).searchParams;
+			const query = params.get('query') || '';
+			const context = params.get('context') || 'site';
+			const source = { onmessage: null, onerror: null, timer: 0, closed: false, close() { this.closed = true; clearTimeout(this.timer); } };
+			const send = (message, delay) => new Promise((resolve) => {
+				source.timer = setTimeout(() => { if (!source.closed) source.onmessage?.({ data: JSON.stringify(message) }); resolve(); }, delay);
+			});
+			(async () => {
+				let text = BRAND;
+				if (context !== 'brand') {
+					const json = await (await fetch('/ui/search/data/demo.json')).json();
+					const hits = score(json.items, query).slice(0, 3);
+					await send({ message_type: 'result_batch', results: hits.map((h) => ({ url: h.url, name: h.name, schema_object: { name: h.name, description: h.description, image: h.image } })) }, 400);
+					text = hits.length
+						? `For “${query}” this site has ${hits.length === 1 ? 'one match' : `${hits.length} matches`}. ${hits.map((h, i) => `${h.description.split('. ')[0]} [${i + 1}]`).join('. ')}.\n\nReferences\n${hits.map((h, i) => `[${i + 1}] ${new URL(h.url, location.href).href}`).join('\n')}`
+						: `Nothing on this site matches “${query}”. Try other words, or a product name.`;
+				}
+				for (const piece of text.split(/(?<= )/)) await send({ message_type: 'summary', message: piece }, 35);
+				await send({ message_type: 'complete' }, 120);
+			})().catch(() => source.onerror?.());
+			return source;
+		};
+		for (const bot of document.querySelectorAll('ui-search-bot[api="/ask"]')) bot.connect = stream;
+	</script>
 </body>
 </html>

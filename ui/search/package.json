@@ -1,0 +1,50 @@
+{
+  "name": "@browser.style/search",
+  "version": "1.0.0",
+  "description": "A <search> landmark with a plain GET form that works without JavaScript, and instant results from any JSON endpoint as progressive enhancement",
+  "type": "module",
+  "module": "index.js",
+  "style": "index.css",
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "style": "./index.css"
+    },
+    "./style": "./index.css",
+    "./index.css": "./index.css",
+    "./ui-search.css": "./ui-search.css",
+    "./ui-search.js": "./ui-search.js"
+  },
+  "files": [
+    "index.js",
+    "index.css",
+    "ui-search.css",
+    "ui-search.js"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "browser.style",
+    "search",
+    "site-search",
+    "semantic-search",
+    "css-first",
+    "web-components"
+  ],
+  "author": "Mads Stoumann",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/search"
+  },
+  "bugs": {
+    "url": "https://github.com/madsstoumann/browser-style/issues"
+  },
+  "homepage": "https://browser.style/ui/search",
+  "peerDependencies": {
+    "@browser.style/base": "^1.0.11"
+  }
+}

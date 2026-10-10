@@ -1,18 +1,25 @@
 {
   "name": "@browser.style/search-bot",
-  "version": "1.0.0",
-  "description": "Search overlay and chatbot component with adapter-based SSE streaming",
+  "version": "2.0.0",
+  "description": "A conversation on a search box: <ui-search-bot> streams an answer and its sources (SSE) to the question a wrapped <ui-search> form, or its own, asks — inline, as an overlay, full-screen or docked",
   "type": "module",
-  "module": "src/index.js",
+  "module": "index.js",
+  "style": "index.css",
   "exports": {
     ".": {
-      "import": "./src/index.js",
-      "style": "./src/index.css"
+      "import": "./index.js",
+      "style": "./index.css"
     },
-    "./style": "./src/index.css"
+    "./style": "./index.css",
+    "./index.css": "./index.css",
+    "./ui-search-bot.css": "./ui-search-bot.css",
+    "./ui-search-bot.js": "./ui-search-bot.js"
   },
   "files": [
-    "src/"
+    "index.js",
+    "index.css",
+    "ui-search-bot.css",
+    "ui-search-bot.js"
   ],
   "publishConfig": {
     "access": "public",
@@ -20,9 +27,14 @@
   },
   "keywords": [
     "browser.style",
-    "web-components",
     "search-bot",
-    "chatbot"
+    "chatbot",
+    "assistant",
+    "sse",
+    "streaming",
+    "nlweb",
+    "css-first",
+    "web-components"
   ],
   "author": "Mads Stoumann",
   "license": "ISC",
@@ -34,5 +46,14 @@
   "bugs": {
     "url": "https://github.com/madsstoumann/browser-style/issues"
   },
-  "homepage": "https://browser.style/ui/search-bot"
+  "homepage": "https://browser.style/ui/search-bot",
+  "peerDependencies": {
+    "@browser.style/base": "^1.0.11",
+    "@browser.style/search": "^1.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@browser.style/search": {
+      "optional": true
+    }
+  }
 }

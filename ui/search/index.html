@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>UI: Search</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="color-scheme" content="light dark">
+	<meta name="description" content="&lt;ui-search&gt;: a &lt;search&gt; landmark whose GET form works without JavaScript, with instant results from any JSON endpoint as progressive enhancement.">
+	<link rel="alternate" type="text/markdown" href="readme.md">
+	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="ui-search.css">
+	<style>
+		body { margin-inline: auto; max-inline-size: 48rem; padding: 2rem 1rem 6rem; }
+		.site-header { align-items: center; border-block-end: 1px solid var(--color-border); display: flex; flex-wrap: wrap; gap: .75rem 1.5rem; padding-block: 1rem; }
+		.site-header strong { white-space: nowrap; }
+		.site-header ui-search { flex: 1 1 18rem; }
+		section + section { margin-block-start: 3rem; }
+		pre { overflow-x: auto; }
+	</style>
+</head>
+<body>
+	<!-- Page-level item, not a component: the ONE WebSite node, whose SearchAction names the form below — readme.md § Structured data -->
+	<div itemscope itemtype="https://schema.org/WebSite" hidden>
+		<meta itemprop="name" content="Browser.style">
+		<link itemprop="url" href="https://browser.style/">
+		<div itemprop="potentialAction" itemscope itemtype="https://schema.org/SearchAction">
+			<div itemprop="target" itemscope itemtype="https://schema.org/EntryPoint">
+				<meta itemprop="urlTemplate" content="https://browser.style/ui/search/?q={search_term_string}">
+			</div>
+			<div itemprop="query-input" itemscope itemtype="https://schema.org/PropertyValueSpecification">
+				<link itemprop="valueRequired" href="https://schema.org/True">
+				<meta itemprop="valueName" content="search_term_string">
+			</div>
+		</div>
+	</div>
+
+	<header class="site-header">
+		<strong>Browser.style</strong>
+		<ui-search api="data/demo.json" trigger="input" variant="bar popover" highlight take="5">
+			<search aria-label="Site">
+				<form action="./" method="get" toolname="search_site" toolautosubmit tooldescription="Search browser.style's pages, components and products. Returns name, URL, summary and type per hit; a product hit may also carry sku, price, currency and availability.">
+					<label for="header-q">Search the site</label>
+					<input type="search" id="header-q" name="q" placeholder="Try “somewhere to sleep by the sea”" required minlength="3" maxlength="200" autocomplete="off" enterkeyhint="search" toolparamdescription="What to look for, in words or a product name.">
+					<button>Search</button>
+				</form>
+			</search>
+		</ui-search>
+	</header>
+
+	<main>
+		<h1>UI: Search</h1>
+		<p><code>&lt;ui-search&gt;</code> wraps a native <code>&lt;search&gt;</code> landmark and a GET form. With no script, or no <code>api=</code>, the form submits to its <code>action=</code> like any form. With <code>api=</code>, the same form fields go to a JSON endpoint and come back as a list of links. This page has no backend: the three demos read <code>data/demo.json</code> and filter it in the browser.</p>
+
+		<section>
+			<h2>Quick results</h2>
+			<p>The header above: <code>trigger="input"</code> searches as you type (after three characters and a 300&nbsp;ms pause), <code>variant="bar popover"</code> joins field and button and floats the results under them while the search has focus. Enter still submits the form to the results page. Arrow keys move between the field and the links; Escape closes the results.</p>
+		</section>
+
+		<section>
+			<h2>Results page</h2>
+			<p><code>trigger="submit"</code> runs on Enter instead of on every pause — right for a semantic backend, where each new query is an embedding call. <code>sync-url</code> writes the query into the address, so the page can be shared and reloaded. <code>results="…"</code> draws the results outside the <code>&lt;search&gt;</code>, in the page's own content, where a results page keeps them. The filter is just another form control.</p>
+			<ui-search api="data/demo.json" trigger="submit" sync-url highlight results="page-results" take="10">
+				<search aria-label="Results">
+					<form action="./" method="get">
+						<label for="page-q">Search for</label>
+						<input type="search" id="page-q" name="q" required minlength="3" maxlength="200" autocomplete="off" enterkeyhint="search">
+						<button>Search</button>
+						<label data-search="filters">Show
+							<select name="type">
+								<option value="">Everything</option>
+								<option>Product</option>
+								<option>Rental</option>
+								<option>Recipe</option>
+								<option>Page</option>
+							</select>
+						</label>
+					</form>
+				</search>
+			</ui-search>
+			<div id="page-results"></div>
+		</section>
+
+		<section>
+			<h2>Your own markup, and other languages</h2>
+			<p>A <code>&lt;template data-search="item"&gt;</code> replaces the default row; <code>data-field</code> names what goes where, always as text. The status line takes its words from <code>label-*</code> attributes, one per plural category of the page's language.</p>
+			<ui-search api="data/demo.json" trigger="input" take="4" lang="da" label-loading="Søger …" label-empty="Intet fundet for “{query}”" label-one="{count} resultat for “{query}”" label-other="{count} resultater for “{query}”" label-error="Søgningen virker ikke lige nu.">
+				<search aria-label="Websted">
+					<form action="./" method="get">
+						<label for="da-q">Søg</label>
+						<input type="search" id="da-q" name="q" placeholder="fx “aftensmad”" required minlength="3" maxlength="200" autocomplete="off" enterkeyhint="search">
+						<button>Søg</button>
+					</form>
+				</search>
+				<template data-search="item">
+					<li><a data-field="name"></a> <small data-field="type"></small></li>
+				</template>
+			</ui-search>
+		</section>
+
+		<section>
+			<h2>When the endpoint fails</h2>
+			<p>The status line says so, and Enter still submits the form natively unless <code>trigger</code> holds <code>submit</code>.</p>
+			<ui-search api="data/missing.json" trigger="input" variant="bar">
+				<search aria-label="Broken">
+					<form action="./" method="get">
+						<label for="broken-q">Search (no endpoint)</label>
+						<input type="search" id="broken-q" name="q" required minlength="3" autocomplete="off" enterkeyhint="search">
+						<button>Search</button>
+					</form>
+				</search>
+			</ui-search>
+		</section>
+
+		<section>
+			<h2>Agents</h2>
+			<p>The header's form is also a WebMCP tool, <code>search_site</code>: <code>toolname</code>, <code>tooldescription</code> and <code>toolautosubmit</code> on the form, <code>toolparamdescription</code> on the field. When a browser's agent submits it, the element answers with the whole response instead of leaving the page, extra fields included (the silk gown's <code>product</code>), and draws the results for the person to see. Browsers without WebMCP ignore the attributes. One tool per page. See <a href="readme.md">readme.md § Agents</a>.</p>
+		</section>
+
+		<section>
+			<h2>Structured data</h2>
+			<p>The component writes no microdata. The site's <strong>one</strong> <code>WebSite</code> item — the hidden block at the top of this page — carries the <code>SearchAction</code>, and its <code>urlTemplate</code> is this page's form: <code>action</code> plus the field named <code>q</code>. Three search boxes, one <code>WebSite</code>. See <a href="readme.md">readme.md § Structured data</a>.</p>
+		</section>
+	</main>
+
+	<script type="module">
+		import './ui-search.js';
+
+		/* The demo's "backend": score the static index by words, as a keyword engine would. */
+		const STOP = new Set(['the', 'and', 'for', 'with', 'something', 'somewhere']);
+		const words = (text) => text.toLowerCase().split(/[^\p{L}\p{N}]+/u).filter((w) => w.length > 2 && !STOP.has(w));
+		const transform = (json, params) => {
+			const query = words(params.get('q') || '');
+			const type = params.get('type') || '';
+			const take = Number(params.get('take')) || 8;
+			const scored = json.items
+				.filter((item) => !type || item.type === type)
+				.map((item) => {
+					const haystack = words(`${item.name} ${item.type} ${item.description} ${item.keywords}`);
+					return { item, score: query.filter((q) => haystack.some((w) => w.startsWith(q))).length };
+				})
+				.filter((hit) => hit.score > 0)
+				.sort((a, b) => b.score - a.score);
+			return { items: scored.slice(0, take).map((hit) => hit.item), total: scored.length, terms: query };
+		};
+		for (const el of document.querySelectorAll('ui-search[api="data/demo.json"]')) el.transform = transform;
+	</script>
+</body>
+</html>
