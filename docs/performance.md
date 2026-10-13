@@ -79,6 +79,10 @@ in `ui/card/components.md`** — a measured conclusion, not an oversight (verifi
 | `beacon-blink` | ~10 ms | `opacity` |
 | `beacon-bounce` | ~8 ms | `background-position`, 3 layers, 22 stops |
 
+The content label's live dot (`ui-content-live`, `<small data-part="label" data-live>`) animates
+`opacity` only: on `demo/content.html` it measured within noise (median 0.4 ms per 2.5 s idle,
+cancelled 1.0 ms).
+
 Everything off drops the page from ~260 ms to 0; `ui-beacon` alone is ~56%. The ladder to
 internalise: custom-property clocks driving layout props ≫ paint props ≫ composited
 `transform`/`opacity`. **Cost scales linearly with instance count**, and off-screen

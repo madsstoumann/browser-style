@@ -17,9 +17,10 @@
 	/* === HOST + GRID === */
 	:where(ui-card) {
 		/* light-dark() pair, so a theme only has to flip color-scheme */
-		--ui-card-bg: light-dark(var(--color-surface), var(--ui-card-dark-bg, #1f2937));
-		--ui-card-radius: var(--radius-2xl);
-		--ui-card-shadow: var(--shadow-xl);
+		--ui-card-bg: var(--ui-card-bg-base, light-dark(var(--color-surface), var(--ui-card-dark-bg, #1f2937)));
+		/* -base hooks: a theme sets a site default on :root, variant words still win */
+		--ui-card-radius: var(--ui-card-radius-base, var(--radius-2xl));
+		--ui-card-shadow: var(--ui-card-shadow-base, var(--shadow-xl));
 
 		background: var(--ui-card-bg);
 		border-radius: var(--ui-card-radius);
@@ -33,7 +34,7 @@
 		/* the grid layer — the queryable descendant container queries need */
 		> cq-box {
 			display: grid;
-			gap: 0;
+			gap: var(--ui-card-gap, 0);
 			grid-template-columns: var(--ui-card-cols, 1fr);
 			min-inline-size: 0; /* a wide child (horizontal scroller/table) must not inflate past the card */
 			> ui-content { min-inline-size: 0; }

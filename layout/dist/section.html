@@ -119,6 +119,69 @@
 		</lay-out>
 	</lay-out-group>
 
+	<!-- hdr(ctr) / hdr(spl) — header arrangements -->
+	<lay-out-group>
+		<ui-content content="hdr(ctr)">
+			<small data-part="eyebrow">hdr(ctr)</small>
+			<h2 data-part="headline">Title, text and link, centred</h2>
+			<p data-part="summary">The header stacks and centres; the link comes last.</p>
+			<a data-part="link" href="#">See everything →</a>
+		</ui-content>
+		<lay-out md="columns(2)" lg="columns(3)">
+			<div class="card"><b>First item</b><small>Placeholder</small></div>
+			<div class="card"><b>Second item</b><small>Placeholder</small></div>
+			<div class="card"><b>Third item</b><small>Placeholder</small></div>
+		</lay-out>
+	</lay-out-group>
+
+	<lay-out-group>
+		<ui-content content="hdr(spl)">
+			<small data-part="eyebrow">hdr(spl)</small>
+			<h2 data-part="headline">Title on the left</h2>
+			<p data-part="summary">Text and link on the right half. Under 30rem the header falls back to one column.</p>
+			<a data-part="link" href="#">Read more →</a>
+		</ui-content>
+		<lay-out md="columns(2)">
+			<div class="card"><b>First item</b><small>Placeholder</small></div>
+			<div class="card"><b>Second item</b><small>Placeholder</small></div>
+		</lay-out>
+	</lay-out-group>
+
+	<!-- a themed band: the header link follows the band's ink -->
+	<lay-out-group bleed xs="pb(2)" theme="green">
+		<ui-content>
+			<h2 data-part="headline">A themed band's link</h2>
+			<a data-part="link" href="#">Follows the band's ink →</a>
+		</ui-content>
+		<lay-out md="columns(3)">
+			<div class="card"><b>First item</b></div>
+			<div class="card"><b>Second item</b></div>
+			<div class="card"><b>Third item</b></div>
+		</lay-out>
+	</lay-out-group>
+
+	<!-- counter — numbered children -->
+	<lay-out-group>
+		<ui-content><h2 data-part="headline">Numbered — <code>&lt;lay-out counter&gt;</code></h2></ui-content>
+		<lay-out counter md="columns(2)" lg="columns(5)" gap-decorations="cols" style="--ui-counter-fs: 2rem;">
+			<ui-card variant="shd(non) rds(non)" content="pad(none) hl(xs)"><cq-box><ui-content><h3 data-part="headline">The first headline in a ranked list</h3></ui-content></cq-box></ui-card>
+			<ui-card variant="shd(non) rds(non)" content="pad(none) hl(xs)"><cq-box><ui-content><h3 data-part="headline">A second headline that runs a little longer</h3></ui-content></cq-box></ui-card>
+			<ui-card variant="shd(non) rds(non)" content="pad(none) hl(xs)"><cq-box><ui-content><h3 data-part="headline">Third</h3></ui-content></cq-box></ui-card>
+			<ui-card variant="shd(non) rds(non)" content="pad(none) hl(xs)"><cq-box><ui-content><h3 data-part="headline">The fourth headline</h3></ui-content></cq-box></ui-card>
+			<ui-card variant="shd(non) rds(non)" content="pad(none) hl(xs)"><cq-box><ui-content><h3 data-part="headline">And a fifth one</h3></ui-content></cq-box></ui-card>
+		</lay-out>
+	</lay-out-group>
+
+	<!-- items(fill) — later cards fill the row the first card sets -->
+	<lay-out-group>
+		<ui-content><h2 data-part="headline">Fill the row — <code>lg="ratio(50:25:25) items(fill)"</code></h2></ui-content>
+		<lay-out md="columns(1)" lg="ratio(50:25:25) items(fill) cg(0.75)">
+			<ui-card variant="shd(non) rds(non)" media="asr(3/2)" content="pad(none) pbs(md) hl(sm)"><cq-box><ui-media><img src="/assets/images/city.png" alt=""></ui-media><ui-content><h3 data-part="headline">The first card sets the height</h3></ui-content></cq-box></ui-card>
+			<ui-card variant="shd(non) rds(non)" media="asr(3/4)" content="pad(none) pbs(md) hl(sm)"><cq-box><ui-media><img src="/assets/images/river.png" alt=""></ui-media><ui-content><h3 data-part="headline">Fills the row</h3></ui-content></cq-box></ui-card>
+			<ui-card variant="shd(non) rds(non)" media="asr(3/4)" content="pad(none) pbs(md) hl(sm)"><cq-box><ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media><ui-content><h3 data-part="headline">Also fills the row</h3></ui-content></cq-box></ui-card>
+		</lay-out>
+	</lay-out-group>
+
 	<!-- ============================================================
 	     subgrid="N" — align direct children's internal rows
 	     ============================================================ -->

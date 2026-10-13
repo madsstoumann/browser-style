@@ -10,6 +10,10 @@
    guaranteed-invalid initial simply never matches the style query). */
 @property --_subgrid { syntax: "*"; inherits: false; }
 
+/* items(fill) flag and its one-hop relay into the card — non-inheriting, like --_subgrid. Docs: core/base.md § items */
+@property --_fill { syntax: "*"; inherits: false; }
+@property --_fill-cell { syntax: "*"; inherits: false; }
+
 /* width knob — [bleed] sets it to a 100dvi-based calc for its OWN width.
    NON-inheriting on purpose: a nested <lay-out> anywhere inside a bleed section
    (e.g. a collage grid inside a card slide) must not pick up the ancestor's
@@ -55,7 +59,6 @@
 	}
 
 	lay-out {
-		--layout-col-rule-c: #CCC;
 		--layout-preview-size: 100px;
 		--layout-preview-xs-size: 40px;
 		--layout-preview-sm-size: 60px;
@@ -154,7 +157,7 @@
 		&[gap-decorations] {
 			--_rule-w: var(--layout-rule-w, 1px);
 			--_rule-s: var(--layout-rule-s, solid);
-			--_rule-c: var(--layout-rule-c, #CCC);
+			--_rule-c: var(--layout-rule-c, var(--color-border, #CCC));
 			--_rule-o: var(--layout-rule-o, 0%);
 		}
 		&[gap-decorations*="cols"] {
@@ -399,6 +402,37 @@
 				display: grid;
 				grid-row: span var(--_sg, 1);
 				grid-template-rows: subgrid;
+			}
+		}
+
+		/* === items(fill) — later cards drop their media ratio and fill the row. Docs: core/base.md § items === */
+		@container style(--_fill: on) {
+			& > ui-card:not(:first-child) { --_fill-cell: on; }
+		}
+		@container style(--_fill-cell: on) {
+			& > ui-card > cq-box { --_fill-cell: on; grid-template-rows: minmax(0, 1fr); }
+			& > ui-card > cq-box > ui-media { aspect-ratio: auto; block-size: 100%; min-block-size: 0; }
+		}
+
+		/* === counter — numbers the children; --ui-counter-* style the number. Docs: core/base.md § counter === */
+		&[counter] {
+			counter-reset: layout-counter;
+			& > * {
+				column-gap: var(--ui-counter-gap, 0.5rem);
+				counter-increment: layout-counter;
+				display: grid;
+				grid-template-columns: auto minmax(0, 1fr);
+				& > * { grid-column: 2; }
+			}
+			& > *::before {
+				color: var(--ui-counter-ink, var(--color-text-muted, currentColor));
+				content: counter(layout-counter);
+				font-family: var(--ui-counter-font, var(--font-heading, inherit));
+				font-size: var(--ui-counter-fs, 2rem);
+				font-variant-numeric: tabular-nums;
+				font-weight: var(--ui-counter-weight, var(--font-weight-bold, 700));
+				grid-column: 1;
+				line-height: 1;
 			}
 		}
 	}

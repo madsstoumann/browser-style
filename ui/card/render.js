@@ -1400,6 +1400,9 @@ const buildContent = (fields, type, overlay, slots = {}, textMode = 'summary', p
 	if (fields.eyebrow) {
 		html += `<small data-part="eyebrow"${EYEBROW_PROP[type] ? ` itemprop="${EYEBROW_PROP[type]}"` : ''}>${esc(fields.eyebrow)}</small>`;
 	}
+	/* `label` — LIVE / BREAKING above the headline; outside it so the headline's itemprop stays clean */
+	const label = typeof fields.label === 'string' ? { text: fields.label } : fields.label;
+	if (label?.text) html += `<small data-part="label"${label.live ? ' data-live' : ''}>${esc(label.text)}</small>`;
 	if (fields.headline && type !== 'quote') {
 		/* `cover` makes the WHOLE card clickable: one <a> in the headline whose ::after
 		   stretches over the card. Safe over a carousel — the scroll-button/marker pseudos

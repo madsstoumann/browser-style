@@ -173,12 +173,18 @@ export class LayoutBuilder {
 	// unequal-height cells stretching to the tallest. Writes --layout-ai, which
 	// base.css composes into `align-items`. Enumerated values only; exotic values
 	// keep the `style="--layout-ai:…"` escape hatch.
+	//
+	// items(fill) stretches too and raises --_fill, which core/base.css reads:
+	// every card after the first drops its media ratio and fills the row the first
+	// card sets. The other values lower the flag, so a larger breakpoint can undo it.
 	generateAlignmentCSS(breakpointName, mediaQuery) {
 		const el = this.config.element || 'lay-out'
 		for (const value of ['start', 'center', 'end', 'stretch']) {
 			this.addRule(mediaQuery, `${el}[${breakpointName}*="items(${value})"]`,
-				{ '--layout-ai': value }, breakpointName, { kind: 'feature', variantKey: `items(${value})` })
+				{ '--layout-ai': value, '--_fill': 'off' }, breakpointName, { kind: 'feature', variantKey: `items(${value})` })
 		}
+		this.addRule(mediaQuery, `${el}[${breakpointName}*="items(fill)"]`,
+			{ '--layout-ai': 'stretch', '--_fill': 'on' }, breakpointName, { kind: 'feature', variantKey: 'items(fill)' })
 	}
 
 	// subgrid — breakpoint-scoped row alignment, one-way.

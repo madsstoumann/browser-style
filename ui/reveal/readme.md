@@ -230,9 +230,9 @@ Scoped to `:where(ui-reveal)` — low specificity, easy to override.
 
 | Token | Default | Purpose |
 |---|---|---|
-| `--ui-reveal-bg` | `var(--color-surface)` | Card background. |
-| `--ui-reveal-radius` | `var(--radius-2xl)` | Corner radius (overridden by `rds()` via `--ui-card-radius`). |
-| `--ui-reveal-shadow` | `var(--shadow-xl)` | Card shadow. |
+| `--ui-reveal-bg` | `var(--ui-card-bg-base, var(--color-surface))` | Card background. |
+| `--ui-reveal-radius` | `var(--ui-card-radius-base, var(--radius-2xl))` | Corner radius (overridden by `rds()` via `--ui-card-radius`). |
+| `--ui-reveal-shadow` | `var(--ui-card-shadow-base, var(--shadow-xl))` | Card shadow. The three `--ui-card-*-base` site defaults ([ui-card-tokens.md § Site defaults](../card/docs/ui-card-tokens.md#site-defaults)) reach the reveal too. |
 | `--ui-reveal-p` | `var(--ui-content-p, var(--spacing-md))` | Panel padding base. |
 | `--ui-reveal-row-gap` | `1em` | Feeds the front-face `--ui-content-gap`. |
 | `--ui-reveal-duration` | `var(--duration-slower)` | Animation duration. |

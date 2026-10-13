@@ -80,6 +80,7 @@ contract — projection DSL, lint rules, editor behaviour — is
 | `cover` | url | Makes the whole card a link — an `<a>` in the headline whose `::after` covers the card, so there is one link and no nested anchors |
 | `chip` | `{ text, theme }` | Status flag at the very TOP of the text column, above the eyebrow — "New", "Sold". `theme` is a ui-chip theme string, default `pale accent`. **Not** `furniture.chip`, which is overlaid on the media: a frame gets one chip family, so a furniture chip suppresses the `<ui-chip data-type>` type label |
 | `eyebrow` | string | Kicker; → `articleSection`/`category`/`recipeCategory`/`about`/`genre` (unmarked on `job` — `details.industry` owns `industry`) |
+| `label` | string \| `{ text, live }` | A flag between the eyebrow and the headline — "Live", "Breaking". `live: true` adds a pulsing dot. No microdata; outside the headline so its `itemprop` stays clean |
 | `headline` | string | → `headline` (article/news), `title` (job), `name` (rest) |
 | `subheadline` | string | |
 | `summary` | text | → `description` — or `reviewBody` (review), `text` (quote/announcement/social) |
