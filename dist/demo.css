@@ -4350,7 +4350,7 @@
 @layer layout.base {
   [data-layout-root] {
     display: grid;
-    row-gap: calc(attr(data-page-gap type(<number>), attr(page-gap type(<number>), 1)) * var(--layout-space-unit, 1rem));
+    row-gap: var(--layout-page-gap, calc(attr(data-page-gap type(<number>), attr(page-gap type(<number>), 1)) * var(--layout-space-unit, 1rem)));
   }
   @supports (-webkit-hyphens: none) {
     html:has(:is(lay-out, lay-out-group)[bleed]) {

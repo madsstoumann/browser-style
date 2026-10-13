@@ -193,6 +193,7 @@ attributes instead — e.g. `col-gap="2"` → `xs="cg(2)"`, `pad-inline="1"` →
 - Default: `data-page-gap` 1 (× `--layout-space-unit`, falling back to `1rem`)
 - Description: Set on the element that **directly contains** the top-level `<lay-out>` sections (usually `<body>`, sometimes `<main>`). Makes it a single-column grid whose `row-gap` spaces the stacked sections; nested `<lay-out>`s are untouched. `data-*` prefixed because the root is a native element; a bare `page-gap` attribute is still read as a legacy fallback.
 - Example: `<body data-layout-root data-page-gap="2">`
+- `--layout-page-gap`: a length set on `:root` (a theme) replaces the attribute's gap on every page, e.g. `:root { --layout-page-gap: 3rem }`; per width with a media query around it.
 
 ---
 

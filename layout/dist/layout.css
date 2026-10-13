@@ -36,7 +36,8 @@
 	   fallback so older markup keeps working. */
 	[data-layout-root] {
 		display: grid;
-		row-gap: calc(attr(data-page-gap type(<number>), attr(page-gap type(<number>), 1)) * var(--layout-space-unit, 1rem));
+		/* --layout-page-gap (a length) is the site-wide hook a theme sets; it beats the attribute */
+		row-gap: var(--layout-page-gap, calc(attr(data-page-gap type(<number>), attr(page-gap type(<number>), 1)) * var(--layout-space-unit, 1rem)));
 	}
 
 	/* Safari-only: kill the sliver of horizontal scroll a bleed band can produce.
