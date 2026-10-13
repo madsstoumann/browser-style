@@ -798,8 +798,9 @@
 		text-shadow: var(--ui-content-meta-text-shadow, none);
 	}
 
-	/* text to meta — the first meta or byline row after the text, added to the column gap */
-	:where(ui-content) > :not([data-part="meta"], [data-part="byline"], meta, link, [hidden]) + :is([data-part="meta"], [data-part="byline"]) {
+	/* text to meta — the first meta or byline row after the text, added to the column gap. Siblings (~), not the
+	   next one (+): a <meta> or <link> of the card's microdata may sit between the text and its meta row */
+	:where(ui-content) > :is([data-part="meta"], [data-part="byline"]):where(:not([data-part="meta"], [data-part="byline"], meta, link, [hidden]) ~ *):not(:is([data-part="meta"], [data-part="byline"]) ~ *) {
 		margin-block-start: var(--ui-content-meta-rhythm, 0);
 	}
 
