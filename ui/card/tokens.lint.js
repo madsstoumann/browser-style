@@ -37,7 +37,7 @@ const SHEETS = [
 	['ui/marquee/ui-marquee.css', MEDIA_ONLY], ['ui/play/ui-play.css', MEDIA_ONLY],
 	['ui/lightbox/ui-lightbox.css', MEDIA_ONLY],
 	['ui/carousel/carousel.css', MEDIA_ONLY], ['ui/base/stagger.css', MEDIA_ONLY],
-	['layout/core/base.css', ALL],
+	['layout/core/base.css', ALL], ['layout/core/group.css', ALL],
 	['ui/map/ui-map.css', MAP_ONLY]
 ];
 

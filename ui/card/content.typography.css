@@ -15,6 +15,7 @@
 		--ui-content-fs-fluid-lg: clamp(0.95rem, 0.86rem + 0.8cqi, 1.10rem);
 		--ui-content-fs-fluid-xl: clamp(1.00rem, 0.92rem + 0.9cqi, 1.20rem);
 		--ui-content-fs-fluid-2xl: clamp(1.08rem, 0.98rem + 1.1cqi, 1.32rem);
+		--ui-content-headline-fluid-xs: clamp(0.90rem, 0.84rem + 0.4cqi, 1.05rem);
 		--ui-content-headline-fluid-sm: clamp(1.05rem, 0.90rem + 1.0cqi, 1.35rem);
 		--ui-content-headline-fluid-md: clamp(1.20rem, 1.00rem + 1.6cqi, 1.75rem);
 		--ui-content-headline-fluid-lg: clamp(1.45rem, 1.05rem + 3.0cqi, 2.50rem);
@@ -28,7 +29,8 @@
 		--ui-content-fs-lg: var(--ui-content-fs-fluid-lg);
 		--ui-content-fs-xl: var(--ui-content-fs-fluid-xl);
 		--ui-content-fs-2xl: var(--ui-content-fs-fluid-2xl); /* ladder headroom only — no scl(2xl)/tx(2xl) token */
-		/* headline — sm–xl are the scl() ramp; 2xl + 3xl are hl()-only display steps */
+		/* headline — sm–xl are the scl() ramp; xs, 2xl + 3xl are hl()-only steps */
+		--ui-content-headline-xs: var(--ui-content-headline-fluid-xs);
 		--ui-content-headline-sm: var(--ui-content-headline-fluid-sm);
 		--ui-content-headline-md: var(--ui-content-headline-fluid-md);
 		--ui-content-headline-lg: var(--ui-content-headline-fluid-lg);
@@ -55,6 +57,7 @@
 		--ui-content-fs-lg: var(--font-size-lg);
 		--ui-content-fs-xl: var(--font-size-xl);
 		--ui-content-fs-2xl: var(--font-size-2xl);
+		--ui-content-headline-xs: var(--font-size-base);
 		--ui-content-headline-sm: var(--font-size-xl);
 		--ui-content-headline-md: var(--font-size-2xl);
 		--ui-content-headline-lg: var(--font-size-3xl);
@@ -69,6 +72,7 @@
 		--ui-content-fs-lg: var(--ui-content-fs-fluid-lg);
 		--ui-content-fs-xl: var(--ui-content-fs-fluid-xl);
 		--ui-content-fs-2xl: var(--ui-content-fs-fluid-2xl);
+		--ui-content-headline-xs: var(--ui-content-headline-fluid-xs);
 		--ui-content-headline-sm: var(--ui-content-headline-fluid-sm);
 		--ui-content-headline-md: var(--ui-content-headline-fluid-md);
 		--ui-content-headline-lg: var(--ui-content-headline-fluid-lg);
@@ -86,6 +90,7 @@
 		--ui-content-tx-md: var(--ui-content-fs-sm);
 		--ui-content-tx-lg: var(--ui-content-fs-md);
 		--ui-content-tx-xl: var(--ui-content-fs-lg);
+		--ui-content-hl-xs: var(--ui-content-headline-xs);
 		--ui-content-hl-sm: var(--ui-content-headline-sm);
 		--ui-content-hl-md: var(--ui-content-headline-sm);
 		--ui-content-hl-lg: var(--ui-content-headline-md);
@@ -100,6 +105,7 @@
 		--ui-content-tx-md: var(--ui-content-fs-md);
 		--ui-content-tx-lg: var(--ui-content-fs-lg);
 		--ui-content-tx-xl: var(--ui-content-fs-xl);
+		--ui-content-hl-xs: var(--ui-content-headline-xs);
 		--ui-content-hl-sm: var(--ui-content-headline-sm);
 		--ui-content-hl-md: var(--ui-content-headline-md);
 		--ui-content-hl-lg: var(--ui-content-headline-lg);
@@ -114,6 +120,7 @@
 		--ui-content-tx-md: var(--ui-content-fs-lg);
 		--ui-content-tx-lg: var(--ui-content-fs-xl);
 		--ui-content-tx-xl: var(--ui-content-fs-2xl);
+		--ui-content-hl-xs: var(--ui-content-headline-sm);
 		--ui-content-hl-sm: var(--ui-content-headline-md);
 		--ui-content-hl-md: var(--ui-content-headline-lg);
 		--ui-content-hl-lg: var(--ui-content-headline-xl);
@@ -128,6 +135,7 @@
 		--ui-content-tx-md: var(--ui-content-fs-xl);
 		--ui-content-tx-lg: var(--ui-content-fs-2xl);
 		--ui-content-tx-xl: var(--ui-content-fs-2xl);
+		--ui-content-hl-xs: var(--ui-content-headline-md);
 		--ui-content-hl-sm: var(--ui-content-headline-lg);
 		--ui-content-hl-md: var(--ui-content-headline-xl);
 		--ui-content-hl-lg: var(--ui-content-headline-2xl);
@@ -145,6 +153,7 @@
 			--ui-content-tx-md: var(--ui-content-fs-sm);
 			--ui-content-tx-lg: var(--ui-content-fs-md);
 			--ui-content-tx-xl: var(--ui-content-fs-lg);
+			--ui-content-hl-xs: var(--ui-content-headline-xs);
 			--ui-content-hl-sm: var(--ui-content-headline-sm);
 			--ui-content-hl-md: var(--ui-content-headline-sm);
 			--ui-content-hl-lg: var(--ui-content-headline-md);
@@ -159,6 +168,7 @@
 			--ui-content-tx-md: var(--ui-content-fs-md);
 			--ui-content-tx-lg: var(--ui-content-fs-lg);
 			--ui-content-tx-xl: var(--ui-content-fs-xl);
+			--ui-content-hl-xs: var(--ui-content-headline-xs);
 			--ui-content-hl-sm: var(--ui-content-headline-sm);
 			--ui-content-hl-md: var(--ui-content-headline-md);
 			--ui-content-hl-lg: var(--ui-content-headline-lg);
@@ -173,6 +183,7 @@
 			--ui-content-tx-md: var(--ui-content-fs-lg);
 			--ui-content-tx-lg: var(--ui-content-fs-xl);
 			--ui-content-tx-xl: var(--ui-content-fs-2xl);
+			--ui-content-hl-xs: var(--ui-content-headline-sm);
 			--ui-content-hl-sm: var(--ui-content-headline-md);
 			--ui-content-hl-md: var(--ui-content-headline-lg);
 			--ui-content-hl-lg: var(--ui-content-headline-xl);
@@ -187,6 +198,7 @@
 			--ui-content-tx-md: var(--ui-content-fs-xl);
 			--ui-content-tx-lg: var(--ui-content-fs-2xl);
 			--ui-content-tx-xl: var(--ui-content-fs-2xl);
+			--ui-content-hl-xs: var(--ui-content-headline-md);
 			--ui-content-hl-sm: var(--ui-content-headline-lg);
 			--ui-content-hl-md: var(--ui-content-headline-xl);
 			--ui-content-hl-lg: var(--ui-content-headline-2xl);
@@ -203,6 +215,7 @@
 			--ui-content-tx-md: var(--ui-content-fs-sm);
 			--ui-content-tx-lg: var(--ui-content-fs-md);
 			--ui-content-tx-xl: var(--ui-content-fs-lg);
+			--ui-content-hl-xs: var(--ui-content-headline-xs);
 			--ui-content-hl-sm: var(--ui-content-headline-sm);
 			--ui-content-hl-md: var(--ui-content-headline-sm);
 			--ui-content-hl-lg: var(--ui-content-headline-md);
@@ -217,6 +230,7 @@
 			--ui-content-tx-md: var(--ui-content-fs-md);
 			--ui-content-tx-lg: var(--ui-content-fs-lg);
 			--ui-content-tx-xl: var(--ui-content-fs-xl);
+			--ui-content-hl-xs: var(--ui-content-headline-xs);
 			--ui-content-hl-sm: var(--ui-content-headline-sm);
 			--ui-content-hl-md: var(--ui-content-headline-md);
 			--ui-content-hl-lg: var(--ui-content-headline-lg);
@@ -231,6 +245,7 @@
 			--ui-content-tx-md: var(--ui-content-fs-lg);
 			--ui-content-tx-lg: var(--ui-content-fs-xl);
 			--ui-content-tx-xl: var(--ui-content-fs-2xl);
+			--ui-content-hl-xs: var(--ui-content-headline-sm);
 			--ui-content-hl-sm: var(--ui-content-headline-md);
 			--ui-content-hl-md: var(--ui-content-headline-lg);
 			--ui-content-hl-lg: var(--ui-content-headline-xl);
@@ -245,6 +260,7 @@
 			--ui-content-tx-md: var(--ui-content-fs-xl);
 			--ui-content-tx-lg: var(--ui-content-fs-2xl);
 			--ui-content-tx-xl: var(--ui-content-fs-2xl);
+			--ui-content-hl-xs: var(--ui-content-headline-md);
 			--ui-content-hl-sm: var(--ui-content-headline-lg);
 			--ui-content-hl-md: var(--ui-content-headline-xl);
 			--ui-content-hl-lg: var(--ui-content-headline-2xl);
@@ -264,6 +280,7 @@
 	:where([content~="eb(sld)"])    { --ui-content-eyebrow-ink: var(--color-text); }
 	:where([content~="eb(accent)"]) { --ui-content-eyebrow-ink: var(--color-accent-ink); }
 	:where([content~="eb(inv)"])    { --ui-content-eyebrow-ink: var(--ui-content-inv); }
+	:where([content~="eb(200)"])    { --ui-content-eyebrow-weight: 200; }
 	:where([content~="eb(300)"])    { --ui-content-eyebrow-weight: var(--font-weight-light); }
 	:where([content~="eb(400)"])    { --ui-content-eyebrow-weight: var(--font-weight-normal); }
 	:where([content~="eb(500)"])    { --ui-content-eyebrow-weight: var(--font-weight-medium); }
@@ -299,6 +316,7 @@
 	:where([content~="tx(sld)"])    { --ui-content-body-ink: var(--color-text); }
 	:where([content~="tx(accent)"]) { --ui-content-body-ink: var(--color-accent-ink); }
 	:where([content~="tx(inv)"])    { --ui-content-body-ink: var(--ui-content-inv); }
+	:where([content~="tx(200)"])    { --ui-content-body-weight: 200; }
 	:where([content~="tx(300)"])    { --ui-content-body-weight: var(--font-weight-light); }
 	:where([content~="tx(400)"])    { --ui-content-body-weight: var(--font-weight-normal); }
 	:where([content~="tx(500)"])    { --ui-content-body-weight: var(--font-weight-medium); }
@@ -333,6 +351,7 @@
 	:where([content~="mt(sld)"])    { --ui-content-meta-ink: var(--color-text); }
 	:where([content~="mt(accent)"]) { --ui-content-meta-ink: var(--color-accent-ink); }
 	:where([content~="mt(inv)"])    { --ui-content-meta-ink: var(--ui-content-inv); }
+	:where([content~="mt(200)"])    { --ui-content-meta-weight: 200; }
 	:where([content~="mt(300)"])    { --ui-content-meta-weight: var(--font-weight-light); }
 	:where([content~="mt(400)"])    { --ui-content-meta-weight: var(--font-weight-normal); }
 	:where([content~="mt(500)"])    { --ui-content-meta-weight: var(--font-weight-medium); }
@@ -367,6 +386,7 @@
 	:where([content~="hl(sld)"])    { --ui-content-heading-ink: var(--color-text); }
 	:where([content~="hl(accent)"]) { --ui-content-heading-ink: var(--color-accent-ink); }
 	:where([content~="hl(inv)"])    { --ui-content-heading-ink: var(--ui-content-inv); }
+	:where([content~="hl(200)"])    { --ui-content-heading-weight: 200; }
 	:where([content~="hl(300)"])    { --ui-content-heading-weight: var(--font-weight-light); }
 	:where([content~="hl(400)"])    { --ui-content-heading-weight: var(--font-weight-normal); }
 	:where([content~="hl(500)"])    { --ui-content-heading-weight: var(--font-weight-medium); }
@@ -374,6 +394,10 @@
 	:where([content~="hl(700)"])    { --ui-content-heading-weight: var(--font-weight-bold); }
 	:where([content~="hl(800)"])    { --ui-content-heading-weight: 800; }
 	:where([content~="hl(900)"])    { --ui-content-heading-weight: var(--font-weight-black); }
+	:where([content~="hl(xs)"]),
+	:where(ui-card[content~="hl(xs)"]) > cq-box,
+	:where(lay-out-group[content~="hl(xs)"]) > cq-box,
+	:where(ui-reveal[content~="hl(xs)"] > details) > summary  { --ui-content-headline: var(--ui-content-hl-xs, var(--ui-content-headline-xs)); }
 	:where([content~="hl(sm)"]),
 	:where(ui-card[content~="hl(sm)"]) > cq-box,
 	:where(lay-out-group[content~="hl(sm)"]) > cq-box,
@@ -399,6 +423,10 @@
 	:where(lay-out-group[content~="hl(3xl)"]) > cq-box,
 	:where(ui-reveal[content~="hl(3xl)"] > details) > summary { --ui-content-headline: var(--ui-content-hl-3xl, var(--ui-content-headline-3xl)); }
 	:where([content~="hl(shd)"])    { --ui-content-heading-text-shadow: var(--ui-content-text-shadow); }
+	/* hl(caps|wide|tight) — case and tracking; the theme hooks are -heading-transform/-tracking */
+	:where([content~="hl(caps)"])   { --ui-content-heading-transform: uppercase; }
+	:where([content~="hl(wide)"])   { --ui-content-heading-tracking: var(--tracking-wide); }
+	:where([content~="hl(tight)"])  { --ui-content-heading-tracking: var(--tracking-tighter); }
 	/* hl(<font>) — heading font override; disjoint from hl()'s other args */
 	:where([content~="hl(body)"])   { --ui-content-heading-font: var(--font-body); }
 	:where([content~="hl(head)"])   { --ui-content-heading-font: var(--font-heading); }
@@ -408,6 +436,7 @@
 
 	/* --- md:/lg: hl(<size>) — AFTER base hl() so a prefixed form wins --- */
 	@container bs-card (inline-size >= 25rem) {
+		:where([content~="md:hl(xs)"])  :is(cq-box, summary), :where(ui-content[content~="md:hl(xs)"]) { --ui-content-headline: var(--ui-content-hl-xs, var(--ui-content-headline-xs)); }
 		:where([content~="md:hl(sm)"])  :is(cq-box, summary), :where(ui-content[content~="md:hl(sm)"]) { --ui-content-headline: var(--ui-content-hl-sm, var(--ui-content-headline-sm)); }
 		:where([content~="md:hl(md)"])  :is(cq-box, summary), :where(ui-content[content~="md:hl(md)"]) { --ui-content-headline: var(--ui-content-hl-md, var(--ui-content-headline-md)); }
 		:where([content~="md:hl(lg)"])  :is(cq-box, summary), :where(ui-content[content~="md:hl(lg)"]) { --ui-content-headline: var(--ui-content-hl-lg, var(--ui-content-headline-lg)); }
@@ -416,6 +445,7 @@
 		:where([content~="md:hl(3xl)"]) :is(cq-box, summary), :where(ui-content[content~="md:hl(3xl)"]) { --ui-content-headline: var(--ui-content-hl-3xl, var(--ui-content-headline-3xl)); }
 	}
 	@container bs-card (inline-size >= 44rem) {
+		:where([content~="lg:hl(xs)"])  :is(cq-box, summary), :where(ui-content[content~="lg:hl(xs)"]) { --ui-content-headline: var(--ui-content-hl-xs, var(--ui-content-headline-xs)); }
 		:where([content~="lg:hl(sm)"])  :is(cq-box, summary), :where(ui-content[content~="lg:hl(sm)"]) { --ui-content-headline: var(--ui-content-hl-sm, var(--ui-content-headline-sm)); }
 		:where([content~="lg:hl(md)"])  :is(cq-box, summary), :where(ui-content[content~="lg:hl(md)"]) { --ui-content-headline: var(--ui-content-hl-md, var(--ui-content-headline-md)); }
 		:where([content~="lg:hl(lg)"])  :is(cq-box, summary), :where(ui-content[content~="lg:hl(lg)"]) { --ui-content-headline: var(--ui-content-hl-lg, var(--ui-content-headline-lg)); }

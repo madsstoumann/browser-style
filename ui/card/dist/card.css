@@ -1593,6 +1593,17 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       color: var(--_theme-c, var(--color-text));
     }
   }
+  :where([content~="pnl(sld)"]) ui-content,
+  :where(ui-content[content~="pnl(sld)"]) {
+    --ui-content-eyebrow-text-shadow: none;
+    --ui-content-heading-text-shadow: none;
+    --ui-content-ov-ink: var(--ui-content-panel-ink, var(--color-text));
+    align-self: var(--ui-content-ov-justify, stretch);
+    background: var(--ui-content-panel-bg, var(--color-surface));
+    border-radius: var(--ui-content-radius, 0);
+    justify-self: var(--ui-content-ov-align, stretch);
+    margin: var(--ui-content-panel-m, 0);
+  }
   :where(ui-card[theme]) {
     --ui-content-eyebrow-ink: currentColor;
   }
@@ -1659,19 +1670,43 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       color: var(--ui-content-eyebrow-ink, var(--color-accent-ink));
       font-size: var(--ui-content-eyebrow-fs, calc(var(--ui-content-fs, var(--ui-content-fs-md)) * 0.78));
       font-weight: var(--ui-content-eyebrow-weight, var(--font-weight-medium, 500));
-      letter-spacing: var(--tracking-wide, 0.05em);
+      letter-spacing: var(--ui-content-eyebrow-tracking, var(--tracking-wide, 0.05em));
       text-shadow: var(--ui-content-eyebrow-text-shadow, none);
       text-transform: var(--ui-content-eyebrow-transform, uppercase);
+    }
+    & [data-part=label] {
+      color: var(--ui-content-label-ink, var(--color-accent-ink));
+      font-size: var(--ui-content-label-fs, var(--ui-content-eyebrow-fs, calc(var(--ui-content-fs, var(--ui-content-fs-md)) * 0.78)));
+      font-weight: var(--ui-content-label-weight, var(--font-weight-bold, 700));
+      letter-spacing: var(--ui-content-eyebrow-tracking, var(--tracking-wide, 0.05em));
+      text-shadow: var(--ui-content-eyebrow-text-shadow, none);
+      text-transform: uppercase;
+      &[data-live]::before {
+        background: currentColor;
+        block-size: 0.6em;
+        border-radius: 50%;
+        content: "";
+        display: inline-block;
+        inline-size: 0.6em;
+        margin-inline-end: 0.4em;
+        @media (prefers-reduced-motion: no-preference) {
+          animation: ui-content-live var(--ui-content-live-duration, 1.6s) var(--ease-in-out) infinite;
+        }
+      }
+    }
+    & :is([data-part=eyebrow], [data-part=label]) + [data-part=headline] {
+      margin-block-start: var(--ui-content-eyebrow-rhythm, 0);
     }
     & :is([data-part=headline], h2, h3, h4, h5, h6) {
       color: var(--ui-content-headline-ink, var(--ui-content-heading-ink, inherit));
       font-family: var(--ui-content-heading-font, var(--font-heading, inherit));
       font-size: var(--ui-content-headline, var(--ui-content-headline-md));
       font-weight: var(--ui-content-headline-weight, var(--ui-content-heading-weight, var(--font-weight-bold, 700)));
-      letter-spacing: var(--tracking-tight, -0.01em);
+      letter-spacing: var(--ui-content-headline-tracking, var(--ui-content-heading-tracking, var(--tracking-tight, -0.01em)));
       line-height: var(--ui-content-headline-line-height, calc(1em + 0.25rem));
       margin-block-end: var(--ui-content-headline-rhythm, 0.25em);
       text-shadow: var(--ui-content-headline-text-shadow, var(--ui-content-heading-text-shadow, none));
+      text-transform: var(--ui-content-headline-transform, var(--ui-content-heading-transform, none));
       text-wrap: var(--ui-content-headline-wrap, balance);
     }
     & [data-part=subheadline] {
@@ -1828,6 +1863,10 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     & [data-part~=cover] {
       color: inherit;
       text-decoration: none;
+      text-underline-offset: 0.15em;
+      &:is(:hover, :focus-visible) {
+        text-decoration: var(--ui-content-headline-hover, none);
+      }
       &:focus-visible {
         outline: none;
       }
@@ -2124,6 +2163,9 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     font-weight: var(--ui-content-meta-weight, inherit);
     text-shadow: var(--ui-content-meta-text-shadow, none);
   }
+  :where(ui-content) > :not([data-part=meta], [data-part=byline], meta, link, [hidden]) + :is([data-part=meta], [data-part=byline]) {
+    margin-block-start: var(--ui-content-meta-rhythm, 0);
+  }
   :where(ui-content, ui-media) [data-part=count]::before {
     content: var(--icon) / "";
     font-family: var(--ui-icon-font);
@@ -2179,6 +2221,11 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       outline: none;
     }
   }
+  @keyframes ui-content-live {
+    50% {
+      opacity: 0.35;
+    }
+  }
 }
 
 /* content.typography.css */
@@ -2190,6 +2237,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     --ui-content-fs-fluid-lg: clamp(0.95rem, 0.86rem + 0.8cqi, 1.10rem);
     --ui-content-fs-fluid-xl: clamp(1.00rem, 0.92rem + 0.9cqi, 1.20rem);
     --ui-content-fs-fluid-2xl: clamp(1.08rem, 0.98rem + 1.1cqi, 1.32rem);
+    --ui-content-headline-fluid-xs: clamp(0.90rem, 0.84rem + 0.4cqi, 1.05rem);
     --ui-content-headline-fluid-sm: clamp(1.05rem, 0.90rem + 1.0cqi, 1.35rem);
     --ui-content-headline-fluid-md: clamp(1.20rem, 1.00rem + 1.6cqi, 1.75rem);
     --ui-content-headline-fluid-lg: clamp(1.45rem, 1.05rem + 3.0cqi, 2.50rem);
@@ -2201,6 +2249,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     --ui-content-fs-lg: var(--ui-content-fs-fluid-lg);
     --ui-content-fs-xl: var(--ui-content-fs-fluid-xl);
     --ui-content-fs-2xl: var(--ui-content-fs-fluid-2xl);
+    --ui-content-headline-xs: var(--ui-content-headline-fluid-xs);
     --ui-content-headline-sm: var(--ui-content-headline-fluid-sm);
     --ui-content-headline-md: var(--ui-content-headline-fluid-md);
     --ui-content-headline-lg: var(--ui-content-headline-fluid-lg);
@@ -2221,6 +2270,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     --ui-content-fs-lg: var(--font-size-lg);
     --ui-content-fs-xl: var(--font-size-xl);
     --ui-content-fs-2xl: var(--font-size-2xl);
+    --ui-content-headline-xs: var(--font-size-base);
     --ui-content-headline-sm: var(--font-size-xl);
     --ui-content-headline-md: var(--font-size-2xl);
     --ui-content-headline-lg: var(--font-size-3xl);
@@ -2235,6 +2285,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     --ui-content-fs-lg: var(--ui-content-fs-fluid-lg);
     --ui-content-fs-xl: var(--ui-content-fs-fluid-xl);
     --ui-content-fs-2xl: var(--ui-content-fs-fluid-2xl);
+    --ui-content-headline-xs: var(--ui-content-headline-fluid-xs);
     --ui-content-headline-sm: var(--ui-content-headline-fluid-sm);
     --ui-content-headline-md: var(--ui-content-headline-fluid-md);
     --ui-content-headline-lg: var(--ui-content-headline-fluid-lg);
@@ -2249,6 +2300,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     --ui-content-tx-md: var(--ui-content-fs-sm);
     --ui-content-tx-lg: var(--ui-content-fs-md);
     --ui-content-tx-xl: var(--ui-content-fs-lg);
+    --ui-content-hl-xs: var(--ui-content-headline-xs);
     --ui-content-hl-sm: var(--ui-content-headline-sm);
     --ui-content-hl-md: var(--ui-content-headline-sm);
     --ui-content-hl-lg: var(--ui-content-headline-md);
@@ -2263,6 +2315,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     --ui-content-tx-md: var(--ui-content-fs-md);
     --ui-content-tx-lg: var(--ui-content-fs-lg);
     --ui-content-tx-xl: var(--ui-content-fs-xl);
+    --ui-content-hl-xs: var(--ui-content-headline-xs);
     --ui-content-hl-sm: var(--ui-content-headline-sm);
     --ui-content-hl-md: var(--ui-content-headline-md);
     --ui-content-hl-lg: var(--ui-content-headline-lg);
@@ -2277,6 +2330,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     --ui-content-tx-md: var(--ui-content-fs-lg);
     --ui-content-tx-lg: var(--ui-content-fs-xl);
     --ui-content-tx-xl: var(--ui-content-fs-2xl);
+    --ui-content-hl-xs: var(--ui-content-headline-sm);
     --ui-content-hl-sm: var(--ui-content-headline-md);
     --ui-content-hl-md: var(--ui-content-headline-lg);
     --ui-content-hl-lg: var(--ui-content-headline-xl);
@@ -2291,6 +2345,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     --ui-content-tx-md: var(--ui-content-fs-xl);
     --ui-content-tx-lg: var(--ui-content-fs-2xl);
     --ui-content-tx-xl: var(--ui-content-fs-2xl);
+    --ui-content-hl-xs: var(--ui-content-headline-md);
     --ui-content-hl-sm: var(--ui-content-headline-lg);
     --ui-content-hl-md: var(--ui-content-headline-xl);
     --ui-content-hl-lg: var(--ui-content-headline-2xl);
@@ -2307,6 +2362,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       --ui-content-tx-md: var(--ui-content-fs-sm);
       --ui-content-tx-lg: var(--ui-content-fs-md);
       --ui-content-tx-xl: var(--ui-content-fs-lg);
+      --ui-content-hl-xs: var(--ui-content-headline-xs);
       --ui-content-hl-sm: var(--ui-content-headline-sm);
       --ui-content-hl-md: var(--ui-content-headline-sm);
       --ui-content-hl-lg: var(--ui-content-headline-md);
@@ -2322,6 +2378,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       --ui-content-tx-md: var(--ui-content-fs-md);
       --ui-content-tx-lg: var(--ui-content-fs-lg);
       --ui-content-tx-xl: var(--ui-content-fs-xl);
+      --ui-content-hl-xs: var(--ui-content-headline-xs);
       --ui-content-hl-sm: var(--ui-content-headline-sm);
       --ui-content-hl-md: var(--ui-content-headline-md);
       --ui-content-hl-lg: var(--ui-content-headline-lg);
@@ -2337,6 +2394,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       --ui-content-tx-md: var(--ui-content-fs-lg);
       --ui-content-tx-lg: var(--ui-content-fs-xl);
       --ui-content-tx-xl: var(--ui-content-fs-2xl);
+      --ui-content-hl-xs: var(--ui-content-headline-sm);
       --ui-content-hl-sm: var(--ui-content-headline-md);
       --ui-content-hl-md: var(--ui-content-headline-lg);
       --ui-content-hl-lg: var(--ui-content-headline-xl);
@@ -2352,6 +2410,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       --ui-content-tx-md: var(--ui-content-fs-xl);
       --ui-content-tx-lg: var(--ui-content-fs-2xl);
       --ui-content-tx-xl: var(--ui-content-fs-2xl);
+      --ui-content-hl-xs: var(--ui-content-headline-md);
       --ui-content-hl-sm: var(--ui-content-headline-lg);
       --ui-content-hl-md: var(--ui-content-headline-xl);
       --ui-content-hl-lg: var(--ui-content-headline-2xl);
@@ -2369,6 +2428,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       --ui-content-tx-md: var(--ui-content-fs-sm);
       --ui-content-tx-lg: var(--ui-content-fs-md);
       --ui-content-tx-xl: var(--ui-content-fs-lg);
+      --ui-content-hl-xs: var(--ui-content-headline-xs);
       --ui-content-hl-sm: var(--ui-content-headline-sm);
       --ui-content-hl-md: var(--ui-content-headline-sm);
       --ui-content-hl-lg: var(--ui-content-headline-md);
@@ -2384,6 +2444,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       --ui-content-tx-md: var(--ui-content-fs-md);
       --ui-content-tx-lg: var(--ui-content-fs-lg);
       --ui-content-tx-xl: var(--ui-content-fs-xl);
+      --ui-content-hl-xs: var(--ui-content-headline-xs);
       --ui-content-hl-sm: var(--ui-content-headline-sm);
       --ui-content-hl-md: var(--ui-content-headline-md);
       --ui-content-hl-lg: var(--ui-content-headline-lg);
@@ -2399,6 +2460,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       --ui-content-tx-md: var(--ui-content-fs-lg);
       --ui-content-tx-lg: var(--ui-content-fs-xl);
       --ui-content-tx-xl: var(--ui-content-fs-2xl);
+      --ui-content-hl-xs: var(--ui-content-headline-sm);
       --ui-content-hl-sm: var(--ui-content-headline-md);
       --ui-content-hl-md: var(--ui-content-headline-lg);
       --ui-content-hl-lg: var(--ui-content-headline-xl);
@@ -2414,6 +2476,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       --ui-content-tx-md: var(--ui-content-fs-xl);
       --ui-content-tx-lg: var(--ui-content-fs-2xl);
       --ui-content-tx-xl: var(--ui-content-fs-2xl);
+      --ui-content-hl-xs: var(--ui-content-headline-md);
       --ui-content-hl-sm: var(--ui-content-headline-lg);
       --ui-content-hl-md: var(--ui-content-headline-xl);
       --ui-content-hl-lg: var(--ui-content-headline-2xl);
@@ -2442,6 +2505,9 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
   }
   :where([content~="eb(inv)"]) {
     --ui-content-eyebrow-ink: var(--ui-content-inv);
+  }
+  :where([content~="eb(200)"]) {
+    --ui-content-eyebrow-weight: 200;
   }
   :where([content~="eb(300)"]) {
     --ui-content-eyebrow-weight: var(--font-weight-light);
@@ -2515,6 +2581,9 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
   :where([content~="tx(inv)"]) {
     --ui-content-body-ink: var(--ui-content-inv);
   }
+  :where([content~="tx(200)"]) {
+    --ui-content-body-weight: 200;
+  }
   :where([content~="tx(300)"]) {
     --ui-content-body-weight: var(--font-weight-light);
   }
@@ -2583,6 +2652,9 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
   }
   :where([content~="mt(inv)"]) {
     --ui-content-meta-ink: var(--ui-content-inv);
+  }
+  :where([content~="mt(200)"]) {
+    --ui-content-meta-weight: 200;
   }
   :where([content~="mt(300)"]) {
     --ui-content-meta-weight: var(--font-weight-light);
@@ -2653,6 +2725,9 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
   :where([content~="hl(inv)"]) {
     --ui-content-heading-ink: var(--ui-content-inv);
   }
+  :where([content~="hl(200)"]) {
+    --ui-content-heading-weight: 200;
+  }
   :where([content~="hl(300)"]) {
     --ui-content-heading-weight: var(--font-weight-light);
   }
@@ -2673,6 +2748,12 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
   }
   :where([content~="hl(900)"]) {
     --ui-content-heading-weight: var(--font-weight-black);
+  }
+  :where([content~="hl(xs)"]),
+  :where(ui-card[content~="hl(xs)"]) > cq-box,
+  :where(lay-out-group[content~="hl(xs)"]) > cq-box,
+  :where(ui-reveal[content~="hl(xs)"] > details) > summary {
+    --ui-content-headline: var(--ui-content-hl-xs, var(--ui-content-headline-xs));
   }
   :where([content~="hl(sm)"]),
   :where(ui-card[content~="hl(sm)"]) > cq-box,
@@ -2713,6 +2794,15 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
   :where([content~="hl(shd)"]) {
     --ui-content-heading-text-shadow: var(--ui-content-text-shadow);
   }
+  :where([content~="hl(caps)"]) {
+    --ui-content-heading-transform: uppercase;
+  }
+  :where([content~="hl(wide)"]) {
+    --ui-content-heading-tracking: var(--tracking-wide);
+  }
+  :where([content~="hl(tight)"]) {
+    --ui-content-heading-tracking: var(--tracking-tighter);
+  }
   :where([content~="hl(body)"]) {
     --ui-content-heading-font: var(--font-body);
   }
@@ -2729,6 +2819,10 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     --ui-content-heading-font: var(--font-form);
   }
   @container bs-card (inline-size >= 25rem) {
+    :where([content~="md:hl(xs)"]) :is(cq-box, summary),
+    :where(ui-content[content~="md:hl(xs)"]) {
+      --ui-content-headline: var(--ui-content-hl-xs, var(--ui-content-headline-xs));
+    }
     :where([content~="md:hl(sm)"]) :is(cq-box, summary),
     :where(ui-content[content~="md:hl(sm)"]) {
       --ui-content-headline: var(--ui-content-hl-sm, var(--ui-content-headline-sm));
@@ -2755,6 +2849,10 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     }
   }
   @container bs-card (inline-size >= 44rem) {
+    :where([content~="lg:hl(xs)"]) :is(cq-box, summary),
+    :where(ui-content[content~="lg:hl(xs)"]) {
+      --ui-content-headline: var(--ui-content-hl-xs, var(--ui-content-headline-xs));
+    }
     :where([content~="lg:hl(sm)"]) :is(cq-box, summary),
     :where(ui-content[content~="lg:hl(sm)"]) {
       --ui-content-headline: var(--ui-content-hl-sm, var(--ui-content-headline-sm));
@@ -2800,9 +2898,9 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
 /* ui-card.css */
 @layer bs-component {
   :where(ui-card) {
-    --ui-card-bg: light-dark(var(--color-surface), var(--ui-card-dark-bg, #1f2937));
-    --ui-card-radius: var(--radius-2xl);
-    --ui-card-shadow: var(--shadow-xl);
+    --ui-card-bg: var(--ui-card-bg-base, light-dark(var(--color-surface), var(--ui-card-dark-bg, #1f2937)));
+    --ui-card-radius: var(--ui-card-radius-base, var(--radius-2xl));
+    --ui-card-shadow: var(--ui-card-shadow-base, var(--shadow-xl));
     background: var(--ui-card-bg);
     border-radius: var(--ui-card-radius);
     box-shadow: var(--ui-card-shadow);
@@ -2813,7 +2911,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     overflow: hidden;
     > cq-box {
       display: grid;
-      gap: 0;
+      gap: var(--ui-card-gap, 0);
       grid-template-columns: var(--ui-card-cols, 1fr);
       min-inline-size: 0;
       > ui-content {

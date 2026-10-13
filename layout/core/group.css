@@ -69,7 +69,7 @@
 
 		& [data-part="link"] {
 			align-self: end;
-			color: var(--color-link, var(--color-accent));
+			color: var(--layout-group-link-c, var(--color-link, var(--color-accent)));
 			font-size: var(--font-size-sm, 0.875rem);
 			font-weight: var(--font-weight-medium, 500);
 			grid-column: 2;
@@ -77,6 +77,29 @@
 			justify-self: end;
 			white-space: nowrap;
 		}
+	}
+
+	/* a themed band's header link follows the band's ink */
+	:where(lay-out-group[theme]) { --layout-group-link-c: currentColor; }
+
+	/* hdr(ctr) — title, text and link stacked and centred. Docs: ui/card/docs/content.md § lay-out-group headers */
+	:where(lay-out-group[content~="hdr(ctr)"], lay-out-group[content~="hdr(ctr)"] > cq-box) > ui-content,
+	:where(lay-out-group, lay-out-group > cq-box) > ui-content[content~="hdr(ctr)"] {
+		grid-template-columns: 1fr;
+		justify-items: center;
+		text-align: center;
+		& > * { grid-column: 1; }
+		& [data-part="link"] { grid-column: 1; grid-row: auto; justify-self: center; }
+	}
+
+	/* hdr(spl) — title left, text and link right */
+	:where(lay-out-group[content~="hdr(spl)"], lay-out-group[content~="hdr(spl)"] > cq-box) > ui-content,
+	:where(lay-out-group, lay-out-group > cq-box) > ui-content[content~="hdr(spl)"] {
+		align-items: start;
+		grid-template-columns: 1fr 1fr;
+		& > * { grid-column: 2; }
+		& > :is([data-part="eyebrow"], [data-part="headline"]) { grid-column: 1; }
+		& [data-part="link"] { grid-column: 2; grid-row: auto; justify-self: start; }
 	}
 
 	@media (width < 30rem) {
@@ -87,6 +110,11 @@
 			grid-column: 1;
 			grid-row: auto;
 			justify-self: start;
+		}
+		:where(lay-out-group[content~="hdr(spl)"], lay-out-group[content~="hdr(spl)"] > cq-box) > ui-content,
+		:where(lay-out-group, lay-out-group > cq-box) > ui-content[content~="hdr(spl)"] {
+			grid-template-columns: 1fr;
+			& > *, & [data-part="link"] { grid-column: 1; }
 		}
 	}
 

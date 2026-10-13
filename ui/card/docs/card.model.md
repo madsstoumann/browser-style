@@ -91,6 +91,7 @@ The fields every card has, whatever its type.
 | `chip` | object \| array | — | — | fieldset / repeater | text-column status flag. **Not the same as `furniture.chip`** |
 | `cover` | url | no | — | url | makes the whole card a link |
 | `eyebrow` | string | yes | — | text | |
+| `label` | object | yes | — | fieldset | `{ text, live }`; a plain string is the text alone. `live` is a boolean (pulsing dot) |
 | `headline` | richtext | yes | **yes** | richtext | max 256; images and embeds disabled |
 | `subheadline` | string | yes | — | text | some types fill this from `details` — § Discriminator |
 | `summary` | text | yes | — | textarea | `review` overrides it from `details` |
@@ -1346,28 +1347,30 @@ is live. One value per token instance — `chip(ts) chip(red)`, never `chip(ts r
 | `gap()` | **size** | none xs sm md lg | — |
 | `scl()` | **size** | sm md lg xl | — |
 | `scl()` | **mode** | fix fluid | — |
-| `hl()` | **size** | sm md lg xl 2xl 3xl | — |
+| `hl()` | **size** | xs sm md lg xl 2xl 3xl | — |
 | `hl()` | **tone** | shr lgt med drk sld accent inv | — |
-| `hl()` | **weight** | 300 400 500 600 700 800 900 | — |
+| `hl()` | **weight** | 200 300 400 500 600 700 800 900 | — |
 | `hl()` | **font** | body head serif mono form | — |
-| `hl()` | **flag** | shd | — |
+| `hl()` | **flag** | shd caps wide tight | — |
 | `eb()` | **size** | sm md lg xl | — |
 | `eb()` | **tone** | shr lgt med drk sld accent inv | — |
-| `eb()` | **weight** | 300 400 500 600 700 800 900 | — |
+| `eb()` | **weight** | 200 300 400 500 600 700 800 900 | — |
 | `eb()` | **flag** | flat shd | — |
 | `tx()` | **size** | sm md lg xl | — |
 | `tx()` | **tone** | shr lgt med drk sld accent inv | — |
-| `tx()` | **weight** | 300 400 500 600 700 800 900 | — |
+| `tx()` | **weight** | 200 300 400 500 600 700 800 900 | — |
 | `tx()` | **flag** | shd | — |
 | `mt()` | **size** | sm md lg xl | — |
 | `mt()` | **tone** | shr lgt med drk sld accent inv | — |
-| `mt()` | **weight** | 300 400 500 600 700 800 900 | — |
+| `mt()` | **weight** | 200 300 400 500 600 700 800 900 | — |
 | `mt()` | **flag** | shd | — |
 | `fnt()` | **font** | body head serif mono form | — |
 | `rds()` | **size** | non sm md lg xl 2xl full pill sm-sq md-sq lg-sq xl-sq | — |
 | `plc()` | **pos** | ts tc te cs cc ce bs bc be | — |
 | `wid()` | **size** | sm md lg xl 2xl | — |
 | `tal()` | **value** | start ctr end | — |
+| `pnl()` | **variant** | sld | — |
+| `hdr()` | **variant** | ctr spl | — |
 | `scr()` | **value** | x y | — |
 | `gate` | *(bare flag)* | — | — |
 <!-- /tokens -->

@@ -22,11 +22,29 @@ All global fallbacks (`--color-*`, `--spacing-*`, `--radius-*`, `--shadow-*`, �
 
 | Token | Default | Controls |
 |-------|---------|----------|
-| `--ui-card-bg` | `var(--color-surface)` | card background (also set by `theme=`) |
-| `--ui-card-radius` | `var(--radius-2xl)` | corner radius (set with `rds()`) |
-| `--ui-card-shadow` | `var(--shadow-xl)` | card shadow |
+| `--ui-card-bg` | `var(--ui-card-bg-base, …surface)` | card background (also set by `theme=`) |
+| `--ui-card-radius` | `var(--ui-card-radius-base, var(--radius-2xl))` | corner radius (set with `rds()`) |
+| `--ui-card-shadow` | `var(--ui-card-shadow-base, var(--shadow-xl))` | card shadow (set with `shd()`) |
+| `--ui-card-gap` | `0` | gap between media and text inside `<cq-box>` |
 
 The card is `display: grid` + `container-type: inline-size` + `overflow: hidden`. Children are wrapped in a `<cq-box>` (the queryable descendant for container queries); its grid columns come from `--ui-card-cols`.
+
+### Site defaults
+
+A theme sets these on `:root` to change every card on a site. The `variant=` words write `--ui-card-radius` / `--ui-card-shadow` on the card itself, so `rds()` and `shd()` still win; a `theme=` card keeps its theme surface.
+
+| Hook | Default | Beaten by | Also read by |
+|---|---|---|---|
+| `--ui-card-radius-base` | `var(--radius-2xl)` | `rds()` | `<ui-reveal>` (`--ui-reveal-radius`) |
+| `--ui-card-shadow-base` | `var(--shadow-xl)` | `shd()` | `<ui-reveal>` |
+| `--ui-card-bg-base` | `light-dark(var(--color-surface), var(--ui-card-dark-bg, #1f2937))` | `theme=` | `<ui-reveal>` (`--ui-reveal-bg`) |
+| `--ui-card-gap` | `0` | — | — |
+
+```css
+:root { --ui-card-radius-base: 0; --ui-card-shadow-base: none; --ui-card-bg-base: transparent; --ui-card-gap: .75rem; }
+```
+
+Before these hooks a site had to override the global `--radius-2xl` / `--shadow-xl` on `ui-card`, which leaked into everything inside the card that reads them. The text hooks are in [content.md § Site defaults](content.md#site-defaults--hooks-a-theme-sets-on-root).
 
 `--ui-card-bg` is a `light-dark()` pair — light arm the normal surface, dark arm the card's own slate (`--ui-card-dark-bg`). Because the *default* is already a pair, a card theme only has to flip `color-scheme`, which is what `theme="black dark"` does.
 

@@ -109,16 +109,18 @@ Argument vocabularies, the custom properties each token writes, and which tokens
 | `pis()` | padding | **size** none xs sm md lg xl 2xl | — | — | --ui-content-pis | md: lg: (size) | — |
 | `pie()` | padding | **size** none xs sm md lg xl 2xl | — | — | --ui-content-pie | md: lg: (size) | — |
 | `gap()` | spacing | **size** none xs sm md lg | — | — | --ui-content-gap | md: lg: (size) | — |
-| `scl()` | type-scale | **size** sm md lg xl · **mode** fix fluid | — | — | --ui-content-fs --ui-content-headline --ui-content-tx-sm --ui-content-tx-md --ui-content-tx-lg --ui-content-tx-xl --ui-content-hl-sm --ui-content-hl-md --ui-content-hl-lg --ui-content-hl-xl --ui-content-hl-2xl --ui-content-hl-3xl --ui-content-fs-sm --ui-content-fs-md --ui-content-fs-lg --ui-content-fs-xl --ui-content-fs-2xl --ui-content-headline-sm --ui-content-headline-md --ui-content-headline-lg --ui-content-headline-xl --ui-content-headline-2xl --ui-content-headline-3xl | md: lg: (size) | — |
-| `hl()` | type-group | **size** sm md lg xl 2xl 3xl · **tone** shr lgt med drk sld accent inv · **weight** 300 400 500 600 700 800 900 · **font** body head serif mono form · **flag** shd | — | — | --ui-content-heading-ink --ui-content-heading-weight --ui-content-heading-text-shadow --ui-content-heading-font --ui-content-headline | md: lg: (size) | — |
-| `eb()` | type-group | **size** sm md lg xl · **tone** shr lgt med drk sld accent inv · **weight** 300 400 500 600 700 800 900 · **flag** flat shd | — | — | --ui-content-eyebrow-ink --ui-content-eyebrow-weight --ui-content-eyebrow-transform --ui-content-eyebrow-text-shadow --ui-content-eyebrow-fs | — | — |
-| `tx()` | type-group | **size** sm md lg xl · **tone** shr lgt med drk sld accent inv · **weight** 300 400 500 600 700 800 900 · **flag** shd | — | — | --ui-content-body-ink --ui-content-body-weight --ui-content-body-text-shadow --ui-content-body-fs | — | — |
-| `mt()` | type-group | **size** sm md lg xl · **tone** shr lgt med drk sld accent inv · **weight** 300 400 500 600 700 800 900 · **flag** shd | — | — | --ui-content-meta-ink --ui-content-meta-weight --ui-content-meta-text-shadow --ui-content-meta-base | — | — |
+| `scl()` | type-scale | **size** sm md lg xl · **mode** fix fluid | — | — | --ui-content-fs --ui-content-headline --ui-content-tx-sm --ui-content-tx-md --ui-content-tx-lg --ui-content-tx-xl --ui-content-hl-xs --ui-content-hl-sm --ui-content-hl-md --ui-content-hl-lg --ui-content-hl-xl --ui-content-hl-2xl --ui-content-hl-3xl --ui-content-fs-sm --ui-content-fs-md --ui-content-fs-lg --ui-content-fs-xl --ui-content-fs-2xl --ui-content-headline-xs --ui-content-headline-sm --ui-content-headline-md --ui-content-headline-lg --ui-content-headline-xl --ui-content-headline-2xl --ui-content-headline-3xl | md: lg: (size) | — |
+| `hl()` | type-group | **size** xs sm md lg xl 2xl 3xl · **tone** shr lgt med drk sld accent inv · **weight** 200 300 400 500 600 700 800 900 · **font** body head serif mono form · **flag** shd caps wide tight | — | — | --ui-content-heading-ink --ui-content-heading-weight --ui-content-heading-text-shadow --ui-content-heading-font --ui-content-headline --ui-content-heading-transform --ui-content-heading-tracking | md: lg: (size) | — |
+| `eb()` | type-group | **size** sm md lg xl · **tone** shr lgt med drk sld accent inv · **weight** 200 300 400 500 600 700 800 900 · **flag** flat shd | — | — | --ui-content-eyebrow-ink --ui-content-eyebrow-weight --ui-content-eyebrow-transform --ui-content-eyebrow-text-shadow --ui-content-eyebrow-fs | — | — |
+| `tx()` | type-group | **size** sm md lg xl · **tone** shr lgt med drk sld accent inv · **weight** 200 300 400 500 600 700 800 900 · **flag** shd | — | — | --ui-content-body-ink --ui-content-body-weight --ui-content-body-text-shadow --ui-content-body-fs | — | — |
+| `mt()` | type-group | **size** sm md lg xl · **tone** shr lgt med drk sld accent inv · **weight** 200 300 400 500 600 700 800 900 · **flag** shd | — | — | --ui-content-meta-ink --ui-content-meta-weight --ui-content-meta-text-shadow --ui-content-meta-base | — | — |
 | `fnt()` | font | **font** body head serif mono form | — | — | --ui-content-font | — | — |
 | `rds()` | corners | **size** non sm md lg xl 2xl full pill sm-sq md-sq lg-sq xl-sq | — | — | --ui-content-radius --ui-content-squircle-exp | — | — |
 | `plc()` | placement | **pos** ts tc te cs cc ce bs bc be | — | — | --ui-content-place-block --ui-content-place-inline | — | — |
 | `wid()` | measure | **size** sm md lg xl 2xl | — | — | --ui-content-max | — | — |
 | `tal()` | alignment | **value** start ctr end | — | — | --ui-content-text-align | — | — |
+| `pnl()` | panel | **variant** sld | — | — | --ui-content-ov-ink --ui-content-heading-text-shadow --ui-content-eyebrow-text-shadow | — | — |
+| `hdr()` | section-header | **variant** ctr spl | — | — | — | — | — |
 | `scr()` | scroll | **value** x y | — | yes | --ui-scroll-fade-dir --ui-scroll-fade-start --ui-scroll-fade-end | — | — |
 | `gate` | scroll | — | — | yes | --ui-scroll-fade-end | — | — |
 <!-- /tokens -->
@@ -293,10 +295,60 @@ Every part belongs to one of **four logical groups**. A group family token write
 **Three disjoint arg vocabularies** (so whole-token matching can't confuse them):
 
 - **tone** (ink): `shr` `lgt` `med` `drk` `sld` `accent` `inv` — an opacity ramp of the current ink (`shr` 30% → `sld` 100% via `--ui-content-{shr,soft,muted,drk}`), plus `accent` (`--color-accent-ink`) and `inv` (`#fff`, for overlays). Writes the group ink prop.
-- **size** (all four families + `scl()`): `sm` `md` `lg` `xl` (+ `2xl` `3xl` on `hl()`). `scl()` is the master step (body **and** headline, `sm`–`xl`); `hl()` sizes the **headline only** (`sm`–`3xl`) so a display title can decouple from readable body copy; `eb()`/`tx()`/`mt()` size their group off the body ramp. All sizes are **relational** — they shift with `scl()` (see *Relational scale*). `3xl` is the display step (`clamp(2.5rem, 1rem + 11cqi, 8rem)`, the token formerly called `poster`).
-- **weight**: `300`–`900` → `--font-weight-*` (`800` is a literal; there is no `--font-weight-extrabold`). Offered on `eb()`, `hl()`, `tx()`, `mt()`.
+- **size** (all four families + `scl()`): `sm` `md` `lg` `xl` (+ `xs` `2xl` `3xl` on `hl()`). `scl()` is the master step (body **and** headline, `sm`–`xl`); `hl()` sizes the **headline only** (`sm`–`3xl`) so a display title can decouple from readable body copy; `eb()`/`tx()`/`mt()` size their group off the body ramp. All sizes are **relational** — they shift with `scl()` (see *Relational scale*). `3xl` is the display step (`clamp(2.5rem, 1rem + 11cqi, 8rem)`, the token formerly called `poster`).
+- **weight**: `200`–`900` → `--font-weight-*` (`200` and `800` are literals; there is no `--font-weight-extralight` or `-extrabold`). Offered on `eb()`, `hl()`, `tx()`, `mt()`.
 
 Plus flags: **`eb(flat)`** drops the eyebrow's default uppercase; **`shd`** on any family (`hl(shd)` `eb(shd)` `tx(shd)` `mt(shd)`) adds a legibility **text-shadow** to that group.
+
+### Headline case and tracking
+
+| Token | Writes | Value |
+|---|---|---|
+| `hl(caps)` | `--ui-content-heading-transform` | `uppercase` |
+| `hl(wide)` | `--ui-content-heading-tracking` | `var(--tracking-wide)` |
+| `hl(tight)` | `--ui-content-heading-tracking` | `var(--tracking-tighter)` |
+| `hl(xs)` | `--ui-content-headline` | one step under `sm`: `clamp(0.90rem, 0.84rem + 0.4cqi, 1.05rem)`, `--font-size-base` under `scl(fix)`; for small section titles |
+
+The headline reads `--ui-content-headline-{transform,tracking}`, then the group prop above, then the default (`none`, `--tracking-tight`). Bare `h2`–`h6` follow too; the subheadline does not.
+
+### Site defaults — hooks a theme sets on `:root`
+
+Each hook is read with a fallback, so nothing changes until it is set, and a preset word that writes the same property still wins (the word sits nearer the element than `:root`).
+
+| Hook | Default | What it sets | Word that beats it |
+|---|---|---|---|
+| `--ui-content-heading-transform` | `none` | headline case | `hl(caps)` |
+| `--ui-content-heading-tracking` | `var(--tracking-tight)` | headline letter spacing | `hl(wide)`, `hl(tight)` |
+| `--ui-content-headline-hover` | `none` | `text-decoration` of the `cover` link on hover and focus, e.g. `underline` | — |
+| `--ui-content-eyebrow-tracking` | `var(--tracking-wide)` | eyebrow and label letter spacing | — |
+| `--ui-content-eyebrow-rhythm` | `0` | space between an eyebrow or label and the headline, added to the column gap | — |
+| `--ui-content-meta-rhythm` | `0` | space above the first meta or byline row after the text, added to the column gap | — |
+| `--ui-content-label-ink` | `var(--color-accent-ink)` | label colour | — |
+| `--ui-content-gap` | `1em` | column gap | `gap()` |
+| `--ui-content-headline-rhythm` | `0.25em` | space under the headline | — |
+| `--ui-content-headline-line-height` | `calc(1em + 0.25rem)` | headline leading | — |
+| `--ui-content-meta-fs` | `calc(var(--ui-content-fs) * 0.75)` | meta size | `mt()` |
+
+The card-level hooks (`--ui-card-radius-base`, `--ui-card-shadow-base`, `--ui-card-bg-base`, `--ui-card-gap`) are in [ui-card-tokens.md § Site defaults](ui-card-tokens.md#site-defaults).
+
+### Panel — `pnl(sld)`
+
+A solid text panel. Over a host `ovr()` it shrinks to its rows and sits at the overlay position; without `ovr()` it fills the column like any background.
+
+| Property | Default | Notes |
+|---|---|---|
+| `--ui-content-panel-bg` | `var(--color-surface)` | panel background |
+| `--ui-content-panel-ink` | `var(--color-text)` | replaces the overlay's white ink; the legibility shadows are dropped |
+| `--ui-content-panel-m` | `0` | margin around the panel |
+| corners | `rds()` | `--ui-content-radius` |
+| width | `wid()` | caps the rows; the panel follows them |
+| padding | `pad()` | the column padding |
+
+```html
+<ui-card variant="ovr(cc) rds(non) shd(non)" media="asr(16/9)" content="pnl(sld) wid(sm) rds(sm) pad(xl) tal(ctr)">…</ui-card>
+```
+
+A `theme=` on the `<ui-content>` itself is a plate too ([Theme surface](#theme-surface)) and out-specifies `pnl(sld)`.
 
 ### `shd` — text-shadow for legibility
 
@@ -354,6 +406,7 @@ Content parts are **semantic children** marked with `data-part`. They are auto-s
 | Part | Typical element | What it styles |
 |------|-----------------|----------------|
 | `eyebrow` | `<small data-part="eyebrow">` / `<p>` | Uppercase, tracked, accent-colored kicker above the headline |
+| `label` | `<small data-part="label">` | A flag between the eyebrow and the headline (Live, Breaking, Opinion): bold, uppercase, eyebrow size, `--ui-content-label-ink`. `data-live` adds a pulsing dot (still under `prefers-reduced-motion`). Outside the headline, so the headline's `itemprop` text stays clean. See [§ Label](#label) |
 | `headline` | `<h2 data-part="headline">` (also bare `h2`–`h6`) | The title — headline type ramp, bold weight, tight tracking, `text-wrap: pretty` |
 | `subheadline` | `<p data-part="subheadline">` | Secondary title — muted color, normal weight, ~0.88× body |
 | `summary` | `<p data-part="summary">` | The body / lede paragraph — body size, normal line-height |
@@ -797,6 +850,17 @@ Parts size relative to the active body size (`--ui-content-fs`), so the whole bl
 | `tags` | ~0.72× |
 | `footer` | ~0.78× |
 
+### Label
+
+`fields.label` renders `<small data-part="label">` after the eyebrow and before the headline. A string is the text; `{ text, live }` adds `data-live`.
+
+| Property | Default |
+|---|---|
+| `--ui-content-label-ink` | `var(--color-accent-ink)` |
+| `--ui-content-label-fs` | the eyebrow size |
+| `--ui-content-label-weight` | `var(--font-weight-bold, 700)` |
+| `--ui-content-live-duration` | `1.6s` (the dot's opacity pulse) |
+
 ### Headline rhythm (leading + space-after)
 
 The headline's vertical rhythm is set by two size-independent formulas so it reads correctly from `sm` to `3xl` without per-step tuning:
@@ -902,13 +966,14 @@ All tokens live in the `--ui-content-*` namespace. Override per instance, per ho
 | `--ui-content-fs-xl` | `clamp(1.00rem, 0.92rem + 0.9cqi, 1.20rem)` | Body ramp — extra large |
 | `--ui-content-fs-2xl` | `clamp(1.08rem, 0.98rem + 1.1cqi, 1.32rem)` | Body ramp — ladder headroom (no `scl(2xl)`/`tx(2xl)` token) |
 | `--ui-content-headline` | `var(--ui-content-headline-md)` | Active headline font-size |
+| `--ui-content-headline-xs` | `clamp(0.90rem, 0.84rem + 0.4cqi, 1.05rem)` | Headline ramp — below the ramp (`hl()`-only, section titles) |
 | `--ui-content-headline-sm` | `clamp(1.05rem, 0.90rem + 1.0cqi, 1.35rem)` | Headline ramp — small |
 | `--ui-content-headline-md` | `clamp(1.20rem, 1.00rem + 1.6cqi, 1.75rem)` | Headline ramp — medium (default) |
 | `--ui-content-headline-lg` | `clamp(1.45rem, 1.05rem + 3.0cqi, 2.50rem)` | Headline ramp — large |
 | `--ui-content-headline-xl` | `clamp(1.90rem, 1.10rem + 5.5cqi, 4.50rem)` | Headline ramp — extra large |
 | `--ui-content-headline-2xl` | `clamp(2.25rem, 1.20rem + 7cqi, 5.50rem)` | Headline ramp — display (`hl()`-only) |
 | `--ui-content-headline-3xl` | `clamp(2.50rem, 1.00rem + 11cqi, 8.00rem)` | Headline ramp — display (`hl()`-only; formerly `poster`) |
-| `--ui-content-tx-{sm..xl}` / `--ui-content-hl-{sm..3xl}` | *(unset without `scl()`)* | Relational ladders written by `scl()` — read by all size tokens (see *Relational scale*) |
+| `--ui-content-tx-{sm..xl}` / `--ui-content-hl-{xs..3xl}` | *(unset without `scl()`)* | Relational ladders written by `scl()` — read by all size tokens (see *Relational scale*) |
 | `--ui-content-body-fs` | *(unset — body parts fall back to `--ui-content-fs`)* | Body-group base size (set by `tx(<size>)`) |
 | `--ui-content-meta-base` | *(unset — meta parts fall back to `--ui-content-fs`)* | Meta-group base size (set by `mt(<size>)`) |
 | `--ui-content-p` | `var(--spacing-md)` | Content padding (set by `pad()`) |
@@ -932,6 +997,12 @@ All tokens live in the `--ui-content-*` namespace. Override per instance, per ho
 | `--ui-content-eyebrow-ink` | `var(--color-accent-ink)` | eyebrow ink |
 | `--ui-content-eyebrow-fs` | `calc(var(--ui-content-fs) * 0.78)` | eyebrow size |
 | `--ui-content-eyebrow-weight` | `var(--font-weight-medium, 500)` | eyebrow weight |
+| `--ui-content-eyebrow-tracking` | `var(--tracking-wide, 0.05em)` | eyebrow and label letter spacing |
+| `--ui-content-eyebrow-rhythm` | `0` | extra space between an eyebrow or label and the headline |
+| `--ui-content-label-ink` | `var(--color-accent-ink)` | label ink |
+| `--ui-content-headline-tracking` | `var(--ui-content-heading-tracking, var(--tracking-tight))` | headline letter spacing |
+| `--ui-content-headline-transform` | `var(--ui-content-heading-transform, none)` | headline case |
+| `--ui-content-headline-hover` | `none` | `text-decoration` of the cover link on hover and focus |
 | `--ui-content-headline-weight` | `var(--font-weight-bold, 700)` | headline weight |
 | `--ui-content-headline-line-height` | `calc(1em + 0.25rem)` | headline line-height (constant-leading formula — see below) |
 | `--ui-content-headline-rhythm` | `0.25em` | space after the headline (modular em rhythm — see below) |
@@ -943,6 +1014,7 @@ All tokens live in the `--ui-content-*` namespace. Override per instance, per ho
 | `--ui-content-summary-clamp` | `none` | teaser truncation — set a line count (e.g. `3`) to clamp the summary. Unset means no clamp; the flex-box formatting context and `overflow: hidden` only switch on for cards that set it |
 | `--ui-content-meta-ink` | `var(--ui-content-muted)` | meta / caption ink |
 | `--ui-content-meta-fs` | `calc(var(--ui-content-fs) * 0.75)` | meta / caption size |
+| `--ui-content-meta-rhythm` | `0` | extra space above the first meta or byline row after the text |
 | `--ui-content-byline-fs` | `calc(var(--ui-content-fs) * 0.82)` | byline size |
 | `--ui-content-byline-gap` | `var(--spacing-sm)` | byline gap |
 | `--ui-content-tags-fs` | `calc(var(--ui-content-fs) * 0.72)` | tags size |
@@ -1076,6 +1148,14 @@ The queries are named on purpose. An *unnamed* size query resolves against the s
 ```
 
 ### `lay-out-group` headers
+
+| Word | Header |
+|---|---|
+| *(none)* | title left, link at the end |
+| `hdr(ctr)` | title, text and link stacked and centred |
+| `hdr(spl)` | eyebrow and title in the first half, text and link in the second; one column under 30rem |
+
+`hdr()` lives in `layout/core/group.css` (`@layer layout.base`, which must win over the header grid) and only acts on the group's header `<ui-content>`. A header link follows the band's ink on a themed group (`--layout-group-link-c`).
 
 `lay-out-group` now declares `container-name: bs-card; container-type: inline-size`, so a group header supports the full `md:`/`lg:` `content=` vocabulary. Two equivalent paths — prefer the first:
 

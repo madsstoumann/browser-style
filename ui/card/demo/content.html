@@ -12,7 +12,7 @@
 	<meta name="referrer" content="no-referrer">
 	<!-- preconnect: CDN handshake parallel to the CSS download. Docs: docs/performance.md -->
 	<link rel="preconnect" href="https://v4.browser.style">
-	<link rel="stylesheet" href="/dist/demo.e43dde0a.min.css">
+	<link rel="stylesheet" href="/dist/demo.7855ed70.min.css">
 	<link rel="stylesheet" href="/dist/icon-font.c6950688.min.css">
 	<style>
 
@@ -464,6 +464,38 @@
 		<ui-card variant="vis(content)" style="--ui-card-bg: linear-gradient(135deg, #6366f1, #ec4899); color: #fff;">
 			<cq-box><ui-content><small data-part="eyebrow" style="--ui-content-eyebrow-ink: rgb(255 255 255 / 0.8);">gradient bg</small><h2 data-part="headline">Custom background</h2><p data-part="summary"><code>--ui-card-bg</code> takes any background value — including a gradient.</p></ui-content></cq-box>
 		</ui-card>
+	</lay-out>
+
+	<!-- ============================================================
+	     Site defaults — the -base hooks a theme sets on :root
+	     ============================================================ -->
+	<h2>Site defaults — <code>--ui-card-*-base</code></h2>
+	<p class="note">A theme sets <code>--ui-card-radius-base</code>, <code>--ui-card-shadow-base</code>, <code>--ui-card-bg-base</code> and <code>--ui-card-gap</code> on <code>:root</code>; here they sit on the lay-out. The third card's <code>rds(lg) shd(md)</code> still wins.</p>
+	<lay-out md="columns(3)" style="--ui-card-radius-base: 0; --ui-card-shadow-base: none; --ui-card-bg-base: transparent; --ui-card-gap: 0.75rem;">
+		<ui-card variant="col" media="asr(16/9)" content="pad(none)"><cq-box><ui-media><img src="/assets/images/city.png" alt="" loading="lazy" decoding="async"></ui-media><ui-content><small data-part="eyebrow">base hooks</small><h3 data-part="headline">Square, flat, on the page</h3><p data-part="summary">No preset word, so the site default applies.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="col" media="asr(16/9)" content="pad(none)"><cq-box><ui-media><img src="/assets/images/river.png" alt="" loading="lazy" decoding="async"></ui-media><ui-content><small data-part="eyebrow">--ui-card-gap: 0.75rem</small><h3 data-part="headline">Picture to text is the card gap</h3><p data-part="summary">The text keeps no padding of its own.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="rds(lg) shd(md)" media="asr(16/9)" content="pad(md)" style="--ui-card-bg-base: var(--color-surface);"><cq-box><ui-media><img src="/assets/images/gastronomy.png" alt="" loading="lazy" decoding="async"></ui-media><ui-content><small data-part="eyebrow">rds(lg) shd(md)</small><h3 data-part="headline">The words win</h3><p data-part="summary">A preset word is nearer the card than :root.</p></ui-content></cq-box></ui-card>
+	</lay-out>
+
+	<!-- ============================================================
+	     Label, case, tracking, hover and rhythm
+	     ============================================================ -->
+	<h2>Label, case and tracking — <code>hl(caps)</code> <code>hl(wide)</code> <code>hl(tight)</code> <code>hl(xs)</code> <code>hl(200)</code></h2>
+	<p class="note">The first card sets the hooks <code>--ui-content-headline-hover: underline</code>, <code>--ui-content-eyebrow-rhythm: 0.75rem</code> and <code>--ui-content-meta-rhythm: 0.5rem</code>; hover it.</p>
+	<lay-out md="columns(3)">
+		<ui-card media="asr(16/9)" content="gap(xs)" style="--ui-content-headline-hover: underline; --ui-content-eyebrow-rhythm: 0.75rem; --ui-content-meta-rhythm: 0.5rem;"><cq-box><ui-media><img src="/assets/images/world.png" alt="" loading="lazy" decoding="async"></ui-media><ui-content><small data-part="eyebrow">World</small><small data-part="label" data-live>Live</small><h3 data-part="headline"><a data-part="cover" href="#">Talks resume after a long night</a></h3><p data-part="summary">A label between the eyebrow and the headline, with a pulsing dot.</p><p data-part="meta"><small>2 hours ago</small></p></ui-content></cq-box></ui-card>
+		<ui-card variant="vis(content)" content="hl(xs) hl(caps) hl(wide)"><cq-box><ui-content><small data-part="eyebrow">hl(xs) hl(caps) hl(wide)</small><h3 data-part="headline">A small section title</h3><p data-part="summary">One step under hl(sm), uppercase, wide tracking.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="vis(content)" content="hl(lg) hl(200) hl(tight)"><cq-box><ui-content><small data-part="eyebrow">hl(lg) hl(200) hl(tight)</small><h3 data-part="headline">Light and tight</h3><p data-part="summary">Weight 200 and the tighter tracking token.</p></ui-content></cq-box></ui-card>
+	</lay-out>
+
+	<!-- ============================================================
+	     Panel — pnl(sld)
+	     ============================================================ -->
+	<h2>Panel — <code>pnl(sld)</code></h2>
+	<p class="note">A solid text panel over the picture: it shrinks to its rows and sits at the <code>ovr()</code> position.</p>
+	<lay-out md="columns(2)">
+		<ui-card variant="ovr(cc) rds(non) shd(non)" media="asr(16/9)" content="pnl(sld) wid(sm) rds(sm) pad(lg) tal(ctr) hl(md) hl(300)"><cq-box><ui-media><img src="/assets/images/hubble.png" alt="" loading="lazy" decoding="async"></ui-media><ui-content><h3 data-part="headline">Centred on the picture</h3><p data-part="summary">ovr(cc) with pnl(sld) wid(sm) rds(sm).</p></ui-content></cq-box></ui-card>
+		<ui-card variant="ovr(bs) rds(non) shd(non)" media="asr(16/9)" content="pnl(sld) wid(sm) pad(md) hl(sm)" style="--ui-content-panel-m: 1rem;"><cq-box><ui-media><img src="/assets/images/quantum.png" alt="" loading="lazy" decoding="async"></ui-media><ui-content><small data-part="eyebrow">ovr(bs)</small><h3 data-part="headline">Bottom start, with a margin</h3><p data-part="summary">--ui-content-panel-m: 1rem.</p></ui-content></cq-box></ui-card>
 	</lay-out>
 </main>
 </body>

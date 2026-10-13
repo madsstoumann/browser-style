@@ -3,11 +3,11 @@
 @layer bs-component {
   :where(ui-reveal) {
     --ui-content-gap: var(--ui-reveal-row-gap, 1em);
-    --ui-reveal-bg: var(--color-surface);
+    --ui-reveal-bg: var(--ui-card-bg-base, var(--color-surface));
     --ui-reveal-icon-sz: var(--size-7);
     --ui-reveal-p: var(--ui-content-p, var(--spacing-md));
     --ui-reveal-icon-m: var(--spacing-md);
-    --ui-reveal-radius: var(--radius-2xl);
+    --ui-reveal-radius: var(--ui-card-radius-base, var(--radius-2xl));
     --_trs: var(--ui-reveal-duration, var(--duration-slower)) var(--ui-reveal-easing, var(--ease-in-out));
     container-type: inline-size;
     display: block;
@@ -17,7 +17,7 @@
       backdrop-filter: var(--ui-reveal-bdf, none);
       background: var(--ui-reveal-bg);
       border-radius: var(--ui-card-radius, var(--ui-reveal-radius));
-      box-shadow: var(--ui-reveal-shadow, var(--shadow-xl));
+      box-shadow: var(--ui-reveal-shadow, var(--ui-card-shadow-base, var(--shadow-xl)));
       container-name: bs-rvl;
       display: grid;
       overflow: hidden;

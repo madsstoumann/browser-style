@@ -180,6 +180,18 @@
 		}
 	}
 
+	/* pnl(sld) — a solid text panel; over ovr() it shrinks to its rows at the overlay position. Docs: docs/content.md § Panel */
+	:where([content~="pnl(sld)"]) ui-content, :where(ui-content[content~="pnl(sld)"]) {
+		--ui-content-eyebrow-text-shadow: none;
+		--ui-content-heading-text-shadow: none;
+		--ui-content-ov-ink: var(--ui-content-panel-ink, var(--color-text));
+		align-self: var(--ui-content-ov-justify, stretch);
+		background: var(--ui-content-panel-bg, var(--color-surface));
+		border-radius: var(--ui-content-radius, 0);
+		justify-self: var(--ui-content-ov-align, stretch);
+		margin: var(--ui-content-panel-m, 0);
+	}
+
 	/* themed hosts: eyebrow + bar fill follow the theme ink; accent stays the unthemed default. Docs: docs/content.md § Theme ink */
 	:where(ui-card[theme]) { --ui-content-eyebrow-ink: currentColor; }
 	:where(ui-card[theme]) progress { --ui-progress-fill: currentColor; }
@@ -246,10 +258,36 @@
 			color: var(--ui-content-eyebrow-ink, var(--color-accent-ink));
 			font-size: var(--ui-content-eyebrow-fs, calc(var(--ui-content-fs, var(--ui-content-fs-md)) * 0.78));
 			font-weight: var(--ui-content-eyebrow-weight, var(--font-weight-medium, 500));
-			letter-spacing: var(--tracking-wide, 0.05em);
+			letter-spacing: var(--ui-content-eyebrow-tracking, var(--tracking-wide, 0.05em));
 			text-shadow: var(--ui-content-eyebrow-text-shadow, none); /* eb(shd) / host ovr() */
 			text-transform: var(--ui-content-eyebrow-transform, uppercase); /* eb(flat) → none */
 		}
+
+		/* label — LIVE / BREAKING above the headline; data-live adds the pulsing dot. Docs: docs/content.md § Label */
+		& [data-part="label"] {
+			color: var(--ui-content-label-ink, var(--color-accent-ink));
+			font-size: var(--ui-content-label-fs, var(--ui-content-eyebrow-fs, calc(var(--ui-content-fs, var(--ui-content-fs-md)) * 0.78)));
+			font-weight: var(--ui-content-label-weight, var(--font-weight-bold, 700));
+			letter-spacing: var(--ui-content-eyebrow-tracking, var(--tracking-wide, 0.05em));
+			text-shadow: var(--ui-content-eyebrow-text-shadow, none);
+			text-transform: uppercase;
+
+			&[data-live]::before {
+				background: currentColor;
+				block-size: 0.6em;
+				border-radius: 50%;
+				content: "";
+				display: inline-block;
+				inline-size: 0.6em;
+				margin-inline-end: 0.4em;
+				@media (prefers-reduced-motion: no-preference) {
+					animation: ui-content-live var(--ui-content-live-duration, 1.6s) var(--ease-in-out) infinite;
+				}
+			}
+		}
+
+		/* eyebrow / label to headline — added to the column gap */
+		& :is([data-part="eyebrow"], [data-part="label"]) + [data-part="headline"] { margin-block-start: var(--ui-content-eyebrow-rhythm, 0); }
 
 		/* headline (and bare h2–h6) — Headings group; beats `& > * { margin: 0 }` */
 		& :is([data-part="headline"], h2, h3, h4, h5, h6) {
@@ -257,10 +295,11 @@
 			font-family: var(--ui-content-heading-font, var(--font-heading, inherit)); /* --font-heading = inherit → follows fnt() unless hl(<font>) sets it */
 			font-size: var(--ui-content-headline, var(--ui-content-headline-md));
 			font-weight: var(--ui-content-headline-weight, var(--ui-content-heading-weight, var(--font-weight-bold, 700)));
-			letter-spacing: var(--tracking-tight, -0.01em);
+			letter-spacing: var(--ui-content-headline-tracking, var(--ui-content-heading-tracking, var(--tracking-tight, -0.01em)));
 			line-height: var(--ui-content-headline-line-height, calc(1em + 0.25rem));
 			margin-block-end: var(--ui-content-headline-rhythm, 0.25em);
 			text-shadow: var(--ui-content-headline-text-shadow, var(--ui-content-heading-text-shadow, none)); /* hl(shd) / host ovr() */
+			text-transform: var(--ui-content-headline-transform, var(--ui-content-heading-transform, none)); /* hl(caps) */
 			text-wrap: var(--ui-content-headline-wrap, balance); /* override to pretty for long poster copy */
 		}
 
@@ -437,6 +476,10 @@
 		& [data-part~="cover"] {
 			color: inherit;
 			text-decoration: none;
+			text-underline-offset: 0.15em;
+
+			/* headline on hover — a theme hook, e.g. underline */
+			&:is(:hover, :focus-visible) { text-decoration: var(--ui-content-headline-hover, none); }
 
 			/* FOCUS — the ring is a second stretched pseudo drawn INSIDE the card edge.
 			   Both halves are load-bearing: an outline on the card paints under the
@@ -755,6 +798,11 @@
 		text-shadow: var(--ui-content-meta-text-shadow, none);
 	}
 
+	/* text to meta — the first meta or byline row after the text, added to the column gap */
+	:where(ui-content) > :not([data-part="meta"], [data-part="byline"], meta, link, [hidden]) + :is([data-part="meta"], [data-part="byline"]) {
+		margin-block-start: var(--ui-content-meta-rhythm, 0);
+	}
+
 	/* counter rows — an inline count with its own glyph. `data-icon` sets --icon through the
 	   icon sheet; the `/ ""` arm keeps the codepoint out of the accessible name. */
 	:where(ui-content, ui-media) [data-part="count"]::before {
@@ -855,4 +903,6 @@
 		& [data-part~="cover"]:focus-visible:not(:where(ui-media *))::before { outline: none; }
 	}
 
+	/* the live label's pulse — opacity only (compositor). Docs: docs/performance.md */
+	@keyframes ui-content-live { 50% { opacity: 0.35; } }
 }

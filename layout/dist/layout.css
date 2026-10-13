@@ -12,6 +12,10 @@
    guaranteed-invalid initial simply never matches the style query). */
 @property --_subgrid { syntax: "*"; inherits: false; }
 
+/* items(fill) flag and its one-hop relay into the card — non-inheriting, like --_subgrid. Docs: core/base.md § items */
+@property --_fill { syntax: "*"; inherits: false; }
+@property --_fill-cell { syntax: "*"; inherits: false; }
+
 /* width knob — [bleed] sets it to a 100dvi-based calc for its OWN width.
    NON-inheriting on purpose: a nested <lay-out> anywhere inside a bleed section
    (e.g. a collage grid inside a card slide) must not pick up the ancestor's
@@ -32,7 +36,8 @@
 	   fallback so older markup keeps working. */
 	[data-layout-root] {
 		display: grid;
-		row-gap: calc(attr(data-page-gap type(<number>), attr(page-gap type(<number>), 1)) * var(--layout-space-unit, 1rem));
+		/* --layout-page-gap (a length) is the site-wide hook a theme sets; it beats the attribute */
+		row-gap: var(--layout-page-gap, calc(attr(data-page-gap type(<number>), attr(page-gap type(<number>), 1)) * var(--layout-space-unit, 1rem)));
 	}
 
 	/* Safari-only: kill the sliver of horizontal scroll a bleed band can produce.
@@ -57,7 +62,6 @@
 	}
 
 	lay-out {
-		--layout-col-rule-c: #CCC;
 		--layout-preview-size: 100px;
 		--layout-preview-xs-size: 40px;
 		--layout-preview-sm-size: 60px;
@@ -156,7 +160,7 @@
 		&[gap-decorations] {
 			--_rule-w: var(--layout-rule-w, 1px);
 			--_rule-s: var(--layout-rule-s, solid);
-			--_rule-c: var(--layout-rule-c, #CCC);
+			--_rule-c: var(--layout-rule-c, var(--color-border, #CCC));
 			--_rule-o: var(--layout-rule-o, 0%);
 		}
 		&[gap-decorations*="cols"] {
@@ -403,6 +407,37 @@
 				grid-template-rows: subgrid;
 			}
 		}
+
+		/* === items(fill) — later cards drop their media ratio and fill the row. Docs: core/base.md § items === */
+		@container style(--_fill: on) {
+			& > ui-card:not(:first-child) { --_fill-cell: on; }
+		}
+		@container style(--_fill-cell: on) {
+			& > ui-card > cq-box { --_fill-cell: on; grid-template-rows: minmax(0, 1fr); }
+			& > ui-card > cq-box > ui-media { aspect-ratio: auto; block-size: 100%; min-block-size: 0; }
+		}
+
+		/* === counter — numbers the children; --ui-counter-* style the number. Docs: core/base.md § counter === */
+		&[counter] {
+			counter-reset: layout-counter;
+			& > * {
+				column-gap: var(--ui-counter-gap, 0.5rem);
+				counter-increment: layout-counter;
+				display: grid;
+				grid-template-columns: auto minmax(0, 1fr);
+				& > * { grid-column: 2; }
+			}
+			& > *::before {
+				color: var(--ui-counter-ink, var(--color-text-muted, currentColor));
+				content: counter(layout-counter);
+				font-family: var(--ui-counter-font, var(--font-heading, inherit));
+				font-size: var(--ui-counter-fs, 2rem);
+				font-variant-numeric: tabular-nums;
+				font-weight: var(--ui-counter-weight, var(--font-weight-bold, 700));
+				grid-column: 1;
+				line-height: 1;
+			}
+		}
 	}
 }
 
@@ -486,7 +521,7 @@
 
 		& [data-part="link"] {
 			align-self: end;
-			color: var(--color-link, var(--color-accent));
+			color: var(--layout-group-link-c, var(--color-link, var(--color-accent)));
 			font-size: var(--font-size-sm, 0.875rem);
 			font-weight: var(--font-weight-medium, 500);
 			grid-column: 2;
@@ -494,6 +529,29 @@
 			justify-self: end;
 			white-space: nowrap;
 		}
+	}
+
+	/* a themed band's header link follows the band's ink */
+	:where(lay-out-group[theme]) { --layout-group-link-c: currentColor; }
+
+	/* hdr(ctr) — title, text and link stacked and centred. Docs: ui/card/docs/content.md § lay-out-group headers */
+	:where(lay-out-group[content~="hdr(ctr)"], lay-out-group[content~="hdr(ctr)"] > cq-box) > ui-content,
+	:where(lay-out-group, lay-out-group > cq-box) > ui-content[content~="hdr(ctr)"] {
+		grid-template-columns: 1fr;
+		justify-items: center;
+		text-align: center;
+		& > * { grid-column: 1; }
+		& [data-part="link"] { grid-column: 1; grid-row: auto; justify-self: center; }
+	}
+
+	/* hdr(spl) — title left, text and link right */
+	:where(lay-out-group[content~="hdr(spl)"], lay-out-group[content~="hdr(spl)"] > cq-box) > ui-content,
+	:where(lay-out-group, lay-out-group > cq-box) > ui-content[content~="hdr(spl)"] {
+		align-items: start;
+		grid-template-columns: 1fr 1fr;
+		& > * { grid-column: 2; }
+		& > :is([data-part="eyebrow"], [data-part="headline"]) { grid-column: 1; }
+		& [data-part="link"] { grid-column: 2; grid-row: auto; justify-self: start; }
 	}
 
 	@media (width < 30rem) {
@@ -504,6 +562,11 @@
 			grid-column: 1;
 			grid-row: auto;
 			justify-self: start;
+		}
+		:where(lay-out-group[content~="hdr(spl)"], lay-out-group[content~="hdr(spl)"] > cq-box) > ui-content,
+		:where(lay-out-group, lay-out-group > cq-box) > ui-content[content~="hdr(spl)"] {
+			grid-template-columns: 1fr;
+			& > *, & [data-part="link"] { grid-column: 1; }
 		}
 	}
 
@@ -603,6 +666,12 @@
     --layout-pbe: 0;
   }
 
+  :is(lay-out, lay-out-group)[xs*="p(0.75)"] {
+    --layout-pi: 0.75;
+    --layout-pbs: 0.75;
+    --layout-pbe: 0.75;
+  }
+
   :is(lay-out, lay-out-group)[xs*="p(1)"],
   :is(lay-out, lay-out-group)[xs*="p(md)"] {
     --layout-pi: 1;
@@ -664,6 +733,10 @@
     --layout-pi: 0;
   }
 
+  :is(lay-out, lay-out-group)[xs*="pi(0.75)"] {
+    --layout-pi: 0.75;
+  }
+
   :is(lay-out, lay-out-group)[xs*="pi(1)"],
   :is(lay-out, lay-out-group)[xs*="pi(md)"] {
     --layout-pi: 1;
@@ -706,6 +779,11 @@
   :is(lay-out, lay-out-group)[xs*="pb(0)"] {
     --layout-pbs: 0;
     --layout-pbe: 0;
+  }
+
+  :is(lay-out, lay-out-group)[xs*="pb(0.75)"] {
+    --layout-pbs: 0.75;
+    --layout-pbe: 0.75;
   }
 
   :is(lay-out, lay-out-group)[xs*="pb(1)"],
@@ -760,6 +838,10 @@
     --layout-pbs: 0;
   }
 
+  :is(lay-out, lay-out-group)[xs*="pbs(0.75)"] {
+    --layout-pbs: 0.75;
+  }
+
   :is(lay-out, lay-out-group)[xs*="pbs(1)"],
   :is(lay-out, lay-out-group)[xs*="pbs(md)"] {
     --layout-pbs: 1;
@@ -801,6 +883,10 @@
 
   :is(lay-out, lay-out-group)[xs*="pbe(0)"] {
     --layout-pbe: 0;
+  }
+
+  :is(lay-out, lay-out-group)[xs*="pbe(0.75)"] {
+    --layout-pbe: 0.75;
   }
 
   :is(lay-out, lay-out-group)[xs*="pbe(1)"],
@@ -846,6 +932,10 @@
     --layout-mbs: 0;
   }
 
+  :is(lay-out, lay-out-group)[xs*="mbs(0.75)"] {
+    --layout-mbs: 0.75;
+  }
+
   :is(lay-out, lay-out-group)[xs*="mbs(1)"],
   :is(lay-out, lay-out-group)[xs*="mbs(md)"] {
     --layout-mbs: 1;
@@ -887,6 +977,10 @@
 
   :is(lay-out, lay-out-group)[xs*="mbe(0)"] {
     --layout-mbe: 0;
+  }
+
+  :is(lay-out, lay-out-group)[xs*="mbe(0.75)"] {
+    --layout-mbe: 0.75;
   }
 
   :is(lay-out, lay-out-group)[xs*="mbe(1)"],
@@ -932,6 +1026,10 @@
     --layout-colmg: 0;
   }
 
+  :is(lay-out, lay-out-group)[xs*="cg(0.75)"] {
+    --layout-colmg: 0.75;
+  }
+
   :is(lay-out, lay-out-group)[xs*="cg(1)"],
   :is(lay-out, lay-out-group)[xs*="cg(md)"] {
     --layout-colmg: 1;
@@ -975,6 +1073,10 @@
     --layout-rg: 0;
   }
 
+  :is(lay-out, lay-out-group)[xs*="rg(0.75)"] {
+    --layout-rg: 0.75;
+  }
+
   :is(lay-out, lay-out-group)[xs*="rg(1)"],
   :is(lay-out, lay-out-group)[xs*="rg(md)"] {
     --layout-rg: 1;
@@ -1016,18 +1118,27 @@
 
   lay-out[xs*="items(start)"] {
     --layout-ai: start;
+    --_fill: off;
   }
 
   lay-out[xs*="items(center)"] {
     --layout-ai: center;
+    --_fill: off;
   }
 
   lay-out[xs*="items(end)"] {
     --layout-ai: end;
+    --_fill: off;
   }
 
   lay-out[xs*="items(stretch)"] {
     --layout-ai: stretch;
+    --_fill: off;
+  }
+
+  lay-out[xs*="items(fill)"] {
+    --layout-ai: stretch;
+    --_fill: on;
   }
 }
 
@@ -1124,18 +1235,27 @@
 
   lay-out[sm*="items(start)"] {
     --layout-ai: start;
+    --_fill: off;
   }
 
   lay-out[sm*="items(center)"] {
     --layout-ai: center;
+    --_fill: off;
   }
 
   lay-out[sm*="items(end)"] {
     --layout-ai: end;
+    --_fill: off;
   }
 
   lay-out[sm*="items(stretch)"] {
     --layout-ai: stretch;
+    --_fill: off;
+  }
+
+  lay-out[sm*="items(fill)"] {
+    --layout-ai: stretch;
+    --_fill: on;
   }
 }
 }
@@ -1233,18 +1353,27 @@
 
   lay-out[md*="items(start)"] {
     --layout-ai: start;
+    --_fill: off;
   }
 
   lay-out[md*="items(center)"] {
     --layout-ai: center;
+    --_fill: off;
   }
 
   lay-out[md*="items(end)"] {
     --layout-ai: end;
+    --_fill: off;
   }
 
   lay-out[md*="items(stretch)"] {
     --layout-ai: stretch;
+    --_fill: off;
+  }
+
+  lay-out[md*="items(fill)"] {
+    --layout-ai: stretch;
+    --_fill: on;
   }
 }
 }
@@ -1698,6 +1827,12 @@
     --layout-pbe: 0;
   }
 
+  :is(lay-out, lay-out-group)[lg*="p(0.75)"] {
+    --layout-pi: 0.75;
+    --layout-pbs: 0.75;
+    --layout-pbe: 0.75;
+  }
+
   :is(lay-out, lay-out-group)[lg*="p(1)"],
   :is(lay-out, lay-out-group)[lg*="p(md)"] {
     --layout-pi: 1;
@@ -1759,6 +1894,10 @@
     --layout-pi: 0;
   }
 
+  :is(lay-out, lay-out-group)[lg*="pi(0.75)"] {
+    --layout-pi: 0.75;
+  }
+
   :is(lay-out, lay-out-group)[lg*="pi(1)"],
   :is(lay-out, lay-out-group)[lg*="pi(md)"] {
     --layout-pi: 1;
@@ -1801,6 +1940,11 @@
   :is(lay-out, lay-out-group)[lg*="pb(0)"] {
     --layout-pbs: 0;
     --layout-pbe: 0;
+  }
+
+  :is(lay-out, lay-out-group)[lg*="pb(0.75)"] {
+    --layout-pbs: 0.75;
+    --layout-pbe: 0.75;
   }
 
   :is(lay-out, lay-out-group)[lg*="pb(1)"],
@@ -1855,6 +1999,10 @@
     --layout-pbs: 0;
   }
 
+  :is(lay-out, lay-out-group)[lg*="pbs(0.75)"] {
+    --layout-pbs: 0.75;
+  }
+
   :is(lay-out, lay-out-group)[lg*="pbs(1)"],
   :is(lay-out, lay-out-group)[lg*="pbs(md)"] {
     --layout-pbs: 1;
@@ -1896,6 +2044,10 @@
 
   :is(lay-out, lay-out-group)[lg*="pbe(0)"] {
     --layout-pbe: 0;
+  }
+
+  :is(lay-out, lay-out-group)[lg*="pbe(0.75)"] {
+    --layout-pbe: 0.75;
   }
 
   :is(lay-out, lay-out-group)[lg*="pbe(1)"],
@@ -1941,6 +2093,10 @@
     --layout-mbs: 0;
   }
 
+  :is(lay-out, lay-out-group)[lg*="mbs(0.75)"] {
+    --layout-mbs: 0.75;
+  }
+
   :is(lay-out, lay-out-group)[lg*="mbs(1)"],
   :is(lay-out, lay-out-group)[lg*="mbs(md)"] {
     --layout-mbs: 1;
@@ -1982,6 +2138,10 @@
 
   :is(lay-out, lay-out-group)[lg*="mbe(0)"] {
     --layout-mbe: 0;
+  }
+
+  :is(lay-out, lay-out-group)[lg*="mbe(0.75)"] {
+    --layout-mbe: 0.75;
   }
 
   :is(lay-out, lay-out-group)[lg*="mbe(1)"],
@@ -2027,6 +2187,10 @@
     --layout-colmg: 0;
   }
 
+  :is(lay-out, lay-out-group)[lg*="cg(0.75)"] {
+    --layout-colmg: 0.75;
+  }
+
   :is(lay-out, lay-out-group)[lg*="cg(1)"],
   :is(lay-out, lay-out-group)[lg*="cg(md)"] {
     --layout-colmg: 1;
@@ -2068,6 +2232,10 @@
 
   :is(lay-out, lay-out-group)[lg*="rg(0)"] {
     --layout-rg: 0;
+  }
+
+  :is(lay-out, lay-out-group)[lg*="rg(0.75)"] {
+    --layout-rg: 0.75;
   }
 
   :is(lay-out, lay-out-group)[lg*="rg(1)"],
@@ -2117,18 +2285,27 @@
 
   lay-out[lg*="items(start)"] {
     --layout-ai: start;
+    --_fill: off;
   }
 
   lay-out[lg*="items(center)"] {
     --layout-ai: center;
+    --_fill: off;
   }
 
   lay-out[lg*="items(end)"] {
     --layout-ai: end;
+    --_fill: off;
   }
 
   lay-out[lg*="items(stretch)"] {
     --layout-ai: stretch;
+    --_fill: off;
+  }
+
+  lay-out[lg*="items(fill)"] {
+    --layout-ai: stretch;
+    --_fill: on;
   }
 }
 }
@@ -2335,18 +2512,27 @@
 
   lay-out[xl*="items(start)"] {
     --layout-ai: start;
+    --_fill: off;
   }
 
   lay-out[xl*="items(center)"] {
     --layout-ai: center;
+    --_fill: off;
   }
 
   lay-out[xl*="items(end)"] {
     --layout-ai: end;
+    --_fill: off;
   }
 
   lay-out[xl*="items(stretch)"] {
     --layout-ai: stretch;
+    --_fill: off;
+  }
+
+  lay-out[xl*="items(fill)"] {
+    --layout-ai: stretch;
+    --_fill: on;
   }
 }
 }
@@ -2404,18 +2590,27 @@
 
   lay-out[xxl*="items(start)"] {
     --layout-ai: start;
+    --_fill: off;
   }
 
   lay-out[xxl*="items(center)"] {
     --layout-ai: center;
+    --_fill: off;
   }
 
   lay-out[xxl*="items(end)"] {
     --layout-ai: end;
+    --_fill: off;
   }
 
   lay-out[xxl*="items(stretch)"] {
     --layout-ai: stretch;
+    --_fill: off;
+  }
+
+  lay-out[xxl*="items(fill)"] {
+    --layout-ai: stretch;
+    --_fill: on;
   }
 }
 }

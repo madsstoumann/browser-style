@@ -3428,6 +3428,23 @@ describe('paywalled content', () => {
 	});
 });
 
+describe('label', () => {
+	const card = (label) => render({ schemaType: 'news', eyebrow: 'World', label, headline: 'Talks resume' });
+	test('sits between the eyebrow and the headline, outside the headline', () => {
+		assert.match(card('Live'), /<small data-part="eyebrow"[^>]*>World<\/small><small data-part="label">Live<\/small><h3 data-part="headline" itemprop="headline">Talks resume<\/h3>/);
+	});
+	test('{ text, live } adds data-live; a missing text renders nothing', () => {
+		assert.match(card({ text: 'Live', live: true }), /<small data-part="label" data-live>Live<\/small>/);
+		assert.match(card({ text: 'Opinion' }), /<small data-part="label">Opinion<\/small>/);
+		for (const label of [undefined, '', {}, { live: true }]) assert.ok(!card(label).includes('data-part="label"'), JSON.stringify(label));
+	});
+	test('escapes hostile text', () => {
+		const html = card('<img src=x onerror=alert(1)>');
+		assert.ok(!html.includes('<img'), 'markup must be escaped');
+		assert.match(html, /&lt;img src=x onerror=alert\(1\)&gt;/);
+	});
+});
+
 /* The CMS models are JSON files nothing in this repo parsed until 2026-08-28 — card.schema.json
    shipped invalid (raw quotes in a description) for a week. Cheap insurance. */
 describe('content models parse', () => {

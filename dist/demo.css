@@ -4344,11 +4344,13 @@
 @layer layout.base, layout.reset, layout.animations, layout.xs, layout.sm, layout.md, layout.lg, layout.xl, layout.xxl;
 @property --_pg { syntax: "<integer>"; inherits: true; initial-value: 0; }
 @property --_subgrid { syntax: "*"; inherits: false; }
+@property --_fill { syntax: "*"; inherits: false; }
+@property --_fill-cell { syntax: "*"; inherits: false; }
 @property --layout-w { syntax: "*"; inherits: false; }
 @layer layout.base {
   [data-layout-root] {
     display: grid;
-    row-gap: calc(attr(data-page-gap type(<number>), attr(page-gap type(<number>), 1)) * var(--layout-space-unit, 1rem));
+    row-gap: var(--layout-page-gap, calc(attr(data-page-gap type(<number>), attr(page-gap type(<number>), 1)) * var(--layout-space-unit, 1rem)));
   }
   @supports (-webkit-hyphens: none) {
     html:has(:is(lay-out, lay-out-group)[bleed]) {
@@ -4356,7 +4358,6 @@
     }
   }
   lay-out {
-    --layout-col-rule-c: #CCC;
     --layout-preview-size: 100px;
     --layout-preview-xs-size: 40px;
     --layout-preview-sm-size: 60px;
@@ -4439,7 +4440,7 @@
     &[gap-decorations] {
       --_rule-w: var(--layout-rule-w, 1px);
       --_rule-s: var(--layout-rule-s, solid);
-      --_rule-c: var(--layout-rule-c, #CCC);
+      --_rule-c: var(--layout-rule-c, var(--color-border, #CCC));
       --_rule-o: var(--layout-rule-o, 0%);
     }
     &[gap-decorations*=cols] {
@@ -4642,6 +4643,44 @@
         grid-template-rows: subgrid;
       }
     }
+    @container style(--_fill: on) {
+      & > ui-card:not(:first-child) {
+        --_fill-cell: on;
+      }
+    }
+    @container style(--_fill-cell: on) {
+      & > ui-card > cq-box {
+        --_fill-cell: on;
+        grid-template-rows: minmax(0, 1fr);
+      }
+      & > ui-card > cq-box > ui-media {
+        aspect-ratio: auto;
+        block-size: 100%;
+        min-block-size: 0;
+      }
+    }
+    &[counter] {
+      counter-reset: layout-counter;
+      & > * {
+        column-gap: var(--ui-counter-gap, 0.5rem);
+        counter-increment: layout-counter;
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        & > * {
+          grid-column: 2;
+        }
+      }
+      & > *::before {
+        color: var(--ui-counter-ink, var(--color-text-muted, currentColor));
+        content: counter(layout-counter);
+        font-family: var(--ui-counter-font, var(--font-heading, inherit));
+        font-size: var(--ui-counter-fs, 2rem);
+        font-variant-numeric: tabular-nums;
+        font-weight: var(--ui-counter-weight, var(--font-weight-bold, 700));
+        grid-column: 1;
+        line-height: 1;
+      }
+    }
   }
 }
 @layer layout.reset {
@@ -4687,13 +4726,46 @@
     }
     & [data-part=link] {
       align-self: end;
-      color: var(--color-link, var(--color-accent));
+      color: var(--layout-group-link-c, var(--color-link, var(--color-accent)));
       font-size: var(--font-size-sm, 0.875rem);
       font-weight: var(--font-weight-medium, 500);
       grid-column: 2;
       grid-row: 1 / -1;
       justify-self: end;
       white-space: nowrap;
+    }
+  }
+  :where(lay-out-group[theme]) {
+    --layout-group-link-c: currentColor;
+  }
+  :where(lay-out-group[content~="hdr(ctr)"], lay-out-group[content~="hdr(ctr)"] > cq-box) > ui-content,
+  :where(lay-out-group, lay-out-group > cq-box) > ui-content[content~="hdr(ctr)"] {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+    & > * {
+      grid-column: 1;
+    }
+    & [data-part=link] {
+      grid-column: 1;
+      grid-row: auto;
+      justify-self: center;
+    }
+  }
+  :where(lay-out-group[content~="hdr(spl)"], lay-out-group[content~="hdr(spl)"] > cq-box) > ui-content,
+  :where(lay-out-group, lay-out-group > cq-box) > ui-content[content~="hdr(spl)"] {
+    align-items: start;
+    grid-template-columns: 1fr 1fr;
+    & > * {
+      grid-column: 2;
+    }
+    & > :is([data-part=eyebrow], [data-part=headline]) {
+      grid-column: 1;
+    }
+    & [data-part=link] {
+      grid-column: 2;
+      grid-row: auto;
+      justify-self: start;
     }
   }
   @media (width < 30rem) {
@@ -4704,6 +4776,14 @@
       grid-column: 1;
       grid-row: auto;
       justify-self: start;
+    }
+    :where(lay-out-group[content~="hdr(spl)"], lay-out-group[content~="hdr(spl)"] > cq-box) > ui-content,
+    :where(lay-out-group, lay-out-group > cq-box) > ui-content[content~="hdr(spl)"] {
+      grid-template-columns: 1fr;
+      & > *,
+      & [data-part=link] {
+        grid-column: 1;
+      }
     }
   }
   :where(lay-out-group)[bleed] > ui-content[data-bleed],
@@ -4753,6 +4833,11 @@
     --layout-pi: 0;
     --layout-pbs: 0;
     --layout-pbe: 0;
+  }
+  :is(lay-out, lay-out-group)[xs*="p(0.75)"] {
+    --layout-pi: 0.75;
+    --layout-pbs: 0.75;
+    --layout-pbe: 0.75;
   }
   :is(lay-out, lay-out-group)[xs*="p(1)"],
   :is(lay-out, lay-out-group)[xs*="p(md)"] {
@@ -4805,6 +4890,9 @@
   :is(lay-out, lay-out-group)[xs*="pi(0)"] {
     --layout-pi: 0;
   }
+  :is(lay-out, lay-out-group)[xs*="pi(0.75)"] {
+    --layout-pi: 0.75;
+  }
   :is(lay-out, lay-out-group)[xs*="pi(1)"],
   :is(lay-out, lay-out-group)[xs*="pi(md)"] {
     --layout-pi: 1;
@@ -4838,6 +4926,10 @@
   :is(lay-out, lay-out-group)[xs*="pb(0)"] {
     --layout-pbs: 0;
     --layout-pbe: 0;
+  }
+  :is(lay-out, lay-out-group)[xs*="pb(0.75)"] {
+    --layout-pbs: 0.75;
+    --layout-pbe: 0.75;
   }
   :is(lay-out, lay-out-group)[xs*="pb(1)"],
   :is(lay-out, lay-out-group)[xs*="pb(md)"] {
@@ -4881,6 +4973,9 @@
   :is(lay-out, lay-out-group)[xs*="pbs(0)"] {
     --layout-pbs: 0;
   }
+  :is(lay-out, lay-out-group)[xs*="pbs(0.75)"] {
+    --layout-pbs: 0.75;
+  }
   :is(lay-out, lay-out-group)[xs*="pbs(1)"],
   :is(lay-out, lay-out-group)[xs*="pbs(md)"] {
     --layout-pbs: 1;
@@ -4913,6 +5008,9 @@
   }
   :is(lay-out, lay-out-group)[xs*="pbe(0)"] {
     --layout-pbe: 0;
+  }
+  :is(lay-out, lay-out-group)[xs*="pbe(0.75)"] {
+    --layout-pbe: 0.75;
   }
   :is(lay-out, lay-out-group)[xs*="pbe(1)"],
   :is(lay-out, lay-out-group)[xs*="pbe(md)"] {
@@ -4947,6 +5045,9 @@
   :is(lay-out, lay-out-group)[xs*="mbs(0)"] {
     --layout-mbs: 0;
   }
+  :is(lay-out, lay-out-group)[xs*="mbs(0.75)"] {
+    --layout-mbs: 0.75;
+  }
   :is(lay-out, lay-out-group)[xs*="mbs(1)"],
   :is(lay-out, lay-out-group)[xs*="mbs(md)"] {
     --layout-mbs: 1;
@@ -4979,6 +5080,9 @@
   }
   :is(lay-out, lay-out-group)[xs*="mbe(0)"] {
     --layout-mbe: 0;
+  }
+  :is(lay-out, lay-out-group)[xs*="mbe(0.75)"] {
+    --layout-mbe: 0.75;
   }
   :is(lay-out, lay-out-group)[xs*="mbe(1)"],
   :is(lay-out, lay-out-group)[xs*="mbe(md)"] {
@@ -5013,6 +5117,9 @@
   :is(lay-out, lay-out-group)[xs*="cg(0)"] {
     --layout-colmg: 0;
   }
+  :is(lay-out, lay-out-group)[xs*="cg(0.75)"] {
+    --layout-colmg: 0.75;
+  }
   :is(lay-out, lay-out-group)[xs*="cg(1)"],
   :is(lay-out, lay-out-group)[xs*="cg(md)"] {
     --layout-colmg: 1;
@@ -5046,6 +5153,9 @@
   :is(lay-out, lay-out-group)[xs*="rg(0)"] {
     --layout-rg: 0;
   }
+  :is(lay-out, lay-out-group)[xs*="rg(0.75)"] {
+    --layout-rg: 0.75;
+  }
   :is(lay-out, lay-out-group)[xs*="rg(1)"],
   :is(lay-out, lay-out-group)[xs*="rg(md)"] {
     --layout-rg: 1;
@@ -5078,15 +5188,23 @@
   }
   lay-out[xs*="items(start)"] {
     --layout-ai: start;
+    --_fill: off;
   }
   lay-out[xs*="items(center)"] {
     --layout-ai: center;
+    --_fill: off;
   }
   lay-out[xs*="items(end)"] {
     --layout-ai: end;
+    --_fill: off;
   }
   lay-out[xs*="items(stretch)"] {
     --layout-ai: stretch;
+    --_fill: off;
+  }
+  lay-out[xs*="items(fill)"] {
+    --layout-ai: stretch;
+    --_fill: on;
   }
 }
 @media (min-width: 380px) {
@@ -5164,15 +5282,23 @@
     }
     lay-out[sm*="items(start)"] {
       --layout-ai: start;
+      --_fill: off;
     }
     lay-out[sm*="items(center)"] {
       --layout-ai: center;
+      --_fill: off;
     }
     lay-out[sm*="items(end)"] {
       --layout-ai: end;
+      --_fill: off;
     }
     lay-out[sm*="items(stretch)"] {
       --layout-ai: stretch;
+      --_fill: off;
+    }
+    lay-out[sm*="items(fill)"] {
+      --layout-ai: stretch;
+      --_fill: on;
     }
   }
 }
@@ -5250,15 +5376,23 @@
     }
     lay-out[md*="items(start)"] {
       --layout-ai: start;
+      --_fill: off;
     }
     lay-out[md*="items(center)"] {
       --layout-ai: center;
+      --_fill: off;
     }
     lay-out[md*="items(end)"] {
       --layout-ai: end;
+      --_fill: off;
     }
     lay-out[md*="items(stretch)"] {
       --layout-ai: stretch;
+      --_fill: off;
+    }
+    lay-out[md*="items(fill)"] {
+      --layout-ai: stretch;
+      --_fill: on;
     }
   }
 }
@@ -5629,6 +5763,11 @@
       --layout-pbs: 0;
       --layout-pbe: 0;
     }
+    :is(lay-out, lay-out-group)[lg*="p(0.75)"] {
+      --layout-pi: 0.75;
+      --layout-pbs: 0.75;
+      --layout-pbe: 0.75;
+    }
     :is(lay-out, lay-out-group)[lg*="p(1)"],
     :is(lay-out, lay-out-group)[lg*="p(md)"] {
       --layout-pi: 1;
@@ -5680,6 +5819,9 @@
     :is(lay-out, lay-out-group)[lg*="pi(0)"] {
       --layout-pi: 0;
     }
+    :is(lay-out, lay-out-group)[lg*="pi(0.75)"] {
+      --layout-pi: 0.75;
+    }
     :is(lay-out, lay-out-group)[lg*="pi(1)"],
     :is(lay-out, lay-out-group)[lg*="pi(md)"] {
       --layout-pi: 1;
@@ -5713,6 +5855,10 @@
     :is(lay-out, lay-out-group)[lg*="pb(0)"] {
       --layout-pbs: 0;
       --layout-pbe: 0;
+    }
+    :is(lay-out, lay-out-group)[lg*="pb(0.75)"] {
+      --layout-pbs: 0.75;
+      --layout-pbe: 0.75;
     }
     :is(lay-out, lay-out-group)[lg*="pb(1)"],
     :is(lay-out, lay-out-group)[lg*="pb(md)"] {
@@ -5756,6 +5902,9 @@
     :is(lay-out, lay-out-group)[lg*="pbs(0)"] {
       --layout-pbs: 0;
     }
+    :is(lay-out, lay-out-group)[lg*="pbs(0.75)"] {
+      --layout-pbs: 0.75;
+    }
     :is(lay-out, lay-out-group)[lg*="pbs(1)"],
     :is(lay-out, lay-out-group)[lg*="pbs(md)"] {
       --layout-pbs: 1;
@@ -5788,6 +5937,9 @@
     }
     :is(lay-out, lay-out-group)[lg*="pbe(0)"] {
       --layout-pbe: 0;
+    }
+    :is(lay-out, lay-out-group)[lg*="pbe(0.75)"] {
+      --layout-pbe: 0.75;
     }
     :is(lay-out, lay-out-group)[lg*="pbe(1)"],
     :is(lay-out, lay-out-group)[lg*="pbe(md)"] {
@@ -5822,6 +5974,9 @@
     :is(lay-out, lay-out-group)[lg*="mbs(0)"] {
       --layout-mbs: 0;
     }
+    :is(lay-out, lay-out-group)[lg*="mbs(0.75)"] {
+      --layout-mbs: 0.75;
+    }
     :is(lay-out, lay-out-group)[lg*="mbs(1)"],
     :is(lay-out, lay-out-group)[lg*="mbs(md)"] {
       --layout-mbs: 1;
@@ -5854,6 +6009,9 @@
     }
     :is(lay-out, lay-out-group)[lg*="mbe(0)"] {
       --layout-mbe: 0;
+    }
+    :is(lay-out, lay-out-group)[lg*="mbe(0.75)"] {
+      --layout-mbe: 0.75;
     }
     :is(lay-out, lay-out-group)[lg*="mbe(1)"],
     :is(lay-out, lay-out-group)[lg*="mbe(md)"] {
@@ -5888,6 +6046,9 @@
     :is(lay-out, lay-out-group)[lg*="cg(0)"] {
       --layout-colmg: 0;
     }
+    :is(lay-out, lay-out-group)[lg*="cg(0.75)"] {
+      --layout-colmg: 0.75;
+    }
     :is(lay-out, lay-out-group)[lg*="cg(1)"],
     :is(lay-out, lay-out-group)[lg*="cg(md)"] {
       --layout-colmg: 1;
@@ -5920,6 +6081,9 @@
     }
     :is(lay-out, lay-out-group)[lg*="rg(0)"] {
       --layout-rg: 0;
+    }
+    :is(lay-out, lay-out-group)[lg*="rg(0.75)"] {
+      --layout-rg: 0.75;
     }
     :is(lay-out, lay-out-group)[lg*="rg(1)"],
     :is(lay-out, lay-out-group)[lg*="rg(md)"] {
@@ -5958,15 +6122,23 @@
     }
     lay-out[lg*="items(start)"] {
       --layout-ai: start;
+      --_fill: off;
     }
     lay-out[lg*="items(center)"] {
       --layout-ai: center;
+      --_fill: off;
     }
     lay-out[lg*="items(end)"] {
       --layout-ai: end;
+      --_fill: off;
     }
     lay-out[lg*="items(stretch)"] {
       --layout-ai: stretch;
+      --_fill: off;
+    }
+    lay-out[lg*="items(fill)"] {
+      --layout-ai: stretch;
+      --_fill: on;
     }
   }
 }
@@ -6126,15 +6298,23 @@
     }
     lay-out[xl*="items(start)"] {
       --layout-ai: start;
+      --_fill: off;
     }
     lay-out[xl*="items(center)"] {
       --layout-ai: center;
+      --_fill: off;
     }
     lay-out[xl*="items(end)"] {
       --layout-ai: end;
+      --_fill: off;
     }
     lay-out[xl*="items(stretch)"] {
       --layout-ai: stretch;
+      --_fill: off;
+    }
+    lay-out[xl*="items(fill)"] {
+      --layout-ai: stretch;
+      --_fill: on;
     }
   }
 }
@@ -6180,15 +6360,23 @@
     }
     lay-out[xxl*="items(start)"] {
       --layout-ai: start;
+      --_fill: off;
     }
     lay-out[xxl*="items(center)"] {
       --layout-ai: center;
+      --_fill: off;
     }
     lay-out[xxl*="items(end)"] {
       --layout-ai: end;
+      --_fill: off;
     }
     lay-out[xxl*="items(stretch)"] {
       --layout-ai: stretch;
+      --_fill: off;
+    }
+    lay-out[xxl*="items(fill)"] {
+      --layout-ai: stretch;
+      --_fill: on;
     }
   }
 }
@@ -8473,11 +8661,11 @@
 @layer bs-component {
   :where(ui-reveal) {
     --ui-content-gap: var(--ui-reveal-row-gap, 1em);
-    --ui-reveal-bg: var(--color-surface);
+    --ui-reveal-bg: var(--ui-card-bg-base, var(--color-surface));
     --ui-reveal-icon-sz: var(--size-7);
     --ui-reveal-p: var(--ui-content-p, var(--spacing-md));
     --ui-reveal-icon-m: var(--spacing-md);
-    --ui-reveal-radius: var(--radius-2xl);
+    --ui-reveal-radius: var(--ui-card-radius-base, var(--radius-2xl));
     --_trs: var(--ui-reveal-duration, var(--duration-slower)) var(--ui-reveal-easing, var(--ease-in-out));
     container-type: inline-size;
     display: block;
@@ -8487,7 +8675,7 @@
       backdrop-filter: var(--ui-reveal-bdf, none);
       background: var(--ui-reveal-bg);
       border-radius: var(--ui-card-radius, var(--ui-reveal-radius));
-      box-shadow: var(--ui-reveal-shadow, var(--shadow-xl));
+      box-shadow: var(--ui-reveal-shadow, var(--ui-card-shadow-base, var(--shadow-xl)));
       container-name: bs-rvl;
       display: grid;
       overflow: hidden;
@@ -12641,6 +12829,17 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       color: var(--_theme-c, var(--color-text));
     }
   }
+  :where([content~="pnl(sld)"]) ui-content,
+  :where(ui-content[content~="pnl(sld)"]) {
+    --ui-content-eyebrow-text-shadow: none;
+    --ui-content-heading-text-shadow: none;
+    --ui-content-ov-ink: var(--ui-content-panel-ink, var(--color-text));
+    align-self: var(--ui-content-ov-justify, stretch);
+    background: var(--ui-content-panel-bg, var(--color-surface));
+    border-radius: var(--ui-content-radius, 0);
+    justify-self: var(--ui-content-ov-align, stretch);
+    margin: var(--ui-content-panel-m, 0);
+  }
   :where(ui-card[theme]) {
     --ui-content-eyebrow-ink: currentColor;
   }
@@ -12707,19 +12906,43 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       color: var(--ui-content-eyebrow-ink, var(--color-accent-ink));
       font-size: var(--ui-content-eyebrow-fs, calc(var(--ui-content-fs, var(--ui-content-fs-md)) * 0.78));
       font-weight: var(--ui-content-eyebrow-weight, var(--font-weight-medium, 500));
-      letter-spacing: var(--tracking-wide, 0.05em);
+      letter-spacing: var(--ui-content-eyebrow-tracking, var(--tracking-wide, 0.05em));
       text-shadow: var(--ui-content-eyebrow-text-shadow, none);
       text-transform: var(--ui-content-eyebrow-transform, uppercase);
+    }
+    & [data-part=label] {
+      color: var(--ui-content-label-ink, var(--color-accent-ink));
+      font-size: var(--ui-content-label-fs, var(--ui-content-eyebrow-fs, calc(var(--ui-content-fs, var(--ui-content-fs-md)) * 0.78)));
+      font-weight: var(--ui-content-label-weight, var(--font-weight-bold, 700));
+      letter-spacing: var(--ui-content-eyebrow-tracking, var(--tracking-wide, 0.05em));
+      text-shadow: var(--ui-content-eyebrow-text-shadow, none);
+      text-transform: uppercase;
+      &[data-live]::before {
+        background: currentColor;
+        block-size: 0.6em;
+        border-radius: 50%;
+        content: "";
+        display: inline-block;
+        inline-size: 0.6em;
+        margin-inline-end: 0.4em;
+        @media (prefers-reduced-motion: no-preference) {
+          animation: ui-content-live var(--ui-content-live-duration, 1.6s) var(--ease-in-out) infinite;
+        }
+      }
+    }
+    & :is([data-part=eyebrow], [data-part=label]) + [data-part=headline] {
+      margin-block-start: var(--ui-content-eyebrow-rhythm, 0);
     }
     & :is([data-part=headline], h2, h3, h4, h5, h6) {
       color: var(--ui-content-headline-ink, var(--ui-content-heading-ink, inherit));
       font-family: var(--ui-content-heading-font, var(--font-heading, inherit));
       font-size: var(--ui-content-headline, var(--ui-content-headline-md));
       font-weight: var(--ui-content-headline-weight, var(--ui-content-heading-weight, var(--font-weight-bold, 700)));
-      letter-spacing: var(--tracking-tight, -0.01em);
+      letter-spacing: var(--ui-content-headline-tracking, var(--ui-content-heading-tracking, var(--tracking-tight, -0.01em)));
       line-height: var(--ui-content-headline-line-height, calc(1em + 0.25rem));
       margin-block-end: var(--ui-content-headline-rhythm, 0.25em);
       text-shadow: var(--ui-content-headline-text-shadow, var(--ui-content-heading-text-shadow, none));
+      text-transform: var(--ui-content-headline-transform, var(--ui-content-heading-transform, none));
       text-wrap: var(--ui-content-headline-wrap, balance);
     }
     & [data-part=subheadline] {
@@ -12876,6 +13099,10 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     & [data-part~=cover] {
       color: inherit;
       text-decoration: none;
+      text-underline-offset: 0.15em;
+      &:is(:hover, :focus-visible) {
+        text-decoration: var(--ui-content-headline-hover, none);
+      }
       &:focus-visible {
         outline: none;
       }
@@ -13172,6 +13399,9 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     font-weight: var(--ui-content-meta-weight, inherit);
     text-shadow: var(--ui-content-meta-text-shadow, none);
   }
+  :where(ui-content) > :not([data-part=meta], [data-part=byline], meta, link, [hidden]) + :is([data-part=meta], [data-part=byline]) {
+    margin-block-start: var(--ui-content-meta-rhythm, 0);
+  }
   :where(ui-content, ui-media) [data-part=count]::before {
     content: var(--icon) / "";
     font-family: var(--ui-icon-font);
@@ -13227,6 +13457,11 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       outline: none;
     }
   }
+  @keyframes ui-content-live {
+    50% {
+      opacity: 0.35;
+    }
+  }
 }
 
 /* ui/card/content.typography.css */
@@ -13238,6 +13473,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     --ui-content-fs-fluid-lg: clamp(0.95rem, 0.86rem + 0.8cqi, 1.10rem);
     --ui-content-fs-fluid-xl: clamp(1.00rem, 0.92rem + 0.9cqi, 1.20rem);
     --ui-content-fs-fluid-2xl: clamp(1.08rem, 0.98rem + 1.1cqi, 1.32rem);
+    --ui-content-headline-fluid-xs: clamp(0.90rem, 0.84rem + 0.4cqi, 1.05rem);
     --ui-content-headline-fluid-sm: clamp(1.05rem, 0.90rem + 1.0cqi, 1.35rem);
     --ui-content-headline-fluid-md: clamp(1.20rem, 1.00rem + 1.6cqi, 1.75rem);
     --ui-content-headline-fluid-lg: clamp(1.45rem, 1.05rem + 3.0cqi, 2.50rem);
@@ -13249,6 +13485,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     --ui-content-fs-lg: var(--ui-content-fs-fluid-lg);
     --ui-content-fs-xl: var(--ui-content-fs-fluid-xl);
     --ui-content-fs-2xl: var(--ui-content-fs-fluid-2xl);
+    --ui-content-headline-xs: var(--ui-content-headline-fluid-xs);
     --ui-content-headline-sm: var(--ui-content-headline-fluid-sm);
     --ui-content-headline-md: var(--ui-content-headline-fluid-md);
     --ui-content-headline-lg: var(--ui-content-headline-fluid-lg);
@@ -13269,6 +13506,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     --ui-content-fs-lg: var(--font-size-lg);
     --ui-content-fs-xl: var(--font-size-xl);
     --ui-content-fs-2xl: var(--font-size-2xl);
+    --ui-content-headline-xs: var(--font-size-base);
     --ui-content-headline-sm: var(--font-size-xl);
     --ui-content-headline-md: var(--font-size-2xl);
     --ui-content-headline-lg: var(--font-size-3xl);
@@ -13283,6 +13521,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     --ui-content-fs-lg: var(--ui-content-fs-fluid-lg);
     --ui-content-fs-xl: var(--ui-content-fs-fluid-xl);
     --ui-content-fs-2xl: var(--ui-content-fs-fluid-2xl);
+    --ui-content-headline-xs: var(--ui-content-headline-fluid-xs);
     --ui-content-headline-sm: var(--ui-content-headline-fluid-sm);
     --ui-content-headline-md: var(--ui-content-headline-fluid-md);
     --ui-content-headline-lg: var(--ui-content-headline-fluid-lg);
@@ -13297,6 +13536,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     --ui-content-tx-md: var(--ui-content-fs-sm);
     --ui-content-tx-lg: var(--ui-content-fs-md);
     --ui-content-tx-xl: var(--ui-content-fs-lg);
+    --ui-content-hl-xs: var(--ui-content-headline-xs);
     --ui-content-hl-sm: var(--ui-content-headline-sm);
     --ui-content-hl-md: var(--ui-content-headline-sm);
     --ui-content-hl-lg: var(--ui-content-headline-md);
@@ -13311,6 +13551,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     --ui-content-tx-md: var(--ui-content-fs-md);
     --ui-content-tx-lg: var(--ui-content-fs-lg);
     --ui-content-tx-xl: var(--ui-content-fs-xl);
+    --ui-content-hl-xs: var(--ui-content-headline-xs);
     --ui-content-hl-sm: var(--ui-content-headline-sm);
     --ui-content-hl-md: var(--ui-content-headline-md);
     --ui-content-hl-lg: var(--ui-content-headline-lg);
@@ -13325,6 +13566,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     --ui-content-tx-md: var(--ui-content-fs-lg);
     --ui-content-tx-lg: var(--ui-content-fs-xl);
     --ui-content-tx-xl: var(--ui-content-fs-2xl);
+    --ui-content-hl-xs: var(--ui-content-headline-sm);
     --ui-content-hl-sm: var(--ui-content-headline-md);
     --ui-content-hl-md: var(--ui-content-headline-lg);
     --ui-content-hl-lg: var(--ui-content-headline-xl);
@@ -13339,6 +13581,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     --ui-content-tx-md: var(--ui-content-fs-xl);
     --ui-content-tx-lg: var(--ui-content-fs-2xl);
     --ui-content-tx-xl: var(--ui-content-fs-2xl);
+    --ui-content-hl-xs: var(--ui-content-headline-md);
     --ui-content-hl-sm: var(--ui-content-headline-lg);
     --ui-content-hl-md: var(--ui-content-headline-xl);
     --ui-content-hl-lg: var(--ui-content-headline-2xl);
@@ -13355,6 +13598,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       --ui-content-tx-md: var(--ui-content-fs-sm);
       --ui-content-tx-lg: var(--ui-content-fs-md);
       --ui-content-tx-xl: var(--ui-content-fs-lg);
+      --ui-content-hl-xs: var(--ui-content-headline-xs);
       --ui-content-hl-sm: var(--ui-content-headline-sm);
       --ui-content-hl-md: var(--ui-content-headline-sm);
       --ui-content-hl-lg: var(--ui-content-headline-md);
@@ -13370,6 +13614,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       --ui-content-tx-md: var(--ui-content-fs-md);
       --ui-content-tx-lg: var(--ui-content-fs-lg);
       --ui-content-tx-xl: var(--ui-content-fs-xl);
+      --ui-content-hl-xs: var(--ui-content-headline-xs);
       --ui-content-hl-sm: var(--ui-content-headline-sm);
       --ui-content-hl-md: var(--ui-content-headline-md);
       --ui-content-hl-lg: var(--ui-content-headline-lg);
@@ -13385,6 +13630,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       --ui-content-tx-md: var(--ui-content-fs-lg);
       --ui-content-tx-lg: var(--ui-content-fs-xl);
       --ui-content-tx-xl: var(--ui-content-fs-2xl);
+      --ui-content-hl-xs: var(--ui-content-headline-sm);
       --ui-content-hl-sm: var(--ui-content-headline-md);
       --ui-content-hl-md: var(--ui-content-headline-lg);
       --ui-content-hl-lg: var(--ui-content-headline-xl);
@@ -13400,6 +13646,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       --ui-content-tx-md: var(--ui-content-fs-xl);
       --ui-content-tx-lg: var(--ui-content-fs-2xl);
       --ui-content-tx-xl: var(--ui-content-fs-2xl);
+      --ui-content-hl-xs: var(--ui-content-headline-md);
       --ui-content-hl-sm: var(--ui-content-headline-lg);
       --ui-content-hl-md: var(--ui-content-headline-xl);
       --ui-content-hl-lg: var(--ui-content-headline-2xl);
@@ -13417,6 +13664,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       --ui-content-tx-md: var(--ui-content-fs-sm);
       --ui-content-tx-lg: var(--ui-content-fs-md);
       --ui-content-tx-xl: var(--ui-content-fs-lg);
+      --ui-content-hl-xs: var(--ui-content-headline-xs);
       --ui-content-hl-sm: var(--ui-content-headline-sm);
       --ui-content-hl-md: var(--ui-content-headline-sm);
       --ui-content-hl-lg: var(--ui-content-headline-md);
@@ -13432,6 +13680,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       --ui-content-tx-md: var(--ui-content-fs-md);
       --ui-content-tx-lg: var(--ui-content-fs-lg);
       --ui-content-tx-xl: var(--ui-content-fs-xl);
+      --ui-content-hl-xs: var(--ui-content-headline-xs);
       --ui-content-hl-sm: var(--ui-content-headline-sm);
       --ui-content-hl-md: var(--ui-content-headline-md);
       --ui-content-hl-lg: var(--ui-content-headline-lg);
@@ -13447,6 +13696,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       --ui-content-tx-md: var(--ui-content-fs-lg);
       --ui-content-tx-lg: var(--ui-content-fs-xl);
       --ui-content-tx-xl: var(--ui-content-fs-2xl);
+      --ui-content-hl-xs: var(--ui-content-headline-sm);
       --ui-content-hl-sm: var(--ui-content-headline-md);
       --ui-content-hl-md: var(--ui-content-headline-lg);
       --ui-content-hl-lg: var(--ui-content-headline-xl);
@@ -13462,6 +13712,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       --ui-content-tx-md: var(--ui-content-fs-xl);
       --ui-content-tx-lg: var(--ui-content-fs-2xl);
       --ui-content-tx-xl: var(--ui-content-fs-2xl);
+      --ui-content-hl-xs: var(--ui-content-headline-md);
       --ui-content-hl-sm: var(--ui-content-headline-lg);
       --ui-content-hl-md: var(--ui-content-headline-xl);
       --ui-content-hl-lg: var(--ui-content-headline-2xl);
@@ -13490,6 +13741,9 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
   }
   :where([content~="eb(inv)"]) {
     --ui-content-eyebrow-ink: var(--ui-content-inv);
+  }
+  :where([content~="eb(200)"]) {
+    --ui-content-eyebrow-weight: 200;
   }
   :where([content~="eb(300)"]) {
     --ui-content-eyebrow-weight: var(--font-weight-light);
@@ -13563,6 +13817,9 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
   :where([content~="tx(inv)"]) {
     --ui-content-body-ink: var(--ui-content-inv);
   }
+  :where([content~="tx(200)"]) {
+    --ui-content-body-weight: 200;
+  }
   :where([content~="tx(300)"]) {
     --ui-content-body-weight: var(--font-weight-light);
   }
@@ -13631,6 +13888,9 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
   }
   :where([content~="mt(inv)"]) {
     --ui-content-meta-ink: var(--ui-content-inv);
+  }
+  :where([content~="mt(200)"]) {
+    --ui-content-meta-weight: 200;
   }
   :where([content~="mt(300)"]) {
     --ui-content-meta-weight: var(--font-weight-light);
@@ -13701,6 +13961,9 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
   :where([content~="hl(inv)"]) {
     --ui-content-heading-ink: var(--ui-content-inv);
   }
+  :where([content~="hl(200)"]) {
+    --ui-content-heading-weight: 200;
+  }
   :where([content~="hl(300)"]) {
     --ui-content-heading-weight: var(--font-weight-light);
   }
@@ -13721,6 +13984,12 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
   }
   :where([content~="hl(900)"]) {
     --ui-content-heading-weight: var(--font-weight-black);
+  }
+  :where([content~="hl(xs)"]),
+  :where(ui-card[content~="hl(xs)"]) > cq-box,
+  :where(lay-out-group[content~="hl(xs)"]) > cq-box,
+  :where(ui-reveal[content~="hl(xs)"] > details) > summary {
+    --ui-content-headline: var(--ui-content-hl-xs, var(--ui-content-headline-xs));
   }
   :where([content~="hl(sm)"]),
   :where(ui-card[content~="hl(sm)"]) > cq-box,
@@ -13761,6 +14030,15 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
   :where([content~="hl(shd)"]) {
     --ui-content-heading-text-shadow: var(--ui-content-text-shadow);
   }
+  :where([content~="hl(caps)"]) {
+    --ui-content-heading-transform: uppercase;
+  }
+  :where([content~="hl(wide)"]) {
+    --ui-content-heading-tracking: var(--tracking-wide);
+  }
+  :where([content~="hl(tight)"]) {
+    --ui-content-heading-tracking: var(--tracking-tighter);
+  }
   :where([content~="hl(body)"]) {
     --ui-content-heading-font: var(--font-body);
   }
@@ -13777,6 +14055,10 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     --ui-content-heading-font: var(--font-form);
   }
   @container bs-card (inline-size >= 25rem) {
+    :where([content~="md:hl(xs)"]) :is(cq-box, summary),
+    :where(ui-content[content~="md:hl(xs)"]) {
+      --ui-content-headline: var(--ui-content-hl-xs, var(--ui-content-headline-xs));
+    }
     :where([content~="md:hl(sm)"]) :is(cq-box, summary),
     :where(ui-content[content~="md:hl(sm)"]) {
       --ui-content-headline: var(--ui-content-hl-sm, var(--ui-content-headline-sm));
@@ -13803,6 +14085,10 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     }
   }
   @container bs-card (inline-size >= 44rem) {
+    :where([content~="lg:hl(xs)"]) :is(cq-box, summary),
+    :where(ui-content[content~="lg:hl(xs)"]) {
+      --ui-content-headline: var(--ui-content-hl-xs, var(--ui-content-headline-xs));
+    }
     :where([content~="lg:hl(sm)"]) :is(cq-box, summary),
     :where(ui-content[content~="lg:hl(sm)"]) {
       --ui-content-headline: var(--ui-content-hl-sm, var(--ui-content-headline-sm));
@@ -13848,9 +14134,9 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
 /* ui/card/ui-card.css */
 @layer bs-component {
   :where(ui-card) {
-    --ui-card-bg: light-dark(var(--color-surface), var(--ui-card-dark-bg, #1f2937));
-    --ui-card-radius: var(--radius-2xl);
-    --ui-card-shadow: var(--shadow-xl);
+    --ui-card-bg: var(--ui-card-bg-base, light-dark(var(--color-surface), var(--ui-card-dark-bg, #1f2937)));
+    --ui-card-radius: var(--ui-card-radius-base, var(--radius-2xl));
+    --ui-card-shadow: var(--ui-card-shadow-base, var(--shadow-xl));
     background: var(--ui-card-bg);
     border-radius: var(--ui-card-radius);
     box-shadow: var(--ui-card-shadow);
@@ -13861,7 +14147,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     overflow: hidden;
     > cq-box {
       display: grid;
-      gap: 0;
+      gap: var(--ui-card-gap, 0);
       grid-template-columns: var(--ui-card-cols, 1fr);
       min-inline-size: 0;
       > ui-content {

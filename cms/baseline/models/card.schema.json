@@ -19,7 +19,7 @@
         "name": "Basics",
         "description": "Type and primary text content",
         "collapse": false,
-        "fields": ["internalName", "schemaType", "eyebrow", "headline", "subheadline", "summary"]
+        "fields": ["internalName", "schemaType", "eyebrow", "label", "headline", "subheadline", "summary"]
       },
       {
         "area": "main",
@@ -164,6 +164,15 @@
       "type": "string",
       "title": "Eyebrow",
       "description": "Category / kicker shown above the headline. Emitted as articleSection, category, recipeCategory or about depending on schemaType."
+    },
+    "label": {
+      "type": "object",
+      "title": "Label",
+      "description": "A short flag between the eyebrow and the headline — \"Live\", \"Breaking\", \"Opinion\". { text, live }, or a plain string for the text alone; live: true adds a pulsing dot. Rendered as <small data-part=\"label\"> OUTSIDE the headline, so the headline's itemprop stays clean; no microdata. Coloured by --ui-content-label-ink (default the accent ink).",
+      "properties": {
+        "text": { "type": "string", "title": "Text" },
+        "live": { "type": "boolean", "title": "Live", "description": "Adds a pulsing dot (still under prefers-reduced-motion)" }
+      }
     },
     "headline": {
       "type": "richtext",
