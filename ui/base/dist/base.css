@@ -500,6 +500,58 @@
     --shp-plus-full: polygon(35% 0%, 65% 0%, 100% 0%, 100% 35%, 100% 60%, 100% 100%, 65% 100%, 35% 100%, 0% 100%, 0% 60%, 0% 35%, 0% 0%);
     --shp-circle: circle(0% at 50% 50%);
     --shp-circle-full: circle(100% at 50% 50%);
+    --shp-pt-d: polygon(100% 0%, 100% 85%, 50% 100%, 0% 85%, 0% 0%);
+    --shp-pt-d-full: polygon(100% 0%, 100% 100%, 50% 100%, 0% 100%, 0% 0%);
+    --shp-pt-u: polygon(100% 0%, 100% 100%, 50% 85%, 0% 100%, 0% 0%);
+    --shp-pt-u-full: polygon(100% 0%, 100% 100%, 50% 100%, 0% 100%, 0% 0%);
+    --shp-pt-l: polygon(25% 0%, 100% 1%, 100% 100%, 25% 100%, 0% 50%);
+    --shp-pt-l-full: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 50%);
+    --shp-pt-r: polygon(0% 0%, 75% 0%, 100% 50%, 75% 100%, 0% 100%);
+    --shp-pt-r-full: polygon(0% 0%, 100% 0%, 100% 50%, 100% 100%, 0% 100%);
+    --shp-cut-r: polygon(0% 0%, 100% 0%, 100% 85%, 0% 100%);
+    --shp-cut-r-full: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+    --shp-cut-l: polygon(0% 0%, 100% 0%, 100% 100%, 0% 85%);
+    --shp-cut-l-full: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+    --shp-skew-r: polygon(0% 15%, 100% 0%, 100% 85%, 0% 100%);
+    --shp-skew-r-full: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+    --shp-skew-l: polygon(0% 0%, 100% 15%, 100% 100%, 0% 85%);
+    --shp-skew-l-full: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+    --shp-para: polygon(25% 0%, 100% 0%, 75% 100%, 0% 100%);
+    --shp-para-full: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+    --shp-chev-l: polygon(100% 0%, 75% 50%, 100% 100%, 25% 100%, 0% 50%, 25% 0%);
+    --shp-chev-l-full: polygon(100% 0%, 100% 50%, 100% 100%, 0% 100%, 0% 50%, 0% 0%);
+    --shp-chev-r: polygon(75% 0%, 100% 50%, 75% 100%, 0% 100%, 25% 50%, 0% 0%);
+    --shp-chev-r-full: polygon(100% 0%, 100% 50%, 100% 100%, 0% 100%, 0% 50%, 0% 0%);
+    --shp-arr-l: polygon(40% 0%, 40% 20%, 100% 20%, 100% 80%, 40% 80%, 40% 100%, 0% 50%);
+    --shp-arr-l-full: polygon(0% 0%, 50% 0%, 100% 0%, 100% 100%, 50% 100%, 0% 100%, 0% 50%);
+    --shp-arr-r: polygon(0% 20%, 60% 20%, 60% 0%, 100% 50%, 60% 100%, 60% 80%, 0% 80%);
+    --shp-arr-r-full: polygon(0% 0%, 50% 0%, 100% 0%, 100% 50%, 100% 100%, 50% 100%, 0% 100%);
+    --shp-minus: polygon(100% 35%, 100% 60%, 0% 60%, 0% 35%);
+    --shp-minus-full: polygon(100% 0%, 100% 100%, 0% 100%, 0% 0%);
+    --shp-close: polygon(20% 0%, 0% 20%, 30% 50%, 0% 80%, 20% 100%, 50% 70%, 80% 100%, 100% 80%, 70% 50%, 100% 20%, 80% 0%, 50% 30%);
+    --shp-close-full: polygon(0% 0%, 0% 0%, 0% 50%, 0% 100%, 0% 100%, 50% 100%, 100% 100%, 100% 100%, 100% 50%, 100% 0%, 100% 0%, 50% 0%);
+    --shp-bolt: polygon(25% 0%, 70% 0%, 40% 35%, 95% 35%, 20% 100%, 40% 55%, 0% 55%);
+    --shp-bolt-full: polygon(0% 0%, 100% 0%, 100% 50%, 100% 100%, 0% 100%, 0% 100%, 0% 50%);
+    --shp-msg: polygon(0% 0%, 100% 0%, 100% 75%, 75% 75%, 75% 100%, 50% 75%, 0% 75%);
+    --shp-msg-full: polygon(0% 0%, 100% 0%, 100% 100%, 75% 100%, 75% 100%, 50% 100%, 0% 100%);
+    --shp-frame: polygon(0% 0%, 0% 100%, 50% 100%, 50% 75%, 25% 75%, 25% 25%, 75% 25%, 75% 75%, 50% 75%, 50% 100%, 100% 100%, 100% 0%);
+    --shp-frame-full: polygon(0% 0%, 0% 100%, 50% 100%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 100%, 100% 100%, 100% 0%);
+    --shp-frame-in: polygon(25% 25%, 75% 25%, 75% 75%, 25% 75%);
+    --shp-frame-in-full: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+    --shp-blinds-h: polygon(0% 5%, 100% 5%, 100% 25%, 0% 25%, 0% 40%, 100% 40%, 100% 60%, 0% 60%, 0% 75%, 100% 75%, 100% 95%, 0% 95%);
+    --shp-blinds-h-full: polygon(0% 0%, 100% 0%, 100% 33.33%, 0% 33.33%, 0% 33.33%, 100% 33.33%, 100% 66.66%, 0% 66.66%, 0% 66.66%, 100% 66.66%, 100% 100%, 0% 100%);
+    --shp-blinds-v: polygon(5% 0%, 5% 100%, 25% 100%, 25% 0%, 40% 0%, 40% 100%, 60% 100%, 60% 0%, 75% 0%, 75% 100%, 95% 100%, 95% 0%);
+    --shp-blinds-v-full: polygon(0% 0%, 0% 100%, 33.33% 100%, 33.33% 0%, 33.33% 0%, 33.33% 100%, 66.66% 100%, 66.66% 0%, 66.66% 0%, 66.66% 100%, 100% 100%, 100% 0%);
+    --shp-curve-d: ellipse(80% 50% at 50% 39%);
+    --shp-curve-d-full: ellipse(75% 75% at 50% 50%);
+    --shp-curve-u: ellipse(80% 50% at 50% 61%);
+    --shp-curve-u-full: ellipse(75% 75% at 50% 50%);
+    --shp-curve-r: ellipse(85% 80% at 25% 20%);
+    --shp-curve-r-full: ellipse(75% 75% at 50% 50%);
+    --shp-curve-l: ellipse(85% 80% at 75% 20%);
+    --shp-curve-l-full: ellipse(75% 75% at 50% 50%);
+    --shp-circ-45: circle(45% at 50% 50%);
+    --shp-circ-45-full: circle(75% at 50% 50%);
   }
 }
 
@@ -2843,6 +2895,162 @@
     --_animn: reveal-shape;
     --reveal-from: var(--shp-circle);
     --reveal-to: var(--shp-circle-full);
+  }
+  [animate-self*="reveal(pt-d)"],
+  [animate*="reveal(pt-d)"] > * {
+    --_animn: reveal-shape;
+    --reveal-from: var(--shp-pt-d);
+    --reveal-to: var(--shp-pt-d-full);
+  }
+  [animate-self*="reveal(pt-u)"],
+  [animate*="reveal(pt-u)"] > * {
+    --_animn: reveal-shape;
+    --reveal-from: var(--shp-pt-u);
+    --reveal-to: var(--shp-pt-u-full);
+  }
+  [animate-self*="reveal(pt-l)"],
+  [animate*="reveal(pt-l)"] > * {
+    --_animn: reveal-shape;
+    --reveal-from: var(--shp-pt-l);
+    --reveal-to: var(--shp-pt-l-full);
+  }
+  [animate-self*="reveal(pt-r)"],
+  [animate*="reveal(pt-r)"] > * {
+    --_animn: reveal-shape;
+    --reveal-from: var(--shp-pt-r);
+    --reveal-to: var(--shp-pt-r-full);
+  }
+  [animate-self*="reveal(cut-r)"],
+  [animate*="reveal(cut-r)"] > * {
+    --_animn: reveal-shape;
+    --reveal-from: var(--shp-cut-r);
+    --reveal-to: var(--shp-cut-r-full);
+  }
+  [animate-self*="reveal(cut-l)"],
+  [animate*="reveal(cut-l)"] > * {
+    --_animn: reveal-shape;
+    --reveal-from: var(--shp-cut-l);
+    --reveal-to: var(--shp-cut-l-full);
+  }
+  [animate-self*="reveal(skew-r)"],
+  [animate*="reveal(skew-r)"] > * {
+    --_animn: reveal-shape;
+    --reveal-from: var(--shp-skew-r);
+    --reveal-to: var(--shp-skew-r-full);
+  }
+  [animate-self*="reveal(skew-l)"],
+  [animate*="reveal(skew-l)"] > * {
+    --_animn: reveal-shape;
+    --reveal-from: var(--shp-skew-l);
+    --reveal-to: var(--shp-skew-l-full);
+  }
+  [animate-self*="reveal(para)"],
+  [animate*="reveal(para)"] > * {
+    --_animn: reveal-shape;
+    --reveal-from: var(--shp-para);
+    --reveal-to: var(--shp-para-full);
+  }
+  [animate-self*="reveal(chev-l)"],
+  [animate*="reveal(chev-l)"] > * {
+    --_animn: reveal-shape;
+    --reveal-from: var(--shp-chev-l);
+    --reveal-to: var(--shp-chev-l-full);
+  }
+  [animate-self*="reveal(chev-r)"],
+  [animate*="reveal(chev-r)"] > * {
+    --_animn: reveal-shape;
+    --reveal-from: var(--shp-chev-r);
+    --reveal-to: var(--shp-chev-r-full);
+  }
+  [animate-self*="reveal(arr-l)"],
+  [animate*="reveal(arr-l)"] > * {
+    --_animn: reveal-shape;
+    --reveal-from: var(--shp-arr-l);
+    --reveal-to: var(--shp-arr-l-full);
+  }
+  [animate-self*="reveal(arr-r)"],
+  [animate*="reveal(arr-r)"] > * {
+    --_animn: reveal-shape;
+    --reveal-from: var(--shp-arr-r);
+    --reveal-to: var(--shp-arr-r-full);
+  }
+  [animate-self*="reveal(minus)"],
+  [animate*="reveal(minus)"] > * {
+    --_animn: reveal-shape;
+    --reveal-from: var(--shp-minus);
+    --reveal-to: var(--shp-minus-full);
+  }
+  [animate-self*="reveal(close)"],
+  [animate*="reveal(close)"] > * {
+    --_animn: reveal-shape;
+    --reveal-from: var(--shp-close);
+    --reveal-to: var(--shp-close-full);
+  }
+  [animate-self*="reveal(bolt)"],
+  [animate*="reveal(bolt)"] > * {
+    --_animn: reveal-shape;
+    --reveal-from: var(--shp-bolt);
+    --reveal-to: var(--shp-bolt-full);
+  }
+  [animate-self*="reveal(msg)"],
+  [animate*="reveal(msg)"] > * {
+    --_animn: reveal-shape;
+    --reveal-from: var(--shp-msg);
+    --reveal-to: var(--shp-msg-full);
+  }
+  [animate-self*="reveal(frame)"],
+  [animate*="reveal(frame)"] > * {
+    --_animn: reveal-shape;
+    --reveal-from: var(--shp-frame);
+    --reveal-to: var(--shp-frame-full);
+  }
+  [animate-self*="reveal(frame-in)"],
+  [animate*="reveal(frame-in)"] > * {
+    --_animn: reveal-shape;
+    --reveal-from: var(--shp-frame-in);
+    --reveal-to: var(--shp-frame-in-full);
+  }
+  [animate-self*="reveal(blinds-h)"],
+  [animate*="reveal(blinds-h)"] > * {
+    --_animn: reveal-shape;
+    --reveal-from: var(--shp-blinds-h);
+    --reveal-to: var(--shp-blinds-h-full);
+  }
+  [animate-self*="reveal(blinds-v)"],
+  [animate*="reveal(blinds-v)"] > * {
+    --_animn: reveal-shape;
+    --reveal-from: var(--shp-blinds-v);
+    --reveal-to: var(--shp-blinds-v-full);
+  }
+  [animate-self*="reveal(curve-d)"],
+  [animate*="reveal(curve-d)"] > * {
+    --_animn: reveal-shape;
+    --reveal-from: var(--shp-curve-d);
+    --reveal-to: var(--shp-curve-d-full);
+  }
+  [animate-self*="reveal(curve-u)"],
+  [animate*="reveal(curve-u)"] > * {
+    --_animn: reveal-shape;
+    --reveal-from: var(--shp-curve-u);
+    --reveal-to: var(--shp-curve-u-full);
+  }
+  [animate-self*="reveal(curve-r)"],
+  [animate*="reveal(curve-r)"] > * {
+    --_animn: reveal-shape;
+    --reveal-from: var(--shp-curve-r);
+    --reveal-to: var(--shp-curve-r-full);
+  }
+  [animate-self*="reveal(curve-l)"],
+  [animate*="reveal(curve-l)"] > * {
+    --_animn: reveal-shape;
+    --reveal-from: var(--shp-curve-l);
+    --reveal-to: var(--shp-curve-l-full);
+  }
+  [animate-self*="reveal(circ-45)"],
+  [animate*="reveal(circ-45)"] > * {
+    --_animn: reveal-shape;
+    --reveal-from: var(--shp-circ-45);
+    --reveal-to: var(--shp-circ-45-full);
   }
   [animate-self*="slide-down("],
   [animate*="slide-down("] > * {

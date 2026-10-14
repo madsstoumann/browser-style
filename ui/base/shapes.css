@@ -27,5 +27,79 @@
 		--shp-plus-full:  polygon(35% 0%, 65% 0%, 100% 0%, 100% 35%, 100% 60%, 100% 100%, 65% 100%, 35% 100%, 0% 100%, 0% 60%, 0% 35%, 0% 0%);
 		--shp-circle:      circle(0% at 50% 50%);   /* reveal-tuned: grow from nothing (media's shp(circle) is a separate 50%→75% hover-morph) */
 		--shp-circle-full: circle(100% at 50% 50%);
+
+		/* the media shp() library (media.shapes.css maps these) — pt/cut/skew/para pad to a full rect */
+		--shp-pt-d:          polygon(100% 0%, 100% 85%, 50% 100%, 0% 85%, 0% 0%);
+		--shp-pt-d-full:     polygon(100% 0%, 100% 100%, 50% 100%, 0% 100%, 0% 0%);
+		--shp-pt-u:          polygon(100% 0%, 100% 100%, 50% 85%, 0% 100%, 0% 0%);
+		--shp-pt-u-full:     polygon(100% 0%, 100% 100%, 50% 100%, 0% 100%, 0% 0%);
+		--shp-pt-l:          polygon(25% 0%, 100% 1%, 100% 100%, 25% 100%, 0% 50%);
+		--shp-pt-l-full:     polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 50%);
+		--shp-pt-r:          polygon(0% 0%, 75% 0%, 100% 50%, 75% 100%, 0% 100%);
+		--shp-pt-r-full:     polygon(0% 0%, 100% 0%, 100% 50%, 100% 100%, 0% 100%);
+		--shp-cut-r:         polygon(0% 0%, 100% 0%, 100% 85%, 0% 100%);
+		--shp-cut-r-full:    polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+		--shp-cut-l:         polygon(0% 0%, 100% 0%, 100% 100%, 0% 85%);
+		--shp-cut-l-full:    polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+		--shp-skew-r:        polygon(0% 15%, 100% 0%, 100% 85%, 0% 100%);
+		--shp-skew-r-full:   polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+		--shp-skew-l:        polygon(0% 0%, 100% 15%, 100% 100%, 0% 85%);
+		--shp-skew-l-full:   polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+		--shp-para:          polygon(25% 0%, 100% 0%, 75% 100%, 0% 100%);
+		--shp-para-full:     polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+
+		/* chev-l/chev-r: 3 points move (the notch out to the edge + 2 corners) */
+		--shp-chev-l:        polygon(100% 0%, 75% 50%, 100% 100%, 25% 100%, 0% 50%, 25% 0%);
+		--shp-chev-l-full:   polygon(100% 0%, 100% 50%, 100% 100%, 0% 100%, 0% 50%, 0% 0%);
+		--shp-chev-r:        polygon(75% 0%, 100% 50%, 75% 100%, 0% 100%, 25% 50%, 0% 0%);
+		--shp-chev-r-full:   polygon(100% 0%, 100% 50%, 100% 100%, 0% 100%, 0% 50%, 0% 0%);
+
+		/* arr-l/arr-r: the arrowhead flattens into the near edge, the shaft fills */
+		--shp-arr-l:         polygon(40% 0%, 40% 20%, 100% 20%, 100% 80%, 40% 80%, 40% 100%, 0% 50%);
+		--shp-arr-l-full:    polygon(0% 0%, 50% 0%, 100% 0%, 100% 100%, 50% 100%, 0% 100%, 0% 50%);
+		--shp-arr-r:         polygon(0% 20%, 60% 20%, 60% 0%, 100% 50%, 60% 100%, 60% 80%, 0% 80%);
+		--shp-arr-r-full:    polygon(0% 0%, 50% 0%, 100% 0%, 100% 50%, 100% 100%, 50% 100%, 0% 100%);
+
+		/* minus: the bar grows vertically to fill (vertices mapped to the 4 corners) */
+		--shp-minus:         polygon(100% 35%, 100% 60%, 0% 60%, 0% 35%);
+		--shp-minus-full:    polygon(100% 0%, 100% 100%, 0% 100%, 0% 0%);
+
+		/* close (X): the 4 inner points push to the edge mids, the 8 arm tips to the corners */
+		--shp-close:         polygon(20% 0%, 0% 20%, 30% 50%, 0% 80%, 20% 100%, 50% 70%, 80% 100%, 100% 80%, 70% 50%, 100% 20%, 80% 0%, 50% 30%);
+		--shp-close-full:    polygon(0% 0%, 0% 0%, 0% 50%, 0% 100%, 0% 100%, 50% 100%, 100% 100%, 100% 100%, 100% 50%, 100% 0%, 100% 0%, 50% 0%);
+
+		/* bolt: the 7 points map onto the square perimeter */
+		--shp-bolt:          polygon(25% 0%, 70% 0%, 40% 35%, 95% 35%, 20% 100%, 40% 55%, 0% 55%);
+		--shp-bolt-full:     polygon(0% 0%, 100% 0%, 100% 50%, 100% 100%, 0% 100%, 0% 100%, 0% 50%);
+
+		/* msg: the bubble bottom + tail drop to the base edge */
+		--shp-msg:           polygon(0% 0%, 100% 0%, 100% 75%, 75% 75%, 75% 100%, 50% 75%, 0% 75%);
+		--shp-msg-full:      polygon(0% 0%, 100% 0%, 100% 100%, 75% 100%, 75% 100%, 50% 100%, 0% 100%);
+
+		/* frame: seam slit routed to bottom-centre (zero-width, invisible); frame-in: an inset window */
+		--shp-frame:         polygon(0% 0%, 0% 100%, 50% 100%, 50% 75%, 25% 75%, 25% 25%, 75% 25%, 75% 75%, 50% 75%, 50% 100%, 100% 100%, 100% 0%);
+		--shp-frame-full:    polygon(0% 0%, 0% 100%, 50% 100%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 100%, 100% 100%, 100% 0%);
+		--shp-frame-in:      polygon(25% 25%, 75% 25%, 75% 75%, 25% 75%);
+		--shp-frame-in-full: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+
+		/* blinds-h/-v: the 3 slats stretch to abut (v = the same polygon, x/y swapped) */
+		--shp-blinds-h:      polygon(0% 5%, 100% 5%, 100% 25%, 0% 25%, 0% 40%, 100% 40%, 100% 60%, 0% 60%, 0% 75%, 100% 75%, 100% 95%, 0% 95%);
+		--shp-blinds-h-full: polygon(0% 0%, 100% 0%, 100% 33.33%, 0% 33.33%, 0% 33.33%, 100% 33.33%, 100% 66.66%, 0% 66.66%, 0% 66.66%, 100% 66.66%, 100% 100%, 0% 100%);
+		--shp-blinds-v:      polygon(5% 0%, 5% 100%, 25% 100%, 25% 0%, 40% 0%, 40% 100%, 60% 100%, 60% 0%, 75% 0%, 75% 100%, 95% 100%, 95% 0%);
+		--shp-blinds-v-full: polygon(0% 0%, 0% 100%, 33.33% 100%, 33.33% 0%, 33.33% 0%, 33.33% 100%, 66.66% 100%, 66.66% 0%, 66.66% 0%, 66.66% 100%, 100% 100%, 100% 0%);
+
+		/* curves: same-function ellipse, 75% radii clear all 4 corners */
+		--shp-curve-d:       ellipse(80% 50% at 50% 39%);
+		--shp-curve-d-full:  ellipse(75% 75% at 50% 50%);
+		--shp-curve-u:       ellipse(80% 50% at 50% 61%);
+		--shp-curve-u-full:  ellipse(75% 75% at 50% 50%);
+		--shp-curve-r:       ellipse(85% 80% at 25% 20%);
+		--shp-curve-r-full:  ellipse(75% 75% at 50% 50%);
+		--shp-curve-l:       ellipse(85% 80% at 75% 20%);
+		--shp-curve-l-full:  ellipse(75% 75% at 50% 50%);
+
+		/* circ-45: same-function circle, 75% clears the corners */
+		--shp-circ-45:       circle(45% at 50% 50%);
+		--shp-circ-45-full:  circle(75% at 50% 50%);
 	}
 }
