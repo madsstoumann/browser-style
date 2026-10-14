@@ -1870,14 +1870,13 @@
         animation-timeline: view(inline);
         animation-range: entry 5% cover 40%;
       }
-      lay-out[stagger]:not([overflow]):not(:where(details *, ui-media *)) {
-        view-timeline: --stg-tl;
-      }
       lay-out[stagger]:not([overflow]):not(:where(details *, ui-media *)) > *:not(lay-out, ui-carousel-controls) {
+        --_stg-n: min(var(--_stg-i) - 1, 2);
+        --_stg-o: min(var(--_stg-n) * 20%, var(--_stg-n) * var(--stagger-distance, 5rem));
         transform-origin: var(--_stg-origin, 50% 50%);
         animation: ui-stagger-in both var(--stagger-easing, cubic-bezier(0.16, 1, 0.3, 1));
-        animation-timeline: --stg-tl;
-        animation-range: entry calc((var(--_stg-i) - 1) * 20%) entry calc(75% + (var(--_stg-i) - 1) * 20%);
+        animation-timeline: view();
+        animation-range: entry var(--_stg-o) entry calc(75% + var(--_stg-o));
       }
       @supports (timeline-trigger-name: --t) {
         lay-out[overflow][stagger~=trigger]:not([animate-self]):not(:where(details *, ui-media *)) {
@@ -1898,16 +1897,14 @@
           animation-trigger: --stg-card play-forwards;
           animation-delay: calc((var(--_stg-i) - 1) * var(--animate-stagger, 10) * var(--animate-delay, 0.005s));
         }
-        lay-out[stagger~=trigger]:not([overflow]):not(:where(details *, ui-media *)) {
-          timeline-trigger: --stg-block view() entry 25% exit 0%;
-          trigger-scope: --stg-block;
-        }
         lay-out[stagger~=trigger]:not([overflow]):not(:where(details *, ui-media *)) > *:not(lay-out, ui-carousel-controls) {
+          timeline-trigger: --stg-item view() entry 25% exit 0%;
+          trigger-scope: --stg-item;
           animation-timeline: auto;
           animation-range: normal;
           animation-duration: var(--stagger-duration, 0.75s);
-          animation-trigger: --stg-block play-forwards;
-          animation-delay: calc((var(--_stg-i) - 1) * var(--animate-stagger, 10) * var(--animate-delay, 0.005s));
+          animation-trigger: --stg-item play-forwards;
+          animation-delay: calc(var(--_stg-n) * var(--animate-stagger, 10) * var(--animate-delay, 0.005s));
         }
       }
     }
