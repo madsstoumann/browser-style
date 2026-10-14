@@ -185,6 +185,33 @@
 	[animate-self*="reveal(rhomb)"],  [animate*="reveal(rhomb)"] > *  { --_animn: reveal-shape; --reveal-from: var(--shp-rhomb);  --reveal-to: var(--shp-rhomb-full); }
 	[animate-self*="reveal(plus)"],   [animate*="reveal(plus)"] > *   { --_animn: reveal-shape; --reveal-from: var(--shp-plus);   --reveal-to: var(--shp-plus-full); }
 	[animate-self*="reveal(circ)"],   [animate*="reveal(circ)"] > *   { --_animn: reveal-shape; --reveal-from: var(--shp-circle); --reveal-to: var(--shp-circle-full); }
+	/* the media shp() library — the same names as media="shp(NAME)" */
+	[animate-self*="reveal(pt-d)"],     [animate*="reveal(pt-d)"] > *     { --_animn: reveal-shape; --reveal-from: var(--shp-pt-d);     --reveal-to: var(--shp-pt-d-full); }
+	[animate-self*="reveal(pt-u)"],     [animate*="reveal(pt-u)"] > *     { --_animn: reveal-shape; --reveal-from: var(--shp-pt-u);     --reveal-to: var(--shp-pt-u-full); }
+	[animate-self*="reveal(pt-l)"],     [animate*="reveal(pt-l)"] > *     { --_animn: reveal-shape; --reveal-from: var(--shp-pt-l);     --reveal-to: var(--shp-pt-l-full); }
+	[animate-self*="reveal(pt-r)"],     [animate*="reveal(pt-r)"] > *     { --_animn: reveal-shape; --reveal-from: var(--shp-pt-r);     --reveal-to: var(--shp-pt-r-full); }
+	[animate-self*="reveal(cut-r)"],    [animate*="reveal(cut-r)"] > *    { --_animn: reveal-shape; --reveal-from: var(--shp-cut-r);    --reveal-to: var(--shp-cut-r-full); }
+	[animate-self*="reveal(cut-l)"],    [animate*="reveal(cut-l)"] > *    { --_animn: reveal-shape; --reveal-from: var(--shp-cut-l);    --reveal-to: var(--shp-cut-l-full); }
+	[animate-self*="reveal(skew-r)"],   [animate*="reveal(skew-r)"] > *   { --_animn: reveal-shape; --reveal-from: var(--shp-skew-r);   --reveal-to: var(--shp-skew-r-full); }
+	[animate-self*="reveal(skew-l)"],   [animate*="reveal(skew-l)"] > *   { --_animn: reveal-shape; --reveal-from: var(--shp-skew-l);   --reveal-to: var(--shp-skew-l-full); }
+	[animate-self*="reveal(para)"],     [animate*="reveal(para)"] > *     { --_animn: reveal-shape; --reveal-from: var(--shp-para);     --reveal-to: var(--shp-para-full); }
+	[animate-self*="reveal(chev-l)"],   [animate*="reveal(chev-l)"] > *   { --_animn: reveal-shape; --reveal-from: var(--shp-chev-l);   --reveal-to: var(--shp-chev-l-full); }
+	[animate-self*="reveal(chev-r)"],   [animate*="reveal(chev-r)"] > *   { --_animn: reveal-shape; --reveal-from: var(--shp-chev-r);   --reveal-to: var(--shp-chev-r-full); }
+	[animate-self*="reveal(arr-l)"],    [animate*="reveal(arr-l)"] > *    { --_animn: reveal-shape; --reveal-from: var(--shp-arr-l);    --reveal-to: var(--shp-arr-l-full); }
+	[animate-self*="reveal(arr-r)"],    [animate*="reveal(arr-r)"] > *    { --_animn: reveal-shape; --reveal-from: var(--shp-arr-r);    --reveal-to: var(--shp-arr-r-full); }
+	[animate-self*="reveal(minus)"],    [animate*="reveal(minus)"] > *    { --_animn: reveal-shape; --reveal-from: var(--shp-minus);    --reveal-to: var(--shp-minus-full); }
+	[animate-self*="reveal(close)"],    [animate*="reveal(close)"] > *    { --_animn: reveal-shape; --reveal-from: var(--shp-close);    --reveal-to: var(--shp-close-full); }
+	[animate-self*="reveal(bolt)"],     [animate*="reveal(bolt)"] > *     { --_animn: reveal-shape; --reveal-from: var(--shp-bolt);     --reveal-to: var(--shp-bolt-full); }
+	[animate-self*="reveal(msg)"],      [animate*="reveal(msg)"] > *      { --_animn: reveal-shape; --reveal-from: var(--shp-msg);      --reveal-to: var(--shp-msg-full); }
+	[animate-self*="reveal(frame)"],    [animate*="reveal(frame)"] > *    { --_animn: reveal-shape; --reveal-from: var(--shp-frame);    --reveal-to: var(--shp-frame-full); }
+	[animate-self*="reveal(frame-in)"], [animate*="reveal(frame-in)"] > * { --_animn: reveal-shape; --reveal-from: var(--shp-frame-in); --reveal-to: var(--shp-frame-in-full); }
+	[animate-self*="reveal(blinds-h)"], [animate*="reveal(blinds-h)"] > * { --_animn: reveal-shape; --reveal-from: var(--shp-blinds-h); --reveal-to: var(--shp-blinds-h-full); }
+	[animate-self*="reveal(blinds-v)"], [animate*="reveal(blinds-v)"] > * { --_animn: reveal-shape; --reveal-from: var(--shp-blinds-v); --reveal-to: var(--shp-blinds-v-full); }
+	[animate-self*="reveal(curve-d)"],  [animate*="reveal(curve-d)"] > *  { --_animn: reveal-shape; --reveal-from: var(--shp-curve-d);  --reveal-to: var(--shp-curve-d-full); }
+	[animate-self*="reveal(curve-u)"],  [animate*="reveal(curve-u)"] > *  { --_animn: reveal-shape; --reveal-from: var(--shp-curve-u);  --reveal-to: var(--shp-curve-u-full); }
+	[animate-self*="reveal(curve-r)"],  [animate*="reveal(curve-r)"] > *  { --_animn: reveal-shape; --reveal-from: var(--shp-curve-r);  --reveal-to: var(--shp-curve-r-full); }
+	[animate-self*="reveal(curve-l)"],  [animate*="reveal(curve-l)"] > *  { --_animn: reveal-shape; --reveal-from: var(--shp-curve-l);  --reveal-to: var(--shp-curve-l-full); }
+	[animate-self*="reveal(circ-45)"],  [animate*="reveal(circ-45)"] > *  { --_animn: reveal-shape; --reveal-from: var(--shp-circ-45);  --reveal-to: var(--shp-circ-45-full); }
 
 	/* Slide */
 	[animate-self*="slide-down("],      [animate*="slide-down("] > *      { --_animn: slide-down; }

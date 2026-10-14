@@ -343,7 +343,7 @@ Creates a named `view-timeline: --animate-tl` on the container; children animate
 | **Fade** | `fade-in()` `fade-out()` `fade-up()` `fade-down()` `fade-left()` `fade-right()` `fade-up-left()` `fade-up-right()` `fade-down-left()` `fade-down-right()` |
 | **Flip** | `flip-up()` `flip-down()` `flip-left()` `flip-right()` `flip-diagonal()` |
 | **Reveal** (container only) | `reveal(circle)` `reveal(inset)` `reveal(polygon)` `reveal(superellipse)` — `[animate-self]` arm only, no child arm |
-| **Reveal** (shape, both arms) | `reveal(hex)` `reveal(star)` `reveal(rhomb)` `reveal(plus)` `reveal(circ)` — clip endpoints from the shared `--shp-*` catalog (`ui/base/shapes.css`) |
+| **Reveal** (shape, both arms) | `reveal(NAME)`, 31 names: `hex` `star` `rhomb` `plus` `circ` `pt-d` `pt-u` `pt-l` `pt-r` `cut-r` `cut-l` `skew-r` `skew-l` `para` `chev-l` `chev-r` `arr-l` `arr-r` `minus` `close` `bolt` `msg` `frame` `frame-in` `blinds-h` `blinds-v` `curve-d` `curve-u` `curve-r` `curve-l` `circ-45` — clip endpoints from the shared `--shp-*` catalog (`ui/base/shapes.css`), the same pairs `media="shp(NAME)"` reads (media's `circle`/`inset` stay local) |
 | **Slide** | `slide-up()` `slide-down()` `slide-in()` `slide-out()` |
 | **Zoom** | `zoom-in()` `zoom-in-rotate()` `zoom-out()` `zoom-out-rotate()` |
 | **Other** | `opacity()` |

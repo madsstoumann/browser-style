@@ -132,7 +132,7 @@ drift from the CSS. (`md:/lg:` is the container-query prefix column: only `asr()
 | `rds()` | corners | **size** non sm md lg xl 2xl full pill sm-sq md-sq lg-sq xl-sq · **mode** prg | — | — | --ui-media-radius --ui-media-squircle-exp | — | — |
 | `obf()` | fit | **mode** cover contain fill none | — | — | --ui-media-fit | — | — |
 | `flp()` | flip | **mode** h v hv | — | — | --ui-media-fl-x --ui-media-fl-y | — | — |
-| `shp()` | shape | **shape** pt-d pt-u pt-l pt-r cut-r cut-l skew-r skew-l para rhomb inset hex chev-l chev-r arr-l arr-r star plus minus close bolt msg frame frame-in blinds-h blinds-v curve-d curve-u curve-r curve-l circle circ-45 | — | — | --ui-media-shape --ui-shape-morph --_shp --_shp-full --_r4 --_r5 --_r5l --_r5r --_ell --_shp-clip | — | — |
+| `shp()` | shape | **shape** pt-d pt-u pt-l pt-r cut-r cut-l skew-r skew-l para rhomb inset hex chev-l chev-r arr-l arr-r star plus minus close bolt msg frame frame-in blinds-h blinds-v curve-d curve-u curve-r curve-l circle circ-45 | — | — | --ui-media-shape --ui-shape-morph --_shp --_shp-full --_r4 --_shp-clip | — | — |
 | `hov()` | hover | **mode** zoom pan track drift tilt tilt-out tilt-in rot-r rot-l shape shape-rev gray blur bright sat dim tint | — | — | --_hv-dur --_hv-ease --_hv-t --_f-gray --_f-blur --_f-bright --_f-sat --_hv-any --_hv-zoom --_hv-pan --_hv-track --_hv-drift --_hv-tilt --_hv-tiltx --_hv-tilt-out --_hv-tilt-in --_hv-rot-r --_hv-rot-l --_hv-shape --_hv-filter --_hv-tint | — | — |
 | `tnt()` | tint | **hue** red orange green blue accent black white gray slate | — | yes | --ui-media-tint-color --_tnt --_hv-tint | — | — |
 | `scm()` | scrim | **pos** ts tc te cs cc ce bs bc be · **size** sm md lg xl · **tone** shr lgt med drk sld | — | yes | --ui-media-scrim --ui-media-scrim-paint --ui-media-scrim-color --ui-media-scrim-fade --ui-media-scrim-mid-stop --ui-media-scrim-end-stop --ui-media-scrim-cc-a --ui-media-scrim-cc-b | — | — |
@@ -173,7 +173,7 @@ What each one is *for*:
 | `obp()` | object-position (9-grid), logical cells only (`ts tc te · cs cc ce · bs bc be`) — the physical `tl…br` spellings were **removed in v5**; see below |
 | `obf()` | object-fit |
 | `flp()` | flip / mirror the image |
-| `shp()` | clip the frame to one of the shared `--shape-*` glyphs (`ui/base/shapes.css`) |
+| `shp()` | clip the frame to a shape — every name but `circle`/`inset` is a shared `--shp-*` pair (`ui/base/shapes.css`), so it is also a `reveal(NAME)` animation |
 | `hov()` | hover effect (image only) — 17 values across five families, see the table below |
 | `tnt()` | colour tint over the image (`media.tint.css`, opt-in), faded out by `hov(tint)` |
 | `scm()` | scrim — bare matches the host `ovr()`; three composable axes (direction · size · intensity) |
@@ -1577,7 +1577,11 @@ was `(0,0,2)`, and so is the bare `ui-media::before`, which the `(0,0,2)`
 `media.shapes.css` is likewise **not** bundled — link it on pages that use `shp()` (see
 `media.shape.html`). Each rule sets two neutral vars, `--_shp` (the shape) and `--_shp-full`
 (its matching-vertex full frame), and a shared bridge wires them into the mechanism that
-lives in `media.css` and ships with the card:
+lives in `media.css` and ships with the card. Thirty of the 32 rules just read base's
+`--shp-NAME` / `--shp-NAME-full` pair (`ui/base/shapes.css`), so the same name is also a scroll
+reveal, `animate-self="reveal(NAME)"` ([layout/core/animations.md](../../../layout/core/animations.md)).
+`circle` and `inset` stay local: base's `--shp-circle` is the reveal-tuned 0%→100% circle of
+`reveal(circ)`, and `reveal(inset)` is its own keyframe.
 
 | Tokens | Effect |
 |---|---|

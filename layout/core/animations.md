@@ -1,6 +1,6 @@
 # Animation System
 
-> **Moved to base (v4).** The `[animate]`/`[animate-self]` engine now lives in `@browser.style/base` (`ui/base/animate.css` + `@keyframes` in `ui/base/animations.css`), so it works on **any** component, not just `<lay-out>` — load base alongside `layout.css`. Easing tokens moved to `ui/base/easings.css`. Custom-property idents were renamed `--layout-*` → `--animate-*` (`--animate-tl`, `--animate-trigger`, `--animate-self-trigger`, `--animate-item-timing`). The only rule still in the layout package is `stack(reveal)` (`core/animations.css`). Shape reveals (`reveal(hex|star|rhomb|plus|circ)`) draw from the shared `--shp-*` catalog in `ui/base/shapes.css`.
+> **Moved to base (v4).** The `[animate]`/`[animate-self]` engine now lives in `@browser.style/base` (`ui/base/animate.css` + `@keyframes` in `ui/base/animations.css`), so it works on **any** component, not just `<lay-out>` — load base alongside `layout.css`. Easing tokens moved to `ui/base/easings.css`. Custom-property idents were renamed `--layout-*` → `--animate-*` (`--animate-tl`, `--animate-trigger`, `--animate-self-trigger`, `--animate-item-timing`). The only rule still in the layout package is `stack(reveal)` (`core/animations.css`). Shape reveals (`reveal(NAME)` — `circ` plus every media `shp()` name except `circle`/`inset`) draw from the shared `--shp-*` catalog in `ui/base/shapes.css`.
 
 Scroll-driven animations, applied via `animate-self` (container) and `animate` (children) — elements animate as they enter the viewport, no JavaScript required.
 
@@ -40,9 +40,11 @@ Animations use a function-call syntax with an optional multiplier:
 `reveal(circle)` `reveal(inset)` `reveal(polygon)` `reveal(superellipse)` — **container only**
 (`[animate-self]` arm, no child arm).
 
-`reveal(hex)` `reveal(star)` `reveal(rhomb)` `reveal(plus)` `reveal(circ)` — shape reveals,
-**both arms**; clip-path endpoints come from the shared `--shp-*` catalog
-(`ui/base/shapes.css`), so the same shape pair can drive a static media clip and a reveal.
+`reveal(NAME)` — 31 shape reveals, **both arms**: `hex` `star` `rhomb` `plus` `circ` `pt-d` `pt-u` `pt-l` `pt-r` `cut-r` `cut-l` `skew-r` `skew-l` `para` `chev-l` `chev-r` `arr-l` `arr-r` `minus` `close` `bolt` `msg` `frame` `frame-in` `blinds-h` `blinds-v` `curve-d` `curve-u` `curve-r` `curve-l` `circ-45`.
+Clip-path endpoints come from the shared `--shp-*` catalog (`ui/base/shapes.css`) — the same
+pairs `media="shp(NAME)"` reads, so every media shape is also a reveal. The two exceptions stay
+media-only: `shp(circle)` (`reveal(circ)` is the reveal-tuned 0%→100% circle) and `shp(inset)`
+(`reveal(circle)` and `reveal(inset)` name the container-only keyframes above).
 
 ### Slide
 `slide-up()` `slide-down()` `slide-in()` `slide-out()`

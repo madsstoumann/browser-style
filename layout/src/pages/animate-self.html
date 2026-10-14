@@ -252,7 +252,7 @@
 	<h2>Reveal Animations</h2>
 	<p><code>reveal(circle)</code>, <code>reveal(inset)</code>, <code>reveal(polygon)</code> and
 	<code>reveal(superellipse)</code> have an <strong><code>[animate-self]</code> arm only</strong> —
-	they cannot be applied to children. The five <strong>shape</strong> reveals below have both
+	they cannot be applied to children. The 31 <strong>shape</strong> reveals below have both
 	arms and also work via <code>animate=</code>; see <a href="animate.html">animate.html</a>.</p>
 
 	<h3>reveal(inset)</h3>
@@ -302,7 +302,9 @@
 	<h2>Reveal Animations — shapes</h2>
 	<p>Clip-path endpoints come from the shared <code>--shp-*</code> catalog
 	(<code>ui/base/shapes.css</code>), so the same shape pair can drive a static media clip and a
-	reveal. These five work on containers <em>and</em> children.</p>
+	reveal. All 31 work on containers <em>and</em> children: <code>circ</code> plus every
+	<code>shp()</code> name except <code>circle</code> and <code>inset</code>, which already name
+	the container-only reveals above.</p>
 
 	<h3>reveal(hex)</h3>
 	<section>
@@ -353,6 +355,292 @@
 		<small>Container reveals from a circle.</small>
 		<p><code>&lt;lay-out animate-self="reveal(circ)" lg="columns(3)"&gt;</code></p>
 		<lay-out animate-self="reveal(circ)" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>reveal(pt-d)</h3>
+	<section>
+		<small>Container reveals from a downward point.</small>
+		<p><code>&lt;lay-out animate-self="reveal(pt-d)" lg="columns(3)"&gt;</code></p>
+		<lay-out animate-self="reveal(pt-d)" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>reveal(pt-u)</h3>
+	<section>
+		<small>Container reveals from a notched base.</small>
+		<p><code>&lt;lay-out animate-self="reveal(pt-u)" lg="columns(3)"&gt;</code></p>
+		<lay-out animate-self="reveal(pt-u)" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>reveal(pt-l)</h3>
+	<section>
+		<small>Container reveals from a left-pointing tab.</small>
+		<p><code>&lt;lay-out animate-self="reveal(pt-l)" lg="columns(3)"&gt;</code></p>
+		<lay-out animate-self="reveal(pt-l)" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>reveal(pt-r)</h3>
+	<section>
+		<small>Container reveals from a right-pointing tab.</small>
+		<p><code>&lt;lay-out animate-self="reveal(pt-r)" lg="columns(3)"&gt;</code></p>
+		<lay-out animate-self="reveal(pt-r)" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>reveal(cut-r)</h3>
+	<section>
+		<small>Container reveals from a right-cut slant.</small>
+		<p><code>&lt;lay-out animate-self="reveal(cut-r)" lg="columns(3)"&gt;</code></p>
+		<lay-out animate-self="reveal(cut-r)" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>reveal(cut-l)</h3>
+	<section>
+		<small>Container reveals from a left-cut slant.</small>
+		<p><code>&lt;lay-out animate-self="reveal(cut-l)" lg="columns(3)"&gt;</code></p>
+		<lay-out animate-self="reveal(cut-l)" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>reveal(skew-r)</h3>
+	<section>
+		<small>Container reveals from a right skew.</small>
+		<p><code>&lt;lay-out animate-self="reveal(skew-r)" lg="columns(3)"&gt;</code></p>
+		<lay-out animate-self="reveal(skew-r)" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>reveal(skew-l)</h3>
+	<section>
+		<small>Container reveals from a left skew.</small>
+		<p><code>&lt;lay-out animate-self="reveal(skew-l)" lg="columns(3)"&gt;</code></p>
+		<lay-out animate-self="reveal(skew-l)" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>reveal(para)</h3>
+	<section>
+		<small>Container reveals from a parallelogram.</small>
+		<p><code>&lt;lay-out animate-self="reveal(para)" lg="columns(3)"&gt;</code></p>
+		<lay-out animate-self="reveal(para)" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>reveal(chev-l)</h3>
+	<section>
+		<small>Container reveals from a left chevron.</small>
+		<p><code>&lt;lay-out animate-self="reveal(chev-l)" lg="columns(3)"&gt;</code></p>
+		<lay-out animate-self="reveal(chev-l)" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>reveal(chev-r)</h3>
+	<section>
+		<small>Container reveals from a right chevron.</small>
+		<p><code>&lt;lay-out animate-self="reveal(chev-r)" lg="columns(3)"&gt;</code></p>
+		<lay-out animate-self="reveal(chev-r)" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>reveal(arr-l)</h3>
+	<section>
+		<small>Container reveals from a left arrow.</small>
+		<p><code>&lt;lay-out animate-self="reveal(arr-l)" lg="columns(3)"&gt;</code></p>
+		<lay-out animate-self="reveal(arr-l)" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>reveal(arr-r)</h3>
+	<section>
+		<small>Container reveals from a right arrow.</small>
+		<p><code>&lt;lay-out animate-self="reveal(arr-r)" lg="columns(3)"&gt;</code></p>
+		<lay-out animate-self="reveal(arr-r)" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>reveal(minus)</h3>
+	<section>
+		<small>Container reveals from a horizontal bar.</small>
+		<p><code>&lt;lay-out animate-self="reveal(minus)" lg="columns(3)"&gt;</code></p>
+		<lay-out animate-self="reveal(minus)" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>reveal(close)</h3>
+	<section>
+		<small>Container reveals from an X.</small>
+		<p><code>&lt;lay-out animate-self="reveal(close)" lg="columns(3)"&gt;</code></p>
+		<lay-out animate-self="reveal(close)" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>reveal(bolt)</h3>
+	<section>
+		<small>Container reveals from a lightning bolt.</small>
+		<p><code>&lt;lay-out animate-self="reveal(bolt)" lg="columns(3)"&gt;</code></p>
+		<lay-out animate-self="reveal(bolt)" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>reveal(msg)</h3>
+	<section>
+		<small>Container reveals from a speech bubble.</small>
+		<p><code>&lt;lay-out animate-self="reveal(msg)" lg="columns(3)"&gt;</code></p>
+		<lay-out animate-self="reveal(msg)" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>reveal(frame)</h3>
+	<section>
+		<small>Container reveals from a frame whose hole closes.</small>
+		<p><code>&lt;lay-out animate-self="reveal(frame)" lg="columns(3)"&gt;</code></p>
+		<lay-out animate-self="reveal(frame)" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>reveal(frame-in)</h3>
+	<section>
+		<small>Container reveals from a small inset window.</small>
+		<p><code>&lt;lay-out animate-self="reveal(frame-in)" lg="columns(3)"&gt;</code></p>
+		<lay-out animate-self="reveal(frame-in)" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>reveal(blinds-h)</h3>
+	<section>
+		<small>Container reveals from horizontal blinds.</small>
+		<p><code>&lt;lay-out animate-self="reveal(blinds-h)" lg="columns(3)"&gt;</code></p>
+		<lay-out animate-self="reveal(blinds-h)" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>reveal(blinds-v)</h3>
+	<section>
+		<small>Container reveals from vertical blinds.</small>
+		<p><code>&lt;lay-out animate-self="reveal(blinds-v)" lg="columns(3)"&gt;</code></p>
+		<lay-out animate-self="reveal(blinds-v)" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>reveal(curve-d)</h3>
+	<section>
+		<small>Container reveals from a downward curve.</small>
+		<p><code>&lt;lay-out animate-self="reveal(curve-d)" lg="columns(3)"&gt;</code></p>
+		<lay-out animate-self="reveal(curve-d)" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>reveal(curve-u)</h3>
+	<section>
+		<small>Container reveals from an upward curve.</small>
+		<p><code>&lt;lay-out animate-self="reveal(curve-u)" lg="columns(3)"&gt;</code></p>
+		<lay-out animate-self="reveal(curve-u)" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>reveal(curve-r)</h3>
+	<section>
+		<small>Container reveals from a right-leaning curve.</small>
+		<p><code>&lt;lay-out animate-self="reveal(curve-r)" lg="columns(3)"&gt;</code></p>
+		<lay-out animate-self="reveal(curve-r)" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>reveal(curve-l)</h3>
+	<section>
+		<small>Container reveals from a left-leaning curve.</small>
+		<p><code>&lt;lay-out animate-self="reveal(curve-l)" lg="columns(3)"&gt;</code></p>
+		<lay-out animate-self="reveal(curve-l)" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>reveal(circ-45)</h3>
+	<section>
+		<small>Container reveals from a 45% circle.</small>
+		<p><code>&lt;lay-out animate-self="reveal(circ-45)" lg="columns(3)"&gt;</code></p>
+		<lay-out animate-self="reveal(circ-45)" lg="columns(3)">
 			<item-card></item-card>
 			<item-card></item-card>
 			<item-card></item-card>
