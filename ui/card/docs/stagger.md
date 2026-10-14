@@ -105,8 +105,8 @@ step override only where the delay is a real `<time>`:
 |---|---|---|
 | adapter 1 (`<details>`) transition delay | ✓ | ✓ |
 | adapter 2 (snap carousel) — cards **and** content | ✓ | ✓ |
-| adapter 3 (`<lay-out stagger>`) scrubbed `animation-range` | ✓ | — (percent-based, no time term) |
-| adapter 3 `stagger="… trigger"` one-shot delay | ✓ | — (paced by `--animate-stagger`/`--animate-delay`) |
+| adapter 3 (`<lay-out stagger>`) scrubbed `animation-range` | ✓ (capped at 3) | — (range-based, no time term) |
+| adapter 3 `stagger="… trigger"` one-shot delay | ✓ (capped at 3 on a grid) | — (paced by `--animate-stagger`/`--animate-delay`) |
 | shimmer delay | ✓ | — (shimmer keeps `--stagger-shimmer-step`) |
 
 Details that matter:
@@ -199,12 +199,30 @@ natural `opacity: 1` (visible, no animation).
 
 | Markup | Behaviour |
 |--------|-----------|
-| `<lay-out stagger>` (grid) | Container publishes `view-timeline: --stg-tl`; children stagger via a per-`sibling-index()` `animation-range` offset (mirrors the `[animate]` system). |
+| `<lay-out stagger>` (grid) | Each card runs on its **own** `view()` timeline, `entry 0%` → `entry 75%`, so it plays when its own row scrolls in. The cascade is an offset into that range: one step per card, capped at the third card (`min(index − 1, 2)`), a step being 20% of the card's entry but never more than `--stagger-distance`. |
 | `<lay-out overflow stagger>` (carousel) | **Two** reveals on different elements: the **container** reveals on vertical scroll-in (`view()` block); each **card** reveals on horizontal scroll (`view(inline)`) as it enters the inline viewport — later pages cascade in as you swipe. Split because one element can't cleanly run two scroll-axis animations. |
 
 **`stagger="… trigger"`** (Chrome 145+, behind `@supports (timeline-trigger-name: --t)`)
 switches the scrubbed reveal to a **one-shot** on entry — plays once at full duration and
-stays, does not reverse on scroll-back. Mirrors the `[animate]` `trigger` token.
+stays, does not reverse on scroll-back. Mirrors the `[animate]` `trigger` token. On a grid
+each card triggers on its own entry (25%), delayed by the same capped index × `--animate-stagger`
+× `--animate-delay`.
+
+**Why each card has its own timeline.** Until October 2026 the grid published one
+`view-timeline` on the `<lay-out>` and card *n* ran from `entry (n−1)·20%` to
+`entry 75% + (n−1)·20%` of it — percentages of the *layout's* entry, whatever row the card
+sat in. That is right for one row of three (the demos) and wrong for a tall grid: a
+two-column section of six 650px cards is two or three viewports tall, so cards 1–2 had
+finished before the page painted and cards from row 2 on finished below the fold. Measured
+at 1280×720, cards 3–9 of such a grid started and ended their rise off-screen; on their
+own timelines every card starts before its top is a quarter of the way up the viewport
+and is done by two-thirds. A single row keeps its old look (a card's own entry *is* the row's), and the
+trigger form had the same flaw — the whole grid played when its top was a quarter in.
+Caps: an uncapped index on a card's own range would hold card 9 back until it had scrolled
+past; three steps is the demos' row of three. Feedback: the card's own transform moves its
+`view()` box (see [animations.md](./animations.md#animate-self-feedback-deadlock)), which
+is harmless here — the vectors are at most one `--stagger-distance`, so the card enters
+a little later and never deadlocks.
 
 **`[animate-self]` co-op.** When an overflow carousel also has `animate-self` (a wilder
 container entry — flip/reveal, see [animations.md](./animations.md)), adapter 3's
