@@ -1,17 +1,12 @@
 /**
- * ui-media — shp() shape LIBRARY. Opt-in, NOT bundled by ui-card.css. Each rule
- * sets --_shp + --_shp-full for media.css's clip/morph. Docs: docs/media.md
+ * ui-media — shp() shape LIBRARY. Opt-in, NOT bundled by ui-card.css. Each rule maps a
+ * --shp-* pair from ui/base/shapes.css onto --_shp + --_shp-full. Docs: docs/media.md
  * @version 1.0.0 · @author Mads Stoumann
  */
 @layer bs-component {
-	/* morph targets — full-bleed rects matched by vertex count, so shapes interpolate */
 	:where([media*="shp("]) {
+		/* morph target for the local inset — a full-bleed rect, vertex-matched */
 		--_r4:  polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
-		--_r5:  polygon(100% 0%, 100% 100%, 50% 100%, 0% 100%, 0% 0%);
-		--_r5l: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 50%);
-		--_r5r: polygon(0% 0%, 100% 0%, 100% 50%, 100% 100%, 0% 100%);
-		/* ellipse target for the curve shapes — 75% radii clear all 4 corners */
-		--_ell: ellipse(75% 75% at 50% 50%);
 
 		/* FORWARD: clip to the shape at rest, morph to the full frame on hover */
 		--ui-media-shape: var(--_shp);
@@ -23,58 +18,37 @@
 		--ui-shape-morph: var(--_shp);
 	}
 
-	:where([media*="shp(pt-d)"])		{ --_shp:polygon(100% 0%, 100% 85%, 50% 100%, 0% 85%, 0% 0%); --_shp-full:var(--_r5); }
-	:where([media*="shp(pt-u)"])		{ --_shp:polygon(100% 0%, 100% 100%, 50% 85%, 0% 100%, 0% 0%); --_shp-full:var(--_r5); }
-	:where([media*="shp(cut-r)"])		{ --_shp:polygon(0% 0%, 100% 0%, 100% 85%, 0% 100%); --_shp-full:var(--_r4); }
-	:where([media*="shp(cut-l)"])		{ --_shp:polygon(0% 0%, 100% 0%, 100% 100%, 0% 85%); --_shp-full:var(--_r4); }
-	:where([media*="shp(skew-r)"])	{ --_shp:polygon(0% 15%, 100% 0%, 100% 85%, 0% 100%); --_shp-full:var(--_r4); }
-	:where([media*="shp(skew-l)"])	{ --_shp:polygon(0% 0%, 100% 15%, 100% 100%, 0% 85%); --_shp-full:var(--_r4); }
-	:where([media*="shp(para)"])		{ --_shp:polygon(25% 0%, 100% 0%, 75% 100%, 0% 100%); --_shp-full:var(--_r4); }
+	/* pairs live in ui/base/shapes.css, so reveal(NAME) reaches them too — except inset/circle */
+	:where([media*="shp(pt-d)"])		{ --_shp:var(--shp-pt-d); --_shp-full:var(--shp-pt-d-full); }
+	:where([media*="shp(pt-u)"])		{ --_shp:var(--shp-pt-u); --_shp-full:var(--shp-pt-u-full); }
+	:where([media*="shp(cut-r)"])		{ --_shp:var(--shp-cut-r); --_shp-full:var(--shp-cut-r-full); }
+	:where([media*="shp(cut-l)"])		{ --_shp:var(--shp-cut-l); --_shp-full:var(--shp-cut-l-full); }
+	:where([media*="shp(skew-r)"])	{ --_shp:var(--shp-skew-r); --_shp-full:var(--shp-skew-r-full); }
+	:where([media*="shp(skew-l)"])	{ --_shp:var(--shp-skew-l); --_shp-full:var(--shp-skew-l-full); }
+	:where([media*="shp(para)"])		{ --_shp:var(--shp-para); --_shp-full:var(--shp-para-full); }
 	:where([media*="shp(rhomb)"])		{ --_shp:var(--shp-rhomb); --_shp-full:var(--shp-rhomb-full); }
-	:where([media*="shp(inset)"])		{ --_shp:polygon(10% 10%, 90% 10%, 90% 90%, 10% 90%); --_shp-full:var(--_r4); }
-	:where([media*="shp(pt-l)"])		{ --_shp:polygon(25% 0%, 100% 1%, 100% 100%, 25% 100%, 0% 50%); --_shp-full:var(--_r5l); }
-	:where([media*="shp(pt-r)"])		{ --_shp:polygon(0% 0%, 75% 0%, 100% 50%, 75% 100%, 0% 100%); --_shp-full:var(--_r5r); }
+	:where([media*="shp(inset)"])		{ --_shp:polygon(10% 10%, 90% 10%, 90% 90%, 10% 90%); --_shp-full:var(--_r4); } /* local: reveal(inset) is its own keyframe */
+	:where([media*="shp(pt-l)"])		{ --_shp:var(--shp-pt-l); --_shp-full:var(--shp-pt-l-full); }
+	:where([media*="shp(pt-r)"])		{ --_shp:var(--shp-pt-r); --_shp-full:var(--shp-pt-r-full); }
 	:where([media*="shp(hex)"])			{ --_shp:var(--shp-hex); --_shp-full:var(--shp-hex-full); }
-
-	/* chev-l/chev-r: 3 points move (the notch out to the edge + 2 corners) → full square */
-	:where([media*="shp(chev-l)"])	{ --_shp:polygon(100% 0%, 75% 50%, 100% 100%, 25% 100%, 0% 50%, 25% 0%); --_shp-full:polygon(100% 0%, 100% 50%, 100% 100%, 0% 100%, 0% 50%, 0% 0%); }
-	:where([media*="shp(chev-r)"])	{ --_shp:polygon(75% 0%, 100% 50%, 75% 100%, 0% 100%, 25% 50%, 0% 0%); --_shp-full:polygon(100% 0%, 100% 50%, 100% 100%, 0% 100%, 0% 50%, 0% 0%); }
-
-	/* arr-l/arr-r: the arrowhead flattens into the near edge, the shaft fills → full square */
-	:where([media*="shp(arr-l)"])		{ --_shp:polygon(40% 0%, 40% 20%, 100% 20%, 100% 80%, 40% 80%, 40% 100%, 0% 50%); --_shp-full:polygon(0% 0%, 50% 0%, 100% 0%, 100% 100%, 50% 100%, 0% 100%, 0% 50%); }
-	:where([media*="shp(arr-r)"])		{ --_shp:polygon(0% 20%, 60% 20%, 60% 0%, 100% 50%, 60% 100%, 60% 80%, 0% 80%); --_shp-full:polygon(0% 0%, 50% 0%, 100% 0%, 100% 50%, 100% 100%, 50% 100%, 0% 100%); }
-
-	/* star: all 10 points map onto the square perimeter (tips → edge mids, valleys → corners) */
+	:where([media*="shp(chev-l)"])	{ --_shp:var(--shp-chev-l); --_shp-full:var(--shp-chev-l-full); }
+	:where([media*="shp(chev-r)"])	{ --_shp:var(--shp-chev-r); --_shp-full:var(--shp-chev-r-full); }
+	:where([media*="shp(arr-l)"])		{ --_shp:var(--shp-arr-l); --_shp-full:var(--shp-arr-l-full); }
+	:where([media*="shp(arr-r)"])		{ --_shp:var(--shp-arr-r); --_shp-full:var(--shp-arr-r-full); }
 	:where([media*="shp(star)"])		{ --_shp:var(--shp-star); --_shp-full:var(--shp-star-full); }
-
-	/* plus: the 4 inner (concave) points slide out to the corners → fills the square */
 	:where([media*="shp(plus)"])		{ --_shp:var(--shp-plus); --_shp-full:var(--shp-plus-full); }
-	/* minus: the bar grows vertically to fill (vertices mapped to the 4 corners) */
-	:where([media*="shp(minus)"])		{ --_shp:polygon(100% 35%, 100% 60%, 0% 60%, 0% 35%); --_shp-full:polygon(100% 0%, 100% 100%, 0% 100%, 0% 0%); }
-
-	/* close (X): the 4 inner points push to the edge mids, the 8 arm tips to the corners */
-	:where([media*="shp(close)"])		{ --_shp:polygon(20% 0%, 0% 20%, 30% 50%, 0% 80%, 20% 100%, 50% 70%, 80% 100%, 100% 80%, 70% 50%, 100% 20%, 80% 0%, 50% 30%); --_shp-full:polygon(0% 0%, 0% 0%, 0% 50%, 0% 100%, 0% 100%, 50% 100%, 100% 100%, 100% 100%, 100% 50%, 100% 0%, 100% 0%, 50% 0%); }
-	/* bolt: the 7 points map onto the square perimeter */
-	:where([media*="shp(bolt)"])		{ --_shp:polygon(25% 0%, 70% 0%, 40% 35%, 95% 35%, 20% 100%, 40% 55%, 0% 55%); --_shp-full:polygon(0% 0%, 100% 0%, 100% 50%, 100% 100%, 0% 100%, 0% 100%, 0% 50%); }
-
-	/* msg: the bubble bottom + tail drop to the base edge → full square */
-	:where([media*="shp(msg)"])			{ --_shp:polygon(0% 0%, 100% 0%, 100% 75%, 75% 75%, 75% 100%, 50% 75%, 0% 75%); --_shp-full:polygon(0% 0%, 100% 0%, 100% 100%, 75% 100%, 75% 100%, 50% 100%, 0% 100%); }
-
-	/* frame: seam slit routed to bottom-centre (zero-width, invisible) */
-	:where([media*="shp(frame)"])		{ --_shp:polygon(0% 0%, 0% 100%, 50% 100%, 50% 75%, 25% 75%, 25% 25%, 75% 25%, 75% 75%, 50% 75%, 50% 100%, 100% 100%, 100% 0%); --_shp-full:polygon(0% 0%, 0% 100%, 50% 100%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 100%, 100% 100%, 100% 0%); }
-	/* frame-in: the reverse — a small inset window that grows to the full frame on hover */
-	:where([media*="shp(frame-in)"]) { --_shp:polygon(25% 25%, 75% 25%, 75% 75%, 25% 75%); --_shp-full:var(--_r4); }
-
-	/* blinds-h/-v: the 3 slats stretch to abut → the gaps close (v = the same polygon, x/y swapped) */
-	:where([media*="shp(blinds-h)"])	{ --_shp:polygon(0% 5%, 100% 5%, 100% 25%, 0% 25%, 0% 40%, 100% 40%, 100% 60%, 0% 60%, 0% 75%, 100% 75%, 100% 95%, 0% 95%); --_shp-full:polygon(0% 0%, 100% 0%, 100% 33.33%, 0% 33.33%, 0% 33.33%, 100% 33.33%, 100% 66.66%, 0% 66.66%, 0% 66.66%, 100% 66.66%, 100% 100%, 0% 100%); }
-	:where([media*="shp(blinds-v)"])	{ --_shp:polygon(5% 0%, 5% 100%, 25% 100%, 25% 0%, 40% 0%, 40% 100%, 60% 100%, 60% 0%, 75% 0%, 75% 100%, 95% 100%, 95% 0%); --_shp-full:polygon(0% 0%, 0% 100%, 33.33% 100%, 33.33% 0%, 33.33% 0%, 33.33% 100%, 66.66% 100%, 66.66% 0%, 66.66% 0%, 66.66% 100%, 100% 100%, 100% 0%); }
-
-	/* curves — morph via a same-function ellipse that grows to cover the frame */
-	:where([media*="shp(curve-d)"])	{ --_shp:ellipse(80% 50% at 50% 39%); --_shp-full:var(--_ell); }
-	:where([media*="shp(curve-u)"])	{ --_shp:ellipse(80% 50% at 50% 61%); --_shp-full:var(--_ell); }
-	:where([media*="shp(curve-r)"])	{ --_shp:ellipse(85% 80% at 25% 20%); --_shp-full:var(--_ell); }
-	:where([media*="shp(curve-l)"])	{ --_shp:ellipse(85% 80% at 75% 20%); --_shp-full:var(--_ell); }
-	/* circles — morph via a same-function circle() that grows past the corners */
-	:where([media*="shp(circle)"])	{ --_shp:circle(50% at 50% 50%); --_shp-full:circle(75% at 50% 50%); }
-	:where([media*="shp(circ-45)"])	{ --_shp:circle(45% at 50% 50%); --_shp-full:circle(75% at 50% 50%); }
+	:where([media*="shp(minus)"])		{ --_shp:var(--shp-minus); --_shp-full:var(--shp-minus-full); }
+	:where([media*="shp(close)"])		{ --_shp:var(--shp-close); --_shp-full:var(--shp-close-full); }
+	:where([media*="shp(bolt)"])		{ --_shp:var(--shp-bolt); --_shp-full:var(--shp-bolt-full); }
+	:where([media*="shp(msg)"])			{ --_shp:var(--shp-msg); --_shp-full:var(--shp-msg-full); }
+	:where([media*="shp(frame)"])		{ --_shp:var(--shp-frame); --_shp-full:var(--shp-frame-full); }
+	:where([media*="shp(frame-in)"]) { --_shp:var(--shp-frame-in); --_shp-full:var(--shp-frame-in-full); }
+	:where([media*="shp(blinds-h)"])	{ --_shp:var(--shp-blinds-h); --_shp-full:var(--shp-blinds-h-full); }
+	:where([media*="shp(blinds-v)"])	{ --_shp:var(--shp-blinds-v); --_shp-full:var(--shp-blinds-v-full); }
+	:where([media*="shp(curve-d)"])	{ --_shp:var(--shp-curve-d); --_shp-full:var(--shp-curve-d-full); }
+	:where([media*="shp(curve-u)"])	{ --_shp:var(--shp-curve-u); --_shp-full:var(--shp-curve-u-full); }
+	:where([media*="shp(curve-r)"])	{ --_shp:var(--shp-curve-r); --_shp-full:var(--shp-curve-r-full); }
+	:where([media*="shp(curve-l)"])	{ --_shp:var(--shp-curve-l); --_shp-full:var(--shp-curve-l-full); }
+	:where([media*="shp(circle)"])	{ --_shp:circle(50% at 50% 50%); --_shp-full:circle(75% at 50% 50%); } /* local: base --shp-circle is reveal-tuned */
+	:where([media*="shp(circ-45)"])	{ --_shp:var(--shp-circ-45); --_shp-full:var(--shp-circ-45-full); }
 }
