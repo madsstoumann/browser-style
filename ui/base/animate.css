@@ -16,6 +16,7 @@
 	[animate-self], [animate] {
 		--animate-delay: 0.005s;
 		--animate-stagger: 10;
+		--animate-step: 6%;
 		--animate-dur: 0.5s;
 		--animate-dur-very-slow: 1.5s;
 		--animate-dur-slow: 1s;
@@ -264,11 +265,7 @@
 				var(--_exit-rs, exit 0%) var(--_exit-re, exit 100%);
 		}
 
-		/* === Item Animations (scroll-driven via container timeline) === */
-
-		[animate] {
-			view-timeline: --animate-tl;
-		}
+		/* === Item Animations — each item on its OWN view(), cascade capped at the 3rd (docs: layout/core/animations.md § Item Animation) === */
 
 		[animate~="clip"] {
 			overflow: clip;
@@ -277,43 +274,57 @@
 		:where([animate]) > * { --_animn: initial; }
 
 		[animate] > * {
+			--_anim-n: 0;
+			--_anim-o: calc(var(--_anim-n) * var(--animate-step));
 			animation-name: var(--_animn), var(--_anim-exit, none);
 			animation-direction: normal, reverse;
 			animation-timing-function:
 				var(--animate-item-timing, var(--animtm, ease-out)),
 				var(--animate-item-timing, var(--animtm, ease-out));
 			animation-fill-mode: backwards, forwards;
-			animation-timeline: --animate-tl, --animate-tl;
+			animation-timeline: view(block var(--_anim-o) var(--_anim-o)), view(block var(--_anim-o) var(--_anim-o));
 			animation-range:
 				var(--_animrs, entry 0%) var(--_animre, entry 75%),
 				exit 25% exit 100%;
 		}
 
-		/* Stagger: offset animation-range per child (exit is reversed) */
-		[animate] > :nth-child(2) { animation-range: entry 20% entry 95%, exit 5% exit 80%; }
-		[animate] > :nth-child(3) { animation-range: entry 40% entry 100%, exit 0% exit 60%; }
-		[animate] > :nth-child(4) { animation-range: entry 50% entry 100%, exit 0% exit 50%; }
-		[animate] > :nth-child(5) { animation-range: entry 60% entry 100%, exit 0% exit 40%; }
-		[animate] > :nth-child(6) { animation-range: entry 70% entry 100%, exit 0% exit 30%; }
+		/* cascade index (0-based), capped at the 3rd item */
+		[animate] > :nth-child(2)   { --_anim-n: 1; }
+		[animate] > :nth-child(n+3) { --_anim-n: 2; }
 
-		/* === Deep: animate grandchildren relative to item position === */
+		/* overflow carousel: the items sit in the layout's own scroller, so they keep the layout's timeline */
+		[animate]:where([overflow]) {
+			view-timeline: --animate-tl;
+		}
+		[animate]:where([overflow]) > * {
+			animation-timeline: --animate-tl, --animate-tl;
+			animation-range:
+				entry calc(var(--_anim-n, 0) * 20%) entry calc(75% + var(--_anim-n, 0) * 20%),
+				exit max(0%, calc(25% - var(--_anim-n, 0) * 20%)) exit calc(100% - var(--_anim-n, 0) * 20%);
+		}
 
+		/* === Deep: grandchildren on their item's timeline, item offset + child offset === */
+
+		[animate~="deep"] > * {
+			view-timeline: --animate-item;
+			view-timeline-inset: var(--_anim-o);
+		}
 		[animate~="deep"] > * > * {
+			--_item-offset: calc(var(--_anim-n, 0) * 20);
 			animation-name: var(--_animn);
 			animation-timing-function: var(--animate-item-timing, var(--animtm, ease-out));
 			animation-fill-mode: backwards;
+			animation-timeline: --animate-item;
+			animation-range:
+				entry calc(var(--_child-offset, 0) * 1%)
+				entry calc((75 + var(--_child-offset, 0)) * 1%);
+		}
+		[animate~="deep"]:where([overflow]) > * > * {
 			animation-timeline: --animate-tl;
 			animation-range:
-				entry calc((var(--_item-offset, 0) + var(--_child-offset, 0)) * 1%)
-				entry calc((75 + var(--_item-offset, 0) + var(--_child-offset, 0)) * 1%);
+				entry calc((var(--_item-offset) + var(--_child-offset, 0)) * 1%)
+				entry calc((75 + var(--_item-offset) + var(--_child-offset, 0)) * 1%);
 		}
-
-		/* Deep stagger: item offset */
-		[animate~="deep"] > :nth-child(2) > * { --_item-offset: 20; }
-		[animate~="deep"] > :nth-child(3) > * { --_item-offset: 40; }
-		[animate~="deep"] > :nth-child(4) > * { --_item-offset: 50; }
-		[animate~="deep"] > :nth-child(5) > * { --_item-offset: 60; }
-		[animate~="deep"] > :nth-child(6) > * { --_item-offset: 70; }
 
 		/* Deep stagger: child offset within each item */
 		[animate~="deep"] > * > :nth-child(2) { --_child-offset: 10; }
@@ -322,26 +333,12 @@
 	}
 
 	/* ==========================================================================
-	   Stagger Enhancement: sibling-index() (scales to any child count)
+	   Deep child offset: sibling-index() (scales to any child count)
 	   ========================================================================== */
 
 	@supports (width: calc(sibling-index() * 1px)) {
-		[animate] > * {
-			animation-range:
-				entry calc((sibling-index() - 1) * 20%)
-				entry calc(75% + (sibling-index() - 1) * 20%),
-				exit max(0%, calc(25% - (sibling-index() - 1) * 20%))
-				exit calc(100% - (sibling-index() - 1) * 20%);
-		}
-
-		[animate~="deep"] > * {
-			--_item-offset: calc((sibling-index() - 1) * 20);
-		}
-
 		[animate~="deep"] > * > * {
-			animation-range:
-				entry calc((var(--_item-offset) + (sibling-index() - 1) * 10) * 1%)
-				entry calc((75 + var(--_item-offset) + (sibling-index() - 1) * 10) * 1%);
+			--_child-offset: calc((sibling-index() - 1) * 10);
 		}
 	}
 
@@ -351,10 +348,19 @@
 	   ========================================================================== */
 
 	@supports (timeline-trigger-name: --t) {
-		/* trigger on container (items + deep) */
-		:is([animate~="trigger"], [animate~="trigger-exit"], [animate~="trigger-both"]) {
+		/* trigger on each item; deep grandchildren resolve to their item's */
+		:is([animate~="trigger"], [animate~="trigger-exit"], [animate~="trigger-both"]) > * {
 			timeline-trigger: --animate-trigger view() entry 25% exit 0%;
 			trigger-scope: --animate-trigger;
+		}
+		/* overflow carousel: one trigger on the layout, as the items sit in its own scroller */
+		:is([animate~="trigger"], [animate~="trigger-exit"], [animate~="trigger-both"])[overflow] {
+			timeline-trigger: --animate-trigger view() entry 25% exit 0%;
+			trigger-scope: --animate-trigger;
+		}
+		:is([animate~="trigger"], [animate~="trigger-exit"], [animate~="trigger-both"])[overflow] > * {
+			timeline-trigger: none;
+			trigger-scope: none;
 		}
 
 		/* trigger: shared item properties */
@@ -362,7 +368,7 @@
 			animation-timeline: auto;
 			animation-duration: var(--animate-dur);
 			animation-range: normal;
-			animation-delay: calc((sibling-index() - 1) * var(--animate-stagger) * var(--animate-delay));
+			animation-delay: calc(var(--_anim-n, 0) * var(--animate-stagger) * var(--animate-delay));
 		}
 
 		/* trigger direction per variant */
