@@ -320,7 +320,7 @@ Animates the entire `lay-out` element using `animation-timeline: view()`.
 
 #### Item Animation (`animate`)
 
-Creates a named `view-timeline: --animate-tl` on the container; children animate independently using that timeline with staggered offsets.
+Each child animates on its own `view()` timeline, so it plays when its own row arrives; the cascade is a timeline inset (`--animate-step`, capped at the third child). An `overflow` carousel keeps one container `view-timeline: --animate-tl`, as its children sit in the layout's own scroller.
 
 ```html
 <lay-out animate="fade-up()" lg="columns(3)">

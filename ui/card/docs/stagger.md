@@ -219,10 +219,10 @@ own timelines every card starts before its top is a quarter of the way up the vi
 and is done by two-thirds. A single row keeps its old look (a card's own entry *is* the row's), and the
 trigger form had the same flaw — the whole grid played when its top was a quarter in.
 Caps: an uncapped index on a card's own range would hold card 9 back until it had scrolled
-past; three steps is the demos' row of three. Feedback: the card's own transform moves its
-`view()` box (see [animations.md](./animations.md#animate-self-feedback-deadlock)), which
-is harmless here — the vectors are at most one `--stagger-distance`, so the card enters
-a little later and never deadlocks.
+past; three steps is the demos' row of three. Feedback: Chrome 155 does not count a card's
+own transform in its `view()` box (measured 2026-10-15), so the vectors cannot hold back
+the card's own start; an engine that did would delay it by at most one `--stagger-distance`.
+`animate=` items run the same per-card timeline (layout/core/animations.md § Item Animation).
 
 **`[animate-self]` co-op.** When an overflow carousel also has `animate-self` (a wilder
 container entry — flip/reveal, see [animations.md](./animations.md)), adapter 3's

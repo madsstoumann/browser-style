@@ -68,8 +68,10 @@ summary:
 
 - **`animate-self="fx()"`** — animates the `<lay-out>` element **itself** on its own
   `view()` timeline.
-- **`animate="fx()"`** — the container publishes `view-timeline: --animate-tl`; its
-  **children** animate against it, staggered by per-`sibling-index()` `animation-range`.
+- **`animate="fx()"`** — each **child** animates on its own `view()` timeline, so a card
+  plays when its own row arrives. The cascade is a timeline inset (`--animate-step`, 6% of
+  the viewport per step, capped at the third child). An `overflow` carousel keeps one
+  container timeline (`--animate-tl`), as its children sit in the layout's own scroller.
 
 **Modifiers** (space-separated, inside the `animate=`/`animate-self=` value): `clip`
 (`overflow: clip`) · `deep` (two-level grandchild stagger) · **pace tokens**
@@ -106,8 +108,10 @@ scrubbed AND triggered.**
 - **Works** (transform-in-place — box keeps its position/size, so `view()` still sees it):
   **flips** (`flip-*`, rotate) and **reveals** (`reveal-*`, clip-path).
 
-`[animate]` on **children** has no such problem — the parent (untranslated) hosts the
-timeline while children translate — so bounce/slide are fine there. This is why the
+`[animate]` on **children** has no such problem in Chrome: each child runs on its own
+`view()`, and Chrome 155 does not count an element's own transform in its `view()` box
+(measured on `bounce-in-up`, `slide-up` and `zoom-in`, which time exactly like `fade-up`).
+Safari is not measured yet. This is why the
 overflow-carousel container entry uses `animate-self` with flip/reveal, while its per-card
 reveal uses [stagger](./stagger.md).
 

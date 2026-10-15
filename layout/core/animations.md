@@ -124,7 +124,9 @@ Animate each child of the container independently, staggered by scroll position:
 </lay-out>
 ```
 
-Children stagger automatically — each child's animation range is offset so they animate sequentially as the container scrolls into view.
+Each child plays on its **own** `view()` timeline, so it animates when it reaches the viewport: a card on the fifth row plays when the fifth row arrives, not when the container does. The cascade is an inset on that timeline (`view(block <o> <o>)`): the second child starts one `--animate-step` (6% of the viewport) later, the third and every later child two steps later. One row cascades left to right, and the cascade never grows down the page.
+
+Inside an `overflow` carousel the children sit in the layout's own horizontal scroller, where a block-axis `view()` has nothing to track. There the container keeps one `view-timeline: --animate-tl` and the children offset their ranges on it (20% per step, capped at the third child).
 
 All animations listed above work with `animate`.
 
@@ -140,7 +142,7 @@ This sets `overflow: clip` on the container. Omit it when you want slight overfl
 
 ### Item Exit Animations
 
-Exit pace tokens work with `animate` too. A second animation slot plays the same keyframe in reverse as the container scrolls out, with reversed stagger — the last child exits first:
+Exit pace tokens work with `animate` too. A second animation slot plays the same keyframe in reverse as each child scrolls out at the top. The same inset shifts the exit, so within a row the last child exits first:
 
 ```html
 <!-- Items animate in on entry and out on exit -->
@@ -150,7 +152,7 @@ Exit pace tokens work with `animate` too. A second animation slot plays the same
 <lay-out animate="zoom-in() slow exit-fast" lg="columns(3)">
 ```
 
-Entry pace tokens (`very-slow`, `slow`, `fast`, `very-fast`) also affect item animations.
+Entry pace tokens (`very-slow`, `slow`, `fast`, `very-fast`) also affect item animations: the pace sets each child's range, the cascade lives in the timeline inset, so the two compose.
 
 ### Deep Animations
 
@@ -172,10 +174,10 @@ The `deep` modifier animates grandchildren (elements *inside* each item) with st
 ```
 
 Deep stagger uses two offset levels:
-- **Item offset** (`--_item-offset`) — based on which item (nth-child of the container)
-- **Child offset** (`--_child-offset`) — based on element position within each item
+- **Item offset** — each item publishes `view-timeline: --animate-item` with the same inset as its own animation, so its grandchildren start where the item does. In an `overflow` carousel and in trigger mode the item offset is `--_item-offset` (the capped item index × 20).
+- **Child offset** (`--_child-offset`) — based on element position within each item: 10% of the item's entry range per child (`sibling-index()`, or `nth-child` up to the fourth).
 
-The combined offset determines when each grandchild animates relative to the container's scroll position.
+The combined offset determines when each grandchild animates relative to its item's scroll position.
 
 Deep can be combined with multipliers:
 
@@ -199,6 +201,7 @@ Override these on any `[animate-self]` or `[animate]` element:
 | `--animate-mult` | `1` | Multiplier (set automatically by `(1)`/`(2)`/`(3)`) |
 | `--animate-delay` | `0.005s` | Time factor per offset unit (triggered mode) |
 | `--animate-stagger` | `10` | Stagger multiplier for item trigger delay |
+| `--animate-step` | `6%` | Timeline inset per cascade step for scroll-driven items (2nd child 1×, 3rd and later 2×; a share of the viewport) |
 | `--animate-dur` | `0.5s` | Animation duration in triggered mode |
 | `--animate-dur-very-slow` | `1.5s` | Duration for `very-slow` pace (triggered mode) |
 | `--animate-dur-slow` | `1s` | Duration for `slow` pace (triggered mode) |
@@ -271,7 +274,7 @@ The animation system uses layered feature detection:
 `@supports (view-transition-name: none)` — All modern browsers with scroll-driven animation support. Container and item animations use `animation-timeline: view()`.
 
 ### Layer 2: `sibling-index()`
-`@supports (width: calc(sibling-index() * 1px))` — Replaces fixed nth-child stagger rules with dynamic calculation. Scales to any number of children without additional selectors.
+`@supports (width: calc(sibling-index() * 1px))` — Computes the deep child offset for any number of grandchildren. The item cascade needs no `sibling-index()`: it is capped at the third child, so two `nth-child` rules carry it.
 
 ### Layer 3: Scroll-triggered animations (Chrome 145+)
 `@supports (timeline-trigger-name: --t)` — Enables time-based delays for item and deep animations via the `trigger` token, triggered by scroll position. Inner elements use `animation-delay` instead of scroll-range offsets, producing smoother stagger timing. Pace tokens map to `--animate-dur` in this mode.
@@ -301,7 +304,7 @@ Slot 1 (entry):  animation-name: var(--_animn)          direction: normal
 Slot 2 (exit):   animation-name: var(--_anim-exit, none) direction: reverse
 ```
 
-The exit slot defaults to `none` (inactive). When an exit pace token is set (in the `animate`/`animate-self` value), `--_anim-exit` resolves to the same keyframe as entry, played in reverse. For items, exit stagger is reversed — the last child exits first.
+The exit slot defaults to `none` (inactive). When an exit pace token is set (in the `animate`/`animate-self` value), `--_anim-exit` resolves to the same keyframe as entry, played in reverse. For items, the timeline inset shifts the exit too, so within a row the last child exits first.
 
 Easing values are sourced from `ui/base/easings.css` (the `--ease-*` tokens, loaded by `@browser.style/base`). The `[easing]` attribute maps the attribute value to `--animtm` (for container animations) and `--animate-item-timing` (for item animations).
 
@@ -345,16 +348,17 @@ Browsers without `timeline-trigger-name` support ignore the `@supports` block an
 ┌──────────────────────────────────────────────────────────┐
 │  @supports (timeline-trigger-name: --t)                  │
 │                                                          │
-│  Container (trigger / trigger-exit / trigger-both)       │
+│  Each child > * (trigger / trigger-exit / trigger-both)  │
 │    → timeline-trigger: --animate-trigger view()           │
 │       entry 25% exit 0%                                  │
 │    → trigger-scope: --animate-trigger                     │
+│    (overflow carousel: one trigger on the container)     │
 │                                                          │
 │  Children > *                                            │
 │    → animation-timeline: auto  (time-based)              │
 │    → animation-duration: var(--animate-dur)          │
 │    → animation-delay:                                    │
-│         (sibling-index() - 1) * stagger * delay          │
+│         min(index, 2) * stagger * delay                  │
 │                                                          │
 │  Direction (set per variant — literal keywords):         │
 │    trigger       → play-forwards                         │
@@ -362,11 +366,11 @@ Browsers without `timeline-trigger-name` support ignore the `@supports` block an
 │    trigger-both  → play-forwards play-backwards          │
 │                                                          │
 │  Fallback (no support):                                  │
-│    Scroll-driven via animation-timeline: --animate-tl     │
+│    Scroll-driven, each child on its own view()           │
 └──────────────────────────────────────────────────────────┘
 ```
 
-The container defines a `timeline-trigger` that fires when it enters the viewport. Children switch from scroll-driven to time-based animations, using `animation-trigger` to link to the container's trigger. Stagger uses `animation-delay` with `sibling-index()` instead of scroll-range offsets. The `--animate-stagger` property (default `10`) multiplies the delay factor to produce visible stagger between items.
+Each child defines its own `timeline-trigger`, so it fires when that child enters the viewport, and switches from scroll-driven to a time-based animation linked to it by `animation-trigger`. An `overflow` carousel keeps one trigger on the container, as its children sit in the layout's own scroller. Stagger uses `animation-delay` by the child's index, capped at the third child (0, 1, 2), instead of scroll-range offsets. The `--animate-stagger` property (default `10`) multiplies the delay factor to produce visible stagger between items.
 
 **Important:** The `animation-trigger` property requires literal keywords (`play-forwards`, `play-backwards`) — CSS custom properties cannot be used for play direction.
 
@@ -375,7 +379,7 @@ The container defines a `timeline-trigger` that fires when it enters the viewpor
 | Aspect | Scroll-driven | Scroll-triggered |
 |--------|--------------|-----------------|
 | Speed consistency | Varies with scroll speed | Fixed duration |
-| Stagger mechanism | Scroll-range offsets | `animation-delay` (smoother) |
+| Stagger mechanism | Timeline inset per child | `animation-delay` (smoother) |
 | Direction control | Two-slot pattern (entry + exit) | `play-forwards` / `play-backwards` keywords |
 | Easing fidelity | Limited by scroll granularity | Full CSS easing curves |
 
