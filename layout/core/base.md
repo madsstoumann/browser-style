@@ -177,7 +177,7 @@ attributes instead — e.g. `col-gap="2"` → `xs="cg(2)"`, `pad-inline="1"` →
 
 ### animate
 - Type: token list (space-separated tokens)
-- Accepted tokens: animation names in function-call syntax (`fade-up()`, `fade-down()`, `fade-left()`, `fade-right()`, `fade-in()`, `zoom-in()`, `flip-up()`, …), the modifiers `deep` / `clip`, trigger tokens (`trigger`, `trigger-exit`, `trigger-both`) and pace words (`very-slow`, `slow`, `fast`, `very-fast`, `exit`, `exit-fast`, `exit-slow`). There is **no separate `pace` attribute** (removed in v4) — pace words live in this value.
+- Accepted tokens: animation names in function-call syntax (`fade-up()`, `fade-down()`, `fade-left()`, `fade-right()`, `fade-in()`, `zoom-in()`, `flip-up()`, …), the modifiers `deep` / `clip`, trigger tokens (`trigger`, `trigger-exit`, `trigger-both`, `trigger-down`, `trigger-up`) and pace words (`very-slow`, `slow`, `fast`, `very-fast`, `exit`, `exit-fast`, `exit-slow`). There is **no separate `pace` attribute** (removed in v4) — pace words live in this value.
 - Default: not present
 - Description: Enables scroll-driven item animations. Creates a named `view-timeline` on the container; all direct children animate using that timeline as they enter the viewport. Children stagger via nth-child `animation-range` offsets (20% per child, up to 6 children). In browsers supporting `sibling-index()`, stagger scales to any number of children automatically. Full engine docs: `core/animations.md` (the engine itself lives in `@browser.style/base`).
 - Examples: `animate="fade-up()"`, `animate="zoom-in() deep"`, `animate="slide-down() clip slow exit"`

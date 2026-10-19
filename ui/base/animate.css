@@ -349,22 +349,22 @@
 
 	@supports (timeline-trigger-name: --t) {
 		/* trigger on each item; deep grandchildren resolve to their item's */
-		:is([animate~="trigger"], [animate~="trigger-exit"], [animate~="trigger-both"]) > * {
+		:is([animate~="trigger"], [animate~="trigger-exit"], [animate~="trigger-both"], [animate~="trigger-down"], [animate~="trigger-up"]) > * {
 			timeline-trigger: --animate-trigger view() entry 25% exit 0%;
 			trigger-scope: --animate-trigger;
 		}
 		/* overflow carousel: one trigger on the layout, as the items sit in its own scroller */
-		:is([animate~="trigger"], [animate~="trigger-exit"], [animate~="trigger-both"])[overflow] {
+		:is([animate~="trigger"], [animate~="trigger-exit"], [animate~="trigger-both"], [animate~="trigger-down"], [animate~="trigger-up"])[overflow] {
 			timeline-trigger: --animate-trigger view() entry 25% exit 0%;
 			trigger-scope: --animate-trigger;
 		}
-		:is([animate~="trigger"], [animate~="trigger-exit"], [animate~="trigger-both"])[overflow] > * {
+		:is([animate~="trigger"], [animate~="trigger-exit"], [animate~="trigger-both"], [animate~="trigger-down"], [animate~="trigger-up"])[overflow] > * {
 			timeline-trigger: none;
 			trigger-scope: none;
 		}
 
 		/* trigger: shared item properties */
-		:is([animate~="trigger"], [animate~="trigger-exit"], [animate~="trigger-both"]) > * {
+		:is([animate~="trigger"], [animate~="trigger-exit"], [animate~="trigger-both"], [animate~="trigger-down"], [animate~="trigger-up"]) > * {
 			animation-timeline: auto;
 			animation-duration: var(--animate-dur);
 			animation-range: normal;
@@ -373,14 +373,18 @@
 
 		/* trigger direction per variant */
 		[animate~="trigger"] > *      { animation-trigger: --animate-trigger play-forwards; }
-		[animate~="trigger-exit"] > * { animation-trigger: --animate-trigger play-backwards; }
-		[animate~="trigger-both"] > * { animation-trigger: --animate-trigger play-forwards play-backwards; }
+		[animate~="trigger-exit"] > * { animation-direction: reverse; animation-fill-mode: both; animation-trigger: --animate-trigger play-backwards play-forwards; }
+		:is([animate~="trigger-both"], [animate~="trigger-down"], [animate~="trigger-up"]) > * { animation-trigger: --animate-trigger play-forwards play-backwards; }
+
+		/* trigger-down / trigger-up: the active range reaches past one edge, so it rewinds only off-screen at the other */
+		:is([animate~="trigger-down"] > *, [animate~="trigger-down"][overflow]) { timeline-trigger-active-range: entry 0% exit 1000000px; }
+		:is([animate~="trigger-up"] > *, [animate~="trigger-up"][overflow]) { timeline-trigger-active-range: entry -1000000px exit 100%; }
 
 		/* trigger on the container's OWN animation (animate-self). Separate
 		   timeline name so it can coexist with an item [animate] trigger on the
 		   same element. Plays at a fixed duration (not scrubbed) so overshoot
 		   effects like bounce look right; trigger-both replays it on scroll-back. */
-		:is([animate-self~="trigger"], [animate-self~="trigger-exit"], [animate-self~="trigger-both"]) {
+		:is([animate-self~="trigger"], [animate-self~="trigger-exit"], [animate-self~="trigger-both"], [animate-self~="trigger-down"], [animate-self~="trigger-up"]) {
 			timeline-trigger: --animate-self-trigger view() entry 25% exit 0%;
 			trigger-scope: --animate-self-trigger;
 			animation-timeline: auto;
@@ -389,11 +393,13 @@
 			animation-range: normal;
 		}
 		[animate-self~="trigger"]      { animation-trigger: --animate-self-trigger play-forwards; }
-		[animate-self~="trigger-exit"] { animation-trigger: --animate-self-trigger play-backwards; }
-		[animate-self~="trigger-both"] { animation-trigger: --animate-self-trigger play-forwards play-backwards; }
+		[animate-self~="trigger-exit"] { animation-direction: reverse; animation-trigger: --animate-self-trigger play-backwards play-forwards; }
+		:is([animate-self~="trigger-both"], [animate-self~="trigger-down"], [animate-self~="trigger-up"]) { animation-trigger: --animate-self-trigger play-forwards play-backwards; }
+		[animate-self~="trigger-down"] { timeline-trigger-active-range: entry 0% exit 1000000px; }
+		[animate-self~="trigger-up"] { timeline-trigger-active-range: entry -1000000px exit 100%; }
 
 		/* trigger: deep shared properties */
-		:is([animate~="trigger"], [animate~="trigger-exit"], [animate~="trigger-both"]):is([animate~="deep"]) > * > * {
+		:is([animate~="trigger"], [animate~="trigger-exit"], [animate~="trigger-both"], [animate~="trigger-down"], [animate~="trigger-up"]):is([animate~="deep"]) > * > * {
 			animation-name: var(--_animn);
 			animation-timing-function: var(--animate-item-timing, var(--animtm, ease-out));
 			animation-fill-mode: both;
@@ -405,8 +411,8 @@
 
 		/* trigger direction per variant (deep) */
 		[animate~="trigger"][animate~="deep"] > * > *      { animation-trigger: --animate-trigger play-forwards; }
-		[animate~="trigger-exit"][animate~="deep"] > * > *  { animation-trigger: --animate-trigger play-backwards; }
-		[animate~="trigger-both"][animate~="deep"] > * > *  { animation-trigger: --animate-trigger play-forwards play-backwards; }
+		[animate~="trigger-exit"][animate~="deep"] > * > *  { animation-direction: reverse; animation-trigger: --animate-trigger play-backwards play-forwards; }
+		:is([animate~="trigger-both"], [animate~="trigger-down"], [animate~="trigger-up"])[animate~="deep"] > * > * { animation-trigger: --animate-trigger play-forwards play-backwards; }
 
 		/* Pace → duration mapping (triggered mode) */
 		:is([animate~="very-slow"], [animate-self~="very-slow"]) { --animate-dur: var(--animate-dur-very-slow); }

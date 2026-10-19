@@ -322,9 +322,13 @@ Trigger tokens in the `animate` attribute opt into scroll-triggered animations (
 
 | Token | Direction | Description |
 |-------|-----------|-------------|
-| `trigger` | Entry only | Animates in when scrolling down (`play-forwards`) |
-| `trigger-exit` | Exit only | Animates out when scrolling back up (`play-backwards`) |
-| `trigger-both` | Both | Animates in on entry, reverses on exit |
+| `trigger` | Entry only | Animates in the first time it enters, then stays (`play-forwards`) |
+| `trigger-exit` | Exit only | There from the start; animates out as it leaves, back in as it returns (`reverse`, `play-backwards play-forwards`) |
+| `trigger-both` | Both | Animates in each time it enters, out each time it leaves (`play-forwards play-backwards`) |
+| `trigger-down` | Scrolling down | Animates in each time you scroll down to it; stays as you scroll back up |
+| `trigger-up` | Scrolling up | Animates in each time you scroll back up to it; stays as you scroll down |
+
+`trigger-down` and `trigger-up` play like `trigger-both`, but their active range reaches 1,000,000px past one edge (`timeline-trigger-active-range: entry 0% exit 1000000px` for down, `entry -1000000px exit 100%` for up). Leaving on that side never deactivates the trigger, so the item stays shown; leaving on the other side does, and it rewinds there, out of view, ready to play again. Every one of them plays the first time an item appears, whichever way the page is scrolled. Measured in Chrome 155: `exit 100%` or `normal` is not enough as the far edge, as the trigger then deactivates once the item has scrolled out of view and replays on its return.
 
 ```html
 <!-- Scroll-driven (default — no trigger token) -->
@@ -338,6 +342,9 @@ Trigger tokens in the `animate` attribute opt into scroll-triggered animations (
 
 <!-- Scroll-triggered: both directions -->
 <lay-out animate="fade-up() trigger-both" lg="columns(3)">
+
+<!-- Scroll-triggered: every time, but only scrolling down -->
+<lay-out animate="fade-up() trigger-down" lg="columns(3)">
 ```
 
 Browsers without `timeline-trigger-name` support ignore the `@supports` block and fall back to the current scroll-driven approach automatically.
@@ -348,7 +355,8 @@ Browsers without `timeline-trigger-name` support ignore the `@supports` block an
 ┌──────────────────────────────────────────────────────────┐
 │  @supports (timeline-trigger-name: --t)                  │
 │                                                          │
-│  Each child > * (trigger / trigger-exit / trigger-both)  │
+│  Each child > * (trigger / trigger-exit / trigger-both / │
+│                  trigger-down / trigger-up)              │
 │    → timeline-trigger: --animate-trigger view()           │
 │       entry 25% exit 0%                                  │
 │    → trigger-scope: --animate-trigger                     │
@@ -362,8 +370,10 @@ Browsers without `timeline-trigger-name` support ignore the `@supports` block an
 │                                                          │
 │  Direction (set per variant — literal keywords):         │
 │    trigger       → play-forwards                         │
-│    trigger-exit  → play-backwards                        │
+│    trigger-exit  → reverse; play-backwards play-forwards │
 │    trigger-both  → play-forwards play-backwards          │
+│    trigger-down  → as both; active range to 1e6px above  │
+│    trigger-up    → as both; active range to 1e6px below  │
 │                                                          │
 │  Fallback (no support):                                  │
 │    Scroll-driven, each child on its own view()           │
@@ -395,7 +405,7 @@ In scroll-driven mode, pace tokens set `animation-range` values. In triggered mo
 | `fast` | Narrow scroll range | `--animate-dur: 0.3s` |
 | `very-fast` | Narrowest scroll range | `--animate-dur: 0.15s` |
 
-Exit direction in triggered mode is controlled by the trigger token (`trigger-exit`, `trigger-both`), not by exit pace tokens. The exit pace tokens (`exit`, `exit-fast`, `exit-slow`) only apply in scroll-driven mode.
+Exit direction in triggered mode is controlled by the trigger token (`trigger-exit`, `trigger-both`, `trigger-down`, `trigger-up`), not by exit pace tokens. The exit pace tokens (`exit`, `exit-fast`, `exit-slow`) only apply in scroll-driven mode.
 
 ### Interaction With `deep`
 
@@ -416,6 +426,9 @@ When a trigger token and `deep` are combined, the existing deep stagger logic (i
 
 <!-- Both directions -->
 <lay-out animate="fade-up() trigger-both" lg="columns(3)">
+
+<!-- Every time you scroll down to it, never on the way back up -->
+<lay-out animate="fade-up() trigger-down" lg="columns(3)">
 
 <!-- With deep stagger -->
 <lay-out animate="fade-up() trigger deep" lg="columns(3)">

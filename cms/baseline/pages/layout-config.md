@@ -147,8 +147,10 @@ A newer API enables **time-based animations triggered by scroll position** rathe
 | Keyword | Behavior |
 |---------|----------|
 | `trigger` | Play forward when entering the viewport |
-| `trigger-exit` | Play backward when exiting |
+| `trigger-exit` | Shown from the start; play out when exiting, back in on return |
 | `trigger-both` | Play forward on entry, reverse on exit |
+| `trigger-down` | As `trigger-both`, but replay only when scrolling down to it |
+| `trigger-up` | As `trigger-both`, but replay only when scrolling back up to it |
 
 ```html
 <lay-out animate="fade-up() trigger">
