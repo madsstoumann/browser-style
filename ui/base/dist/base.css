@@ -1982,8 +1982,7 @@
   [animate*="(3)"] {
     --animate-mult: 3;
   }
-  [animate-self*="bounce("],
-  [animate*="bounce("] > * {
+  [animate-self*="bounce("] {
     --animate-zi: 0.3;
   }
   @keyframes opacity {
@@ -3098,17 +3097,17 @@
     --_animrs: entry 35%;
     --_animre: entry 55%;
   }
-  :is([animate~=exit], [animate-self~=exit]) {
+  [animate-self~=exit] {
     --_anim-exit: var(--_animn);
     --_exit-rs: exit 0%;
     --_exit-re: exit 100%;
   }
-  :is([animate~=exit-fast], [animate-self~=exit-fast]) {
+  [animate-self~=exit-fast] {
     --_anim-exit: var(--_animn);
     --_exit-rs: exit 40%;
     --_exit-re: exit 100%;
   }
-  :is([animate~=exit-slow], [animate-self~=exit-slow]) {
+  [animate-self~=exit-slow] {
     --_anim-exit: var(--_animn);
     --_exit-rs: contain 50%;
     --_exit-re: exit 100%;

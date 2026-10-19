@@ -50,7 +50,7 @@
 	[animate-self*="(3)"], [animate*="(3)"] { --animate-mult: 3; }
 
 	/* bounce squeezes zoom-in start — a PARAM, so it lives here (see invariant) */
-	[animate-self*="bounce("], [animate*="bounce("] > * { --animate-zi: 0.3; }
+	[animate-self*="bounce("] { --animate-zi: 0.3; }
 
 	/* ==========================================================================
 	   Keyframes (parameterized — respond to --animate-* × --animate-mult)

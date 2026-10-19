@@ -240,9 +240,9 @@
 	   Pace: exit (activates second animation slot + sets range)
 	   ========================================================================== */
 
-	:is([animate~="exit"], [animate-self~="exit"])      { --_anim-exit: var(--_animn); --_exit-rs: exit 0%;      --_exit-re: exit 100%; }
-	:is([animate~="exit-fast"], [animate-self~="exit-fast"]) { --_anim-exit: var(--_animn); --_exit-rs: exit 40%;     --_exit-re: exit 100%; }
-	:is([animate~="exit-slow"], [animate-self~="exit-slow"]) { --_anim-exit: var(--_animn); --_exit-rs: contain 50%;  --_exit-re: exit 100%; }
+	[animate-self~="exit"]      { --_anim-exit: var(--_animn); --_exit-rs: exit 0%;      --_exit-re: exit 100%; }
+	[animate-self~="exit-fast"] { --_anim-exit: var(--_animn); --_exit-rs: exit 40%;     --_exit-re: exit 100%; }
+	[animate-self~="exit-slow"] { --_anim-exit: var(--_animn); --_exit-rs: contain 50%;  --_exit-re: exit 100%; }
 
 	/* Item exit: --_animn is on children, not the container, so set --_anim-exit there */
 	:where([animate~="exit"], [animate~="exit-fast"], [animate~="exit-slow"]) > * {
