@@ -1982,8 +1982,7 @@
   [animate*="(3)"] {
     --animate-mult: 3;
   }
-  [animate-self*="bounce("],
-  [animate*="bounce("] > * {
+  [animate-self*="bounce("] {
     --animate-zi: 0.3;
   }
   @keyframes opacity {
@@ -3098,17 +3097,17 @@
     --_animrs: entry 35%;
     --_animre: entry 55%;
   }
-  :is([animate~=exit], [animate-self~=exit]) {
+  [animate-self~=exit] {
     --_anim-exit: var(--_animn);
     --_exit-rs: exit 0%;
     --_exit-re: exit 100%;
   }
-  :is([animate~=exit-fast], [animate-self~=exit-fast]) {
+  [animate-self~=exit-fast] {
     --_anim-exit: var(--_animn);
     --_exit-rs: exit 40%;
     --_exit-re: exit 100%;
   }
-  :is([animate~=exit-slow], [animate-self~=exit-slow]) {
+  [animate-self~=exit-slow] {
     --_anim-exit: var(--_animn);
     --_exit-rs: contain 50%;
     --_exit-re: exit 100%;
@@ -3186,19 +3185,19 @@
     }
   }
   @supports (timeline-trigger-name: --t) {
-    :is([animate~=trigger], [animate~=trigger-exit], [animate~=trigger-both]) > * {
+    :is([animate~=trigger], [animate~=trigger-exit], [animate~=trigger-both], [animate~=trigger-down], [animate~=trigger-up]) > * {
       timeline-trigger: --animate-trigger view() entry 25% exit 0%;
       trigger-scope: --animate-trigger;
     }
-    :is([animate~=trigger], [animate~=trigger-exit], [animate~=trigger-both])[overflow] {
+    :is([animate~=trigger], [animate~=trigger-exit], [animate~=trigger-both], [animate~=trigger-down], [animate~=trigger-up])[overflow] {
       timeline-trigger: --animate-trigger view() entry 25% exit 0%;
       trigger-scope: --animate-trigger;
     }
-    :is([animate~=trigger], [animate~=trigger-exit], [animate~=trigger-both])[overflow] > * {
+    :is([animate~=trigger], [animate~=trigger-exit], [animate~=trigger-both], [animate~=trigger-down], [animate~=trigger-up])[overflow] > * {
       timeline-trigger: none;
       trigger-scope: none;
     }
-    :is([animate~=trigger], [animate~=trigger-exit], [animate~=trigger-both]) > * {
+    :is([animate~=trigger], [animate~=trigger-exit], [animate~=trigger-both], [animate~=trigger-down], [animate~=trigger-up]) > * {
       animation-timeline: auto;
       animation-duration: var(--animate-dur);
       animation-range: normal;
@@ -3208,12 +3207,20 @@
       animation-trigger: --animate-trigger play-forwards;
     }
     [animate~=trigger-exit] > * {
-      animation-trigger: --animate-trigger play-backwards;
+      animation-direction: reverse;
+      animation-fill-mode: both;
+      animation-trigger: --animate-trigger play-backwards play-forwards;
     }
-    [animate~=trigger-both] > * {
+    :is([animate~=trigger-both], [animate~=trigger-down], [animate~=trigger-up]) > * {
       animation-trigger: --animate-trigger play-forwards play-backwards;
     }
-    :is([animate-self~=trigger], [animate-self~=trigger-exit], [animate-self~=trigger-both]) {
+    :is([animate~=trigger-down] > *, [animate~=trigger-down][overflow]) {
+      timeline-trigger-active-range: entry 0% exit 1000000px;
+    }
+    :is([animate~=trigger-up] > *, [animate~=trigger-up][overflow]) {
+      timeline-trigger-active-range: entry -1000000px exit 100%;
+    }
+    :is([animate-self~=trigger], [animate-self~=trigger-exit], [animate-self~=trigger-both], [animate-self~=trigger-down], [animate-self~=trigger-up]) {
       timeline-trigger: --animate-self-trigger view() entry 25% exit 0%;
       trigger-scope: --animate-self-trigger;
       animation-timeline: auto;
@@ -3225,12 +3232,19 @@
       animation-trigger: --animate-self-trigger play-forwards;
     }
     [animate-self~=trigger-exit] {
-      animation-trigger: --animate-self-trigger play-backwards;
+      animation-direction: reverse;
+      animation-trigger: --animate-self-trigger play-backwards play-forwards;
     }
-    [animate-self~=trigger-both] {
+    :is([animate-self~=trigger-both], [animate-self~=trigger-down], [animate-self~=trigger-up]) {
       animation-trigger: --animate-self-trigger play-forwards play-backwards;
     }
-    :is([animate~=trigger], [animate~=trigger-exit], [animate~=trigger-both]):is([animate~=deep]) > * > * {
+    [animate-self~=trigger-down] {
+      timeline-trigger-active-range: entry 0% exit 1000000px;
+    }
+    [animate-self~=trigger-up] {
+      timeline-trigger-active-range: entry -1000000px exit 100%;
+    }
+    :is([animate~=trigger], [animate~=trigger-exit], [animate~=trigger-both], [animate~=trigger-down], [animate~=trigger-up]):is([animate~=deep]) > * > * {
       animation-name: var(--_animn);
       animation-timing-function: var(--animate-item-timing, var(--animtm, ease-out));
       animation-fill-mode: both;
@@ -3243,9 +3257,10 @@
       animation-trigger: --animate-trigger play-forwards;
     }
     [animate~=trigger-exit][animate~=deep] > * > * {
-      animation-trigger: --animate-trigger play-backwards;
+      animation-direction: reverse;
+      animation-trigger: --animate-trigger play-backwards play-forwards;
     }
-    [animate~=trigger-both][animate~=deep] > * > * {
+    :is([animate~=trigger-both], [animate~=trigger-down], [animate~=trigger-up])[animate~=deep] > * > * {
       animation-trigger: --animate-trigger play-forwards play-backwards;
     }
     :is([animate~=very-slow], [animate-self~=very-slow]) {

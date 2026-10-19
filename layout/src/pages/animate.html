@@ -852,7 +852,7 @@
 	</section>
 
 	<h2>Trigger Direction</h2>
-	<p>Control whether triggered animations play on entry, exit, or both. Uses <code>trigger</code> (entry), <code>trigger-exit</code> (exit only), or <code>trigger-both</code> (entry + exit).</p>
+	<p>Control whether triggered animations play on entry, exit, or both. Uses <code>trigger</code> (entry), <code>trigger-exit</code> (exit only), <code>trigger-both</code> (entry + exit), or <code>trigger-down</code> / <code>trigger-up</code> (every time, but only scrolling that way).</p>
 
 	<h3>fade-up() trigger</h3>
 	<section>
@@ -867,7 +867,7 @@
 
 	<h3>fade-up() trigger-exit</h3>
 	<section>
-		<small>Items animate only when scrolling out of view.</small>
+		<small>Items are there from the start, fade out as they leave, and back in as they return.</small>
 		<p><code>&lt;lay-out animate="fade-up() trigger-exit" lg="columns(3)"&gt;</code></p>
 		<lay-out animate="fade-up() trigger-exit" lg="columns(3)">
 			<item-card></item-card>
@@ -887,6 +887,28 @@
 		</lay-out>
 	</section>
 
+	<h3>fade-up() trigger-down</h3>
+	<section>
+		<small>Items fade up each time you scroll down to them, and stay as you scroll back up.</small>
+		<p><code>&lt;lay-out animate="fade-up() trigger-down" lg="columns(3)"&gt;</code></p>
+		<lay-out animate="fade-up() trigger-down" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>fade-up() trigger-up</h3>
+	<section>
+		<small>Items fade up the first time, then each time you scroll back up to them, and stay as you scroll down.</small>
+		<p><code>&lt;lay-out animate="fade-up() trigger-up" lg="columns(3)"&gt;</code></p>
+		<lay-out animate="fade-up() trigger-up" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
 	<h3>zoom-in() trigger-both</h3>
 	<section>
 		<small>Items zoom in on entry, reverse on exit.</small>
@@ -900,7 +922,7 @@
 
 	<h3>flip-up() trigger-exit</h3>
 	<section>
-		<small>Items flip only when scrolling out of view.</small>
+		<small>Items are there from the start, flip out as they leave, and back in as they return.</small>
 		<p><code>&lt;lay-out animate="flip-up() trigger-exit" lg="columns(3)"&gt;</code></p>
 		<lay-out animate="flip-up() trigger-exit" lg="columns(3)">
 			<item-card></item-card>

@@ -87,11 +87,15 @@ scrubbed timeline for a fixed-duration play that *starts* on scroll but isn't sc
 |-------|-----------|-------------------------------|
 | *(none)* | scrubbed `view()` | yes — progress follows scroll |
 | `trigger` | play-forwards on entry | **no** — one-shot, plays once and stays |
-| `trigger-exit` | play-backwards on exit | — |
+| `trigger-exit` | shown from the start; plays out on exit, back in on return | **yes** — the exit, each time |
 | `trigger-both` | forwards on entry + backwards on exit | **yes** — replays every entry |
+| `trigger-down` | as `trigger-both`, but only when you scroll down to it | **yes** — scrolling down only |
+| `trigger-up` | as `trigger-both`, but only when you scroll back up to it | **yes** — scrolling up only |
 
 So for a wild effect that **re-appears** on scroll back-and-forth, use `trigger-both`; for
-one-shot, `trigger`; for scroll-scrubbed, no token.
+one that replays only one way, `trigger-down` or `trigger-up`; for one-shot, `trigger`; for
+scroll-scrubbed, no token. How the one-way words work, and what was measured:
+[layout/core/animations.md § Scroll-Triggered Item Animations](../../../layout/core/animations.md).
 
 `animate-self` supports the same trigger tokens (separate `--animate-self-trigger` scope, so
 it composes with an item `[animate]` trigger on the same element).
@@ -135,7 +139,7 @@ uses. Token ↔ keyframe map: `rise→fade-up · fall→fade-down · lft→fade-
 |------------------|---------|
 | `(view-transition-name: none)` / `(animation-timeline: view())` | scroll-driven base (scrubbed) |
 | `(width: calc(sibling-index() * 1px))` | dynamic per-child stagger (any child count) |
-| `(timeline-trigger-name: --t)` | scroll-**triggered** mode (`trigger` / `trigger-exit` / `trigger-both`) |
+| `(timeline-trigger-name: --t)` | scroll-**triggered** mode (`trigger` / `trigger-exit` / `trigger-both` / `trigger-down` / `trigger-up`) |
 
 Below each gate the animation simply doesn't attach → content renders visible. Everything is
 additionally gated on `prefers-reduced-motion: no-preference`.

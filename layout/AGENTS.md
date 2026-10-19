@@ -330,8 +330,9 @@ Each child animates on its own `view()` timeline, so it plays when its own row a
 - `clip` — sets `overflow: clip` on the container
 - `deep` — animates grandchildren with two-level stagger (item offset + child offset)
 - `trigger` — scroll-triggered entry animation (Chrome 145+)
-- `trigger-exit` — scroll-triggered exit animation
+- `trigger-exit` — scroll-triggered exit animation (shown from the start, plays out as it leaves)
 - `trigger-both` — scroll-triggered entry + exit
+- `trigger-down` / `trigger-up` — as `trigger-both`, but replays only when scrolling down / up to it
 
 **Stagger**: nth-child fallback offsets `animation-range` per child (up to 6 children, 20% offset each). `sibling-index()` behind `@supports` scales to any child count.
 
@@ -363,8 +364,10 @@ Behind `@supports (timeline-trigger-name: --t)`. Scroll position *starts* the an
 | Token | Direction | `animation-trigger` keyword |
 |-------|-----------|---------------------------|
 | `trigger` | Entry only | `play-forwards` |
-| `trigger-exit` | Exit only | `play-backwards` |
+| `trigger-exit` | Exit only | `play-backwards play-forwards` on `animation-direction: reverse` |
 | `trigger-both` | Both | `play-forwards play-backwards` |
+| `trigger-down` | Scrolling down | `play-forwards play-backwards`, active range to `exit 1000000px` |
+| `trigger-up` | Scrolling up | `play-forwards play-backwards`, active range from `entry -1000000px` |
 
 Stagger uses `animation-delay` with `sibling-index()` multiplied by `--animate-stagger` (default `10`) and `--animate-delay` (default `0.005s`). Pace tokens map to `--animate-dur` in this mode.
 
