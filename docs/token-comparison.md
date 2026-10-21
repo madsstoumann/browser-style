@@ -25,7 +25,7 @@
 
 **Approach:** browser.style uses Tailwind's palette names and steps — `--color-{hue}-{50-950}`, with Tailwind v4.1.11's values — plus semantic jobs and roles (`--color-error`, `--color-surface`, …) that point at steps or hold their own value. Open Props uses short hue scales (`--{hue}-{0-12}`) plus semantic aliases (`--surface-*`, `--text-*`).
 
-Where browser.style departs from Tailwind: ten hues (`gray red orange yellow green teal cyan blue violet pink`), `accent` as an alias hue with the same steps, each variable a `light-dark()` pair that mirrors the step on dark pages (`100` ↔ `900`), and a `--color-{hue}-{step}-text` per step. Palette values live in `ui/base/palette.json`.
+Where browser.style departs from Tailwind: ten hues (`gray red orange yellow green teal cyan blue violet pink`), `accent` as a muted-blue ramp of its own with the same steps, each variable a `light-dark()` pair that mirrors the step on dark pages (`100` ↔ `900`), and a `--color-{hue}-{step}-text` per step. Palette values live in `ui/base/palette.json`.
 
 ---
 

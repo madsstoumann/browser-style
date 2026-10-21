@@ -6,7 +6,7 @@ Base CSS for browser.style components.
 
 Colours are `<hue>-<step>` (`green-300`, `gray-800`), plus `white` and `black`: ten hues
 (gray red orange yellow green teal cyan blue violet pink) × eleven steps, and an `accent`
-alias that points at one hue. They are `--color-<hue>-<step>` variables in `tokens.css` and
+ramp of its own (a muted blue). They are `--color-<hue>-<step>` variables in `tokens.css` and
 the `theme=` / `data-theme=` values in `theme.css`. The source is
 [`palette.json`](palette.json); `node scripts/build-palette.js` regenerates the marked
 blocks. Names, text colours, dark pages, looks and adding a hue: [theme.md](theme.md).
