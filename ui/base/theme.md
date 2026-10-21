@@ -83,9 +83,10 @@ with Tailwind CSS v4.1.11's `oklch()` values (MIT). The values live in
 
 Both are the same on light and dark pages.
 
-**`accent` is an alias hue.** It has the same eleven steps and points at `blue` by default
-(`--color-accent-300: var(--color-blue-300)`), so a rebrand is one change: point the steps
-at another hue.
+**`accent` has a ramp of its own.** The same eleven steps, in a muted blue: Tailwind blue's
+lightness at 0.6 × its chroma, hue 258 (`accent-700` is `oklch(48.8% 0.146 258)`; `blue-700` is
+the vivid `oklch(48.8% 0.243 264.376)`). A rebrand is one change: point the steps at a hue
+(`--color-accent-300: var(--color-violet-300)`), or set `"accent": "violet"` in `palette.json`.
 
 **Hue names** are one lowercase word, letters only (`a`–`z`), never a step number — the
 resolver splits `hue-step` at the dash. A hue you add follows the same rule.
@@ -98,7 +99,7 @@ All in `tokens.css`, in one generated block.
 |---|---|
 | `--color-<hue>-<step>` | the step, as a `light-dark()` pair: the step on a light page, its [mirror](#dark-pages) on a dark one |
 | `--color-<hue>-<step>-text` | the [text colour](#text-colours) for that step, mirrored the same way |
-| `--color-accent-<step>` · `--color-accent-<step>-text` | blue's, by `var()` |
+| `--color-accent-<step>` · `--color-accent-<step>-text` | the accent ramp's, as a `light-dark()` pair like any hue |
 | `--color-white` · `--color-white-text` | `#fff` · the value of `gray-950` |
 | `--color-black` · `--color-black-text` | `#000` · `#fff` |
 
@@ -172,7 +173,7 @@ changes nothing.
 | `palette.json` key | What it holds |
 |---|---|
 | `hues` | per hue, each step (`50` … `950`) → an `oklch()` value. Add a hue here: one lowercase word, eleven steps |
-| `accent` | the hue `accent` points at (`blue` by default) |
+| `accent` | the accent's own ramp (eleven steps, as a hue has), or a string naming the hue `accent` points at |
 | `fixed` | `white` and `black`: their value and their text colour |
 | `text` | the [text rule](#text-colours): `prefer` (the step used as text, `950`) and `min` (the contrast it must reach, `4.5`) |
 | `targets` | the files the build rewrites |

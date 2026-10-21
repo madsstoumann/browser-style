@@ -201,7 +201,7 @@ per hue-step) are a generated block next to the `theme=` arm — `ui/chip/ui-chi
 
 ### Gotcha: steps and jobs resolve at `:root`
 
-`--color-accent-700` aliases blue's step and `--color-accent` is `var(--color-accent-700)`; both
+`--color-accent-700` is the accent ramp's step and `--color-accent` is `var(--color-accent-700)`; both
 are declared at `:root`, so substitution happens there and descendants inherit the
 already-resolved color. A page skin that sets only `--color-accent` on `body` will **not** change
 `theme="accent-700"` surfaces. Set the brand on `:root`, or re-declare the step and the job

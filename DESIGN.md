@@ -10,7 +10,7 @@ Light and dark modes are supported natively via `light-dark()` and `color-scheme
 
 - CSS-first: leverage custom properties, cascade layers, and container queries
 - Progressive enhancement: components work without JavaScript
-- Neutral palette: achromatic base with a single accent hue (blue)
+- Neutral palette: achromatic base with a single accent hue (a muted blue)
 - Readable defaults: generous line-height, comfortable measure (65ch–85ch)
 
 ### Token source of truth
@@ -25,7 +25,7 @@ Semantic color roles using `light-dark()` for automatic light/dark adaptation.
 
 ### Palette
 
-A colour is `<hue>-<step>` — Tailwind's names and steps. Ten hues (`gray red orange yellow green teal cyan blue violet pink`) with Tailwind CSS v4.1.11's values, each in eleven steps (`50`, `100`–`900`, `950`); `accent` is an alias hue (blue by default) with the same steps; `white` and `black` are fixed. Every colour is `--color-<hue>-<step>`, with the text for that step in `--color-<hue>-<step>-text`, as `light-dark()` pairs that mirror on dark pages (`100` ↔ `900`). Generated from [`ui/base/palette.json`](ui/base/palette.json) by `node scripts/build-palette.js`; full reference in [`ui/base/theme.md`](ui/base/theme.md#palette).
+A colour is `<hue>-<step>` — Tailwind's names and steps. Ten hues (`gray red orange yellow green teal cyan blue violet pink`) with Tailwind CSS v4.1.11's values, each in eleven steps (`50`, `100`–`900`, `950`); `accent` has the same steps as a ramp of its own (a muted blue, Tailwind blue's lightness at 0.6 × its chroma); `white` and `black` are fixed. Every colour is `--color-<hue>-<step>`, with the text for that step in `--color-<hue>-<step>-text`, as `light-dark()` pairs that mirror on dark pages (`100` ↔ `900`). Generated from [`ui/base/palette.json`](ui/base/palette.json) by `node scripts/build-palette.js`; full reference in [`ui/base/theme.md`](ui/base/theme.md#palette).
 
 ### Accent
 
@@ -81,7 +81,7 @@ The vocabulary is **concrete colour names** (`red-700`, `gray-200`), not semanti
 | Colour | Variables | Notes |
 |--------|-----------|-------|
 | `<hue>-<step>` | `--color-<hue>-<step>` · `-text` | ten hues × eleven steps; mirrored on dark pages (`50`↔`950`, `100`↔`900`, … `500`↔`500`) |
-| `accent-<step>` | `--color-accent-<step>` · `-text` | alias of blue's steps by default |
+| `accent-<step>` | `--color-accent-<step>` · `-text` | the accent's own muted-blue ramp |
 | `white` | `--color-white` · `--color-white-text` | `#fff` · `gray-950`'s value; the same on both pages |
 | `black` | `--color-black` · `--color-black-text` | `#000` · `#fff`; the same on both pages |
 
@@ -117,7 +117,7 @@ Edit `ui/base/palette.json` and run `node scripts/build-palette.js`; or set `--c
 
 ### Gotcha: steps and jobs resolve at `:root`
 
-`--color-accent-700` aliases blue's step and `--color-accent` is `var(--color-accent-700)`; both are declared at `:root` — the `var()` substitution happens there, so descendants inherit the already-resolved color, not the reference. A page skin that sets only `--color-accent` on `body` will therefore **not** change `theme="accent-700"` surfaces. Either set the brand color on `:root` itself, or re-declare the step and the job together alongside the skin:
+`--color-accent-700` is the accent ramp's step and `--color-accent` is `var(--color-accent-700)`; both are declared at `:root` — the `var()` substitution happens there, so descendants inherit the already-resolved color, not the reference. A page skin that sets only `--color-accent` on `body` will therefore **not** change `theme="accent-700"` surfaces. Either set the brand color on `:root` itself, or re-declare the step and the job together alongside the skin:
 
 ```css
 body {
