@@ -184,8 +184,8 @@
 		&[stroke=xl] { --ui-icon-stroke: 6px; --ui-icon-svg-stroke: 2.5; }
 
 		/* theme= — the shared cross-component colour axis paints the plate. Badge role
-		   (chip/sticker precedent): the ink falls back to --_theme-ink, so `theme="gray"`
-		   reads without needing the `ink` modifier. `pale`/`muted`/`light`/`dark` fall out
+		   (chip/sticker precedent): the ink falls back to --_theme-ink, so `theme="gray-200"`
+		   reads without needing the `ink` modifier. `light`/`dark` fall out
 		   of the resolver, `glass` from the backdrop-filter that base sets on the element,
 		   and `border` from base's universal border rule — DON'T pair that last one with
 		   variant="border", whose shorthand out-ranks it. Docs: ../base/theme.md */

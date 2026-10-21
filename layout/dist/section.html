@@ -54,8 +54,8 @@
 		</lay-out>
 	</lay-out-group>
 
-	<!-- 2 — themed full-bleed band (built-in theme="green pale"), content-width header, over grid(3a) -->
-	<lay-out-group bleed xs="pb(3)" theme="green pale">
+	<!-- 2 — themed full-bleed band (built-in theme="green-100"), content-width header, over grid(3a) -->
+	<lay-out-group bleed xs="pb(3)" theme="green-100">
 		<ui-content>
 			<small data-part="eyebrow">Trusted to grow responsibly</small>
 			<h2 data-part="headline">Sustainability across the business</h2>
@@ -69,9 +69,9 @@
 		</lay-out>
 	</lay-out-group>
 
-	<!-- 3 — themed band with a FULL-BLEED header (data-bleed), built-in theme="black dark".
+	<!-- 3 — themed band with a FULL-BLEED header (data-bleed), built-in theme="gray-800 dark".
 	     The dark modifier flips color-scheme, so eyebrow/muted/link re-tone automatically. -->
-	<lay-out-group bleed xs="pb(4)" theme="black dark">
+	<lay-out-group bleed xs="pb(4)" theme="gray-800 dark">
 		<ui-content data-bleed>
 			<small data-part="eyebrow">Careers</small>
 			<h2 data-part="headline">Where exceptional talent reimagines growth</h2>
@@ -104,11 +104,11 @@
 	</lay-out-group>
 
 	<!-- 5 — an OUTLINED BOX via the theme= `border` modifier (non-bleed, content width).
-	     theme="slate border border(md)" → solid slate border on all 4 sides, md width,
+	     theme="gray-700 outline border(md)" → solid gray-700 border on all 4 sides, md width,
 	     transparent fill. NOT combined with bleed (border-image and border-* conflict). -->
-	<lay-out-group theme="pale slate border border(md)" xs="pb(2)" style="--layout-bdrs:0.75rem; padding-inline:1.5rem;">
+	<lay-out-group theme="gray-300 border border(md)" xs="pb(2)" style="--layout-bdrs:0.75rem; padding-inline:1.5rem;">
 		<ui-content>
-			<small data-part="eyebrow">theme="slate border border(md)"</small>
+			<small data-part="eyebrow">theme="gray-700 outline border(md)"</small>
 			<h2 data-part="headline">A section in an outlined box</h2>
 			<a data-part="link" href="#">See all →</a>
 		</ui-content>
@@ -148,7 +148,7 @@
 	</lay-out-group>
 
 	<!-- a themed band: the header link follows the band's ink -->
-	<lay-out-group bleed xs="pb(2)" theme="green">
+	<lay-out-group bleed xs="pb(2)" theme="green-800">
 		<ui-content>
 			<h2 data-part="headline">A themed band's link</h2>
 			<a data-part="link" href="#">Follows the band's ink →</a>
