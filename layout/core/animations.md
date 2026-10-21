@@ -128,6 +128,8 @@ Each child plays on its **own** `view()` timeline, so it animates when it reache
 
 Inside an `overflow` carousel the children sit in the layout's own horizontal scroller, where a block-axis `view()` has nothing to track. There the container keeps one `view-timeline: --animate-tl` and the children offset their ranges on it (20% per step, capped at the third child).
 
+Keep an `overflow` carousel to vertical effects (`fade-up()`, `fade-down()`, `fade-in()`). A sideways effect (`fade-left()`, `fade-right()`, `fade-up-left()` and the other diagonals, `slide-in()`, `bounce-in-left()`) moves each slide's snap area with it: before the entry the scroller rests as far past the first slide as the effect travels (110px for `fade-right(2)`), and it can stay there, cutting the first slide off, also after scrolling forward and back (Chrome 150). Nothing in CSS guards this. `fade-up(2)` and `fade-in()` were checked; zooms and flips change a slide's box too and were not.
+
 All animations listed above work with `animate`.
 
 ### Clip Modifier
