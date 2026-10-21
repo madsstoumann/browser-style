@@ -144,20 +144,20 @@ The Ask button beside a wrapped box is a word, not an icon.
 
 ### Theme
 
-`theme=` is the shared axis from `ui/base/theme.css`: a hue (`red orange green blue accent black
-white gray slate`) and its modifiers (`pale`, `muted`, `ink`, `glass`, `light`, `dark`). The bot
+`theme=` is the shared axis from `ui/base/theme.css`: a palette colour (`<hue>-<step>`, `white` or
+`black`) and its looks (`ink`, `glass`, `light`, `dark`). The bot
 re-publishes it, and the host itself never paints (its box is the page's, around a wrapped search
 box):
 
 | Theme value | Goes to |
 |---|---|
-| the final fill (`pale`, `muted`, `glass` applied) | `--ui-search-bot-bg`, the panel and the history list |
+| the final fill (`glass` applied) | `--ui-search-bot-bg`, the panel and the history list |
 | the paired text, only with `ink` | `--ui-search-bot-c` (else the page's text colour, re-toned by `light`/`dark`) |
-| the hue itself, solid | `--ui-search-bot-trigger-bg` / `--ui-search-bot-trigger-c`, the floating trigger |
+| the colour itself, solid | `--ui-search-bot-trigger-bg` / `--ui-search-bot-trigger-c`, the floating trigger |
 | the `glass` material | `--ui-search-bot-bdf`, the panel's `backdrop-filter` |
 
-`theme="blue pale"` is a solid blue button and a pale blue panel; `theme="slate ink"` a slate panel
-with light text.
+`theme="blue-100"` is a blue-100 button and panel; `theme="gray-700 ink"` a gray-700 panel
+with its light text.
 
 ## The stream
 

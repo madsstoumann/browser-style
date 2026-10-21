@@ -8,7 +8,7 @@
 
 | Purpose | browser.style | Tailwind v4 | Open Props |
 |---------|--------------|-------------|------------|
-| Primary/accent | `--color-accent` | `--color-blue-500` (palette) | `--blue-6` |
+| Primary/accent | `--color-accent` (→ `--color-accent-700`) | `--color-blue-500` (palette) | `--blue-6` |
 | Surface/background | `--color-surface` | `--color-white` / `--color-gray-50` | `--surface-1` |
 | Alt surface | `--color-surface-alt` | `--color-gray-100` | `--surface-2` |
 | Text | `--color-text` | `--color-gray-950` | `--text-1` |
@@ -16,14 +16,16 @@
 | Border | `--color-border` | `--color-gray-200` | `--surface-3` |
 | Field/input bg | `--color-field` | *(none)* | *(none)* |
 | Link | `--color-link` | *(none)* | `--link` |
-| Info | `--color-info` | `--color-blue-600` | `--blue-7` |
-| Error | `--color-error` | `--color-red-600` | `--red-7` |
-| Success | `--color-success` | `--color-green-600` | `--green-7` |
-| Warning | `--color-warning` | `--color-orange-500` | `--orange-6` |
+| Info | `--color-info` (→ `--color-blue-900`) | `--color-blue-600` | `--blue-7` |
+| Error | `--color-error` (→ `--color-red-700`) | `--color-red-600` | `--red-7` |
+| Success | `--color-success` (→ `--color-green-800`) | `--color-green-600` | `--green-7` |
+| Warning | `--color-warning` (→ `--color-orange-400`) | `--color-orange-500` | `--orange-6` |
 | Overlay | `--color-overlay` | *(none)* | *(none)* |
 | Overlay light | `--color-overlay-light` | *(none)* | *(none)* |
 
-**Approach:** browser.style uses semantic names. Tailwind uses numeric hue palettes (`--color-{hue}-{50-950}`). Open Props uses short hue scales (`--{hue}-{0-12}`) plus semantic aliases (`--surface-*`, `--text-*`).
+**Approach:** browser.style uses Tailwind's palette names and steps — `--color-{hue}-{50-950}`, with Tailwind v4.1.11's values — plus semantic jobs and roles (`--color-error`, `--color-surface`, …) that point at steps or hold their own value. Open Props uses short hue scales (`--{hue}-{0-12}`) plus semantic aliases (`--surface-*`, `--text-*`).
+
+Where browser.style departs from Tailwind: ten hues (`gray red orange yellow green teal cyan blue violet pink`), `accent` as an alias hue with the same steps, each variable a `light-dark()` pair that mirrors the step on dark pages (`100` ↔ `900`), and a `--color-{hue}-{step}-text` per step. Palette values live in `ui/base/palette.json`.
 
 ---
 
@@ -287,7 +289,7 @@ Token families introduced in `tokens.css` since the tables above were written:
 |--------|-----------|------------------------------|
 | `--size-{1-15}` | Element-dimension scale (0.25rem–30rem) for icons, avatars, widgets | Names **and** values match Open Props' 15-step `--size-*` scale exactly. Tailwind has no separate size scale — its numeric `--spacing-*` doubles for sizing |
 | `--font-size-3xs`, `--font-size-2xs` | 0.5rem / 0.625rem micro steps below `xs` | Tailwind's scale stops at `xs`; Open Props reaches 0.5rem via `--font-size-00`. browser.style extends the t-shirt naming downward instead |
-| `--ui-theme-{hue}-bg/-c` | Nine surface + paired-ink bundles (`red orange green blue accent black white gray slate`) behind the cross-component `theme=` attribute axis, plus `--ui-theme-glass-*` material tokens | No equivalent in either — Tailwind and Open Props stop at raw color palettes; a bundled surface/ink pair resolved by an attribute axis is browser.style-specific |
+| `--color-{hue}-{step}-text` | The text colour for each palette step (the hue's `950`, else black or white — AA on every step of the default ten hues), behind the cross-component `theme=` attribute axis (`theme="green-300"`), plus `--ui-theme-glass-*` material tokens | No equivalent in either — Tailwind and Open Props stop at raw color palettes; a surface/text pair per step resolved by an attribute axis is browser.style-specific |
 | `--radius-{sm,md,lg,xl}-sq` + `--squircle-{sm,md,lg,xl}` | Squircle radii paired with superellipse exponents for `corner-shape: superellipse()` | Neither Tailwind nor Open Props tokenizes squircles — `corner-shape` is too new for both |
 | `--stagger-*` (+ `--stagger-shimmer-*`) | Knobs for the shared stagger-reveal engine (begin, distance, duration, easing, step) | No equivalent — Tailwind has no animation-engine tokens; Open Props' `--animation-*` are one-shot shorthands, not cascade knobs |
 | `--border-width-xl` (4px), `--border-width-2xl` (6px) | Extends the border scale for the theme axis' `border(<size>)` modifier | Comparable to Tailwind's `--border-4`/`--border-8` numeric names; browser.style keeps t-shirt sizes |
@@ -298,7 +300,6 @@ Token families introduced in `tokens.css` since the tables above were written:
 
 | Category | Tailwind v4 | Open Props | browser.style rationale |
 |----------|-------------|------------|------------------------|
-| Color palettes (50-950) | `--color-{hue}-{shade}` | `--{hue}-{0-12}` | Semantic-only by design — theming via overrides, not palettes |
 | Aspect ratio | `--aspect-*` (utility) | `--ratio-square`, `--ratio-landscape` | Not needed — CSS `aspect-ratio` property suffices |
 | Named animations | `--animate-*` | `--animation-fade-in`, etc. | Component-level — no shared animation tokens |
 | Container/breakpoints | `--breakpoint-sm` etc. | *(none)* | Not tokenizable as CSS custom properties for `@media` |

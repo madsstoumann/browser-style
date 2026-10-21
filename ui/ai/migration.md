@@ -36,7 +36,7 @@ icon alone.
 | Default `--ui-ai-icon-size` 1.15 × font size | 1.8 × font size, so the disc fills the end of the pill |
 | Default weight medium | semibold |
 
-**Unchanged:** `ai(<cell>)`, `ai(<hue>)`, `ai(lg|xl)`, the standalone `size=` and `theme=`
+**Unchanged:** `ai(<cell>)`, `ai(<colour>)` (names are palette colours now; the default is `gray-800`), `ai(lg|xl)`, the standalone `size=` and `theme=`
 attributes, `aria-description`, `--ui-ai-plate`, `--ui-ai-ink`, `--ui-ai-font-size`,
 `--ui-ai-radius` and `--ui-ai-lift`.
 

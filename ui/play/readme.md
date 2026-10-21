@@ -11,7 +11,7 @@ The glyph is a `<ui-icon>` sub-element from `@browser.style/icon`. Use `type="pl
 - `reveal` variant — hidden until the parent media frame is hovered/focused
 - Brand/shape variants — `youtube` (red squircle), `vimeo` (cyan disc), `rounded(sm|md|lg)` (clip-path play triangle)
 - Sizes `sm` / `lg` / `xl` (`md` is the default)
-- `theme` hues or arbitrary `fill`/`ink` colours
+- `theme` palette colours or arbitrary `fill`/`ink` colours
 - Optional web component: toggles `is-playing`, morphs the `<ui-icon>`, and drives targets via the native Invoker Commands API (`command`/`commandfor`) — with a bundled controller for `<video>` and CSS animations. Falls back to a `ui-play-toggle` event when no `commandfor` is set (carousel), and keeps a `for=` shorthand for `<video>`
 - Token-driven colors, radius, size, icon size, and transition duration
 - Light/dark mode support via design tokens
@@ -83,14 +83,14 @@ The web component uses the **exact same** HTML structure as CSS-only. The JS add
 |-----------|------|-------------|
 | `variant` | string | Space-separated: `reveal` (hidden until parent hover/focus), `youtube`, `vimeo`, `rounded(sm)` / `rounded(md)` / `rounded(lg)` |
 | `size` | string | `sm`, `lg`, `xl` (`md` is the default) |
-| `theme` | string | Disc hue (bg + glyph ink): `red orange green blue accent dark light subtle` |
+| `theme` | string | Disc colour (bg + glyph ink): a palette colour — `<hue>-<step>`, `white` or `black`. See [theme.md](../base/theme.md#palette) |
 | `fill` | `<color>` | Arbitrary disc colour — any CSS colour; glyph auto-contrasts. Overrides `theme` |
 | `ink` | `<color>` | Arbitrary glyph colour |
 | `radius` | string | Disc shape: `crc` circle (default) · `sqr` squircle · `rnd` rounded · `non` sharp |
 | `for` | string | `id` of a `<video>` to control; toggling plays/pauses it and syncs the glyph |
 
 > Colour/size is the shared furniture model — identical standalone or via the card `media=` token
-> (`play(<hue>)`, `play(<size>)`, `play(<pos>)`).
+> (`play(<colour>)`, `play(<size>)`, `play(<pos>)`).
 
 The inner `<button>` carries the `aria-pressed` state (the is-playing flag). Always label it with `aria-label`. The glyph is a `<ui-icon>` inside the button.
 
@@ -180,21 +180,16 @@ Use the CSS-only approach — no JavaScript needed:
 
 ## Theme
 
-The `theme` attribute applies a decorative color bundle (background + ink).
+The `theme` attribute applies a palette colour (background + its text colour).
 
 ```html
-<ui-play theme="dark"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
-<ui-play theme="accent"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
+<ui-play theme="gray-800"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
+<ui-play theme="accent-700"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
 ```
 
-8 keys:
-
-```
-red   orange  green   blue
-accent  dark  light  subtle
-```
-
-The bundles are defined as `--ui-theme-*` tokens in `@browser.style/base` and are retunable globally. `theme` is placed after the color defaults, so it wins the cascade.
+Any `<hue>-<step>` of the palette, plus `white` and `black`. The colours are
+`--color-<hue>-<step>` tokens in `@browser.style/base` and are retunable globally
+(see [theme.md](../base/theme.md#change-or-add-a-hue)). `theme` is placed after the color defaults, so it wins the cascade.
 
 ## Sizes
 

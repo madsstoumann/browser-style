@@ -344,7 +344,7 @@ Net effect per bundle — furniture and arrow agree in every one:
 | `arw(bare)` | masked ink glyph, no circle | no disc, ink |
 | no carousel | — | white 70% disc, dark glyph, hairline ring |
 
-`lightbox(<hue>)` / `save(<hue>)`, `ink=` / `fill=` and `lightbox(non)` all still win over
+`lightbox(<colour>)` / `save(<colour>)`, `ink=` / `fill=` and `lightbox(non)` all still win over
 the derived values — they are declared after this binding in the component sheets. While a
 lightbox is **open**, the close button ignores all of it and pins light-on-dark, because the
 fullscreen surface is always dark (`--ui-lightbox-open-c` / `-open-bg` retune it).

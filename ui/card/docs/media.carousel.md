@@ -111,12 +111,12 @@ base's `--_dir-s`/`--_dir-e` pair.)
 | `hov(<17 values>)` | CSS (+JS) | Hover effect. Five families — scale (`zoom` `pan`), cursor (`track` `drift` `tilt`), 3D (`tilt-out` `tilt-in`), rotate (`rot-r` `rot-l`), clip (`shape` `shape-rev`), filter (`gray` `blur` `bright` `dim` `sat`) + `tint`. Only the three **cursor** effects need JS (`hover.js`) — full table in [media.md](./media.md#hov--hover-effect-image-only) |
 | `scm` · `scm(<pos>)` · `scm(sm · md · lg · xl)` · `scm(shr · lgt · med · drk · sld)` | CSS | Scrim — direction (logical furniture grid, mirrored under `:dir(rtl)`) + size + intensity. The old `sheer`/`solid` spellings were removed in v5 |
 | `load(eager · lazy)` | load | Image/video loading (`ui-media-srcset.js`); `load(eager)` = all slides eager, first slide gets `fetchpriority="high"` (hero); `load(lazy)` = all lazy (the default) |
-| `chip(<pos>)` · `chip(<hue>)` | CSS | Position + colour a `<ui-chip>` child. Canonical hues: `red orange green blue accent black white gray slate` (+ `pale`/`muted` modifiers; the `dark`/`light`/`subtle` aliases were removed in v5) |
-| `sticker(<pos>)` · `sticker(<hue>)` | CSS | Position + colour a `<ui-sticker>` child — same grid + hue set as `chip()` |
-| `beacon(<pos>)` · `beacon(<hue>)` | CSS | Position + colour a `<ui-beacon>` child — same grid + hue set |
-| `marquee(top · bot)` · `marquee(rpt · seam · fade)` · `marquee(<hue>)` · `marquee(sm · lg · xl · 2xl)` | CSS | The `<ui-marquee>` **band** — full-width, top/bottom only, `z-index: 1` (below furniture). The old `marquee(loop)` spelling is removed — use `marquee(rpt)` |
+| `chip(<pos>)` · `chip(<colour>)` | CSS | Position + colour a `<ui-chip>` child. Colours are palette names: `<hue>-<step>` (`red-700`, `green-300`), `white`, `black` — see [theme.md](../../base/theme.md#palette) |
+| `sticker(<pos>)` · `sticker(<colour>)` | CSS | Position + colour a `<ui-sticker>` child — same grid + colours as `chip()` |
+| `beacon(<pos>)` · `beacon(<colour>)` | CSS | Position + colour a `<ui-beacon>` child — same grid + colours |
+| `marquee(top · bot)` · `marquee(rpt · seam · fade)` · `marquee(<colour>)` · `marquee(sm · lg · xl · 2xl)` | CSS | The `<ui-marquee>` **band** — full-width, top/bottom only, `z-index: 1` (below furniture). The old `marquee(loop)` spelling is removed — use `marquee(rpt)` |
 | `play(<pos>)` · `play(<size>)` | CSS (+JS on autoplay) | Position **and** size a `<ui-play>` child — one stem, two disjoint vocabularies (`ts…be` vs `sm md lg xl`). On a **scrolling** carousel (`auto`/`loop`) the control is `position:sticky`-pinned to the scrollport (plain furniture would scroll away) and `carousel.js` wires it as the play/pause button — see "Play/pause control" below. (The old `ply(<size>)` stem was removed in v5) |
-| `save(<pos>)` · `save(<hue>)` | CSS | Position + colour a `<ui-save>` child |
+| `save(<pos>)` · `save(<colour>)` | CSS | Position + colour a `<ui-save>` child |
 
 ---
 

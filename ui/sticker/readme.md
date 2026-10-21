@@ -138,16 +138,16 @@ Use the CSS-only approach — no JavaScript needed:
 
 ---
 
-## Colors — `theme` (hues) or `fill` + `ink` (arbitrary)
+## Colors — `theme` (palette) or `fill` + `ink` (arbitrary)
 
-For a **named colour**, use `theme=` — the 9 theme colours `red orange green blue accent white gray slate black` (+ `pale`/`muted` modifiers), a background + paired ink in one keyword:
+For a **palette colour**, use `theme=` — `<hue>-<step>` (`green-300`), `white` or `black` — a background + its text colour in one keyword. See [theme.md](../base/theme.md#palette):
 
 ```html
-<ui-sticker theme="red">Sale</ui-sticker>
-<ui-sticker theme="green">In stock</ui-sticker>
+<ui-sticker theme="red-700">Sale</ui-sticker>
+<ui-sticker theme="green-800">In stock</ui-sticker>
 ```
 
-From a card the same hues work as `media="sticker(<hue>)"`, plus the shared modifiers `sticker(pale)` (light tint + hue ink) and `sticker(muted)` (translucent disc) — add one alongside a hue, e.g. `sticker(red) sticker(pale)`.
+From a card the same colours work as `media="sticker(<colour>)"`, e.g. `sticker(red-700)` or the light `sticker(red-200)`.
 
 For an **arbitrary colour**, think of it as print: **`fill`** is the stock/background, **`ink`** is
 what's printed on it. They override `theme`.
@@ -266,7 +266,7 @@ The `size` attribute scales the **box** (`--ui-sticker-sz`); element lines follo
 `sqr` squircle. In a card, `sticker(<corner>)`. (The decorative `sh:` silhouettes — `sh:burst`, `sh:blob`, `sh:heart`… — set their own `clip-path` and ignore `radius`.)
 
 ```html
-<ui-sticker theme="blue" radius="sqr"><strong>New</strong></ui-sticker>
+<ui-sticker theme="blue-900" radius="sqr"><strong>New</strong></ui-sticker>
 ```
 
 ## Shadow

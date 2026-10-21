@@ -165,7 +165,7 @@ The full type system (the relational ladder, fluid sizing, all the parts) lives 
 And the **furniture** — little overlays that live on the media, positioned by the same corner grid you'll see everywhere (`t`op/`b`ottom/`c`enter × `s`tart/`c`enter/`e`nd):
 
 ```html
-<ui-card variant="col" media="asr(4/3) chip(ts) chip(green) save(te)">
+<ui-card variant="col" media="asr(4/3) chip(ts) chip(green-800) save(te)">
   <cq-box>
     <ui-media>
       <img src="/assets/images/river.png" alt="">
@@ -177,7 +177,7 @@ And the **furniture** — little overlays that live on the media, positioned by 
 </ui-card>
 ```
 
-`chip()` and `sticker()` are labels; `save()` and `play()` are interactive. One value per token — `chip(ts) chip(green)`, not `chip(ts green)`.
+`chip()` and `sticker()` are labels; `save()` and `play()` are interactive. One value per token — `chip(ts) chip(green-800)`, not `chip(ts green-800)`.
 
 ---
 
@@ -216,15 +216,15 @@ A polished example — band below, bare full arrows, pill dots, autoplaying:
 
 ## Give it a theme — `theme=`
 
-`theme=` is the shared colour axis: one colour word plus optional modifiers.
+`theme=` is the shared colour axis: one palette colour plus optional looks.
 
 ```html
-<ui-card theme="black dark" …>     <!-- dark surface, dark colour-scheme -->
-<ui-card theme="red pale" …>       <!-- tinted red surface -->
-<ui-card theme="gray" …>           <!-- quiet neutral -->
+<ui-card theme="gray-800 dark" …>  <!-- dark surface, dark colour-scheme -->
+<ui-card theme="red-200" …>        <!-- light red surface -->
+<ui-card theme="gray-200" …>       <!-- quiet neutral -->
 ```
 
-Colours: `red orange green blue accent white gray slate black` — the neutrals form a light→dark ramp (`white < gray < slate < black`). Modifiers: `pale` (tint), `muted` (fade), `light` / `dark` (flip the colour-scheme so buttons, pills and controls re-tone too). The same axis works on `<lay-out>`, `<lay-out-group>` and other components — details in [ui/base/theme.md](../ui/base/theme.md).
+Colours are Tailwind's names and steps, `<hue>-<step>` — hues `gray red orange yellow green teal cyan blue violet pink` and `accent` (an alias, blue by default), steps `50` `100`–`900` `950` — plus `white` and `black`. Looks: `ink`, `glass`, `border` / `outline`, `light` / `dark` (flip the colour-scheme so buttons, pills and controls re-tone too). On a dark page the steps mirror, so a pick still fits. The same axis works on `<lay-out>`, `<lay-out-group>` and other components — details in [ui/base/theme.md](../ui/base/theme.md).
 
 ---
 
@@ -260,7 +260,7 @@ Plus a few element-level attributes: `bleed` (break out to full viewport width),
 Wrap a section to give it a header — and since `content=` flows down, style the header right on the group:
 
 ```html
-<lay-out-group theme="gray" content="ctr pad(none)">
+<lay-out-group theme="gray-200" content="ctr pad(none)">
   <ui-content>
     <small data-part="eyebrow">From the archive</small>
     <h2 data-part="headline">Editor's picks</h2>
@@ -353,7 +353,7 @@ Scroll-driven animation is attribute-based too, and works on **any** element:
 A complete section, using most of the guide:
 
 ```html
-<lay-out-group theme="gray" content="pad(none)">
+<lay-out-group theme="gray-200" content="pad(none)">
   <ui-content>
     <small data-part="eyebrow">Field notes</small>
     <h2 data-part="headline">This week</h2>

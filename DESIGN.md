@@ -23,12 +23,16 @@ All design tokens are defined as CSS custom properties in [`ui/base/tokens.css`]
 
 Semantic color roles using `light-dark()` for automatic light/dark adaptation.
 
-### Core palette
+### Palette
 
-- **Accent** (`--color-accent`): `light-dark(hsl(211, 100%, 38%), hsl(211, 60%, 50%))` — Primary actions, active states, focus rings, links. This is the **plate** arm: it fills accent buttons, checkboxes and `theme="accent"` surfaces
-- **Accent Dark** (`--color-accent-dark`): `light-dark(hsl(211, 80%, 30%), hsl(211, 30%, 20%))` — Darker accent for hover states
+A colour is `<hue>-<step>` — Tailwind's names and steps. Ten hues (`gray red orange yellow green teal cyan blue violet pink`) with Tailwind CSS v4.1.11's values, each in eleven steps (`50`, `100`–`900`, `950`); `accent` is an alias hue (blue by default) with the same steps; `white` and `black` are fixed. Every colour is `--color-<hue>-<step>`, with the text for that step in `--color-<hue>-<step>-text`, as `light-dark()` pairs that mirror on dark pages (`100` ↔ `900`). Generated from [`ui/base/palette.json`](ui/base/palette.json) by `node scripts/build-palette.js`; full reference in [`ui/base/theme.md`](ui/base/theme.md#palette).
+
+### Accent
+
+- **Accent** (`--color-accent`): `var(--color-accent-700)` — Primary actions, active states, focus rings, links. This is the **plate** arm: it fills accent buttons, checkboxes and `theme="accent-700"` surfaces
+- **Accent Dark** (`--color-accent-dark`): a darker accent step — see [`ui/base/tokens.css`](ui/base/tokens.css) — Darker accent for hover states
 - **Accent Ink** (`--color-accent-ink`): the accent hue **as text**, derived from `--color-accent` with its OKLCH lightness clamped to the readable side of the current `color-scheme` (`min(l, 0.55)` light / `max(l, 0.78)` dark). Card eyebrows and the `eb|tx|mt|hl(accent)` tones read this, so accent text clears AA on a dark card plate as well as on the page surface. Not to be confused with `--color-accent-text`, which is the ink **on** an accent plate
-- **Accent Text** (`--color-accent-text`): `hsl(211, 100%, 95%)` — Text on accent backgrounds
+- **Accent Text** (`--color-accent-text`): `var(--color-accent-700-text)` — Text on accent backgrounds
 
 ### Surfaces
 
@@ -54,10 +58,12 @@ Semantic color roles using `light-dark()` for automatic light/dark adaptation.
 
 ### Status
 
-- **Info** (`--color-info`): `light-dark(hsl(210, 60%, 46%), hsl(210, 30%, 46%))` — Informational messages
-- **Error** (`--color-error`): `light-dark(hsl(360, 60%, 46%), hsl(360, 40%, 56%))` — Errors, destructive actions
-- **Success** (`--color-success`): `light-dark(hsl(136, 41%, 41%), hsl(136, 21%, 51%))` — Success confirmations
-- **Warning** (`--color-warning`): `light-dark(hsl(33, 99%, 59%), hsl(33, 69%, 59%))` — Warnings, caution states
+- **Info** (`--color-info`): `var(--color-blue-900)` — Informational messages
+- **Error** (`--color-error`): `var(--color-red-700)` — Errors, destructive actions
+- **Success** (`--color-success`): `var(--color-green-800)` — Success confirmations
+- **Warning** (`--color-warning`): `var(--color-orange-400)` — Warnings, caution states
+
+The jobs point at steps: components keep reading `--color-error` and the rest, and re-pointing one (`--color-error: var(--color-red-600)`) restyles every component that uses it.
 
 ### Overlays
 
@@ -66,55 +72,58 @@ Semantic color roles using `light-dark()` for automatic light/dark adaptation.
 
 ---
 
-## Theme bundles — the `theme=` axis
+## Theme — the `theme=` axis
 
-A shared, cross-component color axis: nine named bundles, each a surface (`--ui-theme-{name}-bg`) plus a paired ink (`--ui-theme-{name}-c`). Bundles live in `ui/base/tokens.css`; the resolver and modifiers live in `ui/base/theme.css`. Full documentation: `ui/base/theme.md`.
+A shared, cross-component color axis: a surface (`--color-<hue>-<step>`) plus its text colour (`--color-<hue>-<step>-text`), picked by name. The colours are generated into `ui/base/tokens.css` from `palette.json`; the resolver and looks live in `ui/base/theme.css`. Full documentation: `ui/base/theme.md`.
 
-The vocabulary is **concrete color names** (red, slate…), not semantic words — deliberately distinct from button's semantic `.bg-*` / `color=` axis.
+The vocabulary is **concrete colour names** (`red-700`, `gray-200`), not semantic words — deliberately distinct from button's semantic `.bg-*` / `color=` axis.
 
-| Bundle | Surface (`-bg`) | Ink (`-c`) |
-|--------|-----------------|------------|
-| `--ui-theme-red-*` | `var(--color-error)` | `hsl(0 0% 100%)` |
-| `--ui-theme-orange-*` | `var(--color-warning)` | `var(--color-text)` |
-| `--ui-theme-green-*` | `var(--color-success)` | `hsl(0 0% 100%)` |
-| `--ui-theme-blue-*` | `var(--color-info)` | `hsl(0 0% 100%)` |
-| `--ui-theme-accent-*` | `var(--color-accent)` | `var(--color-accent-text)` |
-| `--ui-theme-white-*` | `light-dark(hsl(0 0% 100%), hsl(0 0% 90%))` | `light-dark(hsl(0 0% 15%), hsl(0 0% 10%))` |
-| `--ui-theme-gray-*` | `light-dark(hsl(0 0% 93%), hsl(0 0% 84%))` | `light-dark(hsl(0 0% 15%), hsl(0 0% 10%))` |
-| `--ui-theme-slate-*` | `var(--ui-card-muted-bg, light-dark(hsl(215 19% 27%), hsl(215 16% 38%)))` | `light-dark(hsl(0 0% 96%), hsl(0 0% 88%))` |
-| `--ui-theme-black-*` | `var(--ui-card-dark-bg, light-dark(hsl(215 28% 17%), hsl(215 22% 27%)))` | `light-dark(hsl(0 0% 96%), hsl(0 0% 88%))` |
+| Colour | Variables | Notes |
+|--------|-----------|-------|
+| `<hue>-<step>` | `--color-<hue>-<step>` · `-text` | ten hues × eleven steps; mirrored on dark pages (`50`↔`950`, `100`↔`900`, … `500`↔`500`) |
+| `accent-<step>` | `--color-accent-<step>` · `-text` | alias of blue's steps by default |
+| `white` | `--color-white` · `--color-white-text` | `#fff` · `gray-950`'s value; the same on both pages |
+| `black` | `--color-black` · `--color-black-text` | `#000` · `#fff`; the same on both pages |
 
-The neutrals form a light→dark ramp (`white` < `gray` < `slate` < `black`) and stay true to their names in both schemes — a `white` theme is still a light surface in dark mode; the `light-dark()` pair only softens the shade.
+The text on a step is its hue's `950` when that reads at 4.5:1, else black or white, whichever reads best — every step of the ten hues reaches AA (lowest `pink-600`, 4.6). The build prints the contrast report.
 
 ### Attribute convention
 
-`theme=` is a space-separated token list: exactly one color token plus any number of modifiers. Use `theme=` on custom elements and `data-theme=` on native elements (a bare `theme` attribute is invalid HTML on built-ins) — every resolver rule in `theme.css` is a pair, so both spellings resolve identically:
+`theme=` is a space-separated token list: exactly one colour token plus any number of looks. Use `theme=` on custom elements and `data-theme=` on native elements (a bare `theme` attribute is invalid HTML on built-ins) — every resolver rule in `theme.css` is a pair, so both spellings resolve identically:
 
 ```html
-<ui-card theme="black dark">…</ui-card>
-<ui-chip theme="red pale">soft</ui-chip>
-<section data-theme="slate glass">…</section>
+<ui-card theme="gray-800 dark">…</ui-card>
+<ui-chip theme="red-200">soft</ui-chip>
+<section data-theme="gray-700 glass">…</section>
 ```
 
 `data-box` is the geometry companion for native nodes — padding (`--ui-box-p`) and corners (`--ui-box-radius`) on the element carrying `data-theme`; `data-box="brd"` adds a theme-matched hairline (`--ui-box-border-width` / `--ui-box-border-color`). `ui/base/theme.md` § Box.
 
-### Modifiers
+The same names work in the furniture tokens (`chip(green-300)`, `sticker(red-700)`, `tnt(blue-500)`) and in `tint="green-300"`, beside a literal colour such as `tint="#c00"`.
 
-- **`pale`** — tinted surface: `color-mix` of the color with `--color-surface` (80%), ink becomes the color itself. The pastel version.
-- **`muted`** — fades surface and ink via `color-mix(… transparent 50%)`. Alpha only — no element `opacity`, so descendant content is not dimmed. Composes with `pale`: `theme="green pale muted"`.
+### Looks
+
 - **`ink`** — applies the paired text color (themes set only the background by default).
 - **`light` / `dark`** — set `color-scheme`, picking the `light-dark()` arm and re-toning descendants.
-- **`border`** — outline in the solid base color, transparent fill; `border(<side>)` / `border(sm…2xl)` / `border(dashed|dotted|double)` variants.
+- **`border`** — a solid border in the theme colour; the fill stays. `border(<side>)` / `border(sm…2xl)` / `border(dashed|dotted|double)` variants.
+- **`outline`** — the same border with the fill cleared; the ink is the colour itself.
 - **`glass`** — translucent material with backdrop blur + saturation, configured by `--ui-theme-glass-bg`, `--ui-theme-glass-edge`, `--ui-theme-glass-fade` (62%), `--ui-theme-glass-blur` (`var(--blur-md)`), `--ui-theme-glass-saturate` (180%).
 
-### Gotcha: bundles resolve at `:root`
+A light colour is a step (`red-200`), and see-through is `glass`; the `pale` and `muted` modifiers were removed.
 
-The five color-hue bundles reference `--color-*` tokens **and are declared at `:root`** — the `var()` substitution happens there, so descendants inherit the already-resolved color, not the reference. A page skin that sets a brand `--color-accent` on `body` will therefore **not** change `theme="accent"` surfaces. Either set the brand color on `:root` itself, or re-declare the bundle alongside the skin:
+### Changing the palette
+
+Edit `ui/base/palette.json` and run `node scripts/build-palette.js`; or set `--color-<hue>-<step>` in CSS. A designer can add a hue (one lowercase word, letters only); `ui/base/palette.rules.json` holds the rules a hue needs, so a CMS writes the same ones. Steps in `theme.md` § Change or add a hue.
+
+### Gotcha: steps and jobs resolve at `:root`
+
+`--color-accent-700` aliases blue's step and `--color-accent` is `var(--color-accent-700)`; both are declared at `:root` — the `var()` substitution happens there, so descendants inherit the already-resolved color, not the reference. A page skin that sets only `--color-accent` on `body` will therefore **not** change `theme="accent-700"` surfaces. Either set the brand color on `:root` itself, or re-declare the step and the job together alongside the skin:
 
 ```css
 body {
-	--color-accent: light-dark(#4f46e5, #6366f1);
-	--ui-theme-accent-bg: var(--color-accent); /* re-resolve against body's value */
+	--color-accent-700: light-dark(#4f46e5, #6366f1);
+	--color-accent-700-text: #fff;
+	--color-accent: var(--color-accent-700); /* re-resolve against body's value */
 }
 ```
 

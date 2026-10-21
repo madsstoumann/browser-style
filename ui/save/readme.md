@@ -168,9 +168,9 @@ matching `<ui-lightbox>` in the same corner grid. Off a carousel the fallbacks a
 
 ### One ink or two
 
-By default there is **one ink**: `--ui-save-c-active` resolves to `var(--ui-save-c)`, so the hue
+By default there is **one ink**: `--ui-save-c-active` resolves to `var(--ui-save-c)`, so the colour
 survives the toggle and only the *fill* changes — outline heart → filled heart in the same colour.
-Every `theme=` / `save(<hue>)` already behaved this way; `ink="<css-color>"` does too.
+Every `theme=` / `save(<colour>)` already behaved this way; `ink="<css-color>"` does too.
 
 For the classic two-colour toggle (neutral outline → red fill), set the active ink yourself:
 
@@ -202,7 +202,7 @@ Inside `<ui-media>`, the parent `media=` token drives position, colour and the d
 stays on the `<ui-icon>`:
 
 ```html
-<ui-card media="asr(4/3) save(be) save(crc) save(orange)">
+<ui-card media="asr(4/3) save(be) save(crc) save(orange-400)">
   <ui-media>
     <img …>
     <ui-save>
@@ -217,12 +217,12 @@ stays on the `<ui-icon>`:
 | Token | Standalone equivalent | Effect |
 |-------|----------------------|--------|
 | `save(<pos>)` | — | Position — `ts tc te · cs cc ce · bs bc be` |
-| `save(<hue>)` | `theme="<hue>"` | Ink from the nine theme hues `red orange green blue accent black white gray slate` (idle **and** saved) |
+| `save(<colour>)` | `theme="<colour>"` | Ink from a palette colour — `<hue>-<step>`, `white` or `black` (idle **and** saved). See [theme.md](../base/theme.md#palette) |
 | `save(<size>)` | `size="<size>"` | Scale — `sm lg xl` (`md` = default) |
 | `save(<corner>)` | `radius="<corner>"` | Disc shape — `crc` circle (default) · `sqr` squircle · `rnd` rounded |
 | `save(non)` | `variant="non"` | Hide the disc (bare glyph) |
 
-The disc backdrop is **on by default**. Standalone, use `theme=` (hue),
+The disc backdrop is **on by default**. Standalone, use `theme=` (colour),
 `ink="<css-color>"` (glyph) / `fill="<css-color>"` (the disc), `size=` and `radius=` — the same
 model as `chip`/`sticker`/`play`.
 

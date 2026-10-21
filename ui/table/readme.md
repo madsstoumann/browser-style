@@ -109,8 +109,8 @@ import '@browser.style/table';
 | `variant` | string | Forwarded as `data-variant` on both `<ui-table>` and child `<table>`. Requires `mount` or `frame`. |
 | `hover` | string | Space-separated hover effects (forwarded as `data-hover`). Requires `mount` or `frame`. |
 | `size` | `sm` \| `lg` | Density (forwarded as `data-size`). Requires `mount` or `frame`. |
-| `tint` | string | Graduated-tint start color (forwarded as `data-tint`). Pair with `tinted` on `<tbody>`/`<colgroup>`. Requires `mount` or `frame`. |
-| `tint-end` | string | Graduated-tint end color (default white). Requires `mount` or `frame`. |
+| `tint` | string | Graduated-tint start color — a palette colour (`green-300`) or any CSS colour (forwarded as `data-tint`). Pair with `tinted` on `<tbody>`/`<colgroup>`. Requires `mount` or `frame`. |
+| `tint-end` | string | Graduated-tint end color — a palette colour or any CSS colour (default white). Requires `mount` or `frame`. |
 | `tint-tr` / `tint-bl` | string | 2D-tint top-right / bottom-left corner colors. Requires `mount` or `frame`. |
 | `tint-axis` | `vertical` \| `horizontal` \| `2d` | Places `tinted` on the right grandchild: first `<tbody>` for vertical/2d, first `<colgroup>` for horizontal. Idempotent across axis changes (clears the old target before setting the new). Horizontal paints through `<col>` backgrounds, which requires transparent cells — pair it with `mount`, not `frame` (frame forces opaque cell bg for sticky integrity). CSS-only authors can set `tinted` directly on `<tbody>`/`<colgroup>` instead. Requires `mount` or `frame`. |
 | `c1` … `c8` | string | Per-column formatting — `start`/`center`/`end` for text alignment, or `tabular` for `font-variant-numeric: tabular-nums`. Composable: `c3="end tabular"`. Requires `mount` or `frame`. |

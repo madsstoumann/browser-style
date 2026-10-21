@@ -322,7 +322,7 @@ DSLs here lean on mechanisms a per-element class model cannot reach:
 | Container **style()** queries (`@container style(--_subgrid: on)`, hover-effect dispatch, `if(style(--_pg: 0))`) | — | **NONE** — no variant targets style queries; the flag-relay pattern (ancestor sets a flag, children restyle via style query) is inherently component-CSS |
 | `sibling-index()` paging math, anchor positioning (`self-start`/`self-end`), `::scroll-marker` / `::scroll-button()` carousels | — | **NONE** — pseudo-elements and functions Tailwind has no utilities for; would ship as custom CSS alongside |
 | lay-out breakpoint attributes (`lg="grid(3a) cg(2)"` → generated `@media` rules with `nth-child` area maps) | responsive variants `lg:grid-cols-3` + arbitrary `nth-child` variants | **PARTIAL** — plain column counts translate; the named grid *patterns* (bento, mosaic, asym with per-child `nth-child` placement) would need one class per child per breakpoint, hoisting layout knowledge out of the layout system into every page |
-| `theme=` surface/ink bundles (nine hues × pale/muted, paired `--ui-theme-*-bg/-c`) | color utilities per element | **PARTIAL** — colors translate; the bundled surface+ink+border semantics with `contrast-color()` do not |
+| `theme=` surface/text pairs (`<hue>-<step>`: ten hues × eleven steps with Tailwind's names, paired `--color-<hue>-<step>` / `-text`) | color utilities per element | **PARTIAL** — colors translate (the names match Tailwind's); the bundled surface+text+border semantics resolved from one attribute do not |
 
 The user-facing summary: **the leaf declarations translate; the system does not.**
 What the DSLs actually sell — one attribute on a host driving a coordinated set of

@@ -111,7 +111,7 @@ A shared `name` on the `<details>` makes a group of cards mutually exclusive (na
 
 Reveal behaviour lives on the same space-separated, composable `variant=` attribute as the card tokens (`ovr()`, `rds()`, `bdr`, …) — mix them freely.
 
-> **There is no `thm()` token.** The old `variant="thm(…)"` spelling was removed in v4; colour comes from the shared `theme=` attribute (`theme="gray"`, `theme="black dark"`). Migration mapping in [base/theme.md](../base/theme.md): `thm(dark)` → `theme="black dark"`, `thm(muted)` → `theme="slate dark"`, `thm(subtle)` → `theme="gray"`.
+> **There is no `thm()` token.** The old `variant="thm(…)"` spelling was removed in v4; colour comes from the shared `theme=` attribute (`theme="gray-200"`, `theme="gray-800 dark"`). Migration mapping in [base/theme.md](../base/theme.md): `thm(dark)` → `theme="gray-800 dark"`, `thm(muted)` → `theme="gray-700 dark"`, `thm(subtle)` → `theme="gray-200"`.
 
 Argument vocabularies are **generated from the card manifest** (`ui/card/data/tokens.json`) —
 the same file `render.js` and the token lint read, so this list cannot drift from
@@ -211,13 +211,13 @@ One word per token — `ico(te) ico(sm)` anchors a small icon in the top-right c
 | Group | Words | Effect |
 |---|---|---|
 | Corner | `ts` `te` `bs` `be` | Anchors the icon in that corner (furniture spellings: top/bottom × start/end; logical axes, rtl-safe). Absolute, inset by `--ui-reveal-icon-m`. |
-| Style | `drk` | Dark chrome — sets `--ui-reveal-icon-bg` to the neutral ramp's **`--ui-theme-black-bg`** bundle (a `light-dark()` pair that stays dark in *both* colour schemes, and picks up a `--ui-card-dark-bg` override so a branded card brands its icon) plus a real `color: var(--ui-theme-black-c, #fff)` for the glyph. Not a flat `#000`, and not `--color-text`, which would invert in dark mode. |
+| Style | `drk` | Dark chrome — sets `--ui-reveal-icon-bg` to the palette step **`--color-gray-800`** (a step, so it mirrors on dark pages like every other — see [theme.md § Dark pages](../base/theme.md#dark-pages)) plus a real `color: var(--color-gray-800-text)` for the glyph. Not a flat `#000`, and not `--color-text`. |
 | Style | `sem` | Reduced opacity (`--ui-reveal-icon-opacity`, default `0.6`). |
 | Size | `sm` `lg` | `sm` = `--size-5`, `lg` = `--size-8`. The **default is `--size-7` and has no token** — "medium" is the *absence* of a size word, so `ico(md)` / `icc(md)` do not exist. |
 
 ```html
 <ui-reveal variant="flp ico(te) ico(sm) icc(be) icc(drk)">…</ui-reveal>
-<ui-reveal variant="exp lg:grw ico(te)" theme="gray">…</ui-reveal>
+<ui-reveal variant="exp lg:grw ico(te)" theme="gray-200">…</ui-reveal>
 ```
 
 ---
@@ -259,7 +259,7 @@ Scoped to `:where(ui-reveal)` — low specificity, easy to override.
 | Token | Default | Purpose |
 |---|---|---|
 | `--ui-reveal-icon-sz` | `var(--size-7)` | Icon button size (`ico(sm)` / `ico(lg)` override; the `--size-7` default has no token). |
-| `--ui-reveal-icon-bg` | `var(--color-button)` | Icon background. `ico(drk)`/`icc(drk)` set it to `var(--ui-theme-black-bg)` — the neutral ramp's dark bundle, not a literal `#000` — and additionally set a real `color` for the glyph. |
+| `--ui-reveal-icon-bg` | `var(--color-button)` | Icon background. `ico(drk)`/`icc(drk)` set it to `var(--color-gray-800)` — a palette step, not a literal `#000` — and additionally set a real `color` for the glyph. |
 | `--ui-reveal-icon-radius` | `var(--radius-circle)` | Icon shape. |
 | `--ui-reveal-icon-m` | `var(--spacing-md)` | Icon inset from the edge (decoupled from content padding). |
 | `--ui-reveal-icon-opacity` | `0.6` | Opacity for the `sem` modifier. |
@@ -288,10 +288,10 @@ Scoped to `:where(ui-reveal)` — low specificity, easy to override.
 | `media=` | `<ui-media>` / any ancestor | frame, scrim, overlay markers, carousel — `asr()` `obp()` `obf()` `flp()` `hov()` `scm()` `nav()` `chip()` `sticker()` | [media.md](../card/docs/media.md) |
 | `content=` | `<ui-content>` / any ancestor | text column + parts — `scl()` `hl()` `gap()` · padding `pad()` `pb()` `pi()` `pbs()` `pbe()` `pis()` `pie()` · `rds()` `scr` | [content.md](../card/docs/content.md) |
 | `variant=` | `<ui-reveal>` | arrangement, overlay, corners — `col` `col-r` `row` `row-r` `spl()` `vis()` `ovr()` `rds()` `bdr` | [ui-card-tokens.md](../card/docs/ui-card-tokens.md) |
-| `theme=` | `<ui-reveal>` (card) · the **back element** (panel) | colour — one hue + optional `pale` / `muted` / `ink` / `light` / `dark` / `border` | [base/theme.md](../base/theme.md), [Two sides, two themes](#two-sides-two-themes) |
+| `theme=` | `<ui-reveal>` (card) · the **back element** (panel) | colour — one palette colour (`<hue>-<step>`) + optional `ink` / `light` / `dark` / `border` / `outline` / `glass` | [base/theme.md](../base/theme.md), [Two sides, two themes](#two-sides-two-themes) |
 
 ```html
-<ui-reveal variant="flp ovr(bs) rds(md-sq)" theme="black dark"
+<ui-reveal variant="flp ovr(bs) rds(md-sq)" theme="gray-800 dark"
            media="asr(3/4) obp(cc) hov(zoom) scm" content="scl(xl) pad(lg) lg:pbs(none)"> … </ui-reveal>
 ```
 
@@ -309,7 +309,7 @@ A reveal has **two faces**, so it takes **two themes**: one on the host for the 
 its own `theme=` — that is the whole point of the axis being per-element.
 
 ```html
-<ui-reveal variant="flp scr ico(te)" theme="gray">
+<ui-reveal variant="flp scr ico(te)" theme="gray-200">
   <details>
     <summary>
       <ui-face>
@@ -318,7 +318,7 @@ its own `theme=` — that is the whole point of the axis being per-element.
       </ui-face>
       <ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
     </summary>
-    <ui-content theme="black dark" tabindex="0">   <!-- the flipside -->
+    <ui-content theme="gray-800 dark" tabindex="0">   <!-- the flipside -->
       <h3 data-part="headline">…</h3>
       <p>…</p>
     </ui-content>
@@ -332,11 +332,11 @@ its own `theme=` — that is the whole point of the axis being per-element.
 - **Back `theme=`** sits on whatever element follows `</summary>` — a `<ui-content>`,
   a `<div>` wrapping a nested `<ui-accordion>`, a `<ui-media>`. It paints that
   element's own surface and stretches it to the panel box, so it reads as the
-  flipside. `theme="black dark"` also flips `color-scheme` **for the panel only**,
+  flipside. `theme="gray-800 dark"` also flips `color-scheme` **for the panel only**,
   which re-tones the back's eyebrows, tags and links without touching the front face.
 - **Bespoke colours keep the custom properties.** `--ui-reveal-content-bg` / `-c` are
   still the right tool for a shade sampled from the card's own photo or a pastel
-  outside the nine-hue palette (that is exactly what the band cards in `index.html`
+  outside the palette (that is exactly what the band cards in `index.html`
   do). `theme=` is for palette colours; the two mechanisms compose — an explicit
   `--ui-reveal-content-bg` paints the panel *behind* a themed back element.
 

@@ -30,7 +30,7 @@ Peer dependency:
 npm install @browser.style/base
 ```
 
-> `@browser.style/base` provides the design token system. Because base is a required peer dependency, the global tokens `<ui-media>` references (`--color-overlay-light`, `--spacing-*`, `--radius-*`, the `--ui-theme-*` bundles, …) are always available — no hardcoded fallbacks needed.
+> `@browser.style/base` provides the design token system. Because base is a required peer dependency, the global tokens `<ui-media>` references (`--color-overlay-light`, `--spacing-*`, `--radius-*`, the `--color-<hue>-<step>` palette, …) are always available — no hardcoded fallbacks needed.
 
 The **overlay furniture** elements are separate packages. Install only the ones you use:
 
@@ -134,16 +134,16 @@ drift from the CSS. (`md:/lg:` is the container-query prefix column: only `asr()
 | `flp()` | flip | **mode** h v hv | — | — | --ui-media-fl-x --ui-media-fl-y | — | — |
 | `shp()` | shape | **shape** pt-d pt-u pt-l pt-r cut-r cut-l skew-r skew-l para rhomb inset hex chev-l chev-r arr-l arr-r star plus minus close bolt msg frame frame-in blinds-h blinds-v curve-d curve-u curve-r curve-l circle circ-45 | — | — | --ui-media-shape --ui-shape-morph --_shp --_shp-full --_r4 --_shp-clip | — | — |
 | `hov()` | hover | **mode** zoom pan track drift tilt tilt-out tilt-in rot-r rot-l shape shape-rev gray blur bright sat dim tint | — | — | --_hv-dur --_hv-ease --_hv-t --_f-gray --_f-blur --_f-bright --_f-sat --_hv-any --_hv-zoom --_hv-pan --_hv-track --_hv-drift --_hv-tilt --_hv-tiltx --_hv-tilt-out --_hv-tilt-in --_hv-rot-r --_hv-rot-l --_hv-shape --_hv-filter --_hv-tint | — | — |
-| `tnt()` | tint | **hue** red orange green blue accent black white gray slate | — | yes | --ui-media-tint-color --_tnt --_hv-tint | — | — |
+| `tnt()` | tint | **hue** accent-50 accent-100 accent-200 accent-300 accent-400 accent-500 accent-600 accent-700 accent-800 accent-900 accent-950 gray-50 gray-100 gray-200 gray-300 gray-400 gray-500 gray-600 gray-700 gray-800 gray-900 gray-950 red-50 red-100 red-200 red-300 red-400 red-500 red-600 red-700 red-800 red-900 red-950 orange-50 orange-100 orange-200 orange-300 orange-400 orange-500 orange-600 orange-700 orange-800 orange-900 orange-950 yellow-50 yellow-100 yellow-200 yellow-300 yellow-400 yellow-500 yellow-600 yellow-700 yellow-800 yellow-900 yellow-950 green-50 green-100 green-200 green-300 green-400 green-500 green-600 green-700 green-800 green-900 green-950 teal-50 teal-100 teal-200 teal-300 teal-400 teal-500 teal-600 teal-700 teal-800 teal-900 teal-950 cyan-50 cyan-100 cyan-200 cyan-300 cyan-400 cyan-500 cyan-600 cyan-700 cyan-800 cyan-900 cyan-950 blue-50 blue-100 blue-200 blue-300 blue-400 blue-500 blue-600 blue-700 blue-800 blue-900 blue-950 violet-50 violet-100 violet-200 violet-300 violet-400 violet-500 violet-600 violet-700 violet-800 violet-900 violet-950 pink-50 pink-100 pink-200 pink-300 pink-400 pink-500 pink-600 pink-700 pink-800 pink-900 pink-950 white black | — | yes | --ui-media-tint-color --_tnt --_hv-tint | — | — |
 | `scm()` | scrim | **pos** ts tc te cs cc ce bs bc be · **size** sm md lg xl · **tone** shr lgt med drk sld | — | yes | --ui-media-scrim --ui-media-scrim-paint --ui-media-scrim-color --ui-media-scrim-fade --ui-media-scrim-mid-stop --ui-media-scrim-end-stop --ui-media-scrim-cc-a --ui-media-scrim-cc-b | — | — |
-| `chip()` | furniture | **pos** ts tc te cs cc ce bs bc be · **hue** red orange green blue accent black white gray slate · **mode** pale muted · **variant** lgt out · **size** sm lg xl 2xl · **disc** non rnd pll crc sqr | — | — | --ui-chip-* --_theme-base-bg --_theme-base-c --_theme-bg --_theme-c | — | — |
-| `ai()` | furniture | **pos** ts tc te cs cc ce bs bc be · **hue** red orange green blue accent black white gray slate · **size** lg xl | — | — | --ui-ai-* --_theme-base-bg --_theme-base-c | — | — |
-| `sticker()` | furniture | **pos** ts tc te cs cc ce bs bc be · **hue** red orange green blue accent black white gray slate · **mode** pale muted · **size** sm lg xl 2xl 3xl · **disc** non rnd pll crc sqr · **shape** text spl spr sh:burst sh:blob sh:spark sh:sunburst sh:heart sh:&lt;custom&gt; · **flag** fit | — | — | --ui-sticker-* --_theme-base-bg --_theme-base-c --_theme-bg --_theme-c | — | — |
-| `save()` | furniture | **pos** ts tc te cs cc ce bs bc be · **hue** red orange green blue accent black white gray slate · **size** sm lg xl · **disc** non rnd crc sqr | — | — | --ui-save-c --ui-save-c-active --ui-save-sz --ui-save-circle-* | — | — |
-| `play()` | furniture | **pos** ts tc te cs cc ce bs bc be · **hue** red orange green blue accent black white gray slate · **size** sm md lg xl · **disc** non rnd pll crc sqr | — | — | --ui-play-sz --ui-play-icon-sz --ui-play-bg --ui-play-c --ui-play-radius --ui-play-corner --_play-block --_play-inline --_play-justify --_play-size | — | — |
-| `beacon()` | furniture | **pos** ts tc te cs cc ce bs bc be · **hue** red orange green blue accent black white gray slate · **mode** pale muted · **size** xs sm md lg xl 2xl · **face** sld tck ldr dts · **anim** bln pls brt · **disc** pll rnd sqr non | — | — | --ui-beacon-* --_theme-base-bg --_theme-base-c --_theme-bg --_theme-c | — | — |
-| `lightbox()` | furniture | **pos** ts tc te cs cc ce bs bc be · **hue** red orange green blue accent black white gray slate · **size** sm lg xl · **disc** non rnd crc sqr | — | — | --ui-lightbox-c --ui-lightbox-c-hover --ui-lightbox-sz --ui-lightbox-circle-* --_lb-block --_lb-inline --_lb-justify --_lb-size | — | — |
-| `marquee()` | band | **pos** top bot · **hue** red orange green blue accent black white gray slate · **mode** rpt seam fade pale muted · **size** sm lg xl 2xl · **disc** non rnd pll crc sqr · **value** right up down slow fast faster gap-sm gap-lg | — | — | --ui-marquee-* --_name --_dir --_theme-base-bg --_theme-base-c --_theme-bg --_theme-c --_mrq | — | — |
+| `chip()` | furniture | **pos** ts tc te cs cc ce bs bc be · **hue** accent-50 accent-100 accent-200 accent-300 accent-400 accent-500 accent-600 accent-700 accent-800 accent-900 accent-950 gray-50 gray-100 gray-200 gray-300 gray-400 gray-500 gray-600 gray-700 gray-800 gray-900 gray-950 red-50 red-100 red-200 red-300 red-400 red-500 red-600 red-700 red-800 red-900 red-950 orange-50 orange-100 orange-200 orange-300 orange-400 orange-500 orange-600 orange-700 orange-800 orange-900 orange-950 yellow-50 yellow-100 yellow-200 yellow-300 yellow-400 yellow-500 yellow-600 yellow-700 yellow-800 yellow-900 yellow-950 green-50 green-100 green-200 green-300 green-400 green-500 green-600 green-700 green-800 green-900 green-950 teal-50 teal-100 teal-200 teal-300 teal-400 teal-500 teal-600 teal-700 teal-800 teal-900 teal-950 cyan-50 cyan-100 cyan-200 cyan-300 cyan-400 cyan-500 cyan-600 cyan-700 cyan-800 cyan-900 cyan-950 blue-50 blue-100 blue-200 blue-300 blue-400 blue-500 blue-600 blue-700 blue-800 blue-900 blue-950 violet-50 violet-100 violet-200 violet-300 violet-400 violet-500 violet-600 violet-700 violet-800 violet-900 violet-950 pink-50 pink-100 pink-200 pink-300 pink-400 pink-500 pink-600 pink-700 pink-800 pink-900 pink-950 white black · **variant** lgt out · **size** sm lg xl 2xl · **disc** non rnd pll crc sqr | — | — | --ui-chip-* --_theme-base-bg --_theme-base-c --_theme-bg --_theme-c | — | — |
+| `ai()` | furniture | **pos** ts tc te cs cc ce bs bc be · **hue** accent-50 accent-100 accent-200 accent-300 accent-400 accent-500 accent-600 accent-700 accent-800 accent-900 accent-950 gray-50 gray-100 gray-200 gray-300 gray-400 gray-500 gray-600 gray-700 gray-800 gray-900 gray-950 red-50 red-100 red-200 red-300 red-400 red-500 red-600 red-700 red-800 red-900 red-950 orange-50 orange-100 orange-200 orange-300 orange-400 orange-500 orange-600 orange-700 orange-800 orange-900 orange-950 yellow-50 yellow-100 yellow-200 yellow-300 yellow-400 yellow-500 yellow-600 yellow-700 yellow-800 yellow-900 yellow-950 green-50 green-100 green-200 green-300 green-400 green-500 green-600 green-700 green-800 green-900 green-950 teal-50 teal-100 teal-200 teal-300 teal-400 teal-500 teal-600 teal-700 teal-800 teal-900 teal-950 cyan-50 cyan-100 cyan-200 cyan-300 cyan-400 cyan-500 cyan-600 cyan-700 cyan-800 cyan-900 cyan-950 blue-50 blue-100 blue-200 blue-300 blue-400 blue-500 blue-600 blue-700 blue-800 blue-900 blue-950 violet-50 violet-100 violet-200 violet-300 violet-400 violet-500 violet-600 violet-700 violet-800 violet-900 violet-950 pink-50 pink-100 pink-200 pink-300 pink-400 pink-500 pink-600 pink-700 pink-800 pink-900 pink-950 white black · **size** lg xl | — | — | --ui-ai-* --_theme-base-bg --_theme-base-c | — | — |
+| `sticker()` | furniture | **pos** ts tc te cs cc ce bs bc be · **hue** accent-50 accent-100 accent-200 accent-300 accent-400 accent-500 accent-600 accent-700 accent-800 accent-900 accent-950 gray-50 gray-100 gray-200 gray-300 gray-400 gray-500 gray-600 gray-700 gray-800 gray-900 gray-950 red-50 red-100 red-200 red-300 red-400 red-500 red-600 red-700 red-800 red-900 red-950 orange-50 orange-100 orange-200 orange-300 orange-400 orange-500 orange-600 orange-700 orange-800 orange-900 orange-950 yellow-50 yellow-100 yellow-200 yellow-300 yellow-400 yellow-500 yellow-600 yellow-700 yellow-800 yellow-900 yellow-950 green-50 green-100 green-200 green-300 green-400 green-500 green-600 green-700 green-800 green-900 green-950 teal-50 teal-100 teal-200 teal-300 teal-400 teal-500 teal-600 teal-700 teal-800 teal-900 teal-950 cyan-50 cyan-100 cyan-200 cyan-300 cyan-400 cyan-500 cyan-600 cyan-700 cyan-800 cyan-900 cyan-950 blue-50 blue-100 blue-200 blue-300 blue-400 blue-500 blue-600 blue-700 blue-800 blue-900 blue-950 violet-50 violet-100 violet-200 violet-300 violet-400 violet-500 violet-600 violet-700 violet-800 violet-900 violet-950 pink-50 pink-100 pink-200 pink-300 pink-400 pink-500 pink-600 pink-700 pink-800 pink-900 pink-950 white black · **size** sm lg xl 2xl 3xl · **disc** non rnd pll crc sqr · **shape** text spl spr sh:burst sh:blob sh:spark sh:sunburst sh:heart sh:&lt;custom&gt; · **flag** fit | — | — | --ui-sticker-* --_theme-base-bg --_theme-base-c --_theme-bg --_theme-c | — | — |
+| `save()` | furniture | **pos** ts tc te cs cc ce bs bc be · **hue** accent-50 accent-100 accent-200 accent-300 accent-400 accent-500 accent-600 accent-700 accent-800 accent-900 accent-950 gray-50 gray-100 gray-200 gray-300 gray-400 gray-500 gray-600 gray-700 gray-800 gray-900 gray-950 red-50 red-100 red-200 red-300 red-400 red-500 red-600 red-700 red-800 red-900 red-950 orange-50 orange-100 orange-200 orange-300 orange-400 orange-500 orange-600 orange-700 orange-800 orange-900 orange-950 yellow-50 yellow-100 yellow-200 yellow-300 yellow-400 yellow-500 yellow-600 yellow-700 yellow-800 yellow-900 yellow-950 green-50 green-100 green-200 green-300 green-400 green-500 green-600 green-700 green-800 green-900 green-950 teal-50 teal-100 teal-200 teal-300 teal-400 teal-500 teal-600 teal-700 teal-800 teal-900 teal-950 cyan-50 cyan-100 cyan-200 cyan-300 cyan-400 cyan-500 cyan-600 cyan-700 cyan-800 cyan-900 cyan-950 blue-50 blue-100 blue-200 blue-300 blue-400 blue-500 blue-600 blue-700 blue-800 blue-900 blue-950 violet-50 violet-100 violet-200 violet-300 violet-400 violet-500 violet-600 violet-700 violet-800 violet-900 violet-950 pink-50 pink-100 pink-200 pink-300 pink-400 pink-500 pink-600 pink-700 pink-800 pink-900 pink-950 white black · **size** sm lg xl · **disc** non rnd crc sqr | — | — | --ui-save-c --ui-save-c-active --ui-save-sz --ui-save-circle-* | — | — |
+| `play()` | furniture | **pos** ts tc te cs cc ce bs bc be · **hue** accent-50 accent-100 accent-200 accent-300 accent-400 accent-500 accent-600 accent-700 accent-800 accent-900 accent-950 gray-50 gray-100 gray-200 gray-300 gray-400 gray-500 gray-600 gray-700 gray-800 gray-900 gray-950 red-50 red-100 red-200 red-300 red-400 red-500 red-600 red-700 red-800 red-900 red-950 orange-50 orange-100 orange-200 orange-300 orange-400 orange-500 orange-600 orange-700 orange-800 orange-900 orange-950 yellow-50 yellow-100 yellow-200 yellow-300 yellow-400 yellow-500 yellow-600 yellow-700 yellow-800 yellow-900 yellow-950 green-50 green-100 green-200 green-300 green-400 green-500 green-600 green-700 green-800 green-900 green-950 teal-50 teal-100 teal-200 teal-300 teal-400 teal-500 teal-600 teal-700 teal-800 teal-900 teal-950 cyan-50 cyan-100 cyan-200 cyan-300 cyan-400 cyan-500 cyan-600 cyan-700 cyan-800 cyan-900 cyan-950 blue-50 blue-100 blue-200 blue-300 blue-400 blue-500 blue-600 blue-700 blue-800 blue-900 blue-950 violet-50 violet-100 violet-200 violet-300 violet-400 violet-500 violet-600 violet-700 violet-800 violet-900 violet-950 pink-50 pink-100 pink-200 pink-300 pink-400 pink-500 pink-600 pink-700 pink-800 pink-900 pink-950 white black · **size** sm md lg xl · **disc** non rnd pll crc sqr | — | — | --ui-play-sz --ui-play-icon-sz --ui-play-bg --ui-play-c --ui-play-radius --ui-play-corner --_play-block --_play-inline --_play-justify --_play-size | — | — |
+| `beacon()` | furniture | **pos** ts tc te cs cc ce bs bc be · **hue** accent-50 accent-100 accent-200 accent-300 accent-400 accent-500 accent-600 accent-700 accent-800 accent-900 accent-950 gray-50 gray-100 gray-200 gray-300 gray-400 gray-500 gray-600 gray-700 gray-800 gray-900 gray-950 red-50 red-100 red-200 red-300 red-400 red-500 red-600 red-700 red-800 red-900 red-950 orange-50 orange-100 orange-200 orange-300 orange-400 orange-500 orange-600 orange-700 orange-800 orange-900 orange-950 yellow-50 yellow-100 yellow-200 yellow-300 yellow-400 yellow-500 yellow-600 yellow-700 yellow-800 yellow-900 yellow-950 green-50 green-100 green-200 green-300 green-400 green-500 green-600 green-700 green-800 green-900 green-950 teal-50 teal-100 teal-200 teal-300 teal-400 teal-500 teal-600 teal-700 teal-800 teal-900 teal-950 cyan-50 cyan-100 cyan-200 cyan-300 cyan-400 cyan-500 cyan-600 cyan-700 cyan-800 cyan-900 cyan-950 blue-50 blue-100 blue-200 blue-300 blue-400 blue-500 blue-600 blue-700 blue-800 blue-900 blue-950 violet-50 violet-100 violet-200 violet-300 violet-400 violet-500 violet-600 violet-700 violet-800 violet-900 violet-950 pink-50 pink-100 pink-200 pink-300 pink-400 pink-500 pink-600 pink-700 pink-800 pink-900 pink-950 white black · **size** xs sm md lg xl 2xl · **face** sld tck ldr dts · **anim** bln pls brt · **disc** pll rnd sqr non | — | — | --ui-beacon-* --_theme-base-bg --_theme-base-c --_theme-bg --_theme-c | — | — |
+| `lightbox()` | furniture | **pos** ts tc te cs cc ce bs bc be · **hue** accent-50 accent-100 accent-200 accent-300 accent-400 accent-500 accent-600 accent-700 accent-800 accent-900 accent-950 gray-50 gray-100 gray-200 gray-300 gray-400 gray-500 gray-600 gray-700 gray-800 gray-900 gray-950 red-50 red-100 red-200 red-300 red-400 red-500 red-600 red-700 red-800 red-900 red-950 orange-50 orange-100 orange-200 orange-300 orange-400 orange-500 orange-600 orange-700 orange-800 orange-900 orange-950 yellow-50 yellow-100 yellow-200 yellow-300 yellow-400 yellow-500 yellow-600 yellow-700 yellow-800 yellow-900 yellow-950 green-50 green-100 green-200 green-300 green-400 green-500 green-600 green-700 green-800 green-900 green-950 teal-50 teal-100 teal-200 teal-300 teal-400 teal-500 teal-600 teal-700 teal-800 teal-900 teal-950 cyan-50 cyan-100 cyan-200 cyan-300 cyan-400 cyan-500 cyan-600 cyan-700 cyan-800 cyan-900 cyan-950 blue-50 blue-100 blue-200 blue-300 blue-400 blue-500 blue-600 blue-700 blue-800 blue-900 blue-950 violet-50 violet-100 violet-200 violet-300 violet-400 violet-500 violet-600 violet-700 violet-800 violet-900 violet-950 pink-50 pink-100 pink-200 pink-300 pink-400 pink-500 pink-600 pink-700 pink-800 pink-900 pink-950 white black · **size** sm lg xl · **disc** non rnd crc sqr | — | — | --ui-lightbox-c --ui-lightbox-c-hover --ui-lightbox-sz --ui-lightbox-circle-* --_lb-block --_lb-inline --_lb-justify --_lb-size | — | — |
+| `marquee()` | band | **pos** top bot · **hue** accent-50 accent-100 accent-200 accent-300 accent-400 accent-500 accent-600 accent-700 accent-800 accent-900 accent-950 gray-50 gray-100 gray-200 gray-300 gray-400 gray-500 gray-600 gray-700 gray-800 gray-900 gray-950 red-50 red-100 red-200 red-300 red-400 red-500 red-600 red-700 red-800 red-900 red-950 orange-50 orange-100 orange-200 orange-300 orange-400 orange-500 orange-600 orange-700 orange-800 orange-900 orange-950 yellow-50 yellow-100 yellow-200 yellow-300 yellow-400 yellow-500 yellow-600 yellow-700 yellow-800 yellow-900 yellow-950 green-50 green-100 green-200 green-300 green-400 green-500 green-600 green-700 green-800 green-900 green-950 teal-50 teal-100 teal-200 teal-300 teal-400 teal-500 teal-600 teal-700 teal-800 teal-900 teal-950 cyan-50 cyan-100 cyan-200 cyan-300 cyan-400 cyan-500 cyan-600 cyan-700 cyan-800 cyan-900 cyan-950 blue-50 blue-100 blue-200 blue-300 blue-400 blue-500 blue-600 blue-700 blue-800 blue-900 blue-950 violet-50 violet-100 violet-200 violet-300 violet-400 violet-500 violet-600 violet-700 violet-800 violet-900 violet-950 pink-50 pink-100 pink-200 pink-300 pink-400 pink-500 pink-600 pink-700 pink-800 pink-900 pink-950 white black · **mode** rpt seam fade · **size** sm lg xl 2xl · **disc** non rnd pll crc sqr · **value** right up down slow fast faster gap-sm gap-lg | — | — | --ui-marquee-* --_name --_dir --_theme-base-bg --_theme-base-c --_theme-bg --_theme-c --_mrq | — | — |
 | `vid()` | video | **mode** cc pip fls · **size** sm md lg xl | — | — | --ui-media-tool-fullscreen --ui-media-tool-pip --ui-media-tool-cc --ui-media-tool-bg --ui-media-tool-bg-hover --ui-media-tool-size | — | — |
 | `load()` | loading | **mode** eager lazy | — | — | — | — | — |
 | `nav()` | carousel | **mode** mrk arw blw abv end non | — | yes | --ui-media-bg --ui-carousel-* | — | — |
@@ -180,7 +180,7 @@ What each one is *for*:
 | `nav()` | carousel — **the token IS the trigger**; bare = markers + arrows (full control vocabulary — `arw()`, `mrk()`, `tmb()`, `axis(y)`, `auto`, `loop`, `stagger`, `load()` — in [carousel.md](./carousel.md)) |
 | `vid()` | player-tool cluster over a chrome-less `<video>` — JS **injects** the requested buttons (bottom-end; order CC → PiP → fullscreen, fullscreen rightmost). Size mirrors `arw()` (`vid(sm)`…`vid(xl)`, default 2.5rem). Needs `index.js`; PiP feature-detected (skipped in Firefox). `cc` = subtitles/captions button (glyph only — **switching not wired yet**). *(Play/pause is `<ui-play>` furniture, not a `vid()` value.)* |
 | `load()` | loading strategy — `load(eager)` makes every slide eager and gives the first `fetchpriority="high"` |
-| `chip()` `sticker()` `beacon()` `save()` `play()` | place + theme an overlay element — position **or** hue **or** that element's own size/shape args, one atomic token each |
+| `chip()` `sticker()` `beacon()` `save()` `play()` | place + theme an overlay element — position **or** colour **or** that element's own size/shape args, one atomic token each |
 | `play()` | also **sizes** the `<ui-play>` control (`sm md lg xl`). Mirrors `<ui-play>`'s own `size=` scale; an explicit `size=` on the element still wins. Position args (`ts…be`) and size args are disjoint vocabularies, so one stem parses unambiguously. *(The old `ply(<size>)` stem was removed in v5.)* |
 | `marquee()` | the `<ui-marquee>` **band** (not 9-grid furniture) — see *Overlay furniture* |
 | `pages` | **`<lay-out overflow>` only** — one `::scroll-marker` per *page* of items instead of per item; see [carousel.md](./carousel.md#pages--one-marker-per-page-lay-out-overflow-only) |
@@ -355,7 +355,7 @@ Every `()` token is *sugar* over a custom property, so any value that has no tok
 
 The media area hosts **seven overlay elements** — `<ui-chip>`, `<ui-beacon>`, `<ui-sticker>`, `<ui-save>`, `<ui-play>`, `<ui-lightbox>`, `<ui-ai>`. They carry **only their text/glyph** — position and theme come from the parent `media=` string (so a `<ui-card>` can configure them and the config inherits down).
 
-`<ui-ai>` is the EU AI Act disclosure label. Its content decides what shows: text (`GENERATED` / `MODIFIED` by default, written by `render.js` from a media item's `ai` object, or a phrase such as `Voice rendered with AI`) shows the EU icon plus that text, as written, and an empty element shows the icon alone. `ai(…)` on `media=` is the look (cell, hue, `lg|xl` size). Default cell `bc`; default size is the smallest readable, 11px, in rem. Full contract: [`../../ai/readme.md`](../../ai/readme.md); what changed in 2.0: [`../../ai/migration.md`](../../ai/migration.md); demo: [`demo/media.ai.html`](../demo/media.ai.html).
+`<ui-ai>` is the EU AI Act disclosure label. Its content decides what shows: text (`GENERATED` / `MODIFIED` by default, written by `render.js` from a media item's `ai` object, or a phrase such as `Voice rendered with AI`) shows the EU icon plus that text, as written, and an empty element shows the icon alone. `ai(…)` on `media=` is the look (cell, colour, `lg|xl` size). Default cell `bc`; default size is the smallest readable, 11px, in rem. Full contract: [`../../ai/readme.md`](../../ai/readme.md); what changed in 2.0: [`../../ai/migration.md`](../../ai/migration.md); demo: [`demo/media.ai.html`](../demo/media.ai.html).
 
 ### Furniture vs band — `<ui-marquee>` is not furniture
 
@@ -375,7 +375,7 @@ Two placement modes:
 
 ```html
 <!-- overlaid on the media, pinned to the bottom -->
-<ui-card variant="col" media="asr(4/3) marquee(bot) marquee(rpt) marquee(red) marquee(sm)">
+<ui-card variant="col" media="asr(4/3) marquee(bot) marquee(rpt) marquee(red-700) marquee(sm)">
   <cq-box>
     <ui-media>
       <img src="…" alt="…">
@@ -386,13 +386,13 @@ Two placement modes:
 </ui-card>
 ```
 
-Args beyond position: mode `marquee(rpt)` (continuous repeat) / `marquee(seam)` / `marquee(fade)`, hue (the canonical nine, below), size `marquee(sm|lg|xl|2xl)`, speed `marquee(slow|fast|faster)`, gap `marquee(gap-sm|gap-lg)`, corner `marquee(non|rnd|pll|crc|sqr)`, direction `marquee(right|up|down)`.
+Args beyond position: mode `marquee(rpt)` (continuous repeat) / `marquee(seam)` / `marquee(fade)`, colour (the palette, below), size `marquee(sm|lg|xl|2xl)`, speed `marquee(slow|fast|faster)`, gap `marquee(gap-sm|gap-lg)`, corner `marquee(non|rnd|pll|crc|sqr)`, direction `marquee(right|up|down)`.
 
 > **`marquee(rpt)` was `marquee(loop)`.** Renamed because `loop` is also a bare carousel flag in the same `media=` string — `media="nav loop"` starts autoplay-with-clones, and a substring-matched `marquee(loop)` collided with it. The old spelling is **fully removed** (no live alias — the one rename where keeping one would re-create the collision surface); the carousel's own bare `loop` is whole-token matched so the two can never cross-fire again.
 
 Content is markup-free: put the text in `aria-label` on an empty `<ui-marquee>` and it fills `::before`/`::after` while doubling as the accessible name. Full component: [ui/marquee](../../marquee).
 
-> **Placement caveat.** Unlike the nine-point furniture tokens, the two *position* tokens are matched as `:where([media*="marquee(top|bot)"]) ui-media ui-marquee` — the token holder must be an **ancestor** of the `<ui-media>`. Put `marquee(bot)` on the `<ui-card>`/`<ui-reveal>` host, not on the `<ui-media>` itself. Every other `marquee()` arg (hue, size, mode, speed…) resolves through the component's own arms and works from either placement; `marquee(top)` is the base default regardless.
+> **Placement caveat.** Unlike the nine-point furniture tokens, the two *position* tokens are matched as `:where([media*="marquee(top|bot)"]) ui-media ui-marquee` — the token holder must be an **ancestor** of the `<ui-media>`. Put `marquee(bot)` on the `<ui-card>`/`<ui-reveal>` host, not on the `<ui-media>` itself. Every other `marquee()` arg (colour, size, mode, speed…) resolves through the component's own arms and works from either placement; `marquee(top)` is the base default regardless.
 
 ### The 3×3 positioning grid
 
@@ -437,73 +437,73 @@ elements are **always children of `<ui-media>`** (the box that positions them) �
 
 ### Theming an overlay from the parent
 
-Theme an element with a **sub-theme key** in `media=`:
+Theme an element with a **palette colour** in `media=`:
 
 ```html
-<ui-media media="chip(red) sticker(green)">
+<ui-media media="chip(red-700) sticker(green-800)">
   <img src="product.jpg" alt="Product">
-  <ui-chip>Sale</ui-chip>            <!-- red bundle -->
-  <ui-sticker>-20%</ui-sticker>      <!-- green bundle -->
+  <ui-chip>Sale</ui-chip>            <!-- red-700 -->
+  <ui-sticker>-20%</ui-sticker>      <!-- green-800 -->
 </ui-media>
 ```
 
-#### The canonical nine hues
+#### The palette colours
 
 ```
-red   orange   green   blue
-accent   black   white   gray   slate
+chip(green-300)   sticker(red-700)   tnt(blue-500)   beacon(white)   save(gray-800)
 ```
 
-Four hues + five neutrals — decorative, *not* status. The neutral ramp runs
-`white < gray < slate < black`; `slate` was promoted from a `gray` alias to a
-canonical hue in v5 because it always routed to its own `--ui-theme-slate-*`
-bundle, never to gray's. They route into the element's **own** tokens (`--ui-chip-accent`/`-c`, `--ui-sticker-bg/-c`, `--ui-beacon-accent/-c`, `--ui-marquee-bg/-c`, `--ui-save-c`, `--ui-play-bg/-c`) and resolve from the shared `--ui-theme-*` bundles defined once in `@browser.style/base`. This is the **same palette** as each element's self-service `theme=` attribute — `media="chip(red)"` and `<ui-chip theme="red">` produce identical colors.
+A furniture colour is a palette name — `<hue>-<step>` (`red-700`, `green-300`, `accent-700`), or `white` / `black`.
+Ten hues (`gray red orange yellow green teal cyan blue violet pink`) plus the `accent` alias, each with Tailwind's
+steps (`50`, `100`–`900`, `950`); the palette, the dark-page mirroring and how to change or add a hue are in
+[theme.md](../../base/theme.md#palette). Colours are decorative, *not* status.
 
-Two **fill modifiers** compose on top of a hue: `el(pale)` (mixed 80% into the surface, hue-coloured ink) and `el(muted)` (50% transparent).
+They route into the element's **own** tokens (`--ui-chip-accent`/`-c`, `--ui-sticker-bg/-c`, `--ui-beacon-accent/-c`, `--ui-marquee-bg/-c`, `--ui-save-c`, `--ui-play-bg/-c`) and resolve from the shared `--color-<hue>-<step>` and `-text` variables generated once in `@browser.style/base`. This is the **same palette** as each element's self-service `theme=` attribute — `media="chip(red-700)"` and `<ui-chip theme="red-700">` produce identical colors.
 
-#### Removed hue aliases (v5)
+All furniture tokens share one `media=` attribute, so CSS cannot read hue and step apart: each element carries one generated rule per colour (the ten hues and `accent` at eleven steps, plus `white` and `black`), loaded only with that element. There are **no fill modifiers** — a light colour is a light step (`chip(red-200)`), and see-through is the `glass` look of `theme=`, which furniture tokens do not take.
 
-The doc-era spellings `dark`, `light` and `subtle` were **removed in v5** on every
-hue-taking token — use `black`, `white` and `gray`. `slate` was *not* removed: it
-became a canonical hue (above). Nothing is left in the alias table, which is
-generated, so it stays empty until a new alias is declared:
+#### Removed spellings
+
+The nine old names (`red orange green blue accent black white gray slate`), the `pale` / `muted`
+modifiers (`el(pale)`, `el(muted)`) and the doc-era `dark` / `light` / `subtle` were **removed**. The nearest
+step of the same hue replaces them — the table is in
+[theme.md § From the nine names](../../base/theme.md#from-the-nine-names). Nothing is left in the alias
+table, which is generated, so it stays empty until a new alias is declared:
 
 <!-- tokens:aliases attr=media stems=tnt,chip,sticker,beacon,marquee,save,play,lightbox -->
 | deprecated | canonical | on | kind |
 |---|---|---|---|
 <!-- /tokens -->
 
-> **Why `slate` was promoted rather than removed.** `dark`/`light`/`subtle` really were re-spellings of `black`/`white`/`gray` and routed to those bundles, so dropping them cost nothing. `slate` never did: it routes to its **own** `--ui-theme-slate-*` bundle — a fifth neutral, one step lighter than `black` — and every one of the six furniture/band elements plus `tnt()` implements it. Removing it would have deleted a colour, so it joined the canonical set instead. `theme="slate"` on the element itself keeps working exactly as before.
-
 #### Per-element support matrix (generated from the manifest)
 
 The furniture stems and the exact vocabulary each one accepts. A blank cell means that
-element has no such axis — `pos` and `hue` are universal; the rest differ per element.
+element has no such axis — `pos` is universal; the rest differ per element. The colour is left out: every
+element takes the same [palette colours](#the-palette-colours) (121 `<hue>-<step>` names plus `white` and `black`),
+listed in full in [tokens.md](./tokens.md).
 
-<!-- tokens:matrix attr=media stems=chip,sticker,beacon,marquee,save,play,lightbox classes=pos,hue,mode,size,disc,face,anim,shape,flag,value -->
-| token | pos | hue | mode | size | disc | face | anim | shape | flag | value | deprecated aliases |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| `chip()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray slate | pale muted | sm lg xl 2xl | non rnd pll crc sqr | — | — | — | — | — | — |
-| `sticker()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray slate | pale muted | sm lg xl 2xl 3xl | non rnd pll crc sqr | — | — | text spl spr sh:burst sh:blob sh:spark sh:sunburst sh:heart sh:&lt;custom&gt; | fit | — | — |
-| `beacon()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray slate | pale muted | xs sm md lg xl 2xl | pll rnd sqr non | sld tck ldr dts | bln pls brt | — | — | — | — |
-| `marquee()` | top bot | red orange green blue accent black white gray slate | rpt seam fade pale muted | sm lg xl 2xl | non rnd pll crc sqr | — | — | — | — | right up down slow fast faster gap-sm gap-lg | — |
-| `save()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray slate | — | sm lg xl | non rnd crc sqr | — | — | — | — | — | — |
-| `play()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray slate | — | sm md lg xl | non rnd pll crc sqr | — | — | — | — | — | — |
-| `lightbox()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray slate | — | sm lg xl | non rnd crc sqr | — | — | — | — | — | — |
+<!-- tokens:matrix attr=media stems=chip,sticker,beacon,marquee,save,play,lightbox classes=pos,mode,size,disc,face,anim,shape,flag,value -->
+| token | pos | mode | size | disc | face | anim | shape | flag | value | deprecated aliases |
+|---|---|---|---|---|---|---|---|---|---|---|
+| `chip()` | ts tc te cs cc ce bs bc be | — | sm lg xl 2xl | non rnd pll crc sqr | — | — | — | — | — | — |
+| `sticker()` | ts tc te cs cc ce bs bc be | — | sm lg xl 2xl 3xl | non rnd pll crc sqr | — | — | text spl spr sh:burst sh:blob sh:spark sh:sunburst sh:heart sh:&lt;custom&gt; | fit | — | — |
+| `beacon()` | ts tc te cs cc ce bs bc be | — | xs sm md lg xl 2xl | pll rnd sqr non | sld tck ldr dts | bln pls brt | — | — | — | — |
+| `marquee()` | top bot | rpt seam fade | sm lg xl 2xl | non rnd pll crc sqr | — | — | — | — | right up down slow fast faster gap-sm gap-lg | — |
+| `save()` | ts tc te cs cc ce bs bc be | — | sm lg xl | non rnd crc sqr | — | — | — | — | — | — |
+| `play()` | ts tc te cs cc ce bs bc be | — | sm md lg xl | non rnd pll crc sqr | — | — | — | — | — | — |
+| `lightbox()` | ts tc te cs cc ce bs bc be | — | sm lg xl | non rnd crc sqr | — | — | — | — | — | — |
 <!-- /tokens -->
 
-> **Honest gap: no `pale`/`muted` on `save`/`play`/`lightbox`.** The `mode` column is empty for all three — the **hue** axis on each drives a single ink (`--ui-save-c`, `--ui-play-bg/-c`, `--ui-lightbox-c`) with nothing to mix a tint into, so `media="save(pale)"` / `media="play(muted)"` are silently inert. All three *do* ship the full canonical nine, `slate` included (verified in `ui/save/ui-save.css` and `ui/play/ui-play.css`), so hue itself has no holes.
->
-> Not a hue: `save`/`lightbox` also carry a **disc**, and its default is inherited from the carousel rather than from the page — `--ui-carousel-arrow-plate` / `-ink`, so the furniture matches the arrows in every nav style and no longer flips with `color-scheme` on its own. See [carousel.md § The furniture discs follow the arrows](./carousel.md#the-furniture-discs-follow-the-arrows).
+> `save`/`lightbox` also carry a **disc**, and its default is inherited from the carousel rather than from the page — `--ui-carousel-arrow-plate` / `-ink`, so the furniture matches the arrows in every nav style and no longer flips with `color-scheme` on its own. See [carousel.md § The furniture discs follow the arrows](./carousel.md#the-furniture-discs-follow-the-arrows).
 
-> **Position and hue are disjoint vocabularies** (`ts…be` vs `red…gray`), so `chip(cc)` and `chip(black)` parse unambiguously. They are **two atomic tokens** — `media="chip(te) chip(black)"`, not a combined `chip(te black)` — so the pure-CSS substring parser can scope each arg to its element. Because position usually defaults by role, the common case is a single token (e.g. `chip(black)`).
+> **Position and colour are disjoint vocabularies** (`ts…be` vs `red-700`), so `chip(cc)` and `chip(gray-800)` parse unambiguously. They are **two atomic tokens** — `media="chip(te) chip(gray-800)"`, not a combined `chip(te gray-800)` — so the pure-CSS substring parser can scope each arg to its element. Because position usually defaults by role, the common case is a single token (e.g. `chip(gray-800)`).
 
 ### Element details
 
 | Element | Shape / markup | Notes |
 |---------|----------------|-------|
 | `<ui-chip>` | pill label (reuses `ui/chip`) | `variant` light/outline/square/squircle, `size`, `theme`, `color`. (The unrelated `<ui-badge>` cart-number badge is untouched.) |
-| `<ui-beacon>` | animated dot / pill / solid label (reuses `ui/beacon`) | the chip's **live** counterpart. Card tokens: hue `beacon(red…white)` (same `--ui-theme-*` bundles as chip/sticker), face `beacon(dts)` dots / `beacon(pll)` pill / `beacon(sld)` solid / `beacon(tck)` ticker (markup-free — the sliding panel and dot loader are pseudo-elements), animation `beacon(bln)` blink / `beacon(pls)` pulse / `beacon(brt)` breathe / `beacon(non)` off (solid defaults to blink), size `beacon(xs\|sm\|md\|lg\|xl\|2xl)`, corner `beacon(rnd\|sqr)`, arbitrary colour via `fill=`/`ink=`. Over imagery prefer `pll`/`sld` — the bare dot has no contrast plate. **Marker-class as furniture**: plain text-only markup, summary-safe. Animations are gated behind `prefers-reduced-motion: no-preference` (never start for reduced-motion users); `[paused]` freezes a running one. |
+| `<ui-beacon>` | animated dot / pill / solid label (reuses `ui/beacon`) | the chip's **live** counterpart. Card tokens: colour `beacon(<hue>-<step>)` (the same palette as chip/sticker), face `beacon(dts)` dots / `beacon(pll)` pill / `beacon(sld)` solid / `beacon(tck)` ticker (markup-free — the sliding panel and dot loader are pseudo-elements), animation `beacon(bln)` blink / `beacon(pls)` pulse / `beacon(brt)` breathe / `beacon(non)` off (solid defaults to blink), size `beacon(xs\|sm\|md\|lg\|xl\|2xl)`, corner `beacon(rnd\|sqr)`, arbitrary colour via `fill=`/`ink=`. Over imagery prefer `pll`/`sld` — the bare dot has no contrast plate. **Marker-class as furniture**: plain text-only markup, summary-safe. Animations are gated behind `prefers-reduced-motion: no-preference` (never start for reduced-motion users); `[paused]` freezes a running one. |
 | `<ui-sticker>` | round disc; opt-in starburst via `variant="sh:burst"` (`--ui-sticker-clip-path`); **multi-line** | each direct child is a line; `--ui-sticker-gap` controls line-spacing, `text-box: cap alphabetic` trims leading |
 | `<ui-save>` | `<ui-save><button type="button" command="--save" commandfor="<media id>" aria-label="Save …"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>` | favorite ≈ wishlist ≈ bookmark. Composes an **invoker button** with `aria-pressed` for saved state (`aria-pressed="true"` = saved) — the same invoker shape `<ui-play>` uses. Glyph via the `<ui-icon shape>` (heart / bookmark / star). |
 | `<ui-play>` | see the invoker contract below | play affordance (default `cc`, sized with `play(sm\|md\|lg\|xl)`). `variant="reveal"` hides until media hover/focus. **In a scrolling carousel** (`auto`/`loop`) it becomes the play/pause control: `position:sticky`-pinned to the scrollport (plain furniture scrolls away) and wired by `carousel.js` — see [media.carousel.md](./media.carousel.md#playpause-control-ui-play). |
@@ -662,7 +662,7 @@ With aspect-less tiles the row height comes from the tiles' own floor: **`--ui-m
 
 ### Gutter colour — theme the lay-out, never the frame
 
-A gap is a **hole**: it shows whatever paints behind it, and the nearest layer is the `<lay-out>` itself. A collage with visible gutters therefore paints them on the layout — `theme="gray"` (the shared axis, which feeds `--_theme-bg`) or `--layout-bg` directly. The builder already does this for `mosaic(photo)`, which ships `--layout-bg: light-dark(#333, #EEE)`.
+A gap is a **hole**: it shows whatever paints behind it, and the nearest layer is the `<lay-out>` itself. A collage with visible gutters therefore paints them on the layout — `theme="gray-200"` (the shared axis, which feeds `--_theme-bg`) or `--layout-bg` directly. The builder already does this for `mosaic(photo)`, which ships `--layout-bg: light-dark(#333, #EEE)`.
 
 Do **not** leave the layout transparent and let the frame's own plate show through. It looks like it works — a bare `<ui-media>` paints `--color-overlay-light` — right up until the frame gains `nav`: a scroller sets `--ui-media-bg: #0000` so slides fill it edge to edge, and every gutter goes invisible in the same commit that added the carousel. That is exactly what happened to the ProductGroup collage in `demo/schema.html`, whose `cg(3xs) rg(3xs)` hairline was still 1px wide and painting white on white.
 
@@ -1094,7 +1094,7 @@ Overlay positions are **not tokens** — each element has a default position by 
 ### Standalone with overlay furniture
 
 ```html
-<ui-media media="asr(4/3) chip(red) sticker(green) sticker(cc)">
+<ui-media media="asr(4/3) chip(red-700) sticker(green-800) sticker(cc)">
   <img src="https://picsum.photos/600/450" alt="Hiking boots">
   <ui-chip>Sale</ui-chip>            <!-- ts (default), red -->
   <ui-sticker>-20%</ui-sticker>      <!-- cc (override), green, single line -->
@@ -1114,7 +1114,7 @@ Overlay positions are **not tokens** — each element has a default position by 
 ### Nested in `<ui-card>` — everything configured on the parent
 
 ```html
-<ui-card media="asr(4/3) chip(red) sticker(cc) sticker(green)"
+<ui-card media="asr(4/3) chip(red-700) sticker(cc) sticker(green-800)"
          content="scl(lg) pad(md)"
          variant="col">
   <ui-media>
@@ -1249,7 +1249,7 @@ preferred path) get the full cap for free.
 - **`<ui-save>`** — always set a descriptive `aria-label` on the inner `<button>` (the renderer writes "Save <headline> to favorites"). Saved state is `aria-pressed`; keyboard and focus come from the native button.
 - **`<ui-play>`** — the inner `<button>` carries `aria-label`; `aria-pressed` is mirrored from the target's **real** playback state, never guessed. The CSS-only fallback is still a real, focusable button.
 - **Interactive overlays are card-only.** Never place `<ui-save>` / `<ui-play>` inside a reveal `<summary>` — a click there toggles the `<details>`, and interactive content is invalid in `summary`. Markers (`<ui-chip>`, `<ui-sticker>`) are safe there.
-- **Color isn't meaning.** Hues (`red`/`green`/…) are decorative; convey status with text, not hue alone.
+- **Color isn't meaning.** Palette colours (`red-700`/`green-800`/…) are decorative; convey status with text, not hue alone.
 - Hover effects respect `prefers-reduced-motion: reduce` (disabled); carousel smooth-scroll is gated the same way.
 
 ---
@@ -1284,7 +1284,8 @@ simply a no-op). Migration is a find-and-replace, but it is now mandatory:
 | removed | use instead | on |
 |---|---|---|
 | `ovr(tl)` `ovr(tr)` `ovr(cl)` `ovr(cr)` `ovr(bl)` `ovr(br)` | `ovr(ts)` `ovr(te)` `ovr(cs)` `ovr(ce)` `ovr(bs)` `ovr(be)` | `variant=` |
-| `…(dark)` `…(light)` `…(subtle)` on `tnt` `chip` `sticker` `beacon` `marquee` `save` `play` | `…(black)` `…(white)` `…(gray)` | `media=` |
+| `…(dark)` `…(light)` `…(subtle)` on `tnt` `chip` `sticker` `beacon` `marquee` `save` `play` | `…(gray-800)` `…(white)` `…(gray-200)` | `media=` |
+| `…(red)` `…(orange)` `…(green)` `…(blue)` `…(accent)` `…(white)` `…(gray)` `…(slate)` `…(black)` (the nine names) and `…(pale)` `…(muted)` | a palette colour, e.g. `…(red-700)` — the table is in [theme.md](../../base/theme.md#from-the-nine-names) | `media=` |
 | `marquee(loop)` | `marquee(rpt)` | `media=` |
 | `rds(none)` | `rds(non)` | `variant=` `media=` `content=` |
 | `scm(sheer)` `scm(solid)` | `scm(shr)` `scm(sld)` | `media=` |
@@ -1292,7 +1293,7 @@ simply a no-op). Migration is a find-and-replace, but it is now mandatory:
 | `scl` `scl(ts…be)` `lg:scl` `lg:scl(ts…be)` | `grw` `grw(ts…be)` `lg:grw` `lg:grw(ts…be)` | `variant=` |
 
 - **`ovr(tl…br)` → `ovr(ts…be)`** — the implementation was **already logical**: `ovr(tl)` rendered top-*end* in RTL, so the physical names were mislabels, not behaviour. Six spellings went, not nine: `ovr(tc)`/`ovr(cc)`/`ovr(bc)` are identical in both grids. `obp(tl…br)` followed in a later v5 round, so `ts tc te · cs cc ce · bs bc be` is now the single spelling everywhere.
-- **`…(dark)`/`…(light)`/`…(subtle)` → `…(black)`/`…(white)`/`…(gray)`** — one hue palette (see *The canonical nine hues*). `slate` was **not** removed with them: it routes to its own `--ui-theme-slate-*` bundle, so it was promoted to a canonical hue instead.
+- **`…(dark)`/`…(light)`/`…(subtle)` → `…(gray-800)`/`…(white)`/`…(gray-200)`** — one palette (see *The palette colours*). The nine names that replaced them in v5 were themselves replaced by `<hue>-<step>`.
 - **`marquee(loop)` → `marquee(rpt)`** — `loop` is also the bare carousel autoplay-with-clones flag in the same attribute; the substring match collided, and keeping an alias would have kept the collision surface alive.
 - **`rds(none)` → `rds(non)`** (all three attributes) — three-letter args everywhere; `non` matches the `non`/`rnd`/`pll`/`crc`/`sqr` corner vocabulary the furniture already uses.
 - **`scm(sheer)`/`scm(solid)` → `scm(shr)`/`scm(sld)`** — same, canonical 3-letter intensity codes, matching the `lgt`/`med`/`drk` ones between them.
@@ -1538,7 +1539,7 @@ had to be kept in sync by hand. The same pair drives `obp()`'s inline axis.
 
 ### Sub-theme routing lives in the components
 
-`chip(<hue>)` / `sticker(<hue>)` colour and `save(<hue>|<size>|non)` are **not** in
+`chip(<colour>)` / `sticker(<colour>)` colour and `save(<colour>|<size>|non)` are **not** in
 `media.css`. Each lives in its own sheet (`ui/{chip,sticker,save}/ui-*.css`) in one nested
 rule combined with the standalone attribute form (`theme=` / `color=` / `size=` /
 `variant="non"`), so there is a single source of truth per element. Only the shared
@@ -1552,9 +1553,9 @@ rule combined with the standalone attribute form (`theme=` / `color=` / `size=` 
 only rotates the hues already there).
 
 ```html
-<ui-media media="tnt(red)">                                   <!-- named preset → --ui-theme-red-bg -->
+<ui-media media="tnt(red-700)">                                   <!-- a palette colour → --color-red-700 -->
 <ui-media media="tnt" style="--ui-media-tint-color:#c8102e">  <!-- any brand colour or gradient -->
-<ui-media media="tnt(blue) hov(tint)">                        <!-- fade out on hover → true colour -->
+<ui-media media="tnt(blue-900) hov(tint)">                        <!-- fade out on hover → true colour -->
 ```
 
 Knobs: `--ui-media-tint-color` (default `--color-accent`; any CSS `<color>` **or** a

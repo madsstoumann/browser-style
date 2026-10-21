@@ -46,7 +46,7 @@ The look comes from the parent's `media=`, exactly as `chip(…)` does:
 | `media=` token | Values | Default |
 |---|---|---|
 | `ai(<cell>)` | `ts tc te cs cc ce bs bc be` | `bc` |
-| `ai(<hue>)` | the nine hues | `black` |
+| `ai(<colour>)` | a palette colour — `<hue>-<step>`, `white` or `black` ([theme.md](../base/theme.md#palette)) | `gray-800` |
 | `ai(<size>)` | `lg` (13px) · `xl` (16px) | 11px — the smallest readable size; sizes only grow |
 
 The same axes work standalone as attributes on the element itself: `size=` and `theme=`.

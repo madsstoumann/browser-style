@@ -1,6 +1,6 @@
 # @browser.style/beacon
 
-A CSS-only status indicator — zero JavaScript. Five layout variants (bare dot, dots, pill, solid, ticker) and three animation modes (blink, pulse, breathe). Part of the card-furniture family alongside `@browser.style/chip`, `@browser.style/sticker`, `@browser.style/play` and `@browser.style/save` — same `theme=` hue axis, same `fill=`/`ink=` escape hatch, same size scale, same corner vocabulary.
+A CSS-only status indicator — zero JavaScript. Five layout variants (bare dot, dots, pill, solid, ticker) and three animation modes (blink, pulse, breathe). Part of the card-furniture family alongside `@browser.style/chip`, `@browser.style/sticker`, `@browser.style/play` and `@browser.style/save` — same `theme=` colour axis, same `fill=`/`ink=` escape hatch, same size scale, same corner vocabulary.
 
 > **v5 is a breaking change.** The `color=` attribute is gone and three custom properties were renamed. See [Migration 4.x → 5.0](#migration-4x--50).
 
@@ -14,7 +14,7 @@ A CSS-only status indicator — zero JavaScript. Five layout variants (bare dot,
 - **Ticker variant** — sliding marquee with trailing 3-dot loader
 - **Motion is opt-in**: every animation is gated behind `prefers-reduced-motion: no-preference` — reduced-motion users get a static beacon automatically; pause a running animation with the `paused` attribute
 - **Sizes**: `xs`, `sm`, `md` (default), `lg`, `xl`, `2xl` — the `<ui-chip>` scale
-- **Hues**: the shared `theme=` axis (`red orange green blue accent gray slate black white` + `pale`/`muted`/`light`/`dark`), or arbitrary colours via `fill=` / `ink=`
+- **Colours**: the shared `theme=` axis (a palette colour such as `red-700` or `green-300`, + `light`/`dark`), or arbitrary colours via `fill=` / `ink=`
 - **Corners**: `radius="rnd | sqr | pll"` on the plated faces
 - Light/dark mode via design tokens
 - **Zero JavaScript, markup-free** — every face is plain text content; the ticker's sliding panel and dot loader are pseudo-elements driven by one registered `@property` animation clock
@@ -47,20 +47,20 @@ npm install @browser.style/base
 Bare dots need no inner markup:
 
 ```html
-<ui-beacon theme="green"></ui-beacon>
-<ui-beacon theme="red" animation="blink">Recording</ui-beacon>
+<ui-beacon theme="green-800"></ui-beacon>
+<ui-beacon theme="red-700" animation="blink">Recording</ui-beacon>
 ```
 
 Solid / pill need no inner markup either:
 
 ```html
-<ui-beacon variant="solid" theme="red">LIVE</ui-beacon>
+<ui-beacon variant="solid" theme="red-700">LIVE</ui-beacon>
 ```
 
 The ticker too — no inner markup:
 
 ```html
-<ui-beacon variant="ticker" theme="red">Live</ui-beacon>
+<ui-beacon variant="ticker" theme="red-700">Live</ui-beacon>
 ```
 
 ### How the markup-free ticker works
@@ -81,8 +81,8 @@ keyframes handle the wrap-around jump. There is no JavaScript in this package.
 A colored circle. Optionally followed by an inline label.
 
 ```html
-<ui-beacon theme="green"></ui-beacon>           <!-- presence dot -->
-<ui-beacon theme="green">Online</ui-beacon>     <!-- dot + label -->
+<ui-beacon theme="green-800"></ui-beacon>           <!-- presence dot -->
+<ui-beacon theme="green-800">Online</ui-beacon>     <!-- dot + label -->
 ```
 
 Use cases: presence (online / away / busy), notification dots, inline status.
@@ -92,8 +92,8 @@ Use cases: presence (online / away / busy), notification dots, inline status.
 Chip-style tinted background with a colored dot inside.
 
 ```html
-<ui-beacon variant="pill" theme="blue">Beta</ui-beacon>
-<ui-beacon variant="pill" theme="red" animation="blink">Live</ui-beacon>
+<ui-beacon variant="pill" theme="blue-900">Beta</ui-beacon>
+<ui-beacon variant="pill" theme="red-700" animation="blink">Live</ui-beacon>
 ```
 
 ### Solid — `variant="solid"`
@@ -101,9 +101,9 @@ Chip-style tinted background with a colored dot inside.
 A solid-coloured pill whose whole face flashes. Defaults to `blink` animation. The classic LIVE / REC label.
 
 ```html
-<ui-beacon variant="solid" theme="red">LIVE</ui-beacon>
-<ui-beacon variant="solid" theme="blue">News</ui-beacon>
-<ui-beacon variant="solid" theme="red" animation="none">Static</ui-beacon>
+<ui-beacon variant="solid" theme="red-700">LIVE</ui-beacon>
+<ui-beacon variant="solid" theme="blue-900">News</ui-beacon>
+<ui-beacon variant="solid" theme="red-700" animation="none">Static</ui-beacon>
 ```
 
 ### Dots — `variant="dots"`
@@ -114,8 +114,8 @@ so an optional label still works. Animates by default — reads as a live/updati
 in front of a headline.
 
 ```html
-<ui-beacon variant="dots" theme="red"></ui-beacon>
-<ui-beacon variant="dots" theme="red">Liveblog</ui-beacon>
+<ui-beacon variant="dots" theme="red-700"></ui-beacon>
+<ui-beacon variant="dots" theme="red-700">Liveblog</ui-beacon>
 <ui-beacon variant="dots" animation="none"></ui-beacon>   <!-- static -->
 ```
 
@@ -133,7 +133,7 @@ travels), `--ui-beacon-dots-width` (strip width) and `--ui-beacon-bounce-duratio
 Slide-out / slide-in compound animation with a trailing 3-dot loader.
 
 ```html
-<ui-beacon variant="ticker" theme="red">Live</ui-beacon>
+<ui-beacon variant="ticker" theme="red-700">Live</ui-beacon>
 ```
 
 ### Loader — `variant="loader"`
@@ -145,8 +145,8 @@ layout on the main thread, ~87 ms/2.5 s idle); the dot loader alone is paint-onl
 (~37 ms/2.5 s). See `docs/performance.md` for the measured ladder.
 
 ```html
-<ui-beacon variant="loader" theme="red">Live</ui-beacon>
-<!-- media token form: media="beacon(red) beacon(ldr)" -->
+<ui-beacon variant="loader" theme="red-700">Live</ui-beacon>
+<!-- media token form: media="beacon(red-700) beacon(ldr)" -->
 ```
 
 ---
@@ -211,9 +211,9 @@ whole beacon scales as one unit.
 | `2xl` | `1.4em` | |
 
 ```html
-<ui-beacon size="xs" theme="green"></ui-beacon>
-<ui-beacon size="lg" theme="green"></ui-beacon>
-<ui-beacon size="2xl" theme="green"></ui-beacon>
+<ui-beacon size="xs" theme="green-800"></ui-beacon>
+<ui-beacon size="lg" theme="green-800"></ui-beacon>
+<ui-beacon size="2xl" theme="green-800"></ui-beacon>
 ```
 
 ---
@@ -222,21 +222,20 @@ whole beacon scales as one unit.
 
 Beacon opts into the cross-component `theme=` axis (see `ui/base/theme.md`) exactly
 like `<ui-chip>`, `<ui-sticker>`, `<ui-play>` and `<ui-save>`: one colour token
-(`red orange green blue accent white gray slate black`) plus modifiers (`pale`,
-`muted`, `light`, `dark`). The theme feeds the beacon's hue input
-(`--ui-beacon-accent`) and the paired ink (`--ui-beacon-c`) used by the plated
-`solid` / `ticker` faces.
+(`<hue>-<step>`, `white` or `black`) plus looks (`light`, `dark`). The theme feeds the
+beacon's hue input (`--ui-beacon-accent`) and the paired text colour (`--ui-beacon-c`)
+used by the plated `solid` / `ticker` faces.
 
 ```html
-<ui-beacon theme="red">Recording</ui-beacon>
-<ui-beacon theme="red pale" variant="pill">Live</ui-beacon>
-<ui-beacon theme="slate dark" variant="solid">REC</ui-beacon>
+<ui-beacon theme="red-700">Recording</ui-beacon>
+<ui-beacon theme="red-200" variant="pill">Live</ui-beacon>
+<ui-beacon theme="gray-700 dark" variant="solid">REC</ui-beacon>
 ```
 
 Without a `theme`, the dot uses the current text colour.
 
-Each hue carries a curated ink, so a light plate never gets white text —
-`theme="orange"` on a solid beacon renders **dark** label text.
+Each step carries a text colour picked for contrast, so a light plate never gets white
+text — `theme="orange-400"` on a solid beacon renders **dark** label text.
 
 ### Arbitrary colours — `fill=` / `ink=`
 
@@ -254,7 +253,7 @@ pair. `ink` overrides that derived label.
 
 | Slot | Read by | Notes |
 |---|---|---|
-| `--ui-beacon-accent` | dot, pill/ticker tint, solid plate, ticker panel, bare-dot + pill label | the hue input — `theme=` / `fill=` / `beacon(<hue>)` all write here |
+| `--ui-beacon-accent` | dot, pill/ticker tint, solid plate, ticker panel, bare-dot + pill label | the hue input — `theme=` / `fill=` / `beacon(<colour>)` all write here |
 | `--ui-beacon-bg` | pill, solid, ticker | the plate. Unset by default; each face supplies its own fallback |
 | `--ui-beacon-c` | **solid + ticker labels only** | the ink. The bare dot and pill have no opaque plate, so their label is the accent — a curated white ink would vanish on the page background |
 
@@ -266,8 +265,8 @@ pair. `ink` overrides that derived label.
 (`pill`, `solid`, `ticker`).
 
 ```html
-<ui-beacon variant="solid" theme="red" radius="rnd">LIVE</ui-beacon>
-<ui-beacon variant="solid" theme="red" radius="sqr">LIVE</ui-beacon>
+<ui-beacon variant="solid" theme="red-700" radius="rnd">LIVE</ui-beacon>
+<ui-beacon variant="solid" theme="red-700" radius="sqr">LIVE</ui-beacon>
 <ui-beacon variant="ticker" radius="pll">Live</ui-beacon>   <!-- pill ticker -->
 ```
 
@@ -289,7 +288,7 @@ driven from the parent `media=` string, same as chip/sticker (single-value token
 one axis per token):
 
 ```html
-<ui-card media="asr(16/9) beacon(sld) beacon(red) beacon(bln)">
+<ui-card media="asr(16/9) beacon(sld) beacon(red-700) beacon(bln)">
   <cq-box>
     <ui-media>
       <img src="…" alt="">
@@ -303,8 +302,7 @@ one axis per token):
 | Axis | Tokens | Notes |
 |---|---|---|
 | position | `beacon(ts…be)` | 9-cell furniture grid; default `ts` — same cell as the chip, so position one explicitly when a frame carries both |
-| hue | `beacon(red\|orange\|green\|blue\|accent\|white\|gray\|slate\|black)` | same `--ui-theme-*` bundles as `chip()`/`sticker()` |
-| hue modifier | `beacon(pale)` · `beacon(muted)` | pale = light tint + hue ink · muted = translucent plate; add alongside a hue, e.g. `beacon(red) beacon(pale)` |
+| colour | `beacon(<hue>-<step>)` · `beacon(white\|black)` | same colours as `chip()`/`sticker()` — see [theme.md](../base/theme.md#palette) |
 | face | `beacon(dts)` dots · `beacon(pll)` pill · `beacon(sld)` solid · `beacon(tck)` ticker · `beacon(ldr)` loader (ticker minus the slide) | over imagery prefer these — the bare dot has no contrast plate |
 | animation | `beacon(bln)` blink · `beacon(pls)` pulse · `beacon(brt)` breathe · `beacon(non)` off | solid defaults to blink |
 | size | `beacon(xs\|sm\|md\|lg\|xl\|2xl)` | same em scale as the `size=` attribute |
@@ -331,7 +329,7 @@ For everyone else, the **`paused` attribute** freezes a running animation
 declaratively; toggle it from JS:
 
 ```html
-<ui-beacon variant="solid" theme="red" paused>Paused</ui-beacon>
+<ui-beacon variant="solid" theme="red-700" paused>Paused</ui-beacon>
 ```
 ```js
 beacon.toggleAttribute('paused');
@@ -343,7 +341,7 @@ beacon.toggleAttribute('paused');
 
 | Attribute | Type | Description |
 |---|---|---|
-| `theme` | `red \| orange \| green \| blue \| accent \| gray \| slate \| black \| white` + `pale \| muted \| light \| dark` | Shared hue axis (defaults to text colour) |
+| `theme` | `<hue>-<step>` \| `white` \| `black` + `light \| dark` | Shared colour axis (defaults to text colour) |
 | `fill` | `<color>` | Arbitrary accent colour; overrides `theme` |
 | `ink` | `<color>` | Label colour on the plated faces; overrides the value derived from `fill` |
 | `size` | `xs \| sm \| md \| lg \| xl \| 2xl` | Size scale (defaults to `md`) |
@@ -407,15 +405,15 @@ Every token falls back to a global from `@browser.style/base` where one exists.
 
 ## Migration 4.x → 5.0
 
-**`color=` is removed.** The `theme=` hues resolve to the identical colours
-(`--ui-theme-red-bg` *is* `--color-error`, and so on), so the swap is 1:1:
+**`color=` is removed.** The palette colours of the job variables resolve to the same
+colours (`--color-error` *is* `--color-red-700`, and so on), so the swap is 1:1:
 
 | 4.x | 5.0 |
 |---|---|
-| `theme="blue"` | `theme="blue"` |
-| `theme="green"` | `theme="green"` |
-| `theme="orange"` | `theme="orange"` |
-| `theme="red"` | `theme="red"` |
+| `color="blue"` | `theme="blue-900"` |
+| `color="green"` | `theme="green-800"` |
+| `color="orange"` | `theme="orange-400"` |
+| `color="red"` | `theme="red-700"` |
 
 **Renamed custom properties:**
 
@@ -432,8 +430,8 @@ Every token falls back to a global from `@browser.style/base` where one exists.
 or `size="sm"`.
 
 **Ink now auto-contrasts.** Solid and ticker labels previously fell back to hardcoded
-white, which failed on light plates (`theme="orange"` was white-on-amber). They now use
-the hue's curated ink, or `contrast-color()` when the accent comes from `fill=`. Force a
+white, which failed on light plates (`theme="orange-400"` was white-on-amber). They now use
+the step's text colour, or `contrast-color()` when the accent comes from `fill=`. Force a
 specific colour with `ink="…"`.
 
 ---
@@ -446,8 +444,8 @@ specific colour with `ink="…"`.
 import '@browser.style/base';
 import '@browser.style/beacon/style';
 
-<ui-beacon theme="green">Online</ui-beacon>
-<ui-beacon variant="solid" theme="red">LIVE</ui-beacon>
+<ui-beacon theme="green-800">Online</ui-beacon>
+<ui-beacon variant="solid" theme="red-700">LIVE</ui-beacon>
 ```
 
 ### Vue
@@ -459,8 +457,8 @@ import '@browser.style/beacon/style';
 </script>
 
 <template>
-  <ui-beacon theme="green">Online</ui-beacon>
-  <ui-beacon variant="solid" theme="red">LIVE</ui-beacon>
+  <ui-beacon theme="green-800">Online</ui-beacon>
+  <ui-beacon variant="solid" theme="red-700">LIVE</ui-beacon>
 </template>
 ```
 
@@ -477,8 +475,8 @@ import '@browser.style/beacon/style';
   import '@browser.style/beacon/style';
 </script>
 
-<ui-beacon theme="green">Online</ui-beacon>
-<ui-beacon variant="solid" theme="red">LIVE</ui-beacon>
+<ui-beacon theme="green-800">Online</ui-beacon>
+<ui-beacon variant="solid" theme="red-700">LIVE</ui-beacon>
 ```
 
 ### Astro / server-rendered HTML
@@ -487,8 +485,8 @@ import '@browser.style/beacon/style';
 <link rel="stylesheet" href="@browser.style/base/index.css">
 <link rel="stylesheet" href="@browser.style/beacon/index.css">
 
-<ui-beacon theme="green">Online</ui-beacon>
-<ui-beacon variant="solid" theme="red">
+<ui-beacon theme="green-800">Online</ui-beacon>
+<ui-beacon variant="solid" theme="red-700">
   <label><input type="checkbox" data-sr><span>LIVE</span></label>
 </ui-beacon>
 ```

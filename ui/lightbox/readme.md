@@ -63,15 +63,15 @@ this by default.
 - `<ui-icon>` styling comes from `ui/icon` — load the package entry
   (`index.css` imports it) or link `../icon/ui-icon.css` alongside the raw
   `ui-lightbox.css`; without it the svg glyph collapses to 0×0.
-- Inside a card, position/hue/size come from the `media=` DSL:
-  `lightbox(bs)` (default area), `lightbox(white)`, `lightbox(lg)`, ….
+- Inside a card, position/colour/size come from the `media=` DSL:
+  `lightbox(bs)` (default area), `lightbox(white)`, `lightbox(gray-800)`, `lightbox(lg)`, ….
 
 ## Attributes (standalone) / card tokens
 
 | Axis | Attribute | Card token | Values |
 |---|---|---|---|
 | position | — (card-only) | `lightbox(<pos>)` | `ts tc te cs cc ce bs bc be` — default `bs` |
-| hue | `theme=` | `lightbox(<hue>)` | `red orange green blue accent black white gray slate` |
+| colour | `theme=` | `lightbox(<colour>)` | a palette colour — `<hue>-<step>`, `white` or `black` ([theme.md](../base/theme.md#palette)) |
 | size | `size=` | `lightbox(<size>)` | `sm lg xl` (md = default) |
 | disc | `radius=` / `variant="non"` | `lightbox(sqr\|rnd\|crc\|non)` | squircle · rounded · circle · no disc |
 | ink/fill | `ink=` / `fill=` | — | any CSS color (typed `attr()`, polyfilled) |
@@ -144,5 +144,5 @@ dark glyph, a soft shadow and a hairline ring (carousels suppress the ring via
 `--ui-carousel-arrow-border: 0`). Hovering lightens the disc rather than re-hueing the
 glyph — again matching the arrows.
 
-`lightbox(<hue>)`, `ink=` / `fill=` and `lightbox(non)` all still override this.
+`lightbox(<colour>)`, `ink=` / `fill=` and `lightbox(non)` all still override this.
 Full table: [card docs — band ink](../card/docs/carousel.md#the-furniture-discs-follow-the-arrows).
