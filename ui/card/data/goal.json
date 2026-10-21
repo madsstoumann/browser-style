@@ -42,7 +42,7 @@
       },
       "progressLabel": "Minutes",
       "progressDisplay": "6 of 10 minutes",
-      "hue": "green"
+      "hue": "green-800"
     }
   }
 }

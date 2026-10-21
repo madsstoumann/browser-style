@@ -131,7 +131,7 @@
 		<code>fieldset[disabled]</code> propagation all survive. It is <code>display: contents</code>, so it adds no box and
 		renders identically to the class form.
 	</p>
-	<ui-button-group variant="inline rounded border" theme="red" size="sm">
+	<ui-button-group variant="inline rounded border" theme="red-700" size="sm">
 		<fieldset>
 			<legend>Wrapped in <code>&lt;ui-button-group&gt;</code></legend>
 			<label class="ui-button">
@@ -149,7 +149,7 @@
 		</fieldset>
 	</ui-button-group>
 	<p>The same control as a <code>&lt;fieldset&gt;</code>, for comparison — pixel for pixel identical:</p>
-	<fieldset class="ui-button-group" data-variant="inline rounded border" data-theme="red" data-size="sm">
+	<fieldset class="ui-button-group" data-variant="inline rounded border" data-theme="red-700" data-size="sm">
 		<legend>Plain <code>&lt;fieldset&gt;</code></legend>
 		<label class="ui-button">
 			<input type="radio" name="button-group-host-fs" value="1" data-sr checked>
@@ -274,14 +274,14 @@
 	<br>
 	<h2>Themed — the shared hue axis</h2>
 	<p>
-		<code>data-theme="red"</code> · <code>data-theme="green pale"</code> · <code>data-theme="blue muted"</code><br>
+		<code>data-theme="red-700"</code> · <code>data-theme="green-100"</code> · <code>data-theme="blue-300"</code><br>
 		<strong>Note</strong> the <code>data-</code> prefix: a bare <code>theme</code> attribute is invalid on a
 		<code>&lt;fieldset&gt;</code> — on the <code>&lt;ui-button-group&gt;</code> host above it is simply <code>theme</code>.
 		The hue paints the <em>checked segment</em>, not the group's own box, so
-		the group opts out of the resolver's universal paint. All nine hues work, and so do the
-		<code>pale</code> / <code>muted</code> modifiers — see <a href="../base/theme.md">base/theme.md</a>.
+		the group opts out of the resolver's universal paint. Every palette colour works (<code>&lt;hue&gt;-&lt;step&gt;</code>, plus <code>white</code> and <code>black</code>), and so do the
+		<code>glass</code> / <code>outline</code> modifiers — see <a href="../base/theme.md">base/theme.md</a>.
 	</p>
-	<fieldset class="ui-button-group fs-sm" data-variant="inline rounded border" data-theme="red">
+	<fieldset class="ui-button-group fs-sm" data-variant="inline rounded border" data-theme="red-700">
 		<label class="ui-button">
 			<input type="radio" name="button-group-theme-red" value="1" data-sr checked>
 			Small
@@ -296,7 +296,7 @@
 		</label>
 	</fieldset>
 	<br>
-	<fieldset class="ui-button-group fs-sm" data-variant="inline rounded border" data-theme="green pale">
+	<fieldset class="ui-button-group fs-sm" data-variant="inline rounded border" data-theme="green-100">
 		<label class="ui-button">
 			<input type="radio" name="button-group-theme-green" value="1" data-sr checked>
 			Small
@@ -311,7 +311,7 @@
 		</label>
 	</fieldset>
 	<br>
-	<fieldset class="ui-button-group fs-sm" data-variant="inline rounded border" data-theme="blue muted">
+	<fieldset class="ui-button-group fs-sm" data-variant="inline rounded border" data-theme="blue-300">
 		<label class="ui-button">
 			<input type="radio" name="button-group-theme-blue" value="1" data-sr checked>
 			Small

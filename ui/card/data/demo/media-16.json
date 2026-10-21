@@ -20,7 +20,7 @@
     "furniture": {
       "chip": {
         "text": "New",
-        "style": "be green"
+        "style": "be green-800"
       },
       "sticker": {
         "lines": [
@@ -29,7 +29,7 @@
             "text": "Featured"
           }
         ],
-        "style": "ts red"
+        "style": "ts red-700"
       }
     },
     "media": [

@@ -187,7 +187,7 @@ const quizFormat = (d) => Object.hasOwn(QUIZ_FORMATS, d?.format) ? d.format : 'f
 const quizQuestion = (card, name, words, required = false) => {
 	const options = (card.options || []).map((option, position) =>
 		`<li${scope(option.correct ? 'acceptedAnswer' : 'suggestedAnswer', 'Answer')}>${meta('position', position + 1)}
-					<label><input type="radio" class="--check" name="${esc(name)}"${required && position === 0 ? ' required' : ''}> <span itemprop="text">${esc(option.text)}</span></label> ${option.correct ? '<ui-chip data-verdict="correct" theme="pale green">Correct</ui-chip>' : '<ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip>'}
+					<label><input type="radio" class="--check" name="${esc(name)}"${required && position === 0 ? ' required' : ''}> <span itemprop="text">${esc(option.text)}</span></label> ${option.correct ? '<ui-chip data-verdict="correct" theme="green-100">Correct</ui-chip>' : '<ui-chip data-verdict="wrong" theme="red-200">Wrong</ui-chip>'}
 				</li>`).join('');
 	return `<fieldset${scope('hasPart', 'Question')}>
 				<legend itemprop="text">${esc(card.question)}</legend>${meta('eduQuestionType', words.question)}
@@ -951,10 +951,10 @@ const FURNITURE_TOKEN = new RegExp(`^(${FURNITURE.filter(([, entry]) => !entry.d
 /* arg value → merge axis, unioned from the manifest across the furniture stems. The
    class list is PINNED: adopting a new manifest arg class changes which preset tokens
    an override displaces, so it is a deliberate edit, not a silent data pickup.
-   (`pos` = the 9-grid · `hue` = the 8-key palette + its accepted aliases · `size` — xs is
+   (`pos` = the 9-grid · `hue` = the <hue>-<step> palette (+ white, black) and any accepted aliases · `size` — xs is
    beacon-only, play() sizes live here too · `anim`/`face` are beacon's, `disc` the shared
    radius vocabulary: beacon(non) turns solid's default blink off and stays in `disc` ·
-   `mode` = the pale/muted plate tones + the marquee's rpt/seam/fade play modes ·
+   `mode` = the marquee's rpt/seam/fade play modes ·
    `flag` = sticker(fit)'s text-fit typesetting. The marquee's `value` class —
    direction/speed/gap — is deliberately NOT here: those compose rather than
    displace, so each one falls through to exact-match replacement.) */
@@ -967,6 +967,9 @@ for (const [, entry] of FURNITURE) {
 	for (const [alias, canonical] of Object.entries(entry.argAliases))
 		for (const cls of MERGE_CLASSES) if (FURNITURE_AXIS[cls].has(canonical)) FURNITURE_AXIS[cls].add(alias);
 }
+/* the colour vocabulary every furniture stem and theme= share — <hue>-<step> plus white and black,
+   read from the manifest so the goal ring's hue allowlist can never drift from it */
+const HUE_STEPS = new Set(TOKENS.attributes.media.tokens.chip.args.hue);
 const axisOf = (value) => {
 	if (value.startsWith('sh:')) return 'shape'; /* clipped silhouettes: sh:burst, sh:<custom>… */
 	for (const [axis, set] of Object.entries(FURNITURE_AXIS)) if (set.has(value)) return axis;
@@ -1036,8 +1039,8 @@ const iconTokens = (fn, words) => {
 	return out;
 };
 
-/* A furniture item's style= string → per-value tokens, e.g. ("chip", "bs red")
-   → ["chip(bs)", "chip(red)"]. Single-value tokens only (CSS matches by substring). */
+/* A furniture item's style= string → per-value tokens, e.g. ("chip", "bs red-700")
+   → ["chip(bs)", "chip(red-700)"]. Single-value tokens only (CSS matches by substring). */
 const styleTokens = (el, style) =>
 	String(style || '').split(/\s+/).filter(Boolean).map((token) => `${el}(${token})`);
 
@@ -1387,14 +1390,14 @@ const buildContent = (fields, type, overlay, slots = {}, textMode = 'summary', p
 	   the names are close and the distinction is load-bearing. Media furniture is also
 	   the wrong place for a status flag on a demo card: buildMedia gives a frame ONE
 	   chip family, so a furniture chip suppresses the <ui-chip data-type> type label.
-	   Same <p data-part="meta"><ui-chip theme="pale …"> shape the achievement status,
+	   Same <p data-part="meta"><ui-chip theme="green-100"> shape the achievement status,
 	   most-popular and version chips already use, so it inherits their spacing. */
 	const chips = (Array.isArray(fields.chip) ? fields.chip : [fields.chip]).filter((chip) => chip?.text);
 	if (chips.length) {
 		/* theme/size/radius/variant are ui/chip's own standalone attributes, written
 		   verbatim — the card DSL has no text-column chip token. Docs: ui/chip/readme.md */
 		html += `<p data-part="meta">${chips.map((chip) => `<ui-chip${attrs({
-			theme: chip.theme || 'pale accent', size: chip.size, radius: chip.radius, variant: chip.variant
+			theme: chip.theme || 'accent-200', size: chip.size, radius: chip.radius, variant: chip.variant
 		})}>${esc(chip.text)}</ui-chip>`).join('')}</p>`;
 	}
 	if (fields.eyebrow) {
@@ -1558,6 +1561,8 @@ const availabilityLabel = (availability) => {
    and for the same reason it cannot test /(in)/i — that matches "Discontinued". */
 const AVAILABILITY_GREEN = new Set(['InStock', 'InStoreOnly', 'OnlineOnly']);
 const AVAILABILITY_ORANGE = new Set(['LimitedAvailability']);
+/* the pale plate a status chip sits on, per hue — the old `pale <hue>` look as one step (docs/PALETTE.md §1) */
+const PALE_STEP = { red: 'red-200', orange: 'orange-100', green: 'green-100', blue: 'blue-100', accent: 'accent-200', gray: 'gray-50' };
 const availabilityHue = (availability) => {
 	const value = String(availability ?? '').trim();
 	if (AVAILABILITY_SET.has(value)) return AVAILABILITY_GREEN.has(value) ? 'green'
@@ -1664,7 +1669,7 @@ const variantsPart = (variants, fields, parts = {}) => {
    Docs: docs/schema.md § Product */
 /* hov(zoom) + the chip's trailing chevron are the tile's LINK affordance — a grid of photos
    with plain labels reads as a gallery, not as four sub-pages. Docs: docs/schema.md § Product */
-const COLLAGE_TILE = { variant: 'rds(non)', media: 'asr(1/1) hov(zoom) chip(bs) chip(blue) chip(pale) chip(sm)', content: 'pad(none)' };
+const COLLAGE_TILE = { variant: 'rds(non)', media: 'asr(1/1) hov(zoom) chip(bs) chip(blue-100) chip(sm)', content: 'pad(none)' };
 const COLLAGE_LAYOUT = { xs: 'cg(3xs) rg(3xs)', md: 'columns(2)' };
 
 /* the accessible name says which variant the tile OPENS — "view", not "select": it is a
@@ -1740,7 +1745,7 @@ const menuItem = (item) => {
 	return `<li${scope('hasMenuItem', 'MenuItem')}>`
 		+ `<strong itemprop="name">${esc(item.name)}</strong>`
 		/* sm: the diet chip shares a tight `auto 1fr auto` row with the name and the price */
-		+ (item.label ? `<ui-chip${attrs({ theme: item.labelTheme || 'pale green', size: item.labelSize || 'sm' })}>${esc(item.label)}</ui-chip>` : '')
+		+ (item.label ? `<ui-chip${attrs({ theme: item.labelTheme || 'green-100', size: item.labelSize || 'sm' })}>${esc(item.label)}</ui-chip>` : '')
 		+ offer
 		+ (item.description ? `<small itemprop="description">${esc(item.description)}</small>` : '')
 		+ (item.diets || []).filter((diet) => RESTRICTED_DIETS.has(diet)).map((diet) => meta('suitableForDiet', SCHEMA + diet)).join('')
@@ -2187,12 +2192,12 @@ export const DETAILS = {
 		if (d.price) {
 			html += `<p data-part="price"${scope('offers', 'Offer')}>
 				${meta('priceCurrency', d.price.currency)}${meta('availability', availabilityUrl(d.availability))}${meta('itemCondition', SCHEMA + 'NewCondition')}${d.validUntil ? meta('priceValidUntil', d.validUntil) : ''}
-				${priceValue(d.price.currency, d.price.current)}${d.price.original ? ` <del>${fmtPrice(d.price.currency, d.price.original)}</del>` : ''}${d.price.discountText ? ` <ui-chip theme="pale green">${esc(d.price.discountText)}</ui-chip>` : ''}
+				${priceValue(d.price.currency, d.price.current)}${d.price.original ? ` <del>${fmtPrice(d.price.currency, d.price.original)}</del>` : ''}${d.price.discountText ? ` <ui-chip theme="green-100">${esc(d.price.discountText)}</ui-chip>` : ''}
 			</p>`;
 			/* the validity belongs to the offer — directly under the price, not the stock row */
 			if (d.validUntilDisplay) html += `<p data-part="meta"><small>Valid until ${esc(d.validUntilDisplay)}</small></p>`;
 		}
-		if (d.availability) html += `<p data-part="meta"><ui-chip theme="pale ${availabilityHue(d.availability)}">${esc(availabilityLabel(d.availability))}</ui-chip></p>`;
+		if (d.availability) html += `<p data-part="meta"><ui-chip theme="${PALE_STEP[availabilityHue(d.availability)]}">${esc(availabilityLabel(d.availability))}</ui-chip></p>`;
 		/* sku is machine-readable only — no visible number on the card */
 		if (d.sku) html += meta('sku', d.sku);
 		/* hasVariant/variesBy/productGroupID are ProductGroup-ONLY properties, so the gate is
@@ -2427,7 +2432,7 @@ export const DETAILS = {
 	},
 
 	achievement(d) {
-		let html = d.status ? `<p data-part="meta"><ui-chip theme="pale green">${esc(d.status)}</ui-chip></p>` : '';
+		let html = d.status ? `<p data-part="meta"><ui-chip theme="green-100">${esc(d.status)}</ui-chip></p>` : '';
 		html += meta('dateCreated', d.dateEarned) + meta('expires', d.expirationDate)
 			+ meta('educationalLevel', d.skillLevel) + meta('identifier', d.credentialId);
 		html += `<p data-part="meta">${keyed('Issued by')}<span${scope('recognizedBy', 'Organization')}><span itemprop="name">${esc(d.issuingOrganization)}</span></span>${d.dateEarnedDisplay ? ` · ${esc(d.dateEarnedDisplay)}` : ''}${d.expirationDateDisplay ? ` · ${keyed('Expires')}${esc(d.expirationDateDisplay)}` : ''}${d.credentialId ? ` · ${keyed('ID')}${esc(d.credentialId)}` : ''}</p>`;
@@ -2439,7 +2444,6 @@ export const DETAILS = {
 		/* target rides `object`, progress rides `result` — both QuantitativeValue; the ring is
 		   presentation only, machine numbers stay on the metas. Docs: docs/schema.md § Goal */
 		const STATUS = { active: 'ActiveActionStatus', completed: 'CompletedActionStatus', failed: 'FailedActionStatus', potential: 'PotentialActionStatus' };
-		const HUES = new Set(['red', 'orange', 'green', 'blue', 'accent', 'black', 'white', 'gray', 'slate']);
 		let html = meta('actionStatus', STATUS[d.status] ? SCHEMA + STATUS[d.status] : null)
 			+ meta('startTime', d.startDate) + meta('endTime', d.endDate);
 		if (d.agentName) html += `<span${scope('agent', 'Person')} hidden>${meta('name', d.agentName)}</span>`;
@@ -2448,7 +2452,7 @@ export const DETAILS = {
 		const target = Number(d.target?.value), current = Number(d.current?.value);
 		if (target > 0 && Number.isFinite(current)) {
 			const pct = Math.round(Math.min(100, Math.max(0, current / target * 100)));
-			const hue = HUES.has(d.hue) ? ` theme="${d.hue}"` : '';
+			const hue = HUE_STEPS.has(d.hue) ? ` theme="${d.hue}"` : '';
 			html += `<ui-progress-circular size="lg"${hue}><progress max="${esc(d.target.value)}" value="${esc(d.current.value)}"></progress>${d.progressLabel ? `<small>${esc(d.progressLabel)}</small>` : ''}<span>${pct}%</span></ui-progress-circular>`;
 		}
 		const foot = [d.progressDisplay, d.dateRangeDisplay].filter(Boolean).join(' · ');
@@ -2463,7 +2467,7 @@ export const DETAILS = {
 		if (head) html += `<p data-part="meta">${esc(head)}</p>`;
 		if (d.priority) {
 			const hue = /high|critical/i.test(d.priority) ? 'red' : /medium/i.test(d.priority) ? 'orange' : 'gray';
-			html += `<p data-part="meta"><ui-chip theme="pale ${hue}">${esc(d.priorityDisplay || d.priority)}</ui-chip></p>`;
+			html += `<p data-part="meta"><ui-chip theme="${PALE_STEP[hue]}">${esc(d.priorityDisplay || d.priority)}</ui-chip></p>`;
 		}
 		if (d.targetAudience) {
 			html += `<p data-part="meta"${scope('audience', 'Audience')}>Audience: <span itemprop="audienceType">${esc(d.targetAudience)}</span></p>`;
@@ -2594,7 +2598,7 @@ export const DETAILS = {
 
 	membership(d) {
 		let html = eligibleDuration(d.trialPeriod);
-		if (d.isPopular) html += `<p data-part="meta"><ui-chip theme="pale accent">${esc(d.popularText || 'Most popular')}</ui-chip></p>`;
+		if (d.isPopular) html += `<p data-part="meta"><ui-chip theme="accent-200">${esc(d.popularText || 'Most popular')}</ui-chip></p>`;
 		if (d.price) {
 			html += `<p data-part="price"${scope('priceSpecification', 'PriceSpecification')}>${meta('priceCurrency', d.price.currency)}${priceValue(d.price.currency, d.price.monthly)}/mo ${d.price.yearly ? `<small>or ${fmtPrice(d.price.currency, d.price.yearly)}/yr${d.price.savings ? ` — ${esc(d.price.savings)}` : ''}</small>` : ''}</p>`;
 		}
@@ -2638,7 +2642,7 @@ export const DETAILS = {
 				html += `<span${scope('numberOfPlayers', 'QuantitativeValue')} hidden>${meta('minValue', players.min)}${meta('maxValue', players.max)}</span>`;
 			}
 		}
-		if (d.version) html += `<p data-part="meta"><ui-chip theme="pale accent">v<span itemprop="softwareVersion">${esc(d.version)}</span></ui-chip></p>`;
+		if (d.version) html += `<p data-part="meta"><ui-chip theme="accent-200">v<span itemprop="softwareVersion">${esc(d.version)}</span></ui-chip></p>`;
 		/* a game's run names PLATFORMS; plain software keeps the operatingSystem run it always had */
 		const run = platforms.length ? platforms : (d.operatingSystem || []);
 		html += `<p data-part="meta">${esc(run.join(' · '))}${d.fileSize ? ` · ${esc(d.fileSize)}` : ''}</p>`;
@@ -2703,7 +2707,7 @@ export const DETAILS = {
 		/* machine duration/uploadDate ride the media item (rootVideoMetas) — details are display + creator */
 		let html = '';
 		if (d.durationDisplay || d.viewsDisplay) {
-			html += `<p data-part="meta">${d.durationDisplay ? `<ui-chip theme="pale accent">${esc(d.durationDisplay)}</ui-chip>` : ''}${d.viewsDisplay ? ` ${esc(d.viewsDisplay)}` : ''}</p>`;
+			html += `<p data-part="meta">${d.durationDisplay ? `<ui-chip theme="accent-200">${esc(d.durationDisplay)}</ui-chip>` : ''}${d.viewsDisplay ? ` ${esc(d.viewsDisplay)}` : ''}</p>`;
 		}
 		if (d.creator?.name) html += `<p data-part="meta"${scope('creator', 'Person')}>By <span itemprop="name">${esc(d.creator.name)}</span></p>`;
 		return html;
@@ -2739,7 +2743,7 @@ export const DETAILS = {
 		let html = `<div${scope('mainEntity', 'Question')}>${meta('name', d.question)}${meta('answerCount', answers.length)}${d.upvotes != null ? meta('upvoteCount', d.upvotes) : ''}`;
 		if (answers.length) {
 			html += `<ul data-part="list">${answers.map((answer) =>
-				`<li${scope(answer.accepted ? 'acceptedAnswer' : 'suggestedAnswer', 'Answer')}>${answer.upvotes != null ? meta('upvoteCount', answer.upvotes) : ''}${quotePart(answer.text, { itemprop: 'text', variant: parts.quote || null })}<small>${answer.accepted ? '<ui-chip theme="pale green">Accepted</ui-chip> ' : ''}${answer.author ? `<span${scope('author', 'Person')}><span itemprop="name">${esc(answer.author)}</span></span>` : ''}${answer.upvotes != null ? ` · ▲ ${num(answer.upvotes)}` : ''}</small></li>`
+				`<li${scope(answer.accepted ? 'acceptedAnswer' : 'suggestedAnswer', 'Answer')}>${answer.upvotes != null ? meta('upvoteCount', answer.upvotes) : ''}${quotePart(answer.text, { itemprop: 'text', variant: parts.quote || null })}<small>${answer.accepted ? '<ui-chip theme="green-100">Accepted</ui-chip> ' : ''}${answer.author ? `<span${scope('author', 'Person')}><span itemprop="name">${esc(answer.author)}</span></span>` : ''}${answer.upvotes != null ? ` · ▲ ${num(answer.upvotes)}` : ''}</small></li>`
 			).join('')}</ul>`;
 		}
 		return html + '</div>';
@@ -2877,7 +2881,7 @@ export const DETAILS = {
 			const hue = verdict.value != null
 				? verdict.value >= 4 ? 'green' : verdict.value >= 3 ? 'orange' : 'red'
 				: /false|incorrect/i.test(verdict.label) ? 'red' : /true|correct/i.test(verdict.label) ? 'green' : 'orange';
-			html += `<p data-part="meta"${scope('reviewRating', 'Rating')}>${verdict.value != null ? meta('ratingValue', verdict.value) : ''}${meta('bestRating', verdict.max ?? 5)}${meta('worstRating', 1)}<ui-chip theme="pale ${hue}"><span itemprop="alternateName">${esc(verdict.label)}</span></ui-chip></p>`;
+			html += `<p data-part="meta"${scope('reviewRating', 'Rating')}>${verdict.value != null ? meta('ratingValue', verdict.value) : ''}${meta('bestRating', verdict.max ?? 5)}${meta('worstRating', 1)}<ui-chip theme="${PALE_STEP[hue]}"><span itemprop="alternateName">${esc(verdict.label)}</span></ui-chip></p>`;
 		}
 		if (d.claim) html += quotePart(d.claim, { itemprop: 'claimReviewed', cite: d.claimant });
 		return html;
@@ -3409,7 +3413,7 @@ const REVEAL_FACES = {
 			/* the answer is authored PROSE (docs/schema.md § Quiz), and its panel reads as
 			   a second surface — the same call as the graded verdict chips' themes */
 			back: {
-				attrs: { itemprop: 'acceptedAnswer', itemscope: true, itemtype: `${SCHEMA}Answer`, theme: 'gray ink', content: 'pad(lg) plc(cc) tal(ctr)' },
+				attrs: { itemprop: 'acceptedAnswer', itemscope: true, itemtype: `${SCHEMA}Answer`, theme: 'gray-200 ink', content: 'pad(lg) plc(cc) tal(ctr)' },
 				html: `<p data-part="summary" itemprop="text">${renderInline(card.answer)}</p>`
 			}
 		};
@@ -3443,7 +3447,7 @@ const renderReveal = (fields, type, schemaType, tokens, preset, flipside, cardId
 	const column = faces ? `<ui-content${attrs(faces.front.attrs)}>${faces.front.html}</ui-content>` : `<ui-content${attrs({ content: preset.content || null })}>
 			${fields.eyebrow ? `<small data-part="eyebrow">${esc(fields.eyebrow)}</small>` : ''}
 			<strong data-part="headline" itemprop="${headlineProp(fields, type)}">${renderInline(fields.headline)}</strong>
-			${fields.details?.version ? `<span data-part="meta"><ui-chip theme="pale accent">v<span itemprop="softwareVersion">${esc(fields.details.version)}</span></ui-chip></span>` : ''}
+			${fields.details?.version ? `<span data-part="meta"><ui-chip theme="accent-200">v<span itemprop="softwareVersion">${esc(fields.details.version)}</span></ui-chip></span>` : ''}
 		</ui-content>`;
 	const revealMediaTokens = mergeMediaTokens(preset.media, tokens.media);
 	const inner = `${withMedia(media?.html || '', revealMediaTokens)}

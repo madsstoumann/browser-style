@@ -12,7 +12,7 @@
 	<meta name="referrer" content="no-referrer">
 	<!-- preconnect: CDN handshake parallel to the CSS download. Docs: docs/performance.md -->
 	<link rel="preconnect" href="https://v4.browser.style">
-	<link rel="stylesheet" href="/dist/demo.955ceeeb.min.css">
+	<link rel="stylesheet" href="/dist/demo.2d98081c.min.css">
 	<link rel="stylesheet" href="/dist/icon-font.c6950688.min.css">
 	<link rel="stylesheet" href="../media.tint.css">
 
@@ -43,20 +43,20 @@
 
 	<section>
 	<!-- ============================================================
-	     Theme presets — tnt(<key>)
+	     Theme presets — tnt(<hue>-<step>)
 	     ============================================================ -->
-	<h2>Theme presets — <code>tnt(&lt;key&gt;)</code></h2>
-	<p>Named keys map to the 8 theme colours (mirrors <code>chip(red)</code>/<code>sticker(blue)</code>): <code>red orange green blue accent dark light subtle</code>.</p>
+	<h2>Theme presets — <code>tnt(&lt;hue&gt;-&lt;step&gt;)</code></h2>
+	<p>Named keys are the palette colours — <code>&lt;hue&gt;-&lt;step&gt;</code>, plus <code>white</code> and <code>black</code> (the same names as <code>chip(red-700)</code>/<code>sticker(blue-900)</code>).</p>
 	<lay-out md="columns(2)" lg="columns(4)">
-		<ui-media media="asr(1/1) rds(lg) tnt(red) hov(tint) chip(bc)"><img src="/assets/images/avatar1.png" alt=""><ui-chip>tnt(red)</ui-chip></ui-media>
-		<ui-media media="asr(1/1) rds(lg) tnt(orange) hov(tint) chip(bc)"><img src="/assets/images/avatar2.png" alt=""><ui-chip>tnt(orange)</ui-chip></ui-media>
-		<ui-media media="asr(1/1) rds(lg) tnt(green) hov(tint) chip(bc)"><img src="/assets/images/avatar3.png" alt=""><ui-chip>tnt(green)</ui-chip></ui-media>
-		<ui-media media="asr(1/1) rds(lg) tnt(blue) hov(tint) chip(bc)"><img src="/assets/images/avatar4.png" alt=""><ui-chip>tnt(blue)</ui-chip></ui-media>
+		<ui-media media="asr(1/1) rds(lg) tnt(red-700) hov(tint) chip(bc)"><img src="/assets/images/avatar1.png" alt=""><ui-chip>tnt(red-700)</ui-chip></ui-media>
+		<ui-media media="asr(1/1) rds(lg) tnt(orange-400) hov(tint) chip(bc)"><img src="/assets/images/avatar2.png" alt=""><ui-chip>tnt(orange-400)</ui-chip></ui-media>
+		<ui-media media="asr(1/1) rds(lg) tnt(green-800) hov(tint) chip(bc)"><img src="/assets/images/avatar3.png" alt=""><ui-chip>tnt(green-800)</ui-chip></ui-media>
+		<ui-media media="asr(1/1) rds(lg) tnt(blue-900) hov(tint) chip(bc)"><img src="/assets/images/avatar4.png" alt=""><ui-chip>tnt(blue-900)</ui-chip></ui-media>
 
-		<ui-media media="asr(1/1) rds(lg) tnt(accent) hov(tint) chip(bc)"><img src="/assets/images/avatar1.png" alt=""><ui-chip>tnt(accent)</ui-chip></ui-media>
-		<ui-media media="asr(1/1) rds(lg) tnt(black) hov(tint) chip(bc)"><img src="/assets/images/avatar2.png" alt=""><ui-chip>tnt(black)</ui-chip></ui-media>
+		<ui-media media="asr(1/1) rds(lg) tnt(accent-700) hov(tint) chip(bc)"><img src="/assets/images/avatar1.png" alt=""><ui-chip>tnt(accent-700)</ui-chip></ui-media>
+		<ui-media media="asr(1/1) rds(lg) tnt(gray-800) hov(tint) chip(bc)"><img src="/assets/images/avatar2.png" alt=""><ui-chip>tnt(gray-800)</ui-chip></ui-media>
 		<ui-media media="asr(1/1) rds(lg) tnt(white) hov(tint) chip(bc)"><img src="/assets/images/avatar3.png" alt=""><ui-chip>tnt(white)</ui-chip></ui-media>
-		<ui-media media="asr(1/1) rds(lg) tnt(gray) hov(tint) chip(bc)"><img src="/assets/images/avatar4.png" alt=""><ui-chip>tnt(gray)</ui-chip></ui-media>
+		<ui-media media="asr(1/1) rds(lg) tnt(gray-200) hov(tint) chip(bc)"><img src="/assets/images/avatar4.png" alt=""><ui-chip>tnt(gray-200)</ui-chip></ui-media>
 	</lay-out>
 	</section>
 
@@ -69,7 +69,7 @@
 	<lay-out md="columns(2)" lg="columns(4)">
 		<ui-media media="asr(1/1) rds(lg) tnt hov(tint) chip(bc)" style="--ui-media-tint-color: #6d28d9;"><img src="/assets/images/avatar1.png" alt=""><ui-chip>#6d28d9</ui-chip></ui-media>
 		<ui-media media="asr(1/1) rds(lg) tnt hov(tint) chip(bc)" style="--ui-media-tint-color: oklch(0.7 0.2 350);"><img src="/assets/images/avatar2.png" alt=""><ui-chip>oklch(.7 .2 350)</ui-chip></ui-media>
-		<ui-media media="asr(1/1) rds(lg) tnt(blue) hov(tint) chip(bc)" style="--ui-media-tint-opacity: 0.55;"><img src="/assets/images/avatar3.png" alt=""><ui-chip>opacity 0.55</ui-chip></ui-media>
+		<ui-media media="asr(1/1) rds(lg) tnt(blue-900) hov(tint) chip(bc)" style="--ui-media-tint-opacity: 0.55;"><img src="/assets/images/avatar3.png" alt=""><ui-chip>opacity 0.55</ui-chip></ui-media>
 		<ui-media media="asr(1/1) rds(lg) tnt hov(tint) chip(bc)" style="--ui-media-tint-color: #0d9488;"><img src="/assets/images/avatar4.png" alt=""><ui-chip>#0d9488 teal</ui-chip></ui-media>
 	</lay-out>
 	</section>

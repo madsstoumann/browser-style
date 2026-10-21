@@ -167,7 +167,7 @@ const stepsBand = `
 			</section>`;
 
 /* the transport row — the reference app's bar: wake · back · step N / M · play/pause · next · copy · share */
-const playButton = (label, size = '') => `<ui-play theme="gray"${size ? ` size="${size}"` : ''}><button type="button" command="--play-step" commandfor="steps" aria-label="${esc(label)}" aria-pressed="false"><ui-icon type="play-pause"></ui-icon></button></ui-play>`;
+const playButton = (label, size = '') => `<ui-play theme="gray-200"${size ? ` size="${size}"` : ''}><button type="button" command="--play-step" commandfor="steps" aria-label="${esc(label)}" aria-pressed="false"><ui-icon type="play-pause"></ui-icon></button></ui-play>`;
 const controlsBar = `
 		<nav class="bar" aria-label="Cooking controls">
 			${iconButton({ command: '--toggle-wake', target: 'cook', label: 'Keep the screen awake', icon: glyph('light-mode'), pressed: false })}
@@ -188,8 +188,8 @@ const cookMode = `
 			<header class="cook-bar">
 				<strong id="cook-title">${esc(TITLE)}</strong>
 				<span>
-					<ui-beacon id="cook-wake" variant="pill" size="sm" theme="gray">Screen may sleep</ui-beacon>
-					<ui-beacon id="cook-mic" variant="pill" size="sm" theme="gray">Mic off</ui-beacon>
+					<ui-beacon id="cook-wake" variant="pill" size="sm" theme="gray-200">Screen may sleep</ui-beacon>
+					<ui-beacon id="cook-mic" variant="pill" size="sm" theme="gray-200">Mic off</ui-beacon>
 					${iconButton({ command: 'hide-popover', target: 'cook', label: 'Close cook mode', icon: '<ui-icon type="cross"></ui-icon>' })}
 				</span>
 			</header>

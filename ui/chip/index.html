@@ -18,7 +18,7 @@
 
 	<h2>CSS</h2>
 	<p>
-		<code>&lt;ui-chip&gt;</code> is a CSS-first chip component for tags, labels, filters, and status indicators. It's visually aligned with <code>&lt;ui-button&gt;</code> and shares the same color and spacing tokens. Use <code>theme</code> for a named hue, <code>fill</code>/<code>ink</code> for an arbitrary colour, <code>size</code> for scale, and <code>variant</code> for style.
+		<code>&lt;ui-chip&gt;</code> is a CSS-first chip component for tags, labels, filters, and status indicators. It's visually aligned with <code>&lt;ui-button&gt;</code> and shares the same color and spacing tokens. Use <code>theme</code> for a palette colour, <code>fill</code>/<code>ink</code> for an arbitrary colour, <code>size</code> for scale, and <code>variant</code> for style.
 	</p>
 	<p>
 		<code>&lt;ui-chip&gt;</code> is <strong>CSS-only</strong> — there is no JavaScript version.
@@ -29,68 +29,68 @@
 	<h3>Basic</h3>
 	<div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
 		<ui-chip>Default</ui-chip>
-		<ui-chip theme="blue">Premium User ★</ui-chip>
-		<ui-chip theme="green">All services up ✓</ui-chip>
-		<ui-chip theme="orange">Warning: Low ☀</ui-chip>
-		<ui-chip theme="red">No Connection ❖</ui-chip>
+		<ui-chip theme="blue-900">Premium User ★</ui-chip>
+		<ui-chip theme="green-800">All services up ✓</ui-chip>
+		<ui-chip theme="orange-400">Warning: Low ☀</ui-chip>
+		<ui-chip theme="red-700">No Connection ❖</ui-chip>
 	</div>
 
 	<h3>Light variant</h3>
 	<p>Use <code>variant="light"</code> for a tinted background with the theme colour as text.</p>
 	<div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
 		<ui-chip variant="light">Default</ui-chip>
-		<ui-chip variant="light" theme="blue">Premium User ★</ui-chip>
-		<ui-chip variant="light" theme="green">All services up ✓</ui-chip>
-		<ui-chip variant="light" theme="orange">Warning: Low ☀</ui-chip>
-		<ui-chip variant="light" theme="red">No Connection ❖</ui-chip>
+		<ui-chip variant="light" theme="blue-900">Premium User ★</ui-chip>
+		<ui-chip variant="light" theme="green-800">All services up ✓</ui-chip>
+		<ui-chip variant="light" theme="orange-400">Warning: Low ☀</ui-chip>
+		<ui-chip variant="light" theme="red-700">No Connection ❖</ui-chip>
 	</div>
 
 	<h3>Outline variant</h3>
 	<p>Use <code>variant="outline"</code> for a transparent background with a colored border.</p>
 	<div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
 		<ui-chip variant="outline">Default</ui-chip>
-		<ui-chip variant="outline" theme="blue">Premium User ★</ui-chip>
-		<ui-chip variant="outline" theme="green">All services up ✓</ui-chip>
-		<ui-chip variant="outline" theme="orange">Warning: Low ☀</ui-chip>
-		<ui-chip variant="outline" theme="red">No Connection ❖</ui-chip>
+		<ui-chip variant="outline" theme="blue-900">Premium User ★</ui-chip>
+		<ui-chip variant="outline" theme="green-800">All services up ✓</ui-chip>
+		<ui-chip variant="outline" theme="orange-400">Warning: Low ☀</ui-chip>
+		<ui-chip variant="outline" theme="red-700">No Connection ❖</ui-chip>
 	</div>
 
 	<h3>Sizes</h3>
 	<p>Use the <code>size</code> attribute: <code>sm</code>, <code>lg</code>, <code>xl</code>, <code>2xl</code> (<code>md</code> is the default). Sizes are <code>em</code>-based, so they scale with the surrounding text.</p>
 	<div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
-		<ui-chip size="sm" theme="blue">Small</ui-chip>
-		<ui-chip size="md" theme="blue">Medium</ui-chip>
-		<ui-chip size="lg" theme="blue">Large</ui-chip>
-		<ui-chip size="xl" theme="blue">X-Large</ui-chip>
-		<ui-chip size="2xl" theme="blue">2X-Large</ui-chip>
+		<ui-chip size="sm" theme="blue-900">Small</ui-chip>
+		<ui-chip size="md" theme="blue-900">Medium</ui-chip>
+		<ui-chip size="lg" theme="blue-900">Large</ui-chip>
+		<ui-chip size="xl" theme="blue-900">X-Large</ui-chip>
+		<ui-chip size="2xl" theme="blue-900">2X-Large</ui-chip>
 	</div>
 
 	<h3>Theme</h3>
-	<p>Use <code>theme</code> for a named hue bundle (background + ink). For arbitrary colours use <code>fill</code> (auto-contrast) + <code>ink</code>.</p>
+	<p>Use <code>theme</code> for a palette colour: <code>&lt;hue&gt;-&lt;step&gt;</code> (<code>red-700</code>, <code>gray-200</code>), or <code>white</code> / <code>black</code>. Background and ink come as a pair, so every step carries a readable label. For arbitrary colours use <code>fill</code> (auto-contrast) + <code>ink</code>.</p>
 	<div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
-		<ui-chip theme="red">red</ui-chip>
-		<ui-chip theme="orange">orange</ui-chip>
-		<ui-chip theme="green">green</ui-chip>
-		<ui-chip theme="blue">blue</ui-chip>
-		<ui-chip theme="accent">accent</ui-chip>
+		<ui-chip theme="red-700">red-700</ui-chip>
+		<ui-chip theme="orange-400">orange-400</ui-chip>
+		<ui-chip theme="green-800">green-800</ui-chip>
+		<ui-chip theme="blue-900">blue-900</ui-chip>
+		<ui-chip theme="accent-700">accent-700</ui-chip>
 		<ui-chip theme="white">white</ui-chip>
-		<ui-chip theme="gray">gray</ui-chip>
-		<ui-chip theme="slate">slate</ui-chip>
-		<ui-chip theme="black">black</ui-chip>
+		<ui-chip theme="gray-200">gray-200</ui-chip>
+		<ui-chip theme="gray-700">gray-700</ui-chip>
+		<ui-chip theme="gray-800">gray-800</ui-chip>
 	</div>
-	<p>Modifiers compose on a colour: <code>pale</code> (tint), <code>muted</code> (fade), <code>glass</code> (material), <code>light</code>/<code>dark</code> (color-scheme).</p>
+	<p>A lighter or darker step is the tint or the fade; modifiers compose on a colour: <code>glass</code> (material), <code>ink</code>, <code>light</code>/<code>dark</code> (color-scheme).</p>
 	<div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
-		<ui-chip theme="red">red</ui-chip>
-		<ui-chip theme="red pale">red pale</ui-chip>
-		<ui-chip theme="red muted">red muted</ui-chip>
-		<ui-chip theme="red pale muted">red pale muted</ui-chip>
+		<ui-chip theme="red-700">red-700</ui-chip>
+		<ui-chip theme="red-300">red-300</ui-chip>
+		<ui-chip theme="red-200">red-200</ui-chip>
+		<ui-chip theme="red-100">red-100</ui-chip>
 	</div>
 	<p><code>glass</code> is a material, not a colour — it needs something behind it, so these sit on a photo. Without a colour token it is a neutral frost.</p>
 	<div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; padding: 1rem; border-radius: 0.5rem; background: url('/assets/images/autumn.jpg') center / cover no-repeat;">
 		<ui-chip theme="glass">glass</ui-chip>
-		<ui-chip theme="red pale glass">red pale glass</ui-chip>
-		<ui-chip theme="green pale glass">green pale glass</ui-chip>
-		<ui-chip theme="blue pale glass border">blue pale glass border</ui-chip>
+		<ui-chip theme="red-200 glass">red-200 glass</ui-chip>
+		<ui-chip theme="green-100 glass">green-100 glass</ui-chip>
+		<ui-chip theme="blue-100 glass border">blue-100 glass border</ui-chip>
 	</div>
 
 	<h3>Corners — <code>radius</code></h3>
@@ -99,45 +99,45 @@
 		squircle (iOS-style superellipse). Same values as the card token <code>chip(&lt;corner&gt;)</code>
 		and the other furniture.</p>
 	<div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
-		<ui-chip theme="green" radius="non">non</ui-chip>
-		<ui-chip theme="green" radius="rnd">rnd</ui-chip>
-		<ui-chip theme="green">pll (default)</ui-chip>
-		<ui-chip theme="green" radius="crc">crc</ui-chip>
-		<ui-chip theme="green" radius="sqr">sqr</ui-chip>
+		<ui-chip theme="green-800" radius="non">non</ui-chip>
+		<ui-chip theme="green-800" radius="rnd">rnd</ui-chip>
+		<ui-chip theme="green-800">pll (default)</ui-chip>
+		<ui-chip theme="green-800" radius="crc">crc</ui-chip>
+		<ui-chip theme="green-800" radius="sqr">sqr</ui-chip>
 	</div>
 
 	<h3>With badge</h3>
 	<p>Chips can host a <code>&lt;ui-badge&gt;</code> at any corner.</p>
 	<div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
 		<ui-chip>Notifications<ui-badge color="error">4</ui-badge></ui-chip>
-		<ui-chip theme="blue">Messages<ui-badge color="warning" position="bottom-right">2</ui-badge></ui-chip>
-		<ui-chip variant="light" theme="green">Tasks<ui-badge color="info" variant="text">new</ui-badge></ui-chip>
+		<ui-chip theme="blue-900">Messages<ui-badge color="warning" position="bottom-right">2</ui-badge></ui-chip>
+		<ui-chip variant="light" theme="green-800">Tasks<ui-badge color="info" variant="text">new</ui-badge></ui-chip>
 	</div>
 
 	<p>With <code>variant="inline"</code> on the badge, the chip tightens its end padding and pushes the badge to the inline end automatically:</p>
 	<div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
 		<ui-chip>Inline badge<ui-badge color="warning" variant="inline">4</ui-badge></ui-chip>
-		<ui-chip variant="light" theme="blue">Messages<ui-badge color="info" variant="inline">12</ui-badge></ui-chip>
-		<ui-chip variant="outline" theme="green">Tasks<ui-badge color="success" variant="inline">3</ui-badge></ui-chip>
+		<ui-chip variant="light" theme="blue-900">Messages<ui-badge color="info" variant="inline">12</ui-badge></ui-chip>
+		<ui-chip variant="outline" theme="green-800">Tasks<ui-badge color="success" variant="inline">3</ui-badge></ui-chip>
 	</div>
 
 	<h3>With opposite color-scheme</h3>
 	<div class="bdrs-md cs-opposite pb-3 pi-3" style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
 		<ui-chip>Default</ui-chip>
-		<ui-chip theme="blue">Premium User ★</ui-chip>
-		<ui-chip theme="green">All services up ✓</ui-chip>
-		<ui-chip theme="orange">Warning: Low ☀</ui-chip>
-		<ui-chip theme="red">No Connection ❖</ui-chip>
+		<ui-chip theme="blue-900">Premium User ★</ui-chip>
+		<ui-chip theme="green-800">All services up ✓</ui-chip>
+		<ui-chip theme="orange-400">Warning: Low ☀</ui-chip>
+		<ui-chip theme="red-700">No Connection ❖</ui-chip>
 	</div>
 
 	<br>
 	<h3>With right-to-left</h3>
 	<div dir="rtl" style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
 		<ui-chip>Default</ui-chip>
-		<ui-chip theme="blue">Premium User ★</ui-chip>
-		<ui-chip theme="green">All services up ✓</ui-chip>
-		<ui-chip theme="orange">Warning: Low ☀</ui-chip>
-		<ui-chip theme="red">No Connection ❖</ui-chip>
+		<ui-chip theme="blue-900">Premium User ★</ui-chip>
+		<ui-chip theme="green-800">All services up ✓</ui-chip>
+		<ui-chip theme="orange-400">Warning: Low ☀</ui-chip>
+		<ui-chip theme="red-700">No Connection ❖</ui-chip>
 	</div>
 </body>
 </html>

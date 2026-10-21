@@ -38,7 +38,7 @@
             "text": "20%"
           }
         ],
-        "style": "te red 2xl sh:spark"
+        "style": "te red-700 2xl sh:spark"
       },
       "save": {
         "shape": "heart",

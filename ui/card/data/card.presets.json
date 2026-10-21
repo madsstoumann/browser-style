@@ -83,7 +83,7 @@
       "element": "ui-card",
       "variant": "col",
       "media": "asr(16/9)",
-      "theme": "gray",
+      "theme": "gray-200",
       "content": "scl(lg)"
     },
     "stack-brand": {
@@ -92,7 +92,7 @@
       "element": "ui-card",
       "variant": "col",
       "media": "asr(16/9)",
-      "theme": "black dark"
+      "theme": "gray-800 dark"
     },
     "stack-accordion-divided": {
       "name": "Stack Accordion Divided Preset",
@@ -110,7 +110,7 @@
       "element": "ui-card",
       "variant": "col",
       "media": "asr(16/9)",
-      "theme": "muted gray"
+      "theme": "gray-100"
     },
     "stack-accordion": {
       "name": "Stack Accordion Preset",
@@ -140,7 +140,7 @@
       "media": "asr(16/9)",
       "parts": {
         "office": "box brd",
-        "officeTheme": "gray light"
+        "officeTheme": "gray-200 light"
       }
     },
     "stack-square": {
@@ -162,7 +162,7 @@
       "description": "Content-only, off-white surface, large type — quotes",
       "element": "ui-card",
       "variant": "vis(content)",
-      "theme": "gray",
+      "theme": "gray-200",
       "content": "scl(lg)"
     },
     "panel-brand": {
@@ -170,14 +170,14 @@
       "description": "Content-only on a dark surface — stats, pricing tiers (set --ui-card-dark-bg to the accent for a branded look)",
       "element": "ui-card",
       "variant": "vis(content)",
-      "theme": "black dark"
+      "theme": "gray-800 dark"
     },
     "panel-dark": {
       "name": "Panel Dark Preset",
       "description": "Content-only on a dark surface — announcements, alerts",
       "element": "ui-card",
       "variant": "vis(content)",
-      "theme": "black dark"
+      "theme": "gray-800 dark"
     },
     "hero": {
       "name": "Hero Preset",

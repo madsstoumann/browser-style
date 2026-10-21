@@ -18,12 +18,12 @@
     "chip": [
       {
         "text": "Entire villa",
-        "theme": "pale green",
+        "theme": "green-100",
         "radius": "non"
       },
       {
         "text": "Private pool",
-        "theme": "pale accent",
+        "theme": "accent-200",
         "radius": "non"
       }
     ],

@@ -12,7 +12,7 @@
 	<meta name="referrer" content="no-referrer">
 	<!-- preconnect: CDN handshake parallel to the CSS download. Docs: docs/performance.md -->
 	<link rel="preconnect" href="https://v4.browser.style">
-	<link rel="stylesheet" href="/dist/demo.955ceeeb.min.css">
+	<link rel="stylesheet" href="/dist/demo.2d98081c.min.css">
 	<link rel="stylesheet" href="/dist/icon-font.c6950688.min.css">
 	<link rel="stylesheet" href="../media.shapes.css">
 	<link rel="stylesheet" href="../media.tint.css">
@@ -74,7 +74,7 @@
 	<h2>YouTube — <code>provider="youtube"</code></h2>
 	<p class="note">Same facade as the Vimeo embeds — <code>data-preview</code> is provider-agnostic: here a static <code>&lt;img data-preview&gt;</code> poster (Vimeo uses an animated <code>&lt;video data-preview&gt;</code> loop) sits over a lazy <code>&lt;iframe&gt;</code>, lifted by <code>z-index</code> so source order doesn't matter. The <code>&lt;ui-play&gt;</code> click drops the poster, appends <code>autoplay=1</code> and hands off to the YouTube player. (An iframe isn't an <code>HTMLMediaElement</code>, so it uses the click facade, not <code>command="--play-pause"</code> — that's native <code>&lt;video&gt;</code> only.)</p>
 	<lay-out md="columns(2)">
-		<ui-card variant="col" media="asr(16/9) play(lg) chip(red)" content="pad(md) md:pad(lg)">
+		<ui-card variant="col" media="asr(16/9) play(lg) chip(red-700)" content="pad(md) md:pad(lg)">
 			<cq-box>
 				<ui-media provider="youtube" video="VTCIStB6y8s">
 					<img data-preview src="https://i.ytimg.com/vi/VTCIStB6y8s/maxresdefault.jpg" alt="" loading="lazy">
@@ -85,7 +85,7 @@
 				<ui-content><small data-part="eyebrow">provider="youtube" video="ID"</small><h3 data-part="headline">What’s new in Web UI</h3><p data-part="summary">Poster image until you press play, then the real YouTube player takes over — lazy-loaded, cookie-less.</p></ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card variant="col" media="asr(16/9) play(lg) chip(red)" content="pad(md) md:pad(lg)">
+		<ui-card variant="col" media="asr(16/9) play(lg) chip(red-700)" content="pad(md) md:pad(lg)">
 			<cq-box>
 				<ui-media provider="youtube" video="5b4YcLB4DVI">
 					<img data-preview src="https://i.ytimg.com/vi/5b4YcLB4DVI/maxresdefault.jpg" alt="" loading="lazy">
@@ -103,7 +103,7 @@
 	<h2>YouTube — no-JS facade via <code>srcdoc</code></h2>
 	<p class="note">No JavaScript at all. The <code>&lt;iframe srcdoc&gt;</code> renders a poster + a real <code>&lt;a&gt;</code> link; clicking it navigates the iframe <em>itself</em> to the <code>?autoplay=1</code> embed — the click is the user gesture autoplay needs. <code>src</code> is the fallback for browsers without <code>srcdoc</code> support. No <code>provider</code>, so <code>video.js</code> never touches it.</p>
 	<lay-out>
-		<ui-media media="asr(16/9) rds(lg) chip(red)">
+		<ui-media media="asr(16/9) rds(lg) chip(red-700)">
 			<iframe
 				title="What’s new in Web UI"
 				loading="lazy"
@@ -131,7 +131,7 @@
 	<h2>Vimeo — no-JS facade via <code>srcdoc</code></h2>
 	<p class="note">The same <code>srcdoc</code> trick works for Vimeo: poster + <code>&lt;a&gt;</code> → clicking navigates the iframe to <code>?autoplay=1&amp;muted=1</code>. Cyan circle badge to match <code>&lt;ui-play&gt;</code>'s Vimeo brand. Public/embeddable video only (a domain-locked one would 401).</p>
 	<lay-out>
-		<ui-media media="asr(16/9) rds(lg) chip(blue)">
+		<ui-media media="asr(16/9) rds(lg) chip(blue-900)">
 			<iframe
 				title="Egypten — Besat af livet"
 				loading="lazy"
@@ -159,7 +159,7 @@
 	<h2>YouTube — looping preview in front</h2>
 	<p class="note">YouTube exposes no preview clip (no MP4 API, and the animated-thumbnail WebP is session-gated), so the 2-second loop is a clip <strong>we host ourselves</strong> — cut from the source with <code>yt-dlp</code> + <code>ffmpeg</code> (see <a href="../docs/video.md">video.md</a>). Same <code>&lt;video data-preview&gt;</code> facade as the Vimeo cards, now over a YouTube <code>&lt;iframe&gt;</code>.</p>
 	<lay-out md="columns(2)">
-		<ui-card variant="col" media="asr(16/9) play(lg) chip(red)" content="pad(md) md:pad(lg)">
+		<ui-card variant="col" media="asr(16/9) play(lg) chip(red-700)" content="pad(md) md:pad(lg)">
 			<cq-box>
 				<ui-media provider="youtube" video="VTCIStB6y8s">
 					<video data-preview poster="../data/youtube-data/previews/VTCIStB6y8s.jpg" autoplay muted loop playsinline>
@@ -173,7 +173,7 @@
 				<ui-content><small data-part="eyebrow">provider="youtube" + loop</small><h3 data-part="headline">What’s new in Web UI</h3><p data-part="summary">A 2-second muted loop plays in front; press play to hand off to the full YouTube video.</p></ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card variant="col" media="asr(16/9) play(lg) chip(red)" content="pad(md) md:pad(lg)">
+		<ui-card variant="col" media="asr(16/9) play(lg) chip(red-700)" content="pad(md) md:pad(lg)">
 			<cq-box>
 				<ui-media provider="youtube" video="beYbnNT_02U">
 					<video data-preview poster="../data/youtube-data/previews/beYbnNT_02U.jpg" autoplay muted loop playsinline>
@@ -246,7 +246,7 @@
 		<a href="#">All exhibitions →</a>
 	</div>
 	<lay-out md="columns(2)">
-		<ui-card variant="col" media="asr(16/9) chip(ts) chip(green) play(lg)" content="pad(md) md:pad(lg)">
+		<ui-card variant="col" media="asr(16/9) chip(ts) chip(green-800) play(lg)" content="pad(md) md:pad(lg)">
 			<cq-box>
 				<ui-media provider="vimeo" video="845207657">
 					<video data-preview poster="../data/vimeo-data/previews/845207657.jpg" autoplay muted loop playsinline>
@@ -355,7 +355,7 @@
 			<ui-play><button type="button" aria-label="Play film"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 			<ui-chip>vimeo iframe</ui-chip>
 		</ui-media>
-		<ui-media provider="vimeo" video="794832552" media="asr(1/1) rds(md) sticker(te) sticker(accent)">
+		<ui-media provider="vimeo" video="794832552" media="asr(1/1) rds(md) sticker(te) sticker(accent-700)">
 			<video data-preview poster="../data/vimeo-data/previews/794832552.jpg" autoplay muted loop playsinline>
 				<source src="../data/vimeo-data/previews/794832552.webm" type="video/webm">
 				<source src="../data/vimeo-data/previews/794832552.mp4" type="video/mp4">
@@ -364,7 +364,7 @@
 			<ui-play><button type="button" aria-label="Play film"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 			<ui-chip>vimeo iframe</ui-chip>
 		</ui-media>
-		<ui-media provider="vimeo" video="789027225" media="asr(1/1) rds(md) chip(bs) chip(black)">
+		<ui-media provider="vimeo" video="789027225" media="asr(1/1) rds(md) chip(bs) chip(gray-800)">
 			<video data-preview poster="../data/vimeo-data/previews/789027225.jpg" autoplay muted loop playsinline>
 				<source src="../data/vimeo-data/previews/789027225.webm" type="video/webm">
 				<source src="../data/vimeo-data/previews/789027225.mp4" type="video/mp4">
@@ -381,9 +381,9 @@
 	<h2>Native video + <code>&lt;ui-media&gt;</code> effects</h2>
 	<p class="note">The frame treatments apply to a native <code>&lt;video&gt;</code> just like an image — <code>tnt()</code> tint, <code>shp()</code> shape/morph, <code>hov()</code> effects and furniture all clip/blend/overlay the video. Videos autoplay muted; hover the shape/blur/tint tiles.</p>
 	<lay-out md="columns(2)">
-		<ui-media media="asr(16/9) rds(lg) tnt(red) hov(tint) chip(bs)">
+		<ui-media media="asr(16/9) rds(lg) tnt(red-700) hov(tint) chip(bs)">
 			<video src="/assets/video/city.mp4" poster="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/city.png" autoplay muted loop playsinline></video>
-			<ui-chip>tnt(red) hov(tint)</ui-chip>
+			<ui-chip>tnt(red-700) hov(tint)</ui-chip>
 		</ui-media>
 		<ui-media media="asr(16/9) shp(blinds-v) hov(shape) chip(bs) rds(lg)">
 			<video src="/assets/video/city.mp4" poster="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/city.png" autoplay muted loop playsinline></video>
@@ -393,10 +393,10 @@
 			<video src="/assets/video/city.mp4" poster="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/city.png" autoplay muted loop playsinline></video>
 			<ui-chip>hov(blur)</ui-chip>
 		</ui-media>
-		<ui-media media="asr(16/9) rds(lg) sticker(te) sticker(red) chip(bs)">
+		<ui-media media="asr(16/9) rds(lg) sticker(te) sticker(red-700) chip(bs)">
 			<video src="/assets/video/river.mp4" poster="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/river.png" autoplay muted loop playsinline></video>
 			<ui-sticker><small>NEW</small><strong>4K</strong></ui-sticker>
-			<ui-chip>sticker(red)</ui-chip>
+			<ui-chip>sticker(red-700)</ui-chip>
 		</ui-media>
 	</lay-out>
 	</section>

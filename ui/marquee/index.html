@@ -240,16 +240,16 @@
 	</ui-marquee>
 
 	<h2>Loop — never-ending text (all browsers)</h2>
-	<p><code>variant="loop" theme="red" font="bold"</code></p>
+	<p><code>variant="loop" theme="red-700" font="bold"</code></p>
 	<p>Seamless continuous text: the phrase re-appears with no fade. Two identical direct children (2nd copy <code>aria-hidden</code>), each shifted by exactly &minus;100% of its own width. Or skip the markup entirely with <code>aria-label</code> (below).</p>
-	<ui-marquee variant="loop" theme="red" font="bold">
+	<ui-marquee variant="loop" theme="red-700" font="bold">
 		<span>BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;</span>
 		<span aria-hidden="true">BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;</span>
 	</ui-marquee>
 
 	<h2>Loop via <code>aria-label</code> — zero markup</h2>
 	<p><code>aria-label="…"</code> on an empty <code>&lt;ui-marquee&gt;</code> fills <code>::before</code> + <code>::after</code> — no child elements, and it's the accessible name too.</p>
-	<ui-marquee variant="loop" theme="blue" aria-label="NOW PLAYING • NOW PLAYING • NOW PLAYING • NOW PLAYING • NOW PLAYING • NOW PLAYING • "></ui-marquee>
+	<ui-marquee variant="loop" theme="blue-900" aria-label="NOW PLAYING • NOW PLAYING • NOW PLAYING • NOW PLAYING • NOW PLAYING • NOW PLAYING • "></ui-marquee>
 
 	<h2>Edge-fade</h2>
 	<p><code>fade</code></p>
@@ -259,8 +259,8 @@
 	</ui-marquee>
 
 	<h2>Themed + font control</h2>
-	<p><code>theme="red" font="bold italic" radius="pll"</code> · <code>fill="#8b5cf6" font="mono" size="lg" radius="rnd"</code></p>
-	<ui-marquee theme="red" font="bold italic" radius="pll">
+	<p><code>theme="red-700" font="bold italic" radius="pll"</code> · <code>fill="#8b5cf6" font="mono" size="lg" radius="rnd"</code></p>
+	<ui-marquee theme="red-700" font="bold italic" radius="pll">
 		<span>BREAKING — themed marquee with bold italic type and a pill radius.</span>
 	</ui-marquee>
 	<ui-marquee fill="#8b5cf6" font="mono" size="lg" radius="rnd">
@@ -277,9 +277,9 @@
 	</ui-marquee>
 
 	<h2>Inside a card's content column</h2>
-	<p><code>theme="slate" size="sm"</code></p>
+	<p><code>theme="gray-700" size="sm"</code></p>
 	<p>As a news ticker inside <code>ui-content</code>. (Card CSS not required for this standalone demo.)</p>
-	<ui-marquee theme="slate" size="sm">
+	<ui-marquee theme="gray-700" size="sm">
 		<span>Markets · AAPL ▲ 1.2% · TSLA ▼ 0.8% · BTC ▲ 3.4% · Gold ▲ 0.3% · EUR/USD 1.09 · Oil ▼ 1.1%</span>
 	</ui-marquee>
 	<!-- Typed attr() polyfill — Safari/Firefox. No-op where typed attr() is

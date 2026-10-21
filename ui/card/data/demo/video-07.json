@@ -32,7 +32,7 @@
     "furniture": {
       "chip": {
         "text": "youtube",
-        "style": "red"
+        "style": "red-700"
       },
       "play": {
         "style": "cc lg"

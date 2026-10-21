@@ -32,7 +32,7 @@
     "furniture": {
       "chip": {
         "text": "vimeo iframe",
-        "style": "ts green"
+        "style": "ts green-800"
       },
       "play": {
         "style": "cc lg"

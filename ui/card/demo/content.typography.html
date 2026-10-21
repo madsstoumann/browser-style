@@ -12,7 +12,7 @@
 	<meta name="referrer" content="no-referrer">
 	<!-- preconnect: CDN handshake parallel to the CSS download. Docs: docs/performance.md -->
 	<link rel="preconnect" href="https://v4.browser.style">
-	<link rel="stylesheet" href="/dist/demo.955ceeeb.min.css">
+	<link rel="stylesheet" href="/dist/demo.2d98081c.min.css">
 	<link rel="stylesheet" href="/dist/icon-font.c6950688.min.css">
 	<style>
 		main > lay-out { margin-block-end: var(--spacing-2xl); }
@@ -167,14 +167,14 @@
 	<p class="note"><strong>Resize the cards</strong> (drag the handle): the size tokens stay put in the markup while the responsive master step re-points the ladder per container width. First card: the mobile-first idiom — small type in a narrow container, stepping up at <code>lg</code> (44rem). Second card: base <code>hl(2xl)</code> with <code>md:scl(lg)</code> — the <em>unprefixed</em> headline token re-resolves against the <code>md:</code> ladder (2xl → 3xl at 25rem).</p>
 	<div class="stack">
 		<div style="resize: horizontal; overflow: hidden; min-inline-size: 16rem; max-inline-size: 100%; padding-block-end: var(--spacing-sm);">
-			<ui-card variant="vis(content)" theme="gray" content="scl(sm) lg:scl(md) hl(2xl) tx(xl)"><cq-box><ui-content>
+			<ui-card variant="vis(content)" theme="gray-200" content="scl(sm) lg:scl(md) hl(2xl) tx(xl)"><cq-box><ui-content>
 				<small data-part="eyebrow">scl(sm) lg:scl(md) hl(2xl) tx(xl)</small>
 				<h2 data-part="headline">Steps down when narrow</h2>
 				<p data-part="summary">Narrow: headline xl, summary lg. Past 44rem: headline 2xl, summary xl — the tokens never change, the ladder does.</p>
 			</ui-content></cq-box></ui-card>
 		</div>
 		<div style="resize: horizontal; overflow: hidden; min-inline-size: 16rem; max-inline-size: 100%; padding-block-end: var(--spacing-sm);">
-			<ui-card variant="vis(content)" theme="black dark" content="hl(2xl) md:scl(lg)"><cq-box><ui-content>
+			<ui-card variant="vis(content)" theme="gray-800 dark" content="hl(2xl) md:scl(lg)"><cq-box><ui-content>
 				<small data-part="eyebrow">hl(2xl) md:scl(lg)</small>
 				<h2 data-part="headline">Base token, responsive ladder</h2>
 				<p data-part="summary">Below 25rem the headline is the fixed 2xl clamp; at md the master step shifts the ladder +1 and the same <code>hl(2xl)</code> renders 3xl.</p>
@@ -186,14 +186,14 @@
 	<p class="note"><code>scl(fix)</code> re-points every stop from its fluid <code>cqi</code> clamp to the <strong>global static scale</strong> (<code>--font-size-*</code>): type changes only at the <code>md:</code>/<code>lg:</code> container breakpoints, never in between. <strong>Resize the cards</strong> — the first holds its exact sizes within each breakpoint tier and snaps at <code>lg</code>; the second (<code>scl(fluid)</code> opt-out inside a fixed wrapper) scales continuously.</p>
 	<div class="stack" content="scl(fix)">
 		<div style="resize: horizontal; overflow: hidden; min-inline-size: 16rem; max-inline-size: 100%; padding-block-end: var(--spacing-sm);">
-			<ui-card variant="vis(content)" theme="gray" content="hl(lg) lg:hl(xl)"><cq-box><ui-content>
+			<ui-card variant="vis(content)" theme="gray-200" content="hl(lg) lg:hl(xl)"><cq-box><ui-content>
 				<small data-part="eyebrow">scl(fix) hl(lg) lg:hl(xl)</small>
 				<h2 data-part="headline">Exactly 1.875rem, then exactly 3rem</h2>
 				<p data-part="summary">The designer's spec: two precise sizes from the global <code>--font-size-*</code> scale, switched at the 44rem container breakpoint — no in-between scaling.</p>
 			</ui-content></cq-box></ui-card>
 		</div>
 		<div style="resize: horizontal; overflow: hidden; min-inline-size: 16rem; max-inline-size: 100%; padding-block-end: var(--spacing-sm);">
-			<ui-card variant="vis(content)" theme="black dark" content="scl(fluid) hl(lg)"><cq-box><ui-content>
+			<ui-card variant="vis(content)" theme="gray-800 dark" content="scl(fluid) hl(lg)"><cq-box><ui-content>
 				<small data-part="eyebrow">scl(fluid) — opt-out inside the fixed wrapper</small>
 				<h2 data-part="headline">Back on the fluid clamp</h2>
 				<p data-part="summary">The wrapper sets <code>scl(fix)</code>; this card's own <code>scl(fluid)</code> wins (nearest mode), so the headline tracks the card width continuously again.</p>
