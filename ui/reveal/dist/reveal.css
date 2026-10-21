@@ -124,7 +124,7 @@
       --ui-reveal-bdf: var(--_theme-bdf);
       backdrop-filter: none;
     }
-    &[theme*=border] {
+    &:is([theme*=border], [theme~=outline]) {
       --ui-reveal-shadow: none;
       border-radius: calc(var(--ui-card-radius, var(--ui-reveal-radius)) + var(--_theme-bw, var(--border-width, 1px)));
       &[variant*="-sq)"] {
@@ -172,8 +172,8 @@
     }
     &[variant~="ico(drk)"] > details > summary > ui-icon,
     &[variant~="icc(drk)"] > details[open] > summary > ui-icon {
-      --ui-reveal-icon-bg: var(--ui-theme-black-bg);
-      color: var(--ui-theme-black-c, #fff);
+      --ui-reveal-icon-bg: var(--color-gray-800);
+      color: var(--color-gray-800-text);
     }
     &[variant~="ico(sem)"] > details > summary > ui-icon,
     &[variant~="icc(sem)"] > details[open] > summary > ui-icon {

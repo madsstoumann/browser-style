@@ -4,7 +4,7 @@ A CSS-first chip component for tags, labels, filters, and status indicators. Vis
 
 ## Features
 
-- 9 theme colours (red orange green blue accent white gray slate black) + `pale`/`muted` modifiers, or any arbitrary fill/ink
+- Any palette colour (`green-300`, `red-700`, `white`, … — `<hue>-<step>`), or any arbitrary fill/ink
 - Three sizes: small, medium (default), large
 - Style variants: solid (default), light (tinted), outline
 - Shape variants: pill (default), square, squircle (`corner-shape`)
@@ -49,8 +49,8 @@ Or via CSS `@import`:
 
 ```html
 <ui-chip>Default</ui-chip>
-<ui-chip theme="green">All services up ✓</ui-chip>
-<ui-chip variant="outline" theme="blue">Premium</ui-chip>
+<ui-chip theme="green-800">All services up ✓</ui-chip>
+<ui-chip variant="outline" theme="blue-900">Premium</ui-chip>
 ```
 
 ### JavaScript (optional — adds nothing)
@@ -68,7 +68,7 @@ import resolves; markup, styling and behaviour are identical without it.
 
 | Attribute | Type | Description |
 |-----------|------|-------------|
-| `theme` | string | A theme colour (bg + ink pair): `red orange green blue accent white gray slate black`, + `pale`/`muted` modifiers. See [theme.md](../base/theme.md) |
+| `theme` | string | A palette colour (bg + text pair): `<hue>-<step>` such as `green-300`, or `white` / `black`; looks (`outline`, `glass`, …) after it. See [theme.md](../base/theme.md) |
 | `fill` | `<color>` | Arbitrary background — any CSS colour; text auto-contrasts. Overrides `theme` |
 | `ink` | `<color>` | Arbitrary text colour — any CSS colour. Overrides the auto-contrast |
 | `size` | string | `sm`, `lg`, `xl`, `2xl` (`md` is the default) |
@@ -77,7 +77,7 @@ import resolves; markup, styling and behaviour are identical without it.
 
 > This colour/size model is shared by all `<ui-media>` furniture (`chip`, `sticker`, `save`,
 > `play`) and works identically standalone or via the card `media=` token. Standalone
-> attribute ↔ card token: `theme=` ↔ `chip(<hue>)`, `size=` ↔ `chip(<size>)`, `radius=` ↔
+> attribute ↔ card token: `theme=` ↔ `chip(<colour>)`, `size=` ↔ `chip(<size>)`, `radius=` ↔
 > `chip(<corner>)`, `variant="light"` ↔ `chip(lgt)`, `variant="outline"` ↔ `chip(out)`.
 
 ---
@@ -102,7 +102,7 @@ import '@browser.style/chip/style';
 </script>
 
 <template>
-  <ui-chip variant="light" theme="green">All services up</ui-chip>
+  <ui-chip variant="light" theme="green-800">All services up</ui-chip>
 </template>
 ```
 
@@ -119,7 +119,7 @@ import '@browser.style/chip/style';
   import '@browser.style/chip/style';
 </script>
 
-<ui-chip theme="orange">Warning: Low</ui-chip>
+<ui-chip theme="orange-400">Warning: Low</ui-chip>
 ```
 
 ### Astro / SSR
@@ -130,31 +130,32 @@ Use the CSS-only approach — no JavaScript needed:
 <link rel="stylesheet" href="@browser.style/base/index.css">
 <link rel="stylesheet" href="@browser.style/chip/index.css">
 
-<ui-chip theme="blue">Premium</ui-chip>
+<ui-chip theme="blue-900">Premium</ui-chip>
 ```
 
 ---
 
 ## Colors
 
-Use `theme` for a named hue (a background + paired ink in one keyword):
+Use `theme` for a palette colour (a background + its text colour in one keyword):
 
 ```html
-<ui-chip theme="blue">Info</ui-chip>
-<ui-chip theme="green">Success</ui-chip>
-<ui-chip theme="orange">Warning</ui-chip>
-<ui-chip theme="red">Error</ui-chip>
-<ui-chip theme="accent">Accent</ui-chip>
+<ui-chip theme="blue-900">Info</ui-chip>
+<ui-chip theme="green-800">Success</ui-chip>
+<ui-chip theme="orange-400">Warning</ui-chip>
+<ui-chip theme="red-700">Error</ui-chip>
+<ui-chip theme="accent-700">Accent</ui-chip>
+<ui-chip theme="green-100">Soft</ui-chip>
 ```
 
 | `theme` value | Colour |
 |-------|-------------|
 | _(none)_ | Default — `--color-button` background |
-| `red` | `--color-error` |
-| `orange` | `--color-warning` |
-| `green` | `--color-success` |
-| `blue` | `--color-info` |
-| `accent` `dark` `light` `subtle` | the matching `--ui-theme-*` bundle |
+| `<hue>-<step>` | any step of `gray red orange yellow green teal cyan blue violet pink accent` — `--color-<hue>-<step>` |
+| `white` · `black` | the two fixed colours |
+
+The chip shows the step's text colour (`--color-<hue>-<step>-text`). The palette, the dark-page
+mirroring and how to change a hue are in [theme.md](../base/theme.md#palette).
 
 For an **arbitrary colour**, use `fill` (surface) — text auto-contrasts — and optionally `ink`
 (text):
@@ -165,13 +166,13 @@ For an **arbitrary colour**, use `fill` (surface) — text auto-contrasts — an
 <ui-chip fill="rebeccapurple" ink="gold">Custom</ui-chip>
 ```
 
-`fill`/`ink` override `theme`. The named hues are retunable `--ui-theme-*` tokens in
-`@browser.style/base`:
+`fill`/`ink` override `theme`. The colours are retunable `--color-<hue>-<step>` tokens in
+`@browser.style/base` (or edit `ui/base/palette.json` and run `node scripts/build-palette.js`):
 
 ```css
 :root {
-  --ui-theme-accent-bg: hsl(280, 80%, 55%);
-  --ui-theme-accent-c: hsl(0, 0%, 100%);
+  --color-accent-700: var(--color-violet-700);
+  --color-accent-700-text: var(--color-violet-700-text);
 }
 ```
 
@@ -180,11 +181,11 @@ For an **arbitrary colour**, use `fill` (surface) — text auto-contrasts — an
 `sm`, `lg`, `xl`, `2xl` — `md` is the default (no attribute). Sizes are `em`-based, so they scale with the surrounding text:
 
 ```html
-<ui-chip size="sm" theme="blue">Small</ui-chip>
-<ui-chip theme="blue">Medium (default)</ui-chip>
-<ui-chip size="lg" theme="blue">Large</ui-chip>
-<ui-chip size="xl" theme="blue">X-Large</ui-chip>
-<ui-chip size="2xl" theme="blue">2X-Large</ui-chip>
+<ui-chip size="sm" theme="blue-900">Small</ui-chip>
+<ui-chip theme="blue-900">Medium (default)</ui-chip>
+<ui-chip size="lg" theme="blue-900">Large</ui-chip>
+<ui-chip size="xl" theme="blue-900">X-Large</ui-chip>
+<ui-chip size="2xl" theme="blue-900">2X-Large</ui-chip>
 ```
 
 ## Variants
@@ -194,22 +195,22 @@ For an **arbitrary colour**, use `fill` (surface) — text auto-contrasts — an
 **Light** — tinted background with the `theme`/`fill` colour as text:
 
 ```html
-<ui-chip variant="light" theme="blue">Premium</ui-chip>
+<ui-chip variant="light" theme="blue-900">Premium</ui-chip>
 ```
 
 **Outline** — transparent background with a colored border:
 
 ```html
-<ui-chip variant="outline" theme="green">Available</ui-chip>
+<ui-chip variant="outline" theme="green-800">Available</ui-chip>
 ```
 
-Both are addressable from a card via the `media=` token — `chip(lgt)` (light) and `chip(out)` (outline), combined with a hue/size like any other furniture token:
+Both are addressable from a card via the `media=` token — `chip(lgt)` (light) and `chip(out)` (outline), combined with a colour/size like any other furniture token:
 
 ```html
-<ui-card media="asr(4/3) chip(te) chip(lgt) chip(blue)"> … </ui-card>
+<ui-card media="asr(4/3) chip(te) chip(lgt) chip(blue-900)"> … </ui-card>
 ```
 
-The shared **hue modifiers** `chip(pale)` (light tint + hue ink, the theme-standard pale ratio) and `chip(muted)` (translucent plate) also work from a card — add one alongside a hue, e.g. `chip(red) chip(pale)`.
+The colour is a palette step, so a light chip is a light step: `chip(red-200)`.
 
 ### Shape variants
 
@@ -244,7 +245,7 @@ Chips can host `<ui-badge>` at any corner:
 
 ```html
 <ui-chip>Notifications <ui-badge color="error">4</ui-badge></ui-chip>
-<ui-chip theme="blue">Messages <ui-badge color="warning" position="bottom-right">2</ui-badge></ui-chip>
+<ui-chip theme="blue-900">Messages <ui-badge color="warning" position="bottom-right">2</ui-badge></ui-chip>
 ```
 
 Add `variant="inline"` to the badge to automatically push it to the inline end inside a chip:

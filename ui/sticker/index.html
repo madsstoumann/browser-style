@@ -57,9 +57,9 @@
 		<code>crc</code> circle (default), <code>sqr</code> squircle. In a card: <code>sticker(&lt;corner&gt;)</code>.
 		(Decorative <code>variant=</code> silhouettes set their own <code>clip-path</code> and ignore <code>radius</code>.)</p>
 	<div class="row">
-		<ui-sticker theme="red" radius="non" size="2xl"><small>ONLY</small><strong>$9</strong></ui-sticker>
-		<ui-sticker theme="green" radius="rnd" size="2xl"><small>SAVE</small><strong>20%</strong></ui-sticker>
-		<ui-sticker theme="orange" radius="sqr" size="2xl"><small>UP TO</small><strong>50%</strong></ui-sticker>
+		<ui-sticker theme="red-700" radius="non" size="2xl"><small>ONLY</small><strong>$9</strong></ui-sticker>
+		<ui-sticker theme="green-800" radius="rnd" size="2xl"><small>SAVE</small><strong>20%</strong></ui-sticker>
+		<ui-sticker theme="orange-400" radius="sqr" size="2xl"><small>UP TO</small><strong>50%</strong></ui-sticker>
 	</div>
 
 	<h3>Sizes &amp; shadow</h3>
@@ -143,21 +143,21 @@
 	</div>
 
 	<h3>Glass — <code>theme="… glass"</code></h3>
-	<p><code>glass</code> is a material, not a colour — it needs something behind it, so these sit on a photo. Without a colour token it is a neutral frost; <code>pale</code> first gives the gentlest tint. The sticker's own box is the plate, so the fill and the backdrop blur land together.</p>
+	<p><code>glass</code> is a material, not a colour — it needs something behind it, so these sit on a photo. Without a colour token it is a neutral frost; a light step first gives the gentlest tint. The sticker's own box is the plate, so the fill and the backdrop blur land together.</p>
 	<p>Ink is pinned with <code>ink=</code> rather than left to the theme: over a translucent pane the glass ink (the hue itself) drops to ~2:1 against the composited disc. A four-character lead also needs <code>font-lead="sm"</code> so it clears the circle's edge.</p>
 	<div class="row" style="padding: 1.5rem; border-radius: 0.5rem; background: url('/assets/images/autumn.jpg') center / cover no-repeat;">
 		<ui-sticker theme="glass" ink="#000" font-lead="sm" size="2xl"><small>NEW</small><strong>2026</strong></ui-sticker>
-		<ui-sticker theme="red pale glass" ink="#000" size="2xl"><small>SAVE</small><strong>20%</strong></ui-sticker>
-		<ui-sticker theme="blue pale glass" ink="#000" size="2xl"><small>UP TO</small><strong>50%</strong></ui-sticker>
-		<ui-sticker theme="green pale glass" ink="#000" radius="sqr" size="2xl"><small>ONLY</small><strong>$9</strong></ui-sticker>
-		<ui-sticker theme="black glass" ink="#000" font-lead="sm" size="2xl"><small>LAST</small><strong>CALL</strong></ui-sticker>
+		<ui-sticker theme="red-200 glass" ink="#000" size="2xl"><small>SAVE</small><strong>20%</strong></ui-sticker>
+		<ui-sticker theme="blue-100 glass" ink="#000" size="2xl"><small>UP TO</small><strong>50%</strong></ui-sticker>
+		<ui-sticker theme="green-100 glass" ink="#000" radius="sqr" size="2xl"><small>ONLY</small><strong>$9</strong></ui-sticker>
+		<ui-sticker theme="gray-800 glass" ink="#000" font-lead="sm" size="2xl"><small>LAST</small><strong>CALL</strong></ui-sticker>
 	</div>
 	<div class="row" style="margin-block-start: 1rem; padding: 1.5rem; border-radius: 0.5rem; background: url('/assets/images/spring.jpg') center / cover no-repeat;">
 		<ui-sticker theme="glass" ink="#000" font-lead="sm" size="2xl"><small>NEW</small><strong>2026</strong></ui-sticker>
-		<ui-sticker theme="red pale glass" ink="#000" size="2xl"><small>SAVE</small><strong>20%</strong></ui-sticker>
-		<ui-sticker theme="blue pale glass" ink="#000" size="2xl"><small>UP TO</small><strong>50%</strong></ui-sticker>
-		<ui-sticker theme="green pale glass" ink="#000" radius="sqr" size="2xl"><small>ONLY</small><strong>$9</strong></ui-sticker>
-		<ui-sticker theme="black glass" ink="#000" font-lead="sm" size="2xl"><small>LAST</small><strong>CALL</strong></ui-sticker>
+		<ui-sticker theme="red-200 glass" ink="#000" size="2xl"><small>SAVE</small><strong>20%</strong></ui-sticker>
+		<ui-sticker theme="blue-100 glass" ink="#000" size="2xl"><small>UP TO</small><strong>50%</strong></ui-sticker>
+		<ui-sticker theme="green-100 glass" ink="#000" radius="sqr" size="2xl"><small>ONLY</small><strong>$9</strong></ui-sticker>
+		<ui-sticker theme="gray-800 glass" ink="#000" font-lead="sm" size="2xl"><small>LAST</small><strong>CALL</strong></ui-sticker>
 	</div>
 
 	<!-- Typed attr() polyfill — Safari/Firefox. No-op where typed attr() is

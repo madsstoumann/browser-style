@@ -145,10 +145,10 @@
     "chip": {
       "type": "object",
       "title": "Status chip",
-      "description": "A short status flag at the very top of the TEXT column, above the eyebrow — \"New\", \"Sold\", \"Last places\". Either one object or an ARRAY of them when a listing carries several flags; they render as one <p data-part=\"meta\"> row (which gains flex + gap only when it holds more than one chip). Each entry is { text, theme, size, radius, variant } — ui/chip\u2019s own standalone attributes, written verbatim: theme is a ui-chip theme string (default \"pale accent\"), size sm|lg|xl|2xl, radius non|rnd|pll|crc|sqr (rnd is the square-cornered look), variant light|outline. NOT to be confused with `furniture.chip`, which is the chip overlaid on the MEDIA: a frame gets one chip family, so a furniture chip suppresses the <ui-chip data-type> type label, which is why a status flag belongs here instead.",
+      "description": "A short status flag at the very top of the TEXT column, above the eyebrow — \"New\", \"Sold\", \"Last places\". Either one object or an ARRAY of them when a listing carries several flags; they render as one <p data-part=\"meta\"> row (which gains flex + gap only when it holds more than one chip). Each entry is { text, theme, size, radius, variant } — ui/chip\u2019s own standalone attributes, written verbatim: theme is a ui-chip theme string (default \"accent-200\"), size sm|lg|xl|2xl, radius non|rnd|pll|crc|sqr (rnd is the square-cornered look), variant light|outline. NOT to be confused with `furniture.chip`, which is the chip overlaid on the MEDIA: a frame gets one chip family, so a furniture chip suppresses the <ui-chip data-type> type label, which is why a status flag belongs here instead.",
       "properties": {
         "text": { "type": "string", "title": "Text" },
-        "theme": { "type": "string", "title": "Theme", "default": "pale accent" },
+        "theme": { "type": "string", "title": "Theme", "default": "accent-200" },
         "size": { "type": "string", "title": "Size", "description": "ui-chip size — sm | lg | xl | 2xl (md is the default)" },
         "radius": { "type": "string", "title": "Corner", "description": "ui-chip radius — non | rnd | pll | crc | sqr; pill is the default" },
         "variant": { "type": "string", "title": "Variant", "description": "ui-chip variant — light | outline" }
@@ -465,7 +465,7 @@
               "type": "string",
               "title": "Style override",
               "localized": false,
-              "description": "Extra chip() tokens appended after the preset, e.g. \"red\" or \"bs red\". Overrides the preset for the same axis (position/hue)."
+              "description": "Extra chip() tokens appended after the preset, e.g. \"red-700\" or \"bs red-700\". Overrides the preset for the same axis (position/hue)."
             }
           }
         },
@@ -482,7 +482,7 @@
               "type": "string",
               "title": "Style override",
               "localized": false,
-              "description": "Extra beacon() tokens appended after the preset, e.g. \"red sld bln\" or \"ts pll\". Axes: position (ts…be) · hue (red…white) · face (dts dots | pll pill | sld solid | tck ticker) · animation (bln blink | pls pulse | brt breathe | non none) · size (xs sm md lg xl 2xl) · corner (rnd sqr). Overrides the preset for the same axis."
+              "description": "Extra beacon() tokens appended after the preset, e.g. \"red-700 sld bln\" or \"ts pll\". Axes: position (ts…be) · hue (a <hue>-<step> colour, or white | black) · face (dts dots | pll pill | sld solid | tck ticker) · animation (bln blink | pls pulse | brt breathe | non none) · size (xs sm md lg xl 2xl) · corner (rnd sqr). Overrides the preset for the same axis."
             }
           }
         },
@@ -525,7 +525,7 @@
               "type": "string",
               "title": "Style override",
               "localized": false,
-              "description": "Extra sticker() tokens appended after the preset, e.g. \"sh:burst red\" or \"te sh:heart\". Overrides the preset for the same axis (position/hue/shape)."
+              "description": "Extra sticker() tokens appended after the preset, e.g. \"sh:burst red-700\" or \"te sh:heart\". Overrides the preset for the same axis (position/hue/shape)."
             }
           }
         },
@@ -542,7 +542,7 @@
               "type": "string",
               "title": "Style override",
               "localized": false,
-              "description": "Extra marquee() tokens appended after the preset, e.g. \"red sm rpt\" or \"bot fade\". Overrides the preset for the same axis (position/hue/size/mode); unknown words are dropped by the renderer."
+              "description": "Extra marquee() tokens appended after the preset, e.g. \"red-700 sm rpt\" or \"bot fade\". Overrides the preset for the same axis (position/hue/size/mode); unknown words are dropped by the renderer."
             }
           }
         },
@@ -572,7 +572,7 @@
               "type": "string",
               "title": "Style override",
               "localized": false,
-              "description": "Extra save() tokens appended after the preset, e.g. \"orange sm\" or \"non\" (hide the disc)."
+              "description": "Extra save() tokens appended after the preset, e.g. \"orange-400 sm\" or \"non\" (hide the disc)."
             }
           }
         },

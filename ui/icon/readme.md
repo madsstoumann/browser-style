@@ -10,7 +10,7 @@ A CSS-first icon component built entirely with pseudo-elements and CSS transform
 - Configurable stroke width and size via attributes
 - SVG support — wrap any SVG inside `<ui-icon>` for consistent sizing and stroke
 - `rounded` attribute for soft line caps on dot-based icons
-- Themeable **plate** behind the glyph via `theme=` — nine hues plus `pale`/`muted`/`border`/`glass`
+- Themeable **plate** behind the glyph via `theme=` — any palette colour plus `border`/`outline`/`glass`
 - Plate shape via `radius=` — sharp, rounded, pill, circle or squircle
 - Works inline with text, buttons, and flex layouts
 - Light/dark mode compatible (inherits `currentColor`)
@@ -266,7 +266,7 @@ Use the CSS-only approach — no client JavaScript needed:
 | `size` | string | Size preset: `xs`, `sm`, `md`, `lg`, `xl`, `2xl` |
 | `stroke` | string | Stroke weight: `xs`, `sm`, `md`, `lg`, `xl` |
 | `variant` | string | `border` draws a ring/badge around the glyph (e.g. a circled `+`) |
-| `theme` | string | Paints a **plate** behind the glyph using the shared color axis — one hue (`red orange green blue accent white gray slate black`) plus any modifiers (`pale muted border glass light dark`). See [Plate](#plate-theme) |
+| `theme` | string | Paints a **plate** behind the glyph using the shared color axis — one palette colour (`<hue>-<step>`, `white` or `black`) plus any looks (`border outline glass light dark`). See [Plate](#plate-theme) |
 | `radius` | string | Plate shape: `non` sharp, `rnd` rounded, `pll` pill, `crc` circle (default), `sqr` squircle |
 | `rounded` | boolean | Rounded line caps on dot-based icons (kebab, grid, etc.) |
 | `state` | string | Explicit open animation: `flip`, `flip-x`, `flip-y` |
@@ -333,28 +333,24 @@ It resizes the glyph's box rather than scaling it with a transform, so the shape
 Adding `theme=` paints a **plate** behind the glyph — a filled disc, the "Google style" look:
 
 ```html
-<ui-icon type="chevron down" theme="gray"></ui-icon>
-<ui-icon type="plus"         theme="accent"></ui-icon>
-<ui-icon type="check"        theme="green pale"></ui-icon>
+<ui-icon type="chevron down" theme="gray-200"></ui-icon>
+<ui-icon type="plus"         theme="accent-700"></ui-icon>
+<ui-icon type="check"        theme="green-100"></ui-icon>
 ```
 
 `theme=` is the shared cross-component color axis, the same one `<ui-card>`, `<ui-chip>` and
-`<lay-out>` use — see [theme.md](../base/theme.md) for the full vocabulary. Pick **one hue**:
+`<lay-out>` use — see [theme.md](../base/theme.md) for the full vocabulary. Pick **one colour**
+(`<hue>-<step>` such as `green-300`, `white` or `black`) and add any **looks**:
 
-`red` · `orange` · `green` · `blue` · `accent` · `white` · `gray` · `slate` · `black`
-
-and add any **modifiers**:
-
-| Modifier | Effect on the plate |
+| Look | Effect on the plate |
 |---|---|
-| `pale` | Tinted fill, hue-as-ink glyph |
-| `muted` | Fill and glyph faded 50% |
-| `border` | Transparent fill, hue-colored ring, hue-colored glyph |
+| `border` | Fill kept, framed in the colour |
+| `outline` | Transparent fill, colour ring, colour glyph |
 | `glass` | Translucent fill plus a backdrop blur — needs something behind it |
 | `light` / `dark` | Pins `color-scheme` for the plate |
 
-Every bundle is a `light-dark()` pair, so a `theme="gray"` disc is `hsl(0 0% 93%)` on a light
-page and `hsl(0 0% 84%)` on a dark one, with the paired ink following. Use `data-theme=` instead
+Every colour is a `light-dark()` pair that mirrors on dark pages (`gray-200` shows as `gray-800`
+there), with the step's text colour following. Use `data-theme=` instead
 of `theme=` if you need the markup to validate as a plain attribute.
 
 **Sizing.** The plate is the glyph's `1em` box grown outward by `--ui-icon-padding` (default
@@ -366,15 +362,15 @@ ui-accordion ui-icon[theme] { --ui-icon-padding: .55em; }
 ```
 
 **Ink.** Like every other badge in the system (`<ui-chip>`, `<ui-sticker>`), `<ui-icon>` always
-applies the theme's paired ink — so the `ink` modifier is a no-op here, and `theme="red"` is
-already a white glyph on red.
+applies the step's text colour — so the `ink` look is a no-op here, and `theme="red-700"` carries
+`red-700`'s text colour on red.
 
-**`white` needs a backdrop.** `white` is a light surface in both schemes, so its plate is
+**`white` needs a backdrop.** `white` is the same on light and dark pages, so its plate is
 invisible on a white page. That is the axis behaving as documented, not a bug.
 
-**Don't combine `theme="… border"` with `variant="border"`.** Both draw a ring, and the
+**Don't combine `theme="… border"` or `outline` with `variant="border"`.** Both draw a ring, and the
 `variant` shorthand out-ranks the theme's border width. Pick one: `variant="border"` for a
-`currentColor` ring, `theme="blue border"` for a hue-colored one.
+`currentColor` ring, `theme="blue-900 outline"` for a colored one.
 
 ### Corners (`radius=`)
 
@@ -389,8 +385,8 @@ The plate's shape follows the same five-word vocabulary as `<ui-chip>` and `<ui-
 | `sqr` | Squircle (`corner-shape: superellipse()`) |
 
 ```html
-<ui-icon type="check" theme="gray" radius="rnd"></ui-icon>
-<ui-icon type="check" theme="gray" radius="sqr"></ui-icon>
+<ui-icon type="check" theme="gray-200" radius="rnd"></ui-icon>
+<ui-icon type="check" theme="gray-200" radius="sqr"></ui-icon>
 ```
 
 Because the plate is always a 1:1 box, `pll` and `crc` render identically unless you make

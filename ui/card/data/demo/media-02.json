@@ -21,7 +21,7 @@
       },
       "beacon": {
         "text": "LIVE",
-        "style": "sld red bln"
+        "style": "sld red-700 bln"
       }
     },
     "media": [

@@ -3,7 +3,7 @@
 A CSS-only scrolling content strip — zero JavaScript. Scrolls text, logos, images
 or chips across a clip viewport. Part of the card-furniture family alongside
 `@browser.style/chip`, `@browser.style/beacon` and `@browser.style/sticker` —
-same `theme=` hue axis, same `fill=`/`ink=` escape hatch, same size scale, same
+same `theme=` colour axis, same `fill=`/`ink=` escape hatch, same size scale, same
 corner vocabulary and the same dual-arm token model (standalone attribute + card
 `media="marquee(…)"` token).
 
@@ -29,7 +29,7 @@ corner vocabulary and the same dual-arm token model (standalone attribute + card
 - **Optional edge-fade** (`fade`) — a static mask melts both ends into the
   background; the scroll-shadow analog.
 - **Type control** — `font=` bag for family / weight / italic.
-- **Hues** — the shared `theme=` axis or arbitrary `fill=` / `ink=` colours.
+- **Colours** — the shared `theme=` axis (`<hue>-<step>`) or arbitrary `fill=` / `ink=` colours.
 - **Reduced-motion safe** — under `prefers-reduced-motion: reduce` no marquee
   ever auto-scrolls (WCAG 2.3.1); the strip becomes hand-scrollable instead.
 - **No wrapper** — content is direct children, or zero-markup via `aria-label`
@@ -129,13 +129,13 @@ width, so the second lands where the first began.
 
 ```html
 <!-- two direct children (2nd aria-hidden) -->
-<ui-marquee variant="loop" theme="red">
+<ui-marquee variant="loop" theme="red-700">
   <span>BREAKING NEWS &bull; BREAKING NEWS &bull; BREAKING NEWS &bull; </span>
   <span aria-hidden="true">BREAKING NEWS &bull; BREAKING NEWS &bull; BREAKING NEWS &bull; </span>
 </ui-marquee>
 
 <!-- or zero markup: aria-label fills ::before + ::after -->
-<ui-marquee variant="loop" theme="red" aria-label="BREAKING NEWS • BREAKING NEWS • BREAKING NEWS • "></ui-marquee>
+<ui-marquee variant="loop" theme="red-700" aria-label="BREAKING NEWS • BREAKING NEWS • BREAKING NEWS • "></ui-marquee>
 ```
 
 Two rules for a gap-free result:
@@ -231,8 +231,8 @@ Vertical directions need a height — set `--ui-marquee-block-size` (default
 ## Colours — the shared `theme=` axis
 
 ```html
-<ui-marquee theme="red"><span>Breaking</span></ui-marquee>
-<ui-marquee theme="slate"><span>Markets ticker</span></ui-marquee>
+<ui-marquee theme="red-700"><span>Breaking</span></ui-marquee>
+<ui-marquee theme="gray-700"><span>Markets ticker</span></ui-marquee>
 ```
 
 Arbitrary colours via `fill=` (plate) and `ink=` (text); ink auto-contrasts from
@@ -306,7 +306,7 @@ scroll container, so the mask is static rather than scroll-driven).
 |---|---|---|
 | `variant` | `loop \| seam \| fade \| cards` | `loop` = never-ending text (all browsers); `seam` = gap-free (seamless) item loop (Chrome); `fade` = edge-fade mask; `cards` = item shape is a fixed track cell, not a text run (attribute-only — no `marquee(cards)` card token, see below) |
 | `direction` | `left \| right \| up \| down` | Scroll direction (default `left`; flips under `dir="rtl"`) |
-| `theme` | `red \| orange \| green \| blue \| accent \| gray \| slate \| black \| white` + `pale \| muted \| light \| dark` | Shared hue axis |
+| `theme` | `<hue>-<step>` \| `white` \| `black` + `light \| dark` | Shared colour axis |
 | `fill` | `<color>` | Arbitrary plate colour; overrides `theme` |
 | `ink` | `<color>` | Text colour; overrides the value derived from `fill` |
 | `size` | `sm \| md \| lg \| xl \| 2xl` | Font-size scale (default `md` = `1em`) |
@@ -353,7 +353,7 @@ Inside the card system a marquee is designed to be **overlay furniture** on
 works from the parent `media=` string:
 
 ```html
-<ui-card media="asr(16/9) marquee(red) marquee(fade)">
+<ui-card media="asr(16/9) marquee(red-700) marquee(fade)">
   <cq-box>
     <ui-media>
       <img src="…" alt="">
@@ -366,8 +366,7 @@ works from the parent `media=` string:
 
 | Axis | Tokens |
 |---|---|
-| hue | `marquee(red\|orange\|green\|blue\|accent\|white\|gray\|slate\|black)` |
-| hue modifier | `marquee(pale)` (light tint + hue ink) · `marquee(muted)` (translucent plate) — add alongside a hue, e.g. `marquee(green) marquee(pale)` |
+| colour | `marquee(<hue>-<step>)` · `marquee(white\|black)` — see [theme.md](../base/theme.md#palette) |
 | mode | `marquee(rpt)` · `marquee(seam)` · `marquee(fade)` |
 | direction | `marquee(right)` · `marquee(up)` · `marquee(down)` |
 | size | `marquee(sm\|lg\|xl\|2xl)` |
@@ -422,7 +421,7 @@ actually wants a strip of cards inside its own media frame.
 import '@browser.style/base';
 import '@browser.style/marquee/style';
 
-<ui-marquee theme="red"><span>Breaking</span></ui-marquee>
+<ui-marquee theme="red-700"><span>Breaking</span></ui-marquee>
 ```
 
 ### Vue
@@ -434,7 +433,7 @@ import '@browser.style/marquee/style';
 </script>
 
 <template>
-  <ui-marquee theme="red"><span>Breaking</span></ui-marquee>
+  <ui-marquee theme="red-700"><span>Breaking</span></ui-marquee>
 </template>
 ```
 
@@ -451,7 +450,7 @@ import '@browser.style/marquee/style';
   import '@browser.style/marquee/style';
 </script>
 
-<ui-marquee theme="red"><span>Breaking</span></ui-marquee>
+<ui-marquee theme="red-700"><span>Breaking</span></ui-marquee>
 ```
 
 ### Astro / server-rendered HTML
@@ -460,7 +459,7 @@ import '@browser.style/marquee/style';
 <link rel="stylesheet" href="@browser.style/base/index.css">
 <link rel="stylesheet" href="@browser.style/marquee/index.css">
 
-<ui-marquee theme="red"><span>Breaking</span></ui-marquee>
+<ui-marquee theme="red-700"><span>Breaking</span></ui-marquee>
 ```
 
 ---

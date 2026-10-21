@@ -18,12 +18,12 @@
     "chip": [
       {
         "text": "New",
-        "theme": "pale green",
+        "theme": "green-100",
         "radius": "non"
       },
       {
         "text": "Open house",
-        "theme": "pale accent",
+        "theme": "accent-200",
         "radius": "non"
       }
     ],

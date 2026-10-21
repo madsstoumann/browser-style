@@ -20,11 +20,11 @@ body {
 	--color-accent: var(--bbc-red);
 	--color-text-muted: var(--bbc-grey);
 	--color-surface-alt: #f2f2f4;
-	/* re-alias the accent theme bundle too: --ui-theme-*-bg reference --color-*
-	   at :root, so they freeze to the default; re-declaring here lets theme="accent"
+	/* re-alias the accent plate step too: --color-accent-* resolve at :root, so
+	   they freeze to the default; re-declaring here lets theme="accent-700"
 	   (e.g. the section top rule) pick up the BBC red. */
-	--ui-theme-accent-bg: var(--bbc-red);
-	--ui-theme-accent-c: #fff;
+	--color-accent-700: var(--bbc-red);
+	--color-accent-700-text: #fff;
 	background: #fff;
 	color: var(--bbc-ink);
 	font-family: var(--bbc-sans);
@@ -51,8 +51,8 @@ lay-out ui-content { --ui-content-p: 0; padding-block-start: 0.5rem; }
 [data-part="meta"] { color: var(--bbc-grey); }
 
 /* section header: black serif title. BBC's red top rule now comes from the theme=
-   border modifier on the section's <lay-out-group> — theme="accent border(bs)
-   border(lg)" (accent re-aliased to --bbc-red above); see bbc.html. */
+   outline modifier on the section's <lay-out-group> — theme="accent-700 outline border(bs)
+   border(lg)" (accent-700 re-aliased to --bbc-red above); see bbc.html. */
 lay-out-group > ui-content {
 	--ui-content-headline: 1.75rem;
 	padding-block-start: 0.6rem;

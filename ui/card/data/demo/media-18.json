@@ -20,7 +20,7 @@
     "furniture": {
       "chip": {
         "text": "Editor's pick",
-        "style": "bs accent"
+        "style": "bs accent-700"
       },
       "sticker": {
         "lines": [
@@ -29,7 +29,7 @@
             "text": "Sale"
           }
         ],
-        "style": "te orange"
+        "style": "te orange-400"
       }
     },
     "media": [

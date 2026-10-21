@@ -1120,7 +1120,7 @@ editor is the only place a mistake is catchable.
 | `VARIANT_CONTROLS` | product | `list` `buttons` `collage` |
 | `ATTENDANCE_MODES` | event | `Offline` `Online` `Mixed` |
 | `REVIEWED_TYPES` | review | `Product` `Organization` `Service` |
-| `HUES` | timeline goal menu | `red` `orange` `green` `blue` `accent` `black` `white` `gray` `slate` |
+| `HUES` | timeline goal menu | `accent-50` `accent-100` `accent-200` `accent-300` `accent-400` `accent-500` `accent-600` `accent-700` `accent-800` `accent-900` `accent-950` `gray-50` `gray-100` `gray-200` `gray-300` `gray-400` `gray-500` `gray-600` `gray-700` `gray-800` `gray-900` `gray-950` `red-50` `red-100` `red-200` `red-300` `red-400` `red-500` `red-600` `red-700` `red-800` `red-900` `red-950` `orange-50` `orange-100` `orange-200` `orange-300` `orange-400` `orange-500` `orange-600` `orange-700` `orange-800` `orange-900` `orange-950` `yellow-50` `yellow-100` `yellow-200` `yellow-300` `yellow-400` `yellow-500` `yellow-600` `yellow-700` `yellow-800` `yellow-900` `yellow-950` `green-50` `green-100` `green-200` `green-300` `green-400` `green-500` `green-600` `green-700` `green-800` `green-900` `green-950` `teal-50` `teal-100` `teal-200` `teal-300` `teal-400` `teal-500` `teal-600` `teal-700` `teal-800` `teal-900` `teal-950` `cyan-50` `cyan-100` `cyan-200` `cyan-300` `cyan-400` `cyan-500` `cyan-600` `cyan-700` `cyan-800` `cyan-900` `cyan-950` `blue-50` `blue-100` `blue-200` `blue-300` `blue-400` `blue-500` `blue-600` `blue-700` `blue-800` `blue-900` `blue-950` `violet-50` `violet-100` `violet-200` `violet-300` `violet-400` `violet-500` `violet-600` `violet-700` `violet-800` `violet-900` `violet-950` `pink-50` `pink-100` `pink-200` `pink-300` `pink-400` `pink-500` `pink-600` `pink-700` `pink-800` `pink-900` `pink-950` `white` `black` |
 | `GOAL_STATUS` | goal | `active` `completed` `failed` `potential` |
 | `PLACE_KINDS` | places | `business` `residence` |
 | `ITEM_LIST_ORDERS` | places | `ItemListOrderAscending` `ItemListOrderDescending` `ItemListUnordered` |
@@ -1212,7 +1212,7 @@ Four values cannot be enumerated and need a free-text control:
 `sticker(sh:<custom>)`, `auto(<n>)`, `cluster(<n>)`, `zoom(<n>)`.
 
 There are currently **zero deprecated tokens and zero argument aliases**, so every value below
-is live. One value per token instance — `chip(ts) chip(red)`, never `chip(ts red)`.
+is live. One value per token instance — `chip(ts) chip(red-700)`, never `chip(ts red-700)`.
 
 ### `media=`
 
@@ -1227,48 +1227,45 @@ is live. One value per token instance — `chip(ts) chip(red)`, never `chip(ts r
 | `flp()` | **mode** | h v hv | — |
 | `shp()` | **shape** | pt-d pt-u pt-l pt-r cut-r cut-l skew-r skew-l para rhomb inset hex chev-l chev-r arr-l arr-r star plus minus close bolt msg frame frame-in blinds-h blinds-v curve-d curve-u curve-r curve-l circle circ-45 | — |
 | `hov()` | **mode** | zoom pan track drift tilt tilt-out tilt-in rot-r rot-l shape shape-rev gray blur bright sat dim tint | — |
-| `tnt()` | **hue** | red orange green blue accent black white gray slate | — |
+| `tnt()` | **hue** | accent-50 accent-100 accent-200 accent-300 accent-400 accent-500 accent-600 accent-700 accent-800 accent-900 accent-950 gray-50 gray-100 gray-200 gray-300 gray-400 gray-500 gray-600 gray-700 gray-800 gray-900 gray-950 red-50 red-100 red-200 red-300 red-400 red-500 red-600 red-700 red-800 red-900 red-950 orange-50 orange-100 orange-200 orange-300 orange-400 orange-500 orange-600 orange-700 orange-800 orange-900 orange-950 yellow-50 yellow-100 yellow-200 yellow-300 yellow-400 yellow-500 yellow-600 yellow-700 yellow-800 yellow-900 yellow-950 green-50 green-100 green-200 green-300 green-400 green-500 green-600 green-700 green-800 green-900 green-950 teal-50 teal-100 teal-200 teal-300 teal-400 teal-500 teal-600 teal-700 teal-800 teal-900 teal-950 cyan-50 cyan-100 cyan-200 cyan-300 cyan-400 cyan-500 cyan-600 cyan-700 cyan-800 cyan-900 cyan-950 blue-50 blue-100 blue-200 blue-300 blue-400 blue-500 blue-600 blue-700 blue-800 blue-900 blue-950 violet-50 violet-100 violet-200 violet-300 violet-400 violet-500 violet-600 violet-700 violet-800 violet-900 violet-950 pink-50 pink-100 pink-200 pink-300 pink-400 pink-500 pink-600 pink-700 pink-800 pink-900 pink-950 white black | — |
 | `scm()` | **pos** | ts tc te cs cc ce bs bc be | — |
 | `scm()` | **size** | sm md lg xl | — |
 | `scm()` | **tone** | shr lgt med drk sld | — |
 | `chip()` | **pos** | ts tc te cs cc ce bs bc be | — |
-| `chip()` | **hue** | red orange green blue accent black white gray slate | — |
-| `chip()` | **mode** | pale muted | — |
+| `chip()` | **hue** | accent-50 accent-100 accent-200 accent-300 accent-400 accent-500 accent-600 accent-700 accent-800 accent-900 accent-950 gray-50 gray-100 gray-200 gray-300 gray-400 gray-500 gray-600 gray-700 gray-800 gray-900 gray-950 red-50 red-100 red-200 red-300 red-400 red-500 red-600 red-700 red-800 red-900 red-950 orange-50 orange-100 orange-200 orange-300 orange-400 orange-500 orange-600 orange-700 orange-800 orange-900 orange-950 yellow-50 yellow-100 yellow-200 yellow-300 yellow-400 yellow-500 yellow-600 yellow-700 yellow-800 yellow-900 yellow-950 green-50 green-100 green-200 green-300 green-400 green-500 green-600 green-700 green-800 green-900 green-950 teal-50 teal-100 teal-200 teal-300 teal-400 teal-500 teal-600 teal-700 teal-800 teal-900 teal-950 cyan-50 cyan-100 cyan-200 cyan-300 cyan-400 cyan-500 cyan-600 cyan-700 cyan-800 cyan-900 cyan-950 blue-50 blue-100 blue-200 blue-300 blue-400 blue-500 blue-600 blue-700 blue-800 blue-900 blue-950 violet-50 violet-100 violet-200 violet-300 violet-400 violet-500 violet-600 violet-700 violet-800 violet-900 violet-950 pink-50 pink-100 pink-200 pink-300 pink-400 pink-500 pink-600 pink-700 pink-800 pink-900 pink-950 white black | — |
 | `chip()` | **variant** | lgt out | — |
 | `chip()` | **size** | sm lg xl 2xl | — |
 | `chip()` | **disc** | non rnd pll crc sqr | — |
 | `ai()` | **pos** | ts tc te cs cc ce bs bc be | — |
-| `ai()` | **hue** | red orange green blue accent black white gray slate | — |
+| `ai()` | **hue** | accent-50 accent-100 accent-200 accent-300 accent-400 accent-500 accent-600 accent-700 accent-800 accent-900 accent-950 gray-50 gray-100 gray-200 gray-300 gray-400 gray-500 gray-600 gray-700 gray-800 gray-900 gray-950 red-50 red-100 red-200 red-300 red-400 red-500 red-600 red-700 red-800 red-900 red-950 orange-50 orange-100 orange-200 orange-300 orange-400 orange-500 orange-600 orange-700 orange-800 orange-900 orange-950 yellow-50 yellow-100 yellow-200 yellow-300 yellow-400 yellow-500 yellow-600 yellow-700 yellow-800 yellow-900 yellow-950 green-50 green-100 green-200 green-300 green-400 green-500 green-600 green-700 green-800 green-900 green-950 teal-50 teal-100 teal-200 teal-300 teal-400 teal-500 teal-600 teal-700 teal-800 teal-900 teal-950 cyan-50 cyan-100 cyan-200 cyan-300 cyan-400 cyan-500 cyan-600 cyan-700 cyan-800 cyan-900 cyan-950 blue-50 blue-100 blue-200 blue-300 blue-400 blue-500 blue-600 blue-700 blue-800 blue-900 blue-950 violet-50 violet-100 violet-200 violet-300 violet-400 violet-500 violet-600 violet-700 violet-800 violet-900 violet-950 pink-50 pink-100 pink-200 pink-300 pink-400 pink-500 pink-600 pink-700 pink-800 pink-900 pink-950 white black | — |
 | `ai()` | **size** | lg xl | — |
 | `sticker()` | **pos** | ts tc te cs cc ce bs bc be | — |
-| `sticker()` | **hue** | red orange green blue accent black white gray slate | — |
-| `sticker()` | **mode** | pale muted | — |
+| `sticker()` | **hue** | accent-50 accent-100 accent-200 accent-300 accent-400 accent-500 accent-600 accent-700 accent-800 accent-900 accent-950 gray-50 gray-100 gray-200 gray-300 gray-400 gray-500 gray-600 gray-700 gray-800 gray-900 gray-950 red-50 red-100 red-200 red-300 red-400 red-500 red-600 red-700 red-800 red-900 red-950 orange-50 orange-100 orange-200 orange-300 orange-400 orange-500 orange-600 orange-700 orange-800 orange-900 orange-950 yellow-50 yellow-100 yellow-200 yellow-300 yellow-400 yellow-500 yellow-600 yellow-700 yellow-800 yellow-900 yellow-950 green-50 green-100 green-200 green-300 green-400 green-500 green-600 green-700 green-800 green-900 green-950 teal-50 teal-100 teal-200 teal-300 teal-400 teal-500 teal-600 teal-700 teal-800 teal-900 teal-950 cyan-50 cyan-100 cyan-200 cyan-300 cyan-400 cyan-500 cyan-600 cyan-700 cyan-800 cyan-900 cyan-950 blue-50 blue-100 blue-200 blue-300 blue-400 blue-500 blue-600 blue-700 blue-800 blue-900 blue-950 violet-50 violet-100 violet-200 violet-300 violet-400 violet-500 violet-600 violet-700 violet-800 violet-900 violet-950 pink-50 pink-100 pink-200 pink-300 pink-400 pink-500 pink-600 pink-700 pink-800 pink-900 pink-950 white black | — |
 | `sticker()` | **size** | sm lg xl 2xl 3xl | — |
 | `sticker()` | **disc** | non rnd pll crc sqr | — |
 | `sticker()` | **shape** | text spl spr sh:burst sh:blob sh:spark sh:sunburst sh:heart sh:&lt;custom&gt; | — |
 | `sticker()` | **flag** | fit | — |
 | `save()` | **pos** | ts tc te cs cc ce bs bc be | — |
-| `save()` | **hue** | red orange green blue accent black white gray slate | — |
+| `save()` | **hue** | accent-50 accent-100 accent-200 accent-300 accent-400 accent-500 accent-600 accent-700 accent-800 accent-900 accent-950 gray-50 gray-100 gray-200 gray-300 gray-400 gray-500 gray-600 gray-700 gray-800 gray-900 gray-950 red-50 red-100 red-200 red-300 red-400 red-500 red-600 red-700 red-800 red-900 red-950 orange-50 orange-100 orange-200 orange-300 orange-400 orange-500 orange-600 orange-700 orange-800 orange-900 orange-950 yellow-50 yellow-100 yellow-200 yellow-300 yellow-400 yellow-500 yellow-600 yellow-700 yellow-800 yellow-900 yellow-950 green-50 green-100 green-200 green-300 green-400 green-500 green-600 green-700 green-800 green-900 green-950 teal-50 teal-100 teal-200 teal-300 teal-400 teal-500 teal-600 teal-700 teal-800 teal-900 teal-950 cyan-50 cyan-100 cyan-200 cyan-300 cyan-400 cyan-500 cyan-600 cyan-700 cyan-800 cyan-900 cyan-950 blue-50 blue-100 blue-200 blue-300 blue-400 blue-500 blue-600 blue-700 blue-800 blue-900 blue-950 violet-50 violet-100 violet-200 violet-300 violet-400 violet-500 violet-600 violet-700 violet-800 violet-900 violet-950 pink-50 pink-100 pink-200 pink-300 pink-400 pink-500 pink-600 pink-700 pink-800 pink-900 pink-950 white black | — |
 | `save()` | **size** | sm lg xl | — |
 | `save()` | **disc** | non rnd crc sqr | — |
 | `play()` | **pos** | ts tc te cs cc ce bs bc be | — |
-| `play()` | **hue** | red orange green blue accent black white gray slate | — |
+| `play()` | **hue** | accent-50 accent-100 accent-200 accent-300 accent-400 accent-500 accent-600 accent-700 accent-800 accent-900 accent-950 gray-50 gray-100 gray-200 gray-300 gray-400 gray-500 gray-600 gray-700 gray-800 gray-900 gray-950 red-50 red-100 red-200 red-300 red-400 red-500 red-600 red-700 red-800 red-900 red-950 orange-50 orange-100 orange-200 orange-300 orange-400 orange-500 orange-600 orange-700 orange-800 orange-900 orange-950 yellow-50 yellow-100 yellow-200 yellow-300 yellow-400 yellow-500 yellow-600 yellow-700 yellow-800 yellow-900 yellow-950 green-50 green-100 green-200 green-300 green-400 green-500 green-600 green-700 green-800 green-900 green-950 teal-50 teal-100 teal-200 teal-300 teal-400 teal-500 teal-600 teal-700 teal-800 teal-900 teal-950 cyan-50 cyan-100 cyan-200 cyan-300 cyan-400 cyan-500 cyan-600 cyan-700 cyan-800 cyan-900 cyan-950 blue-50 blue-100 blue-200 blue-300 blue-400 blue-500 blue-600 blue-700 blue-800 blue-900 blue-950 violet-50 violet-100 violet-200 violet-300 violet-400 violet-500 violet-600 violet-700 violet-800 violet-900 violet-950 pink-50 pink-100 pink-200 pink-300 pink-400 pink-500 pink-600 pink-700 pink-800 pink-900 pink-950 white black | — |
 | `play()` | **size** | sm md lg xl | — |
 | `play()` | **disc** | non rnd pll crc sqr | — |
 | `beacon()` | **pos** | ts tc te cs cc ce bs bc be | — |
-| `beacon()` | **hue** | red orange green blue accent black white gray slate | — |
-| `beacon()` | **mode** | pale muted | — |
+| `beacon()` | **hue** | accent-50 accent-100 accent-200 accent-300 accent-400 accent-500 accent-600 accent-700 accent-800 accent-900 accent-950 gray-50 gray-100 gray-200 gray-300 gray-400 gray-500 gray-600 gray-700 gray-800 gray-900 gray-950 red-50 red-100 red-200 red-300 red-400 red-500 red-600 red-700 red-800 red-900 red-950 orange-50 orange-100 orange-200 orange-300 orange-400 orange-500 orange-600 orange-700 orange-800 orange-900 orange-950 yellow-50 yellow-100 yellow-200 yellow-300 yellow-400 yellow-500 yellow-600 yellow-700 yellow-800 yellow-900 yellow-950 green-50 green-100 green-200 green-300 green-400 green-500 green-600 green-700 green-800 green-900 green-950 teal-50 teal-100 teal-200 teal-300 teal-400 teal-500 teal-600 teal-700 teal-800 teal-900 teal-950 cyan-50 cyan-100 cyan-200 cyan-300 cyan-400 cyan-500 cyan-600 cyan-700 cyan-800 cyan-900 cyan-950 blue-50 blue-100 blue-200 blue-300 blue-400 blue-500 blue-600 blue-700 blue-800 blue-900 blue-950 violet-50 violet-100 violet-200 violet-300 violet-400 violet-500 violet-600 violet-700 violet-800 violet-900 violet-950 pink-50 pink-100 pink-200 pink-300 pink-400 pink-500 pink-600 pink-700 pink-800 pink-900 pink-950 white black | — |
 | `beacon()` | **size** | xs sm md lg xl 2xl | — |
 | `beacon()` | **face** | sld tck ldr dts | — |
 | `beacon()` | **anim** | bln pls brt | — |
 | `beacon()` | **disc** | pll rnd sqr non | — |
 | `lightbox()` | **pos** | ts tc te cs cc ce bs bc be | — |
-| `lightbox()` | **hue** | red orange green blue accent black white gray slate | — |
+| `lightbox()` | **hue** | accent-50 accent-100 accent-200 accent-300 accent-400 accent-500 accent-600 accent-700 accent-800 accent-900 accent-950 gray-50 gray-100 gray-200 gray-300 gray-400 gray-500 gray-600 gray-700 gray-800 gray-900 gray-950 red-50 red-100 red-200 red-300 red-400 red-500 red-600 red-700 red-800 red-900 red-950 orange-50 orange-100 orange-200 orange-300 orange-400 orange-500 orange-600 orange-700 orange-800 orange-900 orange-950 yellow-50 yellow-100 yellow-200 yellow-300 yellow-400 yellow-500 yellow-600 yellow-700 yellow-800 yellow-900 yellow-950 green-50 green-100 green-200 green-300 green-400 green-500 green-600 green-700 green-800 green-900 green-950 teal-50 teal-100 teal-200 teal-300 teal-400 teal-500 teal-600 teal-700 teal-800 teal-900 teal-950 cyan-50 cyan-100 cyan-200 cyan-300 cyan-400 cyan-500 cyan-600 cyan-700 cyan-800 cyan-900 cyan-950 blue-50 blue-100 blue-200 blue-300 blue-400 blue-500 blue-600 blue-700 blue-800 blue-900 blue-950 violet-50 violet-100 violet-200 violet-300 violet-400 violet-500 violet-600 violet-700 violet-800 violet-900 violet-950 pink-50 pink-100 pink-200 pink-300 pink-400 pink-500 pink-600 pink-700 pink-800 pink-900 pink-950 white black | — |
 | `lightbox()` | **size** | sm lg xl | — |
 | `lightbox()` | **disc** | non rnd crc sqr | — |
 | `marquee()` | **pos** | top bot | — |
-| `marquee()` | **hue** | red orange green blue accent black white gray slate | — |
-| `marquee()` | **mode** | rpt seam fade pale muted | — |
+| `marquee()` | **hue** | accent-50 accent-100 accent-200 accent-300 accent-400 accent-500 accent-600 accent-700 accent-800 accent-900 accent-950 gray-50 gray-100 gray-200 gray-300 gray-400 gray-500 gray-600 gray-700 gray-800 gray-900 gray-950 red-50 red-100 red-200 red-300 red-400 red-500 red-600 red-700 red-800 red-900 red-950 orange-50 orange-100 orange-200 orange-300 orange-400 orange-500 orange-600 orange-700 orange-800 orange-900 orange-950 yellow-50 yellow-100 yellow-200 yellow-300 yellow-400 yellow-500 yellow-600 yellow-700 yellow-800 yellow-900 yellow-950 green-50 green-100 green-200 green-300 green-400 green-500 green-600 green-700 green-800 green-900 green-950 teal-50 teal-100 teal-200 teal-300 teal-400 teal-500 teal-600 teal-700 teal-800 teal-900 teal-950 cyan-50 cyan-100 cyan-200 cyan-300 cyan-400 cyan-500 cyan-600 cyan-700 cyan-800 cyan-900 cyan-950 blue-50 blue-100 blue-200 blue-300 blue-400 blue-500 blue-600 blue-700 blue-800 blue-900 blue-950 violet-50 violet-100 violet-200 violet-300 violet-400 violet-500 violet-600 violet-700 violet-800 violet-900 violet-950 pink-50 pink-100 pink-200 pink-300 pink-400 pink-500 pink-600 pink-700 pink-800 pink-900 pink-950 white black | — |
+| `marquee()` | **mode** | rpt seam fade | — |
 | `marquee()` | **size** | sm lg xl 2xl | — |
 | `marquee()` | **disc** | non rnd pll crc sqr | — |
 | `marquee()` | **value** | right up down slow fast faster gap-sm gap-lg | — |
@@ -1392,13 +1389,13 @@ is live. One value per token instance — `chip(ts) chip(red)`, never `chip(ts r
 
 ### `theme=`
 
-Not in the token manifest — this vocabulary lives in `ui/base/theme.css`. Pick **one** hue and
-add any number of modifiers.
+Not in the token manifest — this vocabulary lives in `ui/base/theme.css`, the colours in
+`ui/base/palette.json`. Pick **one** colour and add any number of looks.
 
 | Axis | Values |
 |---|---|
-| Hue | `red` `orange` `green` `blue` `accent` `black` `white` `gray` `slate` |
-| Modifier | `pale` `muted` `ink` `light` `dark` `border` `glass` |
+| Colour | `<hue>-<step>` — hues `gray` `red` `orange` `yellow` `green` `teal` `cyan` `blue` `violet` `pink` `accent`, steps `50` `100`–`900` `950` · `white` `black` |
+| Look | `ink` `glass` `border` `outline` `light` `dark` |
 | `border()` | sides `bs` `be` `is` `ie` `bk` `in` · widths `sm` `md` `lg` `xl` `2xl` · styles `dashed` `dotted` `double` |
 
 ---

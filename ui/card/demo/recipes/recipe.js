@@ -185,7 +185,7 @@ function chime() {
 const wake = { want: false, sentinel: null };
 function paintWake(on) {
 	for (const beacon of $$('#wake-state, #cook-wake')) {
-		beacon.setAttribute('theme', on ? 'green' : 'gray');
+		beacon.setAttribute('theme', on ? 'green-800' : 'gray-200');
 		on ? beacon.setAttribute('animation', 'pulse') : beacon.removeAttribute('animation');
 		beacon.textContent = on ? 'Screen awake' : 'Screen may sleep';
 	}
@@ -310,7 +310,7 @@ const heard = $('#voice-heard');
 const hint = (text) => { const el = $('#voice-hint'); if (el) el.textContent = text; };
 function paintMic(on) {
 	for (const beacon of $$('#mic-state, #cook-mic')) { /* red + blink: the REC convention */
-		beacon.setAttribute('theme', on ? 'red' : 'gray');
+		beacon.setAttribute('theme', on ? 'red-700' : 'gray-200');
 		on ? beacon.setAttribute('animation', 'blink') : beacon.removeAttribute('animation');
 		beacon.textContent = on ? 'Listening' : 'Mic off';
 	}

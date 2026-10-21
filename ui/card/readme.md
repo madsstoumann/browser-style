@@ -205,7 +205,7 @@ Configures `<ui-media>`: aspect-ratio, fit/position, hover, scrim, carousel, and
 | `rds()` | corners on a **standalone** `<ui-media>` (inside a card the card owns the radius) |
 | `scm` / `scm()` | scrim — bare matches the host `ovr()`; direction picks a corner (furniture grid), size sets the extent, tone sets darkness. Three composable tokens, e.g. `scm(bc) scm(lg) scm(drk)` |
 | `nav` / `nav()` | carousel — the token **is** the trigger; bare = markers + arrows. All carousel controls (`arw()`, `mrk()`, `tmb()`, `axis(y)`, `auto`, `loop`, `stagger`, `load()`) are `media=` tokens — see [carousel.md](docs/carousel.md) |
-| `chip()` `sticker()` `save()` `play()` | place + theme an overlay element — one atomic token per axis (`chip(te) chip(black)`, never `chip(te black)`) |
+| `chip()` `sticker()` `save()` `play()` | place + theme an overlay element — one atomic token per axis (`chip(te) chip(gray-800)`, never `chip(te gray-800)`) |
 
 Argument vocabularies, **generated from `data/tokens.json`** so they can't drift from the CSS:
 
@@ -225,22 +225,22 @@ Argument vocabularies, **generated from `data/tokens.json`** so they can't drift
 | `nav()` | **mode** | mrk arw blw abv end non | — |
 <!-- /tokens -->
 
-Overlay furniture — position, hue and each element's own axes:
+Overlay furniture — position and each element's own axes (the colour is any palette name, `<hue>-<step>`, `white` or `black`; see [media.md](docs/media.md#the-palette-colours)):
 
-<!-- tokens:matrix attr=media stems=chip,sticker,save,play,lightbox classes=pos,hue,mode,size,disc -->
-| token | pos | hue | mode | size | disc | deprecated aliases |
-|---|---|---|---|---|---|---|
-| `chip()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray slate | pale muted | sm lg xl 2xl | non rnd pll crc sqr | — |
-| `sticker()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray slate | pale muted | sm lg xl 2xl 3xl | non rnd pll crc sqr | — |
-| `save()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray slate | — | sm lg xl | non rnd crc sqr | — |
-| `play()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray slate | — | sm md lg xl | non rnd pll crc sqr | — |
-| `lightbox()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray slate | — | sm lg xl | non rnd crc sqr | — |
+<!-- tokens:matrix attr=media stems=chip,sticker,save,play,lightbox classes=pos,size,disc -->
+| token | pos | size | disc | deprecated aliases |
+|---|---|---|---|---|
+| `chip()` | ts tc te cs cc ce bs bc be | sm lg xl 2xl | non rnd pll crc sqr | — |
+| `sticker()` | ts tc te cs cc ce bs bc be | sm lg xl 2xl 3xl | non rnd pll crc sqr | — |
+| `save()` | ts tc te cs cc ce bs bc be | sm lg xl | non rnd crc sqr | — |
+| `play()` | ts tc te cs cc ce bs bc be | sm md lg xl | non rnd pll crc sqr | — |
+| `lightbox()` | ts tc te cs cc ce bs bc be | sm lg xl | non rnd crc sqr | — |
 <!-- /tokens -->
 
 `<ui-beacon>` and `<ui-marquee>` take the same shape with extra axes of their own — full matrix in [media.md](docs/media.md).
 
 ```html
-<ui-card variant="col" media="asr(4/3) obp(cc) hov(zoom) chip(be) chip(green)"> … </ui-card>
+<ui-card variant="col" media="asr(4/3) obp(cc) hov(zoom) chip(be) chip(green-800)"> … </ui-card>
 ```
 
 Every token just writes a `--ui-media-*` custom property, so any value with no token has a `style="--ui-media-*"` escape hatch. **Full surface, tokens and behavior:** see **[media.md](docs/media.md)**.
@@ -287,11 +287,11 @@ Composes the two primitives — arrangement, split, visibility, overlay, theme, 
 | `vis(media)` | show only the media (hide content) |
 | `vis(content)` | show only the content (hide media) |
 | `ovr()` | `ts tc te · cs cc ce · bs bc be` — stack content over media at one of 9 **logical** positions; sets the matching default scrim direction. (The six physical spellings `tl tr cl cr bl br` were removed in v5; `tc`/`cc`/`bc` are spelled the same in both grids.) |
-| `theme=` | shared theme axis: a colour (`red … black`) + `pale`/`muted`/`light`/`dark` modifiers. Surface + ink; ink crosses into the content namespace. See [theme.md](../base/theme.md). (Replaces the old `variant="thm(…)"` spelling, removed in v4) |
+| `theme=` | shared theme axis: a palette colour (`red-700`, `gray-200`, `white`, …) + `ink`/`glass`/`border`/`outline`/`light`/`dark` looks. Surface + ink; ink crosses into the content namespace. See [theme.md](../base/theme.md). (Replaces the old `variant="thm(…)"` spelling, removed in v4) |
 | `rds()` | `non sm md lg xl 2xl full pill` (round) · `sm-sq md-sq lg-sq xl-sq` (squircle, `corner-shape: superellipse()`) · `prg` (progressive — ramps from square to `--ui-media-radius-max` across the container's width) — corner radius. The old `rds(none)` spelling was removed in v5 |
 
 ```html
-<ui-card variant="row spl(1/2) rds(lg)" theme="gray" media="asr(4/3)" content="scl(lg) pad(lg)"> … </ui-card>
+<ui-card variant="row spl(1/2) rds(lg)" theme="gray-200" media="asr(4/3)" content="scl(lg) pad(lg)"> … </ui-card>
 ```
 
 **Full surface, host tokens and the `ovr()` bridge:** see **[ui-card-tokens.md](docs/ui-card-tokens.md)**; the `theme=` axis is documented in **[theme.md](../base/theme.md)**.
@@ -300,7 +300,7 @@ Composes the two primitives — arrangement, split, visibility, overlay, theme, 
 
 ## Overlay furniture
 
-The media area hosts **five** overlay elements as **children of `<ui-media>`**. They carry only their text/glyph — **position and hue come from the parent `media=` token** (e.g. `media="chip(be) chip(red)"`), not from attributes on the element itself.
+The media area hosts **five** overlay elements as **children of `<ui-media>`**. They carry only their text/glyph — **position and colour come from the parent `media=` token** (e.g. `media="chip(be) chip(red-700)"`), not from attributes on the element itself.
 
 | Element | Role | Default area | In `<summary>`? |
 |---------|------|--------------|------------------|
@@ -312,10 +312,10 @@ The media area hosts **five** overlay elements as **children of `<ui-media>`**. 
 
 A sixth element, **`<ui-marquee>`, is a *band*, not furniture** — full-width, `top`/`bot` only (no nine-point grid), and it sits at `z-index: 1`, *below* the furniture. Overlaid in `<ui-media>` it is token-placed (`marquee(top)` / `marquee(bot)`); inside `<ui-content>` it is markup-placed by flow order. Details in **[media.md](docs/media.md#furniture-vs-band--ui-marquee-is-not-furniture)**.
 
-Hues are the canonical nine — `red orange green blue accent black white gray slate` (four hues + the `white < gray < slate < black` neutral ramp). The doc-era `dark`/`light`/`subtle` aliases were removed in v5; `slate` was promoted to a canonical hue rather than removed, because it always routed to its own `--ui-theme-slate-*` bundle.
+Colours are palette names, `<hue>-<step>` — `green-300`, `gray-800`, `accent-700` — plus `white` and `black`; the same names as `theme=` (see [theme.md](../base/theme.md#palette)). The nine old names and the `pale`/`muted` modifiers were removed: a step replaces them.
 
 ```html
-<ui-card variant="col" media="asr(4/3) chip(be) chip(green) sticker(ts) sticker(red)">
+<ui-card variant="col" media="asr(4/3) chip(be) chip(green-800) sticker(ts) sticker(red-700)">
   <cq-box>
     <ui-media>
       <img src="product.jpg" alt="Product">
@@ -327,7 +327,7 @@ Hues are the canonical nine — `red orange green blue accent black white gray s
 </ui-card>
 ```
 
-Position (`ts…be`) and theme (`red…subtle`) are disjoint vocabularies and are **two atomic tokens** — `media="chip(be) chip(green)"`, not `chip(be green)`. **Full grid, theming and per-element details:** see **[media.md](docs/media.md)**.
+Position (`ts…be`) and colour (`red-700`, `gray-800`, …) are disjoint vocabularies and are **two atomic tokens** — `media="chip(be) chip(green-800)"`, not `chip(be green-800)`. **Full grid, theming and per-element details:** see **[media.md](docs/media.md)**.
 
 ---
 
@@ -447,7 +447,7 @@ The core surface — frame, layout, overlay furniture, scrim, themes, type ramp 
 | Custom elements / CSS Grid / logical properties (RTL) | All modern browsers |
 | `aspect-ratio` | Chrome 88+, Firefox 89+, Safari 15+ |
 | Container queries (`md:` / `lg:` tiers, `cqi` type ramp) | Chrome 105+, Firefox 110+, Safari 16+ |
-| `color-mix()` (themes, muted ink) | Chrome 111+, Firefox 113+, Safari 16.2+ |
+| `color-mix()` (themes) | Chrome 111+, Firefox 113+, Safari 16.2+ |
 | `::scroll-marker` / `::scroll-button` + `anchor()` (carousel markers/arrows) | Chromium-only |
 | `corner-shape: superellipse()` (`rds(*-sq)` squircles) | Chrome 135+ |
 | `progress()` (`rds(prg)` progressive radius) | Chrome 152 verified; without it the ramp drops and the corners render square |

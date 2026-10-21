@@ -104,18 +104,18 @@ The `track=` attribute steps the ring's line thickness, using the same step name
 
 ## Theme
 
-The shared `theme=` axis (nine hues + `pale`/`muted` modifiers, from `@browser.style/base`) colours the **arc**, not the box — the component opts out of the resolver's universal paint, so the wrapper stays transparent and the label keeps the page ink:
+The shared `theme=` axis (the palette colours, from `@browser.style/base`) colours the **arc**, not the box — the component opts out of the resolver's universal paint, so the wrapper stays transparent and the label keeps the page ink:
 
 ```html
-<ui-progress-circular theme="green">
+<ui-progress-circular theme="green-800">
 	<progress value="5" max="5"></progress>
 	<span>100%</span>
 </ui-progress-circular>
 
-<ui-progress-circular theme="pale red" …>  <!-- washed-out arc via the pale modifier -->
+<ui-progress-circular theme="red-200" …>  <!-- a light step: a washed-out arc -->
 ```
 
-A themed ring's track becomes the hue's **pale plate** (the same `color-mix` recipe as `theme="pale …"`), so arc and track read as one system — `theme="green"` gives a green arc on a pale-green track. Unthemed rings keep the `--color-border` track.
+A themed ring's track becomes a **light tint** of the same colour, so arc and track read as one system — `theme="green-800"` gives a green arc on a light-green track. Unthemed rings keep the `--color-border` track.
 
 ---
 

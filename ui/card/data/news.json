@@ -38,7 +38,7 @@
     "furniture": {
       "beacon": {
         "text": "Live",
-        "style": "red ldr"
+        "style": "red-700 ldr"
       }
     },
     "body": {

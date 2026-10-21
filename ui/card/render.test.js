@@ -112,7 +112,7 @@ describe('product variants', () => {
 		/* the tile's link affordance: a trailing chevron on the chip (the CTA convention) and
 		   hov(zoom) on the frame — docs/schema.md § Product */
 		assert.match(html, /<ui-chip data-icon="chevron-right" data-icon-at="end">V0<\/ui-chip>/);
-		assert.match(html, /<ui-card variant="rds\(non\)" media="asr\(1\/1\) hov\(zoom\) chip\(bs\) chip\(blue\) chip\(pale\) chip\(sm\)"/);
+		assert.match(html, /<ui-card variant="rds\(non\)" media="asr\(1\/1\) hov\(zoom\) chip\(bs\) chip\(blue-100\) chip\(sm\)"/);
 	});
 
 	test('tile images get srcset only when the CDN pipeline is armed', () => {
@@ -199,15 +199,15 @@ describe('product variants', () => {
 	   resolve to its label, never the CamelCase token. demo/schema.html specifies "In stock". */
 	test('the availability chip shows a label, not the vocabulary token', () => {
 		const chip = (availability) => render({ schemaType: 'product', headline: 'Coat', details: { availability } })
-			.match(/<ui-chip theme="pale (\w+)">([^<]*)<\/ui-chip>/);
-		assert.deepEqual(chip('InStock').slice(1), ['green', 'In stock']);
-		assert.deepEqual(chip('OutOfStock').slice(1), ['red', 'Out of stock']);
-		assert.deepEqual(chip('LimitedAvailability').slice(1), ['orange', 'Limited availability']);
+			.match(/<ui-chip theme="([a-z]+-\d+)">([^<]*)<\/ui-chip>/);
+		assert.deepEqual(chip('InStock').slice(1), ['green-100', 'In stock']);
+		assert.deepEqual(chip('OutOfStock').slice(1), ['red-200', 'Out of stock']);
+		assert.deepEqual(chip('LimitedAvailability').slice(1), ['orange-100', 'Limited availability']);
 		/* the /(in)/i arm used to paint this green — "Discont(in)ued" */
-		assert.deepEqual(chip('Discontinued').slice(1), ['red', 'Discontinued']);
+		assert.deepEqual(chip('Discontinued').slice(1), ['red-200', 'Discontinued']);
 		/* pre-vocabulary free text still colours, and still reads as authored */
-		assert.deepEqual(chip('In stock').slice(1), ['green', 'In stock']);
-		assert.deepEqual(chip('Low stock').slice(1), ['orange', 'Low stock']);
+		assert.deepEqual(chip('In stock').slice(1), ['green-100', 'In stock']);
+		assert.deepEqual(chip('Low stock').slice(1), ['orange-100', 'Low stock']);
 	});
 
 	/* THE gate. hasVariant/variesBy/productGroupID are ProductGroup-ONLY properties, so the
@@ -640,8 +640,8 @@ describe('quiz — multiple choice', () => {
 		assert.equal(count(html, 'data-verdict="correct"'), 1);
 		assert.equal(count(html, 'data-verdict="wrong"'), 2);
 		/* the CSS hook is data-verdict, never the theme colour — a retheme must not regrade */
-		assert.match(html, /<span itemprop="text">A superposition<\/span><\/label> <ui-chip data-verdict="correct" theme="pale green">Correct<\/ui-chip>/);
-		assert.match(html, /<span itemprop="text">Two values at once<\/span><\/label> <ui-chip data-verdict="wrong" theme="pale red">Wrong<\/ui-chip>/);
+		assert.match(html, /<span itemprop="text">A superposition<\/span><\/label> <ui-chip data-verdict="correct" theme="green-100">Correct<\/ui-chip>/);
+		assert.match(html, /<span itemprop="text">Two values at once<\/span><\/label> <ui-chip data-verdict="wrong" theme="red-200">Wrong<\/ui-chip>/);
 	});
 
 	/* the chips sit inside the <li> but outside any itemprop, so an Answer keeps exactly
@@ -745,7 +745,7 @@ describe('quiz — flip flashcard (REVEAL_FACES)', () => {
 
 	test('the back panel is the acceptedAnswer and holds nothing else', () => {
 		const html = flip(deck);
-		assert.match(html, /<ui-content itemprop="acceptedAnswer" itemscope itemtype="https:\/\/schema\.org\/Answer" theme="gray ink" content="pad\(lg\) plc\(cc\) tal\(ctr\)"><p data-part="summary" itemprop="text">The quantum unit of <em>information<\/em>\.<\/p><\/ui-content>/);
+		assert.match(html, /<ui-content itemprop="acceptedAnswer" itemscope itemtype="https:\/\/schema\.org\/Answer" theme="gray-200 ink" content="pad\(lg\) plc\(cc\) tal\(ctr\)"><p data-part="summary" itemprop="text">The quantum unit of <em>information<\/em>\.<\/p><\/ui-content>/);
 		/* the derived back column is what a flashcard must NOT get */
 		assert.ok(!html.includes('data-part="meta"'), 'no derived meta row on a flashcard');
 		assert.ok(!html.includes('<ui-accordion'), 'no deck inside the flip card');
@@ -2653,14 +2653,14 @@ describe('content chip', () => {
 	const card = (chip) => render({ schemaType: 'content', chip, eyebrow: 'For sale', headline: 'H' });
 
 	test('renders before the eyebrow, in the shared meta-chip shape', () => {
-		const html = card({ text: 'New', theme: 'pale orange' });
-		assert.match(html, /<p data-part="meta"><ui-chip theme="pale orange">New<\/ui-chip><\/p><small data-part="eyebrow">/);
+		const html = card({ text: 'New', theme: 'orange-100' });
+		assert.match(html, /<p data-part="meta"><ui-chip theme="orange-100">New<\/ui-chip><\/p><small data-part="eyebrow">/);
 	});
 
 	test('defaults its theme and is absent when unset', () => {
-		assert.match(card({ text: 'New' }), /<ui-chip theme="pale accent">New<\/ui-chip>/);
+		assert.match(card({ text: 'New' }), /<ui-chip theme="accent-200">New<\/ui-chip>/);
 		assert.ok(!card(undefined).includes('<ui-chip'), 'no chip field, no chip');
-		assert.ok(!card({ theme: 'pale red' }).includes('<ui-chip'), 'a theme with no text renders nothing');
+		assert.ok(!card({ theme: 'red-200' }).includes('<ui-chip'), 'a theme with no text renders nothing');
 	});
 
 	test('escapes hostile text and theme', () => {
@@ -2672,21 +2672,21 @@ describe('content chip', () => {
 	/* several flags on one listing — one meta row, not one row each, so content.css's
 	   :has(> ui-chip + ui-chip) gap arms. ui/chip's own attributes ride through verbatim. */
 	test('accepts an ARRAY and renders every chip in ONE meta row', () => {
-		const html = card([{ text: 'New', theme: 'pale green', radius: 'rnd' }, { text: 'Open house', radius: 'rnd' }]);
-		assert.match(html, /<p data-part="meta"><ui-chip theme="pale green" radius="rnd">New<\/ui-chip><ui-chip theme="pale accent" radius="rnd">Open house<\/ui-chip><\/p>/);
+		const html = card([{ text: 'New', theme: 'green-100', radius: 'rnd' }, { text: 'Open house', radius: 'rnd' }]);
+		assert.match(html, /<p data-part="meta"><ui-chip theme="green-100" radius="rnd">New<\/ui-chip><ui-chip theme="accent-200" radius="rnd">Open house<\/ui-chip><\/p>/);
 		assert.equal(html.match(/<p data-part="meta">/g).length, 1, 'ONE row, not one per chip');
 	});
 
 	test('forwards size and variant, and drops entries with no text', () => {
 		assert.match(card([{ text: 'Sold', size: 'lg', variant: 'outline' }]),
-			/<ui-chip theme="pale accent" size="lg" variant="outline">Sold<\/ui-chip>/);
-		const sparse = card([{ text: 'New' }, { theme: 'pale red' }, null]);
+			/<ui-chip theme="accent-200" size="lg" variant="outline">Sold<\/ui-chip>/);
+		const sparse = card([{ text: 'New' }, { theme: 'red-200' }, null]);
 		assert.equal(sparse.match(/<ui-chip/g).length, 1, 'a textless entry renders nothing');
 	});
 
 	test('an empty array renders no meta row at all', () => {
 		assert.ok(!card([]).includes('<p data-part="meta">'), 'no chips, no row');
-		assert.ok(!card([{ theme: 'pale red' }]).includes('<p data-part="meta">'));
+		assert.ok(!card([{ theme: 'red-200' }]).includes('<p data-part="meta">'));
 	});
 
 	test('escapes hostile chip attributes in the array form', () => {
@@ -2698,7 +2698,7 @@ describe('content chip', () => {
 		const html = renderCard({ fields: { schemaType: 'realestate', headline: 'H', chip: { text: 'New' },
 			media: [{ mediaType: 'image', src: '/a.png', alt: '' }] } }, {}, {}, { typeChip: true });
 		assert.match(html, /<ui-chip data-type>RealEstateListing<\/ui-chip>/, 'the type label survives');
-		assert.match(html, /<ui-chip theme="pale accent">New<\/ui-chip>/, 'and so does the status chip');
+		assert.match(html, /<ui-chip theme="accent-200">New<\/ui-chip>/, 'and so does the status chip');
 	});
 });
 
@@ -3132,7 +3132,7 @@ describe('goal — AchieveAction', () => {
 			current: { value: 6, unitText: 'minutes' },
 			progressLabel: 'Minutes',
 			progressDisplay: '6 of 10 minutes',
-			hue: 'green',
+			hue: 'green-800',
 			...details
 		}
 	});
@@ -3157,7 +3157,7 @@ describe('goal — AchieveAction', () => {
 
 	test('the ring shows the computed ratio and carries NO microdata of its own', () => {
 		const html = card();
-		assert.match(html, /<ui-progress-circular size="lg" theme="green">/);
+		assert.match(html, /<ui-progress-circular size="lg" theme="green-800">/);
 		assert.match(html, /<progress max="10" value="6"><\/progress>/);
 		assert.match(html, /<small>Minutes<\/small>/);
 		assert.match(html, /<span>60%<\/span>/);
@@ -3168,7 +3168,7 @@ describe('goal — AchieveAction', () => {
 	test('a completed goal maps to CompletedActionStatus', () => {
 		const html = card({ status: 'completed', current: { value: 10, unitText: 'minutes' } });
 		assert.match(html, /<meta itemprop="actionStatus" content="https:\/\/schema\.org\/CompletedActionStatus">/);
-		assert.match(html, /<ui-progress-circular size="lg" theme="green">/);
+		assert.match(html, /<ui-progress-circular size="lg" theme="green-800">/);
 	});
 
 	test('the hue is an allowlist, never verbatim data', () => {
@@ -3283,15 +3283,15 @@ describe('organization — boxed offices (parts.office / parts.officeTheme)', ()
 	});
 
 	test('parts.office "box" + parts.officeTheme emit data-theme and a bare data-box ahead of the scope', () => {
-		const html = withParts({ office: 'box', officeTheme: 'gray light' });
-		assert.equal(count(html, '<div data-part="office" data-theme="gray light" data-box itemprop="department" itemscope itemtype="https://schema.org/LocalBusiness">'), 2);
+		const html = withParts({ office: 'box', officeTheme: 'gray-200 light' });
+		assert.equal(count(html, '<div data-part="office" data-theme="gray-200 light" data-box itemprop="department" itemscope itemtype="https://schema.org/LocalBusiness">'), 2);
 	});
 
 	/* `box` turns the attribute on; every other word is its value — `brd` is the theme-matched
 	   hairline (base/theme.md § Box). The demo preset is the first spelling */
 	test('parts.office "box brd" emits data-box="brd"', () => {
-		const html = withParts({ office: 'box brd', officeTheme: 'gray light' });
-		assert.equal(count(html, '<div data-part="office" data-theme="gray light" data-box="brd" itemprop="department" itemscope itemtype="https://schema.org/LocalBusiness">'), 2);
+		const html = withParts({ office: 'box brd', officeTheme: 'gray-200 light' });
+		assert.equal(count(html, '<div data-part="office" data-theme="gray-200 light" data-box="brd" itemprop="department" itemscope itemtype="https://schema.org/LocalBusiness">'), 2);
 	});
 
 	test('parts.office "brd" alone still makes a box — the value implies the attribute', () => {

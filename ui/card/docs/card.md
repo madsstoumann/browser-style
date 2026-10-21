@@ -78,7 +78,7 @@ contract — projection DSL, lint rules, editor behaviour — is
 | `schemaType` | select | 52 values — drives itemtype + microdata mapping |
 | `preset` | reference → `card-preset` | The look & feel. Swap to restyle |
 | `cover` | url | Makes the whole card a link — an `<a>` in the headline whose `::after` covers the card, so there is one link and no nested anchors |
-| `chip` | `{ text, theme }` | Status flag at the very TOP of the text column, above the eyebrow — "New", "Sold". `theme` is a ui-chip theme string, default `pale accent`. **Not** `furniture.chip`, which is overlaid on the media: a frame gets one chip family, so a furniture chip suppresses the `<ui-chip data-type>` type label |
+| `chip` | `{ text, theme }` | Status flag at the very TOP of the text column, above the eyebrow — "New", "Sold". `theme` is a ui-chip theme string, default `accent-200`. **Not** `furniture.chip`, which is overlaid on the media: a frame gets one chip family, so a furniture chip suppresses the `<ui-chip data-type>` type label |
 | `eyebrow` | string | Kicker; → `articleSection`/`category`/`recipeCategory`/`about`/`genre` (unmarked on `job` — `details.industry` owns `industry`) |
 | `label` | string \| `{ text, live }` | A flag between the eyebrow and the headline — "Live", "Breaking". `live: true` adds a pulsing dot. No microdata; outside the headline so its `itemprop` stays clean |
 | `headline` | string | → `headline` (article/news), `title` (job), `name` (rest) |
@@ -93,7 +93,7 @@ contract — projection DSL, lint rules, editor behaviour — is
 | `tags` | tags | → pill list. A tag is a string **or** `{name, url}` — the linked form renders an anchor inside the chip (the itemprop still reads the text) |
 | `actions` | array | `{link, style, ariaLabel}` → `data-part="actions"`. **No `link.url` ⇒ a real `<button type="button">`** — a control, not navigation. In an `ovr()` overlay card a plain solid button (`.ui-button` with no `data-variant`) is given **dark** text by `ui-card.css` so it stays legible on its light surface instead of inheriting the overlay's white ink; colour variants (accent, text, …) set their own ink and are left untouched |
 | `links` | array of link | Plain related links |
-| `furniture` | object | Overlay elements on the media — `{chip, beacon, sticker, save, play}` (five; `<ui-marquee>` is a **band**, not furniture, and has no renderer field — see the gap note under *Renderer*). **Content only** (text/semantics); the *look* (position, hue, size, shape) lives in the preset's `media=` tokens. See **Furniture** below |
+| `furniture` | object | Overlay elements on the media — `{chip, beacon, sticker, save, play}` (five; `<ui-marquee>` is a **band**, not furniture, and has no renderer field — see the gap note under *Renderer*). **Content only** (text/semantics); the *look* (position, colour, size, shape) lives in the preset's `media=` tokens. See **Furniture** below |
 | `engagement` | object | counts → `InteractionCounter` microdata |
 | `details` | object | Type-specific payload (`ui.widget: editor-card`) |
 | `flipside` | reference → `card` | Optional custom reveal back panel — see below |
@@ -139,7 +139,7 @@ Machine values stay schema-ready (`PT15M`, salary numbers, geo coordinates);
 The four overlay elements (`<ui-chip>`, `<ui-sticker>`, `<ui-save>`, `<ui-play>`) share
 one rule: **content decides *what* and *whether*; the preset decides *how it looks*.** The
 content model carries a single `furniture` object holding only text/semantics; the preset's
-`media=` token string carries position, hue, size and shape. The renderer emits the elements
+`media=` token string carries position, colour, size and shape. The renderer emits the elements
 from `furniture` and *never* generates position/hue tokens — they come from the preset (the
 hand-authored [`media.furniture.html`](../demo/media.furniture.html) is the reference shape).
 
@@ -154,30 +154,28 @@ hand-authored [`media.furniture.html`](../demo/media.furniture.html) is the refe
 ```
 ```jsonc
 // preset — look (media= tokens)
-"media": "asr(4/3) sticker(te) sticker(sh:burst) sticker(green) save(be) play(cc)"
+"media": "asr(4/3) sticker(te) sticker(sh:burst) sticker(green-800) save(be) play(cc)"
 ```
 
 **Look tokens on `media=`** — single-value tokens (the CSS matches them by substring, so
-one value per token, never `chip(ts red)`). The vocabulary is generated from
+one value per token, never `chip(ts red-700)`). The vocabulary is generated from
 `data/tokens.json`, so it can't drift from the element stylesheets:
 
-<!-- tokens:matrix attr=media stems=chip,sticker,save,play,lightbox classes=pos,hue,mode,size,disc,shape,flag -->
-| token | pos | hue | mode | size | disc | shape | flag | deprecated aliases |
-|---|---|---|---|---|---|---|---|---|
-| `chip()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray slate | pale muted | sm lg xl 2xl | non rnd pll crc sqr | — | — | — |
-| `sticker()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray slate | pale muted | sm lg xl 2xl 3xl | non rnd pll crc sqr | text spl spr sh:burst sh:blob sh:spark sh:sunburst sh:heart sh:&lt;custom&gt; | fit | — |
-| `save()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray slate | — | sm lg xl | non rnd crc sqr | — | — | — |
-| `play()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray slate | — | sm md lg xl | non rnd pll crc sqr | — | — | — |
-| `lightbox()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray slate | — | sm lg xl | non rnd crc sqr | — | — | — |
+<!-- tokens:matrix attr=media stems=chip,sticker,save,play,lightbox classes=pos,size,disc,shape,flag -->
+| token | pos | size | disc | shape | flag | deprecated aliases |
+|---|---|---|---|---|---|---|
+| `chip()` | ts tc te cs cc ce bs bc be | sm lg xl 2xl | non rnd pll crc sqr | — | — | — |
+| `sticker()` | ts tc te cs cc ce bs bc be | sm lg xl 2xl 3xl | non rnd pll crc sqr | text spl spr sh:burst sh:blob sh:spark sh:sunburst sh:heart sh:&lt;custom&gt; | fit | — |
+| `save()` | ts tc te cs cc ce bs bc be | sm lg xl | non rnd crc sqr | — | — | — |
+| `play()` | ts tc te cs cc ce bs bc be | sm md lg xl | non rnd pll crc sqr | — | — | — |
+| `lightbox()` | ts tc te cs cc ce bs bc be | sm lg xl | non rnd crc sqr | — | — | — |
 <!-- /tokens -->
 
 - **`pos`** — the 9-code logical grid, shared with `ovr()`, `scm()` and reveal's `ico()`.
-- **`hue`** — the canonical nine: four hues plus the `white < gray < slate < black` neutral
-  ramp. `slate` became a canonical hue in v5 (it always resolved to its own
-  `--ui-theme-slate-*` bundle, never to `gray`); the `dark`/`light`/`subtle` aliases were
-  removed in the same round. See [media.md](media.md#the-canonical-nine-hues).
-- **`mode`** — the `pale` / `muted` fill modifiers. `save` and `play` are single-ink controls
-  and implement neither.
+- **`hue`** (the colour) — a palette name, `<hue>-<step>` (`green-300`, `gray-800`), or `white` /
+  `black`; one rule per colour is generated for each element. The `pale` / `muted` modifiers and
+  the nine old names were removed — a step replaces them. See
+  [media.md](media.md#the-palette-colours) and [theme.md](../../base/theme.md#palette).
 - **`size`** — `md` is the default on every element and is spelled by *omitting* a size arg,
   except on `play()` where `play(md)` is also accepted explicitly.
 - **`disc`** — the backing shape: `crc` circle · `sqr` squircle · `rnd` rounded · `pll` pill ·
@@ -246,8 +244,8 @@ Demos in [`media.furniture.html`](../demo/media.furniture.html) and
 | `name`, `description` | both | e.g. “Hero Preset” |
 | `element` | both | `ui-card` (default), `ui-reveal` — or `ui-media` / `ui-content` for **bare primitives**: the renderer emits just the media frame or text column, no card chrome. Standalone blocks are presentation, not a separate content model |
 | `variant` | both | `col row row-r spl() ovr() vis() rds()` |
-| `theme` | both | shared theme axis — colour + `pale`/`muted`/`light`/`dark` (see [base/theme.md](../../base/theme.md)) |
-| `media` | both | `asr() obf() obp() flp() rds() shp() hov() tnt() scm clip hug …` — plus **all carousel controls as tokens, the only form** (`nav`/`nav()`, `arw()`, `mrk()`, `axis(y)`, `auto`, `loop`, `stagger`, `load()`; the schema has no `nav`/`arrow`/`dot` fields) and the furniture look tokens (`chip/sticker/save/play` position/hue/size/shape). The renderer appends each furniture item's optional `style=` override after these |
+| `theme` | both | shared theme axis — palette colour + `ink`/`glass`/`border`/`outline`/`light`/`dark` (see [base/theme.md](../../base/theme.md)) |
+| `media` | both | `asr() obf() obp() flp() rds() shp() hov() tnt() scm clip hug …` — plus **all carousel controls as tokens, the only form** (`nav`/`nav()`, `arw()`, `mrk()`, `axis(y)`, `auto`, `loop`, `stagger`, `load()`; the schema has no `nav`/`arrow`/`dot` fields) and the furniture look tokens (`chip/sticker/save/play` position/colour/size/shape). The renderer appends each furniture item's optional `style=` override after these |
 | `content` | both | `scl() hl() gap() scr` · padding `pad() pb() pi() pbs() pbe() pis() pie()` · `rds()` — plus their `md:`/`lg:` forms |
 | `media-open` | both | the media token string to swap in while a `<ui-media popover>` lightbox is OPEN — an attribute, not an `open:` token, because the control stems are substring-matched. `lightbox.js` swaps only the control words and restores them on close; without the script the open lightbox keeps its closed nav style |
 | `text` | both | which long text the text column shows: `summary` (teaser — default), `body` (full view — body **instead of** summary, with the summary kept as a hidden `description` meta), `both`. Reveal back panels always render both |
@@ -292,7 +290,7 @@ The hover morph lives in `media.hover.css` (see `hov()` below).
 
 **`tnt()` — tint the image a solid colour.** Blends a solid-colour overlay (`ui-media::before`)
 over the image with `mix-blend-mode` — a plain `filter` can't hit an exact colour. Named keys
-`tnt(red|orange|green|blue|accent|black|white|gray|slate)` map to the theme colours (the `dark`/`light`/`subtle` aliases were removed in v5); bare `tnt` reads
+`tnt(<hue>-<step>)` / `tnt(white|black)` map to the palette colours (`tnt(blue-500)`); bare `tnt` reads
 `--ui-media-tint-color` (any CSS colour **or gradient**) for arbitrary brand hues. Default blend
 `color` (recolour, keeps detail); switch via `--ui-media-tint-blend`, fade with
 `--ui-media-tint-opacity`. Pair with **`hov(tint)`** to fade the tint out on hover (reveal true
@@ -322,9 +320,9 @@ content and belong in the card's `media[]` items. Bare booleans like `clip`, `au
 | `portrait` | ui-card | `row spl(1/2)` · 1:1 | review |
 | `portrait-top` | ui-card | + `obp(tc)` | profile |
 | `panel` | ui-card | `vis(content)` | job, poll, faq, timeline, comparison |
-| `panel-subtle` | ui-card | + `theme="gray"`, `scl(lg)` | quote |
-| `panel-brand` | ui-card | + `theme="black dark"` (set `--ui-card-dark-bg` to accent for a branded surface) | statistic, membership |
-| `panel-dark` | ui-card | + `theme="black dark"` | announcement |
+| `panel-subtle` | ui-card | + `theme="gray-200"`, `scl(lg)` | quote |
+| `panel-brand` | ui-card | + `theme="gray-800 dark"` (use an `accent-*` step, e.g. `accent-900 dark`, for a branded surface) | statistic, membership |
+| `panel-dark` | ui-card | + `theme="gray-800 dark"` | announcement |
 | `hero` | ui-card | `ovr(bs)` · 4:3 · scrim · `scl(lg)` | event |
 | `poster` | ui-card | `ovr(bs)` · 3:4 · scrim | location |
 | `carousel` | ui-card | `nav(mrk)` | gallery |

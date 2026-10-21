@@ -7,7 +7,7 @@
 	<meta name="text-scale" content="scale">
 	<meta name="color-scheme" content="light dark">
 	<meta name="description" content="The Roman original — guanciale, pecorino, eggs and pepper. No cream. — the recipe as a small kitchen app: ingredient checklist with servings and units, step timers, narration, cook mode with wake lock and hands-free voice control.">
-	<link rel="stylesheet" href="/dist/demo.955ceeeb.min.css">
+	<link rel="stylesheet" href="/dist/demo.2d98081c.min.css">
 	<link rel="stylesheet" href="/dist/icon-font.c6950688.min.css">
 	<!-- no-referrer: the zone hotlink-protects CDN srcset. Docs: docs/performance.md -->
 	<meta name="referrer" content="no-referrer">
@@ -232,7 +232,7 @@
 			<button class="ui-button" type="button" data-variant="icon" command="--toggle-wake" commandfor="cook" aria-label="Keep the screen awake" title="Keep the screen awake" aria-pressed="false"><span data-icon="light-mode" aria-hidden="true"></span></button>
 			<button class="ui-button" type="button" data-variant="icon" command="--prev-step" commandfor="steps" aria-label="Previous step" title="Previous step" disabled><span data-icon="chevron-left" aria-hidden="true"></span></button>
 			<span class="bar-step" aria-live="polite">Step <output id="step-now">1</output> / 6</span>
-			<ui-play theme="gray"><button type="button" command="--play-step" commandfor="steps" aria-label="Play step" aria-pressed="false"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+			<ui-play theme="gray-200"><button type="button" command="--play-step" commandfor="steps" aria-label="Play step" aria-pressed="false"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 			<button class="ui-button" type="button" data-variant="icon" command="--next-step" commandfor="steps" aria-label="Next step" title="Next step"><span data-icon="chevron-right" aria-hidden="true"></span></button>
 			<button class="ui-button" type="button" data-variant="icon" command="--copy" commandfor="steps" aria-label="Copy recipe as text" title="Copy recipe as text"><span data-icon="content-copy" aria-hidden="true"></span></button>
 			<button class="ui-button" type="button" data-variant="icon" command="--share" commandfor="steps" aria-label="Share this recipe" title="Share this recipe"><span data-icon="share" aria-hidden="true"></span></button>
@@ -243,8 +243,8 @@
 			<header class="cook-bar">
 				<strong id="cook-title">Classic Spaghetti Carbonara</strong>
 				<span>
-					<ui-beacon id="cook-wake" variant="pill" size="sm" theme="gray">Screen may sleep</ui-beacon>
-					<ui-beacon id="cook-mic" variant="pill" size="sm" theme="gray">Mic off</ui-beacon>
+					<ui-beacon id="cook-wake" variant="pill" size="sm" theme="gray-200">Screen may sleep</ui-beacon>
+					<ui-beacon id="cook-mic" variant="pill" size="sm" theme="gray-200">Mic off</ui-beacon>
 					<button class="ui-button" type="button" data-variant="icon" command="hide-popover" commandfor="cook" aria-label="Close cook mode" title="Close cook mode"><ui-icon type="cross"></ui-icon></button>
 				</span>
 			</header>
@@ -286,7 +286,7 @@
 			</ol>
 			<nav class="cook-nav" aria-label="Step navigation">
 				<button class="ui-button" type="button" command="--prev-step" commandfor="steps" disabled><span data-icon="chevron-left" aria-hidden="true"></span>Back</button>
-				<ui-play theme="gray"><button type="button" command="--play-step" commandfor="steps" aria-label="Play step" aria-pressed="false"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+				<ui-play theme="gray-200"><button type="button" command="--play-step" commandfor="steps" aria-label="Play step" aria-pressed="false"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 				<button class="ui-button" type="button" data-variant="accent" command="--next-step" commandfor="steps">Next<span data-icon="chevron-right" aria-hidden="true"></span></button>
 			</nav>
 			<p class="cook-tools">

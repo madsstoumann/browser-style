@@ -259,19 +259,19 @@
 	<h3 id="plate">Plate: <code>theme=</code></h3>
 	<p>
 		Adding <code>theme=</code> turns the icon into a plate &mdash; a coloured box behind the glyph &mdash; using the shared
-		<a href="/ui/base/theme.md">cross-component colour axis</a>. Pick one of the nine hues; the paired ink comes with it,
+		<a href="/ui/base/theme.md">cross-component colour axis</a>. Pick a palette colour (<code>&lt;hue&gt;-&lt;step&gt;</code>, <code>white</code> or <code>black</code>); the paired ink comes with it,
 		and both sides adapt to <code>color-scheme</code>. Size the plate with <code>--ui-icon-padding</code> (default <code>0.3em</code>).
 	</p>
 	<div class="icon-grid">
-		<ui-icon type="chevron down" theme="gray"></ui-icon>
-		<ui-icon type="chevron down" theme="red"></ui-icon>
-		<ui-icon type="chevron down" theme="orange"></ui-icon>
-		<ui-icon type="chevron down" theme="green"></ui-icon>
-		<ui-icon type="chevron down" theme="blue"></ui-icon>
-		<ui-icon type="chevron down" theme="accent"></ui-icon>
+		<ui-icon type="chevron down" theme="gray-200"></ui-icon>
+		<ui-icon type="chevron down" theme="red-700"></ui-icon>
+		<ui-icon type="chevron down" theme="orange-400"></ui-icon>
+		<ui-icon type="chevron down" theme="green-800"></ui-icon>
+		<ui-icon type="chevron down" theme="blue-900"></ui-icon>
+		<ui-icon type="chevron down" theme="accent-700"></ui-icon>
 		<ui-icon type="chevron down" theme="white"></ui-icon>
-		<ui-icon type="chevron down" theme="slate"></ui-icon>
-		<ui-icon type="chevron down" theme="black"></ui-icon>
+		<ui-icon type="chevron down" theme="gray-700"></ui-icon>
+		<ui-icon type="chevron down" theme="gray-800"></ui-icon>
 	</div>
 
 	<p>
@@ -279,14 +279,14 @@
 		dark mode to see it. Like every other badge in the system, <code>&lt;ui-icon&gt;</code> always applies the theme's paired
 		ink, so the <code>ink</code> modifier is a no-op here.
 	</p>
-	<p>The <code>pale</code>, <code>muted</code>, <code>border</code> and <code>glass</code> modifiers all compose:</p>
+	<p>Lighter steps, <code>outline</code>, <code>border</code> and <code>glass</code> all compose:</p>
 	<div class="icon-grid">
-		<ui-icon type="plus" theme="gray pale"></ui-icon>
-		<ui-icon type="plus" theme="red pale"></ui-icon>
-		<ui-icon type="plus" theme="red muted"></ui-icon>
-		<ui-icon type="plus" theme="blue border"></ui-icon>
-		<ui-icon type="plus" theme="green pale border"></ui-icon>
-		<ui-icon type="plus" theme="black muted"></ui-icon>
+		<ui-icon type="plus" theme="gray-50"></ui-icon>
+		<ui-icon type="plus" theme="red-200"></ui-icon>
+		<ui-icon type="plus" theme="red-300"></ui-icon>
+		<ui-icon type="plus" theme="blue-900 outline"></ui-icon>
+		<ui-icon type="plus" theme="green-100 border"></ui-icon>
+		<ui-icon type="plus" theme="gray-400"></ui-icon>
 	</div>
 
 	<!-- Corners: radius= -->
@@ -297,11 +297,11 @@
 		<code>--ui-icon-padding</code> asymmetric.
 	</p>
 	<div class="icon-grid">
-		<ui-icon type="check" theme="black" radius="non"></ui-icon>
-		<ui-icon type="check" theme="black" radius="rnd"></ui-icon>
-		<ui-icon type="check" theme="black" radius="pll"></ui-icon>
-		<ui-icon type="check" theme="black" radius="crc"></ui-icon>
-		<ui-icon type="check" theme="black" radius="sqr"></ui-icon>
+		<ui-icon type="check" theme="gray-800" radius="non"></ui-icon>
+		<ui-icon type="check" theme="gray-800" radius="rnd"></ui-icon>
+		<ui-icon type="check" theme="gray-800" radius="pll"></ui-icon>
+		<ui-icon type="check" theme="gray-800" radius="crc"></ui-icon>
+		<ui-icon type="check" theme="gray-800" radius="sqr"></ui-icon>
 	</div>
 	<p>
 		<strong>Note:</strong> the <code>[open]</code> state rotates the whole icon, plate included. That is invisible at

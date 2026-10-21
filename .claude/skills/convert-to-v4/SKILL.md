@@ -63,7 +63,8 @@ exists, so you know what to reach for:
 | Category | Pattern | Notes |
 |---|---|---|
 | Colors | `--color-{role}` | accent, surface, surface-alt, text, text-muted, border, button, field, link, mark, info/error/success/warning, overlay, overlay-light |
-| Theme bundles | `--ui-theme-{hue}-bg` / `-c` | nine hues + glass knobs — see § 3 |
+| Palette | `--color-{hue}-{step}` / `-text` | ten hues + `accent` × steps `50`–`950`, `white`, `black`; the jobs (`--color-error` …) point at steps — see § 3 |
+| Glass knobs | `--ui-theme-glass-*` | bg, edge, fade, blur, saturate — see `ui/base/theme.md` § Glass |
 | Font family | `--font-{name}` | body, heading, form, mono, serif |
 | Font size | `--font-size-{step}`, `--font-size-fluid-{step}` | 15 fixed steps (`3xs`…`9xl`), 8 fluid `clamp()` steps |
 | Font weight / line height / tracking | `--font-weight-*`, `--line-height-*`, `--tracking-*` | |
@@ -155,9 +156,10 @@ as-is. See `DESIGN.md` § Do's and Don'ts.
 
 ## 3. The `theme=` axis
 
-The shared cross-component color axis: nine hues (`red orange green blue accent black white
-gray slate`) plus modifiers (`pale muted ink light dark border glass`). Resolver:
-`ui/base/theme.css`. Full docs: `ui/base/theme.md`.
+The shared cross-component color axis: one palette colour — `<hue>-<step>` (`green-300`,
+`gray-800`, `accent-700`), `white` or `black` — plus looks (`ink light dark border outline glass`).
+The colours are generated from `ui/base/palette.json` (`node scripts/build-palette.js`).
+Resolver: `ui/base/theme.css`. Full docs: `ui/base/theme.md`.
 
 ### Does this component get it?
 
@@ -186,26 +188,30 @@ component's own. The resolver publishes private, **non-inheriting** `--_theme-bg
 A descendant rule cannot read `--_theme-*` off an ancestor (`inherits: false`) — that is why
 containers must re-publish. **Pick the ink fallback by role:** surfaces (card, reveal, content,
 layout) fall back to `var(--color-text)` so `light`/`dark` re-tone them through `color-scheme`;
-badges (chip, sticker, beacon, marquee) fall back to `var(--_theme-ink)` so the curated pair
-always shows.
+badges (chip, sticker, beacon, marquee) fall back to `var(--_theme-ink)` so the step's text
+colour always shows.
 
 Use `theme=` on custom elements and `data-theme=` on native elements — every resolver rule in
 `theme.css` is a pair, so both resolve identically. A component with a *different* per-element
 meaning for the attribute (`ui/timeline` colors one entry's dot) opts out of universal paint in
-its own sheet. **If the component is card furniture**, add the matching `media="<name>(<hue>)"`
-resolver arm alongside the `theme=` one — `ui/chip/ui-chip.css` § B is the canonical block.
+its own sheet. **If the component is card furniture**, its `media="<name>(<colour>)"` rules (one
+per hue-step) are a generated block next to the `theme=` arm — `ui/chip/ui-chip.css` has the
+`palette:start` / `palette:end` markers and § B is the canonical block; see
+`scripts/build-palette.js` for how a sheet is picked up.
 
-### Gotcha: bundles resolve at `:root`
+### Gotcha: steps and jobs resolve at `:root`
 
-The hue bundles reference `--color-*` **and are declared at `:root`**, so substitution happens
-there and descendants inherit the already-resolved color. A page skin setting a brand
-`--color-accent` on `body` will **not** change `theme="accent"` surfaces. Set the brand color
-on `:root`, or re-declare the bundle alongside the skin:
+`--color-accent-700` aliases blue's step and `--color-accent` is `var(--color-accent-700)`; both
+are declared at `:root`, so substitution happens there and descendants inherit the
+already-resolved color. A page skin that sets only `--color-accent` on `body` will **not** change
+`theme="accent-700"` surfaces. Set the brand on `:root`, or re-declare the step and the job
+together alongside the skin:
 
 ```css
 body {
-	--color-accent: light-dark(#4f46e5, #6366f1);
-	--ui-theme-accent-bg: var(--color-accent); /* re-resolve against body's value */
+	--color-accent-700: light-dark(#4f46e5, #6366f1);
+	--color-accent-700-text: #fff;
+	--color-accent: var(--color-accent-700); /* re-resolve against body's value */
 }
 ```
 

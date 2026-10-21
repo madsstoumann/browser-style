@@ -193,8 +193,10 @@ unconverted v3 components (see § Legacy) or docs-only folders.
 4. **Tokens** — `--ui-{component}-{property}`, resolving to the global tokens in
    `ui/base/tokens.css`. No hardcoded fallbacks for global tokens (base is a required peer).
 5. **Attributes over classes** — `variant=` / `media=` / `content=` / `theme=` token strings.
-6. **`theme=`** — the shared nine-hue axis (red orange green blue accent black white gray
-   slate) with `pale`/`muted` modifiers, from `ui/base/theme.css`.
+6. **`theme=`** — the shared colour axis: `<hue>-<step>` palette names (`green-300`,
+   `gray-800`, `accent-700`; ten hues + `accent`, Tailwind's steps) plus `white`/`black`, with
+   `ink`/`glass`/`border`/`outline`/`light`/`dark` looks, from `ui/base/theme.css`. The colours
+   are generated from `ui/base/palette.json` (`node scripts/build-palette.js`).
 7. **Events** — custom events with `bubbles: true, composed: true`.
 8. **Naming** — kebab-case elements, camelCase JS, lowercase `readme.md` / uppercase
    `AGENTS.md` per package.

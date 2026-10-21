@@ -10,7 +10,7 @@ allowed-tools: Read, Edit, Write, Bash, Glob, Grep, AskUserQuestion
 A card is one act of composition: a host, a frame, a column. Three token DSLs configure it.
 
 ```html
-<ui-card variant="col lg:row lg:spl(1/1)" media="asr(16/9) chip(ts)" content="pad(md) hl(lg)" theme="slate">
+<ui-card variant="col lg:row lg:spl(1/1)" media="asr(16/9) chip(ts)" content="pad(md) hl(lg)" theme="gray-700">
   <cq-box>
     <ui-media>
       <img src="…" alt="">
@@ -48,7 +48,7 @@ grep -n 'scl(' ui/card/docs/tokens.md                      # what args does it t
 | `variant=` | the **host** only (`ui-card` / `ui-reveal`) — arrangement, split, overlay, radius, border, shadow | `ui/card/docs/ui-card-tokens.md` |
 | `media=` | the frame, or a host (inheritance **stops at the card host**) — aspect, fit, hover, tint, scrim, furniture placement, carousel | `ui/card/docs/media.md` |
 | `content=` | the column, or any ancestor (plain custom-property inheritance, flows freely) — padding, gap, typography, width, alignment | `ui/card/docs/content.md`, `typography.md` |
-| `theme=` | any element — the nine-hue axis | `DESIGN.md` § Theme bundles |
+| `theme=` | any element — the palette axis (`<hue>-<step>`, `white`, `black`) | `ui/base/theme.md` |
 
 ## Responsive: containers, not the viewport
 
@@ -64,7 +64,7 @@ descendant instead of `<cq-box>`. A standalone `<ui-media>`/`<ui-content>` opts 
 
 Placement is a `media=` token on the frame or its host, spelled `element(cell)` with cells
 `ts tc te / cs cc ce / bs bc be` (top/center/bottom × start/center/end — they mirror in
-RTL). One value per token: `chip(ts)`, never `chip(ts red)`.
+RTL). One value per token: `chip(ts)`, never `chip(ts red-700)`.
 
 | Element | Package | Default cell | Kind |
 |---|---|---|---|
@@ -144,7 +144,7 @@ one row has an honest glyph, the list gets none — or gets a list-level mark in
   `mask` and `background` (measured, Chrome 150). The ~0.17em optical correction is baked
   into the glyph outlines by `icons.build.py`. There is no CSS lever.
 - **`checked` / `crossed` ink is a page token, not a theme token.** `--color-success` /
-  `--color-error` do not follow `theme=`; on `theme="green"` the ✓ is invisible. Set
+  `--color-error` do not follow `theme=`; on `theme="green-800"` the ✓ is invisible. Set
   `--ui-content-list-checked-mark` / `--ui-content-list-crossed-mark` on a themed card.
   Open-items #37.
 

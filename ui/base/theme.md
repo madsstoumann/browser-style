@@ -3,28 +3,29 @@
 `theme=` is one **generic, cross-component color axis**. The same vocabulary works
 on `<ui-card>`, `<ui-reveal>`, `<ui-content>`, `<ui-chip>`, `<ui-sticker>`,
 `<lay-out>`/`<lay-out-group>`, on **any native element** via `data-theme=`, and on any
-other component that opts in — so a layout can be `gray` while the cards inside it are
-`black`, `red pale`, etc. Each element resolves its own theme independently; a themed
+other component that opts in — so a layout can be `gray-200` while the cards inside it are
+`gray-800`, `red-100`, etc. Each element resolves its own theme independently; a themed
 ancestor never leaks its theme onto un-themed descendants.
 
 That independence is what makes **two-sided** components work: a `<ui-reveal>` carries
 the card's theme, and the back panel element carries its own — see
 [Two sides, two themes](../reveal/readme.md#two-sides-two-themes).
 
-Resolver + modifiers live in `theme.css`; the named bundles live in `tokens.css`.
-`@browser.style/base` is a required peer dependency, so both are always available.
+The colours are the [palette](#palette), generated from `palette.json` into `tokens.css`;
+the resolver and looks live in `theme.css`. `@browser.style/base` is a required peer
+dependency, so both are always available.
 
 ## Syntax
 
-`theme=` is a **space-separated token list**: exactly one **color** token, plus any
-number of **modifier** tokens.
+`theme=` is a **space-separated token list**: exactly one **colour** token (`<hue>-<step>`,
+`white` or `black`), plus any number of **look** tokens.
 
 ```html
-<ui-card  theme="black dark">…</ui-card>
-<ui-chip  theme="red">new</ui-chip>
-<ui-chip  theme="red pale">soft</ui-chip>
-<ui-chip  theme="red pale muted">quiet</ui-chip>
-<lay-out  theme="gray" bleed>…</lay-out>
+<ui-card  theme="gray-800 dark">…</ui-card>
+<ui-chip  theme="red-700">new</ui-chip>
+<ui-chip  theme="red-200">soft</ui-chip>
+<ui-chip  theme="red-700 outline">frame</ui-chip>
+<lay-out  theme="gray-200" bleed>…</lay-out>
 ```
 
 ### `theme=` or `data-theme=`
@@ -38,8 +39,8 @@ element type:
 | `data-theme=` | **native** elements (`<div>`, `<section>`, `<li>`, `<blockquote>`…) | a bare `theme` attribute is **invalid HTML** on a built-in element |
 
 ```html
-<section data-theme="slate glass">…</section>
-<blockquote data-theme="blue pale">…</blockquote>
+<section data-theme="gray-700 glass">…</section>
+<blockquote data-theme="blue-100">…</blockquote>
 ```
 
 A native node that also needs padding and corners adds `data-box` — see [Box](#box).
@@ -49,105 +50,235 @@ so the later rule simply wins.
 
 > **Note on the wider `data-theme` convention.** Many sites (and Docusaurus) use
 > `data-theme="light|dark"` on `<html>` for scheme switching. Those two words happen to
-> line up with this axis' `light`/`dark` modifiers, so the effect is the same
+> line up with this axis' `light`/`dark` looks, so the effect is the same
 > (`color-scheme`). Any other value from such a system (`data-theme="corporate"`) names
-> no bundle here and is simply inert.
+> no colour here and is simply inert.
 
-### Color tokens (pick one)
+## Palette
 
-Every bundle's surface **and** ink is a `light-dark()` pair, so the colors adapt to
-`color-scheme` automatically — the same approach as button's `.bg-*` classes, which
-read the `light-dark()` `--color-*` tokens.
+A colour is **`<hue>-<step>`** — Tailwind's names and steps. Ten hues, eleven steps each,
+with Tailwind CSS v4.1.11's `oklch()` values (MIT). The values live in
+[`palette.json`](palette.json).
 
-| Token | Surface |
+| Hue | 50 | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900 | 950 |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| `gray` | ● | ● | ● | ● | ● | ● | ● | ● | ● | ● | ● |
+| `red` | ● | ● | ● | ● | ● | ● | ● | ● | ● | ● | ● |
+| `orange` | ● | ● | ● | ● | ● | ● | ● | ● | ● | ● | ● |
+| `yellow` | ● | ● | ● | ● | ● | ● | ● | ● | ● | ● | ● |
+| `green` | ● | ● | ● | ● | ● | ● | ● | ● | ● | ● | ● |
+| `teal` | ● | ● | ● | ● | ● | ● | ● | ● | ● | ● | ● |
+| `cyan` | ● | ● | ● | ● | ● | ● | ● | ● | ● | ● | ● |
+| `blue` | ● | ● | ● | ● | ● | ● | ● | ● | ● | ● | ● |
+| `violet` | ● | ● | ● | ● | ● | ● | ● | ● | ● | ● | ● |
+| `pink` | ● | ● | ● | ● | ● | ● | ● | ● | ● | ● | ● |
+| `accent` | ● | ● | ● | ● | ● | ● | ● | ● | ● | ● | ● |
+
+`theme="green-300"`, `theme="gray-950"`, `theme="accent-700"`. Two colours have no steps:
+
+| Colour | Value | Text on it |
+|---|---|---|
+| `white` | `#fff` | `gray-950` |
+| `black` | `#000` | `#fff` |
+
+Both are the same on light and dark pages.
+
+**`accent` is an alias hue.** It has the same eleven steps and points at `blue` by default
+(`--color-accent-300: var(--color-blue-300)`), so a rebrand is one change: point the steps
+at another hue.
+
+**Hue names** are one lowercase word, letters only (`a`–`z`), never a step number — the
+resolver splits `hue-step` at the dash. A hue you add follows the same rule.
+
+### Variables
+
+All in `tokens.css`, in one generated block.
+
+| Variable | Value |
 |---|---|
-| `red` | `--color-error` |
-| `orange` | `--color-warning` |
-| `green` | `--color-success` |
-| `blue` | `--color-info` |
-| `accent` | `--color-accent` |
-| `white` | lightest neutral |
-| `gray` | light-gray neutral |
-| `slate` | dark-slate neutral |
-| `black` | near-black neutral |
+| `--color-<hue>-<step>` | the step, as a `light-dark()` pair: the step on a light page, its [mirror](#dark-pages) on a dark one |
+| `--color-<hue>-<step>-text` | the [text colour](#text-colours) for that step, mirrored the same way |
+| `--color-accent-<step>` · `--color-accent-<step>-text` | blue's, by `var()` |
+| `--color-white` · `--color-white-text` | `#fff` · the value of `gray-950` |
+| `--color-black` · `--color-black-text` | `#000` · `#fff` |
 
-The neutrals form a light→dark ramp: **`white` < `gray` < `slate` < `black`**. Each
-stays true to its name in both schemes (a `white` theme is still a light surface in
-dark mode); the `light-dark()` pair only softens the shade for the opposite scheme.
+### Jobs
 
-### Modifier tokens (add any)
+Components keep reading the job variables; each points at a step. Re-point one to restyle
+every component that uses it:
 
-| Token | Effect |
+| Variable | Points at |
 |---|---|
-| `pale` | Tinted surface (`color-mix` of the color with the page surface, 80%), ink = the color **lightness-clamped for AA** (see [Hue as ink](#hue-as-ink)). Mirrors the light button variant — a pale/pastel version. |
-| `muted` | Fades the theme colors via `color-mix(… transparent 50%)`. Reduces the **theme's** alpha only — it does **not** use element `opacity`, so descendant content is not dimmed. |
-| `ink` | Applies the theme's paired **text colour**. Off by default — see [Ink](#ink). |
+| `--color-error` | `--color-red-700` |
+| `--color-warning` | `--color-orange-400` |
+| `--color-success` | `--color-green-800` |
+| `--color-info` | `--color-blue-900` |
+| `--color-accent` | `--color-accent-700` |
+| `--color-accent-text` | `--color-accent-700-text` |
+
+`--color-accent-dark` is `--color-accent-800`; `--color-accent-ink` (the accent as text) is derived
+from `--color-accent` — see [`tokens.css`](tokens.css).
+
+```css
+:root { --color-error: var(--color-red-600); }
+```
+
+## Dark pages
+
+On a dark page the steps **mirror**, so a pick still fits without Tailwind's `dark:`
+variants. Each variable is a `light-dark()` pair of a step and its mirror:
+
+| Light page shows | 50 | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900 | 950 |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| Dark page shows | 950 | 900 | 800 | 700 | 600 | 500 | 400 | 300 | 200 | 100 | 50 |
+
+`theme="green-100"` is a light green plate on a light page and a dark green one on a dark
+page; its [text colour](#text-colours) mirrors with it. `white` and `black` stay.
+
+The `light` / `dark` looks set `color-scheme` on the element, which picks the arm
+the element's own colours resolve to **and** re-tones every `light-dark()` token below it.
+So `theme="gray-200 light"` is the light plate on any page, with light-page content on it.
+
+A plain colour in place of the `light-dark()` pair (when you [change a step](#change-or-add-a-hue))
+is the same on both.
+
+## Text colours
+
+Every step has a text colour, `--color-<hue>-<step>-text`, picked for contrast:
+
+1. the hue's own `950`, if its WCAG 2 contrast with the step is at least 4.5;
+2. otherwise black or white, whichever has the higher contrast.
+
+With the default palette every step of the ten hues reaches 4.5:1 (the lowest is
+`pink-600`, 4.6). `node scripts/build-palette.js` prints the contrast report for the
+current values, so a changed step shows what it did.
+
+The text colour is what `ink` applies, and what chips, stickers, beacons, marquees and
+the other [furniture](#furniture-and-tint) show on their plate.
+
+## Change or add a hue
+
+**Edit `palette.json`, run the build.** `palette.json` is the one source. From the repo root:
+
+```bash
+node scripts/build-palette.js
+```
+
+The build rewrites the generated blocks (between `/* palette:start */` and
+`/* palette:end */`) in `tokens.css`, `theme.css`, `tint.css` and the furniture sheets, writes
+[`palette.rules.json`](palette.rules.json), and prints the contrast report. Running it twice
+changes nothing.
+
+| `palette.json` key | What it holds |
+|---|---|
+| `hues` | per hue, each step (`50` … `950`) → an `oklch()` value. Add a hue here: one lowercase word, eleven steps |
+| `accent` | the hue `accent` points at (`blue` by default) |
+| `fixed` | `white` and `black`: their value and their text colour |
+| `text` | the [text rule](#text-colours): `prefer` (the step used as text, `950`) and `min` (the contrast it must reach, `4.5`) |
+| `targets` | the files the build rewrites |
+
+**Or in CSS.** Change a step of an existing hue by setting its two variables — the rules for it
+already exist:
+
+```css
+:root {
+  --color-green-300: light-dark(oklch(85% 0.17 150), oklch(50% 0.15 150));  /* a light page, then its mirror */
+  --color-green-300-text: light-dark(#000, #fff);
+}
+```
+
+Re-point `accent` the same way, step by step: `--color-accent-300: var(--color-violet-300)` and
+`--color-accent-300-text: var(--color-violet-300-text)`.
+
+**Add a hue in CSS** by setting `--color-<hue>-<step>` and `--color-<hue>-<step>-text` for the
+eleven steps, **and** the rules that make `brand-300` resolve in `theme=`, `tint=` and the
+furniture tokens. `palette.rules.json` holds those rules as flat templates — `id`, `per`
+(`hue`, `colour`, `step` or `word`), `layer`, `selector`, `declarations`, with `{name}` (and, in
+the variables rule, `{value}`, `{mirror}`, `{text}`, `{mirror-text}`) as placeholders. The rules
+marked `emitForAddedHue` are the ones a new hue needs: its variables, the `theme=` hue rule, the
+`tint=` and `tint-end=` hue rules, and one furniture rule per colour for chip, sticker, beacon,
+marquee, ai, save, lightbox, play and `tnt`. The step rules ship once with browser-style. A CMS
+writes the same rules for a hue a designer adds.
+
+```css
+:root {
+  --color-brand-50: light-dark(…, …);
+  --color-brand-50-text: light-dark(…, …);
+  /* …100 to 950 */
+}
+```
+
+The hue name is one lowercase word: `brand`, not `brand-red` or `blue2`.
+
+## Looks
+
+Looks transform a colour. Add any number.
+
+| Look | Effect |
+|---|---|
+| `ink` | Applies the colour's paired **text colour**. Off by default — see [Ink](#ink). |
+| `glass` | Turns the surface into a **material**: a translucent fill plus a backdrop blur + saturation. With no colour token it is a neutral frost. See [Glass](#glass). |
+| `border` | Draws a solid border and **keeps the fill**. See [Border and outline](#border-and-outline) for sides + width. |
+| `outline` | Clears the fill; the border is on in the pure colour, and the ink is the colour itself. See [Border and outline](#border-and-outline). |
 | `light` | Sets `color-scheme: light` on the element. |
 | `dark` | Sets `color-scheme: dark` on the element. |
-| `border` | Draws a solid border in the theme's **solid base colour** and makes the fill **transparent** (unless `pale` or `glass`). See [Border](#border) for sides + width. |
-| `glass` | Turns the surface into a **material**: a translucent fill plus a backdrop blur + saturation. With no color token it is a neutral frost. See [Glass](#glass). |
 
-`pale` and `muted` compose: `theme="green pale muted"` is a faded soft-green.
-
-`light`/`dark` are the **scheme** modifiers. Because every bundle is `light-dark()`,
-setting the scheme both picks which arm the theme's own colors resolve to **and**
+`light`/`dark` are the **scheme** looks. Because every colour is a `light-dark()` pair,
+setting the scheme both picks which arm the theme's own colours resolve to **and**
 re-tones descendant `light-dark()` tokens — ink ramps, eyebrows, tags, pills, form
 controls, scrollbars. So a card that should carry a full dark treatment for its
-content uses **`theme="black dark"`**; `theme="red dark"` makes a red surface whose
-inner content also renders dark. Without a scheme modifier, the theme follows the
+content uses **`theme="gray-800 dark"`**; `theme="red-700 dark"` makes a red surface whose
+inner content also renders dark. Without a scheme look, the theme follows the
 page's `color-scheme`.
 
 ## Ink
 
 A theme sets only the **background** by default — text keeps the component's own
-colour. This is what you usually want: a tinted panel (`theme="green pale"`) should
-have normal, readable body text, not dark-green text. Add **`ink`** to apply the
-theme's paired text colour.
+colour. This is what you usually want: a tinted panel (`theme="green-100"`) should
+have normal, readable body text. Add **`ink`** to apply the colour's paired text colour.
 
 ```html
-<lay-out theme="green pale">…</lay-out>       <!-- pale-green bg, normal text -->
-<lay-out theme="green pale ink">…</lay-out>   <!-- pale-green bg, dark-green text -->
-<ui-card theme="red ink">…</ui-card>          <!-- red bg, white text -->
+<lay-out theme="green-100">…</lay-out>        <!-- light green bg, normal text -->
+<lay-out theme="green-100 ink">…</lay-out>    <!-- light green bg, green-100's text colour -->
+<ui-card theme="red-700 ink">…</ui-card>      <!-- red-700 bg, red-700's text colour -->
 ```
 
-`ink` uniformly gates every text colour the theme would set — the paired ink, the
-`muted`-faded ink, and the `border` outline's base-colour ink.
+`ink` uniformly gates every text colour the theme would set — the paired text colour, the
+[`outline`](#border-and-outline) ink and the [`glass`](#glass) ink.
 
-- **Dark surfaces don't need `ink`** — pair them with `dark` (`theme="black dark"`),
+- **Dark surfaces don't need `ink`** — pair them with `dark` (`theme="gray-800 dark"`),
   and `color-scheme` re-tones `--color-text` to light. A dark surface **without**
-  `dark` **or** `ink` (e.g. `theme="black"` on a card) would render dark text on a
+  `dark` **or** `ink` (e.g. `theme="gray-800"` on a card) would render dark text on a
   dark fill — add one of them.
 - **Badges keep their ink.** `<ui-chip>` / `<ui-sticker>` (and `<ui-play>` /
-  `<ui-save>`) are colored objects where the paired ink is essential, so they show it
-  regardless of `ink` — a `theme="red"` chip is still white-on-red.
+  `<ui-save>`) are colored objects where the paired text colour is essential, so they show
+  it regardless of `ink` — a `theme="red-700"` chip carries `red-700`'s text colour.
 
 ### Hue as ink
 
-`pale` and a transparent-fill `border` both put the **hue itself** on screen as text.
-The raw hue does not clear WCAG AA that way — `theme="orange pale"` measured **1.76**
-on its own pale plate in light mode, and `pale red` / `pale blue` / `pale accent` all
-failed in dark mode. Both therefore read `--_theme-hue-ink`: the same hue with its
-**OKLCH lightness clamped** to the readable side of the current `color-scheme`
-(`min(l, 0.45)` light, `max(l, 0.80)` dark), so chroma and hue survive and only
-lightness moves. Every bundle now measures 5.3–9.7 in both schemes.
+`outline` and `glass` put the **colour itself** on screen as text, and `border` frames its
+fill with it. A raw step does not always clear WCAG AA on the page (or on its own light fill),
+so all three read `--_theme-hue-ink`: the same colour with its **OKLCH lightness clamped** to
+the readable side of the current `color-scheme` (`min(l, 0.45)` light, `max(l, 0.80)` dark), so
+chroma and hue survive and only lightness moves.
 
 The card system does the same thing one level up with `--color-accent-ink` — the
-accent hue as text, clamped against the scheme — which is what a card eyebrow and the
-`eb|tx|mt|hl(accent)` tones read. Without it, an eyebrow on a `theme="black dark"`
-card measured **2.40**. The paired **plate** inks (`--ui-theme-*-c`, e.g. white on a
-solid red chip) are a separate, still-open case — see `docs/plans/open-items.md` § 29.
+accent as text, clamped against the scheme — which is what a card eyebrow and the
+`eb|tx|mt|hl(accent)` tones read.
 
-## Border
+## Border and outline
 
-`border` draws a solid border in the theme's **solid base colour** — always the pure
-color, unaffected by `pale`/`muted` — and makes the **fill transparent** unless
-`pale` re-establishes it. With a transparent fill the **ink also becomes the base
-colour** (like the border, matching the chip/button outline look) — lightness-clamped
-for AA, see [Hue as ink](#hue-as-ink). Sides and width are both spelled `border(<arg>)`.
+`border` draws a solid border and **keeps the fill**. A kept fill is framed in the colour's
+ink (`--_theme-hue-ink`, see [Hue as ink](#hue-as-ink)), because the pure colour would vanish
+into its own fill; under `glass` the frame is the glass edge. `outline` is the same border with
+the fill **cleared**: the frame is the pure colour and the ink becomes the colour itself
+(lightness-clamped for AA) — the chip/button outline look. Sides and width are spelled
+`border(<arg>)` on both.
 
 | Token | Meaning |
 |---|---|
-| `border` | all 4 sides, default width |
+| `border` | all 4 sides, default width, fill kept |
+| `outline` | all 4 sides, default width, fill cleared |
 | `border(bs)` | block-start only |
 | `border(be)` | block-end only |
 | `border(is)` / `border(ie)` | inline-start / inline-end |
@@ -159,43 +290,45 @@ for AA, see [Hue as ink](#hue-as-ink). Sides and width are both spelled `border(
 **Any** `border` token turns the border on. Sides default to **all 4** unless a
 specific side is named (then only those). Width and style tokens apply to whatever
 sides are active — so `border(dashed)` alone is a dashed border on all sides, and
-`border(bs) border(lg)` is a 3px block-start rule.
+`border(bs) border(lg)` is a 3px block-start rule. `border(…)` with `outline` sets the same
+width and sides and clears the fill.
 
 ```html
-<div theme="red border">…</div>                 <!-- transparent fill, red border, all sides -->
-<div theme="red pale border">…</div>             <!-- pale-red fill, solid red border -->
-<div theme="red border(bs) border(lg)">…</div>   <!-- red block-start rule, lg (3px) -->
-<div theme="slate border border(md)">…</div>     <!-- slate box, md (2px) all sides -->
+<div theme="red-700 outline">…</div>                         <!-- transparent fill, red-700 border, all sides -->
+<div theme="red-100 border">…</div>                          <!-- red-100 fill, framed in the colour's ink -->
+<div theme="red-700 outline border(bs) border(lg)">…</div>   <!-- red-700 block-start rule, lg (3px) -->
+<div theme="gray-700 outline border(md)">…</div>             <!-- gray-700 outline, md (2px) all sides -->
 ```
 
-The border is applied **universally** by `theme.css` (any element with a `border`
-token gets it — cards, `<lay-out>`, `<lay-out-group>`, plain elements), so there's
+The border is applied **universally** by `theme.css` (any element with a `border` or
+`outline` token gets it — cards, `<lay-out>`, `<lay-out-group>`, plain elements), so there's
 no per-component wiring.
 
 **Caveats:**
 - **Not with `bleed`.** `<lay-out [bleed]>` / `<lay-out-group [bleed]>` paint their
   band with a `border-image` trick that conflicts with a real border. Use `border`
-  on non-bleed boxes / rules.
+  and `outline` on non-bleed boxes / rules.
 - **Chip / button own their border.** They sit in the `bs-component` layer (which
-  wins over the `bs-core` theme rule) and have their own `outline`/`variant`; the
-  theme `border` targets cards / layouts / groups / generic elements.
+  wins over the `bs-core` theme rule) and have their own `variant="outline"`; the
+  theme `border` / `outline` target cards / layouts / groups / generic elements.
 - **`<ui-reveal>` routes it.** The reveal's painted, rounded box is its inner
   `<details>`, not the host `theme.css` draws on — so `ui-reveal.css` gives the host
   the card radius grown by the border width (concentric curves) and drops the card
-  shadow, which would otherwise hang under a now-transparent fill. Per-side
-  `border(bs|be|is|ie|bk|in)` and the width/style words keep working unchanged.
+  shadow, which would otherwise hang under a cleared fill. Per-side
+  `border(bs|be|is|ie|bk|in)` and the width/style words keep working unchanged. The arm
+  matches `[theme*="border"]` and `[theme~="outline"]`.
 
 ## Glass
 
-Every other modifier only transforms **colour**. `glass` is a **material**: it makes
+Every other look only transforms **colour**. `glass` is a **material**: it makes
 the fill translucent and puts a `backdrop-filter` — blur plus a saturation boost —
 behind it, so the surface picks up and softens whatever it sits over. It is the
-frosted/liquid-glass look, and it works with any theme colour.
+frosted/liquid-glass look, and it works with any colour.
 
 ```html
-<ui-card theme="green glass">…</ui-card>       <!-- pale-green glass -->
-<ui-card theme="glass">…</ui-card>             <!-- colourless: neutral frost -->
-<lay-out theme="slate glass dark">…</lay-out>  <!-- dark glass band -->
+<ui-card theme="green-300 glass">…</ui-card>       <!-- green glass -->
+<ui-card theme="glass">…</ui-card>                 <!-- colourless: neutral frost -->
+<lay-out theme="gray-700 glass dark">…</lay-out>   <!-- dark glass band -->
 ```
 
 **With no colour token the fill is a neutral frost** — a barely-there `light-dark()`
@@ -207,46 +340,39 @@ only substance is the blur.
 
 | Spelling | Result |
 |---|---|
-| `green glass` | The colour at ~38% alpha over the blur |
-| `green pale glass` | `pale` first, so a **soft** green glass — the gentlest form |
-| `green muted glass` | `muted`'s 50% fade feeds the glass fade — a fainter pane |
-| `green glass border` | Glass fill **kept**, plus the specular rim (see below) |
-| `green pale glass ink` | Text in the **base colour**, like `pale` — never the paired ink |
-| `slate glass dark` | Glass plus `color-scheme: dark` for the descendants |
+| `green-300 glass` | The step at ~38% alpha over the blur |
+| `green-100 glass` | A light step — a **soft** green glass, the gentlest form; its ink is a dark green |
+| `green-300 glass border` | Glass fill **kept**, plus the specular rim (see below) |
+| `gray-700 glass dark` | Glass plus `color-scheme: dark` for the descendants |
 
-`glass` sets the ink to the theme's **base colour**, not the bundle's paired ink: a
-white-on-green pair is unreadable once the green is 38% transparent. As always the
-ink only applies if you add [`ink`](#ink).
+`glass` sets the ink to the **colour itself** (`--_theme-hue-ink`, see [Hue as ink](#hue-as-ink)),
+not the step's paired text colour: a text colour chosen for an opaque fill is unreadable once the
+fill is 38% transparent. As always the ink only applies if you add [`ink`](#ink).
 
-**Reach for `pale glass` whenever text is involved.** A bare `green glass` puts the
-hue's own colour on a translucent version of that same hue, which over busy imagery
-has almost no contrast; `pale` lightens the fill first, so the ink reads. This matters
-most for **badges** — `<ui-chip>` / `<ui-sticker>` / `<ui-beacon>` / `<ui-marquee>`
-always show their ink (see [Ink](#ink)) — so a coloured glass badge should be spelled
-`theme="red pale glass"`, not `theme="red glass"`. Nothing enforces this; glass cannot
-know what is behind it, so contrast stays the author's call.
+**Reach for a light step when text is involved.** `green-300 glass` puts the colour's own ink on
+a translucent version of that same colour, which over busy imagery has little contrast; a light
+step (`green-100 glass`) lightens the fill first, so the ink reads. This matters most for
+**badges** — `<ui-chip>` / `<ui-sticker>` / `<ui-beacon>` / `<ui-marquee>` always show their ink
+(see [Ink](#ink)) — so a coloured glass badge is best spelled `theme="red-100 glass"`. Nothing
+enforces this; glass cannot know what is behind it, so contrast stays the author's call.
 
-**Tell the glass what it is over.** `pale` mixes toward `--color-surface`, the *page*
-surface — but a glass panel usually sits on imagery, which is exactly where the page
-surface is the wrong reference. A bright hero photo under a dark-mode page gives a
-dark tint over a light backdrop and the ink falls apart. Pin the region with the
-scheme modifiers (`theme="blue pale glass light"`, or `color-scheme` on the wrapper)
-so the theme resolves against the backdrop the user actually sees.
+**Tell the glass what it is over.** The page surface is the wrong reference for a
+panel that sits on imagery: a bright hero photo under a dark-mode page gives a dark
+tint over a light backdrop and the ink falls apart. Pin the region with the scheme
+looks (`theme="blue-100 glass light"`, or `color-scheme` on the wrapper) so the theme
+resolves against the backdrop the user actually sees.
 
 ### The specular rim
 
 `glass` re-points the border colour at `--ui-theme-glass-edge` (a translucent white),
-so the iOS-style bright hairline is just the existing [`border`](#border) token —
+so the iOS-style bright hairline is just the existing [`border`](#border-and-outline) token —
 with all its sides, widths and styles:
 
 ```html
-<div theme="green glass border">…</div>       <!-- glass + rim on all sides -->
-<div theme="glass border(bs)">…</div>          <!-- frost + a bright top edge -->
-<div theme="blue glass border border(md)">…</div>
+<div theme="green-300 glass border">…</div>       <!-- glass + rim on all sides -->
+<div theme="glass border(bs)">…</div>              <!-- frost + a bright top edge -->
+<div theme="blue-900 glass border border(md)">…</div>
 ```
-
-Unlike a plain `border`, `glass border` **keeps its fill** — the rim is an addition,
-not a swap to a transparent box.
 
 ### Tokens
 
@@ -281,8 +407,7 @@ not a swap to a transparent box.
 - **It costs.** Backdrop blur is per-element GPU work; a grid of glass cards is
   meaningfully more expensive than a grid of painted ones.
 - **`prefers-reduced-transparency: reduce`** collapses the material — the fill goes
-  opaque and the blur is dropped. An explicit `muted` is left alone: that is an
-  author's colour choice, not the glass effect.
+  opaque and the blur is dropped.
 
 ## Universal paint
 
@@ -293,7 +418,7 @@ background-color: var(--_theme-bg, transparent);
 color:            var(--_theme-c, var(--color-text));
 ```
 
-so `<div data-theme="red">`, `<section data-theme="slate glass">` or a brand-new
+so `<div data-theme="red-700">`, `<section data-theme="gray-700 glass">` or a brand-new
 component works with no wiring at all. This is why `glass` on an arbitrary element is
 a real frosted pane and not just a bare backdrop blur.
 
@@ -316,12 +441,13 @@ Two things keep that from trampling existing components:
 
 A component with its own per-element meaning for the attribute opts out in **its own**
 sheet, which also wins on layer order. `ui/timeline` does this: there `data-theme=`
-colours one entry's **dot**, not the entry, so it resets the fill:
+colours one entry's **dot**, not the entry, so it resets the fill and reads the colour from
+`--_theme-base-bg` — no rule per colour:
 
 ```css
 & > li {
   &[data-theme] { background-color: transparent; color: inherit; }   /* ui-timeline.css */
-  &[data-theme~="accent"] { --ui-timeline-dot: var(--ui-theme-accent-bg); }
+  &[data-theme] { --ui-timeline-dot: var(--_theme-base-bg, var(--ui-timeline-rail)); }
 }
 ```
 
@@ -331,9 +457,9 @@ Universal paint gives a native node its **colour**; `data-box` gives it its **ge
 padding and rounded corners — so the two together make a plate out of any element:
 
 ```html
-<div data-theme="gray light" data-box>…</div>         <!-- light-gray plate, 16px inset, 6px corners -->
-<div data-theme="gray light" data-box="brd">…</div>   <!-- + a theme-matched hairline -->
-<div data-theme="slate dark ink" data-box style="--ui-box-p: var(--spacing-md)">…</div>
+<div data-theme="gray-200 light" data-box>…</div>         <!-- light-gray plate, 16px inset, 6px corners -->
+<div data-theme="gray-200 light" data-box="brd">…</div>   <!-- + a theme-matched hairline -->
+<div data-theme="gray-700 dark ink" data-box style="--ui-box-p: var(--spacing-md)">…</div>
 ```
 
 Two rules in `theme.css`, reading four tokens:
@@ -354,7 +480,7 @@ wobbling against it; with the defaults (0.375rem corner, 1rem inset) it is `0` �
 inner corner is the geometrically right answer once the inset exceeds the radius.
 
 ```html
-<div data-theme="gray light" data-box style="--ui-box-radius: var(--radius-2xl)">
+<div data-theme="gray-200 light" data-box style="--ui-box-radius: var(--radius-2xl)">
   <img style="border-radius: var(--ui-box-inner-radius)" …>   <!-- 1rem − 1rem = 0 → grow the radius or shrink --ui-box-p -->
 </div>
 ```
@@ -364,15 +490,14 @@ in Chrome 152, a child filling the content box keeps square corners — the cont
 is not rounded — and Safari has no `overflow-clip-margin` at all. Two engines, zero wins.
 
 **`brd` — the hairline.** `data-box="brd"` draws a 1px solid border. The theme axis already
-resolves a matching border colour (`--_theme-border`, the solid base hue — what the
-[`border`](#border) modifier draws), but on a *filled* plate that hue **is** the fill: a
-`gray light` plate and its `--_theme-border` are both `#ededed`, so used raw the line would
-vanish. `brd` therefore mixes it 25% toward the theme's AA-clamped ink
-(`--_theme-hue-ink`) — still in the hue, scheme-aware, and visible on solid, pale, muted and
-glass fills alike. Set `--ui-box-border-color: var(--_theme-border)` for the pure hue when
-the fill is pale or transparent. An unthemed `data-box="brd"` falls back to the page
-hairline, `--color-border`. Pick **`brd` or the theme's `border` modifier**, not both — the
-modifier empties the fill by design. The line is decorative: the 3:1 boundary rule applies
+resolves a matching border colour (`--_theme-border`, the pure theme colour), but on a *filled*
+plate that colour **is** the fill: a `gray-200 light` plate and its `--_theme-border` are the
+same colour, so used raw the line would vanish. `brd` therefore mixes it 25% toward the theme's
+clamped ink (`--_theme-hue-ink`) — still in the hue, scheme-aware, and visible on solid,
+light-step and glass fills alike. Set `--ui-box-border-color: var(--_theme-border)` for the pure colour when
+the fill is transparent. An unthemed `data-box="brd"` falls back to the page
+hairline, `--color-border`. Pick **`brd` or the theme's `border` / `outline`**, not both —
+`outline` empties the fill by design. The line is decorative: the 3:1 boundary rule applies
 to controls and meaningful edges, not to a plate's hairline.
 
 **One spelling, on purpose.** Every `theme=` rule is a `theme=`/`data-theme=` pair because a
@@ -389,19 +514,15 @@ argument as [Universal paint](#universal-paint): `data-box` is for the native no
 **A box without a theme is invisible.** The padding still takes space, but nothing paints
 it — pair `data-box` with `data-theme` (or any background of your own).
 
-**Pin the plate's scheme.** A neutral plate keeps its shade in both schemes (`gray` is
-light in dark mode too), but its *contents* re-tone with the page — light ink on a light
-plate. Add `light` (or `dark` for `slate`/`black`) so the descendants' `light-dark()`
-tokens follow the plate, not the page: measured on the Organization demo, `gray light`
-keeps every ink >= 6:1 in both schemes where bare `gray` drops to 1.03 in dark mode — and
-the `brd` hairline goes with it (its tint follows the same clamped ink, so on an unpinned
-light plate in dark mode it computes to the fill colour). And
-note `pale` on a neutral is near-invisible — `gray pale` is 20% gray over the surface,
-1.03:1 against a white card — so reach for the plain neutral.
+**Pin the plate's scheme.** Steps [mirror](#dark-pages) on a dark page, so a `gray-200`
+plate turns dark there and its contents re-tone with the page — plate and contents agree.
+To keep a plate light (or dark) whatever the page does, add `light` (or `dark`): the plate's
+own colour and its descendants' `light-dark()` tokens then follow the same scheme, and the
+`brd` hairline goes with it (its tint follows the same clamped ink).
 
 Live example: the Organization card's offices in `ui/card/demo/schema.html` —
-`<div data-part="office" data-theme="gray light" data-box="brd">` — emitted by the renderer from
-preset `parts.office: "box brd"` + `parts.officeTheme: "gray light"`
+`<div data-part="office" data-theme="gray-200 light" data-box="brd">` — emitted by the renderer from
+preset `parts.office: "box brd"` + `parts.officeTheme: "gray-200 light"`
 ([card.md § Preset model](../card/docs/card.md)).
 
 ## How a component opts in
@@ -411,7 +532,8 @@ surface is **not** the element carrying the attribute, or when it maps the theme
 token of its own.
 
 The resolver turns `theme=` into private, **non-inheriting** vars — `--_theme-bg`,
-`--_theme-c`. A component reads them as the fallback source for its own surface
+`--_theme-c`, fed by the base pair `--_theme-base-bg` / `--_theme-base-c` that the
+colour's rule sets. A component reads them as the fallback source for its own surface
 tokens:
 
 ```css
@@ -421,7 +543,7 @@ tokens:
 }
 ```
 
-`color-scheme` is handled by the `light`/`dark` modifiers directly on the element —
+`color-scheme` is handled by the `light`/`dark` looks directly on the element —
 the component does not need to touch it. Because `--_theme-*` are registered with
 `inherits: false`, an un-themed child does not pick up an ancestor's theme.
 
@@ -438,50 +560,59 @@ itself. Both shapes are in the repo:
 ```
 
 **Pick the ink fallback by role.** Surfaces (card, reveal, content, layout) fall back
-to `var(--color-text)` so the `light`/`dark` modifiers re-tone them through
+to `var(--color-text)` so the `light`/`dark` looks re-tone them through
 `color-scheme`; badges (chip, sticker, beacon, marquee) fall back to
-`var(--_theme-ink)` so their curated pair always shows. See [Ink](#ink).
+`var(--_theme-ink)` so the step's text colour always shows. See [Ink](#ink).
 
-## Create your own theme
+## Furniture and tint
 
-Add a bundle to `tokens.css` (or any `:root` in your own CSS) and one resolver rule.
-The modifiers (`pale`, `muted`, `glass`, `light`, `dark`) and every opted-in component
-then work with it for free — no per-component wiring.
+The same colour names work outside `theme=`:
 
-```css
-:root {
-  --ui-theme-brand-bg: light-dark(#4f46e5, #6366f1);
-  --ui-theme-brand-c:  light-dark(#ffffff, #eef2ff);
-}
+| Where | Spelling |
+|---|---|
+| `theme=` / `data-theme=` | `theme="green-300"` |
+| card furniture, in `media=` | `chip(green-300)` · `sticker(red-700)` · `beacon(…)` · `marquee(…)` · `ai(…)` · `save(…)` · `play(…)` · `lightbox(…)` |
+| media tint, in `media=` | `tnt(blue-500)` |
+| `tint=` / `tint-end=` | `tint="green-300"`, beside a literal colour such as `tint="#c00"` |
 
-:where([theme~="brand"]) {
-  --_theme-base-bg: var(--ui-theme-brand-bg);
-  --_theme-base-c:  var(--ui-theme-brand-c);
-}
-```
-
-Now `theme="brand"`, `theme="brand pale"`, `theme="brand muted"`, `theme="brand glass"`
-and `theme="brand dark"` all work on cards, chips, stickers, layouts — anywhere the
-axis is consumed.
-
-> Set the base pair on `--_theme-base-bg` / `--_theme-base-c` (not `--_theme-bg` /
-> `--_theme-c`) so the `pale`, `muted` and `glass` modifiers can derive from it. The
-> resolver runs **base → pale → tone → final**: `pale` rewrites the pale stage,
-> `muted` the tone stage, `glass` the final one — which is why they stack instead of
-> overwriting each other.
+Furniture tokens share one `media=` attribute, so CSS cannot read hue and step apart: each
+component carries one generated rule per colour — the ten hues and `accent` at eleven steps
+(121), plus `white` and `black`. A hue you add gets its rules from `palette.rules.json` (see
+[Change or add a hue](#change-or-add-a-hue)). There is no `chip(glass)`: `glass` is a look,
+so a glass badge is spelled `<ui-chip theme="red-100 glass">`.
 
 ## Notes
 
-- **Surfaces are colors; modifiers are transforms.** `light`/`dark` set the scheme,
-  `pale`/`muted` transform the colors, `glass` turns them into a material. No surface
+- **Surfaces are colors; looks are transforms.** `light`/`dark` set the scheme,
+  `border`/`outline` frame or clear, `glass` turns the colour into a material. No colour
   is named `light` or `dark`.
 - **Semantic buttons are a separate axis.** Buttons use `.bg-red`, `.bg-accent`, …
   (see `utility.css`) with their own `light`/`outline`/`disabled` `data-variant`s.
   `theme=` is the surface axis; `.bg-*` is the semantic control axis.
 - **Migrated from `thm()`:** the old card-only `variant="thm(dark|muted|subtle)"`
-  spelling was **removed in v4** — use `theme=`: `thm(dark)`→`black dark`,
-  `thm(muted)`→`slate dark`, `thm(subtle)`→`gray`.
-- **Furniture routing:** inside a card, `media="chip(red)"` / `sticker(green)` /
-  `tnt(blue)` etc. color the overlay furniture using the same bundles. There is no
-  `chip(glass)` — `glass` is a `theme=` modifier only, so a glass badge is spelled
-  `<ui-chip theme="red glass">`.
+  spelling was **removed in v4** — use `theme=`: `thm(dark)`→`gray-800 dark`,
+  `thm(muted)`→`gray-700 dark`, `thm(subtle)`→`gray-200`.
+
+## From the nine names
+
+The nine names `red orange green blue accent white gray slate black`, and the `pale` and
+`muted` modifiers, were **removed**: a step replaces them, and see-through is `glass`. The
+nearest step of the same hue:
+
+| Was | Solid | `pale X` | `muted X` |
+|---|---|---|---|
+| `red` | `red-700` | `red-200` | `red-300` |
+| `orange` | `orange-400` | `orange-100` | `orange-200` |
+| `green` | `green-800` | `green-100` | `green-300` |
+| `blue` | `blue-900` | `blue-100` | `blue-300` |
+| `accent` | `accent-700` | `accent-200` | `accent-300` |
+| `white` | `white` | `white` | `white` |
+| `gray` | `gray-200` | `gray-50` | `gray-100` |
+| `slate` | `gray-700` | `gray-300` | `gray-400` |
+| `black` | `gray-800` | `gray-300` | `gray-400` |
+
+`border` used to clear the fill unless `pale` or `glass` was on; now `border` keeps it and
+`outline` clears it. `red border` → `red-700 outline` · `pale red border` → `red-200 border` ·
+`red glass border` → `red-700 glass border`. The `--ui-theme-<name>-bg` / `-c` variables
+are gone (`--ui-theme-glass-*` stays). The same table rewrites the furniture tokens
+(`chip(red)` → `chip(red-700)`).

@@ -384,7 +384,7 @@ The **second `NewsArticle` card** (`#schema-news-paywall`, `data/news-paywall.js
 
 **Two arms, and the second is gated on the body.** Google’s *Subscription and paywalled content* feature reads the boolean **plus** `hasPart → WebPageElement { isAccessibleForFree: False, cssSelector }` naming the gated section of the DOM. A teaser card carries the boolean only: the paywalled text is not on the listing page, so a selector pointing at it would be a lie. The full view — a preset with `text: "body"`, the shape `articles/build.js` renders — adds the part, hidden, with `cssSelector: [data-part=body]` — the wrapper the same render wrote around the body is `<div data-part="body" itemprop="articleBody">`, and `data-part` survives the `raw`/`jsonld` schema modes (`stripSchema()` removes microdata attributes only), so the selector holds in every mode.
 
-**Presentation is not a disabled card.** The link still works (it is the conversion path), a tinted or `muted` treatment fails the muted-compounding contrast rule, and a publisher wants gated content to look *more* desirable, not less. The paywalled news card uses the envelope `chip` — a status flag above the eyebrow, the same slot “New” and “Sold” use — and keeps the type chip on the media. Nothing about the flag is automatic on the visual side; the editor chooses the label.
+**Presentation is not a disabled card.** The link still works (it is the conversion path), a tinted or faded treatment fails the muted-compounding contrast rule, and a publisher wants gated content to look *more* desirable, not less. The paywalled news card uses the envelope `chip` — a status flag above the eyebrow, the same slot “New” and “Sold” use — and keeps the type chip on the media. Nothing about the flag is automatic on the visual side; the editor chooses the label.
 
 **The fade is a token, not a flag.** `content="gate"` fades the text column out towards its block-end — the shared scroll-fade gradient held static, default `100cqb` (see [content.md § gate](content.md#gate-holds-the-same-gradient-still)). The demo card gets it from the `stack-gate` preset; `details.paywalled` never appends it, because the machine claim and the look are two decisions. And a mask hides nothing from a crawler or view-source: the visual is a courtesy, enforcement is server-side.
 
@@ -547,7 +547,7 @@ holding the preset and the variant data together.
   "element": "ui-card", "variant": "col", "media": "chip(tc)",
   "variants": {
     "layout": { "xs": "cg(2xs) rg(2xs)", "md": "columns(2)" },
-    "tile": { "variant": "rds(non)", "media": "asr(1/1) chip(bs) chip(green) chip(pale)", "content": "pad(none)" }
+    "tile": { "variant": "rds(non)", "media": "asr(1/1) chip(bs) chip(green-100)", "content": "pad(none)" }
   }
 }
 ```
@@ -641,7 +641,7 @@ Part `timeline` — styled by `@browser.style/timeline`: a dot per entry on a co
 **Each entry is a real `Event`, so it carries `startDate`, a Text `name` and a `location`.** Two rules keep Google's Event profile satisfied (schema.org alone accepts less):
 
 - **`name` never rides the `<time>`.** Microdata takes a `<time>`'s value from its `datetime` attribute, so `itemprop="name"` there publishes a *date* where Google wants Text — it reports "invalid value type for field name". The `<time>` is presentation only (no `itemprop`; `startDate` already carries the machine date) and the visible sentence is the `name`.
-- **`location` is required**, and a milestone has no venue. `details.locationUrl` (or a per-item `locationUrl`) emits `eventAttendanceMode: OnlineEventAttendanceMode` + a hidden `location` → `VirtualLocation` with that `url` — honest for a software project's history. A per-item `location` string emits a hidden `Place` instead, for milestones that really happened somewhere. Without either, no location is emitted: the renderer will not invent one. Colour a single entry with `data-theme="accent"` (the `theme=` palette names) or an arbitrary `data-fill="#c9b8ff"` — `data-` prefixed, because a bare attribute is invalid on a built-in `<li>`. A coloured dot is filled; in `variant="minimal"` the bullets default to the rail grey; in `variant="horizontal"` plain dots are open rings (transparent centre, rail stops at the dot edge) — only a `data-theme`/`data-fill` entry fills.
+- **`location` is required**, and a milestone has no venue. `details.locationUrl` (or a per-item `locationUrl`) emits `eventAttendanceMode: OnlineEventAttendanceMode` + a hidden `location` → `VirtualLocation` with that `url` — honest for a software project's history. A per-item `location` string emits a hidden `Place` instead, for milestones that really happened somewhere. Without either, no location is emitted: the renderer will not invent one. Colour a single entry with `data-theme="accent-700"` (the `theme=` palette names) or an arbitrary `data-fill="#c9b8ff"` — `data-` prefixed, because a bare attribute is invalid on a built-in `<li>`. A coloured dot is filled; in `variant="minimal"` the bullets default to the rail grey; in `variant="horizontal"` plain dots are open rings (transparent centre, rail stops at the dot edge) — only a `data-theme`/`data-fill` entry fills.
 
 ### Gallery — `ImageGallery`
 
@@ -841,7 +841,7 @@ alongside Course list, Movie, Recipe or Restaurant. See
 
 Dark theme, `PriceSpecification`, features as check-`list` with the excluded ones as a `crossed` list. `details.isPopular` renders the promotional chip — a state, so it keeps the eyebrow free for the actual category.
 
-The demo card takes plain `theme="gray"`, **not `gray muted`**: the `muted` modifier washes the ink by a further ~50%, which is unreadable at card scale in dark mode.
+The demo card takes plain `theme="gray-200"`: a step keeps the ink at full strength, where a half-transparent fill would wash it out at card scale in dark mode.
 
 ### Social — `SocialMediaPosting`
 
@@ -1180,7 +1180,7 @@ generic `derivedBack` path renders it. A flashcard deck of several cards sent th
 renders the **first** card and drops the rest with an HTML comment — the same loud skip again, since
 a reveal has one front and one back and a deck wants a `<ui-card>` preset.
 
-The graded card marks the correct option with a visible **answer key** (a `pale green` chip) rather
+The graded card marks the correct option with a visible **answer key** (a `green-100` chip) rather
 than hiding it behind a `<details>`. Two reasons: the cards are CSS-only with no JS to grade with,
 and the flashcard deck already owns the reveal idiom — reusing it here would blur exactly the
 distinction the pair exists to draw. Options reuse the poll card's `options` part unchanged: one

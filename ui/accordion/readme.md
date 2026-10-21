@@ -116,7 +116,7 @@ The `group` attribute on `<ui-accordion>` automatically propagates as the native
 | `group` | string | Groups items for exclusive open behavior (propagated to child `<details>` as `name`) |
 | `variant` | string | Space-separated: `bordered`, `divided`, `rounded`, `pill`, `breakout`, `separate`, `filled`, `hide-summary` |
 | `type` | string | Layout mode: `"horizontal"` (blinds-style) or `"split"` (two-column with `data-split` content) |
-| `tint` | color | Base color for tinting items (e.g. `oklch(0.35 0.18 210)`) |
+| `tint` | color | Base color for tinting items — a palette colour (`green-300`, see [theme.md](../base/theme.md#palette)) or any CSS colour (e.g. `oklch(0.35 0.18 210)`) |
 | `tinted` | boolean | Enables a graduated color ramp across items (requires `tint`) |
 | `no-collapse` | boolean | Ensures one item always stays open |
 | `indent` | boolean | On the outermost accordion, enables a depth-based staircase: each nested level adds `--ui-accordion-padding-inline` to the inline-start of summaries and leaf panel content |

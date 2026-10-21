@@ -248,7 +248,7 @@ The quote part sits in the Body group at ×1.1 with a border-inline-start; `<cit
 ### 11 · Gradient billboard
 
 ```html
-<ui-card variant="vis(content)" theme="black dark" content="hl(3xl) hl(900) ctr">
+<ui-card variant="vis(content)" theme="gray-800 dark" content="hl(3xl) hl(900) ctr">
   <cq-box>
     <ui-content>
       <small data-part="eyebrow">Launch</small>

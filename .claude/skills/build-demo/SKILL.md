@@ -37,7 +37,7 @@ Inventory before writing anything:
 
 ```html
 <body data-layout-root data-page-gap="3">
-  <lay-out-group theme="accent border(bs)" xs="pbs(3) pbe(3)">
+  <lay-out-group theme="accent-700 outline border(bs)" xs="pbs(3) pbe(3)">
     <ui-content>
       <small data-part="eyebrow">Section</small>
       <h2 data-part="headline">Section title</h2>
@@ -91,12 +91,12 @@ The skin has exactly three layers:
 /* 2. re-alias the SHARED tokens the components read — on body, not :root */
 body {
   --color-text: var(--brand-ink);
-  --color-accent: var(--brand-red);
   --color-text-muted: #5a5a6a;
-  /* --ui-theme-*-bg resolve --color-* at :root and freeze there, so theme="accent"
-     keeps the default unless the bundle is re-declared here too */
-  --ui-theme-accent-bg: var(--brand-red);
-  --ui-theme-accent-c: #fff;
+  /* the accent steps and the --color-accent job resolve at :root and freeze there, so
+     theme="accent-700" keeps the default unless the step and the job are re-declared here */
+  --color-accent-700: var(--brand-red);
+  --color-accent-700-text: #fff;
+  --color-accent: var(--color-accent-700);
   background: #fff;
   color: var(--brand-ink);
 }
@@ -107,8 +107,10 @@ ui-media { --ui-media-radius: 0; }
 lay-out ui-content { --ui-content-p: 0; }
 ```
 
-Setting `--color-accent` on `:root` instead of `body` is the classic mistake — the theme
-bundles have already resolved by then and `theme="accent"` keeps the default hue.
+Re-declare the **step and the job together**: `--color-accent` is `var(--color-accent-700)`
+substituted on `:root`, so changing only the step on `body` leaves buttons and focus rings on the
+default hue, and changing only the job leaves `theme="accent-700"` on it. To rebrand a whole
+site, point `accent` at another hue instead (`ui/base/theme.md` § Palette).
 
 ## 5. Hygiene
 

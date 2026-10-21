@@ -211,7 +211,7 @@ rds(sm-sq)  rds(md-sq)  rds(lg-sq)  rds(xl-sq)       ← squircle (superellipse 
 
 Same scale as `variant="rds()"` on the card and `media="rds()"` on a standalone frame — the values come from the global `--radius-*` / `--radius-*-sq` / `--squircle-*` tokens in `@browser.style/base`, so all three stay in lock-step.
 
-> **Corners need a background to be visible.** `--ui-content-radius` defaults to `0` and is inert inside a card, because `<ui-content>` paints no background *until you give it one*. The canonical way is **`theme=`** — `<ui-content theme="gray" content="rds(lg)">` is a rounded plate (see [Theme surface](#theme-surface)); `style="background: …"` or a utility class work too. Rounding a transparent box is a no-op. For a **native node** inside the text column — a `data-part` group such as `office` — the pairing is `data-theme` + `data-box` (padding + corners from `theme.css`; `data-box="brd"` for a theme-matched hairline — [base/theme.md § Box](../../base/theme.md#box)).
+> **Corners need a background to be visible.** `--ui-content-radius` defaults to `0` and is inert inside a card, because `<ui-content>` paints no background *until you give it one*. The canonical way is **`theme=`** — `<ui-content theme="gray-200" content="rds(lg)">` is a rounded plate (see [Theme surface](#theme-surface)); `style="background: …"` or a utility class work too. Rounding a transparent box is a no-op. For a **native node** inside the text column — a `data-part` group such as `office` — the pairing is `data-theme` + `data-box` (padding + corners from `theme.css`; `data-box="brd"` for a theme-matched hairline — [base/theme.md § Box](../../base/theme.md#box)).
 
 `rds()` is substring-matched (like the card's and media's), which is safe here because it has no `md:`/`lg:` forms to shadow and `rds(sm)` is not a substring of `rds(sm-sq)`. The old `rds(none)` spelling was **removed in v5** on all three attributes — `rds(non)` is the only spelling.
 
@@ -560,27 +560,26 @@ tokens in `ui/base/tokens.css`, through two per-part knobs:
 
 | Knob | Default | Resolves to |
 |---|---|---|
-| `--ui-content-list-checked-mark` | `--color-success` | `light-dark(hsl(136 45% 30%), hsl(136 21% 51%))` |
-| `--ui-content-list-crossed-mark` | `--color-error` | `light-dark(hsl(360 65% 41%), hsl(360 40% 56%))` |
+| `--ui-content-list-checked-mark` | `--color-success` | `--color-green-800` |
+| `--ui-content-list-crossed-mark` | `--color-error` | `--color-red-700` |
 | `--ui-content-links-mark` | `currentColor` | the row's own ink |
 
-`--color-success` / `--color-error` are the same tokens that produce `theme="green"` and
-`theme="red"` — one palette, used for both a surface and a mark.
+`--color-success` / `--color-error` are the same tokens that produce `theme="green-800"` and
+`theme="red-700"` — one palette, used for both a surface and a mark.
 
 **They are page tokens, not theme tokens, and that is the sharp edge.** `theme=` swaps the
-card's surface; the semantic colours do not follow it. Measured on the membership card,
-`::marker` against the surface behind it (Chrome 150):
+card's surface; the semantic colours do not follow it. Contrast of each mark against the
+surface behind it, computed from the palette values (light page):
 
-| Context | ✓ checked | ✗ crossed |
+| Surface | ✓ checked (`green-800`) | ✗ crossed (`red-700`) |
 |---|---|---|
-| light, card surface | 5.22:1 | 5.85:1 |
-| dark (`prefers-color-scheme`) | 4.62:1 | 3.54:1 |
-| `theme="black"` | 2.40:1 | 2.14:1 |
-| `theme="green"` | **1.00:1 — invisible** | 1.12:1 |
+| the page surface (white) | 7.09:1 | 6.42:1 |
+| `theme="gray-800"` | 2.07:1 | 2.29:1 |
+| `theme="green-800"` | **1.00:1 — invisible** | 1.10:1 |
+| `theme="red-700"` | 1.10:1 | **1.00:1 — invisible** |
 
-Only the light row clears 4.5:1 on both marks. Dark mode passes on ✓ and lands at 3.54:1 on
-✗ — above the 3:1 UI-boundary floor, below the body-text one. Under `theme=` both fail, and
-`theme="green"` puts the success green on a success-green surface.
+On the page surface both marks clear 4.5:1. Under a dark plate they land below the 3:1
+UI-boundary floor, and `theme="green-800"` puts the success green on a success-green surface.
 
 This matters because the mark is the **only** carrier of the included/excluded distinction —
 the row text does not say "included", so an invisible mark is lost meaning, not lost
@@ -674,11 +673,11 @@ puts a verdict chip on **every** option, not only the answer key:
 <ul data-part="options" aria-live="polite">
   <li itemprop="suggestedAnswer" itemscope itemtype="https://schema.org/Answer">
     <label><input type="radio" class="--check" name="quiz-q1"> <span itemprop="text">…</span></label>
-    <ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip>
+    <ui-chip data-verdict="wrong" theme="red-200">Wrong</ui-chip>
   </li>
   <li itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
     <label><input type="radio" class="--check" name="quiz-q1"> <span itemprop="text">…</span></label>
-    <ui-chip data-verdict="correct" theme="pale green">Correct</ui-chip>
+    <ui-chip data-verdict="correct" theme="green-100">Correct</ui-chip>
   </li>
 </ul>
 ```
@@ -739,19 +738,15 @@ The bespoke pill is scoped to `& a:not(ui-chip *)`, so it never leaks onto a chi
 
 **Focus on a linked tag swaps its fill and ink.** A ring around the *text inside* a chip reads as a stray box, so the anchor's outline is suppressed and the whole pill flips instead: `background-color: currentColor` makes the chip's own ink the fill, and the label takes `contrast-color()` against it (with a `--color-surface` declaration first, for engines without `contrast-color()`). The bespoke pill does the same through `--ui-content-tag-focus-bg` (default `--color-text`).
 
-A **darkening veil was measured and rejected.** It only works on chips with light ink; anything with dark ink collapses — measured in light mode, label contrast fell from 12.1:1 → 4.4:1 on the grey pill, 4.6:1 → **1.7:1** on `pale green` and 4.9:1 → **1.8:1** on `pale red`. Darkening is the wrong direction whenever the label is the dark half of the pair, and no single veil direction is right for a palette that contains both.
+A **darkening veil was measured and rejected.** It only works on chips with light ink; anything with dark ink collapses — measured in light mode, label contrast fell from 12.1:1 → 4.4:1 on the grey pill, and a light palette step (dark ink on a light plate) fares worse. Darkening is the wrong direction whenever the label is the dark half of the pair, and no single veil direction is right for a palette that contains both light and dark steps.
 
-The swap is the only variant that holds across the whole palette (measured, both colour schemes):
+The swap is the only variant that holds across the whole palette, light steps and dark steps alike: whatever the chip's ink is becomes the fill, and `contrast-color()` picks the label against it. Measured on the default grey chip:
 
 | chip | idle → focus (light) | label on focus | state Δ |
 |---|---|---|---|
 | grey (default) | `#e6e6e6` → `#262626` | 15.1:1 | 12.1:1 |
-| `pale green` | `#d4e2d8` → `#2a6f3c` | 6.1:1 | 4.6:1 |
-| `pale red` | `#efd3d3` → `#ad2525` | 6.8:1 | 4.9:1 |
-| `blue` | `#205c97` → `#ffffff` | 21:1 | 6.9:1 |
-| `black` | `#1f2937` → `#f5f5f5` | 19.3:1 | 13.5:1 |
 
-Dark mode inverts the same way (grey `#666` → `#d9d9d9`, label 14.9:1, Δ 4.1:1). Every combination clears 4.5:1 for the label and 3:1 for the state change, except `blue` in dark mode (Δ 2.8:1 — a full hue-to-white flip whose luminance ratio happens to land low) and an **unthemed** `variant="outline"` chip, which is already unreadable at rest (label 1.25:1 on white — its ink falls back to `--color-button`) and is not a tag look to use.
+Dark mode inverts the same way (grey `#666` → `#d9d9d9`, label 14.9:1, Δ 4.1:1). An **unthemed** `variant="outline"` chip is already unreadable at rest (label 1.25:1 on white — its ink falls back to `--color-button`) and is not a tag look to use.
 
 ---
 
@@ -903,23 +898,23 @@ resolved surface, with surface ink (`--color-text`, re-toned by `light`/`dark`
 through `color-scheme`; add `ink` for the theme's paired ink).
 
 ```html
-<ui-content theme="gray" content="rds(lg) pad(lg)">…</ui-content>   <!-- standalone plate -->
+<ui-content theme="gray-200" content="rds(lg) pad(lg)">…</ui-content>   <!-- standalone plate -->
 ```
 
-Native parts get the same plate with `data-theme` + `data-box` ([base/theme.md § Box](../../base/theme.md#box)) — the Organization demo's offices are `<div data-part="office" data-theme="gray light" data-box="brd">` (`brd` = the theme-matched hairline).
+Native parts get the same plate with `data-theme` + `data-box` ([base/theme.md § Box](../../base/theme.md#box)) — the Organization demo's offices are `<div data-part="office" data-theme="gray-200 light" data-box="brd">` (`brd` = the theme-matched hairline).
 
 Two things this unlocks: `rds()` finally has a background to round, and a
 `<ui-reveal>` **flipside** can carry its own colour independent of the card's front
 face — see [Two sides, two themes](../../reveal/readme.md#two-sides-two-themes).
 
 Inside an `ovr()` card, a themed `<ui-content>` overlay becomes a solid/translucent
-**plate** over the media (`theme="black muted"`) rather than a scrim-lit column: the
+**plate** over the media (`theme="gray-400"`, or `theme="gray-800 glass"`) rather than a scrim-lit column: the
 theme's ink replaces the overlay's `--ui-content-ov-ink` white, which is what a plate
 wants. Leave `theme=` off to keep the scrim treatment.
 
 ## Theme ink
 
-Host themes come from the shared `theme=` axis ([base/theme.md](../../base/theme.md)) and set the card surface; the neutrals ramp **`white` < `gray` < `slate` < `black`**. Adding the `dark` modifier (`theme="slate dark"`, `theme="black dark"`) flips `color-scheme: dark` so the muted / eyebrow / tag ink and controls re-tone automatically (the ink ramp derives from `currentColor`, so most parts follow with no explicit write). Where a theme sets ink explicitly, those tokens live on `<ui-content>`, not on the card:
+Host themes come from the shared `theme=` axis ([base/theme.md](../../base/theme.md)) and set the card surface (`theme="gray-200"`, `theme="gray-800"`, …). Adding the `dark` look (`theme="gray-700 dark"`, `theme="gray-800 dark"`) flips `color-scheme: dark` so the muted / eyebrow / tag ink and controls re-tone automatically (the ink ramp derives from `currentColor`, so most parts follow with no explicit write). Where a theme sets ink explicitly, those tokens live on `<ui-content>`, not on the card:
 
 | Token | Read by | Themed by |
 |-------|---------|-----------|
@@ -927,7 +922,7 @@ Host themes come from the shared `theme=` axis ([base/theme.md](../../base/theme
 | `--ui-content-eyebrow-ink` | eyebrow | theme |
 | `--ui-content-tag-bg` | tags pills | theme |
 
-On a themed card (`ui-card[theme]`) two of those follow the theme ink by default (`content.css` § themed-host relays): the **eyebrow** takes `currentColor` instead of the accent, and a bare `<progress>` bar's fill (`--ui-progress-fill`, from `@browser.style/progress`) does the same — so a pale-plate goal card's bar paints in its own hue ink. An explicit token write on the card or page still overrides both.
+On a themed card (`ui-card[theme]`) two of those follow the theme ink by default (`content.css` § themed-host relays): the **eyebrow** takes `currentColor` instead of the accent, and a bare `<progress>` bar's fill (`--ui-progress-fill`, from `@browser.style/progress`) does the same — so a light-plate goal card's bar paints in its own hue ink. An explicit token write on the card or page still overrides both.
 
 ```css
 :where([theme~="black"]) {

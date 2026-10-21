@@ -46,7 +46,7 @@ A theme sets these on `:root` to change every card on a site. The `variant=` wor
 
 Before these hooks a site had to override the global `--radius-2xl` / `--shadow-xl` on `ui-card`, which leaked into everything inside the card that reads them. The text hooks are in [content.md § Site defaults](content.md#site-defaults--hooks-a-theme-sets-on-root).
 
-`--ui-card-bg` is a `light-dark()` pair — light arm the normal surface, dark arm the card's own slate (`--ui-card-dark-bg`). Because the *default* is already a pair, a card theme only has to flip `color-scheme`, which is what `theme="black dark"` does.
+`--ui-card-bg` is a `light-dark()` pair — light arm the normal surface, dark arm the card's own dark surface (`--ui-card-dark-bg`). Because the *default* is already a pair, a card theme only has to flip `color-scheme`, which is what `theme="gray-800 dark"` does.
 
 ## Arrangement — `variant=`
 
@@ -217,7 +217,7 @@ Composes with a squircle: `rds(lg-sq) rds(prg)` keeps `corner-shape: superellips
 
 ## Border — `bdr`
 
-Opt-in hairline for cards on a `surface` background whose edges otherwise vanish. Distinct from the `theme=` `border()` system ([base/theme.md](../../base/theme.md)) — that needs a colour theme and makes the fill transparent; `bdr` leaves the surface fill intact.
+Opt-in hairline for cards on a `surface` background whose edges otherwise vanish. Distinct from the `theme=` `border` / `outline` looks ([base/theme.md](../../base/theme.md#border-and-outline)) — those need a colour theme (and `outline` makes the fill transparent); `bdr` leaves the surface fill intact and takes no colour theme.
 
 - **On:** `variant="bdr"` (default: `--color-border`, 1px, solid). Substring-matched, so any `bdr(…)` arg alone also enables it.
 - **Shade:** `bdr(lgt)` super-light · default · `bdr(drk)` darker (same `lgt`/`drk` vocabulary as the carousel). There is no `bdr(sub)` / `bdr(strong)`.
@@ -251,35 +251,32 @@ Opt-in hairline for cards on a `surface` background whose edges otherwise vanish
 ## Themes — `theme=`
 
 Cards use the **shared cross-component `theme=` axis** — full reference in
-[base/theme.md](../../base/theme.md). A `theme=` value is one colour
-(`red orange green blue accent white gray slate black`) plus optional modifiers
-(`pale` tint, `muted` fade, `light`/`dark` scheme). The ink crosses into the
+[base/theme.md](../../base/theme.md). A `theme=` value is one palette colour
+(`<hue>-<step>`, `white` or `black` — `gray-200`, `red-700`, `accent-900`) plus optional
+looks (`ink`, `glass`, `border`, `outline`, `light`/`dark` scheme). The ink crosses into the
 `<ui-content>` namespace (muted / eyebrow / tag) so parts re-tone; add the `dark`
-modifier (`theme="black dark"`) to flip `color-scheme` so accent / pills / controls
-re-tone too. The neutral surfaces form a light→dark ramp: **`white` < `gray` <
-`slate` < `black`**.
+look (`theme="gray-800 dark"`) to flip `color-scheme` so accent / pills / controls
+re-tone too. On a dark page the steps mirror (`gray-200` shows as `gray-800`), so a picked
+colour still fits.
 
-Card-local override hooks (feed the `--ui-theme-black-*`/`slate` bundles):
-
-| Token | Default | Controls |
-|-------|---------|----------|
-| `--ui-card-dark-bg` | `#1f2937` | `theme="black"` surface — set to `var(--color-accent)` for a branded surface |
-| `--ui-card-muted-bg` | `#374151` | `theme="slate"` surface |
+An unthemed card paints `--ui-card-bg`: the page surface in a light scheme, `--ui-card-dark-bg`
+(default `#1f2937`) in a dark one. A **branded** surface is an `accent-*` step
+(`theme="accent-900 dark"`) — point `accent` at another hue and every branded card follows.
 
 **On a `<ui-reveal>`** the axis works the same, with one twist: the painted, rounded
 box is the inner `<details>`, so the host arm *re-publishes* the resolved surface into
 `--ui-reveal-bg` (the back panel and the `pop` popup card follow through their own
 fallback chains). The **flipside** carries its own `theme=` on the element after
 `</summary>` — see [Two sides, two themes](../../reveal/readme.md#two-sides-two-themes).
-`theme="… border"` is routed too: the host takes the card radius grown by the border
-width, and the card shadow is dropped (the fill is transparent by then).
+`theme="… border"`, `theme="… outline"` and `border(…)` are routed too: the host takes the card
+radius grown by the border width, and the card shadow is dropped.
 
 > **Migrated from `thm()`:** the old `variant="thm(dark\|muted\|subtle)"` spelling was
-> **removed in v4** — use `theme=`: `thm(dark)`→`theme="black dark"`, `thm(muted)`→
-> `theme="slate dark"`, `thm(subtle)`→`theme="gray"`.
+> **removed in v4** — use `theme=`: `thm(dark)`→`theme="gray-800 dark"`, `thm(muted)`→
+> `theme="gray-700 dark"`, `thm(subtle)`→`theme="gray-200"`.
 >
-> The overlay-furniture **sub-themes** (`chip(red)`, `sticker(green)`, …) are the
-> same bundles routed via `media=` — see [media.md](media.md).
+> The overlay-furniture **sub-themes** (`chip(red-700)`, `sticker(green-800)`, …) are the
+> same palette colours routed via `media=` — see [media.md](media.md).
 
 ## Reveal tokens (`ui-reveal`)
 
@@ -414,11 +411,10 @@ the same `--ui-card-border-*` knobs (still declared on the host by the
 
 Surface + ink come from the resolved `--_theme-*` pair (see
 [base/theme.md](../../base/theme.md)), both `light-dark()` so they adapt, falling back to the
-default host surface when unthemed. Adding the `dark`/`light` modifier
-(`theme="black dark"`) also flips `color-scheme`, which is what re-tones the content ink
+default host surface when unthemed. Adding the `dark`/`light` look
+(`theme="gray-800 dark"`) also flips `color-scheme`, which is what re-tones the content ink
 ramp, eyebrow, tags, pills, form controls and scrollbars. A **branded** surface is
-`theme="black"` plus a `--ui-card-dark-bg` override (hooked in the `--ui-theme-black-bg`
-bundle).
+an `accent-*` step, e.g. `theme="accent-900 dark"`.
 
 ### Cross-document view transitions
 
@@ -506,13 +502,13 @@ downstream then follows through existing fallbacks — the panel via
 `var(--ui-reveal-content-bg, var(--ui-reveal-bg))`, the popup card via
 `--ui-reveal-expand-bg`, the icon focus rings. Ink is set once and inherits into both faces,
 so `--ui-reveal-content-c` is deliberately left alone. Surface-style ink fallback
-(`--color-text`), not the badge pair — that is what makes `theme="black dark"` re-tone
+(`--color-text`), not the badge pair — that is what makes `theme="gray-800 dark"` re-tone
 through `color-scheme`.
 
-`theme="… border"` is routed on the host too: `theme.css` draws the ring on the
+`theme="… border"`, `theme="… outline"` (and `border(…)`) are routed on the host too: `theme.css` draws the ring on the
 `<ui-reveal>` box, which has neither radius nor fill, so the host takes the card radius
 grown by `--_theme-bw` (concentric curves under border-box sizing) and drops the card
-shadow — the fill is already transparent, since `border` sets `--_theme-bg: #0000`.
+shadow. The arm is `[theme*="border"], [theme~="outline"]` (an `outline` clears the fill: `--_theme-bg: #0000`).
 `--_theme-border`/`-bw` are **not** re-published to `> details`: that would flatten the
 per-side `border(bs|be|is|ie|bk|in)` vocabulary into one width.
 

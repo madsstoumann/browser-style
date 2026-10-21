@@ -2,7 +2,7 @@
 
 A reference of every HTML **attribute** exposed by the three systems. Attribute **values** are intentionally omitted; only names, target elements, purpose and type are listed.
 
-**Type key:** `Boolean` = presence-only · `Value` = takes a single value · `Token-list` = space-separated keyword tokens (often `token(arg)` DSL). Many attributes are compact DSL strings where modifiers live *inside* the value (e.g. `theme="red muted ink"`), not as separate attributes.
+**Type key:** `Boolean` = presence-only · `Value` = takes a single value · `Token-list` = space-separated keyword tokens (often `token(arg)` DSL). Many attributes are compact DSL strings where modifiers live *inside* the value (e.g. `theme="red-300 ink"`), not as separate attributes.
 
 **`data-*` twin convention:** several base/layout attributes have a `data-`prefixed form. Custom elements use the bare name (`stagger`); native HTML elements use the `data-` form (`data-stagger`). They are the same feature.
 
@@ -100,7 +100,7 @@ Elements: **`<ui-card>`** (static host, unregistered), **`<cq-box>`** (queryable
 | Attribute | Applies To | Purpose | Type |
 |-----------|-----------|---------|------|
 | `variant` | card / reveal | Composition DSL: arrangement, split, visibility, overlay, corners. | Token-list |
-| `theme` | card / reveal | Shared theme axis (colour + light/dark/pale/muted modifiers); surface + ink. | Token-list |
+| `theme` | card / reveal | Shared theme axis (palette colour + ink/glass/border/outline/light/dark looks); surface + ink. | Token-list |
 | `media` | card (inherits to media) | Media-frame DSL; can live on the host and flow down to `<ui-media>`. | Token-list |
 | `content` | content (canonical) — **or** the card / any ancestor | Content-column DSL. The renderer's **canonical placement is the `<ui-content>` itself**; host and ancestor placement stay fully supported, and ancestor placement is the deliberate **bulk-config** mechanism (pure custom-property inheritance — one declaration on a `<lay-out>`/`<lay-out-group>` governs every card beneath it; a nearer declaration wins). Responsive `md:`/`lg:` forms ship two arms (host → `:is(cq-box, summary)`, self → `ui-content[content~=…]`) so both placements work. | Token-list |
 | `data-view` | card (and optionally its `<img>`) | Sets `view-transition-name` for cross-page view transitions. | Value |
@@ -169,7 +169,7 @@ Global/universal attributes usable on any opted-in element. Token-list attribute
 
 | Attribute | Feature / File | Purpose | Type |
 |-----------|----------------|---------|------|
-| `theme` | `theme.css` | Shared cross-component colour axis; themed surface + ink on any opted-in element. Modifiers (`ink`, `pale`, `muted`, `light`, `dark`, `border`, `border(...)`) are tokens within this attribute. | Token-list |
+| `theme` | `theme.css` | Shared cross-component colour axis; themed surface + ink on any opted-in element. Looks (`ink`, `glass`, `border`, `outline`, `light`, `dark`, `border(...)`) are tokens within this attribute. | Token-list |
 | `tint` / `data-tint` | `tint.css` | Start (top-left) colour of a colour-tinting ramp. | Value |
 | `tint-end` / `data-tint-end` | `tint.css` | End (bottom-right) colour of the tint ramp. | Value |
 | `tint-tr` / `data-tint-tr` | `tint.css` | Top-right corner colour (2D bilinear mode). | Value |

@@ -12,6 +12,11 @@
 > against the working tree on 2026-08-19. Most items wait on a decision or
 > coordination; the audit residue in items 13–14 is plain typing.
 >
+> **2026-10-21 — colours are now a palette.** A colour is `<hue>-<step>` (`green-300`);
+> `pale`, `muted`, the nine names and the `--ui-theme-<name>-bg/-c` bundles are gone
+> (`ui/base/theme.md`). Measurements below keep the vocabulary they were taken in; the
+> parts the palette replaces are marked **Superseded** (items 15, 29, 37, 38).
+>
 > Everything else from that ledger is implemented and machine-verified: the v5 alias
 > batch, R-13 (tokens manifest), R-14 (self arms + the partial style()-flag migration,
 > minus the reverted `tnt`/`hov(tint)` — the guardrail lives in `ui/card/media.tint.css`),
@@ -553,6 +558,11 @@ asymmetry is in the modifiers and the words:
   base → pale → tone → bg, but `chip(pale)` and `chip(muted)` both write `--_theme-bg` at
   identical zero specificity (`ui-chip.css:45-46`), so whichever is later in source —
   `muted` — wins and `pale` vanishes with no signal.
+
+  **Superseded 2026-10-21:** `pale` and `muted` are removed. A step (`green-100`,
+  `green-300`) replaces each, and standalone and furniture spell the colour the same way
+  (`theme="green-100"`, `chip(green-100)`), so the two bullets above no longer apply.
+  The variant-word asymmetry below stays open.
 - **Variant words are spelled differently per mode; sizes and corners are not**:
   `light`/`lgt`, `outline`/`out`, beacon `none`/`non`, `pill`/`pll`, sticker
   `speech(l)`/`spl`. One divergence is deliberate and documented — marquee
@@ -960,6 +970,13 @@ Lighthouse accessibility 100 as the demo-page floor in the `perf-pass` definitio
    (`color-mix` toward `--color-text` *lightens* a dark plate, so hover ink drops to ~3.2 —
    pre-existing, both schemes) and the remaining plate inks orange 1.63 / green 3.18 /
    red 4.15, still decision (a).
+
+   **Superseded 2026-10-21 — the plate-ink half.** The nine `--ui-theme-*-bg/-c` bundles
+   and the ink warning at `tokens.css` are gone. Every step has its own
+   `--color-<hue>-<step>-text` (the hue's 950, else black or white, whichever reads
+   better), so a plate and its ink are one pair per step and mirror together on dark
+   pages. Decisions (a)–(c) above are moot for `theme=`; `build-palette.js` prints the
+   contrast report for every step.
 
    **Also still open:** the *muted-compounding* fix — `--ui-content-muted` is 65% and
    `dateline` re-applies it inside an already-muted `byline` (0.65² ≈ 0.42).
@@ -1384,7 +1401,12 @@ signal, needs a per-theme decision about what "success" means on a green card. (
 control, most surface area.
 
 Same question applies to any other semantic colour used as ink inside a themed card
-(`ui-chip theme="pale green"` is unaffected — it carries its own paired ink).
+(`ui-chip theme="green-100"` is unaffected — it carries its own paired ink).
+
+**Palette note (2026-10-21):** `theme="green"` is now `theme="green-800"`, and
+`--color-success` points at the same step, so that row still reads 1.00:1; a lighter
+step (`green-100`) clears it. Option (c)'s "nine-hue bundles" are now the per-step pairs
+in `ui/base/palette.json`.
 
 Docs: `ui/card/docs/content.md` § Mark colour.
 
@@ -1440,6 +1462,12 @@ open part: under `muted`, `--_theme-ink` is
 compounding* trap in `AGENTS.md` § Accessibility, landing on the one live instance. Decide
 whether `muted` should modify the fill only, or whether the layout arm should read
 `--_theme-base-c` instead.
+
+**Superseded in part 2026-10-21:** `muted` is removed, so the 50 %-transparent ink question
+is moot (`gray-100` is a plain fill with its own `-text`). The one-fallback-level fix is
+still open; re-measure the table with the new names (`black` is `gray-800`, `slate`
+`gray-700`, `red` `red-700`, `accent` `accent-700`, `green` `green-800`, `gray` `gray-200`)
+before applying it.
 
 Docs to correct in the same change: `layout/core/base.md:304` currently states "theme ink wins
 when no explicit value is set", which is what the chain *fails* to do.

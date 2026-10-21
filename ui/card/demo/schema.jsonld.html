@@ -2525,7 +2525,7 @@
 							"@type": "Offer",
 							"priceCurrency": "DKK",
 							"availability": "https://schema.org/InStock",
-							"price": "7950000"
+							"price": "7250000"
 						},
 						"mainEntity": {
 							"@type": "Apartment",
@@ -2546,9 +2546,9 @@
 								"unitCode": "MTK",
 								"value": "118"
 							},
-							"numberOfBedrooms": "2",
-							"numberOfRooms": "4",
-							"yearBuilt": "1932",
+							"numberOfBedrooms": "3",
+							"numberOfRooms": "5",
+							"yearBuilt": "2018",
 							"hasMap": "https://www.google.com/maps/search/?api=1&amp;query=55.6761,12.5911"
 						}
 					}
@@ -3242,7 +3242,7 @@
 		}
 	]
 }</script>
-	<link rel="stylesheet" href="/dist/demo.955ceeeb.min.css">
+	<link rel="stylesheet" href="/dist/demo.2d98081c.min.css">
 	<link rel="stylesheet" href="/dist/icon-font.c6950688.min.css">
 
 	<style>
@@ -3258,7 +3258,7 @@
 		/* type chips keep one look on themed cards too (the theme relay's #666 plate is 4.06:1) */
 		ui-chip[data-type] { --ui-chip-bg: hsl(0, 0%, 95%); --ui-chip-c: hsl(0, 0%, 13%); }
 		/* product save: two-colour toggle (outline → red fill) — page rule, so the card markup stays renderer-identical */
-		[data-view="card-product-1"] ui-save { --ui-save-c-active: var(--ui-theme-red-bg); }
+		[data-view="card-product-1"] ui-save { --ui-save-c-active: var(--color-red-700); }
 		ui-chip[data-type=dark] { --ui-chip-bg: hsl(0, 0%, 25%); --ui-chip-c: hsl(0, 0%, 85%); }
 		/* media-less card: pin the type chip top-end (relative — the containing block is the lay-out) */
 		ui-card:not(:has(ui-media)) { position: relative; }
@@ -3353,7 +3353,7 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card data-view="card-news-1" variant="col" media="asr(16/9) beacon(red) beacon(ldr) chip(te)">
+		<ui-card data-view="card-news-1" variant="col" media="asr(16/9) beacon(red-700) beacon(ldr) chip(te)">
 			<cq-box>
 				<ui-media>
 					<img data-view="hero-news-1" src="/assets/images/government.png" alt="Parliament building at dusk" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/government.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/government.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/government.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/government.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/government.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/government.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
@@ -3382,7 +3382,7 @@
 					
 					
 					
-					<p data-part="meta"><ui-chip theme="black">Subscribers only</ui-chip></p>
+					<p data-part="meta"><ui-chip theme="gray-800">Subscribers only</ui-chip></p>
 					<small data-part="eyebrow">Economy</small>
 					<h3 data-part="headline"><a data-part="cover" href="articles/news-paywall.html">Who pays for the carbon tariff — and who keeps the rebate</a></h3>
 					<p data-part="summary">The rebate mechanism that unlocked the climate deal, modelled sector by sector with the figures the negotiators would not publish.</p>
@@ -3393,7 +3393,7 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card variant="col" media="asr(16/9) chip(te)" theme="gray" content="scl(lg)">
+		<ui-card variant="col" media="asr(16/9) chip(te)" theme="gray-200" content="scl(lg)">
 			<cq-box>
 				<ui-media><img src="/assets/images/quote.png" alt="Open book on a quiet desk" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/quote.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/quote.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/quote.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/quote.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/quote.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/quote.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Quotation</ui-chip></ui-media>
 				<ui-content>
@@ -3417,7 +3417,7 @@
 					<p data-part="meta">
 						
 						
-						<ui-chip theme="pale red"><span>Mostly false</span></ui-chip>
+						<ui-chip theme="red-200"><span>Mostly false</span></ui-chip>
 					</p>
 					<ui-quote data-part="quote"><blockquote><q>The new harbour bridge cost twice its approved budget.</q><cite>Social media posts</cite></blockquote></ui-quote>
 				</ui-content>
@@ -3426,7 +3426,7 @@
 	</lay-out>
 	<h2>Commerce &amp; offers</h2>
 	<lay-out md="columns(2) items(start)">
-		<ui-card data-view="card-product-1" variant="col" media="asr(4/3) sticker(te) sticker(red) sticker(2xl) sticker(sh:spark) save(be)">
+		<ui-card data-view="card-product-1" variant="col" media="asr(4/3) sticker(te) sticker(red-700) sticker(2xl) sticker(sh:spark) save(be)">
 			<cq-box>
 				<ui-media id="product-1-media">
 					<img data-view="hero-product-1" src="/assets/images/aurasoundpro.png" alt="AuraSound Pro wireless headphones" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=180/assets/images/aurasoundpro.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=240/assets/images/aurasoundpro.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=360/assets/images/aurasoundpro.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=420/assets/images/aurasoundpro.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=540/assets/images/aurasoundpro.png 720w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
@@ -3453,10 +3453,10 @@
 						
 						
 						
-						$279 <del>$349</del> <ui-chip theme="pale green">Save 20%</ui-chip>
+						$279 <del>$349</del> <ui-chip theme="green-100">Save 20%</ui-chip>
 					</p>
 					<p data-part="meta"><small>Valid until Aug 1, 2026</small></p>
-					<p data-part="meta"><ui-chip theme="pale green">In stock</ui-chip></p>
+					<p data-part="meta"><ui-chip theme="green-100">In stock</ui-chip></p>
 					<span data-part="tags"><ui-chip>Wireless</ui-chip><ui-chip>Noise Cancelling</ui-chip></span>
 					<nav data-part="actions"><button class="ui-button" type="button" data-variant="accent" aria-label="Add to cart: AuraSound Pro" data-icon="shopping-cart">Add to cart</button></nav>
 				</ui-content>
@@ -3465,8 +3465,8 @@
 		<ui-card id="schema-product-variants" variant="col" media="chip(tc) nav(arw) arw(hid) pages">
 			<cq-box>
 				<ui-media>
-					<lay-out xs="cg(3xs) rg(3xs)" md="columns(2)" theme="pale black">
-						<ui-card data-view="card-variant-indigo" variant="rds(non)" media="asr(1/1) hov(zoom) chip(bs) chip(blue) chip(pale) chip(sm)" content="pad(none)">
+					<lay-out xs="cg(3xs) rg(3xs)" md="columns(2)" theme="gray-300">
+						<ui-card data-view="card-variant-indigo" variant="rds(non)" media="asr(1/1) hov(zoom) chip(bs) chip(blue-100) chip(sm)" content="pad(none)">
 							<cq-box>
 								<ui-media><img data-view="hero-variant-indigo" src="/assets/images/silkgown-indigo.png" alt="Persistence Silk Gown in Indigo Floral" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=240/assets/images/silkgown-indigo.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=320/assets/images/silkgown-indigo.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=480/assets/images/silkgown-indigo.png 480w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-icon="chevron-right" data-icon-at="end">Indigo</ui-chip></ui-media>
 								<ui-content>
@@ -3478,7 +3478,7 @@
 								</ui-content>
 							</cq-box>
 						</ui-card>
-						<ui-card data-view="card-variant-crimson" variant="rds(non)" media="asr(1/1) hov(zoom) chip(bs) chip(blue) chip(pale) chip(sm)" content="pad(none)">
+						<ui-card data-view="card-variant-crimson" variant="rds(non)" media="asr(1/1) hov(zoom) chip(bs) chip(blue-100) chip(sm)" content="pad(none)">
 							<cq-box>
 								<ui-media><img data-view="hero-variant-crimson" src="/assets/images/silkgown-crimson.png" alt="Persistence Silk Gown in Crimson Paisley" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=240/assets/images/silkgown-crimson.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=320/assets/images/silkgown-crimson.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=480/assets/images/silkgown-crimson.png 480w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-icon="chevron-right" data-icon-at="end">Crimson</ui-chip></ui-media>
 								<ui-content>
@@ -3490,7 +3490,7 @@
 								</ui-content>
 							</cq-box>
 						</ui-card>
-						<ui-card data-view="card-variant-emerald" variant="rds(non)" media="asr(1/1) hov(zoom) chip(bs) chip(blue) chip(pale) chip(sm)" content="pad(none)">
+						<ui-card data-view="card-variant-emerald" variant="rds(non)" media="asr(1/1) hov(zoom) chip(bs) chip(blue-100) chip(sm)" content="pad(none)">
 							<cq-box>
 								<ui-media><img data-view="hero-variant-emerald" src="/assets/images/silkgown-emerald.png" alt="Persistence Silk Gown in Emerald Palm" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=240/assets/images/silkgown-emerald.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=320/assets/images/silkgown-emerald.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=480/assets/images/silkgown-emerald.png 480w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-icon="chevron-right" data-icon-at="end">Emerald</ui-chip></ui-media>
 								<ui-content>
@@ -3502,7 +3502,7 @@
 								</ui-content>
 							</cq-box>
 						</ui-card>
-						<ui-card data-view="card-variant-onyx" variant="rds(non)" media="asr(1/1) hov(zoom) chip(bs) chip(blue) chip(pale) chip(sm)" content="pad(none)">
+						<ui-card data-view="card-variant-onyx" variant="rds(non)" media="asr(1/1) hov(zoom) chip(bs) chip(blue-100) chip(sm)" content="pad(none)">
 							<cq-box>
 								<ui-media><img data-view="hero-variant-onyx" src="/assets/images/silkgown-onyx.png" alt="Persistence Silk Gown in Onyx Deco" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=240/assets/images/silkgown-onyx.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=320/assets/images/silkgown-onyx.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=480/assets/images/silkgown-onyx.png 480w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-icon="chevron-right" data-icon-at="end">Onyx</ui-chip></ui-media>
 								<ui-content>
@@ -3524,7 +3524,7 @@
 					<h3 data-part="headline">Persistence Silk Gown</h3>
 					<p data-part="summary">Four colourways, each its own variant with its own URL — pick one to go straight to it.</p>
 					<p data-part="price">$249</p>
-					<p data-part="meta"><ui-chip theme="pale green">In stock</ui-chip></p>
+					<p data-part="meta"><ui-chip theme="green-100">In stock</ui-chip></p>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -3549,7 +3549,7 @@
 					<small data-part="eyebrow">Adventure game</small>
 					<h3 data-part="headline"><a data-part="cover" href="games/pixel-raiders.html">Pixel Raiders</a></h3>
 					<p data-part="summary">Co-op dungeon crawling for up to four raiders — new Sky Fortress season, cross-play everywhere.</p>
-					<p data-part="meta"><ui-chip theme="pale accent">v<span>2.1</span></ui-chip></p>
+					<p data-part="meta"><ui-chip theme="accent-200">v<span>2.1</span></ui-chip></p>
 					<p data-part="meta">PlayStation 5 · Xbox Series X|S · Nintendo Switch · PC · 2.4 GB</p>
 					<p data-part="meta">1–4 players · Single-player · Co-op · Multiplayer</p>
 					<p data-part="meta">Developer: <span>Bitburrow Studio</span></p>
@@ -3638,14 +3638,14 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card variant="col" media="asr(16/9) chip(te)" theme="gray">
+		<ui-card variant="col" media="asr(16/9) chip(te)" theme="gray-200">
 			<cq-box>
 				<ui-media><img src="/assets/images/fittrackpro.png" alt="Fitness tracker on a wrist" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/fittrackpro.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/fittrackpro.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/fittrackpro.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/fittrackpro.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/fittrackpro.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/fittrackpro.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Offer</ui-chip></ui-media>
 				<ui-content>
 					
 					<small data-part="eyebrow">Membership</small>
 					<h3 data-part="headline">FitTrack Pro</h3>
-					<p data-part="meta"><ui-chip theme="pale accent">Most popular</ui-chip></p>
+					<p data-part="meta"><ui-chip theme="accent-200">Most popular</ui-chip></p>
 					<p data-part="summary">Unlimited workouts, personal coaching and priority support.</p>
 					<p data-part="price">
 						
@@ -3852,7 +3852,7 @@
 					<small data-part="eyebrow">Documentary</small>
 					<h3 data-part="headline">The River, Slowly</h3>
 					<p data-part="summary">A quiet study of a lowland river through one summer — shot at water level.</p>
-					<p data-part="meta"><ui-chip theme="pale accent">3:24</ui-chip></p>
+					<p data-part="meta"><ui-chip theme="accent-200">3:24</ui-chip></p>
 					<p data-part="meta">By <span>Nørre Films</span></p>
 					
 					<footer data-part="footer"><span data-part="count" data-icon="visibility">48,211 views</span></footer>
@@ -4121,7 +4121,7 @@
 					<small data-part="eyebrow">Credential</small>
 					<h3 data-part="headline">Advanced Web Accessibility</h3>
 					<p data-part="summary">Demonstrated expertise in WCAG 2.2, ARIA patterns and assistive technology testing.</p>
-					<p data-part="meta"><ui-chip theme="pale green">Certified</ui-chip></p>
+					<p data-part="meta"><ui-chip theme="green-100">Certified</ui-chip></p>
 					<p data-part="meta"><strong data-part="key">Issued by:</strong> <span><span>IAAP</span></span> · Mar 2026 · <strong data-part="key">Expires:</strong> Mar 2029 · <strong data-part="key">ID:</strong> AWA-2026-8841</p>
 					<nav data-part="actions"><a class="ui-button" data-variant="accent" data-icon="verified" href="#">Verify credential</a></nav>
 				</ui-content>
@@ -4140,7 +4140,7 @@
 					<small data-part="eyebrow">Mindfulness</small>
 					<strong data-part="headline">Meditate 10 minutes daily</strong>
 					<span data-part="summary">Before the first coffee — breathe in, phone off.</span>
-					<ui-progress-circular size="lg" theme="green"><progress max="10" value="6"></progress><small>Minutes</small><span>60%</span></ui-progress-circular>
+					<ui-progress-circular size="lg" theme="green-800"><progress max="10" value="6"></progress><small>Minutes</small><span>60%</span></ui-progress-circular>
 					<p data-part="meta">6 of 10 minutes · Jan 1 – Dec 31, 2026</p>
 				</ui-content>
 			</cq-box>
@@ -4192,13 +4192,13 @@
 					<fieldset>
 					<legend>What can a qubit hold that a classical bit cannot?</legend>
 					<ul data-part="options" aria-live="polite"><li>
-						<label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q1" required> <span>Two values at once, permanently</span></label> <ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip>
+						<label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q1" required> <span>Two values at once, permanently</span></label> <ui-chip data-verdict="wrong" theme="red-200">Wrong</ui-chip>
 					</li><li>
-						<label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q1"> <span>A superposition of 0 and 1 that collapses when measured</span></label> <ui-chip data-verdict="correct" theme="pale green">Correct</ui-chip>
+						<label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q1"> <span>A superposition of 0 and 1 that collapses when measured</span></label> <ui-chip data-verdict="correct" theme="green-100">Correct</ui-chip>
 					</li><li>
-						<label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q1"> <span>Any number between 0 and 1, read back exactly</span></label> <ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip>
+						<label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q1"> <span>Any number between 0 and 1, read back exactly</span></label> <ui-chip data-verdict="wrong" theme="red-200">Wrong</ui-chip>
 					</li><li>
-						<label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q1"> <span>Nothing — a qubit is a bit with a faster clock</span></label> <ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip>
+						<label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q1"> <span>Nothing — a qubit is a bit with a faster clock</span></label> <ui-chip data-verdict="wrong" theme="red-200">Wrong</ui-chip>
 					</li></ul>
 				</fieldset>
 				</ui-content>
@@ -4213,13 +4213,13 @@
 					<fieldset>
 					<legend>Two entangled qubits are separated by a kilometre. What happens when one is measured?</legend>
 					<ul data-part="options" aria-live="polite"><li>
-						<label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q2" required> <span>The other's outcome is fixed in the same instant</span></label> <ui-chip data-verdict="correct" theme="pale green">Correct</ui-chip>
+						<label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q2" required> <span>The other's outcome is fixed in the same instant</span></label> <ui-chip data-verdict="correct" theme="green-100">Correct</ui-chip>
 					</li><li>
-						<label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q2"> <span>A signal travels between them at the speed of light</span></label> <ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip>
+						<label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q2"> <span>A signal travels between them at the speed of light</span></label> <ui-chip data-verdict="wrong" theme="red-200">Wrong</ui-chip>
 					</li><li>
-						<label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q2"> <span>The other qubit is destroyed</span></label> <ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip>
+						<label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q2"> <span>The other qubit is destroyed</span></label> <ui-chip data-verdict="wrong" theme="red-200">Wrong</ui-chip>
 					</li><li>
-						<label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q2"> <span>Nothing; entanglement does not survive separation</span></label> <ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip>
+						<label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q2"> <span>Nothing; entanglement does not survive separation</span></label> <ui-chip data-verdict="wrong" theme="red-200">Wrong</ui-chip>
 					</li></ul>
 				</fieldset>
 				</ui-content>
@@ -4234,13 +4234,13 @@
 					<fieldset>
 					<legend>Why does a quantum computer need error correction?</legend>
 					<ul data-part="options" aria-live="polite"><li>
-						<label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q3" required> <span>Because its output is random and must be averaged</span></label> <ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip>
+						<label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q3" required> <span>Because its output is random and must be averaged</span></label> <ui-chip data-verdict="wrong" theme="red-200">Wrong</ui-chip>
 					</li><li>
-						<label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q3"> <span>Because physical qubits decohere in microseconds</span></label> <ui-chip data-verdict="correct" theme="pale green">Correct</ui-chip>
+						<label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q3"> <span>Because physical qubits decohere in microseconds</span></label> <ui-chip data-verdict="correct" theme="green-100">Correct</ui-chip>
 					</li><li>
-						<label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q3"> <span>Because superposition cannot be measured twice</span></label> <ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip>
+						<label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q3"> <span>Because superposition cannot be measured twice</span></label> <ui-chip data-verdict="wrong" theme="red-200">Wrong</ui-chip>
 					</li><li>
-						<label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q3"> <span>It does not — quantum states are exact</span></label> <ui-chip data-verdict="wrong" theme="pale red">Wrong</ui-chip>
+						<label><input type="radio" class="--check" name="quiz-quantum-computing-check-yourself-q3"> <span>It does not — quantum states are exact</span></label> <ui-chip data-verdict="wrong" theme="red-200">Wrong</ui-chip>
 					</li></ul>
 				</fieldset>
 				</ui-content>
@@ -4265,7 +4265,7 @@
 					</ui-face>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<ui-content theme="gray ink" content="pad(lg) plc(cc) tal(ctr)">
+				<ui-content theme="gray-200 ink" content="pad(lg) plc(cc) tal(ctr)">
 					<p data-part="summary">The quantum unit of information. Unlike a bit it can hold a superposition of 0 and 1, and only collapses to one of them when measured.</p>
 				</ui-content>
 			</details>
@@ -4399,7 +4399,7 @@
 						
 					</address>
 					<p data-part="meta"><a href="mailto:contact@northwind.example">contact@northwind.example</a></p>
-					<div data-part="office" data-theme="gray light" data-box="brd">
+					<div data-part="office" data-theme="gray-200 light" data-box="brd">
 						<div>
 							<strong>Aarhus office</strong>
 							<address data-part="address">
@@ -4431,7 +4431,7 @@
 							</dd>
 						</dl>
 					</div>
-					<div data-part="office" data-theme="gray light" data-box="brd">
+					<div data-part="office" data-theme="gray-200 light" data-box="brd">
 						<div>
 							<strong>Berlin office</strong>
 							<address data-part="address">
@@ -4556,7 +4556,7 @@
 							<time datetime="2023">2023</time>
 							<span>Cascade layers adopted across every component.</span>
 						</li>
-						<li data-theme="accent">
+						<li data-theme="accent-700">
 							
 							
 							
@@ -4602,7 +4602,7 @@
 							<time datetime="2023">2023</time>
 							<span>Cascade layers adopted across every component.</span>
 						</li>
-						<li data-theme="accent">
+						<li data-theme="accent-700">
 							
 							
 							
@@ -4679,7 +4679,7 @@
 									<ul data-part="list" data-variant="menu">
 										<li>
 											<strong>Charred hispi cabbage</strong>
-											<ui-chip theme="pale green" size="sm">Vegetarian</ui-chip>
+											<ui-chip theme="green-100" size="sm">Vegetarian</ui-chip>
 											<span>85.00</span>
 											<small>Brown butter, toasted hazelnut and aged pecorino.</small>
 											
@@ -4687,13 +4687,13 @@
 										</li>
 										<li>
 											<strong>Cured trout, rye crisp</strong>
-											<ui-chip theme="pale blue" size="sm">Fish</ui-chip>
+											<ui-chip theme="blue-100" size="sm">Fish</ui-chip>
 											<span>95.00</span>
 											<small>Beetroot, horseradish cream and dill oil.</small>
 										</li>
 										<li>
 											<strong>Smoked beetroot tartare</strong>
-											<ui-chip theme="pale green" size="sm">Vegan</ui-chip>
+											<ui-chip theme="green-100" size="sm">Vegan</ui-chip>
 											<span>80.00</span>
 											<small>Capers, mustard seed and puffed buckwheat.</small>
 											
@@ -4701,13 +4701,13 @@
 										</li>
 										<li>
 											<strong>Chicken liver parfait</strong>
-											<ui-chip theme="pale orange" size="sm">Chicken</ui-chip>
+											<ui-chip theme="orange-100" size="sm">Chicken</ui-chip>
 											<span>90.00</span>
 											<small>Rhubarb compote and grilled sourdough.</small>
 										</li>
 										<li>
 											<strong>Hand-peeled shrimp</strong>
-											<ui-chip theme="pale blue" size="sm">Shellfish</ui-chip>
+											<ui-chip theme="blue-100" size="sm">Shellfish</ui-chip>
 											<span>110.00</span>
 											<small>Lemon mayonnaise, chives and toasted rye.</small>
 										</li>
@@ -4720,7 +4720,7 @@
 									<ul data-part="list" data-variant="menu">
 										<li>
 											<strong>Coconut chicken curry</strong>
-											<ui-chip theme="pale orange" size="sm">Chicken</ui-chip>
+											<ui-chip theme="orange-100" size="sm">Chicken</ui-chip>
 											<span>145.00</span>
 											<small>Mild, with mint, coriander and steamed basmati.</small>
 											
@@ -4728,7 +4728,7 @@
 										</li>
 										<li>
 											<strong>Barley risotto, wild mushroom</strong>
-											<ui-chip theme="pale green" size="sm">Vegan</ui-chip>
+											<ui-chip theme="green-100" size="sm">Vegan</ui-chip>
 											<span>135.00</span>
 											<small>Pearl barley, chanterelle, thyme and a hazelnut crumb.</small>
 											
@@ -4737,14 +4737,14 @@
 										</li>
 										<li>
 											<strong>Braised lamb shank</strong>
-											<ui-chip theme="pale orange" size="sm">Lamb</ui-chip>
+											<ui-chip theme="orange-100" size="sm">Lamb</ui-chip>
 											<span>195.00</span>
 											<small>Slow-cooked in dark beer with root vegetables and mash.</small>
 											
 										</li>
 										<li>
 											<strong>Pan-fried cod, brown butter</strong>
-											<ui-chip theme="pale blue" size="sm">Fish</ui-chip>
+											<ui-chip theme="blue-100" size="sm">Fish</ui-chip>
 											<span>175.00</span>
 											<small>New potatoes, capers and parsley.</small>
 											
@@ -4752,7 +4752,7 @@
 										</li>
 										<li>
 											<strong>Dry-aged beef burger</strong>
-											<ui-chip theme="pale orange" size="sm">Beef</ui-chip>
+											<ui-chip theme="orange-100" size="sm">Beef</ui-chip>
 											<span>165.00</span>
 											<small>Aged cheddar, pickles and hand-cut fries.</small>
 											
@@ -4766,21 +4766,21 @@
 									<ul data-part="list" data-variant="menu">
 										<li>
 											<strong>Rhubarb trifle</strong>
-											<ui-chip theme="pale green" size="sm">Vegetarian</ui-chip>
+											<ui-chip theme="green-100" size="sm">Vegetarian</ui-chip>
 											<span>75.00</span>
 											<small>Vanilla custard, macerated rhubarb and almond crumble.</small>
 											
 										</li>
 										<li>
 											<strong>Dark chocolate mousse</strong>
-											<ui-chip theme="pale green" size="sm">Vegetarian</ui-chip>
+											<ui-chip theme="green-100" size="sm">Vegetarian</ui-chip>
 											<span>80.00</span>
 											<small>Sea salt, cold-pressed olive oil and a rye tuile.</small>
 											
 										</li>
 										<li>
 											<strong>Blackcurrant sorbet</strong>
-											<ui-chip theme="pale green" size="sm">Vegan</ui-chip>
+											<ui-chip theme="green-100" size="sm">Vegan</ui-chip>
 											<span>65.00</span>
 											<small>Sea buckthorn, lemon verbena and toasted oats.</small>
 											
@@ -4789,14 +4789,14 @@
 										</li>
 										<li>
 											<strong>Æbleskiver, three pieces</strong>
-											<ui-chip theme="pale green" size="sm">Vegetarian</ui-chip>
+											<ui-chip theme="green-100" size="sm">Vegetarian</ui-chip>
 											<span>70.00</span>
 											<small>Warm apple doughnuts, icing sugar and blackberry jam.</small>
 											
 										</li>
 										<li>
 											<strong>Danish cheese plate</strong>
-											<ui-chip theme="pale green" size="sm">Vegetarian</ui-chip>
+											<ui-chip theme="green-100" size="sm">Vegetarian</ui-chip>
 											<span>95.00</span>
 											<small>Three cheeses, honeycomb and rye crispbread.</small>
 											
@@ -4810,31 +4810,31 @@
 									<ul data-part="list" data-variant="menu">
 										<li>
 											<strong>Still water, 50 cl</strong>
-											<ui-chip theme="pale blue" size="sm">Still</ui-chip>
+											<ui-chip theme="blue-100" size="sm">Still</ui-chip>
 											<span>30.00</span>
 											<small>Filtered and chilled — refills are free.</small>
 										</li>
 										<li>
 											<strong>Sparkling water, 50 cl</strong>
-											<ui-chip theme="pale blue" size="sm">Sparkling</ui-chip>
+											<ui-chip theme="blue-100" size="sm">Sparkling</ui-chip>
 											<span>35.00</span>
 											<small>Carbonated in house, served with lemon.</small>
 										</li>
 										<li>
 											<strong>Apple &amp; elderflower</strong>
-											<ui-chip theme="pale blue" size="sm">Juice</ui-chip>
+											<ui-chip theme="blue-100" size="sm">Juice</ui-chip>
 											<span>45.00</span>
 											<small>Pressed Danish apples, lightly sparkling.</small>
 										</li>
 										<li>
 											<strong>Filter coffee</strong>
-											<ui-chip theme="pale blue" size="sm">Coffee</ui-chip>
+											<ui-chip theme="blue-100" size="sm">Coffee</ui-chip>
 											<span>35.00</span>
 											<small>Single origin, roasted a few streets away.</small>
 										</li>
 										<li>
 											<strong>Loose-leaf tea</strong>
-											<ui-chip theme="pale blue" size="sm">Tea</ui-chip>
+											<ui-chip theme="blue-100" size="sm">Tea</ui-chip>
 											<span>35.00</span>
 											<small>Green, black or herbal — ask for today's selection.</small>
 										</li>
@@ -4847,31 +4847,31 @@
 									<ul data-part="list" data-variant="menu">
 										<li>
 											<strong>House lager, 40 cl</strong>
-											<ui-chip theme="pale red" size="sm">Lager</ui-chip>
+											<ui-chip theme="red-200" size="sm">Lager</ui-chip>
 											<span>65.00</span>
 											<small>Crisp pilsner from a small brewery in Nørrebro.</small>
 										</li>
 										<li>
 											<strong>Session IPA, 40 cl</strong>
-											<ui-chip theme="pale red" size="sm">IPA</ui-chip>
+											<ui-chip theme="red-200" size="sm">IPA</ui-chip>
 											<span>75.00</span>
 											<small>Citrus-forward and light on the bitterness.</small>
 										</li>
 										<li>
 											<strong>House red, 15 cl</strong>
-											<ui-chip theme="pale red" size="sm">Red wine</ui-chip>
+											<ui-chip theme="red-200" size="sm">Red wine</ui-chip>
 											<span>75.00</span>
 											<small>Grenache from the southern Rhône, served cool.</small>
 										</li>
 										<li>
 											<strong>House white, 15 cl</strong>
-											<ui-chip theme="pale red" size="sm">White wine</ui-chip>
+											<ui-chip theme="red-200" size="sm">White wine</ui-chip>
 											<span>75.00</span>
 											<small>Dry Riesling from the Mosel.</small>
 										</li>
 										<li>
 											<strong>Crémant rosé, 12 cl</strong>
-											<ui-chip theme="pale red" size="sm">Rosé</ui-chip>
+											<ui-chip theme="red-200" size="sm">Rosé</ui-chip>
 											<span>85.00</span>
 											<small>Brut, from the Loire — dry and bright.</small>
 										</li>
@@ -4999,7 +4999,7 @@
 			<cq-box>
 				<ui-media>
 					<ui-map id="places-homes-1-map" map="tiles(voyager) tint(vivid) cluster(sm) fit" lat="55.6789" lon="12.5834"><iframe src="https://www.openstreetmap.org/export/embed.html?bbox=12.580653,55.677351,12.586147,55.680449&amp;layer=mapnik&amp;marker=55.6789,12.5834" title="Map of five homes in central Copenhagen" loading="lazy"></iframe></ui-map>
-					<ui-card id="places-homes-1-place-1" variant="ovr(bs)" media="asr(1/1) scm" content="scl(sm)"><cq-box><ui-media><img src="/assets/images/real_01.jpg" alt="Havnegade 44, Copenhagen" loading="lazy" decoding="async"></ui-media><ui-content><strong data-part="headline"><a data-part="cover" href="realestate/havnegade-44.html?home=havnegade-44">Havnegade 44</a></strong><p data-part="price">DKK 7,950,000</p><div><address data-part="address"><span><span>Havnegade 44</span></span><span><span>1058</span> <span>Copenhagen</span></span></address><p data-part="meta"><span>118 m²</span> · 2 bedrooms · 4 rooms · built 1932</p><div hidden><a href="https://www.google.com/maps/search/?api=1&amp;query=55.6761,12.5911" target="_blank" rel="noopener">Map</a></div></div><nav data-part="actions"><a class="ui-button" data-variant="accent" href="realestate/havnegade-44.html?home=havnegade-44">See More</a></nav></ui-content></cq-box></ui-card>
+					<ui-card id="places-homes-1-place-1" variant="ovr(bs)" media="asr(1/1) scm" content="scl(sm)"><cq-box><ui-media><img src="/assets/images/real_01.jpg" alt="Havnegade 44, Copenhagen" loading="lazy" decoding="async"></ui-media><ui-content><strong data-part="headline"><a data-part="cover" href="realestate/havnegade-44.html?home=havnegade-44">Havnegade 44</a></strong><p data-part="price">DKK 7,250,000</p><div><address data-part="address"><span><span>Havnegade 44</span></span><span><span>1058</span> <span>Copenhagen</span></span></address><p data-part="meta"><span>118 m²</span> · 3 bedrooms · 5 rooms · built 2018</p><div hidden><a href="https://www.google.com/maps/search/?api=1&amp;query=55.6761,12.5911" target="_blank" rel="noopener">Map</a></div></div><nav data-part="actions"><a class="ui-button" data-variant="accent" href="realestate/havnegade-44.html?home=havnegade-44">See More</a></nav></ui-content></cq-box></ui-card>
 					<ui-card id="places-homes-1-place-2" variant="ovr(bs)" media="asr(1/1) scm" content="scl(sm)"><cq-box><ui-media><img src="/assets/images/real_02.jpg" alt="Strandgade 8, Copenhagen" loading="lazy" decoding="async"></ui-media><ui-content><strong data-part="headline"><a data-part="cover" href="realestate/havnegade-44.html?home=strandgade-8">Strandgade 8</a></strong><p data-part="price">DKK 6,250,000</p><div><address data-part="address"><span><span>Strandgade 8</span></span><span><span>1401</span> <span>Copenhagen</span></span></address><p data-part="meta"><span>94 m²</span> · 2 bedrooms · 3 rooms · built 1907</p><div hidden><a href="geo:55.6738,12.5946">Map</a></div></div><nav data-part="actions"><a class="ui-button" data-variant="accent" href="realestate/havnegade-44.html?home=strandgade-8">See More</a></nav></ui-content></cq-box></ui-card>
 					<ui-card id="places-homes-1-place-3" variant="ovr(bs)" media="asr(1/1) scm" content="scl(sm)"><cq-box><ui-media><img src="/assets/images/real_03.jpg" alt="Overgaden Neden Vandet 21, Copenhagen" loading="lazy" decoding="async"></ui-media><ui-content><strong data-part="headline"><a data-part="cover" href="realestate/havnegade-44.html?home=overgaden-neden-vandet-21">Overgaden Neden Vandet 21</a></strong><p data-part="price">DKK 9,400,000</p><div><address data-part="address"><span><span>Overgaden Neden Vandet 21</span></span><span><span>1414</span> <span>Copenhagen</span></span></address><p data-part="meta"><span>142 m²</span> · 3 bedrooms · 5 rooms · built 1888</p><div hidden><a href="geo:55.6721,12.5928">Map</a></div></div><nav data-part="actions"><a class="ui-button" data-variant="accent" href="realestate/havnegade-44.html?home=overgaden-neden-vandet-21">See More</a></nav></ui-content></cq-box></ui-card>
 					<ui-card id="places-homes-1-place-4" variant="ovr(bs)" media="asr(1/1) scm" content="scl(sm)"><cq-box><ui-media><img src="/assets/images/real_04.jpg" alt="Christianshavns Voldgade 3, Copenhagen" loading="lazy" decoding="async"></ui-media><ui-content><strong data-part="headline"><a data-part="cover" href="realestate/havnegade-44.html?home=christianshavns-voldgade-3">Christianshavns Voldgade 3</a></strong><p data-part="price">DKK 14,750,000</p><div><address data-part="address"><span><span>Christianshavns Voldgade 3</span></span><span><span>1424</span> <span>Copenhagen</span></span></address><p data-part="meta"><span>211 m²</span> · 4 bedrooms · 7 rooms · built 1874</p><div hidden><a href="geo:55.6746,12.5989">Map</a></div></div><nav data-part="actions"><a class="ui-button" data-variant="accent" href="realestate/havnegade-44.html?home=christianshavns-voldgade-3">See More</a></nav></ui-content></cq-box></ui-card>
@@ -5053,7 +5053,7 @@
 					<img src="/assets/images/real_06.jpg" alt="Bedroom with a balcony door and a pale wood floor" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/real_06.jpg 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/real_06.jpg 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/real_06.jpg 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/real_06.jpg 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/real_06.jpg 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/real_06.jpg 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
 					<ui-chip data-type>RealEstateListing</ui-chip>
 				</ui-media>
-				<ui-content><p data-part="meta"><ui-chip theme="pale green" radius="non">New</ui-chip><ui-chip theme="pale accent" radius="non">Open house</ui-chip></p><small data-part="eyebrow">For sale</small><h3 data-part="headline"><a data-part="cover" href="realestate/havnegade-44.html">Top-floor apartment, Havnegade 44</a></h3><p data-part="summary">Three bedrooms and a south-facing terrace over the canal, five minutes from Kongens Nytorv.</p><p data-part="price">DKK 7,250,000 <small>DKK 61,441 per m²</small></p><div><p data-part="meta"><span>118 m²</span> · 3 bedrooms · 2 bathrooms · 5 rooms · built 2018</p><address data-part="address"><span><span>Havnegade 44, 5th floor</span></span><span><span>1058</span> <span>Copenhagen</span></span></address></div><p data-part="meta">Listed Jul 18, 2026 · Nordlys Estate · viewings Saturdays</p></ui-content>
+				<ui-content><p data-part="meta"><ui-chip theme="green-100" radius="non">New</ui-chip><ui-chip theme="accent-200" radius="non">Open house</ui-chip></p><small data-part="eyebrow">For sale</small><h3 data-part="headline"><a data-part="cover" href="realestate/havnegade-44.html">Top-floor apartment, Havnegade 44</a></h3><p data-part="summary">Three bedrooms and a south-facing terrace over the canal, five minutes from Kongens Nytorv.</p><p data-part="price">DKK 7,250,000 <small>DKK 61,441 per m²</small></p><div><p data-part="meta"><span>118 m²</span> · 3 bedrooms · 2 bathrooms · 5 rooms · built 2018</p><address data-part="address"><span><span>Havnegade 44, 5th floor</span></span><span><span>1058</span> <span>Copenhagen</span></span></address></div><p data-part="meta">Listed Jul 18, 2026 · Nordlys Estate · viewings Saturdays</p></ui-content>
 			</cq-box>
 		</ui-card>
 		<!-- Morph target for rentals/masseria-lucia.html — docs/schema.md § Vacation rental -->
@@ -5066,7 +5066,7 @@
 					<img src="/assets/images/rental_04.jpg" alt="A bathroom in local stone with a walk-in shower and a wooden washstand" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/rental_04.jpg 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/rental_04.jpg 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/rental_04.jpg 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/rental_04.jpg 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/rental_04.jpg 720w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async">
 					<ui-chip data-type>VacationRental</ui-chip>
 				</ui-media>
-				<ui-content><p data-part="meta"><ui-chip theme="pale green" radius="non">Entire villa</ui-chip><ui-chip theme="pale accent" radius="non">Private pool</ui-chip></p><small data-part="eyebrow">Puglia, Italy</small><h3 data-part="headline"><a data-part="cover" href="rentals/masseria-lucia.html">Masseria Lucia</a></h3><p data-part="summary">A restored stone farmhouse in an olive grove outside Ostuni, with a walled garden and a heated pool.</p><div data-part="rating"><input class="ui-rating" type="range" min="1" max="5" value="4.8" step="0.01" disabled aria-hidden="true"><span data-sr>Rated 4.8 out of 5 stars from 64 ratings</span><span aria-hidden="true">4.8 / 5 (64 ratings)</span></div><p data-part="price">€320–€540 per night</p><div><p data-part="meta"><span>180 m²</span> · 3 bedrooms · 2 bathrooms · 6 rooms · <span>sleeps 6</span></p><ul data-part="list"><li data-icon="king-bed">2 × <span>Queen</span></li><li data-icon="bed">2 × <span>Single</span></li></ul></div><address data-part="address"><span><span>Contrada Lamacoppa 12</span></span><span><span>72017</span> <span>Ostuni</span></span><span><span>Apulia</span></span></address><p data-part="meta">Check-in from 16:00 · check-out by 10:00</p><p data-part="meta">Hosted by <span>Masseria Collective</span></p></ui-content>
+				<ui-content><p data-part="meta"><ui-chip theme="green-100" radius="non">Entire villa</ui-chip><ui-chip theme="accent-200" radius="non">Private pool</ui-chip></p><small data-part="eyebrow">Puglia, Italy</small><h3 data-part="headline"><a data-part="cover" href="rentals/masseria-lucia.html">Masseria Lucia</a></h3><p data-part="summary">A restored stone farmhouse in an olive grove outside Ostuni, with a walled garden and a heated pool.</p><div data-part="rating"><input class="ui-rating" type="range" min="1" max="5" value="4.8" step="0.01" disabled aria-hidden="true"><span data-sr>Rated 4.8 out of 5 stars from 64 ratings</span><span aria-hidden="true">4.8 / 5 (64 ratings)</span></div><p data-part="price">€320–€540 per night</p><div><p data-part="meta"><span>180 m²</span> · 3 bedrooms · 2 bathrooms · 6 rooms · <span>sleeps 6</span></p><ul data-part="list"><li data-icon="king-bed">2 × <span>Queen</span></li><li data-icon="bed">2 × <span>Single</span></li></ul></div><address data-part="address"><span><span>Contrada Lamacoppa 12</span></span><span><span>72017</span> <span>Ostuni</span></span><span><span>Apulia</span></span></address><p data-part="meta">Check-in from 16:00 · check-out by 10:00</p><p data-part="meta">Hosted by <span>Masseria Collective</span></p></ui-content>
 			</cq-box>
 		</ui-card>
 	</lay-out>
@@ -5117,7 +5117,7 @@
 							<li>
 								
 								<ui-quote data-part="quote"><blockquote><q>Give the parent display: grid with place-items: center — two lines, handles both axes, works everywhere.</q></blockquote></ui-quote>
-								<small><ui-chip theme="pale green">Accepted</ui-chip> <span><span>Lena Fischer</span></span> · ▲ 481</small>
+								<small><ui-chip theme="green-100">Accepted</ui-chip> <span><span>Lena Fischer</span></span> · ▲ 481</small>
 							</li>
 							<li>
 								
@@ -5217,7 +5217,7 @@
 	</lay-out>
 	<h2>Data, health &amp; operations</h2>
 	<lay-out md="columns(2) items(start)">
-		<ui-card variant="col" media="asr(16/9) chip(te)" theme="black dark">
+		<ui-card variant="col" media="asr(16/9) chip(te)" theme="gray-800 dark">
 			<cq-box>
 				<ui-media><img src="/assets/images/finance.png" alt="Trading charts on a dark screen" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/finance.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/finance.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/finance.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/finance.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/finance.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/finance.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Observation</ui-chip></ui-media>
 				<ui-content>
@@ -5305,7 +5305,7 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card variant="col" media="asr(16/9) chip(te)" theme="black dark">
+		<ui-card variant="col" media="asr(16/9) chip(te)" theme="gray-800 dark">
 			<cq-box>
 				<ui-media><img src="/assets/images/announcement.png" alt="Stylised diagram of an API outage — a red cross cutting the connection between an app and its database servers" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/announcement.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/announcement.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/announcement.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=560,height=315/assets/images/announcement.png 560w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/announcement.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/announcement.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>SpecialAnnouncement</ui-chip></ui-media>
 				<ui-content>
@@ -5317,7 +5317,7 @@
 					<h3 data-part="headline">Scheduled maintenance — July 5</h3>
 					<p data-part="summary">The API will be unavailable Saturday July 5, 02:00–04:00 UTC while we migrate the primary database.</p>
 					<p data-part="meta">Maintenance · Jul 5, 02:00 UTC – 04:00 UTC</p>
-					<p data-part="meta"><ui-chip theme="pale red">High priority</ui-chip></p>
+					<p data-part="meta"><ui-chip theme="red-200">High priority</ui-chip></p>
 					<p data-part="meta">Audience: <span>API customers</span></p>
 					<footer data-part="footer">Action required: re-authenticate integrations after the window.</footer>
 				</ui-content>

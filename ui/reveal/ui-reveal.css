@@ -151,8 +151,8 @@
 			--ui-reveal-bdf: var(--_theme-bdf);
 			backdrop-filter: none;
 		}
-		/* theme="… border" — the ring is drawn on the host, so match the card radius */
-		&[theme*="border"] {
+		/* theme="… border" or "… outline" — the ring is drawn on the host, so match the card radius */
+		&:is([theme*="border"], [theme~="outline"]) {
 			--ui-reveal-shadow: none;
 			border-radius: calc(var(--ui-card-radius, var(--ui-reveal-radius)) + var(--_theme-bw, var(--border-width, 1px)));
 
@@ -189,11 +189,11 @@
 		&:is([variant~="icc(ts)"],[variant~="icc(bs)"]) > details[open] > summary > ui-icon { inset-inline: 0 auto; }
 		&:is([variant~="icc(te)"],[variant~="icc(be)"]) > details[open] > summary > ui-icon { inset-inline: auto 0; }
 
-		/* icon style: drk (the `black` bundle, so it stays dark in both schemes) + sem */
+		/* icon style: drk (gray-800 — a step, so it mirrors on a dark page) + sem */
 		&[variant~="ico(drk)"] > details > summary > ui-icon,
 		&[variant~="icc(drk)"] > details[open] > summary > ui-icon {
-			--ui-reveal-icon-bg: var(--ui-theme-black-bg);
-			color: var(--ui-theme-black-c, #fff);
+			--ui-reveal-icon-bg: var(--color-gray-800);
+			color: var(--color-gray-800-text);
 		}
 		&[variant~="ico(sem)"] > details > summary > ui-icon,
 		&[variant~="icc(sem)"] > details[open] > summary > ui-icon {

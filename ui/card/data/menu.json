@@ -34,7 +34,7 @@
               "price": 85,
               "currency": "DKK",
               "label": "Vegetarian",
-              "labelTheme": "pale green",
+              "labelTheme": "green-100",
               "description": "Brown butter, toasted hazelnut and aged pecorino.",
               "diets": ["VegetarianDiet", "GlutenFreeDiet"]
             },
@@ -43,7 +43,7 @@
               "price": 95,
               "currency": "DKK",
               "label": "Fish",
-              "labelTheme": "pale blue",
+              "labelTheme": "blue-100",
               "description": "Beetroot, horseradish cream and dill oil."
             },
             {
@@ -51,7 +51,7 @@
               "price": 80,
               "currency": "DKK",
               "label": "Vegan",
-              "labelTheme": "pale green",
+              "labelTheme": "green-100",
               "description": "Capers, mustard seed and puffed buckwheat.",
               "diets": ["VeganDiet", "VegetarianDiet"]
             },
@@ -60,7 +60,7 @@
               "price": 90,
               "currency": "DKK",
               "label": "Chicken",
-              "labelTheme": "pale orange",
+              "labelTheme": "orange-100",
               "description": "Rhubarb compote and grilled sourdough."
             },
             {
@@ -68,7 +68,7 @@
               "price": 110,
               "currency": "DKK",
               "label": "Shellfish",
-              "labelTheme": "pale blue",
+              "labelTheme": "blue-100",
               "description": "Lemon mayonnaise, chives and toasted rye."
             }
           ]
@@ -81,7 +81,7 @@
               "price": 145,
               "currency": "DKK",
               "label": "Chicken",
-              "labelTheme": "pale orange",
+              "labelTheme": "orange-100",
               "description": "Mild, with mint, coriander and steamed basmati.",
               "diets": ["GlutenFreeDiet"],
               "nutrition": { "calories": "620 calories", "proteinContent": "42 g", "servingSize": "1 bowl" }
@@ -91,7 +91,7 @@
               "price": 135,
               "currency": "DKK",
               "label": "Vegan",
-              "labelTheme": "pale green",
+              "labelTheme": "green-100",
               "description": "Pearl barley, chanterelle, thyme and a hazelnut crumb.",
               "diets": ["VeganDiet", "VegetarianDiet"],
               "nutrition": { "calories": "540 calories", "servingSize": "1 bowl" }
@@ -101,7 +101,7 @@
               "price": 195,
               "currency": "DKK",
               "label": "Lamb",
-              "labelTheme": "pale orange",
+              "labelTheme": "orange-100",
               "description": "Slow-cooked in dark beer with root vegetables and mash.",
               "nutrition": { "calories": "780 calories", "proteinContent": "48 g", "servingSize": "1 plate" }
             },
@@ -110,7 +110,7 @@
               "price": 175,
               "currency": "DKK",
               "label": "Fish",
-              "labelTheme": "pale blue",
+              "labelTheme": "blue-100",
               "description": "New potatoes, capers and parsley.",
               "diets": ["GlutenFreeDiet"],
               "nutrition": { "calories": "520 calories", "proteinContent": "41 g", "servingSize": "1 plate" }
@@ -120,7 +120,7 @@
               "price": 165,
               "currency": "DKK",
               "label": "Beef",
-              "labelTheme": "pale orange",
+              "labelTheme": "orange-100",
               "description": "Aged cheddar, pickles and hand-cut fries.",
               "nutrition": { "calories": "890 calories", "proteinContent": "45 g", "servingSize": "1 burger" }
             }
@@ -134,7 +134,7 @@
               "price": 75,
               "currency": "DKK",
               "label": "Vegetarian",
-              "labelTheme": "pale green",
+              "labelTheme": "green-100",
               "description": "Vanilla custard, macerated rhubarb and almond crumble.",
               "diets": ["VegetarianDiet"]
             },
@@ -143,7 +143,7 @@
               "price": 80,
               "currency": "DKK",
               "label": "Vegetarian",
-              "labelTheme": "pale green",
+              "labelTheme": "green-100",
               "description": "Sea salt, cold-pressed olive oil and a rye tuile.",
               "diets": ["VegetarianDiet"]
             },
@@ -152,7 +152,7 @@
               "price": 65,
               "currency": "DKK",
               "label": "Vegan",
-              "labelTheme": "pale green",
+              "labelTheme": "green-100",
               "description": "Sea buckthorn, lemon verbena and toasted oats.",
               "diets": ["VeganDiet", "VegetarianDiet", "GlutenFreeDiet"]
             },
@@ -161,7 +161,7 @@
               "price": 70,
               "currency": "DKK",
               "label": "Vegetarian",
-              "labelTheme": "pale green",
+              "labelTheme": "green-100",
               "description": "Warm apple doughnuts, icing sugar and blackberry jam.",
               "diets": ["VegetarianDiet"]
             },
@@ -170,7 +170,7 @@
               "price": 95,
               "currency": "DKK",
               "label": "Vegetarian",
-              "labelTheme": "pale green",
+              "labelTheme": "green-100",
               "description": "Three cheeses, honeycomb and rye crispbread.",
               "diets": ["VegetarianDiet"]
             }
@@ -184,7 +184,7 @@
               "price": 30,
               "currency": "DKK",
               "label": "Still",
-              "labelTheme": "pale blue",
+              "labelTheme": "blue-100",
               "description": "Filtered and chilled — refills are free."
             },
             {
@@ -192,7 +192,7 @@
               "price": 35,
               "currency": "DKK",
               "label": "Sparkling",
-              "labelTheme": "pale blue",
+              "labelTheme": "blue-100",
               "description": "Carbonated in house, served with lemon."
             },
             {
@@ -200,7 +200,7 @@
               "price": 45,
               "currency": "DKK",
               "label": "Juice",
-              "labelTheme": "pale blue",
+              "labelTheme": "blue-100",
               "description": "Pressed Danish apples, lightly sparkling."
             },
             {
@@ -208,7 +208,7 @@
               "price": 35,
               "currency": "DKK",
               "label": "Coffee",
-              "labelTheme": "pale blue",
+              "labelTheme": "blue-100",
               "description": "Single origin, roasted a few streets away."
             },
             {
@@ -216,7 +216,7 @@
               "price": 35,
               "currency": "DKK",
               "label": "Tea",
-              "labelTheme": "pale blue",
+              "labelTheme": "blue-100",
               "description": "Green, black or herbal — ask for today's selection."
             }
           ]
@@ -229,7 +229,7 @@
               "price": 65,
               "currency": "DKK",
               "label": "Lager",
-              "labelTheme": "pale red",
+              "labelTheme": "red-200",
               "description": "Crisp pilsner from a small brewery in Nørrebro."
             },
             {
@@ -237,7 +237,7 @@
               "price": 75,
               "currency": "DKK",
               "label": "IPA",
-              "labelTheme": "pale red",
+              "labelTheme": "red-200",
               "description": "Citrus-forward and light on the bitterness."
             },
             {
@@ -245,7 +245,7 @@
               "price": 75,
               "currency": "DKK",
               "label": "Red wine",
-              "labelTheme": "pale red",
+              "labelTheme": "red-200",
               "description": "Grenache from the southern Rhône, served cool."
             },
             {
@@ -253,7 +253,7 @@
               "price": 75,
               "currency": "DKK",
               "label": "White wine",
-              "labelTheme": "pale red",
+              "labelTheme": "red-200",
               "description": "Dry Riesling from the Mosel."
             },
             {
@@ -261,7 +261,7 @@
               "price": 85,
               "currency": "DKK",
               "label": "Rosé",
-              "labelTheme": "pale red",
+              "labelTheme": "red-200",
               "description": "Brut, from the Loire — dry and bright."
             }
           ]

@@ -15,7 +15,7 @@ so the control works in a form, with the keyboard, and with assistive tech for f
   fieldset itself.
 - **Four composable variants** — `border`, `inline`, `outline`, `rounded`.
 - **A six-rung size ladder** — `xs` … `2xl`, shared with `ui/chip` and `ui/beacon`.
-- **The shared hue axis** — nine hues plus `pale` / `muted`.
+- **The shared colour axis** — any palette colour (`<hue>-<step>`).
 - **Zero specificity** (`:where()`) — trivial to override.
 
 ---
@@ -85,7 +85,7 @@ If you would rather write `variant=` / `theme=` / `size=` the way every other co
 the set does, wrap the fieldset in the custom element and put the attributes there:
 
 ```html
-<ui-button-group variant="inline rounded border" theme="red" size="sm">
+<ui-button-group variant="inline rounded border" theme="red-700" size="sm">
   <fieldset>
     <legend>Size</legend>
     <label class="ui-button"><input type="radio" name="size" data-sr checked>Small</label>
@@ -180,18 +180,17 @@ text surrounds it, in a 16px context and a 32px one alike.
 ## Theming
 
 ```html
-<ui-button-group theme="red">…</ui-button-group>
-<fieldset class="ui-button-group" data-theme="green pale">…</fieldset>
-<fieldset class="ui-button-group" data-theme="blue muted">…</fieldset>
+<ui-button-group theme="red-700">…</ui-button-group>
+<fieldset class="ui-button-group" data-theme="green-100">…</fieldset>
+<fieldset class="ui-button-group" data-theme="blue-300">…</fieldset>
 ```
 
-All nine hues — `red orange green blue accent black white gray slate` — plus the `pale`
-and `muted` modifiers, resolved through
-[`@browser.style/base`'s theme resolver](../base/theme.md).
+Any palette colour — `<hue>-<step>` (`green-300`), `white` or `black` — resolved through
+[`@browser.style/base`'s theme resolver](../base/theme.md#palette).
 
-**The hue paints the checked segment, not the group's own box.** The group therefore opts
+**The colour paints the checked segment, not the group's own box.** The group therefore opts
 out of the resolver's universal paint, the same way `ui/timeline` does for its dots. Because
-it consumes the resolver's *output* rather than hand-mapping each hue, every modifier works
+it consumes the resolver's *output* rather than hand-mapping each hue, every look works
 without per-hue code.
 
 The resolver's `--_theme-*` outputs are registered `inherits: false`, so they can only be
