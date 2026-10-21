@@ -63,15 +63,7 @@
 
 			/* per-entry dot colour, declared on the li so ::before inherits it. The theme=
 			   palette under data- names, since a bare attribute is invalid on <li>. Docs: readme.md */
-			&[data-theme~="accent"] { --ui-timeline-dot: var(--ui-theme-accent-bg); }
-			&[data-theme~="black"]  { --ui-timeline-dot: var(--ui-theme-black-bg); }
-			&[data-theme~="blue"]   { --ui-timeline-dot: var(--ui-theme-blue-bg); }
-			&[data-theme~="gray"]   { --ui-timeline-dot: var(--ui-theme-gray-bg); }
-			&[data-theme~="green"]  { --ui-timeline-dot: var(--ui-theme-green-bg); }
-			&[data-theme~="orange"] { --ui-timeline-dot: var(--ui-theme-orange-bg); }
-			&[data-theme~="red"]    { --ui-timeline-dot: var(--ui-theme-red-bg); }
-			&[data-theme~="slate"]  { --ui-timeline-dot: var(--ui-theme-slate-bg); }
-			&[data-theme~="white"]  { --ui-timeline-dot: var(--ui-theme-white-bg); }
+			&[data-theme] { --ui-timeline-dot: var(--_theme-base-bg, var(--ui-timeline-rail)); }
 			&[data-fill] { --ui-timeline-dot: attr(data-fill type(<color>), var(--ui-timeline-rail)); }
 			/* typed attr() has NO fallback in Safari/FF. Docs: ../base/polyfills/readme.md */
 			@supports not (background-color: attr(x type(<color>), red)) {

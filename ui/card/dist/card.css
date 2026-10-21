@@ -2163,7 +2163,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     font-weight: var(--ui-content-meta-weight, inherit);
     text-shadow: var(--ui-content-meta-text-shadow, none);
   }
-  :where(ui-content) > :not([data-part=meta], [data-part=byline], meta, link, [hidden]) + :is([data-part=meta], [data-part=byline]) {
+  :where(ui-content) > :is([data-part=meta], [data-part=byline]):where(:not([data-part=meta], [data-part=byline], meta, link, [hidden]) ~ *):not(:is([data-part=meta], [data-part=byline]) ~ *) {
     margin-block-start: var(--ui-content-meta-rhythm, 0);
   }
   :where(ui-content, ui-media) [data-part=count]::before {
