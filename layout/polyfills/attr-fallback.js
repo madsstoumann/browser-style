@@ -33,6 +33,7 @@
 		'max-width': '--layout-mw',
 		'self': '--layout-ps',
 		'size': '--_sz',
+		'subgrid': '--_sg',
 		'degree': '--_dg',
 		'trans-x': '--_tx',
 		'trans-y': '--_ty',

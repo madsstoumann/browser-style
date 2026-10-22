@@ -236,6 +236,8 @@
 	     supported; each component's own @supports block already covers the no-JS
 	     case, this restores per-element attribute values on top. -->
 	<script type="module" src="/ui/base/polyfills/attr-fallback.min.js"></script>
+	<!-- …and the layout half: subgrid="9" is a typed attr() too, so Safari needs it for the shared rows -->
+	<script type="module" src="/layout/polyfills/attr-fallback.js"></script>
 	<!-- Fills the heart on click by flipping aria-pressed, the attribute ui-save.css
 	     keys its active state on. Docs: /ui/save/readme.md § Toggling -->
 	<script type="module" src="/ui/save/save.min.js"></script>
