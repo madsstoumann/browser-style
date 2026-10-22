@@ -82,6 +82,7 @@ media.md.)
 | `mrk(sbr)` | CSS | **System bar (WIP)** — styles the scroller's **real** scrollbar as a full-width bottom bar instead of drawing markers, so it is natively draggable with zero JS. One central `--ui-carousel-sbr-*` set (`-track` `-thumb` `-size` `-inset` `-radius` `-track-radius` `-thumb-radius` `-gap`) feeds both the standard (Firefox `scrollbar-color`) and `::-webkit-scrollbar` paths; `content-box` like `mrk(tmb)` so the bar is added outside the `asr()` image |
 | `tmb(<ratio>)` | CSS | Thumbnail aspect-ratio (default `4/3`): `1/1 · 4/3 · 3/4 · 16/9 · 3/2 · 2/3` (slash, mirrors `asr()`). Sets `--ui-carousel-thumb-ratio` (+ `-ratio-n`, the numeric form the `mrk(rail)` width calc uses) |
 | `mrk(xl)`   | CSS | Marker size 1rem |
+| `fixed`     | CSS | Pins the **frame's** furniture (`ui-ai` `ui-beacon` `ui-chip` `ui-marquee` `ui-save` `ui-sticker`) so it stays put across every slide instead of scrolling away with slide 1. Opt-in, `nav` frames only — see *Fixed furniture* below |
 | `loop`      | JS | Seamless infinite loop (clones first/last slide) |
 | `nav`       | CSS | Carousel **on** — markers + arrows (the trigger) |
 | `nav(arw)`  | CSS | Arrows only |
@@ -726,6 +727,70 @@ thumb from the slide's own image.)
 `[data-clone]` and `ui-media > [data-clone]::scroll-marker { content: none }` suppresses
 their markers, so only the real slides count.
 
+## Fixed furniture — `fixed`
+
+Furniture is absolutely positioned against `<ui-media>`, and in a `nav` frame `<ui-media>`
+**is the scroller** — so the chip, sticker, heart and AI label live in the scrolled content
+and slide off with slide 1 (see *Pinning* below). `fixed` opts the frame out:
+
+```html
+<ui-card media="asr(3/4) nav fixed chip(ts) sticker(te) ai(bs) save(be)"><cq-box>
+  <ui-media>
+    <img …><img …><img …>
+    <ui-chip>Nyhed!</ui-chip><ui-sticker>…</ui-sticker><ui-ai>…</ui-ai><ui-save>…</ui-save>
+  </ui-media>
+  …
+</cq-box></ui-card>
+```
+
+**Two scopes, one rule of thumb.** Furniture on the **frame** belongs to the carousel;
+furniture on a **slide** belongs to that slide. For per-slide furniture make the slide a
+nested `<ui-media>` with its own `media=` — the `ui-media ui-media` guard keeps it a plain
+frame, and its furniture scrolls with it, `fixed` or not:
+
+```html
+<ui-media media="sticker(bs) sticker(green-800)"><img …><ui-sticker>…</ui-sticker></ui-media>
+```
+
+Without `fixed`, frame furniture keeps today's behaviour (it scrolls with slide 1). That is
+the same result as putting it on slide 1's nested frame, which says so in the markup.
+
+**How it works** (`media.carousel.css`, the `fixed` block). Whole-token `[media~="fixed"]`,
+and every rule also needs `[media*="nav"]`, so the token is inert on a plain frame:
+
+1. The frame becomes `position: static` and a scoped anchor (`anchor-name` +
+   `anchor-scope: --ui-media-frame`). The `ui-card`/`ui-reveal` host becomes the containing
+   block (`position: relative`), so the furniture is no longer in the scrolled content.
+2. Each direct furniture child of the frame takes the anchor's box as its inset rectangle —
+   `inset-block: anchor(top) anchor(bottom)`, `inset-inline: anchor(self-start)
+   anchor(self-end)` (`self-*`, never plain `start`/`end` — v4.md § Known sharp edges) —
+   with `margin: var(--_g)` for the overlay gap.
+3. The 9-cell grid resolves as `align-self` / `justify-self` from the `--_fa` / `--_fj`
+   pair that each cell rule in `media.css` writes (`t c b` → `start center end`, `s c e` →
+   `start center end`). Logical alignment, so RTL mirrors with no extra arm; the centre-cell
+   `translate` trick is switched off.
+4. `<ui-marquee>` stretches to the frame width and sits top, or bottom under `marquee(bot)`.
+
+Specificity: the furniture rule is `(0,0,2)` (self arm) / `(0,0,4)` (host arm) — enough to
+beat the `(0,0,1)` cell rules, still overridable by any class.
+
+**Known limits.**
+
+- **A standalone `<ui-media media="nav fixed">` needs a positioned parent.** Only the card
+  host is made `position: relative`: a `:has(> ui-media[media…])` rule would name `media=`
+  inside `:has()`, which taxes every `media=` write page-wide and is lint-banned
+  ([style-performance.md §8.1](../../../docs/style-performance.md)). Without one, the
+  furniture still lands on the frame (anchors resolve against any containing block) but is
+  no longer clipped by an enclosing scroller.
+- **Furniture escapes the frame's own clip.** It is no longer inside the scroller, so a
+  sticker deliberately hung over the frame edge is not cut by `overflow: hidden`/`clip`.
+- **`ui-play` and `ui-lightbox` are not included** — they keep their own sticky pin below.
+- **Nested-frame tokens still leak.** Furniture selectors are descendant
+  (`:where([media*="sticker(te)"]) ui-sticker`), so the outer frame's tokens also reach a
+  nested slide's sticker; when both set a cell or colour, source order — not nearness —
+  wins. Give slide furniture tokens the outer frame does not set, until the furniture
+  tokens resolve per nearest frame.
+
 ## Play/pause control (`<ui-play>`)
 
 Drop a `<ui-play>` furniture child into an autoplay carousel to get a play/pause button:
@@ -738,7 +803,7 @@ Drop a `<ui-play>` furniture child into an autoplay carousel to get a play/pause
 ```
 
 **Pinning.** A scroll container's absolute furniture lives in the *scrolled content* and
-scrolls away with the slides — only the browser-generated `::scroll-button`/`::scroll-marker`
+scrolls away with the slides (the rest of the furniture opts out with `fixed`, above) — only the browser-generated `::scroll-button`/`::scroll-marker`
 pseudos sit in the non-scrolling layer. So on a scrolling carousel (`auto`/`loop`) the
 control is turned into a **`position:sticky`** flex child pinned to the scrollport edge:
 

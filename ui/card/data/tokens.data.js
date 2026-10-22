@@ -2684,6 +2684,34 @@ export default {
 					],
 					"notes": "Seamless infinite loop — carousel.js clones N leading/trailing slides ([data-clone], aria-hidden, inert) and hops on scrollend; runs before initAuto so clones exist when autoplay ticks. WHOLE-TOKEN on both sides: carousel.js needles [media~=\"loop\"] + hasToken(), and the CSS sticky-<ui-play> rule (media.carousel.css:75-76) was moved off substring matching so it no longer fires on marquee(loop). Clone markers are suppressed (carousel.css:336)."
 				},
+				"fixed": {
+					"axis": "carousel",
+					"element": null,
+					"args": {},
+					"argAliases": {},
+					"bare": true,
+					"matching": "whole",
+					"writes": [],
+					"realProperties": true,
+					"cqPrefixes": [],
+					"cqArgs": [],
+					"selfArm": true,
+					"hosts": [
+						"ui-media",
+						"ui-card",
+						"ui-reveal"
+					],
+					"requiresJs": {},
+					"deprecated": false,
+					"canonical": null,
+					"sources": [
+						"ui/card/media.carousel.css:107",
+						"ui/card/media.carousel.css:114",
+						"ui/card/media.carousel.css:115",
+						"ui/card/media.css:156"
+					],
+					"notes": "Pins the frame's own furniture (ui-ai, ui-beacon, ui-chip, ui-marquee, ui-save, ui-sticker) so it stays put across every slide instead of scrolling away with slide 1. Opt-in and NAV FRAMES ONLY: every rule needs [media~=\"fixed\"][media*=\"nav\"], so on a plain frame (where furniture never moves) it is inert. The frame becomes position:static plus a scoped anchor (--ui-media-frame); the ui-card/ui-reveal host becomes the containing block (position:relative) — a STANDALONE fixed frame needs a positioned parent, because naming media= inside :has() is lint-banned (style-performance.md §8.1), and each furniture element's insets are the anchor's box, with the 9-cell grid resolved as align-self/justify-self from the --_fa/--_fj pair every cell rule in media.css writes. Furniture on a NESTED <ui-media> slide is untouched and scrolls with its slide — frame furniture belongs to the carousel, slide furniture to the slide. ui-play and ui-lightbox keep their own sticky pin. Whole-token so no future stem containing \"fixed\" can fire it."
+				},
 				"stagger": {
 					"axis": "carousel",
 					"element": null,

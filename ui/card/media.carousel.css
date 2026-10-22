@@ -103,6 +103,32 @@
 	ui-media:where([media*="play(bs)"], :is(ui-card, ui-reveal)[media*="play(bs)"] *) { --_play-block: end;    --_play-inline: var(--ui-media-overlay-gap, 0.75rem) auto; --_play-justify: start; }
 	ui-media:where([media*="play(be)"], :is(ui-card, ui-reveal)[media*="play(be)"] *) { --_play-block: end;    --_play-inline: auto var(--ui-media-overlay-gap, 0.75rem); --_play-justify: end; --_play-size: max-content; }
 
+	/* fixed — frame furniture anchored to the scroller box, not its scrolled content. Docs: docs/media.carousel.md § Fixed furniture */
+	:where(ui-card, ui-reveal):where([media~="fixed"][media*="nav"]) ui-media:not(ui-media ui-media),
+	ui-media:where([media~="fixed"][media*="nav"]) {
+		anchor-name: --ui-media-frame;
+		anchor-scope: --ui-media-frame;
+		position: static;
+	}
+	/* the host is the containing block; a standalone frame needs a positioned parent (no :has — style-performance.md §8.1) */
+	:where(ui-card, ui-reveal):where([media~="fixed"][media*="nav"]) { position: relative; }
+	:where(ui-card, ui-reveal):where([media~="fixed"][media*="nav"]) ui-media:not(ui-media ui-media) > :is(ui-ai, ui-beacon, ui-chip, ui-marquee, ui-save, ui-sticker),
+	ui-media:where([media~="fixed"][media*="nav"]) > :is(ui-ai, ui-beacon, ui-chip, ui-marquee, ui-save, ui-sticker) {
+		align-self: var(--_fa, start);
+		inset-block: anchor(top) anchor(bottom);
+		inset-inline: anchor(self-start) anchor(self-end);
+		justify-self: var(--_fj, start);
+		margin: var(--_g);
+		position-anchor: --ui-media-frame;
+		translate: none;
+	}
+	:where(ui-card, ui-reveal):where([media~="fixed"][media*="nav"]) ui-media:not(ui-media ui-media) > ui-marquee,
+	ui-media:where([media~="fixed"][media*="nav"]) > ui-marquee { justify-self: stretch; margin: 0; }
+	@container style(--_mrq: bot) {
+		:where(ui-card, ui-reveal):where([media~="fixed"][media*="nav"]) ui-media:not(ui-media ui-media) > ui-marquee,
+		ui-media:where([media~="fixed"][media*="nav"]) > ui-marquee { --_fa: end; }
+	}
+
 	/* ui-lightbox in a nav scroller — sticky pin; MUST be the first child */
 	:where(ui-card, ui-reveal):where([media*="nav"]) ui-media:not(ui-media ui-media) > ui-lightbox,
 	ui-media:where([media*="nav"]) > ui-lightbox {

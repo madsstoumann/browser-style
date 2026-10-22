@@ -208,10 +208,14 @@
     & :is(ui-beacon, ui-chip) {
       inset-block-start: var(--_g);
       inset-inline-start: var(--_g);
+      --_fa: start;
+      --_fj: start;
     }
     & :is(ui-sticker, ui-save) {
       inset-block-start: var(--_g);
       inset-inline-end: var(--_g);
+      --_fa: start;
+      --_fj: end;
     }
     & ui-play {
       inset-block-start: 50%;
@@ -226,6 +230,8 @@
       inset-block-end: var(--_g);
       inset-inline-start: 50%;
       translate: var(--_fx) 0;
+      --_fa: end;
+      --_fj: center;
     }
   }
   :where([media*="chip(ts)"]) ui-chip,
@@ -238,6 +244,8 @@
     inset-block: var(--_g) auto;
     inset-inline: var(--_g) auto;
     translate: none;
+    --_fa: start;
+    --_fj: start;
   }
   :where([media*="chip(tc)"]) ui-chip,
   :where([media*="sticker(tc)"]) ui-sticker,
@@ -249,6 +257,8 @@
     inset-block: var(--_g) auto;
     inset-inline: 50% auto;
     translate: var(--_fx) 0;
+    --_fa: start;
+    --_fj: center;
   }
   :where([media*="chip(te)"]) ui-chip,
   :where([media*="sticker(te)"]) ui-sticker,
@@ -260,6 +270,8 @@
     inset-block: var(--_g) auto;
     inset-inline: auto var(--_g);
     translate: none;
+    --_fa: start;
+    --_fj: end;
   }
   :where([media*="chip(cs)"]) ui-chip,
   :where([media*="sticker(cs)"]) ui-sticker,
@@ -271,6 +283,8 @@
     inset-block: 50% auto;
     inset-inline: var(--_g) auto;
     translate: 0 -50%;
+    --_fa: center;
+    --_fj: start;
   }
   :where([media*="chip(cc)"]) ui-chip,
   :where([media*="sticker(cc)"]) ui-sticker,
@@ -282,6 +296,8 @@
     inset-block: 50% auto;
     inset-inline: 50% auto;
     translate: var(--_fx) -50%;
+    --_fa: center;
+    --_fj: center;
   }
   :where([media*="chip(ce)"]) ui-chip,
   :where([media*="sticker(ce)"]) ui-sticker,
@@ -293,6 +309,8 @@
     inset-block: 50% auto;
     inset-inline: auto var(--_g);
     translate: 0 -50%;
+    --_fa: center;
+    --_fj: end;
   }
   :where([media*="chip(bs)"]) ui-chip,
   :where([media*="sticker(bs)"]) ui-sticker,
@@ -304,6 +322,8 @@
     inset-block: auto var(--_g);
     inset-inline: var(--_g) auto;
     translate: none;
+    --_fa: end;
+    --_fj: start;
   }
   :where([media*="chip(bc)"]) ui-chip,
   :where([media*="sticker(bc)"]) ui-sticker,
@@ -315,6 +335,8 @@
     inset-block: auto var(--_g);
     inset-inline: 50% auto;
     translate: var(--_fx) 0;
+    --_fa: end;
+    --_fj: center;
   }
   :where([media*="chip(be)"]) ui-chip,
   :where([media*="sticker(be)"]) ui-sticker,
@@ -326,6 +348,8 @@
     inset-block: auto var(--_g);
     inset-inline: auto var(--_g);
     translate: none;
+    --_fa: end;
+    --_fj: end;
   }
   :where(ui-media) ui-marquee {
     position: absolute;
@@ -966,6 +990,36 @@
     --_play-inline: auto var(--ui-media-overlay-gap, 0.75rem);
     --_play-justify: end;
     --_play-size: max-content;
+  }
+  :where(ui-card, ui-reveal):where([media~=fixed][media*=nav]) ui-media:not(ui-media ui-media),
+  ui-media:where([media~=fixed][media*=nav]) {
+    anchor-name: --ui-media-frame;
+    anchor-scope: --ui-media-frame;
+    position: static;
+  }
+  :where(ui-card, ui-reveal):where([media~=fixed][media*=nav]) {
+    position: relative;
+  }
+  :where(ui-card, ui-reveal):where([media~=fixed][media*=nav]) ui-media:not(ui-media ui-media) > :is(ui-ai, ui-beacon, ui-chip, ui-marquee, ui-save, ui-sticker),
+  ui-media:where([media~=fixed][media*=nav]) > :is(ui-ai, ui-beacon, ui-chip, ui-marquee, ui-save, ui-sticker) {
+    align-self: var(--_fa, start);
+    inset-block: anchor(top) anchor(bottom);
+    inset-inline: anchor(self-start) anchor(self-end);
+    justify-self: var(--_fj, start);
+    margin: var(--_g);
+    position-anchor: --ui-media-frame;
+    translate: none;
+  }
+  :where(ui-card, ui-reveal):where([media~=fixed][media*=nav]) ui-media:not(ui-media ui-media) > ui-marquee,
+  ui-media:where([media~=fixed][media*=nav]) > ui-marquee {
+    justify-self: stretch;
+    margin: 0;
+  }
+  @container style(--_mrq: bot) {
+    :where(ui-card, ui-reveal):where([media~=fixed][media*=nav]) ui-media:not(ui-media ui-media) > ui-marquee,
+    ui-media:where([media~=fixed][media*=nav]) > ui-marquee {
+      --_fa: end;
+    }
   }
   :where(ui-card, ui-reveal):where([media*=nav]) ui-media:not(ui-media ui-media) > ui-lightbox,
   ui-media:where([media*=nav]) > ui-lightbox {

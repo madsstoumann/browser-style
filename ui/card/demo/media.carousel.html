@@ -12,7 +12,7 @@
 	<meta name="referrer" content="no-referrer">
 	<!-- preconnect: CDN handshake parallel to the CSS download. Docs: docs/performance.md -->
 	<link rel="preconnect" href="https://v4.browser.style">
-	<link rel="stylesheet" href="/dist/demo.57bcd590.min.css">
+	<link rel="stylesheet" href="/dist/demo.8405d4f0.min.css">
 	<link rel="stylesheet" href="/dist/icon-font.c6950688.min.css">
 	<style>
 		section {
@@ -170,6 +170,7 @@
 			<ol>
 				<li><a href="#vertical">Vertical — axis(y)</a></li>
 				<li><a href="#colourways">Colourways</a></li>
+				<li><a href="#fixed">Fixed furniture</a></li>
 				<li><a href="#stagger">Stagger</a></li>
 			</ol>
 		</div>
@@ -886,6 +887,33 @@
 				<img src="/assets/images/phone-green.svg" alt="Phone in green" width="900" height="1200" loading="lazy" decoding="async" style="--ui-carousel-marker-bg: color-mix(in oklab, #2ea36b 40%, #0000); --ui-carousel-marker-active: #2ea36b">
 			</ui-media>
 			<ui-content><small data-part="eyebrow">nav arw(arr) mrk(lg)</small><h3 data-part="headline">Horizontal, full arrow</h3></ui-content></cq-box>
+		</ui-card>
+	</lay-out>
+
+	<hr>
+	<!-- ════════════════════════════════════════════════════════════
+	     FIXED — frame furniture stays put
+	     ════════════════════════════════════════════════════════════ -->
+	<h2 id="fixed">Fixed furniture — <code>fixed</code></h2>
+	<p>In a <code>nav</code> frame the furniture lives in the scrolled content, so it slides away with slide 1 (left). <code>fixed</code> pins the frame's furniture across every slide (right). Furniture that belongs to <em>one</em> slide goes on a nested <code>&lt;ui-media&gt;</code> slide — the green slide's own sticker scrolls with it.</p>
+	<lay-out md="columns(2)">
+		<ui-card id="fixed-off" variant="col" media="asr(3/4) nav mrk(lg) chip(ts) sticker(te) sticker(red-700) sticker(xl) save(be)" style="--ui-carousel-marker-ring-width: 2px; --ui-carousel-marker-ring-color: rgb(255 255 255 / 0.25); --ui-carousel-marker-ring-color-active: #fff" content="scl(sm)">
+			<cq-box><ui-media>
+				<img src="/assets/images/phone-blue.svg" alt="Phone in blue" width="900" height="1200" loading="lazy" decoding="async" style="--ui-carousel-marker-bg: color-mix(in oklab, #2f6fe0 40%, #0000); --ui-carousel-marker-active: #2f6fe0">
+				<img src="/assets/images/phone-orange.svg" alt="Phone in orange" width="900" height="1200" loading="lazy" decoding="async" style="--ui-carousel-marker-bg: color-mix(in oklab, #f2782a 40%, #0000); --ui-carousel-marker-active: #f2782a">
+				<img src="/assets/images/phone-green.svg" alt="Phone in green" width="900" height="1200" loading="lazy" decoding="async" style="--ui-carousel-marker-bg: color-mix(in oklab, #2ea36b 40%, #0000); --ui-carousel-marker-active: #2ea36b">
+				<ui-chip theme="red-700">New</ui-chip><ui-sticker><small>SAVE</small><strong>20%</strong></ui-sticker><ui-save><button type="button" command="--save" commandfor="fixed-off" aria-label="Add phone to favorites"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
+			</ui-media>
+			<ui-content><small data-part="eyebrow">nav · no fixed</small><h3 data-part="headline">Furniture scrolls with slide 1</h3></ui-content></cq-box>
+		</ui-card>
+		<ui-card id="fixed-on" variant="col" media="asr(3/4) nav fixed mrk(lg) chip(ts) sticker(te) sticker(red-700) sticker(xl) save(be)" style="--ui-carousel-marker-ring-width: 2px; --ui-carousel-marker-ring-color: rgb(255 255 255 / 0.25); --ui-carousel-marker-ring-color-active: #fff" content="scl(sm)">
+			<cq-box><ui-media>
+				<img src="/assets/images/phone-blue.svg" alt="Phone in blue" width="900" height="1200" loading="lazy" decoding="async" style="--ui-carousel-marker-bg: color-mix(in oklab, #2f6fe0 40%, #0000); --ui-carousel-marker-active: #2f6fe0">
+				<img src="/assets/images/phone-orange.svg" alt="Phone in orange" width="900" height="1200" loading="lazy" decoding="async" style="--ui-carousel-marker-bg: color-mix(in oklab, #f2782a 40%, #0000); --ui-carousel-marker-active: #f2782a">
+				<ui-media media="sticker(bs) sticker(green-800)" style="--ui-carousel-marker-bg: color-mix(in oklab, #2ea36b 40%, #0000); --ui-carousel-marker-active: #2ea36b"><img src="/assets/images/phone-green.svg" alt="Phone in green" width="900" height="1200" loading="lazy" decoding="async"><ui-sticker><small>GREEN</small><strong>-10%</strong></ui-sticker></ui-media>
+				<ui-chip theme="red-700">New</ui-chip><ui-sticker><small>SAVE</small><strong>20%</strong></ui-sticker><ui-save><button type="button" command="--save" commandfor="fixed-on" aria-label="Add phone to favorites"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
+			</ui-media>
+			<ui-content><small data-part="eyebrow">nav fixed</small><h3 data-part="headline">Furniture stays put; the green slide adds its own</h3></ui-content></cq-box>
 		</ui-card>
 	</lay-out>
 
@@ -1741,6 +1769,8 @@
 	     supported; each component's own @supports block already covers the no-JS
 	     case, this restores per-element attribute values on top. -->
 	<script type="module" src="/ui/base/polyfills/attr-fallback.min.js"></script>
+	<!-- Fills the heart on click (aria-pressed) — the § Fixed furniture save buttons. Docs: /ui/save/readme.md § Toggling -->
+	<script type="module" src="/ui/save/save.min.js"></script>
 </main>
 </body>
 </html>

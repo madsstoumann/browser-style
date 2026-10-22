@@ -1290,6 +1290,7 @@ is live. One value per token instance — `chip(ts) chip(red-700)`, never `chip(
 | `hug` | *(bare flag)* | — | — |
 | `clip` | *(bare flag)* | — | — |
 | `loop` | *(bare flag)* | — | — |
+| `fixed` | *(bare flag)* | — | — |
 | `stagger` | *(bare flag)* | — | — |
 | `gate` | *(bare flag)* | — | — |
 | `pages` | *(bare flag)* | — | — |

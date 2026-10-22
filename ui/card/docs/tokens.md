@@ -10,7 +10,7 @@ sit on. Notes below each table carry the per-token caveats.
 
 ## `media=`
 
-29 stems · 6 bare flags
+29 stems · 7 bare flags
 
 | token | axis | args | aliases | bare | writes | md:/lg: | hosts | requiresJs | deprecated |
 |---|---|---|---|---|---|---|---|---|---|
@@ -45,6 +45,7 @@ sit on. Notes below each table carry the per-token caveats.
 | `hug` | fill | — | — | yes | — | — | ui-media ui-card ui-reveal | — | — |
 | `clip` | corners | — | — | yes | --ui-media-radius | — | ui-media | — | — |
 | `loop` | carousel | — | — | yes | --_play-block --_play-inline --_play-justify --_play-size | — | ui-media ui-card ui-reveal lay-out[overflow] | carousel.js (*) | — |
+| `fixed` | carousel | — | — | yes | — | — | ui-media ui-card ui-reveal | — | — |
 | `stagger` | carousel | — | — | yes | --_stg-base-i --_stg-crd-i | — | ui-media ui-card ui-reveal | — | — |
 | `gate` | carousel | — | — | yes | — | — | lay-out[overflow] | — | — |
 | `pages` | carousel | — | — | yes | --_pg | — | lay-out[overflow] ui-media ui-card ui-reveal | — | — |
@@ -144,6 +145,9 @@ sit on. Notes below each table carry the per-token caveats.
 
 **`loop`** *(whole-matched, self arm)* — Seamless infinite loop — carousel.js clones N leading/trailing slides ([data-clone], aria-hidden, inert) and hops on scrollend; runs before initAuto so clones exist when autoplay ticks. WHOLE-TOKEN on both sides: carousel.js needles [media~="loop"] + hasToken(), and the CSS sticky-<ui-play> rule (media.carousel.css:75-76) was moved off substring matching so it no longer fires on marquee(loop). Clone markers are suppressed (carousel.css:336).
 <sub>ui/card/media.carousel.css:75 · ui/card/carousel.js:44 · ui/card/carousel.js:161</sub>
+
+**`fixed`** *(whole-matched, self arm)* — Pins the frame's own furniture (ui-ai, ui-beacon, ui-chip, ui-marquee, ui-save, ui-sticker) so it stays put across every slide instead of scrolling away with slide 1. Opt-in and NAV FRAMES ONLY: every rule needs [media~="fixed"][media*="nav"], so on a plain frame (where furniture never moves) it is inert. The frame becomes position:static plus a scoped anchor (--ui-media-frame); the ui-card/ui-reveal host becomes the containing block (position:relative) — a STANDALONE fixed frame needs a positioned parent, because naming media= inside :has() is lint-banned (style-performance.md §8.1), and each furniture element's insets are the anchor's box, with the 9-cell grid resolved as align-self/justify-self from the --_fa/--_fj pair every cell rule in media.css writes. Furniture on a NESTED <ui-media> slide is untouched and scrolls with its slide — frame furniture belongs to the carousel, slide furniture to the slide. ui-play and ui-lightbox keep their own sticky pin. Whole-token so no future stem containing "fixed" can fire it.
+<sub>ui/card/media.carousel.css:107 · ui/card/media.carousel.css:114 · ui/card/media.carousel.css:115 · ui/card/media.css:156</sub>
 
 **`stagger`** *(substring-matched, self arm)* — Bare-only in the media= DSL (the equivalent on a <lay-out> is the separate `stagger`/`data-stagger` ATTRIBUTE, which also takes the effect words + `trigger`). Dual arm. Makes each slide a container-type: scroll-state box and holds cards/content at a from-state until @container scroll-state(snapped: inline). Two channels: cards (--_stg-crd-*) and content (--_stg-*). Whole engine is inside @media (prefers-reduced-motion: no-preference). ani()/crd() are separate stems that hang off the same engine.
 <sub>ui/base/stagger.css:171 · ui/base/stagger.css:176 · ui/base/stagger.css:181</sub>

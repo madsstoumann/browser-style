@@ -158,6 +158,7 @@ drift from the CSS. (`md:/lg:` is the container-query prefix column: only `asr()
 | `hug` | fill | — | — | yes | — | — | — |
 | `clip` | corners | — | — | yes | --ui-media-radius | — | — |
 | `loop` | carousel | — | — | yes | --_play-block --_play-inline --_play-justify --_play-size | — | — |
+| `fixed` | carousel | — | — | yes | — | — | — |
 | `stagger` | carousel | — | — | yes | --_stg-base-i --_stg-crd-i | — | — |
 | `gate` | carousel | — | — | yes | — | — | — |
 | `pages` | carousel | — | — | yes | --_pg | — | — |
@@ -356,6 +357,8 @@ Every `()` token is *sugar* over a custom property, so any value that has no tok
 The media area hosts **seven overlay elements** — `<ui-chip>`, `<ui-beacon>`, `<ui-sticker>`, `<ui-save>`, `<ui-play>`, `<ui-lightbox>`, `<ui-ai>`. They carry **only their text/glyph** — position and theme come from the parent `media=` string (so a `<ui-card>` can configure them and the config inherits down).
 
 `<ui-ai>` is the EU AI Act disclosure label. Its content decides what shows: text (`GENERATED` / `MODIFIED` by default, written by `render.js` from a media item's `ai` object, or a phrase such as `Voice rendered with AI`) shows the EU icon plus that text, as written, and an empty element shows the icon alone. `ai(…)` on `media=` is the look (cell, colour, `lg|xl` size). Default cell `bc`; default size is the smallest readable, 11px, in rem. Full contract: [`../../ai/readme.md`](../../ai/readme.md); what changed in 2.0: [`../../ai/migration.md`](../../ai/migration.md); demo: [`demo/media.ai.html`](../demo/media.ai.html).
+
+**In a carousel** (`nav`), the frame is the scroller, so its furniture scrolls away with slide 1 unless the frame also carries `fixed` — see [media.carousel.md § Fixed furniture](./media.carousel.md#fixed-furniture--fixed). Per-slide furniture goes on a nested `<ui-media>` slide.
 
 ### Furniture vs band — `<ui-marquee>` is not furniture
 
