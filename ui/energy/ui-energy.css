@@ -29,7 +29,7 @@
 		color: #fff;
 		direction: ltr;
 		display: inline-grid;
-		font: 700 var(--ui-energy-font-size, 1em) / 1.15 var(--ui-energy-font-family, Calibri, Carlito, var(--font-form));
+		font: 700 var(--ui-energy-font-size, 1em) / 1.15 var(--ui-energy-font-family, Calibri, Carlito, Seravek, 'Gill Sans Nova', Ubuntu, 'DejaVu Sans', source-sans-pro, sans-serif);
 		grid-template-columns: auto auto;
 		isolation: isolate;
 		padding: var(--_bw) var(--_bw) var(--_bw) calc(var(--_tip) + 0.16em);

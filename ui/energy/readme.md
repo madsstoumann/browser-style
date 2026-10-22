@@ -45,7 +45,7 @@ The arrow is em-based, so inside the price element it takes the price's font siz
 
 The online rules also make the nested display a link that opens the full label, with a separate "product information sheet" link to EPREL. This component deliberately covers only the visual part. The interactive parts are a later step.
 
-The font falls back from Calibri to Carlito (metric-compatible) to the form font. White on the yellow D class is low contrast by regulation, which is why the `aria-label` carries the meaning.
+The font is Calibri, then Carlito (Google's metric-compatible open font), then the [modernfontstacks](https://modernfontstacks.com/) Humanist stack, which already lists Calibri as its Windows member. White on the yellow D class is low contrast by regulation, which is why the `aria-label` carries the meaning.
 
 ## As card furniture
 
@@ -67,7 +67,7 @@ On a card, `energy(<cell>)` places it on the nine-cell grid (default `bs`), and 
 | Property | Default |
 |---|---|
 | `--ui-energy-font-size` | `1em` (`1.5rem` as furniture) |
-| `--ui-energy-font-family` | `Calibri, Carlito, var(--font-form)` |
+| `--ui-energy-font-family` | `Calibri, Carlito`, then the modernfontstacks Humanist stack |
 | `--ui-energy-border` | `2px` |
 | `--ui-energy-a` … `--ui-energy-g` | sRGB of the regulation's CMYK arrow colours |
 

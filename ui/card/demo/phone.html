@@ -12,7 +12,7 @@
 	<meta name="referrer" content="no-referrer">
 	<!-- preconnect: CDN handshake parallel to the CSS download. Docs: docs/performance.md -->
 	<link rel="preconnect" href="https://v4.browser.style">
-	<link rel="stylesheet" href="/dist/demo.8b8c8e0b.min.css">
+	<link rel="stylesheet" href="/dist/demo.2090ace1.min.css">
 	<link rel="stylesheet" href="/dist/icon-font.c6950688.min.css">
 	<style>
 		main > lay-out { margin-block-end: var(--spacing-2xl); }
@@ -59,16 +59,16 @@
 	     ════════════════════════════════════════════════════════════ -->
 	<lay-out md="columns(2) subgrid" subgrid="9" lang="da">
 
-		<ui-card id="nova-x" class="colourways" variant="col sub" media="asr(3/4) nav fixed mrk(lg) chip(ts) ai(bs) save(be) sticker(te) sticker(red-700) sticker(2xl)" content="scl(sm)">
+		<ui-card id="nova-x" class="colourways" variant="col sub" media="asr(3/4) nav fixed mrk(lg) chip(ts) ai(bs) sticker(te) sticker(red-700) sticker(2xl) energy(be)" content="scl(sm)">
 			<cq-box>
 				<ui-media>
 					<img src="/assets/images/phone-blue.svg" alt="Nova X i blå" width="900" height="1200" loading="eager" decoding="async" style="--ui-carousel-marker-bg: color-mix(in oklab, #2f6fe0 40%, #0000); --ui-carousel-marker-active: #2f6fe0">
 					<img src="/assets/images/phone-orange.svg" alt="Nova X i orange" width="900" height="1200" loading="lazy" decoding="async" style="--ui-carousel-marker-bg: color-mix(in oklab, #f2782a 40%, #0000); --ui-carousel-marker-active: #f2782a">
 					<img src="/assets/images/phone-green.svg" alt="Nova X i grøn" width="900" height="1200" loading="lazy" decoding="async" style="--ui-carousel-marker-bg: color-mix(in oklab, #2ea36b 40%, #0000); --ui-carousel-marker-active: #2ea36b">
 					<ui-chip theme="red-700">Nyhed!</ui-chip>
-					<ui-save><button type="button" command="--save" commandfor="nova-x" aria-label="Føj Nova X til ønskelisten"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
 					<ui-sticker><small>SPAR</small><strong>20%</strong></ui-sticker>
 					<ui-ai aria-description="Billedet er genereret med AI.">AI-genereret</ui-ai>
+					<ui-energy type="phone" grade="A" role="img" aria-label="Energiklasse A på en skala fra A til G">A</ui-energy>
 				</ui-media>
 				<ui-content>
 					<small data-part="eyebrow">Nordtel</small>
@@ -79,7 +79,7 @@
 						<span data-sr>Bedømt 4,6 ud af 5 stjerner ud fra 312 anmeldelser</span>
 						<span aria-hidden="true">4,6 (312)</span>
 					</div>
-					<p data-part="price">4.799 kr. <del>5.999 kr.</del> <ui-energy type="phone" grade="A" role="img" aria-label="Energiklasse A på en skala fra A til G">A</ui-energy></p>
+					<p data-part="price">4.799 kr. <del>5.999 kr.</del></p>
 					<p data-part="meta" class="legal">Eller 200 kr./md. i 24 mdr. Mindstepris 4.799 kr.</p>
 					<p data-part="meta"><ui-chip theme="green-100">På lager · levering 1–2 hverdage</ui-chip></p>
 					<nav data-part="actions"><a class="ui-button bg-accent" href="#">Køb</a></nav>
@@ -87,7 +87,7 @@
 			</cq-box>
 		</ui-card>
 
-		<ui-card id="nova-x-pro" class="colourways" variant="col sub" media="asr(3/4) nav fixed mrk(lg) chip(ts) ai(bs) save(be)" content="scl(sm)">
+		<ui-card id="nova-x-pro" class="colourways" variant="col sub" media="asr(3/4) nav fixed mrk(lg) chip(ts) ai(bs) save(te) energy(be)" content="scl(sm)">
 			<cq-box>
 				<ui-media>
 					<img src="/assets/images/phone-orange.svg" alt="Nova X Pro i orange" width="900" height="1200" loading="eager" decoding="async" style="--ui-carousel-marker-bg: color-mix(in oklab, #f2782a 40%, #0000); --ui-carousel-marker-active: #f2782a">
@@ -95,6 +95,7 @@
 					<ui-chip theme="red-700">Nyhed!</ui-chip>
 					<ui-save><button type="button" command="--save" commandfor="nova-x-pro" aria-label="Føj Nova X Pro til ønskelisten"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
 					<ui-ai aria-description="Billedet er genereret med AI.">AI-genereret</ui-ai>
+					<ui-energy type="phone" grade="B" role="img" aria-label="Energiklasse B på en skala fra A til G">B</ui-energy>
 				</ui-media>
 				<ui-content>
 					<small data-part="eyebrow">Nordtel</small>
@@ -105,7 +106,7 @@
 						<span data-sr>Bedømt 4,8 ud af 5 stjerner ud fra 87 anmeldelser</span>
 						<span aria-hidden="true">4,8 (87)</span>
 					</div>
-					<p data-part="price">8.499 kr. <ui-energy type="phone" grade="B" role="img" aria-label="Energiklasse B på en skala fra A til G">B</ui-energy></p>
+					<p data-part="price">8.499 kr.</p>
 					<p data-part="meta" class="legal">Eller 355 kr./md. i 24 mdr. Mindstepris 8.499 kr.</p>
 					<p data-part="meta"><ui-chip theme="orange-100">Forudbestil · levering 14. nov.</ui-chip></p>
 					<nav data-part="actions"><a class="ui-button bg-accent" href="#">Forudbestil</a></nav>
@@ -113,21 +114,22 @@
 			</cq-box>
 		</ui-card>
 
-		<ui-card id="fjord-8" class="colourways" variant="col sub" media="asr(3/4) nav mrk(lg)" content="scl(sm)">
+		<ui-card id="fjord-8" class="colourways" variant="col sub" media="asr(3/4) nav fixed mrk(lg) energy(be)" content="scl(sm)">
 			<cq-box>
 				<ui-media>
-					<ui-media id="fjord-8-green" media="beacon(ts) beacon(sld) beacon(red-700) beacon(pls) sticker(te) sticker(green-800) sticker(2xl) save(be)" style="--ui-carousel-marker-bg: color-mix(in oklab, #2ea36b 40%, #0000); --ui-carousel-marker-active: #2ea36b">
+					<ui-media id="fjord-8-green" media="beacon(ts) beacon(sld) beacon(red-700) beacon(pls) sticker(te) sticker(green-800) sticker(2xl) save(bs)" style="--ui-carousel-marker-bg: color-mix(in oklab, #2ea36b 40%, #0000); --ui-carousel-marker-active: #2ea36b">
 						<img src="/assets/images/phone-green.svg" alt="Fjord 8 i grøn" width="900" height="1200" loading="eager" decoding="async">
 						<ui-beacon>Kun i dag</ui-beacon><ui-sticker><small>SPAR</small><strong>20%</strong></ui-sticker><ui-save><button type="button" command="--save" commandfor="fjord-8-green" aria-label="Føj Fjord 8 i grøn til ønskelisten" aria-pressed="true"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
 					</ui-media>
-					<ui-media id="fjord-8-blue" media="sticker(te) sticker(blue-900) sticker(2xl) save(be)" style="--ui-carousel-marker-bg: color-mix(in oklab, #2f6fe0 40%, #0000); --ui-carousel-marker-active: #2f6fe0">
+					<ui-media id="fjord-8-blue" media="sticker(te) sticker(blue-900) sticker(2xl) save(bs)" style="--ui-carousel-marker-bg: color-mix(in oklab, #2f6fe0 40%, #0000); --ui-carousel-marker-active: #2f6fe0">
 						<img src="/assets/images/phone-blue.svg" alt="Fjord 8 i blå" width="900" height="1200" loading="lazy" decoding="async">
 						<ui-sticker><small>SPAR</small><strong>15%</strong></ui-sticker><ui-save><button type="button" command="--save" commandfor="fjord-8-blue" aria-label="Føj Fjord 8 i blå til ønskelisten"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
 					</ui-media>
-					<ui-media id="fjord-8-orange" media="sticker(te) sticker(orange-700) sticker(2xl) save(be)" style="--ui-carousel-marker-bg: color-mix(in oklab, #f2782a 40%, #0000); --ui-carousel-marker-active: #f2782a">
+					<ui-media id="fjord-8-orange" media="sticker(te) sticker(orange-700) sticker(2xl) save(bs)" style="--ui-carousel-marker-bg: color-mix(in oklab, #f2782a 40%, #0000); --ui-carousel-marker-active: #f2782a">
 						<img src="/assets/images/phone-orange.svg" alt="Fjord 8 i orange" width="900" height="1200" loading="lazy" decoding="async">
 						<ui-sticker><small>SPAR</small><strong>10%</strong></ui-sticker><ui-save><button type="button" command="--save" commandfor="fjord-8-orange" aria-label="Føj Fjord 8 i orange til ønskelisten"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
 					</ui-media>
+					<ui-energy type="phone" grade="C" role="img" aria-label="Energiklasse C på en skala fra A til G">C</ui-energy>
 				</ui-media>
 				<ui-content>
 					<small data-part="eyebrow">Fjord</small>
@@ -138,7 +140,7 @@
 						<span data-sr>Bedømt 4,3 ud af 5 stjerner ud fra 1.024 anmeldelser</span>
 						<span aria-hidden="true">4,3 (1.024)</span>
 					</div>
-					<p data-part="price">2.399 kr. <del>2.999 kr.</del> <ui-energy type="phone" grade="C" role="img" aria-label="Energiklasse C på en skala fra A til G">C</ui-energy></p>
+					<p data-part="price">2.399 kr. <del>2.999 kr.</del></p>
 					<p data-part="meta" class="legal">Eller 100 kr./md. i 24 mdr. Mindstepris 2.399 kr.</p>
 					<p data-part="meta"><ui-chip theme="green-100">På lager · levering 1–2 hverdage</ui-chip></p>
 					<nav data-part="actions"><a class="ui-button bg-accent" href="#">Køb</a></nav>
@@ -146,21 +148,22 @@
 			</cq-box>
 		</ui-card>
 
-		<ui-card id="fjord-8-lite" class="colourways" variant="col sub" media="asr(3/4) nav mrk(lg)" content="scl(sm)">
+		<ui-card id="fjord-8-lite" class="colourways" variant="col sub" media="asr(3/4) nav fixed mrk(lg) energy(be)" content="scl(sm)">
 			<cq-box>
 				<ui-media>
-					<ui-media id="fjord-8-lite-blue" media="beacon(ts) beacon(sld) beacon(orange-700) beacon(pls) save(be)" style="--ui-carousel-marker-bg: color-mix(in oklab, #2f6fe0 40%, #0000); --ui-carousel-marker-active: #2f6fe0">
+					<ui-media id="fjord-8-lite-blue" media="beacon(ts) beacon(sld) beacon(orange-700) beacon(pls) save(bs)" style="--ui-carousel-marker-bg: color-mix(in oklab, #2f6fe0 40%, #0000); --ui-carousel-marker-active: #2f6fe0">
 						<img src="/assets/images/phone-blue.svg" alt="Fjord 8 Lite i blå" width="900" height="1200" loading="eager" decoding="async">
 						<ui-beacon>Få på lager</ui-beacon><ui-save><button type="button" command="--save" commandfor="fjord-8-lite-blue" aria-label="Føj Fjord 8 Lite i blå til ønskelisten"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
 					</ui-media>
-					<ui-media id="fjord-8-lite-green" media="sticker(te) sticker(green-800) sticker(2xl) save(be)" style="--ui-carousel-marker-bg: color-mix(in oklab, #2ea36b 40%, #0000); --ui-carousel-marker-active: #2ea36b">
+					<ui-media id="fjord-8-lite-green" media="sticker(te) sticker(green-800) sticker(2xl) save(bs)" style="--ui-carousel-marker-bg: color-mix(in oklab, #2ea36b 40%, #0000); --ui-carousel-marker-active: #2ea36b">
 						<img src="/assets/images/phone-green.svg" alt="Fjord 8 Lite i grøn" width="900" height="1200" loading="lazy" decoding="async">
 						<ui-sticker><small>SPAR</small><strong>10%</strong></ui-sticker><ui-save><button type="button" command="--save" commandfor="fjord-8-lite-green" aria-label="Føj Fjord 8 Lite i grøn til ønskelisten"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
 					</ui-media>
-					<ui-media id="fjord-8-lite-orange" media="chip(ts) ai(bs) save(be)" style="--ui-carousel-marker-bg: color-mix(in oklab, #f2782a 40%, #0000); --ui-carousel-marker-active: #f2782a">
+					<ui-media id="fjord-8-lite-orange" media="chip(ts) ai(tc) save(bs)" style="--ui-carousel-marker-bg: color-mix(in oklab, #f2782a 40%, #0000); --ui-carousel-marker-active: #f2782a">
 						<img src="/assets/images/phone-orange.svg" alt="Fjord 8 Lite i orange" width="900" height="1200" loading="lazy" decoding="async">
 						<ui-chip theme="red-700">Sidste chance!</ui-chip><ui-ai aria-description="Billedet er genereret med AI.">AI-genereret</ui-ai><ui-save><button type="button" command="--save" commandfor="fjord-8-lite-orange" aria-label="Føj Fjord 8 Lite i orange til ønskelisten"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
 					</ui-media>
+					<ui-energy type="phone" grade="D" role="img" aria-label="Energiklasse D på en skala fra A til G">D</ui-energy>
 				</ui-media>
 				<ui-content>
 					<small data-part="eyebrow">Fjord</small>
@@ -171,7 +174,7 @@
 						<span data-sr>Bedømt 4,1 ud af 5 stjerner ud fra 438 anmeldelser</span>
 						<span aria-hidden="true">4,1 (438)</span>
 					</div>
-					<p data-part="price">1.799 kr. <ui-energy type="phone" grade="D" role="img" aria-label="Energiklasse D på en skala fra A til G">D</ui-energy></p>
+					<p data-part="price">1.799 kr.</p>
 					<p data-part="meta" class="legal">Eller 75 kr./md. i 24 mdr. Mindstepris 1.799 kr.</p>
 					<p data-part="meta"><ui-chip theme="gray-100">Levering 2–4 hverdage</ui-chip></p>
 					<nav data-part="actions"><a class="ui-button bg-accent" href="#">Køb</a></nav>
