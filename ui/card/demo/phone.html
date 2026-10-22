@@ -12,7 +12,7 @@
 	<meta name="referrer" content="no-referrer">
 	<!-- preconnect: CDN handshake parallel to the CSS download. Docs: docs/performance.md -->
 	<link rel="preconnect" href="https://v4.browser.style">
-	<link rel="stylesheet" href="/dist/demo.8405d4f0.min.css">
+	<link rel="stylesheet" href="/dist/demo.7834d3bd.min.css">
 	<link rel="stylesheet" href="/dist/icon-font.c6950688.min.css">
 	<style>
 		main > lay-out { margin-block-end: var(--spacing-2xl); }
@@ -113,15 +113,21 @@
 			</cq-box>
 		</ui-card>
 
-		<ui-card id="fjord-8" class="colourways" variant="col sub" media="asr(3/4) nav mrk(lg) beacon(ts) beacon(sld) beacon(red-700) beacon(pls) save(be) sticker(te) sticker(red-700) sticker(2xl)" content="scl(sm)">
+		<ui-card id="fjord-8" class="colourways" variant="col sub" media="asr(3/4) nav mrk(lg)" content="scl(sm)">
 			<cq-box>
 				<ui-media>
-					<img src="/assets/images/phone-green.svg" alt="Fjord 8 i grøn" width="900" height="1200" loading="eager" decoding="async" style="--ui-carousel-marker-bg: color-mix(in oklab, #2ea36b 40%, #0000); --ui-carousel-marker-active: #2ea36b">
-					<img src="/assets/images/phone-blue.svg" alt="Fjord 8 i blå" width="900" height="1200" loading="lazy" decoding="async" style="--ui-carousel-marker-bg: color-mix(in oklab, #2f6fe0 40%, #0000); --ui-carousel-marker-active: #2f6fe0">
-					<img src="/assets/images/phone-orange.svg" alt="Fjord 8 i orange" width="900" height="1200" loading="lazy" decoding="async" style="--ui-carousel-marker-bg: color-mix(in oklab, #f2782a 40%, #0000); --ui-carousel-marker-active: #f2782a">
-					<ui-save><button type="button" command="--save" commandfor="fjord-8" aria-label="Føj Fjord 8 til ønskelisten" aria-pressed="true"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
-					<ui-sticker><small>SPAR</small><strong>20%</strong></ui-sticker>
-					<ui-beacon>Kun i dag</ui-beacon>
+					<ui-media id="fjord-8-green" media="beacon(ts) beacon(sld) beacon(red-700) beacon(pls) sticker(te) sticker(green-800) sticker(2xl) save(be)" style="--ui-carousel-marker-bg: color-mix(in oklab, #2ea36b 40%, #0000); --ui-carousel-marker-active: #2ea36b">
+						<img src="/assets/images/phone-green.svg" alt="Fjord 8 i grøn" width="900" height="1200" loading="eager" decoding="async">
+						<ui-beacon>Kun i dag</ui-beacon><ui-sticker><small>SPAR</small><strong>20%</strong></ui-sticker><ui-save><button type="button" command="--save" commandfor="fjord-8-green" aria-label="Føj Fjord 8 i grøn til ønskelisten" aria-pressed="true"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
+					</ui-media>
+					<ui-media id="fjord-8-blue" media="sticker(te) sticker(blue-900) sticker(2xl) save(be)" style="--ui-carousel-marker-bg: color-mix(in oklab, #2f6fe0 40%, #0000); --ui-carousel-marker-active: #2f6fe0">
+						<img src="/assets/images/phone-blue.svg" alt="Fjord 8 i blå" width="900" height="1200" loading="lazy" decoding="async">
+						<ui-sticker><small>SPAR</small><strong>15%</strong></ui-sticker><ui-save><button type="button" command="--save" commandfor="fjord-8-blue" aria-label="Føj Fjord 8 i blå til ønskelisten"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
+					</ui-media>
+					<ui-media id="fjord-8-orange" media="sticker(te) sticker(orange-700) sticker(2xl) save(be)" style="--ui-carousel-marker-bg: color-mix(in oklab, #f2782a 40%, #0000); --ui-carousel-marker-active: #f2782a">
+						<img src="/assets/images/phone-orange.svg" alt="Fjord 8 i orange" width="900" height="1200" loading="lazy" decoding="async">
+						<ui-sticker><small>SPAR</small><strong>10%</strong></ui-sticker><ui-save><button type="button" command="--save" commandfor="fjord-8-orange" aria-label="Føj Fjord 8 i orange til ønskelisten"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
+					</ui-media>
 				</ui-media>
 				<ui-content>
 					<small data-part="eyebrow">Fjord</small>
@@ -140,13 +146,21 @@
 			</cq-box>
 		</ui-card>
 
-		<ui-card id="fjord-8-lite" class="colourways" variant="col sub" media="asr(3/4) nav mrk(lg) beacon(ts) beacon(sld) beacon(orange-700) beacon(pls) save(be)" content="scl(sm)">
+		<ui-card id="fjord-8-lite" class="colourways" variant="col sub" media="asr(3/4) nav mrk(lg)" content="scl(sm)">
 			<cq-box>
 				<ui-media>
-					<img src="/assets/images/phone-blue.svg" alt="Fjord 8 Lite i blå" width="900" height="1200" loading="eager" decoding="async" style="--ui-carousel-marker-bg: color-mix(in oklab, #2f6fe0 40%, #0000); --ui-carousel-marker-active: #2f6fe0">
-					<img src="/assets/images/phone-green.svg" alt="Fjord 8 Lite i grøn" width="900" height="1200" loading="lazy" decoding="async" style="--ui-carousel-marker-bg: color-mix(in oklab, #2ea36b 40%, #0000); --ui-carousel-marker-active: #2ea36b">
-					<ui-save><button type="button" command="--save" commandfor="fjord-8-lite" aria-label="Føj Fjord 8 Lite til ønskelisten"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
-					<ui-beacon>Få på lager</ui-beacon>
+					<ui-media id="fjord-8-lite-blue" media="beacon(ts) beacon(sld) beacon(orange-700) beacon(pls) save(be)" style="--ui-carousel-marker-bg: color-mix(in oklab, #2f6fe0 40%, #0000); --ui-carousel-marker-active: #2f6fe0">
+						<img src="/assets/images/phone-blue.svg" alt="Fjord 8 Lite i blå" width="900" height="1200" loading="eager" decoding="async">
+						<ui-beacon>Få på lager</ui-beacon><ui-save><button type="button" command="--save" commandfor="fjord-8-lite-blue" aria-label="Føj Fjord 8 Lite i blå til ønskelisten"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
+					</ui-media>
+					<ui-media id="fjord-8-lite-green" media="sticker(te) sticker(green-800) sticker(2xl) save(be)" style="--ui-carousel-marker-bg: color-mix(in oklab, #2ea36b 40%, #0000); --ui-carousel-marker-active: #2ea36b">
+						<img src="/assets/images/phone-green.svg" alt="Fjord 8 Lite i grøn" width="900" height="1200" loading="lazy" decoding="async">
+						<ui-sticker><small>SPAR</small><strong>10%</strong></ui-sticker><ui-save><button type="button" command="--save" commandfor="fjord-8-lite-green" aria-label="Føj Fjord 8 Lite i grøn til ønskelisten"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
+					</ui-media>
+					<ui-media id="fjord-8-lite-orange" media="chip(ts) ai(bs) save(be)" style="--ui-carousel-marker-bg: color-mix(in oklab, #f2782a 40%, #0000); --ui-carousel-marker-active: #f2782a">
+						<img src="/assets/images/phone-orange.svg" alt="Fjord 8 Lite i orange" width="900" height="1200" loading="lazy" decoding="async">
+						<ui-chip theme="red-700">Sidste chance!</ui-chip><ui-ai aria-description="Billedet er genereret med AI.">AI-genereret</ui-ai><ui-save><button type="button" command="--save" commandfor="fjord-8-lite-orange" aria-label="Føj Fjord 8 Lite i orange til ønskelisten"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
+					</ui-media>
 				</ui-media>
 				<ui-content>
 					<small data-part="eyebrow">Fjord</small>
