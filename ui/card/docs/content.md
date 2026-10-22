@@ -432,6 +432,29 @@ Content parts are **semantic children** marked with `data-part`. They are auto-s
 
 Bare headings (`h2`–`h6`) are styled identically to `data-part="headline"` as a convenience, so plain semantic markup just works.
 
+### Price and rating — keeping them on the cap-trimmed rhythm
+
+Every row in `<ui-content>` gets `text-box: cap alphabetic`, so the vertical rhythm is the
+column `gap` alone. Trimming only applies to **block containers** and inline boxes, so a
+flex row keeps its full line height. Two parts were flex rows and therefore sat taller than
+their text:
+
+- **`price`** is now **inline flow** (a block `<p>`), not flex. The leading price is
+  usually a bare text node, which inside flex becomes an anonymous item no selector can
+  trim. The `<del>` / `<small>` / `<ui-chip>` children are spaced with
+  `margin-inline-start: var(--ui-content-price-gap)`; the chip sits `vertical-align: middle`
+  and overhangs the trimmed line box rather than growing it.
+- **`rating`** stays `inline-flex`, but its text spans are trimmed (`> :not(input)`), and
+  a **display-only** star input (`.ui-rating[disabled]` or `[readonly]`) gets
+  `font: inherit` and `margin-block: calc((1cap − var(--ui-rating-size)) / 2)`. That
+  undoes two leaks: `ui/base/form.css` gives every `[type=range]` a thumb-room
+  `margin-block`, and an input does not inherit `font-size`, so `1.15em` resolved against
+  16px. The negative margin lets the stars overhang into the gap, so the row measures one
+  cap height like its neighbours. An interactive rating input is left alone.
+
+Boxes that are boxes on purpose — tag chips, the CTA button, a chip inside a `meta` row —
+keep their padding; that is visual weight, not leading.
+
 Each part keeps its own `--ui-content-{part}-*` token(s) (see *Tokens*) for future per-part typography knobs.
 
 #### `data-variant="menu"` — the priced row

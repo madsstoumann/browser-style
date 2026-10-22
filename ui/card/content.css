@@ -506,20 +506,17 @@
 
 		/* === STRUCTURED PARTS — hook → group ink → default. Docs: docs/content.md === */
 
-		/* price — Body group (prominent) */
+		/* price — Body group (prominent). Inline flow, not flex, so the row's cap trim applies. Docs: docs/content.md § Price and rating */
 		& [data-part="price"] {
-			align-items: baseline;
 			color: var(--ui-content-price-ink, var(--ui-content-body-ink, inherit));
-			display: flex;
-			flex-wrap: wrap;
 			font-size: var(--ui-content-price-fs, calc(var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))) * 1.35));
 			font-weight: var(--ui-content-price-weight, var(--font-weight-bold, 700));
-			gap: var(--ui-content-price-gap, var(--spacing-sm));
 
+			& > :where(del, small, ui-chip) { margin-inline-start: var(--ui-content-price-gap, var(--spacing-sm)); }
 			& del   { color: var(--ui-content-muted); font-weight: var(--font-weight-normal, 400); }
 			& small { color: var(--ui-content-price-discount, var(--color-accent-ink)); font-size: 0.7em; }
 			/* chip rides the price row at label size, not price size */
-			& ui-chip { align-self: center; font-size: 0.55em; font-weight: var(--font-weight-normal, 400); }
+			& ui-chip { font-size: 0.55em; font-weight: var(--font-weight-normal, 400); vertical-align: middle; }
 		}
 
 		/* rating — Meta group; the symbol row is @browser.style/rating, display-only */
@@ -531,6 +528,9 @@
 			gap: var(--ui-content-rating-gap, var(--spacing-sm));
 
 			& .ui-rating { --ui-rating-size: var(--ui-content-rating-size, 1.15em); }
+			/* display-only stars: no form.css thumb margin, row-relative em, overhang the cap-trimmed row. Docs: docs/content.md § Price and rating */
+			& .ui-rating:is([disabled], [readonly]) { font: inherit; margin-block: calc((1cap - var(--ui-rating-size)) / 2); }
+			& > :not(input) { text-box: cap alphabetic; }
 			& small { color: var(--ui-content-meta-ink, var(--ui-content-muted)); }
 		}
 

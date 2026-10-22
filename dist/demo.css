@@ -17652,13 +17652,12 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       }
     }
     & [data-part=price] {
-      align-items: baseline;
       color: var(--ui-content-price-ink, var(--ui-content-body-ink, inherit));
-      display: flex;
-      flex-wrap: wrap;
       font-size: var(--ui-content-price-fs, calc(var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))) * 1.35));
       font-weight: var(--ui-content-price-weight, var(--font-weight-bold, 700));
-      gap: var(--ui-content-price-gap, var(--spacing-sm));
+      & > :where(del, small, ui-chip) {
+        margin-inline-start: var(--ui-content-price-gap, var(--spacing-sm));
+      }
       & del {
         color: var(--ui-content-muted);
         font-weight: var(--font-weight-normal, 400);
@@ -17668,9 +17667,9 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
         font-size: 0.7em;
       }
       & ui-chip {
-        align-self: center;
         font-size: 0.55em;
         font-weight: var(--font-weight-normal, 400);
+        vertical-align: middle;
       }
     }
     & [data-part=rating] {
@@ -17681,6 +17680,13 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       gap: var(--ui-content-rating-gap, var(--spacing-sm));
       & .ui-rating {
         --ui-rating-size: var(--ui-content-rating-size, 1.15em);
+      }
+      & .ui-rating:is([disabled], [readonly]) {
+        font: inherit;
+        margin-block: calc((1cap - var(--ui-rating-size)) / 2);
+      }
+      & > :not(input) {
+        text-box: cap alphabetic;
       }
       & small {
         color: var(--ui-content-meta-ink, var(--ui-content-muted));
