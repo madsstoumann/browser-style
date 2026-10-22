@@ -6,7 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="text-scale" content="scale">
 	<meta name="color-scheme" content="light dark">
-	<meta name="description" content="Overlay furniture inside &lt;ui-media&gt;: ai (EU AI Act disclosure label), beacon (live status), chip (pill label), play, save (bookmark toggle) and sticker (disc / burst) — positioned via the 9-code grid and themed via the media= token.">
+	<meta name="description" content="Overlay furniture inside &lt;ui-media&gt;: ai (EU AI Act disclosure label), beacon (live status), chip (pill label), energy (EU energy label), play, save (bookmark toggle) and sticker (disc / burst) — positioned via the 9-code grid and themed via the media= token.">
 	<link rel="alternate" type="text/markdown" href="/ui/card/docs/media.md">
 	<!-- no-referrer: the zone hotlink-protects CDN srcset. Docs: docs/performance.md -->
 	<meta name="referrer" content="no-referrer">
@@ -38,7 +38,7 @@
 <body data-layout-root data-page-gap="2">
 	<header>
 		<h1>UI: Card — Media furniture</h1>
-		<p>Overlay elements inside <code>&lt;ui-media&gt;</code>: <code>&lt;ui-ai&gt;</code>, <code>&lt;ui-beacon&gt;</code>, <code>&lt;ui-chip&gt;</code>, <code>&lt;ui-marquee&gt;</code>, <code>&lt;ui-play&gt;</code>, <code>&lt;ui-save&gt;</code>, <code>&lt;ui-sticker&gt;</code>. All configured from the parent <code>media=</code> token as <code>&lt;el&gt;(&lt;value&gt;)</code> — position on the 9-code grid (<code>ts tc te · cs cc ce · bs bc be</code>), plus hue, size etc.:</p>
+		<p>Overlay elements inside <code>&lt;ui-media&gt;</code>: <code>&lt;ui-ai&gt;</code>, <code>&lt;ui-beacon&gt;</code>, <code>&lt;ui-chip&gt;</code>, <code>&lt;ui-energy&gt;</code>, <code>&lt;ui-marquee&gt;</code>, <code>&lt;ui-play&gt;</code>, <code>&lt;ui-save&gt;</code>, <code>&lt;ui-sticker&gt;</code>. All configured from the parent <code>media=</code> token as <code>&lt;el&gt;(&lt;value&gt;)</code> — position on the 9-code grid (<code>ts tc te · cs cc ce · bs bc be</code>), plus hue, size etc.:</p>
 	</header>
 <main data-layout-root data-page-gap="2">
 
@@ -171,6 +171,41 @@
 			</cq-box>
 		</ui-card>
 	</lay-out>
+	</section>
+
+	<section>
+	<!-- ============================================================
+	     Energy — <ui-energy>
+	     ============================================================ -->
+	<h2>Energy — <code>&lt;ui-energy&gt;</code></h2>
+	<p>The EU energy label's nested display, as a visual indicator. Position with <code>energy(&lt;pos&gt;)</code> (default <code>bs</code>),
+		size with <code>energy(sm|lg)</code>. There is no colour token: the class colour is product data, from the element's own
+		<code>grade=</code> on the scale its <code>type=</code> implies (<code>phone</code> → A–G, <code>oven</code> → A+++–D …).</p>
+	<p>Full component: <a href="../../energy/">ui/energy</a> · in a shop grid: <a href="phone.html">phone.html</a>.</p>
+	<lay-out md="columns(2)" lg="columns(3)">
+		<ui-card variant="col" media="asr(1/1)">
+			<cq-box>
+				<ui-media style="--ui-media-bg: hsl(220, 20%, 96%)"><img src="/assets/images/phone-blue.svg" alt="" width="900" height="1200" loading="lazy" decoding="async"><ui-energy type="phone" grade="A" role="img" aria-label="Energy class A on a scale from A to G">A</ui-energy></ui-media>
+				<ui-content><small data-part="eyebrow">Phone · default</small><h2 data-part="headline">grade A — bs, 1.5rem</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(1/1) energy(be) energy(sm) chip(ts) chip(red-700)">
+			<cq-box>
+				<ui-media style="--ui-media-bg: hsl(220, 20%, 96%)"><img src="/assets/images/phone-orange.svg" alt="" width="900" height="1200" loading="lazy" decoding="async"><ui-chip>New</ui-chip><ui-energy type="phone" grade="C" role="img" aria-label="Energy class C on a scale from A to G">C</ui-energy></ui-media>
+				<ui-content><small data-part="eyebrow">Phone</small><h2 data-part="headline">energy(be) energy(sm) + chip(ts) chip(red-700)</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(1/1) energy(ts) energy(lg) sticker(te) sticker(green-800)">
+			<cq-box>
+				<ui-media style="--ui-media-bg: hsl(220, 20%, 96%)"><img src="/assets/images/phone-green.svg" alt="" width="900" height="1200" loading="lazy" decoding="async"><ui-sticker><small>SAVE</small><strong>15%</strong></ui-sticker><ui-energy type="phone" grade="D" role="img" aria-label="Energy class D on a scale from A to G">D</ui-energy></ui-media>
+				<ui-content><small data-part="eyebrow">Phone</small><h2 data-part="headline">energy(ts) energy(lg) + sticker(te) sticker(green-800)</h2></ui-content>
+			</cq-box>
+		</ui-card>
+	</lay-out>
+	<p>Outside a frame it is em-based, so next to a price it takes the price's font size, as the regulation asks:</p>
+	<p style="font-size:1.5rem;font-weight:700;">
+		4.799 kr. <ui-energy type="phone" grade="B" role="img" aria-label="Energy class B on a scale from A to G">B</ui-energy>
+	</p>
 	</section>
 
 	<section class="marquee-demo">
