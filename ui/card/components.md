@@ -25,6 +25,7 @@ grouped by role. Paths are relative to `ui/`, matching how the demos link them
 | Package | Element | Stylesheet |
 |---|---|---|
 | `ui/ai` | `<ui-ai>` — EU AI Act disclosure label; `render.js` emits it from a media item's `ai` object. Zero JS | `ai/ui-ai.css` |
+| `ui/energy` | `<ui-energy>` — EU energy label nested display (visual indicator), every EPREL scale. Zero JS | `energy/ui-energy.css` |
 | `ui/badge` | `<ui-badge>` — count badge; `render.js` emits it inside a furniture `<ui-chip>` (`furniture.chip.badge`). Declared peer | `badge/ui-badge.css` |
 | `ui/beacon` | `<ui-beacon>` | `beacon/ui-beacon.css` |
 | `ui/chip` | `<ui-chip>` | `chip/ui-chip.css` |

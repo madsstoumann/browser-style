@@ -35,7 +35,7 @@ const SHEETS = [
 	['ui/chip/ui-chip.css', MEDIA_ONLY], ['ui/ai/ui-ai.css', MEDIA_ONLY], ['ui/sticker/ui-sticker.css', MEDIA_ONLY],
 	['ui/save/ui-save.css', MEDIA_ONLY], ['ui/beacon/ui-beacon.css', MEDIA_ONLY],
 	['ui/marquee/ui-marquee.css', MEDIA_ONLY], ['ui/play/ui-play.css', MEDIA_ONLY],
-	['ui/lightbox/ui-lightbox.css', MEDIA_ONLY],
+	['ui/lightbox/ui-lightbox.css', MEDIA_ONLY], ['ui/energy/ui-energy.css', MEDIA_ONLY],
 	['ui/carousel/carousel.css', MEDIA_ONLY], ['ui/base/stagger.css', MEDIA_ONLY],
 	['layout/core/base.css', ALL], ['layout/core/group.css', ALL],
 	['ui/map/ui-map.css', MAP_ONLY]

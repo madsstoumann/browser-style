@@ -19,7 +19,7 @@
 /* Two sheets, not one: the icon webfont is hashed separately so it survives a bundle
    rehash. It MUST come second — it declares @layer bs-component, and loading it first
    would create that layer ahead of bs-core. Docs: ui/icon/readme.md § Icon font */
-export const HEAD_COMMON = `<link rel="stylesheet" href="/dist/demo.7834d3bd.min.css">
+export const HEAD_COMMON = `<link rel="stylesheet" href="/dist/demo.8b8c8e0b.min.css">
 	<link rel="stylesheet" href="/dist/icon-font.c6950688.min.css">
 	<!-- no-referrer: the zone hotlink-protects CDN srcset. Docs: docs/performance.md -->
 	<meta name="referrer" content="no-referrer">

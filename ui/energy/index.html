@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>UI: Energy label</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="color-scheme" content="light dark">
+	<meta name="description" content="&lt;ui-energy&gt; standalone: the EU energy label nested display as a visual indicator — the class arrow in its regulated colour with the scale range, for every product group.">
+	<link rel="alternate" type="text/markdown" href="readme.md">
+	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="ui-energy.css">
+	<style>
+		body { max-inline-size: 60rem; margin-inline: auto; padding: 2rem 1rem; }
+		.row { align-items: center; display: flex; flex-wrap: wrap; gap: 1rem; margin-block: 1rem 2rem; }
+		.price { font-size: 1.5rem; font-weight: 700; }
+	</style>
+</head>
+<body>
+<main>
+	<h1>UI: Energy label</h1>
+	<p>Standalone <code>&lt;ui-energy&gt;</code>: the EU energy label's nested display as a visual indicator. <code>type=</code> picks the scale the regulation sets for the product group, <code>grade=</code> the class, and the colour follows the class's place on that scale. On a card it is furniture with <code>energy(…)</code> tokens — see <a href="../card/demo/phone.html">the phone demo</a>.</p>
+
+	<h2>Next to the price</h2>
+	<p>The arrow is em-based, so inside the price it takes the price's font size, as the regulation requires.</p>
+	<p class="price">4.799 kr. <ui-energy type="phone" grade="B" role="img" aria-label="Energiklasse B på en skala fra A til G">B</ui-energy></p>
+
+	<h2>Every scale</h2>
+	<h3>A–G <small>(phone, tablet, fridge, dishwasher, washer, washer-dryer, dryer, display, light, commercial-fridge)</small></h3>
+	<div class="row">
+		<ui-energy type="phone" grade="A" role="img" aria-label="Energy class A on a scale from A to G">A</ui-energy>
+		<ui-energy type="phone" grade="B" role="img" aria-label="Energy class B on a scale from A to G">B</ui-energy>
+		<ui-energy type="phone" grade="C" role="img" aria-label="Energy class C on a scale from A to G">C</ui-energy>
+		<ui-energy type="phone" grade="D" role="img" aria-label="Energy class D on a scale from A to G">D</ui-energy>
+		<ui-energy type="phone" grade="E" role="img" aria-label="Energy class E on a scale from A to G">E</ui-energy>
+		<ui-energy type="phone" grade="F" role="img" aria-label="Energy class F on a scale from A to G">F</ui-energy>
+		<ui-energy type="phone" grade="G" role="img" aria-label="Energy class G on a scale from A to G">G</ui-energy>
+	</div>
+	<h3>A–E <small>(tyre)</small></h3>
+	<div class="row">
+		<ui-energy type="tyre" grade="A" role="img" aria-label="Energy class A on a scale from A to E">A</ui-energy>
+		<ui-energy type="tyre" grade="B" role="img" aria-label="Energy class B on a scale from A to E">B</ui-energy>
+		<ui-energy type="tyre" grade="C" role="img" aria-label="Energy class C on a scale from A to E">C</ui-energy>
+		<ui-energy type="tyre" grade="D" role="img" aria-label="Energy class D on a scale from A to E">D</ui-energy>
+		<ui-energy type="tyre" grade="E" role="img" aria-label="Energy class E on a scale from A to E">E</ui-energy>
+	</div>
+	<h3>A+++–D <small>(oven, hood, space-heater, air-con, boiler)</small></h3>
+	<div class="row">
+		<ui-energy type="oven" grade="A+++" role="img" aria-label="Energy class A+++ on a scale from A+++ to D">A+++</ui-energy>
+		<ui-energy type="oven" grade="A++" role="img" aria-label="Energy class A++ on a scale from A+++ to D">A++</ui-energy>
+		<ui-energy type="oven" grade="A+" role="img" aria-label="Energy class A+ on a scale from A+++ to D">A+</ui-energy>
+		<ui-energy type="oven" grade="A" role="img" aria-label="Energy class A on a scale from A+++ to D">A</ui-energy>
+		<ui-energy type="oven" grade="B" role="img" aria-label="Energy class B on a scale from A+++ to D">B</ui-energy>
+		<ui-energy type="oven" grade="C" role="img" aria-label="Energy class C on a scale from A+++ to D">C</ui-energy>
+		<ui-energy type="oven" grade="D" role="img" aria-label="Energy class D on a scale from A+++ to D">D</ui-energy>
+	</div>
+	<h3>A+–F <small>(water-heater)</small></h3>
+	<div class="row">
+		<ui-energy type="water-heater" grade="A+" role="img" aria-label="Energy class A+ on a scale from A+ to F">A+</ui-energy>
+		<ui-energy type="water-heater" grade="A" role="img" aria-label="Energy class A on a scale from A+ to F">A</ui-energy>
+		<ui-energy type="water-heater" grade="B" role="img" aria-label="Energy class B on a scale from A+ to F">B</ui-energy>
+		<ui-energy type="water-heater" grade="C" role="img" aria-label="Energy class C on a scale from A+ to F">C</ui-energy>
+		<ui-energy type="water-heater" grade="D" role="img" aria-label="Energy class D on a scale from A+ to F">D</ui-energy>
+		<ui-energy type="water-heater" grade="E" role="img" aria-label="Energy class E on a scale from A+ to F">E</ui-energy>
+		<ui-energy type="water-heater" grade="F" role="img" aria-label="Energy class F on a scale from A+ to F">F</ui-energy>
+	</div>
+	<h3>A+–G <small>(ventilation)</small></h3>
+	<div class="row">
+		<ui-energy type="ventilation" grade="A+" role="img" aria-label="Energy class A+ on a scale from A+ to G">A+</ui-energy>
+		<ui-energy type="ventilation" grade="A" role="img" aria-label="Energy class A on a scale from A+ to G">A</ui-energy>
+		<ui-energy type="ventilation" grade="B" role="img" aria-label="Energy class B on a scale from A+ to G">B</ui-energy>
+		<ui-energy type="ventilation" grade="C" role="img" aria-label="Energy class C on a scale from A+ to G">C</ui-energy>
+		<ui-energy type="ventilation" grade="D" role="img" aria-label="Energy class D on a scale from A+ to G">D</ui-energy>
+		<ui-energy type="ventilation" grade="E" role="img" aria-label="Energy class E on a scale from A+ to G">E</ui-energy>
+		<ui-energy type="ventilation" grade="F" role="img" aria-label="Energy class F on a scale from A+ to G">F</ui-energy>
+		<ui-energy type="ventilation" grade="G" role="img" aria-label="Energy class G on a scale from A+ to G">G</ui-energy>
+	</div>
+	<h3>A++–G <small>(local-heater)</small></h3>
+	<div class="row">
+		<ui-energy type="local-heater" grade="A++" role="img" aria-label="Energy class A++ on a scale from A++ to G">A++</ui-energy>
+		<ui-energy type="local-heater" grade="A+" role="img" aria-label="Energy class A+ on a scale from A++ to G">A+</ui-energy>
+		<ui-energy type="local-heater" grade="A" role="img" aria-label="Energy class A on a scale from A++ to G">A</ui-energy>
+		<ui-energy type="local-heater" grade="B" role="img" aria-label="Energy class B on a scale from A++ to G">B</ui-energy>
+		<ui-energy type="local-heater" grade="C" role="img" aria-label="Energy class C on a scale from A++ to G">C</ui-energy>
+		<ui-energy type="local-heater" grade="D" role="img" aria-label="Energy class D on a scale from A++ to G">D</ui-energy>
+		<ui-energy type="local-heater" grade="E" role="img" aria-label="Energy class E on a scale from A++ to G">E</ui-energy>
+		<ui-energy type="local-heater" grade="F" role="img" aria-label="Energy class F on a scale from A++ to G">F</ui-energy>
+		<ui-energy type="local-heater" grade="G" role="img" aria-label="Energy class G on a scale from A++ to G">G</ui-energy>
+	</div>
+	<h3>A+++–G <small>(pro-fridge)</small></h3>
+	<div class="row">
+		<ui-energy type="pro-fridge" grade="A+++" role="img" aria-label="Energy class A+++ on a scale from A+++ to G">A+++</ui-energy>
+		<ui-energy type="pro-fridge" grade="A++" role="img" aria-label="Energy class A++ on a scale from A+++ to G">A++</ui-energy>
+		<ui-energy type="pro-fridge" grade="A+" role="img" aria-label="Energy class A+ on a scale from A+++ to G">A+</ui-energy>
+		<ui-energy type="pro-fridge" grade="A" role="img" aria-label="Energy class A on a scale from A+++ to G">A</ui-energy>
+		<ui-energy type="pro-fridge" grade="B" role="img" aria-label="Energy class B on a scale from A+++ to G">B</ui-energy>
+		<ui-energy type="pro-fridge" grade="C" role="img" aria-label="Energy class C on a scale from A+++ to G">C</ui-energy>
+		<ui-energy type="pro-fridge" grade="D" role="img" aria-label="Energy class D on a scale from A+++ to G">D</ui-energy>
+		<ui-energy type="pro-fridge" grade="E" role="img" aria-label="Energy class E on a scale from A+++ to G">E</ui-energy>
+		<ui-energy type="pro-fridge" grade="F" role="img" aria-label="Energy class F on a scale from A+++ to G">F</ui-energy>
+		<ui-energy type="pro-fridge" grade="G" role="img" aria-label="Energy class G on a scale from A+++ to G">G</ui-energy>
+	</div>
+</main>
+</body>
+</html>

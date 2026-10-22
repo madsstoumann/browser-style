@@ -1,0 +1,36 @@
+{
+	"$comment": "EU energy label scales. colours: sRGB of the regulations' seven arrow CMYK values, A (best) to G (worst). scales: classes best to worst; 7-class scales use the colours as-is, other lengths interpolate. types: product group -> scale. Build: node scales.build.js. Docs: readme.md",
+	"fallback": "A-G",
+	"colours": ["#00a54f", "#50b848", "#bed62f", "#fff200", "#fdb913", "#f37021", "#ed1c24"],
+	"scales": {
+		"A-G": ["A", "B", "C", "D", "E", "F", "G"],
+		"A-E": ["A", "B", "C", "D", "E"],
+		"A+++-D": ["A+++", "A++", "A+", "A", "B", "C", "D"],
+		"A+-F": ["A+", "A", "B", "C", "D", "E", "F"],
+		"A+-G": ["A+", "A", "B", "C", "D", "E", "F", "G"],
+		"A++-G": ["A++", "A+", "A", "B", "C", "D", "E", "F", "G"],
+		"A+++-G": ["A+++", "A++", "A+", "A", "B", "C", "D", "E", "F", "G"]
+	},
+	"types": {
+		"phone": "A-G",
+		"tablet": "A-G",
+		"fridge": "A-G",
+		"dishwasher": "A-G",
+		"washer": "A-G",
+		"washer-dryer": "A-G",
+		"dryer": "A-G",
+		"display": "A-G",
+		"light": "A-G",
+		"commercial-fridge": "A-G",
+		"tyre": "A-E",
+		"oven": "A+++-D",
+		"hood": "A+++-D",
+		"space-heater": "A+++-D",
+		"air-con": "A+++-D",
+		"boiler": "A+++-D",
+		"water-heater": "A+-F",
+		"ventilation": "A+-G",
+		"local-heater": "A++-G",
+		"pro-fridge": "A+++-G"
+	}
+}

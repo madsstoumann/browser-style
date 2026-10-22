@@ -2706,8 +2706,8 @@
         translate: var(--_stg-tr, 0 var(--stagger-distance, 5rem));
       }
     }
-    :where(ui-card[media*=stagger], ui-reveal[media*=stagger]) ui-media > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker),
-    ui-media:where([media*=stagger]) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker) {
+    :where(ui-card[media*=stagger], ui-reveal[media*=stagger]) ui-media > :not(ui-beacon, ui-chip, ui-energy, ui-lightbox, ui-play, ui-save, ui-sticker),
+    ui-media:where([media*=stagger]) > :not(ui-beacon, ui-chip, ui-energy, ui-lightbox, ui-play, ui-save, ui-sticker) {
       container-type: scroll-state;
     }
     :where(ui-card[media*=stagger], ui-reveal[media*=stagger]) ui-media > :where(ui-slide, lay-out) > *,
@@ -2752,8 +2752,8 @@
         container-type: scroll-state inline-size;
         --_stg-crd-i: 0;
       }
-      ui-media[media~=pages] > lay-out > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker),
-      :is(ui-card, ui-reveal)[media~=pages] ui-media > lay-out > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker) {
+      ui-media[media~=pages] > lay-out > :not(ui-beacon, ui-chip, ui-energy, ui-lightbox, ui-play, ui-save, ui-sticker),
+      :is(ui-card, ui-reveal)[media~=pages] ui-media > lay-out > :not(ui-beacon, ui-chip, ui-energy, ui-lightbox, ui-play, ui-save, ui-sticker) {
         filter: none;
         opacity: 1;
         scale: none;

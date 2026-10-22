@@ -925,6 +925,50 @@ export default {
 					],
 					"notes": "EU AI Act disclosure label. Default area bc. No face tokens: the CONTENT decides — a text node shows the EU icon plus that text, as written (the renderer's default words are \"GENERATED\" / \"MODIFIED\"; a CMS may pass a phrase such as \"Voice rendered with AI\"), an empty element shows the icon alone (:empty). The word comes from render.js aiLabel() (truth table ui/ai/data/cases.json), which always writes one, so the legal floor (a deep fake keeps its word) lives in the renderer, not in CSS. The icon's alt text (content: \"\" / \"AI\") puts \"AI\" in the accessible name. The label keeps full-contrast ink: ai(<hue>-<step>) only picks the plate, and the default plate is gray-800. Size is rem-based and the DEFAULT is the smallest readable (0.6875rem, 11px) — the card's own scale never shrinks it further — so the axis only grows: ai(lg) 13px, ai(xl) 16px; there is no ai(sm). Markup is one element and at most one text node — <ui-ai aria-description>word</ui-ai>; the details ride aria-description for AT only, never painted. A frame with a native-controls <video> lifts the label clear of them (--ui-ai-lift). The face tokens ai(label|icon|pill) and the options= attribute were removed in @browser.style/ai 2.0 — ui/ai/migration.md."
 				},
+				"energy": {
+					"axis": "furniture",
+					"element": "ui-energy",
+					"args": {
+						"pos": [
+							"ts",
+							"tc",
+							"te",
+							"cs",
+							"cc",
+							"ce",
+							"bs",
+							"bc",
+							"be"
+						],
+						"size": [
+							"sm",
+							"lg"
+						]
+					},
+					"argAliases": {},
+					"bare": false,
+					"matching": "substring",
+					"writes": [
+						"--ui-energy-*"
+					],
+					"realProperties": true,
+					"cqPrefixes": [],
+					"cqArgs": [],
+					"selfArm": true,
+					"hosts": [
+						"ui-media",
+						"ui-card",
+						"ui-reveal"
+					],
+					"requiresJs": {},
+					"deprecated": false,
+					"canonical": null,
+					"sources": [
+						"ui/card/media.css:152",
+						"ui/energy/ui-energy.css:134-135"
+					],
+					"notes": "EU energy label nested display as a VISUAL INDICATOR (not interactive): a left-pointing arrow in the class colour, the class letter in white, a black border, the scale range in black (Regulation (EU) 2023/1669 Annex VIII for phones and tablets). Default area bs. No colour axis — the colour is the regulated class colour, picked by the element's own grade= on the scale its type= implies (phone → A–G, tyre → A–E, oven → A+++–D …; scale= overrides), all PIM data, never a card token; the scales are generated from ui/energy/data/scales.json. Size is rem-based as furniture: default 1.5rem, energy(sm) 1.125rem, energy(lg) 2rem. In content it is em-based, so placed in the price row it matches the price's font size, which the regulation requires. The regulation also wants it close to the price, so content placement is the compliant default; furniture suits listings where the price sits right under the image."
+				},
 				"sticker": {
 					"axis": "furniture",
 					"element": "ui-sticker",
