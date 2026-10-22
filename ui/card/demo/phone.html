@@ -53,22 +53,10 @@
 <body>
 <main>
 	<h1>UI: Card — Phone shop</h1>
-	<p>The colourway carousels from <a href="media.carousel.html#colourways">media.carousel.html</a>, dressed as product tiles on a Danish telecom webshop. One coloured dot per slide picks the colour; the furniture sits on the media's 9-code grid, one cell each so nothing collides:</p>
-	<ul>
-		<li><code>chip(ts)</code> — <code>&lt;ui-chip&gt;</code> <strong>Nyhed!</strong> top-start, where the eye lands first.</li>
-		<li><code>sticker(te)</code> — <code>&lt;ui-sticker&gt;</code> <strong>SPAR 20%</strong> splash top-end, where telecom shops put the campaign.</li>
-		<li><code>save(be)</code> — <code>&lt;ui-save&gt;</code> wishlist heart bottom-end, by the thumb on a phone.</li>
-		<li><code>beacon(ts)</code> — <code>&lt;ui-beacon&gt;</code> for <em>live</em> status (<strong>Kun i dag</strong>, <strong>Få på lager</strong>). It shares <code>ts</code> with the chip, so a tile carries one or the other.</li>
-		<li><code>ai(bs)</code> — <code>&lt;ui-ai&gt;</code> <strong>AI-genereret</strong> bottom-start, on the image it labels; the dots take the centre and the heart the end.</li>
-	</ul>
-	<p>Bare <code>nav</code> gives dots bottom-centre and chevron arrows on the side edges; <code>fixed</code> keeps the furniture in place while you swipe through the colours (<a href="media.carousel.html#fixed">media.carousel.html § Fixed furniture</a>). Static specs — <strong>5G</strong>, <strong>eSIM</strong>, <strong>Dual SIM</strong> — are plain chips in <code>data-part="tags"</code>: they never change, so they don't need the beacon's motion, and they don't cover the product. Rating, price, stock and the call to action live in <code>&lt;ui-content&gt;</code>.</p>
-	<p>The grid is <code>md="columns(2) subgrid" subgrid="9"</code> with <code>variant="col sub"</code> on each card: the media plus eight content parts share nine rows across a grid row, so prices, stock and the <strong>Køb</strong> button line up from tile to tile however long a name or spec list runs. Every tile carries all eight parts for that reason.</p>
 
 	<!-- ════════════════════════════════════════════════════════════
 	     PRODUCT GRID — one tile per phone
 	     ════════════════════════════════════════════════════════════ -->
-	<h2 id="grid">Product grid</h2>
-	<p>Each tile adds only the furniture it needs: a brand-new model gets the chip, a campaign the sticker, a time- or stock-limited offer the beacon, an AI render the label. The heart is on every tile.</p>
 	<lay-out md="columns(2) subgrid" subgrid="9" lang="da">
 
 		<ui-card id="nova-x" class="colourways" variant="col sub" media="asr(3/4) nav fixed mrk(lg) chip(ts) ai(bs) save(be) sticker(te) sticker(red-700) sticker(2xl)" content="scl(sm)">
@@ -125,7 +113,7 @@
 			</cq-box>
 		</ui-card>
 
-		<ui-card id="fjord-8" class="colourways" variant="col sub" media="asr(3/4) nav fixed mrk(lg) beacon(ts) beacon(sld) beacon(red-700) beacon(pls) save(be) sticker(te) sticker(red-700) sticker(2xl)" content="scl(sm)">
+		<ui-card id="fjord-8" class="colourways" variant="col sub" media="asr(3/4) nav mrk(lg) beacon(ts) beacon(sld) beacon(red-700) beacon(pls) save(be) sticker(te) sticker(red-700) sticker(2xl)" content="scl(sm)">
 			<cq-box>
 				<ui-media>
 					<img src="/assets/images/phone-green.svg" alt="Fjord 8 i grøn" width="900" height="1200" loading="eager" decoding="async" style="--ui-carousel-marker-bg: color-mix(in oklab, #2ea36b 40%, #0000); --ui-carousel-marker-active: #2ea36b">
@@ -152,7 +140,7 @@
 			</cq-box>
 		</ui-card>
 
-		<ui-card id="fjord-8-lite" class="colourways" variant="col sub" media="asr(3/4) nav fixed mrk(lg) beacon(ts) beacon(sld) beacon(orange-700) beacon(pls) save(be)" content="scl(sm)">
+		<ui-card id="fjord-8-lite" class="colourways" variant="col sub" media="asr(3/4) nav mrk(lg) beacon(ts) beacon(sld) beacon(orange-700) beacon(pls) save(be)" content="scl(sm)">
 			<cq-box>
 				<ui-media>
 					<img src="/assets/images/phone-blue.svg" alt="Fjord 8 Lite i blå" width="900" height="1200" loading="eager" decoding="async" style="--ui-carousel-marker-bg: color-mix(in oklab, #2f6fe0 40%, #0000); --ui-carousel-marker-active: #2f6fe0">
