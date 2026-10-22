@@ -28,6 +28,11 @@
 		.colourways ui-media { --ui-media-bg: light-dark(hsl(220, 20%, 96%), hsl(220, 10%, 18%)); }
 		/* the price row's small print: monthly price, minimum price (mindstepris) */
 		.legal { font-size: 0.8125em; }
+		/* sub dissolves <ui-content>, so its parts take back the padding. Docs: layout/AGENTS.md § Subgrid */
+		@container style(--_sub: 1) {
+			.colourways > cq-box > ui-content > * { margin-inline: var(--spacing-md); }
+			.colourways > cq-box > ui-content > :last-child { margin-block-end: var(--spacing-md); }
+		}
 	</style>
 	<style>
 		/* Page-scoped WCAG AA contrast overrides — pending a token retune in ui/base/tokens.css.
@@ -54,18 +59,19 @@
 		<li><code>sticker(te)</code> — <code>&lt;ui-sticker&gt;</code> <strong>SPAR 20%</strong> splash top-end, where telecom shops put the campaign.</li>
 		<li><code>save(be)</code> — <code>&lt;ui-save&gt;</code> wishlist heart bottom-end, by the thumb on a phone.</li>
 		<li><code>beacon(ts)</code> — <code>&lt;ui-beacon&gt;</code> for <em>live</em> status (<strong>Kun i dag</strong>, <strong>Få på lager</strong>). It shares <code>ts</code> with the chip, so a tile carries one or the other.</li>
-		<li><code>&lt;ui-ai&gt;</code> <strong>AI-genereret</strong> — on a narrow tile the bottom edge belongs to the dots and the heart, so the label moves into the content, right under the product name. A wide tile has room for it on the image: <code>ai(bs)</code>.</li>
+		<li><code>ai(bs)</code> — <code>&lt;ui-ai&gt;</code> <strong>AI-genereret</strong> bottom-start, on the image it labels; the dots take the centre and the heart the end.</li>
 	</ul>
 	<p>The dots stay bottom-centre (<code>nav(mrk)</code>). Static specs — <strong>5G</strong>, <strong>eSIM</strong>, <strong>Dual SIM</strong> — are plain chips in <code>data-part="tags"</code>: they never change, so they don't need the beacon's motion, and they don't cover the product. Rating, price, stock and the call to action live in <code>&lt;ui-content&gt;</code>.</p>
+	<p>The grid is <code>md="columns(2) subgrid" subgrid="9"</code> with <code>variant="col sub"</code> on each card: the media plus eight content parts share nine rows across a grid row, so prices, stock and the <strong>Køb</strong> button line up from tile to tile however long a name or spec list runs. Every tile carries all eight parts for that reason.</p>
 
 	<!-- ════════════════════════════════════════════════════════════
 	     PRODUCT GRID — one tile per phone
 	     ════════════════════════════════════════════════════════════ -->
 	<h2 id="grid">Product grid</h2>
 	<p>Each tile adds only the furniture it needs: a brand-new model gets the chip, a campaign the sticker, a time- or stock-limited offer the beacon, an AI render the label. The heart is on every tile.</p>
-	<lay-out md="columns(2)" lg="columns(4)" lang="da">
+	<lay-out md="columns(2) subgrid" subgrid="9" lang="da">
 
-		<ui-card id="nova-x" class="colourways" variant="col" media="asr(3/4) nav(mrk) mrk(lg) chip(ts) save(be) sticker(te) sticker(red-700) sticker(xl)" content="scl(sm)">
+		<ui-card id="nova-x" class="colourways" variant="col sub" media="asr(3/4) nav(mrk) mrk(lg) chip(ts) ai(bs) save(be) sticker(te) sticker(red-700) sticker(xl)" content="scl(sm)">
 			<cq-box>
 				<ui-media>
 					<img src="/assets/images/phone-blue.svg" alt="Nova X i blå" width="900" height="1200" loading="eager" decoding="async" style="--ui-carousel-marker-bg: color-mix(in oklab, #2f6fe0 40%, #0000); --ui-carousel-marker-active: #2f6fe0">
@@ -74,11 +80,11 @@
 					<ui-chip theme="red-700">Nyhed!</ui-chip>
 					<ui-save><button type="button" command="--save" commandfor="nova-x" aria-label="Føj Nova X til ønskelisten"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
 					<ui-sticker><small>SPAR</small><strong>20%</strong></ui-sticker>
+					<ui-ai aria-description="Billedet er genereret med AI.">AI-genereret</ui-ai>
 				</ui-media>
 				<ui-content>
 					<small data-part="eyebrow">Nordtel</small>
 					<h3 data-part="headline">Nova X 256 GB</h3>
-					<p data-part="meta"><ui-ai aria-description="Billedet er genereret med AI.">AI-genereret</ui-ai></p>
 					<ul data-part="tags"><li><ui-chip theme="gray-100">5G</ui-chip></li><li><ui-chip theme="gray-100">eSIM</ui-chip></li><li><ui-chip theme="gray-100">Dual SIM</ui-chip></li></ul>
 					<div data-part="rating">
 						<input class="ui-rating" type="range" min="1" max="5" value="4.6" step="0.01" disabled aria-hidden="true">
@@ -93,18 +99,18 @@
 			</cq-box>
 		</ui-card>
 
-		<ui-card id="nova-x-pro" class="colourways" variant="col" media="asr(3/4) nav(mrk) mrk(lg) chip(ts) save(be)" content="scl(sm)">
+		<ui-card id="nova-x-pro" class="colourways" variant="col sub" media="asr(3/4) nav(mrk) mrk(lg) chip(ts) ai(bs) save(be)" content="scl(sm)">
 			<cq-box>
 				<ui-media>
 					<img src="/assets/images/phone-orange.svg" alt="Nova X Pro i orange" width="900" height="1200" loading="eager" decoding="async" style="--ui-carousel-marker-bg: color-mix(in oklab, #f2782a 40%, #0000); --ui-carousel-marker-active: #f2782a">
 					<img src="/assets/images/phone-blue.svg" alt="Nova X Pro i blå" width="900" height="1200" loading="lazy" decoding="async" style="--ui-carousel-marker-bg: color-mix(in oklab, #2f6fe0 40%, #0000); --ui-carousel-marker-active: #2f6fe0">
 					<ui-chip theme="red-700">Nyhed!</ui-chip>
 					<ui-save><button type="button" command="--save" commandfor="nova-x-pro" aria-label="Føj Nova X Pro til ønskelisten"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
+					<ui-ai aria-description="Billedet er genereret med AI.">AI-genereret</ui-ai>
 				</ui-media>
 				<ui-content>
 					<small data-part="eyebrow">Nordtel</small>
 					<h3 data-part="headline">Nova X Pro 512 GB</h3>
-					<p data-part="meta"><ui-ai aria-description="Billedet er genereret med AI.">AI-genereret</ui-ai></p>
 					<ul data-part="tags"><li><ui-chip theme="gray-100">5G</ui-chip></li><li><ui-chip theme="gray-100">eSIM</ui-chip></li></ul>
 					<div data-part="rating">
 						<input class="ui-rating" type="range" min="1" max="5" value="4.8" step="0.01" disabled aria-hidden="true">
@@ -119,7 +125,7 @@
 			</cq-box>
 		</ui-card>
 
-		<ui-card id="fjord-8" class="colourways" variant="col" media="asr(3/4) nav(mrk) mrk(lg) beacon(ts) beacon(sld) beacon(red-700) beacon(pls) save(be) sticker(te) sticker(red-700) sticker(xl)" content="scl(sm)">
+		<ui-card id="fjord-8" class="colourways" variant="col sub" media="asr(3/4) nav(mrk) mrk(lg) beacon(ts) beacon(sld) beacon(red-700) beacon(pls) save(be) sticker(te) sticker(red-700) sticker(xl)" content="scl(sm)">
 			<cq-box>
 				<ui-media>
 					<img src="/assets/images/phone-green.svg" alt="Fjord 8 i grøn" width="900" height="1200" loading="eager" decoding="async" style="--ui-carousel-marker-bg: color-mix(in oklab, #2ea36b 40%, #0000); --ui-carousel-marker-active: #2ea36b">
@@ -146,7 +152,7 @@
 			</cq-box>
 		</ui-card>
 
-		<ui-card id="fjord-8-lite" class="colourways" variant="col" media="asr(3/4) nav(mrk) mrk(lg) beacon(ts) beacon(sld) beacon(orange-700) beacon(pls) save(be)" content="scl(sm)">
+		<ui-card id="fjord-8-lite" class="colourways" variant="col sub" media="asr(3/4) nav(mrk) mrk(lg) beacon(ts) beacon(sld) beacon(orange-700) beacon(pls) save(be)" content="scl(sm)">
 			<cq-box>
 				<ui-media>
 					<img src="/assets/images/phone-blue.svg" alt="Fjord 8 Lite i blå" width="900" height="1200" loading="eager" decoding="async" style="--ui-carousel-marker-bg: color-mix(in oklab, #2f6fe0 40%, #0000); --ui-carousel-marker-active: #2f6fe0">
@@ -165,6 +171,7 @@
 					</div>
 					<p data-part="price">1.799 kr.</p>
 					<p data-part="meta" class="legal">Eller 75 kr./md. i 24 mdr. Mindstepris 1.799 kr.</p>
+					<p data-part="meta"><ui-chip theme="gray-100">Levering 2–4 hverdage</ui-chip></p>
 					<nav data-part="actions"><a class="ui-button bg-accent" href="#">Køb</a></nav>
 				</ui-content>
 			</cq-box>
@@ -175,7 +182,7 @@
 	     FEATURED — the campaign tile, all four on one frame
 	     ════════════════════════════════════════════════════════════ -->
 	<h2 id="featured">Featured — all four on one frame</h2>
-	<p>The campaign slot on a front page: media beside the content (<code>row spl(1/1)</code>), a starburst splash (<code>sticker(sh:burst)</code>) and larger furniture (<code>save(lg)</code>, <code>sticker(2xl)</code>, <code>ai(lg)</code>). With the room a wide frame gives, the AI label goes back on the image: <code>chip(ts) sticker(te) ai(bs) save(be)</code>.</p>
+	<p>The campaign slot on a front page: media beside the content (<code>row spl(1/1)</code>), a starburst splash (<code>sticker(sh:burst)</code>) and larger furniture (<code>save(lg)</code>, <code>sticker(2xl)</code>, <code>ai(lg)</code>). Same cells as the grid: <code>chip(ts) sticker(te) ai(bs) save(be)</code>.</p>
 	<lay-out lang="da">
 		<ui-card id="nova-x-featured" class="colourways" variant="row spl(1/1)" media="asr(3/4) nav(mrk) mrk(xl) chip(ts) save(be) save(lg) sticker(te) sticker(sh:burst) sticker(red-700) sticker(2xl) ai(bs) ai(lg)">
 			<cq-box>
