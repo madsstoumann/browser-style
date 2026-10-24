@@ -57,6 +57,7 @@
 				"title": { "type": "string" },
 				"description": { "type": "string" },
 				"required": { "type": "boolean" },
+				"track": { "type": "boolean", "description": "Choice fields only: the chosen value may be sent to analytics. Never for personal data" },
 				"localized": { "type": "boolean" },
 				"default": {},
 				"validation": {

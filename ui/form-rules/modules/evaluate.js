@@ -52,6 +52,10 @@ function resolve(form, results, input) {
 	for (const { rule, matched } of results) {
 		const priority = rule.priority ?? 0;
 		const wasMatched = previousMatched.has(rule.id);
+		/* A tracked rule reports its own edges, for analytics (ids only). */
+		if (rule.track && matched !== (hasPrevious && wasMatched) && (matched || hasPrevious)) {
+			effects.push({ type: 'track', event: matched ? 'rule.enter' : 'rule.leave', rule: rule.id });
+		}
 		const lists = [
 			{ actions: rule.then ?? [], active: matched, before: hasPrevious && wasMatched, source: rule.id },
 			{ actions: rule.else ?? [], active: !matched, before: hasPrevious && !wasMatched, source: `${rule.id}:else` }

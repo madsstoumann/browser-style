@@ -164,7 +164,7 @@ function fieldInspector(editor, id) {
 		field('Type', select(TYPES, property.type, value => update(p => {
 			p.type = value;
 			if (value === 'select' && !p.options?.choices) p.options = { choices: [{ value: 'a', label: 'Option A' }, { value: 'b', label: 'Option B' }] };
-			if (value !== 'select') delete p.options;
+			if (value !== 'select') { delete p.options; delete p.track; }
 			if (p.ui?.widget && !(WIDGETS[value] ?? []).some(([w]) => w === p.ui.widget)) delete p.ui.widget;
 		}))),
 		widgets ? field('Shown as', select(widgets, property.ui?.widget ?? '', value => update(p => {
@@ -177,6 +177,7 @@ function fieldInspector(editor, id) {
 			setOrDelete(p.ui, 'hidden', value);
 		})),
 		property.type === 'select' ? choicesEditor(property, numeric, update) : null,
+		property.type === 'select' ? check('Send the chosen option to analytics (not for personal data)', property.track === true, value => update(p => setOrDelete(p, 'track', value))) : null,
 		property.type === 'number' || property.type === 'integer' ? h('div', { part: 'row' },
 			field('Lowest', h('input', { type: 'number', value: validation.minimum ?? '', onchange: e => update(p => { p.validation = { ...(p.validation ?? {}) }; setOrDelete(p.validation, 'minimum', e.target.value === '' ? '' : Number(e.target.value)); }) })),
 			field('Highest', h('input', { type: 'number', value: validation.maximum ?? '', onchange: e => update(p => { p.validation = { ...(p.validation ?? {}) }; setOrDelete(p.validation, 'maximum', e.target.value === '' ? '' : Number(e.target.value)); }) }))

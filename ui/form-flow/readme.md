@@ -51,6 +51,7 @@ Every input re-runs `evaluate()` and applies the result:
 | `ff:emit` | `{ type, data, rule, where }` |
 | `ff:submit` | `{ form, rules, version, values, state }` |
 | `ff:error` | `{ error, errors?, effect?, event? }` |
+| `ff:track` | An analytics event, see below |
 
 ## Attributes
 
@@ -58,6 +59,7 @@ Every input re-runs `evaluate()` and applies the result:
 | --- | --- |
 | `form`, `rules` | URLs of the form definition and the rule set |
 | `explain` | Shows a "Why" list of which rule decided what |
+| `track-context` | Context keys `form.start` may carry (default `channel campaign`) |
 | `label-prev`, `label-next`, `label-submit`, `label-unavailable`, `label-required` | Button and message texts |
 
 ## Field types
@@ -70,3 +72,53 @@ Every input re-runs `evaluate()` and applies the result:
 | `select` | `<select>`; a radio group with `ui.widget: "radio"`; checkboxes with `options.multiple` |
 
 Values are typed from the definition: a choice `30` comes back as the number `30`.
+
+## Tracking
+
+form-flow describes the funnel as `ff:track` events and hands each one to `flow.tracker`. Every event has the same envelope, so a backend can store it as one flat row:
+
+```json
+{ "type": "step.leave", "form": "form-loan", "rules": "loan", "version": 1,
+  "session": "s_7f3a…", "seq": 14, "at": "2026-10-24T09:12:03Z",
+  "step": "economy", "index": 1, "path": ["you", "economy", "loan", "review"],
+  "data": { "ms": 41200, "direction": "next" } }
+```
+
+`session` is random per run (not a user id, not stored); `seq` orders events sent in batches.
+
+| Event | When | `data` |
+| --- | --- | --- |
+| `form.view` | The form is rendered | |
+| `form.start` | First input | `entry`, `context` (only the `track-context` keys) |
+| `step.view` | A step is shown | `from`, `via`: `start`, `next`, `back`, `goto`, `rule`, `submit`, `goTo()` |
+| `step.leave` | A step is left | `ms` on the step, `direction` |
+| `step.blocked` | Next or Send refused | `fields`, `codes` |
+| `field.error` | A field gets a message the user sees | `field`, `code`, `level`, `rule?` |
+| `field.revisit` | A field on an earlier step is changed again | `field` |
+| `rule.enter` / `rule.leave` | A rule with `"track": true` starts or stops matching | `rule` |
+| `service.request` / `service.reply` / `service.error` | A fetch runs | `service`, `wait`, `ms`, `status` |
+| `form.submit` | Sent | `ms`, `jumps`, `patches`, `warnings?`, `choices?` |
+| `form.abandon` | The page is hidden or left before Send | `lastField`, `ms`, `choices?` |
+
+**Ids, never values.** Events carry field, step and rule ids, issue codes and durations. The only values are `choices`: the chosen option of `select` fields marked `"track": true` in the form definition (the loan demo marks `purpose` and `term`). Never mark a field whose options are personal.
+
+**Consent** is the host's call: set `flow.tracker` only when consent allows, or use a tracker that buffers until it is granted.
+
+### Trackers
+
+```js
+import { beacon, dataLayer, combine } from '/ui/form-flow/trackers/index.js';
+
+const tracker = combine(beacon('/api/form-events', { consent: false }), dataLayer());
+flow.tracker = tracker;
+// later, from the consent banner:
+tracker.grant();
+```
+
+| Tracker | Does |
+| --- | --- |
+| `beacon(url, { batch: 20, interval: 10000, consent: true, send })` | Queues events and posts them as a JSON array every `interval` ms or `batch` events, and on `pagehide` with `navigator.sendBeacon` (as `text/plain`, so no CORS preflight). `grant()` sends what was buffered, `revoke()` drops it. The endpoint only appends rows. |
+| `dataLayer({ name: 'dataLayer', prefix: 'form_' })` | Pushes `{ event: 'form_step_view', form_id, form_session, form_step, form_path, … }` to `window.dataLayer` for Google Tag Manager / GA4: flat snake_case parameters, at most 25. |
+| `combine(...trackers)` | Hands every event to each, and forwards `flush`, `grant` and `revoke`. |
+
+A tracker is any function `event => {}`; an optional `flush()` is called after `form.submit` and `form.abandon`. The event logic lives in `tracking.js` (tested in Node: `npm test`).

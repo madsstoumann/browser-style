@@ -94,3 +94,18 @@ test('goto passes over steps, prefers the nearest target on a tie, and ignores a
 	assert.deepEqual(state.path, ['one', 'two', 'three']);
 	assert.deepEqual(state.issues, [{ step: 'one', code: 'goto-target', target: 'four', rule: 'to-four' }]);
 });
+
+test('a tracked rule reports rule.enter and rule.leave on its edges only', () => {
+	const rules = { id: 'r', rules: [
+		{ id: 'long', track: true, when: { '>': [{ var: 'values.a' }, 'm'] }, then: [{ show: 'b' }] },
+		{ id: 'quiet', when: true, then: [] }
+	] };
+	const tracks = state => state.effects.filter(effect => effect.type === 'track');
+	const first = evaluate(form, rules, { values: { a: 'x' } });
+	assert.deepEqual(tracks(first), [{ type: 'track', event: 'rule.enter', rule: 'long' }]);
+	const again = evaluate(form, rules, { values: { a: 'y' }, previous: { matched: first.matched } });
+	assert.deepEqual(tracks(again), []);
+	const left = evaluate(form, rules, { values: { a: 'b' }, previous: { matched: again.matched } });
+	assert.deepEqual(tracks(left), [{ type: 'track', event: 'rule.leave', rule: 'long' }]);
+	assert.deepEqual(tracks(evaluate(form, rules, { values: { a: 'b' } })), []);
+});
