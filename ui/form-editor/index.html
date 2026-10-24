@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Form Editor</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="color-scheme" content="light dark">
+	<meta name="description" content="Design a multi-step form and its rules visually. The output is two JSON files: the form definition and the rule set.">
+	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="../step/ui-step.css">
+	<link rel="stylesheet" href="../form-flow/index.css">
+	<link rel="stylesheet" href="index.css">
+	<style>body { margin: 0; max-inline-size: none; padding-inline: 2ch; }</style>
+</head>
+<body>
+	<form-editor
+		form="../form-rules/examples/insurance.form.json"
+		rules="../form-rules/examples/insurance.rules.json"
+		samples='{ "offers": "../form-rules/examples/offers.patch.json" }'>
+	</form-editor>
+	<script type="module" src="index.js"></script>
+</body>
+</html>
