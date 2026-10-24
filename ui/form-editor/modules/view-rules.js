@@ -283,6 +283,7 @@ function ruleEditor(editor, rule, index, count, updateRule, commitRules) {
 				editor.select({ rule: id });
 			}
 		})) : null,
+		check('Track this rule in analytics', rule.track === true, value => updateRule(rule.id, r => { if (value) r.track = true; else delete r.track; })),
 		h('h3', {}, 'When'),
 		groupEditor(editor, tree, next => updateRule(rule.id, r => { r.when = serializeCondition(next); })),
 		h('h3', {}, 'Then'),

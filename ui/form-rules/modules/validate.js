@@ -51,6 +51,7 @@ export function validate(formDefinition, ruleSetDocument, { functions = {} } = {
 		slotIds.add(slot);
 	}));
 	for (const [id, property] of Object.entries(rawForm.properties ?? {})) {
+		if (property?.track !== undefined && (property.track !== true || property.type !== 'select')) fail('track', `Field "${id}" can only send its value to analytics as a choice field (select), with "track": true`, `properties.${id}.track`);
 		[].concat(property?.validation?.check ?? []).forEach(name => {
 			if (typeof functions[name] !== 'function') fail('function', `Field "${id}" uses the check "${name}", which no function provides`, `properties.${id}.validation.check`);
 		});
@@ -115,6 +116,7 @@ export function validate(formDefinition, ruleSetDocument, { functions = {} } = {
 		if (ruleIds.has(rule.id)) fail('duplicate', `Rule id "${rule.id}" is used twice`, path);
 		ruleIds.add(rule.id);
 		if (rule.priority !== undefined && !Number.isFinite(rule.priority)) fail('priority', 'Priority must be a number', `${path}.priority`);
+		if (rule.track !== undefined && typeof rule.track !== 'boolean') fail('track', 'Track must be true or false', `${path}.track`);
 
 		/* Conditions */
 		operatorsOf(rule.when ?? true).forEach(op => {

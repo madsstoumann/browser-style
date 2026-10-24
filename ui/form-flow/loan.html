@@ -26,6 +26,7 @@
 			<li><strong>Variables:</strong> age is computed from the CPR number, a debt ratio from income and debt, and a credit score adds up from rules. Open <em>Why</em> to watch them.</li>
 			<li><strong>Cross-field rules:</strong> under 18 is refused; the amount may not exceed five times the yearly income; the start date cannot be in the past (and warns more than a year ahead).</li>
 			<li><strong>Score:</strong> below 40 adds a Documentation step and removes the 10 and 15 year terms.</li>
+			<li><strong>Funnel tracking:</strong> every step, error, tracked rule and service call becomes an <code>ff:track</code> event, also pushed to <code>window.dataLayer</code>. Events carry ids only; the purpose and term choices are the two values marked as safe to track.</li>
 			<li><strong>Backend:</strong> once CPR and amount are known, a partner bank (a static JSON file) is asked, and Next waits for it. It caps the amount at 300,000. A co-applicant gets their own step from another service.</li>
 		</ul>
 		<p>Try CPR <code>070761-4285</code>, or <code>0707104234</code> to be 16.</p>
@@ -38,14 +39,26 @@
 
 		<h2>Log</h2>
 		<ol class="demo-log" id="log" reversed></ol>
+
+		<h2>Analytics events</h2>
+		<p>What a beacon or GA4 would receive. Switch tabs to see <code>form.abandon</code>.</p>
+		<ol class="demo-log" id="track" reversed></ol>
 	</main>
 
 	<script type="module">
 		import './index.js';
 		import functions from '../form-rules/examples/functions/checks.js';
+		import { dataLayer } from './trackers/index.js';
 
 		const flow = document.querySelector('form-flow');
 		flow.functions = functions;
+		flow.tracker = dataLayer();
+		const track = document.getElementById('track');
+		flow.addEventListener('ff:track', ({ detail }) => {
+			const item = document.createElement('li');
+			item.textContent = `${detail.seq} ${detail.type} · ${detail.step ?? '–'} ${JSON.stringify(detail.data)}`;
+			track.prepend(item);
+		});
 		const log = document.getElementById('log');
 		const write = (type, detail) => {
 			const item = document.createElement('li');

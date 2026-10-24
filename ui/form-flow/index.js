@@ -5,6 +5,7 @@
  * Every input re-evaluates the rules; the engine's effects (fetch, emit) are carried out here.
  */
 import { evaluate, expirePatches, handleEvent, merge, normalizeForm, normalizeRuleSet } from '../form-rules/index.js';
+import { FlowTracking, validityCode } from './tracking.js';
 
 const INPUT_TYPES = ['color', 'date', 'datetime-local', 'email', 'month', 'password', 'search', 'tel', 'time', 'url', 'week'];
 const EMPTY_RULES = { id: 'none', rules: [] };
@@ -57,8 +58,24 @@ export default class FormFlow extends HTMLElement {
 	#functions = {};
 	#pending = new Set();
 
+	/* Receives every ff:track event, e.g. a beacon or dataLayer adapter from ./trackers/ (readme § Tracking) */
+	tracker = null;
+	#tracking = null;
+	#onVisibility = () => {
+		if (document.visibilityState === 'hidden') this.#abandon();
+		else this.#tracking?.resume();
+	};
+	#onPageHide = () => this.#abandon();
+
 	async connectedCallback() {
+		document.addEventListener('visibilitychange', this.#onVisibility);
+		window.addEventListener('pagehide', this.#onPageHide);
 		if (!this.#definition && this.getAttribute('form')) await this.load();
+	}
+
+	disconnectedCallback() {
+		document.removeEventListener('visibilitychange', this.#onVisibility);
+		window.removeEventListener('pagehide', this.#onPageHide);
 	}
 
 	async attributeChangedCallback(name, oldValue, newValue) {
@@ -88,6 +105,11 @@ export default class FormFlow extends HTMLElement {
 		this.#current = null;
 		this.#previous = undefined;
 		this.#requests.clear();
+		this.#tracking = new FlowTracking(event => this.#track(event), {
+			contextKeys: (this.getAttribute('track-context') ?? 'channel campaign').split(/\s+/).filter(Boolean),
+			contextOf: () => this.#context,
+			propertyOf: id => this.#propertyOf(id)
+		});
 		this.#render();
 		this.update();
 	}
@@ -129,7 +151,12 @@ export default class FormFlow extends HTMLElement {
 	}
 
 	goTo(stepId) {
+		return this.#goTo(stepId, 'goTo()');
+	}
+
+	#goTo(stepId, via) {
 		if (!this.#state?.path.includes(stepId)) return false;
+		this.#tracking?.step(this.#current, stepId, via);
 		this.#current = stepId;
 		this.update();
 		this.#dispatch('ff:step', { step: stepId });
@@ -158,6 +185,7 @@ export default class FormFlow extends HTMLElement {
 
 		form.addEventListener('input', event => this.#onInput(event));
 		form.addEventListener('change', event => this.#onInput(event));
+		form.addEventListener('focusin', event => { if (event.target.name) this.#tracking?.focus(event.target.name); });
 		form.addEventListener('click', event => {
 			const action = event.target.closest('[data-action]')?.dataset.action;
 			if (action === 'next') this.#move(1);
@@ -299,6 +327,7 @@ export default class FormFlow extends HTMLElement {
 		const id = event.target.name;
 		if (!id || !this.#fieldElement(id)) return;
 		this.#values[id] = this.#readValue(id);
+		this.#tracking?.input(id);
 		this.update();
 	}
 
@@ -327,6 +356,7 @@ export default class FormFlow extends HTMLElement {
 		this.#applyFields(state);
 		this.#applySteps(state);
 		this.#applyExplain(state);
+		this.#tracking?.update(state, this.#current, state.effects);
 		this.#runEffects(state);
 		this.#dispatch('ff:change', { values: state.values, state });
 	}
@@ -384,7 +414,9 @@ export default class FormFlow extends HTMLElement {
 		if (!path.includes(this.#current)) {
 			const order = state.steps.map(step => step.id);
 			const from = Math.max(0, order.indexOf(this.#current));
+			const before = this.#current;
 			this.#current = order.slice(from).find(id => path.includes(id)) ?? path.at(-1) ?? null;
+			if (before) this.#tracking?.step(before, this.#current, 'rule');
 		}
 		for (const step of state.steps) {
 			const fieldset = this.querySelector(`fieldset[data-step="${CSS.escape(step.id)}"]`);
@@ -426,6 +458,9 @@ export default class FormFlow extends HTMLElement {
 	async #fetchPatch(effect) {
 		this.#requests.set(effect.key, 'pending');
 		const service = normalizeRuleSet(this.#rules).services[effect.service] ?? {};
+		const started = performance.now();
+		const ms = () => Math.round(performance.now() - started);
+		this.#tracking?.service('request', { service: effect.service, wait: effect.wait === true });
 		try {
 			let patch;
 			if (this.fetcher) patch = await this.fetcher(effect, service);
@@ -433,10 +468,13 @@ export default class FormFlow extends HTMLElement {
 			const result = merge(this.#definition, this.#rules, patch, { owner: effect.rule });
 			if (result.errors.length) throw Object.assign(new Error(`${effect.service}: patch refused`), { errors: result.errors });
 			this.#requests.set(effect.key, 'done');
+			this.#tracking?.service('reply', { service: effect.service, ms: ms(), status: 'ok' });
 			this.#rules = result.ruleSet;
 			this.update();
 		} catch (error) {
 			this.#requests.set(effect.key, 'error');
+			const status = error.status ?? (error.name === 'TimeoutError' ? 'timeout' : error.errors ? 'refused' : 'failed');
+			this.#tracking?.service('error', { service: effect.service, ms: ms(), status });
 			this.#dispatch('ff:error', { error, effect });
 		}
 	}
@@ -451,7 +489,7 @@ export default class FormFlow extends HTMLElement {
 			...(get ? {} : { headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(effect.send) }),
 			signal: AbortSignal.timeout(service.timeoutMs ?? 5000)
 		});
-		if (!response.ok) throw new Error(`${effect.service}: ${response.status}`);
+		if (!response.ok) throw Object.assign(new Error(`${effect.service}: ${response.status}`), { status: response.status });
 		return response.json();
 	}
 
@@ -461,7 +499,11 @@ export default class FormFlow extends HTMLElement {
 		const fieldset = this.querySelector(`fieldset[data-step="${CSS.escape(stepId)}"]`);
 		const invalid = [...fieldset.querySelectorAll('input, select, textarea')].find(control => !control.disabled && !control.checkValidity());
 		if (!invalid) return true;
-		if (this.#current !== stepId) this.goTo(stepId);
+		const controls = [...fieldset.querySelectorAll('input, select, textarea')].filter(control => !control.disabled && !control.validity.valid);
+		const fieldOf = control => control.closest('[data-field]')?.dataset.field ?? control.name;
+		const codeOf = control => (control.validity.customError && this.#state.issues.find(issue => issue.field === fieldOf(control) && issue.message && issue.level !== 'warning')?.code) || validityCode(control);
+		this.#tracking?.blocked([...new Set(controls.map(fieldOf))], [...new Set(controls.map(codeOf))]);
+		if (this.#current !== stepId) this.#goTo(stepId, 'submit');
 		invalid.reportValidity();
 		return false;
 	}
@@ -484,7 +526,8 @@ export default class FormFlow extends HTMLElement {
 		const index = path.indexOf(this.#current);
 		if (direction > 0 && !this.#validStep(this.#current)) return;
 		const next = path[index + direction];
-		if (next) this.goTo(next);
+		const via = direction < 0 ? 'back' : this.#state.jumps?.some(jump => jump.from === this.#current) ? 'goto' : 'next';
+		if (next) this.#goTo(next, via);
 		this.querySelector(`fieldset[data-step="${CSS.escape(this.#current)}"] legend`)?.scrollIntoView({ block: 'nearest' });
 	}
 
@@ -496,12 +539,30 @@ export default class FormFlow extends HTMLElement {
 		const blocking = this.#state.issues.filter(issue => issue.field && issue.level !== 'warning');
 		if (blocking.length) {
 			const field = this.#state.fields[blocking[0].field];
-			this.goTo(field.step);
+			this.#tracking?.blocked([...new Set(blocking.map(issue => issue.field))], [...new Set(blocking.map(issue => issue.code))]);
+			this.#goTo(field.step, 'submit');
 			this.#fieldElement(blocking[0].field)?.querySelector('input, select, textarea')?.reportValidity();
 			return;
 		}
 		const { form, rules, version, values } = this.#state;
+		this.#tracking?.submit(this.#state);
+		this.tracker?.flush?.();
 		this.#dispatch('ff:submit', { form, rules, version, values, state: this.#state });
+	}
+
+	/* === Tracking === */
+
+	#track(event) {
+		this.#dispatch('ff:track', event);
+		try {
+			this.tracker?.(event);
+		} catch (error) {
+			this.#dispatch('ff:error', { error });
+		}
+	}
+
+	#abandon() {
+		if (this.#tracking?.abandon()) this.tracker?.flush?.();
 	}
 
 	#dispatch(type, detail) {

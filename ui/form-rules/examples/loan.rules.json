@@ -63,6 +63,7 @@
 			{
 				"id": "high-risk",
 				"title": "A low score needs documentation and a shorter term",
+				"track": true,
 				"when": { "<": [{ "var": "vars.score" }, 40] },
 				"then": [
 					{ "set": { "var": "risk", "value": "high" } },
@@ -104,18 +105,21 @@
 			{
 				"id": "not-eligible",
 				"title": "The partner bank says no",
+				"track": true,
 				"when": { "===": [{ "var": "services.eligibility.eligible" }, false] },
 				"then": [{ "invalid": { "field": "amount", "code": "not-eligible", "message": "We cannot offer this loan right now" } }]
 			},
 			{
 				"id": "above-partner-limit",
 				"title": "The partner bank caps the amount",
+				"track": true,
 				"when": { ">": [{ "var": "values.amount" }, { "var": "services.eligibility.maxAmount" }] },
 				"then": [{ "invalid": { "field": "amount", "code": "partner-limit", "message": "Our partner bank can lend at most 300,000 DKK to you" } }]
 			},
 			{
 				"id": "co-applicant",
 				"title": "A co-applicant gets their own step",
+				"track": true,
 				"when": { "===": [{ "var": "values.coApplicant" }, true] },
 				"then": [{ "fetch": { "service": "partner", "after": "loan" } }]
 			}

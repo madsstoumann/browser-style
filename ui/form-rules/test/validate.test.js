@@ -86,3 +86,11 @@ test('variables must be declared, and rules may not write computed ones or feed 
 	});
 	assert.deepEqual(codes(result).sort(), ['cycle', 'invalid', 'variable', 'variable']);
 });
+
+test('only choice fields may send their value to analytics', () => {
+	const tracked = structuredClone(form);
+	tracked.fields.properties.plan.track = true;
+	tracked.fields.properties.zip.track = true;
+	const { errors } = validate(tracked, rules);
+	assert.deepEqual(errors.filter(error => error.code === 'track').map(error => error.path), ['properties.zip.track']);
+});

@@ -91,6 +91,7 @@
 				"id": { "$ref": "#/definitions/id" },
 				"title": { "type": "string" },
 				"priority": { "type": "number" },
+				"track": { "type": "boolean", "description": "Report rule.enter / rule.leave to analytics as track effects" },
 				"when": { "$ref": "#/definitions/logic" },
 				"then": { "type": "array", "items": { "$ref": "#/definitions/action" } },
 				"else": { "type": "array", "items": { "$ref": "#/definitions/action" } }

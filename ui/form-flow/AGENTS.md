@@ -22,3 +22,5 @@ fetch effect → POST (or this.fetcher) → merge() → #rules updated → updat
 - Patch fields are rendered into `[data-slot]` containers when they first appear in `state.fields`, and removed when they disappear.
 - `noValidate` is set on the form: steps are validated one at a time in `#validStep`, because hidden steps' required controls would otherwise block submit.
 - A required boolean relies on native `required` (must be checked); the engine counts `false` as a value.
+- Tracking (`tracking.js`) is fed from a few hooks: `update()` (view, rule and error edges), `#onInput` (start, revisit, called before `update()` so the first error counts), `#goTo(step, via)` (every step change goes through it, with the reason), `#validStep` (blocked), `#fetchPatch` (service timing). A new navigation path must call `#goTo`, not set `#current`, or the funnel loses a step.
+- Abandon listens on `document` / `window` from `connectedCallback`; it fires once per hide and is re-armed when the page is visible again.

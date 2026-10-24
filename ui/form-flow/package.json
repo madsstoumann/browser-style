@@ -9,11 +9,15 @@
       "import": "./index.js",
       "style": "./index.css"
     },
-    "./style": "./index.css"
+    "./style": "./index.css",
+    "./trackers": "./trackers/index.js",
+    "./tracking": "./tracking.js"
   },
   "files": [
     "index.js",
-    "index.css"
+    "index.css",
+    "tracking.js",
+    "trackers/*.js"
   ],
   "dependencies": {
     "@browser.style/form-rules": "^0.1.0"
@@ -39,5 +43,8 @@
   "bugs": {
     "url": "https://github.com/madsstoumann/browser-style/issues"
   },
-  "homepage": "https://browser.style/ui/form-flow"
+  "homepage": "https://browser.style/ui/form-flow",
+  "scripts": {
+    "test": "node --test test/*.test.js"
+  }
 }

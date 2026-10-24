@@ -23,11 +23,13 @@ const state = evaluate(form, rules, { values, context, facts, previous, today: '
 | `fields` | Per field: `visible`, `enabled`, `required`, `options` (narrowed choices), `step`, `source` |
 | `values` | What would be submitted: visible, enabled fields only, `setValue` applied, unavailable options removed |
 | `matched` | Ids of the rules that matched |
-| `effects` | `fetch` and `emit` requests for the host to carry out |
+| `effects` | `fetch` and `emit` requests for the host to carry out, and `track` edges (`rule.enter` / `rule.leave`) of rules marked `"track": true` |
 | `issues` | `{ field, code, message?, level? }`: `required`, `option-unavailable`, the field's own constraints (`minimum`, `pattern`, …), its checks, and `invalid` rules. `level: "warning"` does not block |
 | `explain` | Which rules decided each flag, e.g. `"plan.options": ["senior-north"]`; a rule's `else` branch shows as `"senior-north:else"` |
 
-Pass the previous state's `matched` as `previous` so `emit` fires once per change, not on every evaluation.
+Pass the previous state's `matched` as `previous` so `emit` and `track` fire once per change, not on every evaluation.
+
+**Analytics.** `"track": true` on a rule reports when it starts and stops matching; on a `select` field it marks the chosen option as safe to send to analytics. `validate()` refuses `track` on any other field type, so typed values never reach a tracker. The events themselves are built by form-flow (`ui/form-flow/readme.md` § Tracking).
 
 ## The three documents
 

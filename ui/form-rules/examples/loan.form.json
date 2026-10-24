@@ -82,6 +82,7 @@
 			},
 			"purpose": {
 				"type": "select",
+				"track": true,
 				"title": "What is it for?",
 				"required": true,
 				"options": { "choices": [
@@ -92,6 +93,7 @@
 			},
 			"term": {
 				"type": "select",
+				"track": true,
 				"title": "Pay back over",
 				"required": true,
 				"options": { "choices": [
