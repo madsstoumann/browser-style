@@ -1,0 +1,39 @@
+@layer bs-component {
+	:where(form-flow) {
+		display: block;
+		& form {
+			display: grid;
+			gap: var(--form-flow-gap, var(--spacing-lg, 1.5rem));
+		}
+		& fieldset[data-step] {
+			border: 0;
+			padding: 0;
+			& > legend {
+				font-size: var(--form-flow-legend-fs, 1.25rem);
+				font-weight: 700;
+				margin-block-end: var(--spacing-sm, 0.5rem);
+				padding: 0;
+			}
+		}
+		& fieldset[data-field] {
+			border: 0;
+			padding: 0;
+			& > legend { margin-block-end: var(--label-gap, .25rem); padding: 0; }
+		}
+		& [data-slot] {
+			display: grid;
+			gap: var(--fieldset-gap, .5rem);
+			&:empty { display: none; }
+		}
+		& nav {
+			display: flex;
+			gap: var(--spacing-sm, 0.5rem);
+			justify-content: space-between;
+			& [type=submit], & [data-action=next] { margin-inline-start: auto; }
+		}
+		& [part=explain] {
+			font-size: smaller;
+			& ul { margin: 0; padding-inline-start: 2ch; }
+		}
+	}
+}
