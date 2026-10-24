@@ -13,7 +13,8 @@
 		"model": "form-definition",
 		"meta": {
 			"locale": "en",
-			"status": "published"
+			"status": "published",
+			"version": 1
 		},
 		"fields": {
 			"title": "Loan application",
@@ -81,6 +82,7 @@
 			"type": "object",
 			"properties": {
 				"cpr": {
+					"privacy": "special",
 					"type": "string",
 					"title": "CPR number",
 					"description": "DDMMYY-XXXX",
@@ -91,6 +93,7 @@
 				},
 				"name": {
 					"type": "string",
+					"privacy": "personal",
 					"title": "Full name",
 					"required": true,
 					"validation": {
@@ -99,6 +102,7 @@
 				},
 				"email": {
 					"type": "string",
+					"privacy": "personal",
 					"title": "Email",
 					"required": true,
 					"ui": {
@@ -144,6 +148,7 @@
 					}
 				},
 				"income": {
+					"privacy": "personal",
 					"type": "integer",
 					"title": "Monthly income after tax (DKK)",
 					"required": true,
@@ -153,6 +158,7 @@
 					}
 				},
 				"debt": {
+					"privacy": "personal",
 					"type": "integer",
 					"title": "Total debt today (DKK)",
 					"required": true,
@@ -204,6 +210,7 @@
 				},
 				"purpose": {
 					"type": "select",
+					"track": true,
 					"title": "What is it for?",
 					"required": true,
 					"options": {
@@ -225,6 +232,7 @@
 				},
 				"term": {
 					"type": "select",
+					"track": true,
 					"title": "Pay back over",
 					"required": true,
 					"options": {
@@ -268,6 +276,7 @@
 					}
 				},
 				"incomeNote": {
+					"privacy": "personal",
 					"type": "string",
 					"title": "Tell us about your income and expenses",
 					"description": "We need a little more to decide",
@@ -522,6 +531,7 @@
 				{
 					"id": "high-risk",
 					"title": "A low score needs documentation and a shorter term",
+					"track": true,
 					"when": {
 						"<": [
 							{
@@ -696,6 +706,7 @@
 				{
 					"id": "not-eligible",
 					"title": "The partner bank says no",
+					"track": true,
 					"when": {
 						"===": [
 							{
@@ -717,6 +728,7 @@
 				{
 					"id": "above-partner-limit",
 					"title": "The partner bank caps the amount",
+					"track": true,
 					"when": {
 						">": [
 							{
@@ -740,6 +752,7 @@
 				{
 					"id": "co-applicant",
 					"title": "A co-applicant gets their own step",
+					"track": true,
 					"when": {
 						"===": [
 							{
