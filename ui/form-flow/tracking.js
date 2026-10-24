@@ -32,7 +32,8 @@ export class FlowTracking {
 
 	/* send(event) dispatches and hands the event on; contextKeys are the context entries form.start may carry. */
 	/* resumed: { age } when a saved session is reopened; the run then opens with form.resume instead of form.view. */
-	constructor(send, { contextKeys = ['channel', 'campaign'], contextOf = () => ({}), propertyOf = () => null, resumed = null } = {}) {
+	constructor(send, { contextKeys = ['channel', 'campaign'], contextOf = () => ({}), propertyOf = () => null, privacyOf = () => 'none', resumed = null } = {}) {
+		this.privacyOf = privacyOf;
 		this.#send = send;
 		this.resumed = resumed;
 		this.contextKeys = contextKeys;
@@ -65,7 +66,7 @@ export class FlowTracking {
 		const values = this.#state?.values ?? {};
 		const entries = Object.entries(values).filter(([id]) => {
 			const property = this.propertyOf(id);
-			return property?.track === true && property.type === 'select';
+			return property?.track === true && property.type === 'select' && this.privacyOf(id) === 'none';
 		});
 		return entries.length ? Object.fromEntries(entries) : undefined;
 	}
@@ -110,7 +111,7 @@ export class FlowTracking {
 			this.#emit('form.start', { entry: this.#state?.current ?? null, ...(Object.keys(context).length ? { context } : {}) });
 		}
 		const step = this.#state?.fields?.[id]?.step;
-		if (this.#left.has(step) && !this.#revisited.has(id)) {
+		if (this.#left.has(step) && !this.#revisited.has(id) && this.privacyOf(id) !== 'special') {
 			this.#revisited.add(id);
 			this.#emit('field.revisit', { field: id });
 		}

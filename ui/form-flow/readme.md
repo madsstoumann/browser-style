@@ -103,7 +103,7 @@ form-flow describes the funnel as `ff:track` events and hands each one to `flow.
 | `form.abandon` | The page is hidden or left before Send | `lastField`, `ms`, `choices?` |
 | `form.resume` | A saved session is reopened (instead of `form.view`; the run counts as started) | `age?` |
 
-**Ids, never values.** Events carry field, step and rule ids, issue codes and durations. The only values are `choices`: the chosen option of `select` fields marked `"track": true` in the form definition (the loan demo marks `purpose` and `term`). Never mark a field whose options are personal.
+**Ids, never values.** Events carry field, step and rule ids, issue codes and durations. The only values are `choices`: the chosen option of `select` fields marked `"track": true` in the form definition (the loan demo marks `purpose` and `term`). `validate()` refuses `track` on a field with `privacy: "personal"` or `"special"`, and the tracker drops choices of patch fields (personal by default). A `special` field also sends no `field.revisit`, since repeated corrections of a health answer are themselves sensitive.
 
 **Consent** is the host's call: set `flow.tracker` only when consent allows, or use a tracker that buffers until it is granted.
 

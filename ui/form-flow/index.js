@@ -4,7 +4,7 @@
  * Fields are plain native controls in light DOM, so @browser.style/base form.css styles them.
  * Every input re-evaluates the rules; the engine's effects (fetch, emit) are carried out here.
  */
-import { evaluate, expirePatches, handleEvent, merge, normalizeForm, normalizeRuleSet } from '../form-rules/index.js';
+import { evaluate, expirePatches, handleEvent, merge, normalizeForm, normalizeRuleSet, privacyOf } from '../form-rules/index.js';
 import { FlowTracking, validityCode } from './tracking.js';
 
 const INPUT_TYPES = ['color', 'date', 'datetime-local', 'email', 'month', 'password', 'search', 'tel', 'time', 'url', 'week'];
@@ -110,6 +110,7 @@ export default class FormFlow extends HTMLElement {
 			contextKeys: (this.getAttribute('track-context') ?? 'channel campaign').split(/\s+/).filter(Boolean),
 			contextOf: () => this.#context,
 			propertyOf: id => this.#propertyOf(id),
+			privacyOf: id => privacyOf(this.#definition, this.#rules, id),
 			resumed
 		});
 		this.#render();

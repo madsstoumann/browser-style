@@ -59,7 +59,7 @@
 				"title": { "type": "string" },
 				"description": { "type": "string" },
 				"required": { "type": "boolean" },
-				"track": { "type": "boolean", "description": "Choice fields only: the chosen value may be sent to analytics. Never for personal data" },
+				"track": { "type": "boolean", "description": "Choice fields with privacy none only: the chosen value may be sent to analytics" },
 				"privacy": {
 					"enum": ["none", "personal", "special"],
 					"description": "none: may be saved anywhere; personal: saved in drafts the person chose to keep; special (health, national id, …): never saved in a draft. Form fields default to none, patch fields to personal"

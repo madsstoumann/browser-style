@@ -52,6 +52,7 @@ export function validate(formDefinition, ruleSetDocument, { functions = {} } = {
 	}));
 	for (const [id, property] of Object.entries(rawForm.properties ?? {})) {
 		if (property?.track !== undefined && (property.track !== true || property.type !== 'select')) fail('track', `Field "${id}" can only send its value to analytics as a choice field (select), with "track": true`, `properties.${id}.track`);
+		else if (property?.track && ['personal', 'special'].includes(property.privacy)) fail('track', `Field "${id}" is ${property.privacy} data, so its value may not be sent to analytics`, `properties.${id}.track`);
 		[].concat(property?.validation?.check ?? []).forEach(name => {
 			if (typeof functions[name] !== 'function') fail('function', `Field "${id}" uses the check "${name}", which no function provides`, `properties.${id}.validation.check`);
 		});

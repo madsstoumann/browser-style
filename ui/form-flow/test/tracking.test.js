@@ -99,3 +99,19 @@ test('a resumed run opens with form.resume and counts as started', () => {
 	assert.ok(!events.some(event => event.type === 'form.start'));
 	assert.equal(tracking.abandon(), true);
 });
+
+test('special fields send no revisit and only privacy-none choices are sent', () => {
+	const events = [];
+	const privacy = { name: 'special', plan: 'personal' };
+	const tracking = new FlowTracking(event => events.push(event), {
+		propertyOf: () => ({ type: 'select', track: true }),
+		privacyOf: id => privacy[id] ?? 'none'
+	});
+	tracking.update(state(), 'a');
+	tracking.input('name');
+	tracking.step('a', 'b', 'next');
+	tracking.input('name');
+	tracking.submit(state({ values: { plan: 'plus', term: 3 } }));
+	assert.ok(!events.some(event => event.type === 'field.revisit'));
+	assert.deepEqual(events.at(-1).data.choices, { term: 3 });
+});

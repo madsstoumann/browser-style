@@ -94,3 +94,10 @@ test('only choice fields may send their value to analytics', () => {
 	const { errors } = validate(tracked, rules);
 	assert.deepEqual(errors.filter(error => error.code === 'track').map(error => error.path), ['properties.zip.track']);
 });
+
+test('personal and special fields may not send their value to analytics', () => {
+	const tracked = structuredClone(form);
+	Object.assign(tracked.fields.properties.plan, { track: true, privacy: 'personal' });
+	const { errors } = validate(tracked, rules);
+	assert.deepEqual(errors.filter(error => error.code === 'track').map(error => error.path), ['properties.plan.track']);
+});
