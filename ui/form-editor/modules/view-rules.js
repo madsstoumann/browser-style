@@ -1,0 +1,311 @@
+/**
+ * The rule designer: rules as sentences, a When / Then / Otherwise builder made of pickers,
+ * and the services rules can fetch from.
+ */
+import { h, field, check, select, button } from './dom.js';
+import { clone, moveItem, newRule, slugify, stepsOf } from './model.js';
+import { COMPARE, OPERATOR_WORDS, parseCondition, serializeCondition, summarize } from './conditions.js';
+import { actionName } from '../../form-rules/modules/actions.js';
+
+const FIELD_VERBS = [['show', 'Show'], ['hide', 'Hide'], ['enable', 'Enable'], ['disable', 'Disable'], ['require', 'Require'], ['optional', 'Make optional'], ['clear', 'Clear'], ['setValue', 'Set value of'], ['only', 'Offer only, in'], ['exclude', 'Remove options from']];
+const STEP_VERBS = [['skip', 'Skip step'], ['include', 'Include step']];
+const OTHER_VERBS = [['fetch', 'Fetch fields from service'], ['emit', 'Send event']];
+
+const propertyOf = (form, path) => (path?.startsWith('values.') ? form.fields.properties[path.slice(7)] : null);
+const choicesOf = property => property?.options?.choices ?? [];
+
+/* Operators that make sense for a field, as [op, words]. */
+function operatorsFor(property) {
+	const ops = ['===', '!=='];
+	const choices = choicesOf(property);
+	const numericChoices = choices.length && choices.every(c => typeof c.value === 'number');
+	if (property?.type !== 'boolean' && (!choices.length || numericChoices)) ops.push('>', '>=', '<', '<=');
+	if (property?.type !== 'boolean') ops.push('in', 'notin');
+	ops.push('filled', 'empty');
+	return ops.map(op => [op, OPERATOR_WORDS[op]]);
+}
+
+/* A value picker that fits the field: its choices, a number, yes/no or text. */
+function valueEditor(property, value, onchange, { many = false, label = 'Value', numeric = false } = {}) {
+	const choices = choicesOf(property);
+	if (choices.length && many) {
+		const chosen = Array.isArray(value) ? value : [];
+		return h('fieldset', { part: 'choices-inline' }, h('legend', {}, label),
+			choices.map(choice => check(choice.label, chosen.includes(choice.value), on => {
+				onchange(on ? [...chosen, choice.value] : chosen.filter(v => v !== choice.value));
+			})));
+	}
+	if (choices.length) {
+		return select([['', '…'], ...choices.map(c => [String(c.value), c.label])], value === null || value === undefined ? '' : String(value),
+			text => onchange(choices.find(c => String(c.value) === text)?.value ?? null), { 'aria-label': label });
+	}
+	if (property?.type === 'boolean') {
+		return select([['true', 'yes'], ['false', 'no']], String(value === true), text => onchange(text === 'true'), { 'aria-label': label });
+	}
+	if (many) {
+		return h('input', { value: (Array.isArray(value) ? value : []).join(', '), 'aria-label': `${label}, comma-separated`, onchange: e => onchange(e.target.value.split(',').map(v => v.trim()).filter(Boolean)) });
+	}
+	if (numeric || property?.type === 'number' || property?.type === 'integer') {
+		return h('input', { type: 'number', value: value ?? '', 'aria-label': label, onchange: e => onchange(e.target.value === '' ? null : Number(e.target.value)) });
+	}
+	return h('input', { value: value ?? '', 'aria-label': label, onchange: e => onchange(e.target.value) });
+}
+
+/* === Conditions === */
+
+function conditionRow(editor, node, onchange, onremove) {
+	const { form } = editor;
+	const property = propertyOf(form, node.path);
+	const fields = stepsOf(form).flatMap(step => step.fields.map(id => [`values.${id}`, `${form.fields.properties[id]?.title ?? id} (${step.name})`]));
+	const known = fields.some(([path]) => path === node.path);
+	const fieldOptions = [...fields, ['other', 'Context or fact…']];
+	const ops = operatorsFor(property);
+	const many = node.op === 'in' || node.op === 'notin';
+	const needsValue = node.op !== 'filled' && node.op !== 'empty';
+	/* A string field compared as a number needs num(); choice and number fields do not. */
+	const withNum = (next, prop = propertyOf(form, next.path)) => ({ ...next, num: COMPARE.slice(2).includes(next.op) && (prop?.type === 'string' || !prop) });
+
+	return h('li', { part: 'condition' },
+		select(fieldOptions, known ? node.path : 'other', value => {
+			if (value === 'other') onchange({ ...node, path: 'context.', value: null });
+			else onchange(withNum({ ...node, path: value, value: propertyOf(form, value)?.type === 'boolean' ? true : null, op: '===' }));
+		}, { 'aria-label': 'Field' }),
+		known ? null : h('input', { value: node.path, 'aria-label': 'Path, for example context.channel or facts.pricing.region', onchange: e => onchange(withNum({ ...node, path: e.target.value.trim() })) }),
+		select(ops, node.op, op => {
+			const switching = (op === 'in' || op === 'notin') !== many;
+			onchange(withNum({ ...node, op, value: switching ? (op === 'in' || op === 'notin' ? [] : null) : node.value }, property));
+		}, { 'aria-label': 'Operator' }),
+		needsValue ? valueEditor(property, node.value, value => onchange({ ...node, value }), { many, numeric: node.num }) : null,
+		button('Remove', onremove, { 'aria-label': 'Remove condition' })
+	);
+}
+
+function groupEditor(editor, node, onchange, depth = 0, onremove = null) {
+	const setItem = (index, item) => onchange({ ...node, items: node.items.map((current, i) => (i === index ? item : current)) });
+	const removeItem = index => onchange({ ...node, items: node.items.filter((_, i) => i !== index) });
+	const firstField = stepsOf(editor.form).flatMap(step => step.fields)[0];
+
+	return h('div', { part: depth ? 'group nested' : 'group' },
+		h('div', { part: 'row' },
+			select([['and', 'All of these are true'], ['or', 'Any of these is true']], node.mode, mode => onchange({ ...node, mode }), { 'aria-label': 'Match' }),
+			onremove ? button('Remove group', onremove) : null
+		),
+		node.items.length ? null : h('p', {}, h('small', {}, 'No conditions: the rule always applies.')),
+		h('ul', {}, node.items.map((item, index) => {
+			if (item.kind === 'group') return h('li', {}, groupEditor(editor, item, next => setItem(index, next), depth + 1, () => removeItem(index)));
+			if (item.kind === 'raw') return h('li', { part: 'condition' }, rawEditor(editor, item.logic, logic => setItem(index, { kind: 'raw', logic }), 'Custom condition'), button('Remove', () => removeItem(index)));
+			return conditionRow(editor, item, next => setItem(index, next), () => removeItem(index));
+		})),
+		h('div', { part: 'row' },
+			button('+ Condition', () => onchange({ ...node, items: [...node.items, { kind: 'cond', path: firstField ? `values.${firstField}` : 'context.', num: false, op: 'filled', value: null }] })),
+			depth < 2 ? button('+ Group', () => onchange({ ...node, items: [...node.items, { kind: 'group', mode: 'or', items: [] }] })) : null
+		)
+	);
+}
+
+/* JSON the builder cannot draw: read-only unless Advanced is on. */
+function rawEditor(editor, value, onchange, label) {
+	return field(label, h('textarea', {
+		rows: 4, readOnly: !editor.advanced, value: JSON.stringify(value, null, 1),
+		onchange: e => {
+			try {
+				onchange(JSON.parse(e.target.value));
+				e.target.setCustomValidity('');
+			} catch (error) {
+				e.target.setCustomValidity(error.message);
+				e.target.reportValidity();
+			}
+		}
+	}), editor.advanced ? 'JSON Logic' : 'Turn on Advanced to edit');
+}
+
+/* === Actions === */
+
+function toRow(action) {
+	const name = actionName(action);
+	const value = action[name];
+	if (name === 'options') return value.only ? { verb: 'only', target: value.field, values: value.only } : { verb: 'exclude', target: value.field, values: value.exclude ?? [] };
+	if (name === 'setValue') return { verb: 'setValue', target: value.field, value: value.value };
+	if (name === 'fetch') return { verb: 'fetch', service: value.service, into: value.into };
+	if (name === 'emit') return { verb: 'emit', type: value.type, data: value.data, on: value.on, where: value.where };
+	if (name) return { verb: name, target: Array.isArray(value) ? value[0] : value, rest: Array.isArray(value) ? value.slice(1) : [] };
+	return { verb: 'raw', action };
+}
+
+function fromRow(row) {
+	switch (row.verb) {
+		case 'only': return { options: { field: row.target, only: row.values ?? [] } };
+		case 'exclude': return { options: { field: row.target, exclude: row.values ?? [] } };
+		case 'setValue': return { setValue: { field: row.target, value: row.value ?? null } };
+		case 'fetch': return { fetch: { service: row.service ?? '', into: row.into ?? '' } };
+		case 'emit': {
+			const emit = { type: row.type ?? '' };
+			if (row.data !== undefined) emit.data = row.data;
+			if (row.on) emit.on = row.on;
+			if (row.where) emit.where = row.where;
+			return { emit };
+		}
+		case 'raw': return row.action;
+		default: return { [row.verb]: row.rest?.length ? [row.target, ...row.rest] : row.target };
+	}
+}
+
+function actionRow(editor, action, onchange, onremove) {
+	const { form, rules } = editor;
+	const row = toRow(action);
+	if (row.verb === 'raw') return h('li', { part: 'action' }, rawEditor(editor, action, onchange, 'Custom action'), button('Remove', onremove));
+	const set = patch => onchange(fromRow({ ...row, ...patch }));
+	const fieldList = stepsOf(form).flatMap(step => step.fields.map(id => [id, form.fields.properties[id]?.title ?? id]));
+	const choiceFields = fieldList.filter(([id]) => choicesOf(form.fields.properties[id]).length);
+	const isField = FIELD_VERBS.some(([verb]) => verb === row.verb);
+	const isStep = STEP_VERBS.some(([verb]) => verb === row.verb);
+	const services = Object.keys(rules.fields.services ?? {});
+	const slots = stepsOf(form).flatMap(step => step.slots ?? []);
+
+	const verbSelect = select([...FIELD_VERBS, ...STEP_VERBS, ...OTHER_VERBS], row.verb, verb => {
+		const firstField = (verb === 'only' || verb === 'exclude' ? choiceFields : fieldList)[0]?.[0] ?? '';
+		if (FIELD_VERBS.some(([v]) => v === verb)) set({ verb, target: isField && row.target ? row.target : firstField, values: [], value: null, rest: [] });
+		else if (STEP_VERBS.some(([v]) => v === verb)) set({ verb, target: stepsOf(form)[0]?.id ?? '', rest: [] });
+		else if (verb === 'fetch') set({ verb, service: services[0] ?? '', into: slots[0] ?? '' });
+		else set({ verb, type: 'form.event' });
+	}, { 'aria-label': 'Action' });
+
+	let detail = [];
+	if (isField) {
+		const targets = row.verb === 'only' || row.verb === 'exclude' ? choiceFields : fieldList;
+		detail.push(select(targets, row.target, target => set({ target, values: [], value: null }), { 'aria-label': 'Field' }));
+		const property = form.fields.properties[row.target];
+		if (row.verb === 'setValue') detail.push(h('span', {}, 'to'), valueEditor(property, row.value, value => set({ value })));
+		if (row.verb === 'only' || row.verb === 'exclude') detail.push(valueEditor(property, row.values, values => set({ values }), { many: true, label: 'Options' }));
+	} else if (isStep) {
+		detail.push(select(stepsOf(form).map(step => [step.id, step.name]), row.target, target => set({ target }), { 'aria-label': 'Step' }));
+	} else if (row.verb === 'fetch') {
+		detail.push(select(services.length ? services : [['', 'Add a service below']], row.service, service => set({ service }), { 'aria-label': 'Service' }),
+			h('span', {}, 'into'),
+			select(slots.length ? slots : [['', 'Add a slot to a step']], row.into, into => set({ into }), { 'aria-label': 'Slot' }));
+	} else if (row.verb === 'emit') {
+		detail.push(h('input', { value: row.type ?? '', 'aria-label': 'Event type, for example quote.segment', onchange: e => set({ type: e.target.value.trim() }) }),
+			select([['', 'when it starts to apply'], ['leave', 'when it stops applying']], row.on ?? '', on => set({ on: on || undefined }), { 'aria-label': 'When' }));
+	}
+	return h('li', { part: 'action' }, verbSelect, detail, button('Remove', onremove, { 'aria-label': 'Remove action' }));
+}
+
+function actionList(editor, actions, onchange) {
+	const firstField = stepsOf(editor.form).flatMap(step => step.fields)[0] ?? '';
+	return h('div', {},
+		h('ul', {}, actions.map((action, index) => actionRow(editor, action,
+			next => onchange(actions.map((a, i) => (i === index ? next : a))),
+			() => onchange(actions.filter((_, i) => i !== index))))),
+		button('+ Action', () => onchange([...actions, { show: firstField }]))
+	);
+}
+
+/* === The view === */
+
+export function renderRulesView(editor) {
+	const { form, rules, selection } = editor;
+	const list = rules.fields.rules ?? [];
+	const commitRules = fn => {
+		const next = clone(rules);
+		fn(next.fields);
+		editor.commit({ rules: next });
+	};
+	const updateRule = (id, fn) => commitRules(f => { fn(f.rules.find(rule => rule.id === id)); });
+
+	return h('section', { part: 'inspector' },
+		h('h2', {}, 'Rules'),
+		h('ol', { part: 'rules' }, list.map((rule, index) => {
+			const open = selection.rule === rule.id;
+			return h('li', { part: open ? 'rule open' : 'rule' },
+				button(h('span', {}, h('strong', {}, rule.title ?? rule.id), h('br'), h('small', {}, summarize(form, rule))),
+					() => editor.select({ view: 'rules', rule: open ? null : rule.id }), { part: 'rule-summary', 'aria-expanded': String(open) }),
+				open ? ruleEditor(editor, rule, index, list.length, updateRule, commitRules) : null
+			);
+		})),
+		button('+ Rule', () => {
+			const result = newRule(rules, `Rule ${list.length + 1}`);
+			editor.commit({ rules: result.rules });
+			editor.select({ view: 'rules', rule: result.id });
+		}, { part: 'add' }),
+		servicesEditor(editor, commitRules),
+		editor.advanced ? rawEditor(editor, rules.fields.listen ?? [], listen => commitRules(f => { f.listen = listen; }), 'Events this rule set listens for') : null
+	);
+}
+
+function ruleEditor(editor, rule, index, count, updateRule, commitRules) {
+	const tree = parseCondition(rule.when);
+	return h('div', { part: 'rule-editor' },
+		h('div', { part: 'row' },
+			field('Title', h('input', { value: rule.title ?? '', onchange: e => updateRule(rule.id, r => { r.title = e.target.value; }) })),
+			editor.advanced ? field('Priority', h('input', { type: 'number', value: rule.priority ?? 0, onchange: e => updateRule(rule.id, r => { r.priority = Number(e.target.value) || 0; if (!r.priority) delete r.priority; }) }), 'Higher wins') : null
+		),
+		editor.advanced ? field('Rule id', h('input', {
+			value: rule.id,
+			onchange: e => {
+				const id = slugify(e.target.value);
+				if ((editor.rules.fields.rules ?? []).some(r => r.id === id)) { e.target.value = rule.id; return; }
+				updateRule(rule.id, r => { r.id = id; });
+				editor.select({ rule: id });
+			}
+		})) : null,
+		h('h3', {}, 'When'),
+		groupEditor(editor, tree, next => updateRule(rule.id, r => { r.when = serializeCondition(next); })),
+		h('h3', {}, 'Then'),
+		actionList(editor, rule.then ?? [], then => updateRule(rule.id, r => { r.then = then; })),
+		rule.else ? [h('h3', {}, 'Otherwise'), actionList(editor, rule.else, otherwise => updateRule(rule.id, r => { if (otherwise.length) r.else = otherwise; else delete r.else; }))]
+			: button('+ Otherwise', () => updateRule(rule.id, r => { r.else = [{ show: stepsOf(editor.form).flatMap(s => s.fields)[0] ?? '' }]; })),
+		h('div', { part: 'row' },
+			button('Move up', () => commitRules(f => { f.rules = moveItem(f.rules, index, -1); }), { disabled: index === 0 }),
+			button('Move down', () => commitRules(f => { f.rules = moveItem(f.rules, index, 1); }), { disabled: index === count - 1 }),
+			button('Delete rule', () => {
+				if (!confirm(`Delete the rule "${rule.title ?? rule.id}"?`)) return;
+				commitRules(f => { f.rules = f.rules.filter(r => r.id !== rule.id); });
+				editor.select({ rule: null });
+			}, { part: 'danger' })
+		)
+	);
+}
+
+function servicesEditor(editor, commitRules) {
+	const { form, rules } = editor;
+	const services = rules.fields.services ?? {};
+	const fieldIds = stepsOf(form).flatMap(step => step.fields);
+	return h('details', { part: 'services', open: Object.keys(services).length > 0 },
+		h('summary', {}, `Services (${Object.keys(services).length})`),
+		h('p', {}, h('small', {}, 'A rule can fetch extra fields and rules from a service. The sample reply is used by the preview and is not exported.')),
+		Object.entries(services).map(([name, service]) => h('fieldset', { part: 'service' },
+			h('legend', {}, name),
+			field('URL', h('input', { type: 'url', value: service.url ?? '', onchange: e => commitRules(f => { f.services[name].url = e.target.value; }) })),
+			h('fieldset', { part: 'choices-inline' }, h('legend', {}, 'Sends'),
+				fieldIds.map(id => check(form.fields.properties[id]?.title ?? id, (service.send ?? []).includes(id), on => commitRules(f => {
+					const send = new Set(f.services[name].send ?? []);
+					if (on) send.add(id); else send.delete(id);
+					f.services[name].send = fieldIds.filter(fid => send.has(fid));
+				})))),
+			field('Timeout (ms)', h('input', { type: 'number', min: 0, value: service.timeoutMs ?? '', onchange: e => commitRules(f => { if (e.target.value) f.services[name].timeoutMs = Number(e.target.value); else delete f.services[name].timeoutMs; }) })),
+			field('Sample reply (a patch)', h('textarea', {
+				rows: 5, value: editor.samples[name] ?? '',
+				onchange: e => {
+					try {
+						if (e.target.value.trim()) JSON.parse(e.target.value);
+						e.target.setCustomValidity('');
+						editor.setSample(name, e.target.value);
+					} catch (error) {
+						e.target.setCustomValidity(error.message);
+						e.target.reportValidity();
+					}
+				}
+			})),
+			button('Delete service', () => commitRules(f => { delete f.services[name]; }), { part: 'danger' })
+		)),
+		h('form', {
+			part: 'row',
+			onsubmit: event => {
+				event.preventDefault();
+				const name = slugify(new FormData(event.target).get('name'));
+				if (!name || services[name]) return;
+				commitRules(f => { f.services = { ...(f.services ?? {}), [name]: { url: 'https://', send: [] } }; });
+			}
+		}, field('New service name', h('input', { name: 'name', required: true })), h('button', { type: 'submit' }, '+ Service'))
+	);
+}

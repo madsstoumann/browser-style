@@ -23,7 +23,7 @@ const state = evaluate(form, rules, { values, context, facts, previous });
 | `matched` | Ids of the rules that matched |
 | `effects` | `fetch` and `emit` requests for the host to carry out |
 | `issues` | `required` and `option-unavailable` problems |
-| `explain` | Which rules decided each flag, e.g. `"plan.options": ["senior-north"]` |
+| `explain` | Which rules decided each flag, e.g. `"plan.options": ["senior-north"]`; a rule's `else` branch shows as `"senior-north:else"` |
 
 Pass the previous state's `matched` as `previous` so `emit` fires once per change, not on every evaluation.
 

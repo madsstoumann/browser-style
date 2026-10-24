@@ -5,6 +5,12 @@
 			display: grid;
 			gap: var(--form-flow-gap, var(--spacing-lg, 1.5rem));
 		}
+		& [part=steps] {
+			display: flex;
+			flex-wrap: wrap;
+			gap: var(--spacing-sm, 0.5rem) var(--ui-step-gap, 2ch);
+			& li { white-space: nowrap; }
+		}
 		& fieldset[data-step] {
 			border: 0;
 			padding: 0;
