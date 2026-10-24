@@ -2,7 +2,7 @@
 	"$schema": "../schemas/form-definition.schema.json",
 	"id": "form-loan",
 	"model": "form-definition",
-	"meta": { "locale": "en", "status": "published" },
+	"meta": { "locale": "en", "status": "published", "version": 1 },
 	"fields": {
 		"title": "Loan application",
 		"structure": {
@@ -17,14 +17,15 @@
 		"type": "object",
 		"properties": {
 			"cpr": {
+				"privacy": "special",
 				"type": "string",
 				"title": "CPR number",
 				"description": "DDMMYY-XXXX",
 				"required": true,
 				"validation": { "check": "dk-cpr" }
 			},
-			"name": { "type": "string", "title": "Full name", "required": true, "validation": { "minLength": 2 } },
-			"email": { "type": "string", "title": "Email", "required": true, "ui": { "widget": "email" } },
+			"name": { "type": "string", "privacy": "personal", "title": "Full name", "required": true, "validation": { "minLength": 2 } },
+			"email": { "type": "string", "privacy": "personal", "title": "Email", "required": true, "ui": { "widget": "email" } },
 			"employment": {
 				"type": "select",
 				"title": "Employment",
@@ -44,12 +45,14 @@
 				"validation": { "check": "dk-cvr" }
 			},
 			"income": {
+				"privacy": "personal",
 				"type": "integer",
 				"title": "Monthly income after tax (DKK)",
 				"required": true,
 				"validation": { "minimum": 0, "maximum": 1000000 }
 			},
 			"debt": {
+				"privacy": "personal",
 				"type": "integer",
 				"title": "Total debt today (DKK)",
 				"required": true,
@@ -107,6 +110,7 @@
 			"startDate": { "type": "string", "title": "Start date", "required": true, "ui": { "widget": "date" } },
 			"coApplicant": { "type": "boolean", "title": "I am applying with someone else", "ui": { "widget": "toggle" } },
 			"incomeNote": {
+				"privacy": "personal",
 				"type": "string",
 				"title": "Tell us about your income and expenses",
 				"description": "We need a little more to decide",

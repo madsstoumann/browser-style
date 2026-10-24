@@ -39,6 +39,10 @@
 			justify-content: space-between;
 			& [type=submit], & [data-action=next] { margin-inline-start: auto; }
 		}
+		& [part=done] {
+			border-inline-start: 4px solid var(--color-success, currentColor);
+			padding: var(--spacing-sm, 0.5rem) var(--spacing-md, 1rem);
+		}
 		& [part=explain] {
 			font-size: smaller;
 			& ul { margin: 0; padding-inline-start: 2ch; }

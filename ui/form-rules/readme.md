@@ -98,6 +98,20 @@ A **computed** variable is an expression over the values (and earlier variables)
 
 `handleEvent(form, rules, store, event)` applies an incoming event the rule set `listen`s for: `set` writes `facts`, `replace` swaps in a newer rule set version, `patch` mounts an always-active patch. Duplicate and out-of-order events are ignored.
 
+## Sessions
+
+A session is one person's saved progress through one form version (`schemas/form-session.schema.json`). It is user data with an expiry, not content, so it does not belong in the CMS. The helpers are pure; `<form-flow>`'s `session.js` stores them.
+
+| Function | Does |
+| --- | --- |
+| `createSession({ id, definition, ruleSet, owner, now })` | A new draft pinned to the form and rule set versions; anonymous drafts expire after 30 days, a user's 90 days after the last save |
+| `snapshot(session, { definition, ruleSet, state, step, facts, now })` | The draft after a save: `state.values` (visible fields only) without fields marked `privacy: "special"`, plus step, facts and matched rules |
+| `keep(session, { storage, now })` | Records that the person chose to keep the draft on the `device` or the `server` |
+| `complete`, `discard`, `expire` | Final states. They drop the answers; `complete` is idempotent |
+| `resume(session, { definition, ruleSet, now })` | What `setup()` needs to continue, against the current versions: `{ ok, values, facts, step, previous, migrated, changes }`, or `{ ok: false, reason }` |
+
+Fields declare `privacy`: `none` (default for form fields), `personal` (default for patch fields) or `special` (never saved). A form's `version` (top level or `meta.version`) is recorded in the session; raising `resetDrafts` makes saved drafts start over.
+
 ## Tests
 
 ```bash

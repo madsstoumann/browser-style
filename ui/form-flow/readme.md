@@ -16,7 +16,7 @@
 <script type="module" src="/ui/form-flow/index.js"></script>
 ```
 
-Or from objects: `flow.setup(definition, rules, { values, context, facts })`.
+Or from objects: `flow.setup(definition, rules, { values, context, facts, step, previous })`.
 
 ## How it works
 
@@ -123,3 +123,41 @@ tracker.grant();
 | `combine(...trackers)` | Hands every event to each, and forwards `flush`, `grant` and `revoke`. |
 
 A tracker is any function `event => {}`; an optional `flush()` is called after `form.submit` and `form.abandon`. The event logic lives in `tracking.js` (tested in Node: `npm test`).
+
+## Saving and resuming (sessions)
+
+`session.js` saves a partly filled form and makes a sent form final. Demo: `session.html`.
+
+```js
+import FlowSession, { MockServer } from '@browser.style/form-flow/session.js';
+
+const session = new FlowSession(flow, {
+  owner: { kind: 'anonymous' },          // or { kind: 'user', sub: 'login-subject' }
+  server: new MockServer(),             // the draft store; a mock until there is a backend
+  send: async (detail) => ({ reference: 'AB-1234' }) // the real submission; returns the receipt
+});
+await session.start();
+```
+
+| Who | Where the draft is kept | How long |
+| --- | --- | --- |
+| Anonymous, by default | `sessionStorage`, this tab only | Until the tab closes |
+| Anonymous, after `session.saveOnDevice()` | `localStorage` | 30 days from the start |
+| Anonymous, after `session.emailLink(email)` | The server, opened with a one-time link (`#resume=…`) | 30 days from the start |
+| Signed in | The server, one draft per form | 90 days after the last change |
+
+- Only values of visible fields are saved. Fields with `privacy: "special"` (health, national id) are never saved and must be filled in again; `personal` fields are saved once the person chose to keep the draft.
+- On resume the draft is checked against the current form and rules: removed fields and options that are no longer allowed come back in `ff:resumed` as `changes`.
+- A resumed draft starts a tracking run with `form.resume` (and `age` in hours) instead of `form.view`. Set `flow.tracker` after `await session.start()`, so the run from the first render, before the resume, is not reported.
+- `session.discard()` deletes every copy and starts over; `session.forgetHere()` removes the copies in this browser (call it on logout).
+- After submit, every copy becomes a tombstone without answers. The form is cleared and hidden, `[part="done"]` shows the receipt, `done` is set on `<form-flow>`, and other tabs of the same draft lock through `BroadcastChannel`. A page restored with Back checks again.
+- The server must enforce the same: no save after submit (`409`), the same receipt for a repeated submit, tokens stored hashed and used once. `MockServer` shows the contract.
+
+| Event | `detail` |
+| --- | --- |
+| `ff:resumed` | `{ session, changes, migrated }` |
+| `ff:resume-failed` | `{ reason }`: `link`, `expired`, `reset`, … |
+| `ff:saved` | `{ session }` |
+| `ff:link` | `{ email, url, expires }` (a real backend emails the url instead) |
+| `ff:discarded` | `{ session }` |
+| `ff:done` | `{ session }` |

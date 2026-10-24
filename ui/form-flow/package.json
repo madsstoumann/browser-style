@@ -11,13 +11,15 @@
     },
     "./style": "./index.css",
     "./trackers": "./trackers/index.js",
-    "./tracking": "./tracking.js"
+    "./tracking": "./tracking.js",
+    "./session.js": "./session.js"
   },
   "files": [
     "index.js",
     "index.css",
     "tracking.js",
-    "trackers/*.js"
+    "trackers/*.js",
+    "session.js"
   ],
   "dependencies": {
     "@browser.style/form-rules": "^0.1.0"

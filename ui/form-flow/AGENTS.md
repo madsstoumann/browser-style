@@ -24,3 +24,11 @@ fetch effect → POST (or this.fetcher) → merge() → #rules updated → updat
 - A required boolean relies on native `required` (must be checked); the engine counts `false` as a value.
 - Tracking (`tracking.js`) is fed from a few hooks: `update()` (view, rule and error edges), `#onInput` (start, revisit, called before `update()` so the first error counts), `#goTo(step, via)` (every step change goes through it, with the reason), `#validStep` (blocked), `#fetchPatch` (service timing). A new navigation path must call `#goTo`, not set `#current`, or the funnel loses a step.
 - Abandon listens on `document` / `window` from `connectedCallback`; it fires once per hide and is re-armed when the page is visible again.
+
+## Sessions (session.js)
+
+- `FlowSession` is a controller next to the element, not part of it: it calls `setup()` with `values`, `facts`, `step` and `previous` to resume, and listens to `ff:change` (debounced save) and `ff:submit`.
+- A step inserted by a service patch is not on the path until its fetch returns, so the saved step is kept in `#pendingStep` and visited on a later `ff:change`, unless the person navigates first.
+- `#restoring` guards the `ff:change` that `setup()` itself fires, so a resume or reset is not saved straight back.
+- The done view hides the re-rendered (empty) form instead of removing it, so late `update()` calls (a fetch returning) still find their elements.
+- Pure session logic lives in `form-rules/modules/session.js`; keep storage and DOM out of it.
