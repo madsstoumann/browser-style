@@ -291,8 +291,9 @@ export default class FlowSession {
 	}
 
 	#restore({ values, facts, step, previous }) {
+		const age = Math.round((Date.parse(this.now()) - Date.parse(this.#session.updated)) / 36e5);
 		this.#restoring = true;
-		this.#flow.setup(this.#flow.definition, this.#rules, { values, facts, step, previous, context: this.#flow.context });
+		this.#flow.setup(this.#flow.definition, this.#rules, { values, facts, step, previous, resumed: { age }, context: this.#flow.context });
 		this.#restoring = false;
 		/* A step inserted by a service patch appears once its fetch returns. */
 		this.#pendingStep = step && this.#flow.currentStep !== step ? step : null;
@@ -343,7 +344,7 @@ export default class FlowSession {
 		clearTimeout(this.#timer);
 		this.#session = session;
 		this.#restoring = true;
-		this.#flow.setup(this.#flow.definition, this.#rules, { context: this.#flow.context });
+		this.#flow.setup(this.#flow.definition, this.#rules, { context: this.#flow.context, keepTracking: true });
 		this.#restoring = false;
 		const form = this.#flow.querySelector('form');
 		if (form) {

@@ -94,8 +94,9 @@ export default class FormFlow extends HTMLElement {
 		}
 	}
 
-	/* Starts the form from objects instead of URLs. A saved session passes `step` and `previous` (its matched rules) to continue. */
-	setup(definition, rules = EMPTY_RULES, { values = {}, context = this.#context, facts, step = null, previous } = {}) {
+	/* Starts the form from objects instead of URLs. A saved session passes `step`, `previous` (its matched rules) and
+	   `resumed: { age }` to continue; `keepTracking` re-renders without starting a new tracking run. */
+	setup(definition, rules = EMPTY_RULES, { values = {}, context = this.#context, facts, step = null, previous, resumed = null, keepTracking = false } = {}) {
 		this.#definition = definition;
 		this.#form = normalizeForm(definition);
 		this.#rules = rules;
@@ -105,10 +106,11 @@ export default class FormFlow extends HTMLElement {
 		this.#current = step;
 		this.#previous = previous?.matched;
 		this.#requests.clear();
-		this.#tracking = new FlowTracking(event => this.#track(event), {
+		if (!keepTracking || !this.#tracking) this.#tracking = new FlowTracking(event => this.#track(event), {
 			contextKeys: (this.getAttribute('track-context') ?? 'channel campaign').split(/\s+/).filter(Boolean),
 			contextOf: () => this.#context,
-			propertyOf: id => this.#propertyOf(id)
+			propertyOf: id => this.#propertyOf(id),
+			resumed
 		});
 		this.#render();
 		this.update();
