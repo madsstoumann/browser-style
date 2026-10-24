@@ -1,0 +1,25 @@
+{
+	"description": "Zip 2000 or below takes the else branch: Basic and Plus, no fetch",
+	"form": "../examples/insurance.form.json",
+	"rules": "../examples/insurance.rules.json",
+	"input": {
+		"values": {
+			"ageGroup": 30,
+			"zip": "1500"
+		}
+	},
+	"expect": {
+		"matched": [
+			"roadside-region"
+		],
+		"fields": {
+			"plan": {
+				"options": [
+					"basic",
+					"plus"
+				]
+			}
+		},
+		"effects": []
+	}
+}

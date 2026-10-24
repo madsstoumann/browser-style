@@ -1,0 +1,26 @@
+{
+	"description": "Choosing an add-on makes Email required",
+	"form": "../examples/insurance.form.json",
+	"rules": "../examples/insurance.rules.json",
+	"input": {
+		"values": {
+			"ageGroup": 30,
+			"zip": "1500",
+			"addOns": [
+				"glass"
+			]
+		}
+	},
+	"expect": {
+		"fields": {
+			"email": {
+				"required": true
+			}
+		},
+		"explain": {
+			"email.required": [
+				"email-needed"
+			]
+		}
+	}
+}

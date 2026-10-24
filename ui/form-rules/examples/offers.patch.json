@@ -1,0 +1,17 @@
+{
+	"$schema": "../schemas/form-patch.schema.json",
+	"patch": "senior-north",
+	"for": { "form": "form-insurance", "rules": "insurance", "minVersion": 3 },
+	"fields": {
+		"travelCover": { "type": "boolean", "title": "Add travel cover", "ui": { "widget": "toggle" } }
+	},
+	"place": { "cover.extra": ["travelCover"] },
+	"rules": [
+		{
+			"id": "travel-needs-plus",
+			"when": { "===": [{ "var": "values.travelCover" }, true] },
+			"then": [{ "options": { "field": "plan", "exclude": ["basic"] } }]
+		}
+	],
+	"expires": "2026-10-24T08:00:00Z"
+}

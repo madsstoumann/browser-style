@@ -1,0 +1,73 @@
+{
+	"description": "With the offers patch merged and senior-north matching, Travel cover appears in the cover.extra slot and its rule runs",
+	"form": "../examples/insurance.form.json",
+	"rules": "../examples/insurance.rules.json",
+	"patches": [
+		{
+			"owner": "senior-north",
+			"patch": "../examples/offers.patch.json"
+		}
+	],
+	"input": {
+		"values": {
+			"ageGroup": 30,
+			"zip": "2100",
+			"plan": "plus",
+			"offers.travelCover": true
+		}
+	},
+	"expect": {
+		"patches": [
+			"offers/senior-north"
+		],
+		"matched": [
+			"senior-north",
+			"roadside-region",
+			"offers/travel-needs-plus"
+		],
+		"steps": [
+			{
+				"id": "you"
+			},
+			{
+				"id": "where"
+			},
+			{
+				"id": "cover",
+				"fields": [
+					"plan",
+					"addOns",
+					"offers.travelCover"
+				]
+			},
+			{
+				"id": "review"
+			}
+		],
+		"fields": {
+			"offers.travelCover": {
+				"step": "cover",
+				"source": "offers/senior-north",
+				"visible": true
+			},
+			"plan": {
+				"options": [
+					"plus",
+					"senior"
+				]
+			}
+		},
+		"values": {
+			"ageGroup": 30,
+			"zip": "2100",
+			"plan": "plus",
+			"offers.travelCover": true
+		},
+		"explain": {
+			"plan.options": [
+				"senior-north",
+				"offers/travel-needs-plus"
+			]
+		}
+	}
+}

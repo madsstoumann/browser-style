@@ -1,0 +1,67 @@
+{
+	"$schema": "../schemas/form-definition.schema.json",
+	"id": "form-insurance",
+	"model": "form-definition",
+	"meta": { "locale": "en", "status": "published" },
+	"fields": {
+		"title": "Insurance quote",
+		"structure": {
+			"layout": [
+				{ "area": "main", "type": "step", "id": "you", "name": "About you", "fields": ["ageGroup", "email"] },
+				{ "area": "main", "type": "step", "id": "where", "name": "Where you live", "fields": ["zip"] },
+				{ "area": "main", "type": "step", "id": "cover", "name": "Your cover", "fields": ["plan", "addOns"], "slots": ["cover.extra"] },
+				{ "area": "main", "type": "step", "id": "review", "name": "Review", "fields": ["consent"] }
+			]
+		},
+		"type": "object",
+		"properties": {
+			"ageGroup": {
+				"type": "select",
+				"title": "Age group",
+				"required": true,
+				"options": { "choices": [
+					{ "value": 18, "label": "18–29" },
+					{ "value": 30, "label": "30–49" },
+					{ "value": 50, "label": "50+" }
+				] }
+			},
+			"email": {
+				"type": "string",
+				"title": "Email",
+				"ui": { "widget": "email" }
+			},
+			"zip": {
+				"type": "string",
+				"title": "Zip code",
+				"description": "Four digits",
+				"required": true,
+				"validation": { "pattern": "^[0-9]{4}$" }
+			},
+			"plan": {
+				"type": "select",
+				"title": "Plan",
+				"required": true,
+				"ui": { "widget": "radio" },
+				"options": { "choices": [
+					{ "value": "basic", "label": "Basic" },
+					{ "value": "plus", "label": "Plus" },
+					{ "value": "senior", "label": "Senior" }
+				] }
+			},
+			"addOns": {
+				"type": "select",
+				"title": "Add-ons",
+				"options": { "multiple": true, "choices": [
+					{ "value": "glass", "label": "Glass" },
+					{ "value": "roadside", "label": "Roadside help" }
+				] }
+			},
+			"consent": {
+				"type": "boolean",
+				"title": "I accept the terms",
+				"required": true,
+				"ui": { "widget": "toggle" }
+			}
+		}
+	}
+}

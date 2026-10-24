@@ -1,0 +1,61 @@
+{
+	"description": "Age group 30–49 and zip above 2000 narrows Plan to Plus and Senior, asks for offers and emits the segment once",
+	"form": "../examples/insurance.form.json",
+	"rules": "../examples/insurance.rules.json",
+	"input": {
+		"values": {
+			"ageGroup": 30,
+			"zip": "2100",
+			"plan": "plus"
+		}
+	},
+	"expect": {
+		"matched": [
+			"senior-north",
+			"roadside-region"
+		],
+		"fields": {
+			"plan": {
+				"visible": true,
+				"options": [
+					"plus",
+					"senior"
+				]
+			}
+		},
+		"values": {
+			"ageGroup": 30,
+			"zip": "2100",
+			"plan": "plus"
+		},
+		"effects": [
+			{
+				"type": "fetch",
+				"rule": "senior-north",
+				"service": "offers",
+				"into": "cover.extra",
+				"url": "https://api.example.com/offers",
+				"send": {
+					"ageGroup": 30,
+					"zip": "2100"
+				},
+				"key": "offers:{\"ageGroup\":30,\"zip\":\"2100\"}",
+				"mounted": false
+			},
+			{
+				"type": "emit",
+				"rule": "senior-north",
+				"event": "quote.segment",
+				"data": {
+					"segment": "senior-north"
+				},
+				"where": "any"
+			}
+		],
+		"explain": {
+			"plan.options": [
+				"senior-north"
+			]
+		}
+	}
+}

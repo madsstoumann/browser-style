@@ -1,0 +1,136 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "https://browser.style/ui/form-rules/schemas/form-rules.schema.json",
+	"title": "Form rule set",
+	"description": "Rules for a multi-step form. Stored as UCF content of the form-rules model, or as the plain object in `fields`.",
+	"oneOf": [
+		{
+			"type": "object",
+			"required": ["id", "model", "fields"],
+			"properties": {
+				"$schema": { "type": "string" },
+				"id": { "type": "string" },
+				"model": { "const": "form-rules" },
+				"meta": { "type": "object" },
+				"fields": { "$ref": "#/definitions/ruleSet" }
+			}
+		},
+		{ "allOf": [{ "$ref": "#/definitions/ruleSet" }, { "required": ["id"] }] }
+	],
+	"definitions": {
+		"id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+		"ids": { "oneOf": [{ "type": "string" }, { "type": "array", "items": { "type": "string" }, "minItems": 1 }] },
+		"logic": {
+			"description": "A JSON Logic expression, strict subset: no == or !=. See modules/logic.js for the operator list.",
+			"type": ["object", "array", "string", "number", "boolean", "null"]
+		},
+		"ruleSet": {
+			"type": "object",
+			"required": ["rules"],
+			"properties": {
+				"$schema": { "type": "string" },
+				"id": { "type": "string" },
+				"form": { "type": "string", "description": "Id of the form definition these rules belong to" },
+				"version": { "type": "integer", "minimum": 1 },
+				"patchPriorityCeiling": { "type": "number", "description": "Highest priority a mounted patch rule may have. Default -1." },
+				"services": {
+					"type": "object",
+					"additionalProperties": {
+						"type": "object",
+						"required": ["url"],
+						"properties": {
+							"url": { "type": "string", "format": "uri" },
+							"send": { "type": "array", "items": { "type": "string" } },
+							"timeoutMs": { "type": "integer", "minimum": 0 }
+						},
+						"additionalProperties": false
+					}
+				},
+				"listen": { "type": "array", "items": { "$ref": "#/definitions/listener" } },
+				"rules": { "type": "array", "items": { "$ref": "#/definitions/rule" } }
+			}
+		},
+		"listener": {
+			"type": "object",
+			"required": ["type"],
+			"properties": {
+				"type": { "type": "string" },
+				"set": { "type": "string", "pattern": "^facts\\." },
+				"replace": { "const": "rules" },
+				"patch": {
+					"type": "object",
+					"required": ["namespace", "into"],
+					"properties": {
+						"namespace": { "type": "string" },
+						"into": { "type": "string" },
+						"owner": { "type": "string" }
+					}
+				}
+			},
+			"oneOf": [{ "required": ["set"] }, { "required": ["replace"] }, { "required": ["patch"] }]
+		},
+		"rule": {
+			"type": "object",
+			"required": ["id", "when"],
+			"properties": {
+				"id": { "$ref": "#/definitions/id" },
+				"title": { "type": "string" },
+				"priority": { "type": "number" },
+				"when": { "$ref": "#/definitions/logic" },
+				"then": { "type": "array", "items": { "$ref": "#/definitions/action" } },
+				"else": { "type": "array", "items": { "$ref": "#/definitions/action" } }
+			},
+			"additionalProperties": false
+		},
+		"action": {
+			"type": "object",
+			"minProperties": 1,
+			"maxProperties": 1,
+			"properties": {
+				"show": { "$ref": "#/definitions/ids" },
+				"hide": { "$ref": "#/definitions/ids" },
+				"enable": { "$ref": "#/definitions/ids" },
+				"disable": { "$ref": "#/definitions/ids" },
+				"require": { "$ref": "#/definitions/ids" },
+				"optional": { "$ref": "#/definitions/ids" },
+				"clear": { "$ref": "#/definitions/ids" },
+				"skip": { "$ref": "#/definitions/ids" },
+				"include": { "$ref": "#/definitions/ids" },
+				"setValue": {
+					"type": "object",
+					"required": ["field", "value"],
+					"properties": { "field": { "type": "string" }, "value": {} },
+					"additionalProperties": false
+				},
+				"options": {
+					"type": "object",
+					"required": ["field"],
+					"properties": {
+						"field": { "type": "string" },
+						"only": { "type": "array" },
+						"exclude": { "type": "array" }
+					},
+					"additionalProperties": false
+				},
+				"fetch": {
+					"type": "object",
+					"required": ["service", "into"],
+					"properties": { "service": { "type": "string" }, "into": { "type": "string" } },
+					"additionalProperties": false
+				},
+				"emit": {
+					"type": "object",
+					"required": ["type"],
+					"properties": {
+						"type": { "type": "string" },
+						"data": {},
+						"on": { "enum": ["enter", "leave"] },
+						"where": { "enum": ["any", "server"] }
+					},
+					"additionalProperties": false
+				}
+			},
+			"additionalProperties": false
+		}
+	}
+}

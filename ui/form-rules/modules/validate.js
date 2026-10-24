@@ -1,0 +1,162 @@
+/**
+ * validate(form, ruleSet) → { valid, errors: [{ code, message, path }] }
+ *
+ * Checks a form definition and its rule set together, before anything runs:
+ * unknown fields, steps, slots, services, operators and actions, duplicate ids,
+ * option values that do not exist, and cycles between rules.
+ */
+
+import { operatorsOf, readsOf, OPERATORS } from './logic.js';
+import { actionName, actionTargets, ACTIONS } from './actions.js';
+import { normalizeForm, normalizeRuleSet, unwrap } from './form.js';
+
+const INPUT_ROOTS = ['values', 'context', 'facts', 'step'];
+/* Only these change what a condition can read, since hidden values read as absent. */
+const VISIBILITY = new Set(['show', 'hide', 'skip', 'include']);
+
+export function validate(formDefinition, ruleSetDocument) {
+	const errors = [];
+	const fail = (code, message, path) => errors.push({ code, message, path });
+	const rawForm = unwrap(formDefinition);
+	const form = normalizeForm(formDefinition);
+	const ruleSet = normalizeRuleSet(ruleSetDocument);
+
+	/* The form */
+	if (!form.steps.length) fail('form-steps', 'The form has no steps (structure.layout entries of type "step")', 'structure.layout');
+	const stepIds = new Set();
+	form.steps.forEach((step, index) => {
+		if (stepIds.has(step.id)) fail('duplicate', `Step id "${step.id}" is used twice`, `structure.layout[${index}]`);
+		stepIds.add(step.id);
+	});
+	const placed = new Map();
+	form.steps.forEach(step => step.fields.forEach(id => {
+		if (!rawForm.properties?.[id]) fail('field', `Step "${step.id}" lists "${id}", which is not in properties`, `structure.layout.${step.id}`);
+		if (placed.has(id)) fail('duplicate', `Field "${id}" is in steps "${placed.get(id)}" and "${step.id}"`, `structure.layout.${step.id}`);
+		placed.set(id, step.id);
+	}));
+	const slotIds = new Set();
+	form.steps.forEach(step => step.slots.forEach(slot => {
+		if (slotIds.has(slot)) fail('duplicate', `Slot "${slot}" is declared twice`, `structure.layout.${step.id}`);
+		slotIds.add(slot);
+	}));
+
+	/* The rule set */
+	const formId = form.id;
+	if (ruleSet.form && formId && ruleSet.form !== formId) fail('target', `Rule set is for form "${ruleSet.form}", not "${formId}"`, 'form');
+
+	for (const [name, service] of Object.entries(ruleSet.services)) {
+		if (typeof service?.url !== 'string') fail('service', `Service "${name}" needs a url`, `services.${name}`);
+		(service?.send ?? []).forEach(id => {
+			if (!form.fields.has(id)) fail('field', `Service "${name}" sends unknown field "${id}"`, `services.${name}.send`);
+		});
+	}
+
+	ruleSet.listen.forEach((listener, index) => {
+		const path = `listen[${index}]`;
+		if (typeof listener?.type !== 'string') fail('listener', 'A listener needs an event type', path);
+		const kinds = ['set', 'replace', 'patch'].filter(key => listener?.[key]);
+		if (kinds.length !== 1) fail('listener', 'A listener needs exactly one of set, replace or patch', path);
+		if (listener?.set && !String(listener.set).startsWith('facts.')) fail('listener', '"set" may only write under facts.', path);
+		if (listener?.patch && !slotIds.has(listener.patch.into)) fail('slot', `Unknown slot "${listener.patch.into}"`, `${path}.patch.into`);
+	});
+
+	const ruleIds = new Set();
+	const writes = new Map();
+	const reads = new Map();
+	const assignedFields = new Set();
+
+	ruleSet.rules.forEach((rule, index) => {
+		const path = `rules[${index}]`;
+		if (typeof rule?.id !== 'string' || !rule.id) {
+			fail('rule-id', 'Every rule needs an id', path);
+			return;
+		}
+		if (ruleIds.has(rule.id)) fail('duplicate', `Rule id "${rule.id}" is used twice`, path);
+		ruleIds.add(rule.id);
+		if (rule.priority !== undefined && !Number.isFinite(rule.priority)) fail('priority', 'Priority must be a number', `${path}.priority`);
+
+		/* Conditions */
+		operatorsOf(rule.when ?? true).forEach(op => {
+			if (op === '==' || op === '!=') fail('operator', `"${op}" coerces types; use "${op}="`, `${path}.when`);
+			else if (!OPERATORS.includes(op)) fail('operator', `Unknown operator "${op}"`, `${path}.when`);
+		});
+		const fieldReads = new Set();
+		readsOf(rule.when ?? true).forEach(variable => {
+			const [root, ...rest] = variable.split('.');
+			if (!INPUT_ROOTS.includes(root)) {
+				fail('variable', `"${variable}" must start with ${INPUT_ROOTS.join(', ')}`, `${path}.when`);
+				return;
+			}
+			if (root === 'values') {
+				const field = rest.join('.');
+				if (!form.fields.has(field)) fail('field', `Condition reads unknown field "${field}"`, `${path}.when`);
+				fieldReads.add(field);
+			}
+		});
+		reads.set(rule.id, fieldReads);
+
+		/* Actions */
+		const ruleWrites = new Set();
+		['then', 'else'].forEach(branch => (rule[branch] ?? []).forEach((action, i) => {
+			const at = `${path}.${branch}[${i}]`;
+			const name = actionName(action);
+			if (!ACTIONS.includes(name)) {
+				fail('action', `Unknown action "${name ?? JSON.stringify(action)}"`, at);
+				return;
+			}
+			const value = action[name];
+			const { fields, steps } = actionTargets(action);
+			fields.forEach(id => {
+				if (!form.fields.has(id)) fail('field', `Action targets unknown field "${id}"`, at);
+				else if (VISIBILITY.has(name)) ruleWrites.add(id);
+			});
+			steps.forEach(id => {
+				if (!stepIds.has(id)) fail('step', `Action targets unknown step "${id}"`, at);
+				else form.steps.find(step => step.id === id).fields.forEach(field => ruleWrites.add(field));
+			});
+			if (name === 'setValue' || name === 'clear') fields.forEach(id => assignedFields.add(id));
+			if (name === 'options') {
+				const choices = form.fields.get(value?.field)?.choices;
+				if (form.fields.has(value?.field) && !choices) fail('options', `Field "${value.field}" has no choices to narrow`, at);
+				[...(value?.only ?? []), ...(value?.exclude ?? [])].forEach(option => {
+					if (choices && !choices.includes(option)) fail('options', `"${option}" is not a choice of "${value.field}"`, at);
+				});
+			}
+			if (name === 'fetch') {
+				if (!ruleSet.services[value?.service]) fail('service', `Unknown service "${value?.service}"`, at);
+				if (value?.into && !slotIds.has(value.into)) fail('slot', `Unknown slot "${value.into}"`, at);
+			}
+			if (name === 'emit') {
+				if (typeof value?.type !== 'string') fail('emit', 'emit needs an event type', at);
+				if (value?.on && !['enter', 'leave'].includes(value.on)) fail('emit', '"on" must be "enter" or "leave"', at);
+			}
+		}));
+		writes.set(rule.id, ruleWrites);
+	});
+
+	/* A field set by setValue must not steer any rule, or a rule could change its own input. */
+	reads.forEach((fields, ruleId) => fields.forEach(field => {
+		if (assignedFields.has(field)) fail('cycle', `Rule "${ruleId}" reads "${field}", which another rule sets with setValue or clear`, 'rules');
+	}));
+
+	/* Visibility cycles: rule A hides a field rule B reads, and B hides one A reads. */
+	const fieldGraph = new Map();
+	reads.forEach((readFields, ruleId) => readFields.forEach(from => {
+		if (!fieldGraph.has(from)) fieldGraph.set(from, new Set());
+		writes.get(ruleId).forEach(to => fieldGraph.get(from).add(to));
+	}));
+	const state = new Map();
+	const visit = (node, trail) => {
+		if (state.get(node) === 'done') return;
+		if (state.get(node) === 'active') {
+			fail('cycle', `Fields depend on each other in a loop: ${[...trail.slice(trail.indexOf(node)), node].join(' → ')}`, 'rules');
+			return;
+		}
+		state.set(node, 'active');
+		(fieldGraph.get(node) ?? []).forEach(next => visit(next, [...trail, node]));
+		state.set(node, 'done');
+	};
+	[...fieldGraph.keys()].forEach(node => visit(node, []));
+
+	return { valid: errors.length === 0, errors };
+}

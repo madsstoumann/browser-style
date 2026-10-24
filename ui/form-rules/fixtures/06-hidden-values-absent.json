@@ -1,0 +1,23 @@
+{
+	"description": "A value in a skipped step is not submitted",
+	"form": "../examples/insurance.form.json",
+	"rules": "../examples/insurance.rules.json",
+	"input": {
+		"values": {
+			"ageGroup": 30,
+			"zip": "1500",
+			"plan": "basic",
+			"consent": true
+		},
+		"context": {
+			"channel": "partner"
+		}
+	},
+	"expect": {
+		"values": {
+			"ageGroup": 30,
+			"zip": "1500",
+			"plan": "basic"
+		}
+	}
+}

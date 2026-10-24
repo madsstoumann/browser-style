@@ -1,0 +1,34 @@
+{
+	"description": "Re-evaluating while senior-north still matches sends no new event",
+	"form": "../examples/insurance.form.json",
+	"rules": "../examples/insurance.rules.json",
+	"input": {
+		"values": {
+			"ageGroup": 30,
+			"zip": "2100"
+		},
+		"previous": {
+			"matched": [
+				"senior-north",
+				"roadside-region"
+			]
+		}
+	},
+	"expect": {
+		"effects": [
+			{
+				"type": "fetch",
+				"rule": "senior-north",
+				"service": "offers",
+				"into": "cover.extra",
+				"url": "https://api.example.com/offers",
+				"send": {
+					"ageGroup": 30,
+					"zip": "2100"
+				},
+				"key": "offers:{\"ageGroup\":30,\"zip\":\"2100\"}",
+				"mounted": false
+			}
+		]
+	}
+}

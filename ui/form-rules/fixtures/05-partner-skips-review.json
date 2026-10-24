@@ -1,0 +1,36 @@
+{
+	"description": "A partner channel skips the Review step, so its required consent is not asked for",
+	"form": "../examples/insurance.form.json",
+	"rules": "../examples/insurance.rules.json",
+	"input": {
+		"values": {
+			"ageGroup": 30,
+			"zip": "1500",
+			"plan": "basic"
+		},
+		"context": {
+			"channel": "partner"
+		}
+	},
+	"expect": {
+		"path": [
+			"you",
+			"where",
+			"cover"
+		],
+		"fields": {
+			"consent": {
+				"visible": false
+			}
+		},
+		"issues": [],
+		"explain": {
+			"step:review": [
+				"partner-skips-review"
+			],
+			"consent.visible": [
+				"step:review"
+			]
+		}
+	}
+}

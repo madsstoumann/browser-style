@@ -1,0 +1,32 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "https://browser.style/ui/form-rules/schemas/form-patch.schema.json",
+	"title": "Form patch",
+	"description": "Extra fields and rules returned by a service, or carried by an event. Fields are UCM properties; rules use the rule format.",
+	"type": "object",
+	"required": ["patch"],
+	"properties": {
+		"$schema": { "type": "string" },
+		"patch": { "type": "string" },
+		"for": {
+			"type": "object",
+			"properties": {
+				"form": { "type": "string" },
+				"rules": { "type": "string" },
+				"minVersion": { "type": "integer" }
+			}
+		},
+		"fields": {
+			"type": "object",
+			"additionalProperties": { "$ref": "form-definition.schema.json#/definitions/property" }
+		},
+		"place": {
+			"type": "object",
+			"description": "Slot id → field ids, in order",
+			"additionalProperties": { "type": "array", "items": { "type": "string" } }
+		},
+		"rules": { "type": "array", "items": { "$ref": "form-rules.schema.json#/definitions/rule" } },
+		"expires": { "type": "string", "format": "date-time" }
+	},
+	"additionalProperties": false
+}
