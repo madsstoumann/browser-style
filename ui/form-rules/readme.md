@@ -2,6 +2,8 @@
 
 A pure, JSON-defined rule engine for multi-step forms. Forms, rule sets and the answers are all JSON, and can be stored as UCF content and synced through UCM. Same input, same output, in the browser and in Node.
 
+> The whole system (JSON formats, operators and actions, custom functions, sessions, tracking, embedding, what is deferred) is explained in the [forms guide](../../docs/forms.md).
+
 ```bash
 npm install @browser.style/form-rules
 ```

@@ -2,6 +2,8 @@
 
 `<form-embed>` puts a published form on any site by id. It loads one bundle (form, rules and the names of the host functions the form needs), imports those functions from a reviewed registry, and runs [`<form-flow>`](../form-flow/) inside it.
 
+> The whole system (JSON formats, operators and actions, custom functions, sessions, tracking, embedding, what is deferred) is explained in the [forms guide](../../docs/forms.md).
+
 ```html
 <script type="module" src="https://v4.browser.style/ui/form-embed/index.js"></script>
 
