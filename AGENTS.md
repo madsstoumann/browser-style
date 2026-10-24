@@ -121,6 +121,7 @@ which is why the native `::scroll-marker` path has never been audited
 | `docs/v4.md` | **Auto-loaded.** Reading order, load-bearing facts, the verification gates, sharp edges |
 | `DESIGN.md` | The design-token reference — every global token family |
 | `docs/guide.md` | Narrative guide: card → section → page |
+| `docs/forms.md` | Guide to the schema-driven forms system: form-rules, form-flow, form-editor, form-embed, the JSON formats and what is deferred |
 | `docs/performance.md` | CPU/GPU policy, `will-change` rules, measured animation costs |
 | `docs/sustainability.md` | The W3C Web Sustainability Guidelines mapped to this repo — status per guideline, the transfer-weight budget and rating scale, the disclosure-file audit |
 | `docs/token-comparison.md` | Naming rationale vs Tailwind v4 / Open Props |

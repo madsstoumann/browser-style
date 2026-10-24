@@ -2,6 +2,8 @@
 
 `<form-editor>` is a visual editor for multi-step forms and their rules. It is meant for developers and content editors alike. It produces exactly two JSON documents, both UCF content:
 
+> The whole system (JSON formats, operators and actions, custom functions, sessions, tracking, embedding, what is deferred) is explained in the [forms guide](../../docs/forms.md).
+
 - **`<form-id>.form.json`** is the form definition (model `form-definition`), and is what `<form-flow>` renders.
 - **`<rules-id>.rules.json`** is the rule set (model `form-rules`), and is what `@browser.style/form-rules` evaluates.
 

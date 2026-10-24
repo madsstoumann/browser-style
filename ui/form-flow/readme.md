@@ -2,6 +2,8 @@
 
 `<form-flow>` renders a multi-step form from a JSON form definition and a [form-rules](../form-rules/) rule set. Fields are plain native controls in light DOM, styled by `@browser.style/base` form.css; steps use the `.ui-step` list from `ui/step`.
 
+> The whole system (JSON formats, operators and actions, custom functions, sessions, tracking, embedding, what is deferred) is explained in the [forms guide](../../docs/forms.md).
+
 ```html
 <link rel="stylesheet" href="/ui/base/index.css">
 <link rel="stylesheet" href="/ui/step/ui-step.css">
