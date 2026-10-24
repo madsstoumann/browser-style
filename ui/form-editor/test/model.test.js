@@ -42,7 +42,7 @@ test('renaming a field updates steps, rules and services', () => {
 	assert.ok(result.form.fields.properties.postcode);
 	assert.deepEqual(result.rules.fields.services.offers.send, ['ageGroup', 'postcode']);
 	assert.deepEqual(validate(result.form, result.rules), { valid: true, errors: [] });
-	assert.deepEqual(rulesUsingField(result.rules, 'postcode'), ['senior-north', 'roadside-region']);
+	assert.deepEqual(rulesUsingField(result.rules, 'postcode'), ['senior-north', 'roadside-region', 'outside-area']);
 	assert.equal(renameField(form, rules, 'zip', 'plan').renamed, false);
 });
 
@@ -60,4 +60,12 @@ test('a new form, step, field and rule validate', () => {
 	({ rules: ruleSet } = newRule(ruleSet, 'Always require email'));
 	ruleSet.fields.rules[0].then = [{ require: 'emailAddress' }];
 	assert.deepEqual(validate(doc, ruleSet).errors, []);
+});
+
+test('goto and step-inserting fetches read as sentences', () => {
+	const goto = rules.fields.rules.find(rule => rule.id === 'outside-area');
+	assert.equal(summarize(form, goto), 'When Zip code is at least 9000: go to Review.');
+	const health = rules.fields.rules.find(rule => rule.id === 'senior-health');
+	assert.equal(summarize(form, health), 'When Age group is at least 50+: fetch extra steps from health after Your cover.');
+	assert.equal(summarize(form, { when: true, then: [{ goto: { step: 'review', from: 'you' } }] }), 'Always: go to Review after About you.');
 });

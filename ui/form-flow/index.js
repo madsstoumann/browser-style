@@ -45,7 +45,7 @@ export default class FormFlow extends HTMLElement {
 	#requests = new Map();
 	#element;
 
-	/* Replace to fetch patches another way (a proxy, a mock): async (effect, service) => patch */
+	/* Replace to fetch patches another way (a proxy, a mock): async (effect, service) => patch, or undefined for the built-in request */
 	fetcher = null;
 
 	async connectedCallback() {
@@ -211,17 +211,31 @@ export default class FormFlow extends HTMLElement {
 		return this.querySelector(`[data-field="${CSS.escape(id)}"]`);
 	}
 
-	/* Mounts fields from patches into their slots, and removes those of unmounted patches. */
+	/* Mounts patch steps and fields (fields in their slot or step), and removes those of unmounted patches. */
 	#syncPatchFields(state) {
 		const patches = normalizeRuleSet(this.#rules).patches;
+		let previous = null;
+		for (const step of state.steps) {
+			let fieldset = this.querySelector(`fieldset[data-step="${CSS.escape(step.id)}"]`);
+			if (!fieldset) {
+				fieldset = h('fieldset', { part: 'step', 'data-step': step.id, 'data-source': step.source }, h('legend', {}, step.name));
+				(previous ?? this.querySelector('[part="steps"]')).after(fieldset);
+			}
+			previous = fieldset;
+		}
+		this.querySelectorAll('fieldset[data-source]').forEach(fieldset => {
+			if (!state.steps.some(step => step.id === fieldset.dataset.step)) fieldset.remove();
+		});
 		for (const [id, field] of Object.entries(state.fields)) {
 			if (field.source === 'form' || this.#fieldElement(id)) continue;
 			const patch = patches.find(p => p.id === field.source);
 			const slot = Object.entries(patch?.place ?? {}).find(([, ids]) => ids.includes(id))?.[0];
-			const container = slot && this.querySelector(`[data-slot="${CSS.escape(slot)}"]`);
+			const container = slot
+				? this.querySelector(`[data-slot="${CSS.escape(slot)}"]`)
+				: this.querySelector(`fieldset[data-step="${CSS.escape(field.step)}"][data-source]`);
 			if (container) container.append(this.#renderField(id, patch.fields[id]));
 		}
-		this.querySelectorAll('[data-slot] > [data-field]').forEach(element => {
+		this.querySelectorAll('[data-slot] > [data-field], fieldset[data-source] > [data-field]').forEach(element => {
 			if (!state.fields[element.dataset.field]) element.remove();
 		});
 	}
@@ -382,18 +396,8 @@ export default class FormFlow extends HTMLElement {
 		const service = normalizeRuleSet(this.#rules).services[effect.service] ?? {};
 		try {
 			let patch;
-			if (this.fetcher) {
-				patch = await this.fetcher(effect, service);
-			} else {
-				const response = await fetch(effect.url, {
-					method: 'POST',
-					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify(effect.send),
-					signal: AbortSignal.timeout(service.timeoutMs ?? 5000)
-				});
-				if (!response.ok) throw new Error(`${effect.service}: ${response.status}`);
-				patch = await response.json();
-			}
+			if (this.fetcher) patch = await this.fetcher(effect, service);
+			if (patch === undefined) patch = await this.#request(effect, service);
 			const result = merge(this.#definition, this.#rules, patch, { owner: effect.rule });
 			if (result.errors.length) throw Object.assign(new Error(`${effect.service}: patch refused`), { errors: result.errors });
 			this.#requests.set(effect.key, 'done');
@@ -403,6 +407,20 @@ export default class FormFlow extends HTMLElement {
 			this.#requests.set(effect.key, 'error');
 			this.#dispatch('ff:error', { error, effect });
 		}
+	}
+
+	/* POST sends the values as JSON; GET sends them as query parameters (a static file works as a service). */
+	async #request(effect, service) {
+		const url = new URL(effect.url, document.baseURI);
+		const get = service.method === 'GET';
+		if (get) Object.entries(effect.send).forEach(([key, value]) => url.searchParams.set(key, value ?? ''));
+		const response = await fetch(url, {
+			method: get ? 'GET' : 'POST',
+			...(get ? {} : { headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(effect.send) }),
+			signal: AbortSignal.timeout(service.timeoutMs ?? 5000)
+		});
+		if (!response.ok) throw new Error(`${effect.service}: ${response.status}`);
+		return response.json();
 	}
 
 	/* === Navigation === */
@@ -429,7 +447,7 @@ export default class FormFlow extends HTMLElement {
 		event.preventDefault();
 		this.update();
 		if (!this.#state.path.every(stepId => this.#validStep(stepId))) return;
-		const blocking = this.#state.issues;
+		const blocking = this.#state.issues.filter(issue => issue.field);
 		if (blocking.length) {
 			const field = this.#state.fields[blocking[0].field];
 			this.goTo(field.step);

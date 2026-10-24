@@ -66,10 +66,10 @@ test('a pricing event sets facts, which the next evaluation reads', () => {
 });
 
 test('a rules.published event replaces the rule set only with a newer version', () => {
-	const newer = { ...rules, fields: { ...rules.fields, version: 4, rules: [] } };
+	const newer = { ...rules, fields: { ...rules.fields, version: 5, rules: [] } };
 	const result = handleEvent(form, rules, {}, { id: 'r1', type: 'rules.published', data: newer });
 	assert.equal(result.changed, true);
-	assert.equal(result.ruleSet.version, 4);
+	assert.equal(result.ruleSet.version, 5);
 	assert.equal(handleEvent(form, result.ruleSet, result.store, { id: 'r2', type: 'rules.published', data: newer }).reason, 'not-newer');
 });
 
@@ -84,4 +84,14 @@ test('a campaign event mounts an always-active patch', () => {
 	const state = evaluate(form, result.ruleSet, { values: { ageGroup: 18, 'campaign.voucher': 'AUTUMN' } });
 	assert.equal(state.fields['campaign.voucher'].visible, true);
 	assert.equal(state.values['campaign.voucher'], 'AUTUMN');
+});
+
+test('a patch can insert steps only after the step its fetch named', () => {
+	const health = load('../examples/api/health.json');
+	const result = merge(form, rules, health, { owner: 'senior-health' });
+	assert.deepEqual(result.errors, []);
+	const mounted = result.ruleSet.patches.find(p => p.id === 'health/senior-health');
+	assert.deepEqual(mounted.steps, [{ id: 'health.health', name: 'Health', after: 'cover', fields: ['health.conditions', 'health.details', 'health.doctor'] }]);
+	assert.deepEqual(mounted.rules[0].then, [{ show: 'health.details' }, { require: 'health.details' }]);
+	assert.deepEqual(codes(merge(form, rules, health, { owner: 'senior-north' })), ['step']);
 });

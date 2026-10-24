@@ -21,7 +21,8 @@
 		<code>&lt;form-flow&gt;</code> renders a multi-step form from a <a href="../form-rules/examples/insurance.form.json">form definition</a>
 		and a <a href="../form-rules/examples/insurance.rules.json">rule set</a>, both JSON (UCF content).
 		Choose age group <em>30–49</em> and a zip code above <em>2000</em>: step 3 then offers Plus and Senior, and a mocked
-		<em>offers</em> service adds <em>Travel cover</em>.
+		<em>offers</em> service adds <em>Travel cover</em>. Choose <em>50+</em> and a <em>Health</em> step is fetched from a static JSON
+		file and inserted after step 3. A zip of <em>9000</em> or above jumps straight to Review.
 	</p>
 
 	<form-flow
@@ -55,9 +56,10 @@
 			log.prepend(item);
 		};
 
-		/* No backend: the offers service is mocked with the example patch. */
+		/* No backend: offers is mocked with the example patch; health is a static JSON file (a GET "API"). */
 		flow.fetcher = async (effect) => {
 			write('fetch', { service: effect.service, send: effect.send });
+			if (effect.service !== 'offers') return undefined;
 			const patch = await (await fetch('../form-rules/examples/offers.patch.json')).json();
 			return { ...patch, expires: new Date(Date.now() + 36e5).toISOString() };
 		};

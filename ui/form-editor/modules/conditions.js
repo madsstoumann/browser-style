@@ -144,7 +144,11 @@ export function actionText(form, action) {
 		}
 		case 'skip': return `skip ${steps()}`;
 		case 'include': return `include ${steps()}`;
-		case 'fetch': return `fetch extra fields from ${value.service} into ${value.into}`;
+		case 'goto': {
+			const goto = typeof value === 'string' ? { step: value } : value;
+			return `go to ${stepName(form, goto.step)}${goto.from ? ` after ${stepName(form, goto.from)}` : ''}`;
+		}
+		case 'fetch': return value.after ? `fetch extra steps from ${value.service} after ${stepName(form, value.after)}` : `fetch extra fields from ${value.service} into ${value.into}`;
 		case 'emit': return `send the event ${value.type}`;
 		default: return 'do something custom';
 	}

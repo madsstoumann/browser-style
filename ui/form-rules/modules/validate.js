@@ -7,7 +7,7 @@
  */
 
 import { operatorsOf, readsOf, OPERATORS } from './logic.js';
-import { actionName, actionTargets, ACTIONS } from './actions.js';
+import { actionName, actionTargets, ACTIONS, gotoFrom, gotoOf } from './actions.js';
 import { normalizeForm, normalizeRuleSet, unwrap } from './form.js';
 
 const INPUT_ROOTS = ['values', 'context', 'facts', 'step'];
@@ -46,6 +46,7 @@ export function validate(formDefinition, ruleSetDocument) {
 
 	for (const [name, service] of Object.entries(ruleSet.services)) {
 		if (typeof service?.url !== 'string') fail('service', `Service "${name}" needs a url`, `services.${name}`);
+		if (service?.method && !['GET', 'POST'].includes(service.method)) fail('service', `Service "${name}" method must be GET or POST`, `services.${name}.method`);
 		(service?.send ?? []).forEach(id => {
 			if (!form.fields.has(id)) fail('field', `Service "${name}" sends unknown field "${id}"`, `services.${name}.send`);
 		});
@@ -125,6 +126,18 @@ export function validate(formDefinition, ruleSetDocument) {
 			if (name === 'fetch') {
 				if (!ruleSet.services[value?.service]) fail('service', `Unknown service "${value?.service}"`, at);
 				if (value?.into && !slotIds.has(value.into)) fail('slot', `Unknown slot "${value.into}"`, at);
+				if (value?.after && !stepIds.has(value.after)) fail('step', `Unknown step "${value.after}"`, at);
+				if (!value?.into && !value?.after) fail('fetch', 'fetch needs "into" (a slot for fields) or "after" (a step to insert steps after)', at);
+			}
+			if (name === 'goto') {
+				const goto = gotoOf(action);
+				const from = gotoFrom(form.steps, rule, action);
+				const order = form.steps.map(step => step.id);
+				if (!stepIds.has(goto?.step)) fail('step', `goto targets unknown step "${goto?.step}"`, at);
+				else if (!from) fail('goto', 'This rule reads no field, so goto needs "from": the step to jump from', at);
+				else if (!stepIds.has(from)) fail('step', `goto jumps from unknown step "${from}"`, at);
+				else if (order.indexOf(goto.step) <= order.indexOf(from)) fail('goto', `goto may only jump forward: "${goto.step}" is not after "${from}"`, at);
+				else form.steps.slice(order.indexOf(from) + 1, order.indexOf(goto.step)).forEach(step => step.fields.forEach(field => ruleWrites.add(field)));
 			}
 			if (name === 'emit') {
 				if (typeof value?.type !== 'string') fail('emit', 'emit needs an event type', at);

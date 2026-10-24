@@ -7,7 +7,7 @@
  */
 
 import { apply, truthy } from './logic.js';
-import { actionName, actionTargets, FLAG_ACTIONS, RESTRICTIVE, STEP_ACTIONS } from './actions.js';
+import { actionName, actionTargets, FLAG_ACTIONS, gotoFrom, gotoOf, RESTRICTIVE, STEP_ACTIONS } from './actions.js';
 import { normalizeForm, normalizeRuleSet, withPatchFields } from './form.js';
 
 const MAX_PASSES = 16;
@@ -37,6 +37,7 @@ function resolve(form, results, input) {
 	const stepFlags = new Map();
 	const optionRules = new Map();
 	const assigned = new Map();
+	const gotos = new Map();
 	const effects = [];
 	const explain = {};
 
@@ -80,8 +81,11 @@ function resolve(form, results, input) {
 					push(assigned, value.field, { value: value.value ?? null, priority, rule: list.source });
 				} else if (name === 'clear') {
 					actionTargets(action).fields.forEach(field => push(assigned, field, { value: null, priority, rule: list.source }));
+				} else if (name === 'goto') {
+					const from = gotoFrom(form.steps, rule, action);
+					if (from) push(gotos, from, { to: gotoOf(action).step, priority, rule: list.source });
 				} else if (name === 'fetch') {
-					effects.push({ type: 'fetch', rule: rule.id, service: value.service, into: value.into ?? null });
+					effects.push({ type: 'fetch', rule: rule.id, service: value.service, into: value.into ?? null, ...(value.after ? { after: value.after } : {}) });
 				}
 			}
 		}
@@ -94,8 +98,37 @@ function resolve(form, results, input) {
 			visible = decision.value;
 			explain[`step:${step.id}`] = decision.rules;
 		}
-		return { id: step.id, name: step.name, visible, fields: [...step.fields] };
+		return { id: step.id, name: step.name, source: step.source ?? 'form', visible, fields: [...step.fields] };
 	});
+
+	/* goto: walking the visible steps, a jump from a step hides the steps between it and its target. */
+	const jumps = [];
+	const issues = [];
+	for (let index = 0; index < steps.length; index++) {
+		const step = steps[index];
+		if (!step.visible || !gotos.has(step.id)) continue;
+		const options = gotos.get(step.id);
+		const top = Math.max(...options.map(option => option.priority));
+		const targets = options.filter(option => option.priority === top)
+			.map(option => ({ ...option, at: steps.findIndex(s => s.id === option.to) }))
+			.filter(option => {
+				const valid = option.at > index && steps[option.at].visible;
+				if (!valid) issues.push({ step: step.id, code: 'goto-target', target: option.to, rule: option.rule });
+				return valid;
+			})
+			.sort((a, b) => a.at - b.at);
+		if (!targets.length) continue;
+		/* On a tie, the nearest target wins: it passes over the fewest steps. */
+		const target = targets[0];
+		const rules = targets.filter(option => option.at === target.at).map(option => option.rule);
+		for (let between = index + 1; between < target.at; between++) {
+			if (!steps[between].visible) continue;
+			steps[between].visible = false;
+			explain[`step:${steps[between].id}`] = rules;
+		}
+		jumps.push({ from: step.id, to: target.to, rules });
+		index = target.at - 1;
+	}
 	const stepVisible = new Map(steps.map(step => [step.id, step.visible]));
 
 	const fields = {};
@@ -122,7 +155,7 @@ function resolve(form, results, input) {
 		fields[id] = state;
 	}
 
-	return { steps, fields, assigned, effects, explain };
+	return { steps, fields, assigned, effects, explain, jumps, issues };
 }
 
 /* Values a condition can read: only fields that are currently visible. */
@@ -160,6 +193,7 @@ export function evaluate(formDefinition, ruleSetDocument, input = {}) {
 		const key = stableKey({
 			matched,
 			patches: nextPatches.map(patch => patch.id),
+			steps: state.steps.filter(step => step.visible).map(step => step.id),
 			visible: Object.entries(state.fields).filter(([, field]) => field.visible).map(([id]) => id)
 		});
 		if (key === lastKey) break;
@@ -170,7 +204,7 @@ export function evaluate(formDefinition, ruleSetDocument, input = {}) {
 
 	/* What would be submitted: visible, enabled fields only. */
 	const submit = {};
-	const issues = [];
+	const issues = [...state.issues];
 	for (const [id, field] of Object.entries(state.fields)) {
 		if (!field.visible || !field.enabled) continue;
 		let value = values[id];
@@ -205,6 +239,7 @@ export function evaluate(formDefinition, ruleSetDocument, input = {}) {
 		version: ruleSet.version ?? null,
 		steps: state.steps,
 		path: state.steps.filter(step => step.visible).map(step => step.id),
+		jumps: state.jumps,
 		fields: state.fields,
 		values: submit,
 		matched,

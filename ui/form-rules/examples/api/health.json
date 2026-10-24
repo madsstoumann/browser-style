@@ -1,0 +1,20 @@
+{
+	"$schema": "../../schemas/form-patch.schema.json",
+	"patch": "senior-health",
+	"for": { "form": "form-insurance", "rules": "insurance", "minVersion": 4 },
+	"fields": {
+		"conditions": { "type": "boolean", "title": "I have a long-term health condition", "ui": { "widget": "toggle" } },
+		"details": { "type": "string", "title": "Tell us about it", "ui": { "widget": "textarea", "hidden": true } },
+		"doctor": { "type": "boolean", "title": "I saw a doctor in the last 12 months", "ui": { "widget": "toggle" } }
+	},
+	"steps": [
+		{ "id": "health", "name": "Health", "fields": ["conditions", "details", "doctor"] }
+	],
+	"rules": [
+		{
+			"id": "condition-details",
+			"when": { "===": [{ "var": "values.conditions" }, true] },
+			"then": [{ "show": "details" }, { "require": "details" }]
+		}
+	]
+}

@@ -1,0 +1,37 @@
+{
+	"description": "With the health patch merged and the over-50 rule matching, a Health step is inserted after Your cover, and its own rule shows and requires a field",
+	"form": "../examples/insurance.form.json",
+	"rules": "../examples/insurance.rules.json",
+	"patches": [
+		{
+			"owner": "senior-health",
+			"patch": "../examples/api/health.json"
+		}
+	],
+	"input": {
+		"values": {
+			"ageGroup": 50,
+			"zip": "1500",
+			"plan": "plus",
+			"health.conditions": true
+		}
+	},
+	"expect": {
+		"patches": ["health/senior-health"],
+		"path": ["you", "where", "cover", "health.health", "review"],
+		"steps": [
+			{ "id": "you" },
+			{ "id": "where" },
+			{ "id": "cover" },
+			{ "id": "health.health", "source": "health/senior-health", "fields": ["health.conditions", "health.details", "health.doctor"] },
+			{ "id": "review" }
+		],
+		"fields": {
+			"health.details": { "step": "health.health", "visible": true, "required": true }
+		},
+		"issues": [
+			{ "field": "consent", "code": "required" },
+			{ "field": "health.details", "code": "required" }
+		]
+	}
+}

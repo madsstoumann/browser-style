@@ -56,3 +56,20 @@ test('a form without steps is reported', () => {
 	const result = validate({ id: 'empty', structure: { layout: [] }, properties: {} }, { id: 'r', rules: [] });
 	assert.deepEqual(codes(result), ['form-steps']);
 });
+
+test('goto must target a known step after the step it jumps from', () => {
+	const result = validate(form, withRules(
+		{ id: 'back', when: { '!!': { var: 'values.addOns' } }, then: [{ goto: 'you' }] },
+		{ id: 'no-read', when: { '===': [{ var: 'context.channel' }, 'x'] }, then: [{ goto: 'review' }] },
+		{ id: 'ghost', when: { '!!': { var: 'values.addOns' } }, then: [{ goto: 'nowhere' }] },
+		{ id: 'explicit', when: { '===': [{ var: 'context.channel' }, 'x'] }, then: [{ goto: { step: 'review', from: 'where' } }] }
+	));
+	assert.deepEqual(codes(result).sort(), ['goto', 'goto', 'step']);
+});
+
+test('fetch needs a slot or a step to insert after', () => {
+	const result = validate(form, withRules(
+		{ id: 'nowhere', when: true, then: [{ fetch: { service: 'offers' } }, { fetch: { service: 'health', after: 'ghost' } }] }
+	));
+	assert.deepEqual(codes(result).sort(), ['fetch', 'step']);
+});
