@@ -3,6 +3,8 @@
  * { "show": "plan" }, { "hide": ["a", "b"] }, { "options": { "field": "plan", "only": [ … ] } }, …
  */
 
+import { readsOf } from './logic.js';
+
 const list = value => (Array.isArray(value) ? value : [value]).filter(item => typeof item === 'string');
 
 /* Field flags: the action name, the flag it sets and the value it sets it to. */
@@ -20,15 +22,33 @@ export const RESTRICTIVE = { visible: false, enabled: false, required: true };
 
 export const STEP_ACTIONS = { skip: false, include: true };
 
-export const ACTIONS = Object.freeze([...Object.keys(FLAG_ACTIONS), 'setValue', 'clear', 'options', ...Object.keys(STEP_ACTIONS), 'fetch', 'emit']);
+export const ACTIONS = Object.freeze([...Object.keys(FLAG_ACTIONS), 'setValue', 'clear', 'options', ...Object.keys(STEP_ACTIONS), 'goto', 'fetch', 'emit']);
 
 /* What a patch rule may do to a field or step that belongs to the base form: only narrow it. */
-export const NARROWING = new Set(['hide', 'disable', 'require', 'options', 'skip', 'emit', 'fetch']);
+export const NARROWING = new Set(['hide', 'disable', 'require', 'options', 'skip', 'goto', 'emit', 'fetch']);
 
 export function actionName(action) {
 	if (!action || typeof action !== 'object' || Array.isArray(action)) return null;
 	const keys = Object.keys(action);
 	return keys.length === 1 ? keys[0] : null;
+}
+
+/* A goto as { step, from }: { "goto": "review" } or { "goto": { "step": "review", "from": "where" } }. */
+export function gotoOf(action) {
+	const value = action?.goto;
+	if (typeof value === 'string') return { step: value, from: null };
+	if (value && typeof value === 'object') return { step: value.step ?? null, from: value.from ?? null };
+	return null;
+}
+
+/* The step a goto jumps from: its own "from", else the step of the last field the rule reads. */
+export function gotoFrom(steps, rule, action) {
+	const goto = gotoOf(action);
+	if (goto?.from) return goto.from;
+	const read = new Set([...readsOf(rule.when ?? true)].filter(path => path.startsWith('values.')).map(path => path.slice(7)));
+	let from = null;
+	for (const step of steps) if (step.fields.some(id => read.has(id) || [...read].some(path => path.startsWith(`${id}.`)))) from = step.id;
+	return from;
 }
 
 /* The fields and steps an action writes to. */
@@ -50,6 +70,10 @@ export function renameTargets(action, renameField, renameStep = id => id) {
 	if (name in FLAG_ACTIONS || name === 'clear') return { [name]: map(value, renameField) };
 	if (name === 'setValue' || name === 'options') return { [name]: { ...value, field: renameField(value.field) } };
 	if (name in STEP_ACTIONS) return { [name]: map(value, renameStep) };
-	if (name === 'fetch') return { [name]: { ...value, send: value.send?.map(renameField) } };
+	if (name === 'goto') {
+		const { step, from } = gotoOf(action);
+		return { goto: from ? { step: renameStep(step), from: renameStep(from) } : renameStep(step) };
+	}
+	if (name === 'fetch') return { [name]: { ...value, ...(value.after ? { after: renameStep(value.after) } : {}) } };
 	return action;
 }

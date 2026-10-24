@@ -1,0 +1,31 @@
+{
+	"description": "A zip of 9000 or above jumps from Where you live straight to Review; Your cover is passed over and its fields are not submitted",
+	"form": "../examples/insurance.form.json",
+	"rules": "../examples/insurance.rules.json",
+	"input": {
+		"values": {
+			"ageGroup": 18,
+			"zip": "9100",
+			"plan": "basic",
+			"consent": true
+		}
+	},
+	"expect": {
+		"path": ["you", "where", "review"],
+		"jumps": [
+			{ "from": "where", "to": "review", "rules": ["outside-area"] }
+		],
+		"fields": {
+			"plan": { "visible": false },
+			"addOns": { "visible": false }
+		},
+		"values": {
+			"ageGroup": 18,
+			"zip": "9100",
+			"consent": true
+		},
+		"explain": {
+			"step:cover": ["outside-area"]
+		}
+	}
+}

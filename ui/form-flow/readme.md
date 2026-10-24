@@ -35,7 +35,8 @@ Every input re-runs `evaluate()` and applies the result:
 
 ## Effects and events
 
-- `fetch` effects are POSTed to the service URL with the fields the service declares in `send`; the reply is merged as a patch and its fields appear in their slot. Set `flow.fetcher = async (effect, service) => patch` to use a proxy or a mock.
+- `fetch` effects are sent to the service URL with the fields the service declares in `send` (POST as JSON, or GET as query parameters with `"method": "GET"`). The reply is merged as a patch: its fields appear in their slot, its steps after the step the fetch named. Set `flow.fetcher = async (effect, service) => patch` to use a proxy or a mock; return `undefined` to fall back to the built-in request.
+- `goto` needs nothing from the host: the engine's `path` already leaves out the steps passed over, so Next lands on the target and Back returns along the path.
 - `emit` effects are dispatched as `ff:emit`.
 - `flow.receive(event)` applies an incoming event the rule set listens for (facts, a newer rule set, a patch).
 - `flow.context = { … }` and `flow.facts = { … }` re-evaluate.

@@ -25,6 +25,20 @@
 			"description": "Slot id → field ids, in order",
 			"additionalProperties": { "type": "array", "items": { "type": "string" } }
 		},
+		"steps": {
+			"type": "array",
+			"description": "Steps to insert after the step the fetching rule named in \"after\", in order",
+			"items": {
+				"type": "object",
+				"required": ["id", "fields"],
+				"properties": {
+					"id": { "type": "string" },
+					"name": { "type": "string" },
+					"fields": { "type": "array", "items": { "type": "string" } }
+				},
+				"additionalProperties": false
+			}
+		},
 		"rules": { "type": "array", "items": { "$ref": "form-rules.schema.json#/definitions/rule" } },
 		"expires": { "type": "string", "format": "date-time" }
 	},

@@ -68,3 +68,29 @@ test('plain (non-UCF) documents work the same', () => {
 	const state = evaluate({ ...form }, { id: 'r', rules: [{ id: 'req', when: true, then: [{ require: 'a' }] }] });
 	assert.deepEqual(state.issues, [{ field: 'a', code: 'required' }]);
 });
+
+test('goto passes over steps, prefers the nearest target on a tie, and ignores a hidden target', () => {
+	const three = {
+		id: 'three',
+		structure: { layout: [
+			{ type: 'step', id: 'one', fields: ['a'] },
+			{ type: 'step', id: 'two', fields: ['b'] },
+			{ type: 'step', id: 'three', fields: ['c'] },
+			{ type: 'step', id: 'four', hidden: true, fields: [] }
+		] },
+		properties: { a: { type: 'string' }, b: { type: 'string' }, c: { type: 'string' } }
+	};
+	const jump = to => ({ id: `to-${to}`, when: { '===': [{ var: 'values.a' }, 'x'] }, then: [{ goto: to }] });
+	const rules = { rules: [jump('three'), jump('two')] };
+	let state = evaluate(three, rules, { values: { a: 'x', b: 'kept in memory' } });
+	assert.deepEqual(state.path, ['one', 'two', 'three']);
+	assert.deepEqual(state.jumps, [{ from: 'one', to: 'two', rules: ['to-two'] }]);
+
+	state = evaluate(three, { rules: [jump('three')] }, { values: { a: 'x', b: 'kept in memory' } });
+	assert.deepEqual(state.path, ['one', 'three']);
+	assert.equal('b' in state.values, false);
+
+	state = evaluate(three, { rules: [jump('four')] }, { values: { a: 'x' } });
+	assert.deepEqual(state.path, ['one', 'two', 'three']);
+	assert.deepEqual(state.issues, [{ step: 'one', code: 'goto-target', target: 'four', rule: 'to-four' }]);
+});

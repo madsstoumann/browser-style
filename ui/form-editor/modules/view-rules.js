@@ -8,8 +8,8 @@ import { COMPARE, OPERATOR_WORDS, parseCondition, serializeCondition, summarize 
 import { actionName } from '../../form-rules/modules/actions.js';
 
 const FIELD_VERBS = [['show', 'Show'], ['hide', 'Hide'], ['enable', 'Enable'], ['disable', 'Disable'], ['require', 'Require'], ['optional', 'Make optional'], ['clear', 'Clear'], ['setValue', 'Set value of'], ['only', 'Offer only, in'], ['exclude', 'Remove options from']];
-const STEP_VERBS = [['skip', 'Skip step'], ['include', 'Include step']];
-const OTHER_VERBS = [['fetch', 'Fetch fields from service'], ['emit', 'Send event']];
+const STEP_VERBS = [['skip', 'Skip step'], ['include', 'Include step'], ['goto', 'Go to step']];
+const OTHER_VERBS = [['fetch', 'Fetch from service'], ['emit', 'Send event']];
 
 const propertyOf = (form, path) => (path?.startsWith('values.') ? form.fields.properties[path.slice(7)] : null);
 const choicesOf = property => property?.options?.choices ?? [];
@@ -126,7 +126,8 @@ function toRow(action) {
 	const value = action[name];
 	if (name === 'options') return value.only ? { verb: 'only', target: value.field, values: value.only } : { verb: 'exclude', target: value.field, values: value.exclude ?? [] };
 	if (name === 'setValue') return { verb: 'setValue', target: value.field, value: value.value };
-	if (name === 'fetch') return { verb: 'fetch', service: value.service, into: value.into };
+	if (name === 'fetch') return { verb: 'fetch', service: value.service, into: value.into, after: value.after };
+	if (name === 'goto') return typeof value === 'string' ? { verb: 'goto', target: value } : { verb: 'goto', target: value.step, from: value.from };
 	if (name === 'emit') return { verb: 'emit', type: value.type, data: value.data, on: value.on, where: value.where };
 	if (name) return { verb: name, target: Array.isArray(value) ? value[0] : value, rest: Array.isArray(value) ? value.slice(1) : [] };
 	return { verb: 'raw', action };
@@ -137,7 +138,8 @@ function fromRow(row) {
 		case 'only': return { options: { field: row.target, only: row.values ?? [] } };
 		case 'exclude': return { options: { field: row.target, exclude: row.values ?? [] } };
 		case 'setValue': return { setValue: { field: row.target, value: row.value ?? null } };
-		case 'fetch': return { fetch: { service: row.service ?? '', into: row.into ?? '' } };
+		case 'fetch': return { fetch: { service: row.service ?? '', ...(row.after ? { after: row.after } : { into: row.into ?? '' }) } };
+		case 'goto': return { goto: row.from ? { step: row.target, from: row.from } : row.target };
 		case 'emit': {
 			const emit = { type: row.type ?? '' };
 			if (row.data !== undefined) emit.data = row.data;
@@ -178,11 +180,19 @@ function actionRow(editor, action, onchange, onremove) {
 		if (row.verb === 'setValue') detail.push(h('span', {}, 'to'), valueEditor(property, row.value, value => set({ value })));
 		if (row.verb === 'only' || row.verb === 'exclude') detail.push(valueEditor(property, row.values, values => set({ values }), { many: true, label: 'Options' }));
 	} else if (isStep) {
-		detail.push(select(stepsOf(form).map(step => [step.id, step.name]), row.target, target => set({ target }), { 'aria-label': 'Step' }));
+		const stepOptions = stepsOf(form).map(step => [step.id, step.name]);
+		detail.push(select(stepOptions, row.target, target => set({ target }), { 'aria-label': 'Step' }));
+		if (row.verb === 'goto') {
+			detail.push(h('span', {}, 'when leaving'), select([['', 'the step it reads'], ...stepOptions], row.from ?? '', from => set({ from: from || undefined }), { 'aria-label': 'Jump from step' }));
+		}
 	} else if (row.verb === 'fetch') {
+		const mode = row.after ? 'after' : 'into';
+		const stepOptions = stepsOf(form).map(step => [step.id, step.name]);
 		detail.push(select(services.length ? services : [['', 'Add a service below']], row.service, service => set({ service }), { 'aria-label': 'Service' }),
-			h('span', {}, 'into'),
-			select(slots.length ? slots : [['', 'Add a slot to a step']], row.into, into => set({ into }), { 'aria-label': 'Slot' }));
+			select([['into', 'fields into slot'], ['after', 'steps after']], mode, next => set(next === 'after' ? { after: stepOptions[0]?.[0] ?? '', into: undefined } : { after: undefined, into: slots[0] ?? '' }), { 'aria-label': 'What the reply may add' }),
+			mode === 'after'
+				? select(stepOptions, row.after, after => set({ after }), { 'aria-label': 'Insert after step' })
+				: select(slots.length ? slots : [['', 'Add a slot to a step']], row.into, into => set({ into }), { 'aria-label': 'Slot' }));
 	} else if (row.verb === 'emit') {
 		detail.push(h('input', { value: row.type ?? '', 'aria-label': 'Event type, for example quote.segment', onchange: e => set({ type: e.target.value.trim() }) }),
 			select([['', 'when it starts to apply'], ['leave', 'when it stops applying']], row.on ?? '', on => set({ on: on || undefined }), { 'aria-label': 'When' }));
@@ -272,7 +282,7 @@ function servicesEditor(editor, commitRules) {
 	const fieldIds = stepsOf(form).flatMap(step => step.fields);
 	return h('details', { part: 'services', open: Object.keys(services).length > 0 },
 		h('summary', {}, `Services (${Object.keys(services).length})`),
-		h('p', {}, h('small', {}, 'A rule can fetch extra fields and rules from a service. The sample reply is used by the preview and is not exported.')),
+		h('p', {}, h('small', {}, 'A rule can fetch extra fields and rules from a service. The preview uses the sample reply, or calls the URL when there is none. Samples are not exported.')),
 		Object.entries(services).map(([name, service]) => h('fieldset', { part: 'service' },
 			h('legend', {}, name),
 			field('URL', h('input', { type: 'url', value: service.url ?? '', onchange: e => commitRules(f => { f.services[name].url = e.target.value; }) })),
@@ -282,6 +292,8 @@ function servicesEditor(editor, commitRules) {
 					if (on) send.add(id); else send.delete(id);
 					f.services[name].send = fieldIds.filter(fid => send.has(fid));
 				})))),
+			field('Method', select([['POST', 'POST (values as JSON)'], ['GET', 'GET (values as query; a static file works)']], service.method ?? 'POST',
+				method => commitRules(f => { if (method === 'GET') f.services[name].method = 'GET'; else delete f.services[name].method; }))),
 			field('Timeout (ms)', h('input', { type: 'number', min: 0, value: service.timeoutMs ?? '', onchange: e => commitRules(f => { if (e.target.value) f.services[name].timeoutMs = Number(e.target.value); else delete f.services[name].timeoutMs; }) })),
 			field('Sample reply (a patch)', h('textarea', {
 				rows: 5, value: editor.samples[name] ?? '',

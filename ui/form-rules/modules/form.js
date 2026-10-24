@@ -31,6 +31,7 @@ export function normalizeForm(definition) {
 			id,
 			name: entry.name ?? id,
 			hidden: entry.hidden === true,
+			source: 'form',
 			fields: [...(entry.fields ?? [])],
 			slots: [...(entry.slots ?? [])]
 		};
@@ -64,7 +65,21 @@ export function normalizeRuleSet(ruleSet) {
 	};
 }
 
-/* Adds a mounted patch's fields to a copy of the normalized form, at the slots the patch names. */
+const patchField = (patch, fieldId, stepId, slot) => {
+	const property = patch.fields[fieldId];
+	return {
+		id: fieldId,
+		step: stepId,
+		source: patch.id,
+		...(slot ? { slot } : {}),
+		property,
+		choices: choiceValues(property),
+		hidden: property?.ui?.hidden === true,
+		required: property?.required === true
+	};
+};
+
+/* Adds mounted patches to a copy of the normalized form: fields at the slots they name, steps after their anchor. */
 export function withPatchFields(form, patches) {
 	if (!patches.length) return form;
 	const fields = new Map(form.fields);
@@ -75,20 +90,19 @@ export function withPatchFields(form, patches) {
 			const step = steps.find(s => s.id === stepId);
 			if (!step) continue;
 			for (const fieldId of fieldIds) {
-				const property = patch.fields?.[fieldId];
-				if (!property) continue;
+				if (!patch.fields?.[fieldId]) continue;
 				step.fields.push(fieldId);
-				fields.set(fieldId, {
-					id: fieldId,
-					step: stepId,
-					source: patch.id,
-					slot,
-					property,
-					choices: choiceValues(property),
-					hidden: property?.ui?.hidden === true,
-					required: property?.required === true
-				});
+				fields.set(fieldId, patchField(patch, fieldId, stepId, slot));
 			}
+		}
+		for (const inserted of patch.steps ?? []) {
+			let at = steps.findIndex(step => step.id === inserted.after);
+			if (at < 0) continue;
+			/* After the anchor and any steps already inserted after it. */
+			while (steps[at + 1]?.after === inserted.after) at++;
+			const ids = (inserted.fields ?? []).filter(fieldId => patch.fields?.[fieldId]);
+			steps.splice(at + 1, 0, { id: inserted.id, name: inserted.name ?? inserted.id, hidden: false, source: patch.id, after: inserted.after, fields: ids, slots: [] });
+			ids.forEach(fieldId => fields.set(fieldId, patchField(patch, fieldId, inserted.id)));
 		}
 	}
 	return { ...form, steps, fields };

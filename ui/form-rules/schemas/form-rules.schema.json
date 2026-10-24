@@ -39,7 +39,8 @@
 						"type": "object",
 						"required": ["url"],
 						"properties": {
-							"url": { "type": "string", "format": "uri" },
+							"url": { "type": "string", "format": "uri-reference" },
+							"method": { "enum": ["GET", "POST"], "description": "POST (default) sends the values as a JSON body; GET sends them as query parameters" },
 							"send": { "type": "array", "items": { "type": "string" } },
 							"timeoutMs": { "type": "integer", "minimum": 0 }
 						},
@@ -114,9 +115,26 @@
 				},
 				"fetch": {
 					"type": "object",
-					"required": ["service", "into"],
-					"properties": { "service": { "type": "string" }, "into": { "type": "string" } },
+					"required": ["service"],
+					"anyOf": [{ "required": ["into"] }, { "required": ["after"] }],
+					"properties": {
+						"service": { "type": "string" },
+						"into": { "type": "string", "description": "The slot the reply may place fields in" },
+						"after": { "type": "string", "description": "The step the reply may insert steps after" }
+					},
 					"additionalProperties": false
+				},
+				"goto": {
+					"description": "Jump forward to a step. The steps passed over are hidden, like skip. \"from\" defaults to the step of the last field the rule reads.",
+					"oneOf": [
+						{ "type": "string" },
+						{
+							"type": "object",
+							"required": ["step"],
+							"properties": { "step": { "type": "string" }, "from": { "type": "string" } },
+							"additionalProperties": false
+						}
+					]
 				},
 				"emit": {
 					"type": "object",

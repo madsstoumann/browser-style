@@ -268,7 +268,7 @@ export class FormEditor extends HTMLElement {
 
 	async #sampleReply(effect) {
 		const text = this.samples[effect.service];
-		if (!text) throw new Error(`No sample reply for the service "${effect.service}"`);
+		if (!text) return undefined;
 		return { ...JSON.parse(text), expires: new Date(Date.now() + 36e5).toISOString() };
 	}
 

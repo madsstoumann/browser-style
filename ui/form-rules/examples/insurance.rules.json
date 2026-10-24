@@ -5,9 +5,10 @@
 	"meta": { "locale": "en", "status": "published" },
 	"fields": {
 		"form": "form-insurance",
-		"version": 3,
+		"version": 4,
 		"services": {
-			"offers": { "url": "https://api.example.com/offers", "send": ["ageGroup", "zip"], "timeoutMs": 3000 }
+			"offers": { "url": "https://api.example.com/offers", "send": ["ageGroup", "zip"], "timeoutMs": 3000 },
+			"health": { "url": "/ui/form-rules/examples/api/health.json", "method": "GET", "send": ["ageGroup"], "timeoutMs": 3000 }
 		},
 		"listen": [
 			{ "type": "pricing.updated", "set": "facts.pricing" },
@@ -60,6 +61,18 @@
 				"title": "Ask for email when add-ons are chosen",
 				"when": { "!!": { "var": "values.addOns" } },
 				"then": [{ "require": "email" }]
+			},
+			{
+				"id": "senior-health",
+				"title": "Over 50s answer health questions",
+				"when": { ">=": [{ "var": "values.ageGroup" }, 50] },
+				"then": [{ "fetch": { "service": "health", "after": "cover" } }]
+			},
+			{
+				"id": "outside-area",
+				"title": "Outside our area: straight to Review",
+				"when": { ">=": [{ "num": { "var": "values.zip" } }, 9000] },
+				"then": [{ "goto": "review" }]
 			}
 		]
 	}

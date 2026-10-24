@@ -18,6 +18,7 @@ const state = evaluate(form, rules, { values, context, facts, previous });
 | Key | Holds |
 | --- | --- |
 | `steps`, `path` | Every step with `visible`, and the ids of the visible ones in order |
+| `jumps` | The gotos taken: `{ from, to, rules }` |
 | `fields` | Per field: `visible`, `enabled`, `required`, `options` (narrowed choices), `step`, `source` |
 | `values` | What would be submitted: visible, enabled fields only, `setValue` applied, unavailable options removed |
 | `matched` | Ids of the rules that matched |
@@ -58,7 +59,10 @@ Both the form and the rule set may be plain objects or UCF content (`{ id, model
 
 Conditions are a strict subset of [JSON Logic](https://jsonlogic.com): no `==` / `!=`, no type coercion, `num` for explicit number conversion, missing values read as `null`. Conditions can read `values.*`, `context.*`, `facts.*` and `step`.
 
-Actions: `show`, `hide`, `enable`, `disable`, `require`, `optional`, `setValue`, `clear`, `options` (`only` / `exclude`), `skip`, `include`, `fetch`, `emit`.
+Actions: `show`, `hide`, `enable`, `disable`, `require`, `optional`, `setValue`, `clear`, `options` (`only` / `exclude`), `skip`, `include`, `goto`, `fetch`, `emit`.
+
+- **`goto`** jumps forward: `{ "goto": "review" }`. Leaving the step it jumps from, the steps in between are passed over, like `skip`, so their values are not submitted. It jumps from the step of the last field the rule reads, or from `{ "goto": { "step": "review", "from": "where" } }`. Only forward jumps are valid; Back follows the path. When several gotos leave the same step, the higher priority wins, then the nearest target. A target that is hidden is ignored with a `goto-target` issue.
+- **`fetch`** names what the reply may add: `"into": "<slot>"` for fields, `"after": "<step>"` for whole steps (the patch's `steps`). A service with `"method": "GET"` gets the values as query parameters, so a static JSON file works as a test API (`examples/api/health.json`).
 
 - **Declarative.** State is computed from scratch each time; when a condition stops matching, its effect goes away.
 - **Conflicts.** Higher `priority` wins; on a tie the restrictive value wins (hide, disable, required). Option lists intersect.
@@ -66,7 +70,7 @@ Actions: `show`, `hide`, `enable`, `disable`, `require`, `optional`, `setValue`,
 
 ## Patches and events
 
-`merge(form, rules, patch, { owner })` mounts a service reply. Fields are namespaced (`offers.travelCover`) and may only land in the slot the fetch named; patch rules sit below the base rules' priority and may only narrow base fields. A patch stays active only while its owner rule matches.
+`merge(form, rules, patch, { owner })` mounts a service reply. Fields are namespaced (`offers.travelCover`) and may only land in the slot the fetch named, and its `steps` only after the step the fetch named (ids `health.health`); patch rules sit below the base rules' priority and may only narrow base fields. A patch stays active only while its owner rule matches.
 
 `handleEvent(form, rules, store, event)` applies an incoming event the rule set `listen`s for: `set` writes `facts`, `replace` swaps in a newer rule set version, `patch` mounts an always-active patch. Duplicate and out-of-order events are ignored.
 
