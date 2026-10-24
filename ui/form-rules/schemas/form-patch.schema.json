@@ -39,6 +39,7 @@
 				"additionalProperties": false
 			}
 		},
+		"data": { "description": "Any JSON the rules can read as services.<service>, e.g. an eligibility answer" },
 		"rules": { "type": "array", "items": { "$ref": "form-rules.schema.json#/definitions/rule" } },
 		"expires": { "type": "string", "format": "date-time" }
 	},

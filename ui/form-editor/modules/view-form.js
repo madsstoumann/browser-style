@@ -182,6 +182,8 @@ function fieldInspector(editor, id) {
 			field('Highest', h('input', { type: 'number', value: validation.maximum ?? '', onchange: e => update(p => { p.validation = { ...(p.validation ?? {}) }; setOrDelete(p.validation, 'maximum', e.target.value === '' ? '' : Number(e.target.value)); }) }))
 		) : null,
 		property.type === 'string' && editor.advanced ? field('Pattern', h('input', { value: validation.pattern ?? '', onchange: e => update(p => { p.validation = { ...(p.validation ?? {}) }; setOrDelete(p.validation, 'pattern', e.target.value); }) }), 'A regular expression, for example ^[0-9]{4}$') : null,
+		property.type === 'string' ? field('Min. length', h('input', { type: 'number', min: 0, value: validation.minLength ?? '', onchange: e => update(p => { p.validation = { ...(p.validation ?? {}) }; setOrDelete(p.validation, 'minLength', e.target.value === '' ? '' : Number(e.target.value)); }) })) : null,
+		checksEditor(editor, validation, update),
 		field('Step', select(stepsOf(form).map(s => [s.id, s.name]), step.id, value => {
 			const next = clone(form);
 			stepsOf(next).forEach(s => { s.fields = s.fields.filter(f => f !== id); });
@@ -220,4 +222,18 @@ function fieldInspector(editor, id) {
 			}))
 		);
 	}
+}
+
+/* Field checks are host functions, picked by name (see readme § Functions). */
+function checksEditor(editor, validation, update) {
+	const names = Object.keys(editor.functions ?? {});
+	const chosen = [].concat(validation.check ?? []);
+	if (!names.length && !chosen.length) return null;
+	return h('fieldset', { part: 'choices-inline' }, h('legend', {}, 'Checks'),
+		[...new Set([...names, ...chosen])].map(name => check(name, chosen.includes(name), on => update(p => {
+			p.validation = { ...(p.validation ?? {}) };
+			const next = on ? [...chosen, name] : chosen.filter(item => item !== name);
+			if (!next.length) delete p.validation.check;
+			else p.validation.check = next.length === 1 ? next[0] : next;
+		}))));
 }

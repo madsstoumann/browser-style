@@ -22,10 +22,13 @@ export const RESTRICTIVE = { visible: false, enabled: false, required: true };
 
 export const STEP_ACTIONS = { skip: false, include: true };
 
-export const ACTIONS = Object.freeze([...Object.keys(FLAG_ACTIONS), 'setValue', 'clear', 'options', ...Object.keys(STEP_ACTIONS), 'goto', 'fetch', 'emit']);
+/* Actions on variables: { "add": { "var": "score", "value": 10 } }, { "set": { "var": "tier", "value": "A" } }. */
+export const VARIABLE_ACTIONS = ['add', 'set'];
+
+export const ACTIONS = Object.freeze([...Object.keys(FLAG_ACTIONS), 'setValue', 'clear', 'options', ...Object.keys(STEP_ACTIONS), 'goto', ...VARIABLE_ACTIONS, 'invalid', 'fetch', 'emit']);
 
 /* What a patch rule may do to a field or step that belongs to the base form: only narrow it. */
-export const NARROWING = new Set(['hide', 'disable', 'require', 'options', 'skip', 'goto', 'emit', 'fetch']);
+export const NARROWING = new Set(['hide', 'disable', 'require', 'options', 'skip', 'goto', 'invalid', 'emit', 'fetch']);
 
 export function actionName(action) {
 	if (!action || typeof action !== 'object' || Array.isArray(action)) return null;
@@ -56,7 +59,7 @@ export function actionTargets(action) {
 	const name = actionName(action);
 	const value = name ? action[name] : undefined;
 	if (name in FLAG_ACTIONS || name === 'clear') return { name, fields: list(value), steps: [] };
-	if (name === 'setValue' || name === 'options') return { name, fields: list(value?.field), steps: [] };
+	if (name === 'setValue' || name === 'options' || name === 'invalid') return { name, fields: list(value?.field), steps: [] };
 	if (name in STEP_ACTIONS) return { name, fields: [], steps: list(value) };
 	return { name, fields: [], steps: [] };
 }
@@ -68,7 +71,7 @@ export function renameTargets(action, renameField, renameStep = id => id) {
 	const value = action[name];
 	const map = (input, fn) => (Array.isArray(input) ? input.map(fn) : fn(input));
 	if (name in FLAG_ACTIONS || name === 'clear') return { [name]: map(value, renameField) };
-	if (name === 'setValue' || name === 'options') return { [name]: { ...value, field: renameField(value.field) } };
+	if (name === 'setValue' || name === 'options' || name === 'invalid') return { [name]: { ...value, field: renameField(value.field) } };
 	if (name in STEP_ACTIONS) return { [name]: map(value, renameStep) };
 	if (name === 'goto') {
 		const { step, from } = gotoOf(action);

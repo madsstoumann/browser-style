@@ -6,7 +6,7 @@
  * `effects` for the host to carry out.
  */
 
-import { apply, truthy } from './logic.js';
+import { apply, FUNCTIONS, runCheck, truthy } from './logic.js';
 import { actionName, actionTargets, FLAG_ACTIONS, gotoFrom, gotoOf, RESTRICTIVE, STEP_ACTIONS } from './actions.js';
 import { normalizeForm, normalizeRuleSet, withPatchFields } from './form.js';
 
@@ -32,12 +32,15 @@ function decide(contributions, restrictive) {
 }
 
 function resolve(form, results, input) {
-	const { previousMatched, hasPrevious } = input;
+	const { previousMatched, hasPrevious, data } = input;
 	const fieldFlags = new Map();
 	const stepFlags = new Map();
 	const optionRules = new Map();
 	const assigned = new Map();
 	const gotos = new Map();
+	const varSets = new Map();
+	const varAdds = new Map();
+	const invalid = new Map();
 	const effects = [];
 	const explain = {};
 
@@ -84,8 +87,14 @@ function resolve(form, results, input) {
 				} else if (name === 'goto') {
 					const from = gotoFrom(form.steps, rule, action);
 					if (from) push(gotos, from, { to: gotoOf(action).step, priority, rule: list.source });
+				} else if (name === 'set') {
+					push(varSets, value.var, { value: apply(value.value ?? null, data), priority, rule: list.source });
+				} else if (name === 'add') {
+					push(varAdds, value.var, { value: apply(value.value ?? 0, data), rule: list.source });
+				} else if (name === 'invalid') {
+					push(invalid, value.field, { code: value.code ?? 'invalid', message: value.message ?? null, level: value.level, rule: list.source });
 				} else if (name === 'fetch') {
-					effects.push({ type: 'fetch', rule: rule.id, service: value.service, into: value.into ?? null, ...(value.after ? { after: value.after } : {}) });
+					effects.push({ type: 'fetch', rule: rule.id, service: value.service, into: value.into ?? null, ...(value.after ? { after: value.after } : {}), ...(value.wait ? { wait: true } : {}) });
 				}
 			}
 		}
@@ -155,7 +164,70 @@ function resolve(form, results, input) {
 		fields[id] = state;
 	}
 
-	return { steps, fields, assigned, effects, explain, jumps, issues };
+	return { steps, fields, assigned, effects, explain, jumps, issues, varSets, varAdds, invalid };
+}
+
+/* Variables a rule set declares: computed ones from their expression, the others from rules (set, then add). */
+function computeVars(declared, base, accumulated) {
+	const vars = { ...accumulated };
+	for (const [name, definition] of Object.entries(declared)) {
+		if (definition && 'compute' in definition) vars[name] = apply(definition.compute, { ...base, vars });
+	}
+	return vars;
+}
+
+function accumulate(declared, state) {
+	const vars = {};
+	for (const [name, definition] of Object.entries(declared)) {
+		if (definition && 'compute' in definition) continue;
+		let value = definition?.initial ?? null;
+		const sources = [];
+		const sets = state.varSets.get(name);
+		if (sets) {
+			const top = Math.max(...sets.map(entry => entry.priority));
+			const winner = sets.find(entry => entry.priority === top);
+			value = winner.value;
+			sources.push(winner.rule);
+		}
+		for (const add of state.varAdds.get(name) ?? []) {
+			if (typeof add.value !== 'number' || !Number.isFinite(add.value)) continue;
+			value = (typeof value === 'number' ? value : 0) + add.value;
+			sources.push(add.rule);
+		}
+		if (sources.length) state.explain[`vars.${name}`] = sources;
+		vars[name] = value;
+	}
+	return vars;
+}
+
+const DEFAULT_MESSAGES = {
+	minimum: rule => `Must be at least ${rule}`,
+	maximum: rule => `Must be at most ${rule}`,
+	minLength: rule => `Must be at least ${rule} characters`,
+	maxLength: rule => `Must be at most ${rule} characters`,
+	pattern: () => 'Does not match the expected format'
+};
+
+/* The field's own constraints (validation in the form definition), as issues. */
+function constraintIssues(id, property, value, functions) {
+	const validation = property?.validation ?? {};
+	const messages = validation.messages ?? {};
+	const found = [];
+	const fail = (code, rule) => found.push({ field: id, code, message: messages[code] ?? DEFAULT_MESSAGES[code](rule) });
+	if (typeof value === 'number') {
+		if (typeof validation.minimum === 'number' && value < validation.minimum) fail('minimum', validation.minimum);
+		if (typeof validation.maximum === 'number' && value > validation.maximum) fail('maximum', validation.maximum);
+	}
+	if (typeof value === 'string') {
+		if (typeof validation.minLength === 'number' && value.length < validation.minLength) fail('minLength', validation.minLength);
+		if (typeof validation.maxLength === 'number' && value.length > validation.maxLength) fail('maxLength', validation.maxLength);
+		if (typeof validation.pattern === 'string' && !new RegExp(`^(?:${validation.pattern.replace(/^\^|\$$/g, '')})$`, 'u').test(value)) fail('pattern');
+	}
+	for (const name of [].concat(validation.check ?? [])) {
+		const result = runCheck(functions, name, value);
+		if (result) found.push({ field: id, code: result.code, message: messages[result.code] ?? messages[name] ?? result.message, ...(result.level ? { level: result.level } : {}) });
+	}
+	return found;
 }
 
 /* Values a condition can read: only fields that are currently visible. */
@@ -171,6 +243,9 @@ export function evaluate(formDefinition, ruleSetDocument, input = {}) {
 	const previousMatched = new Set(input.previous?.matched ?? []);
 	const baseRules = ruleSet.rules;
 
+	const declared = ruleSet.variables ?? {};
+	let accumulated = accumulate(declared, { varSets: new Map(), varAdds: new Map(), explain: {} });
+	let vars = {};
 	let patches = [];
 	let fieldsSeen = Object.fromEntries([...baseForm.fields].map(([id, field]) => [id, { visible: !field.hidden && !baseForm.steps.find(step => step.id === field.step)?.hidden }]));
 	let lastKey = null;
@@ -183,23 +258,36 @@ export function evaluate(formDefinition, ruleSetDocument, input = {}) {
 
 		form = withPatchFields(baseForm, patches);
 		const rules = [...baseRules, ...patches.flatMap(patch => patch.rules ?? [])];
-		const data = { values: visibleValues(values, fieldsSeen), context: input.context ?? {}, facts: input.facts ?? {}, step: input.step ?? null };
+		const base = {
+			values: visibleValues(values, fieldsSeen),
+			context: input.context ?? {},
+			facts: input.facts ?? {},
+			step: input.step ?? null,
+			today: input.today ?? null,
+			services: Object.fromEntries(patches.filter(patch => patch.data !== undefined).map(patch => [patch.service, patch.data])),
+			[FUNCTIONS]: input.functions ?? {}
+		};
+		vars = computeVars(declared, base, accumulated);
+		const data = { ...base, vars };
 		const results = rules.map(rule => ({ rule, matched: truthy(apply(rule.when ?? true, data)) }));
 		matched = results.filter(result => result.matched).map(result => result.rule.id);
 
-		state = resolve(form, results, { previousMatched, hasPrevious });
+		state = resolve(form, results, { previousMatched, hasPrevious, data });
+		const nextAccumulated = accumulate(declared, state);
 		const matchedSet = new Set(matched);
 		const nextPatches = ruleSet.patches.filter(patch => patch.owner == null || matchedSet.has(patch.owner));
 		const key = stableKey({
 			matched,
 			patches: nextPatches.map(patch => patch.id),
 			steps: state.steps.filter(step => step.visible).map(step => step.id),
+			vars: nextAccumulated,
 			visible: Object.entries(state.fields).filter(([, field]) => field.visible).map(([id]) => id)
 		});
 		if (key === lastKey) break;
 		lastKey = key;
 		patches = nextPatches;
 		fieldsSeen = state.fields;
+		accumulated = nextAccumulated;
 	}
 
 	/* What would be submitted: visible, enabled fields only. */
@@ -221,6 +309,11 @@ export function evaluate(formDefinition, ruleSetDocument, input = {}) {
 			}
 		}
 		if (field.required && isEmpty(value)) issues.push({ field: id, code: 'required' });
+		if (!isEmpty(value)) issues.push(...constraintIssues(id, form.fields.get(id)?.property, value, input.functions));
+		for (const entry of state.invalid.get(id) ?? []) {
+			issues.push({ field: id, code: entry.code, message: entry.message, ...(entry.level ? { level: entry.level } : {}), rule: entry.rule });
+		}
+		if (state.invalid.has(id)) state.explain[`${id}.invalid`] = state.invalid.get(id).map(entry => entry.rule);
 		if (value !== undefined) submit[id] = value;
 	}
 
@@ -240,6 +333,7 @@ export function evaluate(formDefinition, ruleSetDocument, input = {}) {
 		steps: state.steps,
 		path: state.steps.filter(step => step.visible).map(step => step.id),
 		jumps: state.jumps,
+		vars,
 		fields: state.fields,
 		values: submit,
 		matched,

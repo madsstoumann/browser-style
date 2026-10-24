@@ -7,14 +7,25 @@
  */
 
 import { operatorsOf, readsOf, OPERATORS } from './logic.js';
-import { actionName, actionTargets, ACTIONS, gotoFrom, gotoOf } from './actions.js';
+import { actionName, actionTargets, ACTIONS, gotoFrom, gotoOf, VARIABLE_ACTIONS } from './actions.js';
 import { normalizeForm, normalizeRuleSet, unwrap } from './form.js';
 
-const INPUT_ROOTS = ['values', 'context', 'facts', 'step'];
+const INPUT_ROOTS = ['values', 'context', 'facts', 'step', 'today', 'vars', 'services'];
 /* Only these change what a condition can read, since hidden values read as absent. */
 const VISIBILITY = new Set(['show', 'hide', 'skip', 'include']);
 
-export function validate(formDefinition, ruleSetDocument) {
+/* Names used by the "check" operator. */
+function checksOf(logic, found = []) {
+	if (Array.isArray(logic)) logic.forEach(item => checksOf(item, found));
+	else if (logic && typeof logic === 'object') {
+		const [op] = Object.keys(logic);
+		if (op === 'check' && Array.isArray(logic.check)) found.push(logic.check[0]);
+		Object.values(logic).forEach(value => checksOf(value, found));
+	}
+	return found;
+}
+
+export function validate(formDefinition, ruleSetDocument, { functions = {} } = {}) {
 	const errors = [];
 	const fail = (code, message, path) => errors.push({ code, message, path });
 	const rawForm = unwrap(formDefinition);
@@ -39,6 +50,11 @@ export function validate(formDefinition, ruleSetDocument) {
 		if (slotIds.has(slot)) fail('duplicate', `Slot "${slot}" is declared twice`, `structure.layout.${step.id}`);
 		slotIds.add(slot);
 	}));
+	for (const [id, property] of Object.entries(rawForm.properties ?? {})) {
+		[].concat(property?.validation?.check ?? []).forEach(name => {
+			if (typeof functions[name] !== 'function') fail('function', `Field "${id}" uses the check "${name}", which no function provides`, `properties.${id}.validation.check`);
+		});
+	}
 
 	/* The rule set */
 	const formId = form.id;
@@ -61,6 +77,30 @@ export function validate(formDefinition, ruleSetDocument) {
 		if (listener?.patch && !slotIds.has(listener.patch.into)) fail('slot', `Unknown slot "${listener.patch.into}"`, `${path}.patch.into`);
 	});
 
+	/* Variables: computed from an expression, or written by rules (set / add) from an initial value. */
+	const variables = ruleSet.variables ?? {};
+	const varReads = (logic, at) => {
+		const found = new Set();
+		readsOf(logic).forEach(variable => {
+			const [root, ...rest] = variable.split('.');
+			if (root === 'vars') {
+				if (!Object.hasOwn(variables, rest[0])) fail('variable', `"${variable}" is not a declared variable`, at);
+				found.add(`vars.${rest[0]}`);
+			} else if (root === 'values') found.add(rest.join('.'));
+		});
+		return found;
+	};
+	const computedReads = new Map();
+	for (const [name, definition] of Object.entries(variables)) {
+		const at = `variables.${name}`;
+		if (!/^[A-Za-z_][\w]*$/.test(name)) fail('variable', `Variable name "${name}" must be a plain identifier`, at);
+		if (definition && 'compute' in definition) {
+			if ('initial' in definition) fail('variable', `"${name}" is computed, so it cannot have an initial value`, at);
+			operatorsOf(definition.compute).forEach(op => { if (!OPERATORS.includes(op) && typeof functions[op] !== 'function') fail('operator', `Unknown operator "${op}"`, at); });
+			computedReads.set(`vars.${name}`, varReads(definition.compute, at));
+		}
+	}
+
 	const ruleIds = new Set();
 	const writes = new Map();
 	const reads = new Map();
@@ -79,7 +119,10 @@ export function validate(formDefinition, ruleSetDocument) {
 		/* Conditions */
 		operatorsOf(rule.when ?? true).forEach(op => {
 			if (op === '==' || op === '!=') fail('operator', `"${op}" coerces types; use "${op}="`, `${path}.when`);
-			else if (!OPERATORS.includes(op)) fail('operator', `Unknown operator "${op}"`, `${path}.when`);
+			else if (!OPERATORS.includes(op) && typeof functions[op] !== 'function') fail('operator', `Unknown operator "${op}"`, `${path}.when`);
+		});
+		checksOf(rule.when ?? true).forEach(name => {
+			if (typeof name !== 'string' || typeof functions[name] !== 'function') fail('function', `"check" uses "${name}", which no function provides`, `${path}.when`);
 		});
 		const fieldReads = new Set();
 		readsOf(rule.when ?? true).forEach(variable => {
@@ -92,6 +135,10 @@ export function validate(formDefinition, ruleSetDocument) {
 				const field = rest.join('.');
 				if (!form.fields.has(field)) fail('field', `Condition reads unknown field "${field}"`, `${path}.when`);
 				fieldReads.add(field);
+			}
+			if (root === 'vars') {
+				if (!Object.hasOwn(variables, rest[0])) fail('variable', `"${variable}" is not a declared variable`, `${path}.when`);
+				fieldReads.add(`vars.${rest[0]}`);
 			}
 		});
 		reads.set(rule.id, fieldReads);
@@ -127,7 +174,6 @@ export function validate(formDefinition, ruleSetDocument) {
 				if (!ruleSet.services[value?.service]) fail('service', `Unknown service "${value?.service}"`, at);
 				if (value?.into && !slotIds.has(value.into)) fail('slot', `Unknown slot "${value.into}"`, at);
 				if (value?.after && !stepIds.has(value.after)) fail('step', `Unknown step "${value.after}"`, at);
-				if (!value?.into && !value?.after) fail('fetch', 'fetch needs "into" (a slot for fields) or "after" (a step to insert steps after)', at);
 			}
 			if (name === 'goto') {
 				const goto = gotoOf(action);
@@ -139,6 +185,15 @@ export function validate(formDefinition, ruleSetDocument) {
 				else if (order.indexOf(goto.step) <= order.indexOf(from)) fail('goto', `goto may only jump forward: "${goto.step}" is not after "${from}"`, at);
 				else form.steps.slice(order.indexOf(from) + 1, order.indexOf(goto.step)).forEach(step => step.fields.forEach(field => ruleWrites.add(field)));
 			}
+			if (VARIABLE_ACTIONS.includes(name)) {
+				const definition = variables[value?.var];
+				if (!definition) fail('variable', `${name} writes undeclared variable "${value?.var}"`, at);
+				else if ('compute' in definition) fail('variable', `"${value.var}" is computed; rules cannot ${name} it`, at);
+				else if (name === 'add' && definition.type && definition.type !== 'number') fail('variable', `add needs a number variable; "${value.var}" is ${definition.type}`, at);
+				else ruleWrites.add(`vars.${value.var}`);
+				varReads(value?.value ?? null, at).forEach(read => fieldReads.add(read));
+			}
+			if (name === 'invalid' && typeof value?.message !== 'string') fail('invalid', 'invalid needs a message', at);
 			if (name === 'emit') {
 				if (typeof value?.type !== 'string') fail('emit', 'emit needs an event type', at);
 				if (value?.on && !['enter', 'leave'].includes(value.on)) fail('emit', '"on" must be "enter" or "leave"', at);
@@ -157,6 +212,10 @@ export function validate(formDefinition, ruleSetDocument) {
 	reads.forEach((readFields, ruleId) => readFields.forEach(from => {
 		if (!fieldGraph.has(from)) fieldGraph.set(from, new Set());
 		writes.get(ruleId).forEach(to => fieldGraph.get(from).add(to));
+	}));
+	computedReads.forEach((readNodes, node) => readNodes.forEach(from => {
+		if (!fieldGraph.has(from)) fieldGraph.set(from, new Set());
+		fieldGraph.get(from).add(node);
 	}));
 	const state = new Map();
 	const visit = (node, trail) => {

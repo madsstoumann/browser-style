@@ -1,0 +1,14 @@
+{
+	"$schema": "../../schemas/form-patch.schema.json",
+	"patch": "co-applicant",
+	"for": { "form": "form-loan", "rules": "loan" },
+	"fields": {
+		"cpr": { "type": "string", "title": "Their CPR number", "required": true, "validation": { "check": "dk-cpr" } },
+		"name": { "type": "string", "title": "Their full name", "required": true },
+		"income": { "type": "integer", "title": "Their monthly income after tax (DKK)", "required": true, "validation": { "minimum": 0 } },
+		"sameAddress": { "type": "boolean", "title": "We live at the same address", "ui": { "widget": "toggle" } }
+	},
+	"steps": [
+		{ "id": "person", "name": "Co-applicant", "fields": ["cpr", "name", "income", "sameAddress"] }
+	]
+}

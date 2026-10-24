@@ -21,6 +21,8 @@
 				padding: 0;
 			}
 		}
+		& [part=warning] { color: color-mix(in oklab, var(--color-warning), var(--color-text) 50%); display: block; margin-block-start: calc(-1 * var(--spacing-sm, 0.5rem)); }
+		& [aria-busy=true] { cursor: progress; }
 		& fieldset[data-field] {
 			border: 0;
 			padding: 0;

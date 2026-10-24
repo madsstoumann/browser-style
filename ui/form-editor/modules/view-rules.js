@@ -7,11 +7,15 @@ import { clone, moveItem, newRule, slugify, stepsOf } from './model.js';
 import { COMPARE, OPERATOR_WORDS, parseCondition, serializeCondition, summarize } from './conditions.js';
 import { actionName } from '../../form-rules/modules/actions.js';
 
-const FIELD_VERBS = [['show', 'Show'], ['hide', 'Hide'], ['enable', 'Enable'], ['disable', 'Disable'], ['require', 'Require'], ['optional', 'Make optional'], ['clear', 'Clear'], ['setValue', 'Set value of'], ['only', 'Offer only, in'], ['exclude', 'Remove options from']];
+const FIELD_VERBS = [['invalid', 'Mark as invalid'], ['show', 'Show'], ['hide', 'Hide'], ['enable', 'Enable'], ['disable', 'Disable'], ['require', 'Require'], ['optional', 'Make optional'], ['clear', 'Clear'], ['setValue', 'Set value of'], ['only', 'Offer only, in'], ['exclude', 'Remove options from']];
 const STEP_VERBS = [['skip', 'Skip step'], ['include', 'Include step'], ['goto', 'Go to step']];
-const OTHER_VERBS = [['fetch', 'Fetch from service'], ['emit', 'Send event']];
+const OTHER_VERBS = [['add', 'Add to variable'], ['set', 'Set variable'], ['fetch', 'Fetch from service'], ['emit', 'Send event']];
 
-const propertyOf = (form, path) => (path?.startsWith('values.') ? form.fields.properties[path.slice(7)] : null);
+const propertyOf = (form, path, rules) => {
+	if (path?.startsWith('values.')) return form.fields.properties[path.slice(7)];
+	if (path?.startsWith('vars.')) return { type: rules?.fields.variables?.[path.slice(5)]?.type ?? 'number' };
+	return null;
+};
 const choicesOf = property => property?.options?.choices ?? [];
 
 /* Operators that make sense for a field, as [op, words]. */
@@ -55,20 +59,21 @@ function valueEditor(property, value, onchange, { many = false, label = 'Value',
 
 function conditionRow(editor, node, onchange, onremove) {
 	const { form } = editor;
-	const property = propertyOf(form, node.path);
-	const fields = stepsOf(form).flatMap(step => step.fields.map(id => [`values.${id}`, `${form.fields.properties[id]?.title ?? id} (${step.name})`]));
+	const property = propertyOf(form, node.path, editor.rules);
+	const variables = Object.entries(editor.rules.fields.variables ?? {}).map(([name, v]) => [`vars.${name}`, `${v.title ?? name} (variable)`]);
+	const fields = [...stepsOf(form).flatMap(step => step.fields.map(id => [`values.${id}`, `${form.fields.properties[id]?.title ?? id} (${step.name})`])), ...variables];
 	const known = fields.some(([path]) => path === node.path);
-	const fieldOptions = [...fields, ['other', 'Context or fact…']];
+	const fieldOptions = [...fields, ['other', 'Context, fact or service…']];
 	const ops = operatorsFor(property);
 	const many = node.op === 'in' || node.op === 'notin';
 	const needsValue = node.op !== 'filled' && node.op !== 'empty';
 	/* A string field compared as a number needs num(); choice and number fields do not. */
-	const withNum = (next, prop = propertyOf(form, next.path)) => ({ ...next, num: COMPARE.slice(2).includes(next.op) && (prop?.type === 'string' || !prop) });
+	const withNum = (next, prop = propertyOf(form, next.path, editor.rules)) => ({ ...next, num: COMPARE.slice(2).includes(next.op) && (prop?.type === 'string' || !prop) });
 
 	return h('li', { part: 'condition' },
 		select(fieldOptions, known ? node.path : 'other', value => {
 			if (value === 'other') onchange({ ...node, path: 'context.', value: null });
-			else onchange(withNum({ ...node, path: value, value: propertyOf(form, value)?.type === 'boolean' ? true : null, op: '===' }));
+			else onchange(withNum({ ...node, path: value, value: propertyOf(form, value, editor.rules)?.type === 'boolean' ? true : null, op: '===' }));
 		}, { 'aria-label': 'Field' }),
 		known ? null : h('input', { value: node.path, 'aria-label': 'Path, for example context.channel or facts.pricing.region', onchange: e => onchange(withNum({ ...node, path: e.target.value.trim() })) }),
 		select(ops, node.op, op => {
@@ -126,7 +131,9 @@ function toRow(action) {
 	const value = action[name];
 	if (name === 'options') return value.only ? { verb: 'only', target: value.field, values: value.only } : { verb: 'exclude', target: value.field, values: value.exclude ?? [] };
 	if (name === 'setValue') return { verb: 'setValue', target: value.field, value: value.value };
-	if (name === 'fetch') return { verb: 'fetch', service: value.service, into: value.into, after: value.after };
+	if (name === 'fetch') return { verb: 'fetch', service: value.service, into: value.into, after: value.after, wait: value.wait };
+	if (name === 'add' || name === 'set') return { verb: name, variable: value.var, value: value.value };
+	if (name === 'invalid') return { verb: 'invalid', target: value.field, message: value.message, code: value.code, level: value.level };
 	if (name === 'goto') return typeof value === 'string' ? { verb: 'goto', target: value } : { verb: 'goto', target: value.step, from: value.from };
 	if (name === 'emit') return { verb: 'emit', type: value.type, data: value.data, on: value.on, where: value.where };
 	if (name) return { verb: name, target: Array.isArray(value) ? value[0] : value, rest: Array.isArray(value) ? value.slice(1) : [] };
@@ -138,7 +145,9 @@ function fromRow(row) {
 		case 'only': return { options: { field: row.target, only: row.values ?? [] } };
 		case 'exclude': return { options: { field: row.target, exclude: row.values ?? [] } };
 		case 'setValue': return { setValue: { field: row.target, value: row.value ?? null } };
-		case 'fetch': return { fetch: { service: row.service ?? '', ...(row.after ? { after: row.after } : { into: row.into ?? '' }) } };
+		case 'fetch': return { fetch: { service: row.service ?? '', ...(row.after ? { after: row.after } : row.into ? { into: row.into } : {}), ...(row.wait ? { wait: true } : {}) } };
+		case 'add': case 'set': return { [row.verb]: { var: row.variable ?? '', value: row.value ?? (row.verb === 'add' ? 0 : null) } };
+		case 'invalid': return { invalid: { field: row.target, message: row.message ?? '', ...(row.code ? { code: row.code } : {}), ...(row.level === 'warning' ? { level: 'warning' } : {}) } };
 		case 'goto': return { goto: row.from ? { step: row.target, from: row.from } : row.target };
 		case 'emit': {
 			const emit = { type: row.type ?? '' };
@@ -163,10 +172,12 @@ function actionRow(editor, action, onchange, onremove) {
 	const isStep = STEP_VERBS.some(([verb]) => verb === row.verb);
 	const services = Object.keys(rules.fields.services ?? {});
 	const slots = stepsOf(form).flatMap(step => step.slots ?? []);
+	const variables = Object.keys(rules.fields.variables ?? {});
 
 	const verbSelect = select([...FIELD_VERBS, ...STEP_VERBS, ...OTHER_VERBS], row.verb, verb => {
 		const firstField = (verb === 'only' || verb === 'exclude' ? choiceFields : fieldList)[0]?.[0] ?? '';
-		if (FIELD_VERBS.some(([v]) => v === verb)) set({ verb, target: isField && row.target ? row.target : firstField, values: [], value: null, rest: [] });
+		if (FIELD_VERBS.some(([v]) => v === verb)) set({ verb, target: isField && row.target ? row.target : firstField, values: [], value: null, rest: [], message: verb === 'invalid' ? 'Please check this value' : undefined });
+		else if (verb === 'add' || verb === 'set') set({ verb, variable: variables[0] ?? '', value: verb === 'add' ? 1 : null });
 		else if (STEP_VERBS.some(([v]) => v === verb)) set({ verb, target: stepsOf(form)[0]?.id ?? '', rest: [] });
 		else if (verb === 'fetch') set({ verb, service: services[0] ?? '', into: slots[0] ?? '' });
 		else set({ verb, type: 'form.event' });
@@ -178,6 +189,10 @@ function actionRow(editor, action, onchange, onremove) {
 		detail.push(select(targets, row.target, target => set({ target, values: [], value: null }), { 'aria-label': 'Field' }));
 		const property = form.fields.properties[row.target];
 		if (row.verb === 'setValue') detail.push(h('span', {}, 'to'), valueEditor(property, row.value, value => set({ value })));
+		if (row.verb === 'invalid') {
+			detail.push(h('input', { value: row.message ?? '', 'aria-label': 'Message', placeholder: 'Message', onchange: e => set({ message: e.target.value }) }),
+				select([['', 'blocks'], ['warning', 'only warns']], row.level === 'warning' ? 'warning' : '', level => set({ level: level || undefined }), { 'aria-label': 'Severity' }));
+		}
 		if (row.verb === 'only' || row.verb === 'exclude') detail.push(valueEditor(property, row.values, values => set({ values }), { many: true, label: 'Options' }));
 	} else if (isStep) {
 		const stepOptions = stepsOf(form).map(step => [step.id, step.name]);
@@ -192,7 +207,16 @@ function actionRow(editor, action, onchange, onremove) {
 			select([['into', 'fields into slot'], ['after', 'steps after']], mode, next => set(next === 'after' ? { after: stepOptions[0]?.[0] ?? '', into: undefined } : { after: undefined, into: slots[0] ?? '' }), { 'aria-label': 'What the reply may add' }),
 			mode === 'after'
 				? select(stepOptions, row.after, after => set({ after }), { 'aria-label': 'Insert after step' })
-				: select(slots.length ? slots : [['', 'Add a slot to a step']], row.into, into => set({ into }), { 'aria-label': 'Slot' }));
+				: select(slots.length ? slots : [['', 'Add a slot to a step']], row.into, into => set({ into }), { 'aria-label': 'Slot' }),
+			check('wait for it', row.wait === true, wait => set({ wait })));
+	} else if (row.verb === 'add' || row.verb === 'set') {
+		const definition = rules.fields.variables?.[row.variable];
+		const literal = row.value === null || typeof row.value !== 'object';
+		detail.push(select(variables.length ? variables : [['', 'Add a variable below']], row.variable, variable => set({ variable }), { 'aria-label': 'Variable' }),
+			h('span', {}, row.verb === 'add' ? 'by' : 'to'),
+			literal
+				? valueEditor({ type: row.verb === 'add' ? 'number' : definition?.type }, row.value, value => set({ value }))
+				: rawEditor(editor, row.value, value => set({ value }), 'Calculated value'));
 	} else if (row.verb === 'emit') {
 		detail.push(h('input', { value: row.type ?? '', 'aria-label': 'Event type, for example quote.segment', onchange: e => set({ type: e.target.value.trim() }) }),
 			select([['', 'when it starts to apply'], ['leave', 'when it stops applying']], row.on ?? '', on => set({ on: on || undefined }), { 'aria-label': 'When' }));
@@ -237,6 +261,7 @@ export function renderRulesView(editor) {
 			editor.commit({ rules: result.rules });
 			editor.select({ view: 'rules', rule: result.id });
 		}, { part: 'add' }),
+		variablesEditor(editor, commitRules),
 		servicesEditor(editor, commitRules),
 		editor.advanced ? rawEditor(editor, rules.fields.listen ?? [], listen => commitRules(f => { f.listen = listen; }), 'Events this rule set listens for') : null
 	);
@@ -273,6 +298,37 @@ function ruleEditor(editor, rule, index, count, updateRule, commitRules) {
 				editor.select({ rule: null });
 			}, { part: 'danger' })
 		)
+	);
+}
+
+function variablesEditor(editor, commitRules) {
+	const variables = editor.rules.fields.variables ?? {};
+	const count = Object.keys(variables).length;
+	return h('details', { part: 'services', open: count > 0 },
+		h('summary', {}, `Variables (${count})`),
+		h('p', {}, h('small', {}, 'Rules read a variable as vars.name. Give it a start value for rules to add to or set, or a calculation (Advanced).')),
+		Object.entries(variables).map(([name, definition]) => h('fieldset', { part: 'service' },
+			h('legend', {}, name),
+			field('Title', h('input', { value: definition.title ?? '', onchange: e => commitRules(f => { f.variables[name].title = e.target.value; }) })),
+			'compute' in definition
+				? rawEditor(editor, definition.compute, compute => commitRules(f => { f.variables[name].compute = compute; }), 'Calculated from')
+				: field('Start value', valueEditor({ type: definition.type }, definition.initial ?? null, initial => commitRules(f => { f.variables[name].initial = initial; }))),
+			button('Delete variable', () => commitRules(f => { delete f.variables[name]; }), { part: 'danger' })
+		)),
+		h('form', {
+			part: 'row',
+			onsubmit: event => {
+				event.preventDefault();
+				const data = new FormData(event.target);
+				const name = String(data.get('name')).trim().replace(/[^A-Za-z0-9_]/g, '');
+				if (!name || variables[name]) return;
+				const type = data.get('type');
+				commitRules(f => { f.variables = { ...(f.variables ?? {}), [name]: { type, initial: type === 'number' ? 0 : type === 'boolean' ? false : '' } }; });
+			}
+		},
+		field('New variable', h('input', { name: 'name', required: true, pattern: '[A-Za-z_][A-Za-z0-9_]*' })),
+		field('Type', select([['number', 'Number'], ['string', 'Text'], ['boolean', 'Yes / no']], 'number', () => {}, { name: 'type' })),
+		h('button', { type: 'submit' }, '+ Variable'))
 	);
 }
 

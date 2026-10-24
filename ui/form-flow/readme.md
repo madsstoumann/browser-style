@@ -29,6 +29,7 @@ Every input re-runs `evaluate()` and applies the result:
 | Options narrowed | `<option>`s, radios and checkboxes outside the list are hidden and disabled |
 | `setValue` | The control is updated |
 | Option no longer available | `setCustomValidity()` on the control |
+| An issue with a message (constraint, check, `invalid` rule) | `setCustomValidity(message)`; a `warning` shows as `<small part="warning">` after the field and does not block |
 | Step skipped | The step's `<fieldset>` is `disabled` and left out of the step list |
 
 **Next** validates the current step with native constraint validation. **Send** validates every visible step and dispatches `ff:submit`.
@@ -36,6 +37,8 @@ Every input re-runs `evaluate()` and applies the result:
 ## Effects and events
 
 - `fetch` effects are sent to the service URL with the fields the service declares in `send` (POST as JSON, or GET as query parameters with `"method": "GET"`). The reply is merged as a patch: its fields appear in their slot, its steps after the step the fetch named. Set `flow.fetcher = async (effect, service) => patch` to use a proxy or a mock; return `undefined` to fall back to the built-in request.
+- A fetch with `wait` (a backend check) holds Next and Send, with `aria-busy` on the button, until the reply is merged.
+- `flow.functions = { name: fn }` passes host functions (operators and field checks) to the engine; today's date is passed as `today` in the user's time zone. The advanced demo is `loan.html`.
 - `goto` needs nothing from the host: the engine's `path` already leaves out the steps passed over, so Next lands on the target and Back returns along the path.
 - `emit` effects are dispatched as `ff:emit`.
 - `flow.receive(event)` applies an incoming event the rule set listens for (facts, a newer rule set, a patch).

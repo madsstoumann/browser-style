@@ -8,6 +8,11 @@
  * - A missing variable is null, and an unknown operator throws.
  */
 
+import { daysBetween, yearsBetween } from './dates.js';
+
+/* Where data carries the host's functions (input.functions): operators and field checks by name. */
+export const FUNCTIONS = Symbol('functions');
+
 const isPlainObject = value => value !== null && typeof value === 'object' && !Array.isArray(value);
 
 /* Reads a dotted path. Keys that contain dots ("offers.travelCover") are matched before nested ones. */
@@ -80,8 +85,19 @@ const operators = {
 	'/': (a, b) => numeric([a, b]) && b !== 0 ? a / b : null,
 	'%': (a, b) => numeric([a, b]) && b !== 0 ? a % b : null,
 	min: (...args) => args.length && numeric(args) ? Math.min(...args) : null,
-	max: (...args) => args.length && numeric(args) ? Math.max(...args) : null
+	max: (...args) => args.length && numeric(args) ? Math.max(...args) : null,
+	round: (a, places = 0) => numeric([a, places]) ? Math.round(a * 10 ** places) / 10 ** places : null,
+	/* Dates are ISO strings; pass "today" in with { "var": "today" }. */
+	yearsBetween: (a, b) => yearsBetween(a, b),
+	daysBetween: (a, b) => daysBetween(a, b)
 };
+
+/* Runs a host function used as a field check: null when the value passes, else { code, message, level? }. */
+export function runCheck(functions, name, value) {
+	const fn = functions?.[name];
+	if (typeof fn !== 'function') throw new Error(`Unknown function "${name}"`);
+	return fn(value) ?? null;
+}
 
 /* Operators that control evaluation of their own arguments. */
 const special = {
@@ -113,6 +129,12 @@ const special = {
 		}
 		return index === args.length - 1 ? apply(args[index], data) : null;
 	},
+	/* True when the named host check passes; warnings pass. */
+	check: (args, data) => {
+		const [name, value] = args.map(arg => apply(arg, data));
+		const result = runCheck(data?.[FUNCTIONS], name, value);
+		return !result || result.level === 'warning';
+	},
 	missing: (args, data) => args.map(arg => apply(arg, data)).flat().filter(path => getPath(data, path) === null || getPath(data, path) === '')
 };
 
@@ -133,6 +155,8 @@ export function apply(logic, data = {}) {
 
 	if (Object.hasOwn(special, op)) return special[op](args, data);
 	if (Object.hasOwn(operators, op)) return operators[op](...args.map(arg => apply(arg, data)));
+	const fn = data?.[FUNCTIONS]?.[op];
+	if (typeof fn === 'function') return fn(...args.map(arg => apply(arg, data))) ?? null;
 	throw new Error(`Unknown operator "${op}"`);
 }
 

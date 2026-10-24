@@ -9,8 +9,8 @@ npm install @browser.style/form-rules
 ```js
 import { evaluate, validate, merge, handleEvent } from '@browser.style/form-rules';
 
-const { valid, errors } = validate(form, rules);
-const state = evaluate(form, rules, { values, context, facts, previous });
+const { valid, errors } = validate(form, rules, { functions });
+const state = evaluate(form, rules, { values, context, facts, previous, today: '2026-10-24', functions });
 ```
 
 `evaluate()` does no I/O. It returns:
@@ -19,11 +19,12 @@ const state = evaluate(form, rules, { values, context, facts, previous });
 | --- | --- |
 | `steps`, `path` | Every step with `visible`, and the ids of the visible ones in order |
 | `jumps` | The gotos taken: `{ from, to, rules }` |
+| `vars` | The rule set's variables after this evaluation |
 | `fields` | Per field: `visible`, `enabled`, `required`, `options` (narrowed choices), `step`, `source` |
 | `values` | What would be submitted: visible, enabled fields only, `setValue` applied, unavailable options removed |
 | `matched` | Ids of the rules that matched |
 | `effects` | `fetch` and `emit` requests for the host to carry out |
-| `issues` | `required` and `option-unavailable` problems |
+| `issues` | `{ field, code, message?, level? }`: `required`, `option-unavailable`, the field's own constraints (`minimum`, `pattern`, …), its checks, and `invalid` rules. `level: "warning"` does not block |
 | `explain` | Which rules decided each flag, e.g. `"plan.options": ["senior-north"]`; a rule's `else` branch shows as `"senior-north:else"` |
 
 Pass the previous state's `matched` as `previous` so `emit` fires once per change, not on every evaluation.
@@ -33,8 +34,8 @@ Pass the previous state's `matched` as `previous` so `emit` fires once per chang
 | Document | Schema | Example |
 | --- | --- | --- |
 | Form definition: UCM-shaped properties, steps as `structure.layout` entries of type `step`, `slots` for remote fields | `schemas/form-definition.schema.json` | `examples/insurance.form.json` |
-| Rule set: `services`, `listen`, `rules` | `schemas/form-rules.schema.json` | `examples/insurance.rules.json` |
-| Patch: extra fields and rules from a service or event | `schemas/form-patch.schema.json` | `examples/offers.patch.json` |
+| Rule set: `variables`, `services`, `listen`, `rules` | `schemas/form-rules.schema.json` | `examples/insurance.rules.json`, `examples/loan.rules.json` (advanced) |
+| Patch: extra fields, steps, rules and data from a service or event | `schemas/form-patch.schema.json` | `examples/offers.patch.json`, `examples/api/*.json` |
 
 Both the form and the rule set may be plain objects or UCF content (`{ id, model, meta, fields }`).
 
@@ -59,7 +60,7 @@ Both the form and the rule set may be plain objects or UCF content (`{ id, model
 
 Conditions are a strict subset of [JSON Logic](https://jsonlogic.com): no `==` / `!=`, no type coercion, `num` for explicit number conversion, missing values read as `null`. Conditions can read `values.*`, `context.*`, `facts.*` and `step`.
 
-Actions: `show`, `hide`, `enable`, `disable`, `require`, `optional`, `setValue`, `clear`, `options` (`only` / `exclude`), `skip`, `include`, `goto`, `fetch`, `emit`.
+Actions: `show`, `hide`, `enable`, `disable`, `require`, `optional`, `setValue`, `clear`, `options` (`only` / `exclude`), `skip`, `include`, `goto`, `set` / `add` (variables), `invalid`, `fetch`, `emit`.
 
 - **`goto`** jumps forward: `{ "goto": "review" }`. Leaving the step it jumps from, the steps in between are passed over, like `skip`, so their values are not submitted. It jumps from the step of the last field the rule reads, or from `{ "goto": { "step": "review", "from": "where" } }`. Only forward jumps are valid; Back follows the path. When several gotos leave the same step, the higher priority wins, then the nearest target. A target that is hidden is ignored with a `goto-target` issue.
 - **`fetch`** names what the reply may add: `"into": "<slot>"` for fields, `"after": "<step>"` for whole steps (the patch's `steps`). A service with `"method": "GET"` gets the values as query parameters, so a static JSON file works as a test API (`examples/api/health.json`).
@@ -67,6 +68,27 @@ Actions: `show`, `hide`, `enable`, `disable`, `require`, `optional`, `setValue`,
 - **Declarative.** State is computed from scratch each time; when a condition stops matching, its effect goes away.
 - **Conflicts.** Higher `priority` wins; on a tie the restrictive value wins (hide, disable, required). Option lists intersect.
 - **Hidden values are absent.** A hidden field or skipped step reads as `null` in conditions and is not submitted.
+
+## Variables
+
+A rule set may declare `variables`, which conditions read as `vars.<name>`:
+
+```json
+"variables": {
+  "age":   { "type": "number", "compute": { "yearsBetween": [{ "cprDate": { "var": "values.cpr" } }, { "var": "today" }] } },
+  "score": { "type": "number", "initial": 50 }
+}
+```
+
+A **computed** variable is an expression over the values (and earlier variables). Any other variable starts at `initial`; matching rules `set` it (priority wins) and then `add` to it. Every evaluation starts again from `initial`, so the same answers always give the same score: nothing counts twice. `validate()` refuses a rule that feeds its own input (reads `vars.score` and adds to it), undeclared names and writes to computed variables. `explain["vars.score"]` lists the rules that changed it. Example: `examples/loan.rules.json`.
+
+## Validation
+
+- **Field constraints** in the form definition (`minimum`, `maximum`, `minLength`, `maxLength`, `pattern`) are checked by the engine too, not only by the browser, with `validation.messages` overriding the default text per code.
+- **Rules across fields**: `{ "invalid": { "field": "amount", "message": "…", "code": "income", "level": "warning"? } }` in any rule. The condition can read any field, variable or service answer.
+- **Functions** are the plug-in point. The engine has no domain checks built in: the host passes `functions` (`{ name: fn }`) to `evaluate()` and `validate()`, and the JSON uses them by name: as an operator (`{ "cprDate": [{ "var": "values.cpr" }] }`), as a field check (`"validation": { "check": "dk-cpr" }`: return `null` to pass or `{ code, message, level? }`), or in a condition (`{ "check": ["dk-cpr", { "var": "values.cpr" }] }`). `validate()` reports names no function provides. `examples/functions/checks.js` shows CPR, CVR, Luhn and IBAN checks.
+- **Dates** are ISO strings and "today" is an input (`{ "var": "today" }`), never a clock: `yearsBetween`, `daysBetween` and `round` are built in.
+- **Backend checks**: a patch may carry `data`, which conditions read as `services.<service>.…` while it is mounted, so a service can approve, refuse or cap (`examples/api/eligibility.json`). `{ "fetch": { "service": "eligibility", "wait": true } }` marks the request as one the user must wait for; `into` and `after` are optional when the reply is only data.
 
 ## Patches and events
 

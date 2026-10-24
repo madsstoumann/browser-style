@@ -23,9 +23,11 @@ Demo: [/ui/form-editor/](https://browser.style/ui/form-editor/)
 <script type="module" src="/ui/form-editor/index.js"></script>
 ```
 
-All three attributes are optional. `form` and `rules` give the example that the **Example** button restores. `samples` maps a service name to a sample reply (a form patch), which the preview uses in place of calling the service. Without attributes, the editor starts with an empty form.
+`functions` is the URL of a module whose default export is `{ name: fn }`: the host functions the rules call (see form-rules § Validation). The editor offers them as field checks, validates with them and passes them to the preview; set `editor.functions` to pass them directly. The demo opens the advanced loan example with `?example=loan`.
 
-The editor saves a draft in `localStorage` (`form-editor:draft`) on every change and restores it on load.
+All attributes are optional. `form` and `rules` give the example that the **Example** button restores. `samples` maps a service name to a sample reply (a form patch), which the preview uses in place of calling the service. Without attributes, the editor starts with an empty form.
+
+The editor saves a draft in `localStorage` (`form-editor:draft:<form URL>`, one per example) on every change and restores it on load.
 
 ## The page
 
@@ -34,7 +36,7 @@ The editor saves a draft in `localStorage` (`form-editor:draft`) on every change
 | Toolbar | Shows the form title and the Form, Rules and JSON tabs (JSON only when Advanced is on). Also has Undo/Redo (Ctrl/Cmd+Z, Shift for redo), Example, New, Import, Export and the Advanced toggle. |
 | Outline | Lists steps, their fields (with a type badge) and their slots. **+ Field** and **+ Step** add new ones. |
 | Form view | Edits whichever is selected: the form (title, ids, rule set version), a step (name, hidden, slots, order) or a field (label, id, help, type, widget, required, hidden, choices, min/max, pattern, step). Renaming a field id also updates every rule, action and service that names it. Deleting a field lists the rules that use it. |
-| Rules view | Shows each rule as a sentence ("When Age group is at least 30–49 and Zip code is above 2000: offer only Plus, Senior in Plan."). Opening a rule shows a **When** builder (All/Any groups, field, operator and value pickers fitted to the field), plus **Then** and **Otherwise** action rows. A condition the builder cannot draw stays as a custom JSON block, which can be edited when Advanced is on. Also edits services (URL, which fields they send, timeout, sample reply). With Advanced on, it also edits the events the rule set listens for. |
+| Rules view | Shows each rule as a sentence ("When Age group is at least 30–49 and Zip code is above 2000: offer only Plus, Senior in Plan."). Opening a rule shows a **When** builder (All/Any groups, field, operator and value pickers fitted to the field), plus **Then** and **Otherwise** action rows. A condition the builder cannot draw stays as a custom JSON block, which can be edited when Advanced is on. Actions include `invalid` (a message on a field, blocking or only warning) and `set`/`add` on variables. Also edits variables (start value, or a calculation with Advanced on) and services (URL, method, which fields they send, timeout, sample reply; a fetch can be marked *wait for it*). With Advanced on, it also edits the events the rule set listens for. |
 | Preview | A live `<form-flow explain>` showing the current documents. Values the user has typed survive edits. **Restart** clears them. |
 | Status | Shows the `validate()` result. **Export is blocked while there are problems.** |
 

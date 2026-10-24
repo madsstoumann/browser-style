@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Loan Application</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="color-scheme" content="light dark">
+	<meta name="description" content="An advanced form-flow example: variables, a score, cross-field rules, custom check functions and backend calls.">
+	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="../step/ui-step.css">
+	<link rel="stylesheet" href="index.css">
+	<style>
+		body { max-inline-size: 60ch; margin-inline: auto; padding: 2ch; }
+		.demo-log { font-size: smaller; max-block-size: 16em; overflow: auto; overflow-wrap: anywhere; }
+	</style>
+</head>
+<body>
+	<main>
+		<h1>UI: Components &gt; FormFlow &gt; Loan</h1>
+		<p>
+			The advanced example. Everything here comes from <a href="../form-rules/examples/loan.form.json">the form</a> and
+			<a href="../form-rules/examples/loan.rules.json">the rules</a>, plus <a href="../form-rules/examples/functions/checks.js">example check functions</a>
+			the page passes in.
+		</p>
+		<ul>
+			<li><strong>Variables:</strong> age is computed from the CPR number, a debt ratio from income and debt, and a credit score adds up from rules. Open <em>Why</em> to watch them.</li>
+			<li><strong>Cross-field rules:</strong> under 18 is refused; the amount may not exceed five times the yearly income; the start date cannot be in the past (and warns more than a year ahead).</li>
+			<li><strong>Score:</strong> below 40 adds a Documentation step and removes the 10 and 15 year terms.</li>
+			<li><strong>Backend:</strong> once CPR and amount are known, a partner bank (a static JSON file) is asked, and Next waits for it. It caps the amount at 300,000. A co-applicant gets their own step from another service.</li>
+		</ul>
+		<p>Try CPR <code>070761-4285</code>, or <code>0707104234</code> to be 16.</p>
+
+		<form-flow
+			form="../form-rules/examples/loan.form.json"
+			rules="../form-rules/examples/loan.rules.json"
+			explain>
+		</form-flow>
+
+		<h2>Log</h2>
+		<ol class="demo-log" id="log" reversed></ol>
+	</main>
+
+	<script type="module">
+		import './index.js';
+		import functions from '../form-rules/examples/functions/checks.js';
+
+		const flow = document.querySelector('form-flow');
+		flow.functions = functions;
+		const log = document.getElementById('log');
+		const write = (type, detail) => {
+			const item = document.createElement('li');
+			item.textContent = `${type} ${JSON.stringify(detail)}`;
+			log.prepend(item);
+		};
+		flow.fetcher = async (effect) => {
+			write('fetch', { service: effect.service, send: effect.send });
+			await new Promise(resolve => setTimeout(resolve, 600));
+		};
+		flow.addEventListener('ff:emit', event => write('ff:emit', event.detail));
+		flow.addEventListener('ff:error', event => write('ff:error', { message: event.detail.error?.message, errors: event.detail.errors }));
+		flow.addEventListener('ff:submit', event => write('ff:submit', event.detail.values));
+	</script>
+</body>
+</html>

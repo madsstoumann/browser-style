@@ -9,7 +9,7 @@
  */
 
 import { isRule } from './logic.js';
-import { actionName, actionTargets, ACTIONS, gotoOf, NARROWING, renameTargets } from './actions.js';
+import { actionName, actionTargets, ACTIONS, gotoOf, NARROWING, renameTargets, VARIABLE_ACTIONS } from './actions.js';
 import { normalizeForm, normalizeRuleSet } from './form.js';
 
 export const PATCH_PRIORITY_CEILING = -1;
@@ -112,6 +112,10 @@ export function merge(formDefinition, ruleSetDocument, patch, { owner = null, se
 				fail('action', `Unknown action "${name}"`, at);
 				return;
 			}
+			if (VARIABLE_ACTIONS.includes(name)) {
+				fail('widen', `A patch rule may not change variables ("${name}")`, at);
+				return;
+			}
 			const targets = actionTargets(action);
 			const targetFields = targets.fields;
 			const stepTargets = name === 'goto' ? [gotoOf(action).step, gotoOf(action).from].filter(Boolean) : targets.steps;
@@ -139,7 +143,7 @@ export function merge(formDefinition, ruleSetDocument, patch, { owner = null, se
 
 	if (errors.length) return { ruleSet: ruleSetDocument, errors };
 
-	const mounted = { id: `${ns}/${patch.patch}`, service: ns, owner, fields, place, ...(steps.length ? { steps } : {}), rules, expires: patch.expires ?? null };
+	const mounted = { id: `${ns}/${patch.patch}`, service: ns, owner, fields, place, ...(steps.length ? { steps } : {}), ...(patch.data !== undefined ? { data: patch.data } : {}), rules, expires: patch.expires ?? null };
 	const patches = [...ruleSet.patches.filter(p => !(p.owner === owner && p.service === ns)), mounted];
 	return { ruleSet: { ...ruleSet, patches }, errors };
 }
