@@ -177,7 +177,11 @@ function fieldInspector(editor, id) {
 			setOrDelete(p.ui, 'hidden', value);
 		})),
 		property.type === 'select' ? choicesEditor(property, numeric, update) : null,
-		property.type === 'select' ? check('Send the chosen option to analytics (not for personal data)', property.track === true, value => update(p => setOrDelete(p, 'track', value))) : null,
+		field('Privacy', select([['none', 'Not personal'], ['personal', 'Personal'], ['special', 'Special (health, national id, …)']], property.privacy ?? 'none', value => update(p => {
+			setOrDelete(p, 'privacy', value === 'none' ? '' : value);
+			if (value !== 'none') delete p.track;
+		})), 'Special data is never saved in a draft; personal and special data never go to analytics'),
+		property.type === 'select' && (property.privacy ?? 'none') === 'none' ? check('Send the chosen option to analytics', property.track === true, value => update(p => setOrDelete(p, 'track', value))) : null,
 		property.type === 'number' || property.type === 'integer' ? h('div', { part: 'row' },
 			field('Lowest', h('input', { type: 'number', value: validation.minimum ?? '', onchange: e => update(p => { p.validation = { ...(p.validation ?? {}) }; setOrDelete(p.validation, 'minimum', e.target.value === '' ? '' : Number(e.target.value)); }) })),
 			field('Highest', h('input', { type: 'number', value: validation.maximum ?? '', onchange: e => update(p => { p.validation = { ...(p.validation ?? {}) }; setOrDelete(p.validation, 'maximum', e.target.value === '' ? '' : Number(e.target.value)); }) }))
