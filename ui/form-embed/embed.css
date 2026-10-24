@@ -1,0 +1,38 @@
+/* form-embed: public --form-* tokens mapped onto the base tokens the form sheets read. Docs: readme.md § Styling */
+@layer bs-core, bs-component;
+@layer bs-core {
+	:host {
+		--color-accent: var(--form-accent, light-dark(oklch(48.8% 0.146 258), oklch(80.9% 0.063 258)));
+		--color-accent-text: var(--form-accent-text, light-dark(#fff, oklch(28.2% 0.055 258)));
+		--color-border: var(--form-border, light-dark(hsl(0, 0%, 80%), hsl(0, 0%, 35%)));
+		--color-button: var(--form-button, light-dark(hsl(0, 0%, 90%), hsl(0, 0%, 35%)));
+		--color-error: var(--form-error, light-dark(oklch(50.5% 0.213 27.518), oklch(80.8% 0.114 19.571)));
+		--color-surface: var(--form-surface, light-dark(hsl(0, 0%, 100%), hsl(0, 0%, 0%)));
+		--color-surface-alt: var(--form-surface-alt, light-dark(hsl(0, 0%, 95%), hsl(0, 0%, 15%)));
+		--color-text: var(--form-text, currentColor);
+		--color-text-muted: var(--form-text-muted, color-mix(in oklab, currentColor 70%, Canvas));
+		--color-warning: var(--form-warning, light-dark(oklch(75% 0.183 55.934), oklch(64.6% 0.222 41.116)));
+		--font-form: var(--form-font, inherit);
+		--input-fs: var(--form-font-size, 1rem);
+		--input-radius: var(--form-radius, 0.25rem);
+		--radius-sm: var(--form-radius, 0.25rem);
+		--ring-color: var(--form-focus, var(--color-accent));
+		--ring-offset: 3px;
+		--ring-width: 2px;
+		--spacing-lg: 1.5rem;
+		--spacing-sm: 0.5rem;
+		--spacing-xs: 0.25rem;
+		--form-flow-gap: var(--form-gap, 1.5rem);
+		--AccentColor: var(--color-accent);
+		--AccentColorText: var(--color-accent-text);
+		--CanvasGray: var(--color-surface-alt);
+		--_dir-s: left;
+		--_dir-e: right;
+		accent-color: var(--color-accent);
+		display: block;
+	}
+	:host(:dir(rtl)) { --_dir-s: right; --_dir-e: left; }
+	:host([hidden]) { display: none; }
+	*, *::before, *::after { box-sizing: border-box; }
+	[hidden] { display: none !important; } /* !important: a client's unlayered display rule must not unhide steps */
+}

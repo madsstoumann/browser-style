@@ -1,0 +1,43 @@
+{
+  "name": "@browser.style/form-embed",
+  "version": "0.1.0",
+  "description": "Embed a published @browser.style/form-flow form by id on any site, in Shadow DOM or light DOM, themed with CSS custom properties.",
+  "type": "module",
+  "module": "index.js",
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "style": "./embed.css"
+    }
+  },
+  "files": [
+    "index.js",
+    "embed.css",
+    "publish.js",
+    "functions/registry.json"
+  ],
+  "dependencies": {
+    "@browser.style/form-flow": "^0.1.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "browser.style",
+    "web-components",
+    "form",
+    "embed"
+  ],
+  "author": "Mads Stoumann",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/form-embed"
+  },
+  "bugs": {
+    "url": "https://github.com/madsstoumann/browser-style/issues"
+  },
+  "homepage": "https://browser.style/ui/form-embed"
+}
