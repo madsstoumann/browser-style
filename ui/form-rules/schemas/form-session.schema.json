@@ -1,0 +1,64 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "https://browser.style/ui/form-rules/schemas/form-session.schema.json",
+	"title": "Form session",
+	"description": "One person's saved progress through one form version. User data, not content: kept in a draft store with an expiry, never in the CMS. A final session (submitted, expired, discarded) holds no answers.",
+	"type": "object",
+	"required": ["id", "form", "rules", "status", "rev", "owner", "created", "updated", "expires"],
+	"properties": {
+		"id": { "type": "string", "description": "Random, also the idempotency key of the submit" },
+		"form": {
+			"type": "object",
+			"required": ["id"],
+			"properties": {
+				"id": { "type": "string" },
+				"version": { "type": ["integer", "null"] },
+				"resetDrafts": { "type": "integer" }
+			}
+		},
+		"rules": {
+			"type": "object",
+			"properties": {
+				"id": { "type": ["string", "null"] },
+				"version": { "type": ["integer", "null"] }
+			}
+		},
+		"status": { "enum": ["draft", "submitted", "expired", "discarded"], "description": "Only a draft can change" },
+		"rev": { "type": "integer", "minimum": 0, "description": "Raised on every save; an older rev is a conflict" },
+		"owner": {
+			"oneOf": [
+				{ "type": "object", "required": ["kind"], "properties": { "kind": { "const": "anonymous" } }, "additionalProperties": false },
+				{ "type": "object", "required": ["kind", "sub"], "properties": { "kind": { "const": "user" }, "sub": { "type": "string", "description": "Login subject, never a name or email" } }, "additionalProperties": false }
+			]
+		},
+		"storage": { "enum": ["tab", "device", "server"], "description": "tab: sessionStorage; device: localStorage after Save on this device; server: a draft store (logged in, or a resume link)" },
+		"lifetime": {
+			"type": "object",
+			"properties": {
+				"ttlDays": { "type": "integer", "description": "Anonymous: days from creation" },
+				"idleDays": { "type": "integer", "description": "Logged in: days after the last save" }
+			}
+		},
+		"consent": {
+			"type": ["object", "null"],
+			"description": "When the person chose to keep the draft beyond the open tab",
+			"properties": {
+				"device": { "type": "boolean" },
+				"server": { "type": "boolean" },
+				"at": { "type": "string", "format": "date-time" }
+			}
+		},
+		"step": { "type": ["string", "null"] },
+		"values": { "type": "object", "description": "Visible fields only; fields with privacy special are never stored" },
+		"facts": { "type": "object" },
+		"matched": { "type": "array", "items": { "type": "string" } },
+		"created": { "type": "string", "format": "date-time" },
+		"updated": { "type": "string", "format": "date-time" },
+		"expires": { "type": "string", "format": "date-time" },
+		"submitted": { "type": ["string", "null"], "format": "date-time" },
+		"receipt": {
+			"type": ["object", "null"],
+			"properties": { "reference": { "type": "string" } }
+		}
+	}
+}

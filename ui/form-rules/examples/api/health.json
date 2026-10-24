@@ -3,9 +3,9 @@
 	"patch": "senior-health",
 	"for": { "form": "form-insurance", "rules": "insurance", "minVersion": 4 },
 	"fields": {
-		"conditions": { "type": "boolean", "title": "I have a long-term health condition", "ui": { "widget": "toggle" } },
-		"details": { "type": "string", "title": "Tell us about it", "ui": { "widget": "textarea", "hidden": true } },
-		"doctor": { "type": "boolean", "title": "I saw a doctor in the last 12 months", "ui": { "widget": "toggle" } }
+		"conditions": { "type": "boolean", "privacy": "special", "title": "I have a long-term health condition", "ui": { "widget": "toggle" } },
+		"details": { "type": "string", "privacy": "special", "title": "Tell us about it", "ui": { "widget": "textarea", "hidden": true } },
+		"doctor": { "type": "boolean", "privacy": "special", "title": "I saw a doctor in the last 12 months", "ui": { "widget": "toggle" } }
 	},
 	"steps": [
 		{ "id": "health", "name": "Health", "fields": ["conditions", "details", "doctor"] }

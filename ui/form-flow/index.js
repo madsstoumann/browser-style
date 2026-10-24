@@ -94,16 +94,16 @@ export default class FormFlow extends HTMLElement {
 		}
 	}
 
-	/* Starts the form from objects instead of URLs. */
-	setup(definition, rules = EMPTY_RULES, { values = {}, context = this.#context, facts } = {}) {
+	/* Starts the form from objects instead of URLs. A saved session passes `step` and `previous` (its matched rules) to continue. */
+	setup(definition, rules = EMPTY_RULES, { values = {}, context = this.#context, facts, step = null, previous } = {}) {
 		this.#definition = definition;
 		this.#form = normalizeForm(definition);
 		this.#rules = rules;
 		this.#values = { ...values };
 		this.#context = context;
 		if (facts) this.#store = { ...this.#store, facts };
-		this.#current = null;
-		this.#previous = undefined;
+		this.#current = step;
+		this.#previous = previous?.matched;
 		this.#requests.clear();
 		this.#tracking = new FlowTracking(event => this.#track(event), {
 			contextKeys: (this.getAttribute('track-context') ?? 'channel campaign').split(/\s+/).filter(Boolean),
@@ -121,6 +121,7 @@ export default class FormFlow extends HTMLElement {
 	}
 	get functions() { return this.#functions; }
 
+	get definition() { return this.#definition; }
 	get state() { return this.#state; }
 	get values() { return this.#state?.values ?? {}; }
 	get rules() { return this.#rules; }

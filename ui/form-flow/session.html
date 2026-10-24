@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Form Flow Sessions</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="color-scheme" content="light dark">
+	<meta name="description" content="Saving, resuming and completing a form-flow session: tab, device and server drafts, resume links and a final submitted state.">
+	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="../step/ui-step.css">
+	<link rel="stylesheet" href="index.css">
+	<style>
+		body { max-inline-size: 60ch; margin-inline: auto; padding: 2ch; }
+		.demo-controls { display: flex; flex-wrap: wrap; gap: 1ch; align-items: end; margin-block: 2ch; }
+		.demo-notice:empty { display: none; }
+		.demo-log { font-size: smaller; max-block-size: 16em; overflow: auto; overflow-wrap: anywhere; }
+		.demo-inbox { font-size: smaller; overflow-wrap: anywhere; }
+	</style>
+</head>
+<body>
+	<main>
+		<h1>UI: Components &gt; FormFlow &gt; Sessions</h1>
+		<p>
+			The <a href="loan.html">loan form</a> with <code>session.js</code>: a partly filled form is saved and resumed, and a
+			sent form cannot be opened again. There is no backend yet, so a mock server keeps its data in <code>localStorage</code>.
+		</p>
+		<ul>
+			<li><strong>Reload</strong> the page: your answers come back (from <code>sessionStorage</code>, this tab only). The CPR number is marked <code>privacy: "special"</code> and is never saved, so type it again.</li>
+			<li><strong>Save on this device</strong> keeps the draft after the tab is closed, for 30 days. Not on a shared computer.</li>
+			<li><strong>Email me a link</strong> keeps the draft on the server. The link works once; it appears in the mock inbox below instead of an email.</li>
+			<li><strong>Send</strong> the form, then press Back, reload, or look at a second tab of this page: it shows the receipt, not the form.</li>
+			<li><strong>Signed in</strong>: the draft is kept on the server for 90 days after the last change, one per form.</li>
+		</ul>
+		<p>Try CPR <code>070761-4285</code>.</p>
+
+		<div class="demo-controls">
+			<label>Who
+				<select id="who">
+					<option value="anonymous">Anonymous</option>
+					<option value="user">Signed in (demo user)</option>
+				</select>
+			</label>
+		</div>
+
+		<p class="demo-notice" id="notice" role="status"></p>
+
+		<form-flow
+			form="../form-rules/examples/loan.form.json"
+			rules="../form-rules/examples/loan.rules.json">
+		</form-flow>
+
+		<div class="demo-controls" id="actions">
+			<button type="button" id="device">Save on this device</button>
+			<label>Email
+				<input type="email" id="email" placeholder="you@example.com">
+			</label>
+			<button type="button" id="link">Email me a link</button>
+			<button type="button" id="discard">Discard draft</button>
+		</div>
+
+		<h2>Mock inbox</h2>
+		<p class="demo-inbox" id="inbox">Empty.</p>
+
+		<h2>Log</h2>
+		<ol class="demo-log" id="log" reversed></ol>
+	</main>
+
+	<script type="module">
+		import './index.js';
+		import FlowSession, { MockServer } from './session.js';
+		import functions from '../form-rules/examples/functions/checks.js';
+
+		const params = new URLSearchParams(location.search);
+		const who = document.getElementById('who');
+		who.value = params.get('who') === 'user' ? 'user' : 'anonymous';
+		who.addEventListener('change', () => {
+			params.set('who', who.value);
+			location.search = params.toString();
+		});
+
+		const flow = document.querySelector('form-flow');
+		flow.functions = functions;
+		flow.fetcher = async () => { await new Promise(resolve => setTimeout(resolve, 600)); };
+
+		const log = document.getElementById('log');
+		const notice = document.getElementById('notice');
+		const write = (type, detail) => {
+			const item = document.createElement('li');
+			item.textContent = `${type} ${JSON.stringify(detail)}`;
+			log.prepend(item);
+		};
+
+		const session = new FlowSession(flow, {
+			owner: who.value === 'user' ? { kind: 'user', sub: 'demo-user-1' } : { kind: 'anonymous' },
+			server: new MockServer(),
+			/* The real submission goes here; its reply is the receipt. */
+			send: async (detail) => {
+				write('send', detail.values);
+				return { reference: `LOAN-${Math.floor(Math.random() * 9000 + 1000)}` };
+			}
+		});
+
+		const NAMES = { removed: 'no longer in the form', special: 'not saved, please fill in again', 'option-unavailable': 'please choose again' };
+		flow.addEventListener('ff:resumed', ({ detail }) => {
+			const changes = detail.changes.map(change => `${change.field} (${NAMES[change.change]})`);
+			notice.textContent = `Welcome back: your answers from ${new Date(detail.session.updated).toLocaleString()} are restored. `
+				+ (detail.migrated ? 'The form has been updated since. ' : '')
+				+ (changes.length ? `Check: ${changes.join(', ')}.` : 'Sensitive answers, like your CPR number, are never saved.');
+			write('ff:resumed', detail);
+		});
+		flow.addEventListener('ff:resume-failed', ({ detail }) => {
+			notice.textContent = detail.reason === 'link' ? 'This link has been used or has expired.' : `The saved draft could not be used (${detail.reason}); starting over.`;
+			write('ff:resume-failed', detail);
+		});
+		flow.addEventListener('ff:saved', ({ detail }) => write('ff:saved', { storage: detail.session.storage, rev: detail.session.rev, values: detail.session.values }));
+		flow.addEventListener('ff:link', ({ detail }) => {
+			const inbox = document.getElementById('inbox');
+			inbox.replaceChildren(`To ${detail.email || '(no address)'}: continue your loan application before ${new Date(detail.expires).toLocaleDateString()}: `);
+			const a = document.createElement('a');
+			a.href = detail.url;
+			a.textContent = detail.url;
+			a.target = '_blank';
+			inbox.append(a);
+			write('ff:link', { email: detail.email });
+		});
+		flow.addEventListener('ff:discarded', ({ detail }) => {
+			notice.textContent = 'Your draft was deleted.';
+			write('ff:discarded', { id: detail.session.id });
+		});
+		flow.addEventListener('ff:done', ({ detail }) => {
+			document.getElementById('actions').hidden = true;
+			notice.textContent = '';
+			write('ff:done', detail.session);
+		});
+		flow.addEventListener('ff:error', event => write('ff:error', { message: event.detail.error?.message, errors: event.detail.errors }));
+
+		document.getElementById('device').hidden = who.value === 'user';
+		document.getElementById('link').hidden = document.getElementById('email').closest('label').hidden = who.value === 'user';
+		document.getElementById('device').addEventListener('click', async () => {
+			await session.saveOnDevice();
+			notice.textContent = 'Saved on this device for 30 days. Do not use this on a shared computer.';
+		});
+		document.getElementById('link').addEventListener('click', async () => {
+			await session.emailLink(document.getElementById('email').value);
+			notice.textContent = 'We have emailed you a link. It works once.';
+		});
+		document.getElementById('discard').addEventListener('click', () => session.discard());
+
+		await session.start();
+		write('start', { id: session.session.id, status: session.session.status, storage: session.session.storage });
+	</script>
+</body>
+</html>

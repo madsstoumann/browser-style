@@ -24,6 +24,8 @@
 			"properties": {
 				"id": { "type": "string" },
 				"title": { "type": "string" },
+				"version": { "type": "integer", "minimum": 1, "description": "Raised on every publish; saved drafts record it and are checked against it on resume" },
+				"resetDrafts": { "type": "integer", "minimum": 0, "description": "Raise to make saved drafts start over (when old answers no longer make sense)" },
 				"type": { "const": "object" },
 				"required": { "type": "array", "items": { "type": "string" } },
 				"structure": {
@@ -58,6 +60,10 @@
 				"description": { "type": "string" },
 				"required": { "type": "boolean" },
 				"track": { "type": "boolean", "description": "Choice fields only: the chosen value may be sent to analytics. Never for personal data" },
+				"privacy": {
+					"enum": ["none", "personal", "special"],
+					"description": "none: may be saved anywhere; personal: saved in drafts the person chose to keep; special (health, national id, …): never saved in a draft. Form fields default to none, patch fields to personal"
+				},
 				"localized": { "type": "boolean" },
 				"default": {},
 				"validation": {
