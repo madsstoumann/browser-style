@@ -66,7 +66,16 @@
 						"maximum": { "type": "number" },
 						"minLength": { "type": "integer" },
 						"maxLength": { "type": "integer" },
-						"pattern": { "type": "string" }
+						"pattern": { "type": "string" },
+						"check": {
+							"description": "Names of host functions (evaluate input.functions) that check the value: null passes, { code, message, level? } fails",
+							"oneOf": [{ "type": "string" }, { "type": "array", "items": { "type": "string" } }]
+						},
+						"messages": {
+							"type": "object",
+							"description": "Message per issue code (minimum, pattern, dk-cpr, …), replacing the default",
+							"additionalProperties": { "type": "string" }
+						}
 					}
 				},
 				"options": {

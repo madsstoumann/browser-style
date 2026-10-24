@@ -13,11 +13,17 @@
 	<style>body { margin: 0; max-inline-size: none; padding-inline: 2ch; }</style>
 </head>
 <body>
-	<form-editor
-		form="../form-rules/examples/insurance.form.json"
-		rules="../form-rules/examples/insurance.rules.json"
-		samples='{ "offers": "../form-rules/examples/offers.patch.json" }'>
-	</form-editor>
-	<script type="module" src="index.js"></script>
+	<form-editor></form-editor>
+	<script type="module">
+		/* ?example=loan opens the advanced example; each example keeps its own draft. */
+		const examples = {
+			insurance: { form: '../form-rules/examples/insurance.form.json', rules: '../form-rules/examples/insurance.rules.json', samples: '{ "offers": "../form-rules/examples/offers.patch.json" }' },
+			loan: { form: '../form-rules/examples/loan.form.json', rules: '../form-rules/examples/loan.rules.json', functions: '../form-rules/examples/functions/checks.js' }
+		};
+		const example = examples[new URLSearchParams(location.search).get('example')] ?? examples.insurance;
+		const editor = document.querySelector('form-editor');
+		Object.entries(example).forEach(([name, value]) => editor.setAttribute(name, value));
+		await import('./index.js');
+	</script>
 </body>
 </html>

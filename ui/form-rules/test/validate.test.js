@@ -67,9 +67,22 @@ test('goto must target a known step after the step it jumps from', () => {
 	assert.deepEqual(codes(result).sort(), ['goto', 'goto', 'step']);
 });
 
-test('fetch needs a slot or a step to insert after', () => {
+test('a fetch may name a step to insert after, which must exist', () => {
 	const result = validate(form, withRules(
-		{ id: 'nowhere', when: true, then: [{ fetch: { service: 'offers' } }, { fetch: { service: 'health', after: 'ghost' } }] }
+		{ id: 'data-only', when: true, then: [{ fetch: { service: 'offers' } }, { fetch: { service: 'health', after: 'ghost' } }] }
 	));
-	assert.deepEqual(codes(result).sort(), ['fetch', 'step']);
+	assert.deepEqual(codes(result).sort(), ['step']);
+});
+
+test('variables must be declared, and rules may not write computed ones or feed their own input', () => {
+	const result = validate(form, {
+		...rules.fields, id: rules.id,
+		variables: { score: { type: 'number', initial: 0 }, age: { compute: { yearsBetween: ['2000-01-01', { var: 'today' }] } } },
+		rules: [...rules.fields.rules,
+			{ id: 'ghost-var', when: { '>': [{ var: 'vars.nope' }, 1] }, then: [] },
+			{ id: 'write-computed', when: true, then: [{ set: { var: 'age', value: 3 } }] },
+			{ id: 'loop', when: { '>': [{ var: 'vars.score' }, 1] }, then: [{ add: { var: 'score', value: 1 } }] },
+			{ id: 'no-message', when: true, then: [{ invalid: { field: 'zip' } }] }]
+	});
+	assert.deepEqual(codes(result).sort(), ['cycle', 'invalid', 'variable', 'variable']);
 });

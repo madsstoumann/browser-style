@@ -92,6 +92,7 @@ export function pathLabel(form, path) {
 	const property = propertyOf(form, path);
 	if (property) return property.title ?? path.slice(7);
 	const [root, ...rest] = path.split('.');
+	if (root === 'vars') return rest.join('.');
 	return `${root} ${rest.join('.')}`.trim();
 }
 
@@ -104,8 +105,24 @@ export function valueLabel(form, path, value) {
 	return value === null || value === '' ? '(nothing)' : String(value);
 }
 
+const WORDS = { ...OPERATOR_WORDS, '*': '×', '/': '÷', '+': '+', '-': '−', and: 'and', or: 'or' };
+
+/* Any JSON Logic as readable text, for conditions the builder cannot draw. */
+function logicText(form, logic) {
+	if (!isRule(logic)) return Array.isArray(logic) ? logic.map(item => logicText(form, item)).join(', ') : valueLabel(form, '', logic);
+	const [op] = Object.keys(logic);
+	const args = Array.isArray(logic[op]) ? logic[op] : [logic[op]];
+	if (op === 'var') return typeof args[0] === 'string' ? pathLabel(form, args[0]) : 'a value';
+	if (op === 'num') return logicText(form, args[0]);
+	if (op === '!') return `not (${logicText(form, args[0])})`;
+	if (op === '!!') return `${logicText(form, args[0])} is filled in`;
+	if (op === 'check') return `${logicText(form, args[1])} passes ${args[0]}`;
+	if (op in WORDS && args.length >= 2) return args.map(arg => logicText(form, arg)).join(` ${WORDS[op]} `);
+	return `${op}(${args.map(arg => logicText(form, arg)).join(', ')})`;
+}
+
 function conditionText(form, node, nested = false) {
-	if (node.kind === 'raw') return 'a custom condition';
+	if (node.kind === 'raw') return logicText(form, node.logic);
 	if (node.kind === 'group') {
 		if (!node.items.length) return 'always';
 		const text = node.items.map(item => conditionText(form, item, true)).join(node.mode === 'and' ? ' and ' : ' or ');
@@ -148,7 +165,10 @@ export function actionText(form, action) {
 			const goto = typeof value === 'string' ? { step: value } : value;
 			return `go to ${stepName(form, goto.step)}${goto.from ? ` after ${stepName(form, goto.from)}` : ''}`;
 		}
-		case 'fetch': return value.after ? `fetch extra steps from ${value.service} after ${stepName(form, value.after)}` : `fetch extra fields from ${value.service} into ${value.into}`;
+		case 'add': return `add ${typeof value.value === 'object' && value.value !== null ? 'a calculated value' : value.value} to ${value.var}`;
+		case 'set': return `set ${value.var} to ${typeof value.value === 'object' && value.value !== null ? 'a calculated value' : valueLabel(form, '', value.value)}`;
+		case 'invalid': return `${value.level === 'warning' ? 'warn on' : 'mark'} ${fieldTitle(form, value.field)}${value.level === 'warning' ? '' : ' invalid'}: “${value.message}”`;
+		case 'fetch': return (value.after ? `fetch extra steps from ${value.service} after ${stepName(form, value.after)}` : value.into ? `fetch extra fields from ${value.service} into ${value.into}` : `ask ${value.service}`) + (value.wait ? ' and wait for the answer' : '');
 		case 'emit': return `send the event ${value.type}`;
 		default: return 'do something custom';
 	}

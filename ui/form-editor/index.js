@@ -19,10 +19,10 @@ const fetchJSON = async url => {
 	return response.json();
 };
 
+/* One draft per example (the form attribute), so switching examples never mixes them up. */
 const storage = {
-	read() { try { return JSON.parse(localStorage.getItem(DRAFT_KEY)); } catch { return null; } },
-	write(value) { try { localStorage.setItem(DRAFT_KEY, JSON.stringify(value)); } catch { /* private mode */ } },
-	clear() { try { localStorage.removeItem(DRAFT_KEY); } catch { /* private mode */ } }
+	read(key) { try { return JSON.parse(localStorage.getItem(key)); } catch { return null; } },
+	write(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* private mode */ } }
 };
 
 /* Which model a dropped-in JSON file is: 'form-definition', 'form-rules', 'form-patch' or null. */
@@ -55,12 +55,23 @@ export class FormEditor extends HTMLElement {
 	#parts = {};
 	#preview;
 	#message = '';
+	#functions = {};
+	#draftKey = DRAFT_KEY;
 
 	async connectedCallback() {
 		if (this.#parts.main) return;
 		this.advanced = this.hasAttribute('advanced');
 		this.#build();
-		const draft = storage.read();
+		if (this.getAttribute('form')) this.#draftKey = `${DRAFT_KEY}:${this.getAttribute('form')}`;
+		const draft = storage.read(this.#draftKey);
+		if (this.getAttribute('functions')) {
+			try {
+				const module = await import(new URL(this.getAttribute('functions'), document.baseURI));
+				this.functions = module.default ?? module.functions ?? {};
+			} catch (error) {
+				this.#message = `Could not load the functions: ${error.message}`;
+			}
+		}
 		if (this.getAttribute('form')) {
 			try {
 				const [form, rules] = await Promise.all([
@@ -98,6 +109,14 @@ export class FormEditor extends HTMLElement {
 		this.#save();
 		this.#restartPreview();
 	}
+
+	/* Host functions the rules may call by name (operators and field checks), as in evaluate(). */
+	set functions(value) {
+		this.#functions = value ?? {};
+		if (this.#preview) this.#preview.functions = this.#functions;
+		if (this.#parts.main) this.#render(false);
+	}
+	get functions() { return this.#functions; }
 
 	get output() { return { form: clone(this.form), rules: clone(this.rules) }; }
 
@@ -142,7 +161,7 @@ export class FormEditor extends HTMLElement {
 		this.dispatchEvent(new CustomEvent('fe:change', { bubbles: true, composed: true, detail: this.output }));
 	}
 
-	#save() { storage.write({ form: this.form, rules: this.rules, samples: this.samples }); }
+	#save() { storage.write(this.#draftKey, { form: this.form, rules: this.rules, samples: this.samples }); }
 
 	/* === Layout === */
 
@@ -276,7 +295,7 @@ export class FormEditor extends HTMLElement {
 
 	#errors() {
 		try {
-			return validate(this.form, this.rules).errors;
+			return validate(this.form, this.rules, { functions: this.#functions }).errors;
 		} catch (error) {
 			return [{ code: 'invalid', message: error.message }];
 		}

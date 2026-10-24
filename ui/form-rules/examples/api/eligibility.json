@@ -1,0 +1,6 @@
+{
+	"$schema": "../../schemas/form-patch.schema.json",
+	"patch": "eligibility",
+	"for": { "form": "form-loan", "rules": "loan" },
+	"data": { "eligible": true, "maxAmount": 300000, "rate": 7.4 }
+}

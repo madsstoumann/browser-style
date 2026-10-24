@@ -33,6 +33,20 @@
 				"form": { "type": "string", "description": "Id of the form definition these rules belong to" },
 				"version": { "type": "integer", "minimum": 1 },
 				"patchPriorityCeiling": { "type": "number", "description": "Highest priority a mounted patch rule may have. Default -1." },
+				"variables": {
+					"type": "object",
+					"description": "Read as vars.<name>. Either computed from an expression, or written by rules (set, then add) starting from an initial value",
+					"additionalProperties": {
+						"type": "object",
+						"properties": {
+							"type": { "enum": ["number", "string", "boolean"] },
+							"title": { "type": "string" },
+							"initial": {},
+							"compute": { "$ref": "#/definitions/logic" }
+						},
+						"additionalProperties": false
+					}
+				},
 				"services": {
 					"type": "object",
 					"additionalProperties": {
@@ -116,9 +130,9 @@
 				"fetch": {
 					"type": "object",
 					"required": ["service"],
-					"anyOf": [{ "required": ["into"] }, { "required": ["after"] }],
 					"properties": {
 						"service": { "type": "string" },
+						"wait": { "type": "boolean", "description": "Next waits for the reply, so a backend check cannot be skipped" },
 						"into": { "type": "string", "description": "The slot the reply may place fields in" },
 						"after": { "type": "string", "description": "The step the reply may insert steps after" }
 					},
@@ -135,6 +149,29 @@
 							"additionalProperties": false
 						}
 					]
+				},
+				"add": {
+					"type": "object",
+					"required": ["var", "value"],
+					"properties": { "var": { "type": "string" }, "value": { "$ref": "#/definitions/logic" } },
+					"additionalProperties": false
+				},
+				"set": {
+					"type": "object",
+					"required": ["var", "value"],
+					"properties": { "var": { "type": "string" }, "value": { "$ref": "#/definitions/logic" } },
+					"additionalProperties": false
+				},
+				"invalid": {
+					"type": "object",
+					"required": ["field", "message"],
+					"properties": {
+						"field": { "type": "string" },
+						"message": { "type": "string" },
+						"code": { "type": "string" },
+						"level": { "enum": ["error", "warning"] }
+					},
+					"additionalProperties": false
 				},
 				"emit": {
 					"type": "object",

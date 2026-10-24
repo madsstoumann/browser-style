@@ -1,0 +1,118 @@
+{
+	"$schema": "../schemas/form-definition.schema.json",
+	"id": "form-loan",
+	"model": "form-definition",
+	"meta": { "locale": "en", "status": "published" },
+	"fields": {
+		"title": "Loan application",
+		"structure": {
+			"layout": [
+				{ "area": "main", "type": "step", "id": "you", "name": "You", "fields": ["cpr", "name", "email", "employment", "cvr"] },
+				{ "area": "main", "type": "step", "id": "economy", "name": "Your economy", "fields": ["income", "debt", "housing", "dependants"] },
+				{ "area": "main", "type": "step", "id": "loan", "name": "The loan", "fields": ["amount", "purpose", "term", "startDate", "coApplicant"] },
+				{ "area": "main", "type": "step", "id": "documents", "name": "Documentation", "hidden": true, "fields": ["incomeNote"] },
+				{ "area": "main", "type": "step", "id": "review", "name": "Review", "fields": ["consent"] }
+			]
+		},
+		"type": "object",
+		"properties": {
+			"cpr": {
+				"type": "string",
+				"title": "CPR number",
+				"description": "DDMMYY-XXXX",
+				"required": true,
+				"validation": { "check": "dk-cpr" }
+			},
+			"name": { "type": "string", "title": "Full name", "required": true, "validation": { "minLength": 2 } },
+			"email": { "type": "string", "title": "Email", "required": true, "ui": { "widget": "email" } },
+			"employment": {
+				"type": "select",
+				"title": "Employment",
+				"required": true,
+				"ui": { "widget": "radio" },
+				"options": { "choices": [
+					{ "value": "employed", "label": "Employed" },
+					{ "value": "self-employed", "label": "Self-employed" },
+					{ "value": "student", "label": "Student" },
+					{ "value": "retired", "label": "Retired" }
+				] }
+			},
+			"cvr": {
+				"type": "string",
+				"title": "CVR number of your company",
+				"ui": { "hidden": true },
+				"validation": { "check": "dk-cvr" }
+			},
+			"income": {
+				"type": "integer",
+				"title": "Monthly income after tax (DKK)",
+				"required": true,
+				"validation": { "minimum": 0, "maximum": 1000000 }
+			},
+			"debt": {
+				"type": "integer",
+				"title": "Total debt today (DKK)",
+				"required": true,
+				"validation": { "minimum": 0 }
+			},
+			"housing": {
+				"type": "select",
+				"title": "Housing",
+				"required": true,
+				"options": { "choices": [
+					{ "value": "own", "label": "I own my home" },
+					{ "value": "rent", "label": "I rent" },
+					{ "value": "family", "label": "I live with family" }
+				] }
+			},
+			"dependants": {
+				"type": "integer",
+				"title": "Children living at home",
+				"validation": { "minimum": 0, "maximum": 10 }
+			},
+			"amount": {
+				"type": "integer",
+				"title": "Amount (DKK)",
+				"required": true,
+				"validation": {
+					"minimum": 5000,
+					"maximum": 500000,
+					"messages": { "minimum": "The smallest loan is 5,000 DKK", "maximum": "The largest loan is 500,000 DKK" }
+				}
+			},
+			"purpose": {
+				"type": "select",
+				"title": "What is it for?",
+				"required": true,
+				"options": { "choices": [
+					{ "value": "car", "label": "A car" },
+					{ "value": "renovation", "label": "Renovation" },
+					{ "value": "other", "label": "Something else" }
+				] }
+			},
+			"term": {
+				"type": "select",
+				"title": "Pay back over",
+				"required": true,
+				"options": { "choices": [
+					{ "value": 1, "label": "1 year" },
+					{ "value": 3, "label": "3 years" },
+					{ "value": 5, "label": "5 years" },
+					{ "value": 10, "label": "10 years" },
+					{ "value": 15, "label": "15 years" }
+				] }
+			},
+			"startDate": { "type": "string", "title": "Start date", "required": true, "ui": { "widget": "date" } },
+			"coApplicant": { "type": "boolean", "title": "I am applying with someone else", "ui": { "widget": "toggle" } },
+			"incomeNote": {
+				"type": "string",
+				"title": "Tell us about your income and expenses",
+				"description": "We need a little more to decide",
+				"required": true,
+				"ui": { "widget": "textarea" },
+				"validation": { "minLength": 20 }
+			},
+			"consent": { "type": "boolean", "title": "I confirm the information is correct", "required": true }
+		}
+	}
+}

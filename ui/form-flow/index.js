@@ -22,6 +22,12 @@ function h(tag, attributes = {}, ...children) {
 }
 
 const choicesOf = property => (property?.options?.choices ?? []).map(choice => (choice && typeof choice === 'object' ? choice : { value: choice, label: String(choice) }));
+/* Today in the user's time zone, as the engine expects it (YYYY-MM-DD). */
+const localToday = () => {
+	const now = new Date();
+	return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+};
+
 const isEmpty = value => value === undefined || value === null || value === '' || (Array.isArray(value) && value.length === 0);
 
 async function fetchJSON(url) {
@@ -47,6 +53,9 @@ export default class FormFlow extends HTMLElement {
 
 	/* Replace to fetch patches another way (a proxy, a mock): async (effect, service) => patch, or undefined for the built-in request */
 	fetcher = null;
+
+	#functions = {};
+	#pending = new Set();
 
 	async connectedCallback() {
 		if (!this.#definition && this.getAttribute('form')) await this.load();
@@ -82,6 +91,13 @@ export default class FormFlow extends HTMLElement {
 		this.#render();
 		this.update();
 	}
+
+	/* Host functions the rules call by name (operators and field checks): { name: fn } */
+	set functions(value) {
+		this.#functions = value ?? {};
+		if (this.#form) this.update();
+	}
+	get functions() { return this.#functions; }
 
 	get state() { return this.#state; }
 	get values() { return this.#state?.values ?? {}; }
@@ -297,6 +313,8 @@ export default class FormFlow extends HTMLElement {
 				context: this.#context,
 				facts: this.#store.facts ?? {},
 				step: { current: this.#current },
+				today: localToday(),
+				functions: this.#functions,
 				previous: this.#previous ? { matched: this.#previous } : undefined
 			});
 		} catch (error) {
@@ -345,7 +363,16 @@ export default class FormFlow extends HTMLElement {
 			}
 
 			const first = controls.find(control => !control.disabled) ?? controls[0];
-			if (unavailable.has(id)) first?.setCustomValidity(this.getAttribute('label-unavailable') ?? 'This option is no longer available');
+			const own = state.issues.filter(issue => issue.field === id && issue.message);
+			const error = own.find(issue => issue.level !== 'warning');
+			const warning = own.find(issue => issue.level === 'warning');
+			let note = element.nextElementSibling?.matches('[part="warning"]') ? element.nextElementSibling : null;
+			if (warning && field.visible) {
+				if (!note) element.after(note = h('small', { part: 'warning', role: 'status' }));
+				note.textContent = warning.message;
+			} else note?.remove();
+			if (error) first?.setCustomValidity(error.message);
+			else if (unavailable.has(id)) first?.setCustomValidity(this.getAttribute('label-unavailable') ?? 'This option is no longer available');
 			else if (group && field.required && controls[0]?.type === 'checkbox' && isEmpty(this.#values[id])) {
 				first?.setCustomValidity(this.getAttribute('label-required') ?? 'Choose at least one');
 			}
@@ -378,6 +405,7 @@ export default class FormFlow extends HTMLElement {
 		const list = this.querySelector('[part="explain"] ul');
 		if (!list) return;
 		list.replaceChildren(...Object.entries(state.explain).map(([key, rules]) => h('li', {}, h('code', {}, key), ' ← ', rules.map(rule => rule.replace(/:else$/, ' (else)')).join(', '))));
+		Object.entries(state.vars ?? {}).forEach(([name, value]) => list.append(h('li', { part: 'var' }, h('code', {}, `vars.${name}`), ' = ', JSON.stringify(value))));
 		if (!list.children.length) list.append(h('li', {}, 'No rule has changed the form.'));
 	}
 
@@ -386,7 +414,11 @@ export default class FormFlow extends HTMLElement {
 			if (effect.type === 'emit') {
 				this.#dispatch('ff:emit', { type: effect.event, data: effect.data, rule: effect.rule, where: effect.where });
 			} else if (effect.type === 'fetch' && !this.#requests.has(effect.key)) {
-				this.#fetchPatch(effect);
+				const request = this.#fetchPatch(effect);
+				if (effect.wait) {
+					this.#pending.add(request);
+					request.finally(() => this.#pending.delete(request));
+				}
 			}
 		}
 	}
@@ -434,7 +466,20 @@ export default class FormFlow extends HTMLElement {
 		return false;
 	}
 
-	#move(direction) {
+	/* A fetch marked wait (a backend check) must answer before the user moves on. */
+	async #settle() {
+		if (!this.#pending.size) return;
+		const next = this.querySelector('[data-action="next"]');
+		next.setAttribute('aria-busy', 'true');
+		next.disabled = true;
+		await Promise.allSettled([...this.#pending]);
+		next.removeAttribute('aria-busy');
+		next.disabled = false;
+		this.update();
+	}
+
+	async #move(direction) {
+		if (direction > 0) await this.#settle();
 		const { path } = this.#state;
 		const index = path.indexOf(this.#current);
 		if (direction > 0 && !this.#validStep(this.#current)) return;
@@ -443,11 +488,12 @@ export default class FormFlow extends HTMLElement {
 		this.querySelector(`fieldset[data-step="${CSS.escape(this.#current)}"] legend`)?.scrollIntoView({ block: 'nearest' });
 	}
 
-	#onSubmit(event) {
+	async #onSubmit(event) {
 		event.preventDefault();
 		this.update();
+		await this.#settle();
 		if (!this.#state.path.every(stepId => this.#validStep(stepId))) return;
-		const blocking = this.#state.issues.filter(issue => issue.field);
+		const blocking = this.#state.issues.filter(issue => issue.field && issue.level !== 'warning');
 		if (blocking.length) {
 			const field = this.#state.fields[blocking[0].field];
 			this.goTo(field.step);

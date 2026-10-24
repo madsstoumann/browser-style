@@ -1,0 +1,124 @@
+{
+	"$schema": "../schemas/form-rules.schema.json",
+	"id": "loan",
+	"model": "form-rules",
+	"meta": { "locale": "en", "status": "published" },
+	"fields": {
+		"form": "form-loan",
+		"version": 1,
+		"variables": {
+			"age": { "type": "number", "title": "Age, from the CPR number", "compute": { "yearsBetween": [{ "cprDate": { "var": "values.cpr" } }, { "var": "today" }] } },
+			"yearlyIncome": { "type": "number", "title": "Yearly income", "compute": { "*": [{ "var": "values.income" }, 12] } },
+			"debtRatio": { "type": "number", "title": "Debt to yearly income", "compute": { "round": [{ "/": [{ "var": "values.debt" }, { "var": "vars.yearlyIncome" }] }, 2] } },
+			"score": { "type": "number", "title": "Credit score", "initial": 50 },
+			"risk": { "type": "string", "title": "Risk", "initial": "normal" }
+		},
+		"services": {
+			"eligibility": { "url": "/ui/form-rules/examples/api/eligibility.json", "method": "GET", "send": ["cpr", "amount", "income"], "timeoutMs": 4000 },
+			"partner": { "url": "/ui/form-rules/examples/api/co-applicant.json", "method": "GET", "send": ["cpr"], "timeoutMs": 4000 }
+		},
+		"rules": [
+			{
+				"id": "adult",
+				"title": "Applicants must be 18 or older",
+				"when": { "<": [{ "var": "vars.age" }, 18] },
+				"then": [{ "invalid": { "field": "cpr", "code": "too-young", "message": "You must be 18 or older to apply" } }]
+			},
+			{
+				"id": "self-employed-cvr",
+				"title": "Self-employed give their CVR number",
+				"when": { "===": [{ "var": "values.employment" }, "self-employed"] },
+				"then": [{ "show": "cvr" }, { "require": "cvr" }]
+			},
+			{
+				"id": "score-income-high",
+				"title": "High income adds to the score",
+				"when": { ">=": [{ "var": "vars.yearlyIncome" }, 480000] },
+				"then": [{ "add": { "var": "score", "value": 20 } }]
+			},
+			{
+				"id": "score-income-low",
+				"title": "Low income lowers the score",
+				"when": { "<": [{ "var": "vars.yearlyIncome" }, 240000] },
+				"then": [{ "add": { "var": "score", "value": -15 } }]
+			},
+			{
+				"id": "score-debt",
+				"title": "Debt above half the yearly income lowers the score",
+				"when": { ">": [{ "var": "vars.debtRatio" }, 0.5] },
+				"then": [{ "add": { "var": "score", "value": -25 } }]
+			},
+			{
+				"id": "score-owner",
+				"title": "Home owners score higher",
+				"when": { "===": [{ "var": "values.housing" }, "own"] },
+				"then": [{ "add": { "var": "score", "value": 10 } }]
+			},
+			{
+				"id": "score-young",
+				"title": "Under 25 lowers the score",
+				"when": { "<": [{ "var": "vars.age" }, 25] },
+				"then": [{ "add": { "var": "score", "value": -10 } }]
+			},
+			{
+				"id": "high-risk",
+				"title": "A low score needs documentation and a shorter term",
+				"when": { "<": [{ "var": "vars.score" }, 40] },
+				"then": [
+					{ "set": { "var": "risk", "value": "high" } },
+					{ "include": "documents" },
+					{ "options": { "field": "term", "exclude": [10, 15] } },
+					{ "emit": { "type": "loan.manual-review", "data": { "reason": "score" } } }
+				]
+			},
+			{
+				"id": "low-risk",
+				"title": "A high score is low risk",
+				"when": { ">=": [{ "var": "vars.score" }, 75] },
+				"then": [{ "set": { "var": "risk", "value": "low" } }]
+			},
+			{
+				"id": "amount-vs-income",
+				"title": "Borrow at most five times the yearly income",
+				"when": { ">": [{ "var": "values.amount" }, { "*": [{ "var": "vars.yearlyIncome" }, 5] }] },
+				"then": [{ "invalid": { "field": "amount", "code": "income", "message": "You can borrow at most five times your yearly income" } }]
+			},
+			{
+				"id": "start-not-past",
+				"title": "The loan cannot start in the past",
+				"when": { "<": [{ "daysBetween": [{ "var": "today" }, { "var": "values.startDate" }] }, 0] },
+				"then": [{ "invalid": { "field": "startDate", "code": "past", "message": "Choose today or a later date" } }]
+			},
+			{
+				"id": "start-far-ahead",
+				"title": "More than a year ahead is unusual",
+				"when": { ">": [{ "daysBetween": [{ "var": "today" }, { "var": "values.startDate" }] }, 365] },
+				"then": [{ "invalid": { "field": "startDate", "code": "far", "level": "warning", "message": "That is more than a year from now. Is the date right?" } }]
+			},
+			{
+				"id": "check-eligibility",
+				"title": "Ask the partner bank once CPR and amount are known",
+				"when": { "and": [{ "check": ["dk-cpr", { "var": "values.cpr" }] }, { "!!": { "var": "values.amount" } }] },
+				"then": [{ "fetch": { "service": "eligibility", "wait": true } }]
+			},
+			{
+				"id": "not-eligible",
+				"title": "The partner bank says no",
+				"when": { "===": [{ "var": "services.eligibility.eligible" }, false] },
+				"then": [{ "invalid": { "field": "amount", "code": "not-eligible", "message": "We cannot offer this loan right now" } }]
+			},
+			{
+				"id": "above-partner-limit",
+				"title": "The partner bank caps the amount",
+				"when": { ">": [{ "var": "values.amount" }, { "var": "services.eligibility.maxAmount" }] },
+				"then": [{ "invalid": { "field": "amount", "code": "partner-limit", "message": "Our partner bank can lend at most 300,000 DKK to you" } }]
+			},
+			{
+				"id": "co-applicant",
+				"title": "A co-applicant gets their own step",
+				"when": { "===": [{ "var": "values.coApplicant" }, true] },
+				"then": [{ "fetch": { "service": "partner", "after": "loan" } }]
+			}
+		]
+	}
+}
