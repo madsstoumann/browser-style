@@ -90,7 +90,7 @@ form-flow describes the funnel as `ff:track` events and hands each one to `flow.
 | --- | --- | --- |
 | `form.view` | The form is rendered | |
 | `form.start` | First input | `entry`, `context` (only the `track-context` keys) |
-| `step.view` | A step is shown | `from`, `via`: `start`, `next`, `back`, `goto`, `rule`, `submit`, `goTo()` |
+| `step.view` | A step is shown | `from`, `via`: `start`, `resume`, `next`, `back`, `goto`, `rule`, `submit`, `goTo()` |
 | `step.leave` | A step is left | `ms` on the step, `direction` |
 | `step.blocked` | Next or Send refused | `fields`, `codes` |
 | `field.error` | A field gets a message the user sees | `field`, `code`, `level`, `rule?` |
@@ -99,6 +99,7 @@ form-flow describes the funnel as `ff:track` events and hands each one to `flow.
 | `service.request` / `service.reply` / `service.error` | A fetch runs | `service`, `wait`, `ms`, `status` |
 | `form.submit` | Sent | `ms`, `jumps`, `patches`, `warnings?`, `choices?` |
 | `form.abandon` | The page is hidden or left before Send | `lastField`, `ms`, `choices?` |
+| `form.resume` | A saved session is reopened (instead of `form.view`; the run counts as started) | `age?` |
 
 **Ids, never values.** Events carry field, step and rule ids, issue codes and durations. The only values are `choices`: the chosen option of `select` fields marked `"track": true` in the form definition (the loan demo marks `purpose` and `term`). Never mark a field whose options are personal.
 

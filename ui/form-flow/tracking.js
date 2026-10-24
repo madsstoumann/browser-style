@@ -31,8 +31,10 @@ export class FlowTracking {
 	#shown = new Set();
 
 	/* send(event) dispatches and hands the event on; contextKeys are the context entries form.start may carry. */
-	constructor(send, { contextKeys = ['channel', 'campaign'], contextOf = () => ({}), propertyOf = () => null } = {}) {
+	/* resumed: { age } when a saved session is reopened; the run then opens with form.resume instead of form.view. */
+	constructor(send, { contextKeys = ['channel', 'campaign'], contextOf = () => ({}), propertyOf = () => null, resumed = null } = {}) {
 		this.#send = send;
+		this.resumed = resumed;
 		this.contextKeys = contextKeys;
 		this.contextOf = contextOf;
 		this.propertyOf = propertyOf;
@@ -74,8 +76,14 @@ export class FlowTracking {
 		if (!this.#viewed) {
 			this.#viewed = true;
 			this.#stepAt = Date.now();
-			this.#emit('form.view');
-			this.#emit('step.view', { from: null, via: 'start' });
+			if (this.resumed) {
+				this.#started = Date.now();
+				this.#emit('form.resume', { ...(this.resumed.age != null ? { age: this.resumed.age } : {}) });
+				this.#emit('step.view', { from: null, via: 'resume' });
+			} else {
+				this.#emit('form.view');
+				this.#emit('step.view', { from: null, via: 'start' });
+			}
 		}
 		effects.filter(effect => effect.type === 'track').forEach(effect => this.#emit(effect.event, { rule: effect.rule }));
 		const shown = new Set();

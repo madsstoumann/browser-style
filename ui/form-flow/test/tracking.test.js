@@ -89,3 +89,13 @@ test('combine hands every event to each tracker', () => {
 	assert.equal(a.length, 1);
 	assert.deepEqual(b, [{ type: 'x' }, 'flushed']);
 });
+
+test('a resumed run opens with form.resume and counts as started', () => {
+	const events = [];
+	const tracking = new FlowTracking(event => events.push(event), { resumed: { age: 26 } });
+	tracking.update(state(), 'b');
+	assert.deepEqual(events.map(event => [event.type, event.data]), [['form.resume', { age: 26 }], ['step.view', { from: null, via: 'resume' }]]);
+	tracking.input('plan');
+	assert.ok(!events.some(event => event.type === 'form.start'));
+	assert.equal(tracking.abandon(), true);
+});
