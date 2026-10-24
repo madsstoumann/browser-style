@@ -363,7 +363,7 @@ export default class FormFlow extends HTMLElement {
 	#applyExplain(state) {
 		const list = this.querySelector('[part="explain"] ul');
 		if (!list) return;
-		list.replaceChildren(...Object.entries(state.explain).map(([key, rules]) => h('li', {}, h('code', {}, key), ' ← ', rules.join(', '))));
+		list.replaceChildren(...Object.entries(state.explain).map(([key, rules]) => h('li', {}, h('code', {}, key), ' ← ', rules.map(rule => rule.replace(/:else$/, ' (else)')).join(', '))));
 		if (!list.children.length) list.append(h('li', {}, 'No rule has changed the form.'));
 	}
 

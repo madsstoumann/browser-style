@@ -49,8 +49,8 @@ function resolve(form, results, input) {
 		const priority = rule.priority ?? 0;
 		const wasMatched = previousMatched.has(rule.id);
 		const lists = [
-			{ actions: rule.then ?? [], active: matched, before: hasPrevious && wasMatched },
-			{ actions: rule.else ?? [], active: !matched, before: hasPrevious && !wasMatched }
+			{ actions: rule.then ?? [], active: matched, before: hasPrevious && wasMatched, source: rule.id },
+			{ actions: rule.else ?? [], active: !matched, before: hasPrevious && !wasMatched, source: `${rule.id}:else` }
 		];
 
 		for (const list of lists) {
@@ -71,15 +71,15 @@ function resolve(form, results, input) {
 
 				if (name in FLAG_ACTIONS) {
 					const [flag, flagValue] = FLAG_ACTIONS[name];
-					actionTargets(action).fields.forEach(field => push(fieldFlags, `${field}|${flag}`, { value: flagValue, priority, rule: rule.id }));
+					actionTargets(action).fields.forEach(field => push(fieldFlags, `${field}|${flag}`, { value: flagValue, priority, rule: list.source }));
 				} else if (name in STEP_ACTIONS) {
-					actionTargets(action).steps.forEach(step => push(stepFlags, step, { value: STEP_ACTIONS[name], priority, rule: rule.id }));
+					actionTargets(action).steps.forEach(step => push(stepFlags, step, { value: STEP_ACTIONS[name], priority, rule: list.source }));
 				} else if (name === 'options') {
-					push(optionRules, value.field, { only: value.only, exclude: value.exclude, rule: rule.id });
+					push(optionRules, value.field, { only: value.only, exclude: value.exclude, rule: list.source });
 				} else if (name === 'setValue') {
-					push(assigned, value.field, { value: value.value ?? null, priority, rule: rule.id });
+					push(assigned, value.field, { value: value.value ?? null, priority, rule: list.source });
 				} else if (name === 'clear') {
-					actionTargets(action).fields.forEach(field => push(assigned, field, { value: null, priority, rule: rule.id }));
+					actionTargets(action).fields.forEach(field => push(assigned, field, { value: null, priority, rule: list.source }));
 				} else if (name === 'fetch') {
 					effects.push({ type: 'fetch', rule: rule.id, service: value.service, into: value.into ?? null });
 				}

@@ -1,5 +1,5 @@
 {
-	"description": "Zip 2000 or below takes the else branch: Basic and Plus, no fetch",
+	"description": "Zip 2000 or below takes the else branch: Basic and Plus, no fetch, explained as senior-north:else",
 	"form": "../examples/insurance.form.json",
 	"rules": "../examples/insurance.rules.json",
 	"input": {
@@ -20,6 +20,11 @@
 				]
 			}
 		},
-		"effects": []
+		"effects": [],
+		"explain": {
+			"plan.options": [
+				"senior-north:else"
+			]
+		}
 	}
 }
