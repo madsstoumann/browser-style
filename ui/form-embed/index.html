@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Form Embed</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="color-scheme" content="light dark">
+	<meta name="description" content="Embed a published form by id on any site, in Shadow DOM or light DOM, themed with CSS custom properties.">
+	<!-- No @browser.style/base here on purpose: this page plays a client site with its own CSS. -->
+	<style>
+		body { font-family: Georgia, serif; line-height: 1.5; max-inline-size: 64ch; margin-inline: auto; padding: 2ch; }
+		input, select, button { border: 2px dashed hotpink; border-radius: 0; font: inherit; }
+		.demo-site { border-block-start: 1px solid; margin-block-start: 3ch; padding-block-start: 1ch; }
+		.demo-log { font-family: ui-monospace, monospace; font-size: smaller; max-block-size: 14em; overflow: auto; overflow-wrap: anywhere; }
+		#brand {
+			--form-accent: #0b6e4f;
+			--form-accent-text: #fff;
+			--form-radius: 0;
+			--form-font: system-ui, sans-serif;
+			--form-gap: 1rem;
+			&::part(input) { background: color-mix(in oklab, #0b6e4f 6%, Canvas); }
+			&::part(label) { text-transform: uppercase; letter-spacing: .04em; }
+			&::part(button-primary) { min-inline-size: 12ch; }
+		}
+		#light input { border: 1px solid #0b6e4f; }
+	</style>
+</head>
+<body>
+	<main>
+		<h1>UI: Components &gt; FormEmbed</h1>
+		<p>
+			<code>&lt;form-embed&gt;</code> loads a published form by id (a bundle of form, rules and the names of the
+			functions it needs) and renders it with <a href="../form-flow/">&lt;form-flow&gt;</a>. This page does not load
+			<code>@browser.style/base</code>: it plays a client site, with a serif font and hot-pink dashed inputs of its own.
+		</p>
+
+		<h2>Shadow DOM (default)</h2>
+		<p>The site's input rules stay out; the font and colour are inherited.</p>
+		<form-embed form-id="insurance" version="1"></form-embed>
+
+		<h2>Shadow DOM, branded</h2>
+		<p>The same mode, themed with <code>--form-*</code> custom properties and <code>::part()</code>. The loan form names
+			three host functions (<code>cprDate</code>, <code>dk-cpr</code>, <code>dk-cvr</code>), loaded from the registry.
+			Try CPR <code>070761-4285</code>.</p>
+		<form-embed id="brand" form-id="loan" label-submit="Apply"></form-embed>
+
+		<h2>Light DOM</h2>
+		<p>With <code>mode="light"</code> the form is in the page, so the site's own CSS applies (here, a green border
+			beats the form styles); the form styles stay inside <code>@scope (form-embed)</code> and do not touch the
+			inputs below.</p>
+		<form-embed id="light" form-id="insurance" mode="light"></form-embed>
+
+		<section class="demo-site">
+			<h2>The rest of the site</h2>
+			<label>Newsletter <input type="email" placeholder="you@example.com"></label>
+			<button type="button">Subscribe</button>
+		</section>
+
+		<h2>Events</h2>
+		<ol class="demo-log" id="log" reversed></ol>
+	</main>
+	<script type="module">
+		import './index.js';
+		const log = document.getElementById('log');
+		const write = text => log.prepend(Object.assign(document.createElement('li'), { textContent: text }));
+		for (const type of ['ff:ready', 'ff:step', 'ff:emit', 'ff:submit', 'ff:error']) {
+			document.addEventListener(type, event => {
+				const host = event.target.closest('form-embed');
+				const where = host?.id || host?.getAttribute('form-id');
+				const { detail } = event;
+				const summary = type === 'ff:submit' ? Object.keys(detail.values).join(', ')
+					: type === 'ff:error' ? String(detail.error ?? detail.errors?.[0]?.message)
+					: JSON.stringify(detail.data ?? detail.step ?? detail);
+				write(`${type} (${where}): ${summary}`);
+			});
+		}
+	</script>
+</body>
+</html>

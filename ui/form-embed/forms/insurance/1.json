@@ -1,0 +1,392 @@
+{
+	"id": "insurance",
+	"version": 1,
+	"runtime": "0.1.0",
+	"functions": [],
+	"form": {
+		"$schema": "../schemas/form-definition.schema.json",
+		"id": "form-insurance",
+		"model": "form-definition",
+		"meta": {
+			"locale": "en",
+			"status": "published"
+		},
+		"fields": {
+			"title": "Insurance quote",
+			"structure": {
+				"layout": [
+					{
+						"area": "main",
+						"type": "step",
+						"id": "you",
+						"name": "About you",
+						"fields": [
+							"ageGroup",
+							"email"
+						]
+					},
+					{
+						"area": "main",
+						"type": "step",
+						"id": "where",
+						"name": "Where you live",
+						"fields": [
+							"zip"
+						]
+					},
+					{
+						"area": "main",
+						"type": "step",
+						"id": "cover",
+						"name": "Your cover",
+						"fields": [
+							"plan",
+							"addOns"
+						],
+						"slots": [
+							"cover.extra"
+						]
+					},
+					{
+						"area": "main",
+						"type": "step",
+						"id": "review",
+						"name": "Review",
+						"fields": [
+							"consent"
+						]
+					}
+				]
+			},
+			"type": "object",
+			"properties": {
+				"ageGroup": {
+					"type": "select",
+					"title": "Age group",
+					"required": true,
+					"options": {
+						"choices": [
+							{
+								"value": 18,
+								"label": "18–29"
+							},
+							{
+								"value": 30,
+								"label": "30–49"
+							},
+							{
+								"value": 50,
+								"label": "50+"
+							}
+						]
+					}
+				},
+				"email": {
+					"type": "string",
+					"title": "Email",
+					"ui": {
+						"widget": "email"
+					}
+				},
+				"zip": {
+					"type": "string",
+					"title": "Zip code",
+					"description": "Four digits",
+					"required": true,
+					"validation": {
+						"pattern": "^[0-9]{4}$"
+					}
+				},
+				"plan": {
+					"type": "select",
+					"title": "Plan",
+					"required": true,
+					"ui": {
+						"widget": "radio"
+					},
+					"options": {
+						"choices": [
+							{
+								"value": "basic",
+								"label": "Basic"
+							},
+							{
+								"value": "plus",
+								"label": "Plus"
+							},
+							{
+								"value": "senior",
+								"label": "Senior"
+							}
+						]
+					}
+				},
+				"addOns": {
+					"type": "select",
+					"title": "Add-ons",
+					"options": {
+						"multiple": true,
+						"choices": [
+							{
+								"value": "glass",
+								"label": "Glass"
+							},
+							{
+								"value": "roadside",
+								"label": "Roadside help"
+							}
+						]
+					}
+				},
+				"consent": {
+					"type": "boolean",
+					"title": "I accept the terms",
+					"required": true,
+					"ui": {
+						"widget": "toggle"
+					}
+				}
+			}
+		}
+	},
+	"rules": {
+		"$schema": "../schemas/form-rules.schema.json",
+		"id": "insurance",
+		"model": "form-rules",
+		"meta": {
+			"locale": "en",
+			"status": "published"
+		},
+		"fields": {
+			"form": "form-insurance",
+			"version": 4,
+			"services": {
+				"offers": {
+					"url": "https://api.example.com/offers",
+					"send": [
+						"ageGroup",
+						"zip"
+					],
+					"timeoutMs": 3000
+				},
+				"health": {
+					"url": "/ui/form-rules/examples/api/health.json",
+					"method": "GET",
+					"send": [
+						"ageGroup"
+					],
+					"timeoutMs": 3000
+				}
+			},
+			"listen": [
+				{
+					"type": "pricing.updated",
+					"set": "facts.pricing"
+				},
+				{
+					"type": "rules.published",
+					"replace": "rules"
+				},
+				{
+					"type": "campaign.started",
+					"patch": {
+						"namespace": "campaign",
+						"into": "cover.extra"
+					}
+				}
+			],
+			"rules": [
+				{
+					"id": "senior-north",
+					"title": "Over 30, zip above 2000",
+					"priority": 10,
+					"when": {
+						"and": [
+							{
+								">=": [
+									{
+										"var": "values.ageGroup"
+									},
+									30
+								]
+							},
+							{
+								">": [
+									{
+										"num": {
+											"var": "values.zip"
+										}
+									},
+									2000
+								]
+							}
+						]
+					},
+					"then": [
+						{
+							"options": {
+								"field": "plan",
+								"only": [
+									"plus",
+									"senior"
+								]
+							}
+						},
+						{
+							"fetch": {
+								"service": "offers",
+								"into": "cover.extra"
+							}
+						},
+						{
+							"emit": {
+								"type": "quote.segment",
+								"data": {
+									"segment": "senior-north"
+								}
+							}
+						}
+					],
+					"else": [
+						{
+							"options": {
+								"field": "plan",
+								"only": [
+									"basic",
+									"plus"
+								]
+							}
+						}
+					]
+				},
+				{
+					"id": "young-basic-only",
+					"title": "Under 30 get Basic",
+					"when": {
+						"===": [
+							{
+								"var": "values.ageGroup"
+							},
+							18
+						]
+					},
+					"then": [
+						{
+							"options": {
+								"field": "plan",
+								"only": [
+									"basic"
+								]
+							}
+						},
+						{
+							"setValue": {
+								"field": "plan",
+								"value": "basic"
+							}
+						}
+					]
+				},
+				{
+					"id": "partner-skips-review",
+					"title": "Partners collect consent themselves",
+					"when": {
+						"===": [
+							{
+								"var": "context.channel"
+							},
+							"partner"
+						]
+					},
+					"then": [
+						{
+							"skip": "review"
+						}
+					]
+				},
+				{
+					"id": "roadside-region",
+					"title": "Roadside help only where pricing allows",
+					"when": {
+						"!": {
+							"in": [
+								{
+									"var": "values.zip"
+								},
+								{
+									"var": [
+										"facts.pricing.roadsideZips",
+										[]
+									]
+								}
+							]
+						}
+					},
+					"then": [
+						{
+							"options": {
+								"field": "addOns",
+								"exclude": [
+									"roadside"
+								]
+							}
+						}
+					]
+				},
+				{
+					"id": "email-needed",
+					"title": "Ask for email when add-ons are chosen",
+					"when": {
+						"!!": {
+							"var": "values.addOns"
+						}
+					},
+					"then": [
+						{
+							"require": "email"
+						}
+					]
+				},
+				{
+					"id": "senior-health",
+					"title": "Over 50s answer health questions",
+					"when": {
+						">=": [
+							{
+								"var": "values.ageGroup"
+							},
+							50
+						]
+					},
+					"then": [
+						{
+							"fetch": {
+								"service": "health",
+								"after": "cover"
+							}
+						}
+					]
+				},
+				{
+					"id": "outside-area",
+					"title": "Outside our area: straight to Review",
+					"when": {
+						">=": [
+							{
+								"num": {
+									"var": "values.zip"
+								}
+							},
+							9000
+						]
+					},
+					"then": [
+						{
+							"goto": "review"
+						}
+					]
+				}
+			]
+		}
+	}
+}
