@@ -1,0 +1,96 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "https://browser.style/ui/form-rules/schemas/form-definition.schema.json",
+	"title": "Form definition",
+	"description": "A multi-step form as a UCM-shaped schema: properties are UCM properties, steps are structure.layout entries of type step. Stored as UCF content of the form-definition model, or as the plain object in `fields`.",
+	"oneOf": [
+		{
+			"type": "object",
+			"required": ["id", "model", "fields"],
+			"properties": {
+				"$schema": { "type": "string" },
+				"id": { "type": "string" },
+				"model": { "const": "form-definition" },
+				"meta": { "type": "object" },
+				"fields": { "$ref": "#/definitions/form" }
+			}
+		},
+		{ "allOf": [{ "$ref": "#/definitions/form" }, { "required": ["id"] }] }
+	],
+	"definitions": {
+		"form": {
+			"type": "object",
+			"required": ["structure", "properties"],
+			"properties": {
+				"id": { "type": "string" },
+				"title": { "type": "string" },
+				"type": { "const": "object" },
+				"required": { "type": "array", "items": { "type": "string" } },
+				"structure": {
+					"type": "object",
+					"required": ["layout"],
+					"properties": {
+						"layout": { "type": "array", "items": { "$ref": "#/definitions/step" } }
+					}
+				},
+				"properties": { "type": "object", "additionalProperties": { "$ref": "#/definitions/property" } }
+			}
+		},
+		"step": {
+			"type": "object",
+			"required": ["type", "id", "fields"],
+			"properties": {
+				"area": { "type": "string" },
+				"type": { "const": "step" },
+				"id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+				"name": { "type": "string" },
+				"hidden": { "type": "boolean", "description": "Left out unless a rule includes it" },
+				"fields": { "type": "array", "items": { "type": "string" } },
+				"slots": { "type": "array", "items": { "type": "string" }, "description": "Places where patch fields may land" }
+			}
+		},
+		"property": {
+			"type": "object",
+			"required": ["type"],
+			"properties": {
+				"type": { "enum": ["string", "number", "integer", "boolean", "select"] },
+				"title": { "type": "string" },
+				"description": { "type": "string" },
+				"required": { "type": "boolean" },
+				"localized": { "type": "boolean" },
+				"default": {},
+				"validation": {
+					"type": "object",
+					"properties": {
+						"minimum": { "type": "number" },
+						"maximum": { "type": "number" },
+						"minLength": { "type": "integer" },
+						"maxLength": { "type": "integer" },
+						"pattern": { "type": "string" }
+					}
+				},
+				"options": {
+					"type": "object",
+					"properties": {
+						"multiple": { "type": "boolean" },
+						"choices": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"required": ["value", "label"],
+								"properties": { "value": { "type": ["string", "number", "boolean"] }, "label": { "type": "string" } }
+							}
+						}
+					}
+				},
+				"ui": {
+					"type": "object",
+					"properties": {
+						"widget": { "type": "string", "description": "email, tel, url, date, textarea, radio, toggle, …" },
+						"hidden": { "type": "boolean", "description": "Hidden unless a rule shows it" }
+					}
+				}
+			}
+		}
+	}
+}

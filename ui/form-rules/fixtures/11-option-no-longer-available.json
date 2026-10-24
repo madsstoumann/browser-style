@@ -1,0 +1,30 @@
+{
+	"description": "A chosen plan that a rule has removed is reported and not submitted",
+	"form": "../examples/insurance.form.json",
+	"rules": "../examples/insurance.rules.json",
+	"input": {
+		"values": {
+			"ageGroup": 30,
+			"zip": "1500",
+			"plan": "senior",
+			"consent": true
+		}
+	},
+	"expect": {
+		"values": {
+			"ageGroup": 30,
+			"zip": "1500",
+			"consent": true
+		},
+		"issues": [
+			{
+				"field": "plan",
+				"code": "option-unavailable"
+			},
+			{
+				"field": "plan",
+				"code": "required"
+			}
+		]
+	}
+}

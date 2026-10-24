@@ -1,0 +1,32 @@
+{
+	"description": "Facts written by a pricing event unlock Roadside help for listed zip codes",
+	"form": "../examples/insurance.form.json",
+	"rules": "../examples/insurance.rules.json",
+	"input": {
+		"values": {
+			"ageGroup": 30,
+			"zip": "2100"
+		},
+		"facts": {
+			"pricing": {
+				"roadsideZips": [
+					"2100",
+					"2200"
+				]
+			}
+		}
+	},
+	"expect": {
+		"matched": [
+			"senior-north"
+		],
+		"fields": {
+			"addOns": {
+				"options": [
+					"glass",
+					"roadside"
+				]
+			}
+		}
+	}
+}

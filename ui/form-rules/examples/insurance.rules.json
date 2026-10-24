@@ -1,0 +1,66 @@
+{
+	"$schema": "../schemas/form-rules.schema.json",
+	"id": "insurance",
+	"model": "form-rules",
+	"meta": { "locale": "en", "status": "published" },
+	"fields": {
+		"form": "form-insurance",
+		"version": 3,
+		"services": {
+			"offers": { "url": "https://api.example.com/offers", "send": ["ageGroup", "zip"], "timeoutMs": 3000 }
+		},
+		"listen": [
+			{ "type": "pricing.updated", "set": "facts.pricing" },
+			{ "type": "rules.published", "replace": "rules" },
+			{ "type": "campaign.started", "patch": { "namespace": "campaign", "into": "cover.extra" } }
+		],
+		"rules": [
+			{
+				"id": "senior-north",
+				"title": "Over 30, zip above 2000",
+				"priority": 10,
+				"when": { "and": [
+					{ ">=": [{ "var": "values.ageGroup" }, 30] },
+					{ ">": [{ "num": { "var": "values.zip" } }, 2000] }
+				] },
+				"then": [
+					{ "options": { "field": "plan", "only": ["plus", "senior"] } },
+					{ "fetch": { "service": "offers", "into": "cover.extra" } },
+					{ "emit": { "type": "quote.segment", "data": { "segment": "senior-north" } } }
+				],
+				"else": [
+					{ "options": { "field": "plan", "only": ["basic", "plus"] } }
+				]
+			},
+			{
+				"id": "young-basic-only",
+				"title": "Under 30 get Basic",
+				"when": { "===": [{ "var": "values.ageGroup" }, 18] },
+				"then": [
+					{ "options": { "field": "plan", "only": ["basic"] } },
+					{ "setValue": { "field": "plan", "value": "basic" } }
+				]
+			},
+			{
+				"id": "partner-skips-review",
+				"title": "Partners collect consent themselves",
+				"when": { "===": [{ "var": "context.channel" }, "partner"] },
+				"then": [{ "skip": "review" }]
+			},
+			{
+				"id": "roadside-region",
+				"title": "Roadside help only where pricing allows",
+				"when": { "!": { "in": [{ "var": "values.zip" }, { "var": ["facts.pricing.roadsideZips", []] }] } },
+				"then": [
+					{ "options": { "field": "addOns", "exclude": ["roadside"] } }
+				]
+			},
+			{
+				"id": "email-needed",
+				"title": "Ask for email when add-ons are chosen",
+				"when": { "!!": { "var": "values.addOns" } },
+				"then": [{ "require": "email" }]
+			}
+		]
+	}
+}

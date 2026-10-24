@@ -1,0 +1,28 @@
+{
+	"description": "Missing required answers are reported as issues",
+	"form": "../examples/insurance.form.json",
+	"rules": "../examples/insurance.rules.json",
+	"input": {
+		"values": {}
+	},
+	"expect": {
+		"issues": [
+			{
+				"field": "ageGroup",
+				"code": "required"
+			},
+			{
+				"field": "zip",
+				"code": "required"
+			},
+			{
+				"field": "plan",
+				"code": "required"
+			},
+			{
+				"field": "consent",
+				"code": "required"
+			}
+		]
+	}
+}

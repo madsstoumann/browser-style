@@ -1,0 +1,42 @@
+{
+  "name": "@browser.style/form-rules",
+  "version": "0.1.0",
+  "description": "A pure, JSON-defined rule engine for multi-step forms: JSON Logic conditions, a closed set of actions, remote patches and events. Same result in the browser and in Node.",
+  "type": "module",
+  "module": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./schemas/*": "./schemas/*"
+  },
+  "files": [
+    "index.js",
+    "modules/*.js",
+    "schemas/*.json"
+  ],
+  "scripts": {
+    "test": "node --test test/*.test.js"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "browser.style",
+    "form",
+    "rules",
+    "json-logic",
+    "multi-step",
+    "json-schema"
+  ],
+  "author": "Mads Stoumann",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/form-rules"
+  },
+  "bugs": {
+    "url": "https://github.com/madsstoumann/browser-style/issues"
+  },
+  "homepage": "https://browser.style/ui/form-rules"
+}

@@ -1,0 +1,30 @@
+{
+	"description": "When senior-north stops matching, the patch's field and rules go away and its value is dropped",
+	"form": "../examples/insurance.form.json",
+	"rules": "../examples/insurance.rules.json",
+	"patches": [
+		{
+			"owner": "senior-north",
+			"patch": "../examples/offers.patch.json"
+		}
+	],
+	"input": {
+		"values": {
+			"ageGroup": 18,
+			"zip": "2100",
+			"offers.travelCover": true
+		}
+	},
+	"expect": {
+		"patches": [],
+		"matched": [
+			"young-basic-only",
+			"roadside-region"
+		],
+		"values": {
+			"ageGroup": 18,
+			"zip": "2100",
+			"plan": "basic"
+		}
+	}
+}

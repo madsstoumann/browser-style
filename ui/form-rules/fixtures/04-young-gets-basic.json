@@ -1,0 +1,30 @@
+{
+	"description": "Under 30: Plan narrowed to Basic and set to it",
+	"form": "../examples/insurance.form.json",
+	"rules": "../examples/insurance.rules.json",
+	"input": {
+		"values": {
+			"ageGroup": 18,
+			"zip": "1500"
+		}
+	},
+	"expect": {
+		"fields": {
+			"plan": {
+				"options": [
+					"basic"
+				]
+			}
+		},
+		"values": {
+			"ageGroup": 18,
+			"zip": "1500",
+			"plan": "basic"
+		},
+		"explain": {
+			"plan.value": [
+				"young-basic-only"
+			]
+		}
+	}
+}

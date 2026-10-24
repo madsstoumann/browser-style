@@ -1,0 +1,24 @@
+{
+	"description": "A zip that is not a number never matches, it does not throw",
+	"form": "../examples/insurance.form.json",
+	"rules": "../examples/insurance.rules.json",
+	"input": {
+		"values": {
+			"ageGroup": 50,
+			"zip": "abcd"
+		}
+	},
+	"expect": {
+		"matched": [
+			"roadside-region"
+		],
+		"fields": {
+			"plan": {
+				"options": [
+					"basic",
+					"plus"
+				]
+			}
+		}
+	}
+}
