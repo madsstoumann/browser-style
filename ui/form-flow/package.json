@@ -1,0 +1,43 @@
+{
+  "name": "@browser.style/form-flow",
+  "version": "0.1.0",
+  "description": "A multi-step form web component driven by a JSON form definition and a @browser.style/form-rules rule set. Native fields, styled by @browser.style/base.",
+  "type": "module",
+  "module": "index.js",
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "style": "./index.css"
+    },
+    "./style": "./index.css"
+  },
+  "files": [
+    "index.js",
+    "index.css"
+  ],
+  "dependencies": {
+    "@browser.style/form-rules": "^0.1.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "browser.style",
+    "web-components",
+    "form",
+    "multi-step",
+    "rules"
+  ],
+  "author": "Mads Stoumann",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/form-flow"
+  },
+  "bugs": {
+    "url": "https://github.com/madsstoumann/browser-style/issues"
+  },
+  "homepage": "https://browser.style/ui/form-flow"
+}

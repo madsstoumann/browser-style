@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Form Flow</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="color-scheme" content="light dark">
+	<meta name="description" content="A multi-step form driven by a JSON form definition and a JSON rule set.">
+	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="../step/ui-step.css">
+	<link rel="stylesheet" href="index.css">
+	<style>
+		body { max-inline-size: 60ch; margin-inline: auto; padding: 2ch; }
+		.demo-controls { display: flex; flex-wrap: wrap; gap: 1ch; align-items: end; margin-block: 2ch; }
+		.demo-log { font-size: smaller; max-block-size: 16em; overflow: auto; overflow-wrap: anywhere; }
+	</style>
+</head>
+<body>
+	<h1>UI: Components &gt; FormFlow</h1>
+	<p>
+		<code>&lt;form-flow&gt;</code> renders a multi-step form from a <a href="../form-rules/examples/insurance.form.json">form definition</a>
+		and a <a href="../form-rules/examples/insurance.rules.json">rule set</a>, both JSON (UCF content).
+		Choose age group <em>30–49</em> and a zip code above <em>2000</em>: step 3 then offers Plus and Senior, and a mocked
+		<em>offers</em> service adds <em>Travel cover</em>.
+	</p>
+
+	<form-flow
+		form="../form-rules/examples/insurance.form.json"
+		rules="../form-rules/examples/insurance.rules.json"
+		explain>
+	</form-flow>
+
+	<h2>Context and events</h2>
+	<div class="demo-controls">
+		<label>Channel
+			<select id="channel">
+				<option value="web">Web</option>
+				<option value="partner">Partner (skips Review)</option>
+			</select>
+		</label>
+		<button type="button" id="pricing">Send pricing.updated (roadside in 2100)</button>
+	</div>
+
+	<h3>Log</h3>
+	<ol class="demo-log" id="log" reversed></ol>
+
+	<script type="module">
+		import './index.js';
+
+		const flow = document.querySelector('form-flow');
+		const log = document.getElementById('log');
+		const write = (type, detail) => {
+			const item = document.createElement('li');
+			item.textContent = `${type} ${JSON.stringify(detail)}`;
+			log.prepend(item);
+		};
+
+		/* No backend: the offers service is mocked with the example patch. */
+		flow.fetcher = async (effect) => {
+			write('fetch', { service: effect.service, send: effect.send });
+			const patch = await (await fetch('../form-rules/examples/offers.patch.json')).json();
+			return { ...patch, expires: new Date(Date.now() + 36e5).toISOString() };
+		};
+
+		flow.addEventListener('ff:emit', event => write('ff:emit', event.detail));
+		flow.addEventListener('ff:step', event => write('ff:step', event.detail));
+		flow.addEventListener('ff:error', event => write('ff:error', { message: event.detail.error?.message, errors: event.detail.errors }));
+		flow.addEventListener('ff:submit', event => write('ff:submit', event.detail.values));
+
+		document.getElementById('channel').addEventListener('change', event => {
+			flow.context = { channel: event.target.value };
+		});
+
+		let sequence = 0;
+		document.getElementById('pricing').addEventListener('click', () => {
+			sequence++;
+			const result = flow.receive({
+				id: `pricing-${sequence}`, source: 'pricing', sequence, type: 'pricing.updated',
+				data: { roadsideZips: ['2100'] }
+			});
+			write('receive', { type: 'pricing.updated', changed: result.changed, reason: result.reason });
+		});
+	</script>
+</body>
+</html>
