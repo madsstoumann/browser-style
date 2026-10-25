@@ -1,0 +1,107 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "https://browser.style/ui/form-rules/schemas/form-types.schema.json",
+	"title": "Field type package",
+	"description": "Field types as data: what an editor offers when adding a field, and the property a new field starts from. The core package is types/core.json; other packages (dk, banking, …) are installed alongside it and prefix their kinds with the package name.",
+	"type": "object",
+	"required": [
+		"package",
+		"types"
+	],
+	"properties": {
+		"$schema": {
+			"type": "string"
+		},
+		"package": {
+			"type": "string",
+			"pattern": "^[a-z0-9][a-z0-9-]*$"
+		},
+		"title": {
+			"type": "string"
+		},
+		"description": {
+			"type": "string"
+		},
+		"version": {
+			"type": "string"
+		},
+		"functions": {
+			"type": "string",
+			"description": "A module, relative to this file, whose default export is { name: fn }: the checks and operators the types use"
+		},
+		"types": {
+			"type": "array",
+			"items": {
+				"$ref": "#/definitions/type"
+			}
+		}
+	},
+	"definitions": {
+		"type": {
+			"type": "object",
+			"required": [
+				"kind",
+				"title",
+				"template"
+			],
+			"properties": {
+				"kind": {
+					"type": "string",
+					"description": "Unique id; \"<package>/<name>\" outside core"
+				},
+				"title": {
+					"type": "string"
+				},
+				"description": {
+					"type": "string"
+				},
+				"group": {
+					"type": "string",
+					"description": "Where the editor lists it: Answers, Choices, Contact, Content, Advanced, or a group of the package's own"
+				},
+				"glyph": {
+					"type": "string",
+					"description": "A short badge for lists"
+				},
+				"keywords": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					},
+					"description": "Extra words the editor's search finds it by"
+				},
+				"privacy": {
+					"enum": [
+						"none",
+						"personal",
+						"special"
+					],
+					"description": "The privacy a new field of this type starts with"
+				},
+				"template": {
+					"$ref": "form-definition.schema.json#/definitions/property"
+				},
+				"settings": {
+					"type": "array",
+					"items": {
+						"enum": [
+							"choices",
+							"multiple",
+							"range",
+							"length",
+							"pattern",
+							"checks",
+							"placeholder",
+							"default",
+							"content",
+							"consent",
+							"files",
+							"source"
+						]
+					},
+					"description": "Which settings the editor's inspector shows besides label, id, help, required, hidden, privacy and step"
+				}
+			}
+		}
+	}
+}

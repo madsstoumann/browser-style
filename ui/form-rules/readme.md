@@ -73,6 +73,12 @@ Actions: `show`, `hide`, `enable`, `disable`, `require`, `optional`, `setValue`,
 - **Conflicts.** Higher `priority` wins; on a tie the restrictive value wins (hide, disable, required). Option lists intersect.
 - **Hidden values are absent.** A hidden field or skipped step reads as `null` in conditions and is not submitted.
 
+## Field types
+
+Field types are data: `types/core.json` is the core package (text, choices, email, phone, consent, text block, hidden value, file upload, …), and country or domain packages such as `ui/form-types/dk` add their own, with their checks. `defineTypes`, `loadTypes`, `loadPackages`, `typeOf`, `fieldFromType`, `changeType`, `searchTypes` and `groupTypes` read them; all are pure. Schema: `schemas/form-types.schema.json`. The [forms guide](../../docs/forms.md#field-types-and-packages) explains the format.
+
+Property types beyond the plain inputs: `content` (a text block, never submitted), `file` (value `[{ name, size, type }]`, checked against `accept`, `maxSize`, `maxFiles`, never saved in a draft), a `boolean` with `ui.widget: "consent"` (`consentRecords(form, values)` gives what each ticked box said), and any field may prefill `from` `context.*` / `facts.*` or its `default`. A required boolean must be `true`.
+
 ## Variables
 
 A rule set may declare `variables`, which conditions read as `vars.<name>`:
@@ -90,7 +96,7 @@ A **computed** variable is an expression over the values (and earlier variables)
 
 - **Field constraints** in the form definition (`minimum`, `maximum`, `minLength`, `maxLength`, `pattern`) are checked by the engine too, not only by the browser, with `validation.messages` overriding the default text per code.
 - **Rules across fields**: `{ "invalid": { "field": "amount", "message": "…", "code": "income", "level": "warning"? } }` in any rule. The condition can read any field, variable or service answer.
-- **Functions** are the plug-in point. The engine has no domain checks built in: the host passes `functions` (`{ name: fn }`) to `evaluate()` and `validate()`, and the JSON uses them by name: as an operator (`{ "cprDate": [{ "var": "values.cpr" }] }`), as a field check (`"validation": { "check": "dk-cpr" }`: return `null` to pass or `{ code, message, level? }`), or in a condition (`{ "check": ["dk-cpr", { "var": "values.cpr" }] }`). `validate()` reports names no function provides. `examples/functions/checks.js` shows CPR, CVR, Luhn and IBAN checks.
+- **Functions** are the plug-in point. The engine has no domain checks built in: the host passes `functions` (`{ name: fn }`) to `evaluate()` and `validate()`, and the JSON uses them by name: as an operator (`{ "cprDate": [{ "var": "values.cpr" }] }`), as a field check (`"validation": { "check": "dk-cpr" }`: return `null` to pass or `{ code, message, level? }`), or in a condition (`{ "check": ["dk-cpr", { "var": "values.cpr" }] }`). `validate()` reports names no function provides. The Danish checks are in `ui/form-types/dk/functions.js`, IBAN and Luhn in `ui/form-types/banking/functions.js`.
 - **Dates** are ISO strings and "today" is an input (`{ "var": "today" }`), never a clock: `yearsBetween`, `daysBetween` and `round` are built in.
 - **Backend checks**: a patch may carry `data`, which conditions read as `services.<service>.…` while it is mounted, so a service can approve, refuse or cap (`examples/api/eligibility.json`). `{ "fetch": { "service": "eligibility", "wait": true } }` marks the request as one the user must wait for; `into` and `after` are optional when the reply is only data.
 

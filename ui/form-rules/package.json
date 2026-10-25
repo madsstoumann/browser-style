@@ -6,12 +6,14 @@
   "module": "index.js",
   "exports": {
     ".": "./index.js",
-    "./schemas/*": "./schemas/*"
+    "./schemas/*": "./schemas/*",
+    "./types/*": "./types/*"
   },
   "files": [
     "index.js",
     "modules/*.js",
-    "schemas/*.json"
+    "schemas/*.json",
+    "types/*.json"
   ],
   "scripts": {
     "test": "node --test test/*.test.js"

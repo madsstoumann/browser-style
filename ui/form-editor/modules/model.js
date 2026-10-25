@@ -60,11 +60,13 @@ export function addStep(form, name) {
 	return { form: next, id };
 }
 
+/* `type` is a base type ('string', 'select', …) or a whole property, such as fieldFromType() makes. */
 export function addField(form, stepId, title, type = 'string') {
 	const next = clone(form);
-	const id = fieldId(title, fieldIds(next));
-	next.fields.properties[id] = { type, title };
-	if (type === 'select') next.fields.properties[id].options = { choices: [{ value: 'a', label: 'Option A' }, { value: 'b', label: 'Option B' }] };
+	const property = typeof type === 'object' ? clone(type) : { type };
+	const id = fieldId(title || property.title || property.kind?.split('/').pop() || property.type, fieldIds(next));
+	next.fields.properties[id] = { ...property, title: title ?? property.title };
+	if (property.type === 'select' && !property.options) next.fields.properties[id].options = { choices: [{ value: 'a', label: 'Option A' }, { value: 'b', label: 'Option B' }] };
 	stepsOf(next).find(step => step.id === stepId).fields.push(id);
 	return { form: next, id };
 }

@@ -55,7 +55,22 @@
 			"type": "object",
 			"required": ["type"],
 			"properties": {
-				"type": { "enum": ["string", "number", "integer", "boolean", "select"] },
+				"type": { "enum": ["string", "number", "integer", "boolean", "select", "content", "file"], "description": "content: a text block with no value (never submitted); file: uploads, whose value is [{ name, size, type }] and which are never saved in a draft" },
+				"kind": { "type": "string", "description": "The field type from an installed type package (types/core.json, dk/cpr, …) the field was made from; tells an editor which settings to show. Optional: typeOf() infers it from type and ui.widget" },
+				"content": { "type": "string", "description": "Text block only: the text, plain; a blank line starts a new paragraph" },
+				"from": { "type": "string", "pattern": "^(context|facts)\\.", "description": "Prefill from context.* or facts.* while the field has no answer (for example a hidden campaign value)" },
+				"consent": {
+					"type": "object",
+					"description": "Consent fields (ui.widget consent) only: the wording and the notice it refers to, recorded with the answer",
+					"required": ["text"],
+					"properties": {
+						"text": { "type": "string" },
+						"notice": {
+							"type": "object",
+							"properties": { "label": { "type": "string" }, "url": { "type": "string" }, "version": { "type": "string" } }
+						}
+					}
+				},
 				"title": { "type": "string" },
 				"description": { "type": "string" },
 				"required": { "type": "boolean" },
@@ -74,6 +89,9 @@
 						"minLength": { "type": "integer" },
 						"maxLength": { "type": "integer" },
 						"pattern": { "type": "string" },
+						"accept": { "type": "string", "description": "File fields: allowed types, as the accept attribute (.pdf,image/*)" },
+						"maxSize": { "type": "integer", "minimum": 1, "description": "File fields: largest file in bytes" },
+						"maxFiles": { "type": "integer", "minimum": 1, "description": "File fields: how many files (1 by default)" },
 						"check": {
 							"description": "Names of host functions (evaluate input.functions) that check the value: null passes, { code, message, level? } fails",
 							"oneOf": [{ "type": "string" }, { "type": "array", "items": { "type": "string" } }]
@@ -102,7 +120,8 @@
 				"ui": {
 					"type": "object",
 					"properties": {
-						"widget": { "type": "string", "description": "email, tel, url, date, textarea, radio, toggle, …" },
+						"widget": { "type": "string", "description": "email, tel, url, date, time, textarea, radio, consent, hidden, …" },
+						"placeholder": { "type": "string" },
 						"hidden": { "type": "boolean", "description": "Hidden unless a rule shows it" }
 					}
 				}

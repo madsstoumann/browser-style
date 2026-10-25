@@ -1,0 +1,23 @@
+{
+	"description": "A file field's value is file metadata, checked against accept, maxSize and maxFiles; a rule can require it. A hidden value without context falls back to its default",
+	"form": "../examples/contact.form.json",
+	"rules": "../examples/contact.rules.json",
+	"input": {
+		"values": {
+			"name": "Ada", "email": "ada@example.com", "topic": "complaint", "message": "The parcel arrived broken", "contactConsent": true,
+			"attachment": [{ "name": "photo.heic", "size": 6000000, "type": "image/heic" }, { "name": "notes.docx", "size": 1000, "type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document" }]
+		}
+	},
+	"expect": {
+		"values": {
+			"name": "Ada", "email": "ada@example.com", "topic": "complaint", "message": "The parcel arrived broken", "contactConsent": true, "campaign": "direct",
+			"attachment": [{ "name": "photo.heic", "size": 6000000, "type": "image/heic" }, { "name": "notes.docx", "size": 1000, "type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document" }]
+		},
+		"matched": ["complaint-attachment"],
+		"fields": { "attachment": { "required": true } },
+		"issues": [
+			{ "field": "attachment", "code": "maxSize", "message": "Each file must be at most 5 MB" },
+			{ "field": "attachment", "code": "accept", "message": "Allowed file types: .pdf,image/*" }
+		]
+	}
+}

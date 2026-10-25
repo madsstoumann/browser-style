@@ -61,7 +61,7 @@ function conditionRow(editor, node, onchange, onremove) {
 	const { form } = editor;
 	const property = propertyOf(form, node.path, editor.rules);
 	const variables = Object.entries(editor.rules.fields.variables ?? {}).map(([name, v]) => [`vars.${name}`, `${v.title ?? name} (variable)`]);
-	const fields = [...stepsOf(form).flatMap(step => step.fields.map(id => [`values.${id}`, `${form.fields.properties[id]?.title ?? id} (${step.name})`])), ...variables];
+	const fields = [...stepsOf(form).flatMap(step => step.fields.filter(id => form.fields.properties[id]?.type !== 'content').map(id => [`values.${id}`, `${form.fields.properties[id]?.title ?? id} (${step.name})`])), ...variables];
 	const known = fields.some(([path]) => path === node.path);
 	const fieldOptions = [...fields, ['other', 'Context, fact or service…']];
 	const ops = operatorsFor(property);

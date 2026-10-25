@@ -28,6 +28,17 @@
 			padding: 0;
 			& > legend { margin-block-end: var(--label-gap, .25rem); padding: 0; }
 		}
+		& [part~=content] {
+			display: grid;
+			gap: var(--spacing-xs, .25rem);
+			& p { margin: 0; }
+		}
+		& [part~=consent] {
+			align-items: start;
+			display: flex;
+			gap: var(--spacing-sm, .5rem);
+			& > input { flex-shrink: 0; margin-block-start: .2em; }
+		}
 		& [data-slot] {
 			display: grid;
 			gap: var(--fieldset-gap, .5rem);

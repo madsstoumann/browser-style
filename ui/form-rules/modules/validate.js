@@ -25,7 +25,11 @@ function checksOf(logic, found = []) {
 	return found;
 }
 
-export function validate(formDefinition, ruleSetDocument, { functions = {} } = {}) {
+const PROPERTY_TYPES = ['string', 'number', 'integer', 'boolean', 'select', 'content', 'file'];
+const PREFILL_ROOTS = ['context', 'facts'];
+
+/* `types`: a registry from defineTypes()/loadTypes(); when given, every `kind` must be one of its types. */
+export function validate(formDefinition, ruleSetDocument, { functions = {}, types = null } = {}) {
 	const errors = [];
 	const fail = (code, message, path) => errors.push({ code, message, path });
 	const rawForm = unwrap(formDefinition);
@@ -53,6 +57,19 @@ export function validate(formDefinition, ruleSetDocument, { functions = {} } = {
 	for (const [id, property] of Object.entries(rawForm.properties ?? {})) {
 		if (property?.track !== undefined && (property.track !== true || property.type !== 'select')) fail('track', `Field "${id}" can only send its value to analytics as a choice field (select), with "track": true`, `properties.${id}.track`);
 		else if (property?.track && ['personal', 'special'].includes(property.privacy)) fail('track', `Field "${id}" is ${property.privacy} data, so its value may not be sent to analytics`, `properties.${id}.track`);
+		const at = `properties.${id}`;
+		if (!PROPERTY_TYPES.includes(property?.type)) fail('type', `Field "${id}" has the type "${property?.type}"; use one of ${PROPERTY_TYPES.join(', ')}`, `${at}.type`);
+		if (property?.kind !== undefined && types && !types.kinds[property.kind]) fail('kind', `Field "${id}" is a "${property.kind}", which no installed type package provides`, `${at}.kind`);
+		if (property?.from !== undefined && !(typeof property.from === 'string' && PREFILL_ROOTS.includes(property.from.split('.')[0]) && property.from.includes('.'))) fail('from', `Field "${id}" can only be prefilled from context.* or facts.*`, `${at}.from`);
+		if (property?.type === 'content') {
+			if (property.required) fail('content', `"${id}" is a text block, so it cannot be required`, `${at}.required`);
+			if (property.validation) fail('content', `"${id}" is a text block, so it has nothing to validate`, `${at}.validation`);
+		}
+		if (property?.ui?.widget === 'consent') {
+			if (property.type !== 'boolean') fail('consent', `Consent field "${id}" must be a boolean`, `${at}.type`);
+			if (typeof property.consent?.text !== 'string' || !property.consent.text.trim()) fail('consent', `Consent field "${id}" needs the wording the person agrees to (consent.text)`, `${at}.consent.text`);
+		}
+		if (property?.type === 'file' && property.default !== undefined) fail('file', `File field "${id}" cannot have a default`, `${at}.default`);
 		[].concat(property?.validation?.check ?? []).forEach(name => {
 			if (typeof functions[name] !== 'function') fail('function', `Field "${id}" uses the check "${name}", which no function provides`, `properties.${id}.validation.check`);
 		});
@@ -166,6 +183,10 @@ export function validate(formDefinition, ruleSetDocument, { functions = {} } = {
 				else form.steps.find(step => step.id === id).fields.forEach(field => ruleWrites.add(field));
 			});
 			if (name === 'setValue' || name === 'clear') fields.forEach(id => assignedFields.add(id));
+			if (['setValue', 'clear', 'require'].includes(name)) fields.forEach(id => {
+				const type = form.fields.get(id)?.property?.type;
+				if (type === 'content' || (type === 'file' && name === 'setValue')) fail('action', `${name} cannot target "${id}", a ${type === 'content' ? 'text block' : 'file field'}`, at);
+			});
 			if (name === 'options') {
 				const choices = form.fields.get(value?.field)?.choices;
 				if (form.fields.has(value?.field) && !choices) fail('options', `Field "${value.field}" has no choices to narrow`, at);

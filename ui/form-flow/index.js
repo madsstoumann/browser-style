@@ -4,7 +4,7 @@
  * Fields are plain native controls in light DOM, so @browser.style/base form.css styles them.
  * Every input re-evaluates the rules; the engine's effects (fetch, emit) are carried out here.
  */
-import { evaluate, expirePatches, handleEvent, merge, normalizeForm, normalizeRuleSet, privacyOf } from '../form-rules/index.js';
+import { consentRecords, evaluate, expirePatches, handleEvent, merge, normalizeForm, normalizeRuleSet, privacyOf } from '../form-rules/index.js';
 import { FlowTracking, validityCode } from './tracking.js';
 
 const INPUT_TYPES = ['color', 'date', 'datetime-local', 'email', 'month', 'password', 'search', 'tel', 'time', 'url', 'week'];
@@ -50,6 +50,7 @@ export default class FormFlow extends HTMLElement {
 	#current = null;
 	#previous;
 	#requests = new Map();
+	#files = new Map();
 	#element;
 
 	/* Replace to fetch patches another way (a proxy, a mock): async (effect, service) => patch, or undefined for the built-in request */
@@ -106,6 +107,7 @@ export default class FormFlow extends HTMLElement {
 		this.#current = step;
 		this.#previous = previous?.matched;
 		this.#requests.clear();
+		this.#files.clear();
 		if (!keepTracking || !this.#tracking) this.#tracking = new FlowTracking(event => this.#track(event), {
 			contextKeys: (this.getAttribute('track-context') ?? 'channel campaign').split(/\s+/).filter(Boolean),
 			contextOf: () => this.#context,
@@ -211,10 +213,39 @@ export default class FormFlow extends HTMLElement {
 	}
 
 	#renderField(id, property = {}) {
-		const value = this.#values[id];
+		const value = Object.hasOwn(this.#values, id) ? this.#values[id] : property.default;
 		const widget = property.ui?.widget;
+		const placeholder = property.ui?.placeholder;
 		const validation = property.validation ?? {};
 		const choices = choicesOf(property);
+
+		/* A text block: no control and no value. Blank lines start new paragraphs. */
+		if (property.type === 'content') {
+			return h('div', { 'data-field': id, part: 'field content' },
+				property.title ? h('strong', {}, property.title) : null,
+				String(property.content ?? '').split(/\n\s*\n/).map(text => text.trim()).filter(Boolean).map(text => h('p', {}, text)));
+		}
+		/* Sent with the answers, never shown. The engine fills it from `from` or `default`. */
+		if (widget === 'hidden') {
+			return h('div', { 'data-field': id, part: 'field hidden-value', 'data-hidden-value': true, hidden: true },
+				h('input', { type: 'hidden', name: id, value: value ?? '' }));
+		}
+		/* The wording is the label, so what is recorded is what the person saw. */
+		if (widget === 'consent') {
+			const notice = property.consent?.notice;
+			return h('label', { 'data-field': id, part: 'field consent' },
+				h('input', { type: 'checkbox', name: id, checked: value === true }),
+				h('span', {},
+					property.consent?.text ?? property.title ?? id,
+					notice?.url ? [' ', h('a', { href: notice.url, target: '_blank', rel: 'noopener' }, notice.label ?? 'Privacy notice')] : null,
+					h('abbr', { title: 'Required', hidden: true }, '*'),
+					property.description ? h('small', {}, property.description) : null));
+		}
+		/* Files stay in the browser until the final submit; the engine only sees { name, size, type }. */
+		if (property.type === 'file') {
+			const control = h('input', { type: 'file', name: id, accept: validation.accept, multiple: (validation.maxFiles ?? 1) > 1 });
+			return h('label', { 'data-field': id, part: 'field file' }, this.#labelText(id, property), control);
+		}
 
 		if (property.type === 'select' && (property.options?.multiple || widget === 'radio')) {
 			const multiple = property.options?.multiple === true;
@@ -244,10 +275,10 @@ export default class FormFlow extends HTMLElement {
 				step: property.type === 'integer' ? '1' : 'any'
 			});
 		} else if (widget === 'textarea') {
-			control = h('textarea', { name: id, minLength: validation.minLength, maxLength: validation.maxLength }, value ?? '');
+			control = h('textarea', { name: id, placeholder, minLength: validation.minLength, maxLength: validation.maxLength }, value ?? '');
 		} else {
 			control = h('input', {
-				type: INPUT_TYPES.includes(widget) ? widget : 'text', name: id, value: value ?? '',
+				type: INPUT_TYPES.includes(widget) ? widget : 'text', name: id, value: value ?? '', placeholder,
 				pattern: validation.pattern?.replace(/^\^|\$$/g, ''),
 				minLength: validation.minLength, maxLength: validation.maxLength
 			});
@@ -309,6 +340,11 @@ export default class FormFlow extends HTMLElement {
 		if (!element) return undefined;
 		const controls = [...element.querySelectorAll('input, select, textarea')];
 		const first = controls[0];
+		if (first?.type === 'file') {
+			const files = [...first.files];
+			this.#files.set(id, files);
+			return files.length ? files.map(file => ({ name: file.name, size: file.size, type: file.type })) : undefined;
+		}
 		if (first?.type === 'radio') return this.#convert(id, controls.find(c => c.checked)?.value ?? '');
 		if (first?.type === 'checkbox' && controls.length > 1) return controls.filter(c => c.checked).map(c => this.#convert(id, c.value));
 		if (first?.type === 'checkbox') return first.checked;
@@ -321,6 +357,10 @@ export default class FormFlow extends HTMLElement {
 		const controls = [...element.querySelectorAll('input, select, textarea')];
 		const wanted = (Array.isArray(value) ? value : [value]).map(String);
 		for (const control of controls) {
+			if (control.type === 'file') {
+				if (isEmpty(value)) { control.value = ''; this.#files.delete(id); }
+				continue;
+			}
 			if (control.type === 'radio' || (control.type === 'checkbox' && controls.length > 1)) control.checked = wanted.includes(control.value);
 			else if (control.type === 'checkbox') control.checked = value === true;
 			else control.value = isEmpty(value) ? '' : String(value);
@@ -372,8 +412,9 @@ export default class FormFlow extends HTMLElement {
 			if (!element) continue;
 			const controls = [...element.querySelectorAll('input, select, textarea')];
 			const group = element.tagName === 'FIELDSET';
-			element.hidden = !field.visible;
-			element.querySelector('abbr').hidden = !field.required;
+			element.hidden = !field.visible || element.hasAttribute('data-hidden-value');
+			const marker = element.querySelector('abbr');
+			if (marker) marker.hidden = !field.required;
 
 			if (state.explain[`${id}.value`]) {
 				this.#values[id] = state.values[id];
@@ -549,9 +590,13 @@ export default class FormFlow extends HTMLElement {
 			return;
 		}
 		const { form, rules, version, values } = this.#state;
+		const at = new Date().toISOString();
+		/* The File objects of the file fields that are submitted, and what each ticked consent said. */
+		const files = Object.fromEntries([...this.#files].filter(([id, list]) => id in values && list.length));
+		const consents = consentRecords(this.#definition, values).map(record => ({ ...record, at }));
 		this.#tracking?.submit(this.#state);
 		this.tracker?.flush?.();
-		this.#dispatch('ff:submit', { form, rules, version, values, state: this.#state });
+		this.#dispatch('ff:submit', { form, rules, version, values, files, consents, state: this.#state });
 	}
 
 	/* === Tracking === */

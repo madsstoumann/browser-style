@@ -51,7 +51,7 @@ Every input re-runs `evaluate()` and applies the result:
 | `ff:change` | `{ values, state }` after every evaluation |
 | `ff:step` | `{ step }` |
 | `ff:emit` | `{ type, data, rule, where }` |
-| `ff:submit` | `{ form, rules, version, values, state }` |
+| `ff:submit` | `{ form, rules, version, values, files, consents, state }`. `files`: the `File` objects per submitted file field; `consents`: what each ticked consent box said (`consentRecords`), with `at` |
 | `ff:error` | `{ error, errors?, effect?, event? }` |
 | `ff:track` | An analytics event, see below |
 
@@ -68,10 +68,16 @@ Every input re-runs `evaluate()` and applies the result:
 
 | Property | Control |
 | --- | --- |
-| `string` | `<input>`; `ui.widget` may be `email`, `tel`, `url`, `date`, `time`, … or `textarea` |
+| `string` | `<input>`; `ui.widget` may be `email`, `tel`, `url`, `date`, `time`, … or `textarea`; `ui.placeholder` |
+| `string` with `ui.widget: "hidden"` | `<input type="hidden">`, never shown; its value comes from `from` (context or facts) or `default` |
 | `number`, `integer` | `<input type="number">` with `validation.minimum` / `maximum` |
 | `boolean` | `<input type="checkbox" role="switch">` |
+| `boolean` with `ui.widget: "consent"` | A plain checkbox labelled with `consent.text` and a link to `consent.notice.url` |
 | `select` | `<select>`; a radio group with `ui.widget: "radio"`; checkboxes with `options.multiple` |
+| `content` | A text block: optional `title` as a heading, `content` as paragraphs. No control |
+| `file` | `<input type="file">` with `accept` and `multiple` (when `maxFiles` > 1). The engine sees name, size and type only; the files go out with `ff:submit` |
+
+Which types an editor offers, and under what names, is data: see the [forms guide](../../docs/forms.md#field-types-and-packages). Demo: `contact.html`.
 
 Values are typed from the definition: a choice `30` comes back as the number `30`.
 

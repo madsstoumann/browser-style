@@ -1,0 +1,14 @@
+{
+	"description": "Text blocks have no value, a hidden value is prefilled from context, a required consent must be ticked",
+	"form": "../examples/contact.form.json",
+	"rules": "../examples/contact.rules.json",
+	"input": {
+		"values": { "name": "Ada", "email": "ada@example.com", "topic": "question", "message": "Hello there, a question", "contactConsent": false, "newsletter": false },
+		"context": { "campaign": "spring" }
+	},
+	"expect": {
+		"values": { "name": "Ada", "email": "ada@example.com", "topic": "question", "message": "Hello there, a question", "campaign": "spring", "contactConsent": false, "newsletter": false },
+		"matched": [],
+		"issues": [{ "field": "contactConsent", "code": "required" }]
+	}
+}
