@@ -15,13 +15,16 @@
 <body>
 	<form-editor></form-editor>
 	<script type="module">
-		/* ?example=loan opens the advanced example; each example keeps its own draft. */
+		/* ?example=loan opens the advanced example, ?example=contact the field types example; each example keeps its own draft. */
 		const examples = {
 			insurance: { form: '../form-rules/examples/insurance.form.json', rules: '../form-rules/examples/insurance.rules.json', samples: '{ "offers": "../form-rules/examples/offers.patch.json" }' },
-			loan: { form: '../form-rules/examples/loan.form.json', rules: '../form-rules/examples/loan.rules.json', functions: '../form-rules/examples/functions/checks.js' }
+			loan: { form: '../form-rules/examples/loan.form.json', rules: '../form-rules/examples/loan.rules.json' },
+			contact: { form: '../form-rules/examples/contact.form.json', rules: '../form-rules/examples/contact.rules.json' }
 		};
 		const example = examples[new URLSearchParams(location.search).get('example')] ?? examples.insurance;
 		const editor = document.querySelector('form-editor');
+		/* The installed field type packages (core is always there). The Danish and banking packages bring their checks. */
+		editor.setAttribute('types', '../form-types/dk/types.json ../form-types/banking/types.json');
 		Object.entries(example).forEach(([name, value]) => editor.setAttribute(name, value));
 		await import('./index.js');
 	</script>

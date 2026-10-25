@@ -1,0 +1,12 @@
+{
+	"$schema": "../../form-rules/schemas/form-types.schema.json",
+	"package": "dk",
+	"title": "Denmark",
+	"description": "Danish personal and company numbers, with their checks.",
+	"version": "0.1.0",
+	"functions": "./functions.js",
+	"types": [
+		{ "kind": "dk/cpr", "title": "CPR number", "description": "Danish personal identification number, DDMMYY-XXXX", "group": "Contact", "glyph": "CPR", "privacy": "special", "keywords": ["national id", "personnummer", "denmark", "danish", "ssn"], "template": { "type": "string", "title": "CPR number", "description": "DDMMYY-XXXX", "privacy": "special", "validation": { "check": "dk-cpr" } }, "settings": ["placeholder", "checks"] },
+		{ "kind": "dk/cvr", "title": "CVR number", "description": "Danish company registration number, 8 digits", "group": "Contact", "glyph": "CVR", "keywords": ["company", "business", "vat", "denmark", "danish"], "template": { "type": "string", "title": "CVR number", "validation": { "check": "dk-cvr" } }, "settings": ["placeholder", "checks"] }
+	]
+}

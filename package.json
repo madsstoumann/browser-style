@@ -9,6 +9,7 @@
     "ui/gui/*",
     "ui/data/*",
     "ui/charts/*",
+    "ui/form-types/*",
     "ui/design-tokens/*",
     "cms/baseline",
     "cms/editors/*"

@@ -17,6 +17,9 @@ Design proposal: "Rule engine for multi-step forms" (claude.ai artifact, Forms p
 | `modules/validate.js` | `validate()`: static checks of form + rule set |
 | `modules/merge.js` | `merge()`, `expirePatches()`: mounting patches safely |
 | `modules/events.js` | `handleEvent()`: facts, rule set replacement, event patches |
+| `modules/session.js` | Session helpers: `createSession`, `snapshot` (never special or file values), `resume`, … |
+| `modules/types.js` | Field types as data: `defineTypes`, `loadTypes`, `loadPackages`, `typeOf`, `fieldFromType`, `changeType`, `searchTypes`. Core package in `types/core.json`; country packages live in `ui/form-types/*` |
+| `modules/consent.js` | `consentRecords()`: what each ticked consent field said |
 
 ## Invariants
 
@@ -27,6 +30,9 @@ Design proposal: "Rule engine for multi-step forms" (claude.ai artifact, Forms p
 5. **Fixtures are the contract.** A behaviour change needs a fixture in `fixtures/`; another runtime (for example .NET) proves itself by passing them.
 
 ## Gotchas
+
+- Never put a country-specific type or check in core (`types/core.json`, the engine). It goes in a package under `ui/form-types/`, with kinds prefixed by the package name.
+- `kind` is editor metadata. The engine evaluates `type`, `ui.widget` and `validation` only.
 
 - Field ids from patches contain a dot (`offers.travelCover`). `getPath` matches the longest flat key first, so `values.offers.travelCover` resolves to the flat key.
 - `evaluate` expects typed values: a select with numeric choices needs a number, not the string `FormData` gives. Converting is the host's job (`<form-flow>`).

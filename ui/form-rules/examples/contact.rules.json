@@ -1,0 +1,18 @@
+{
+	"$schema": "../schemas/form-rules.schema.json",
+	"id": "rules-contact",
+	"model": "form-rules",
+	"meta": { "locale": "en", "status": "published" },
+	"fields": {
+		"form": "form-contact",
+		"version": 1,
+		"rules": [
+			{
+				"id": "complaint-attachment",
+				"title": "Ask for an attachment with complaints",
+				"when": { "===": [{ "var": "values.topic" }, "complaint"] },
+				"then": [{ "require": "attachment" }]
+			}
+		]
+	}
+}

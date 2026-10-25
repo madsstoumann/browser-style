@@ -4,13 +4,14 @@
  * Docs: readme.md
  */
 import '../form-flow/index.js';
-import { validate } from '../form-rules/index.js';
+import { defineTypes, loadPackages, validate } from '../form-rules/index.js';
 import { h, button } from './modules/dom.js';
 import { asUcf, clone, emptyForm, emptyRules } from './modules/model.js';
 import { renderOutline, renderFormView } from './modules/view-form.js';
 import { renderRulesView } from './modules/view-rules.js';
 
 const DRAFT_KEY = 'form-editor:draft';
+const CORE_TYPES = new URL('../form-rules/types/core.json', import.meta.url).href;
 const HISTORY = 50;
 
 const fetchJSON = async url => {
@@ -56,6 +57,8 @@ export class FormEditor extends HTMLElement {
 	#preview;
 	#message = '';
 	#functions = {};
+	#ownFunctions = {};
+	#types = defineTypes();
 	#draftKey = DRAFT_KEY;
 
 	async connectedCallback() {
@@ -64,6 +67,7 @@ export class FormEditor extends HTMLElement {
 		this.#build();
 		if (this.getAttribute('form')) this.#draftKey = `${DRAFT_KEY}:${this.getAttribute('form')}`;
 		const draft = storage.read(this.#draftKey);
+		await this.#loadTypes();
 		if (this.getAttribute('functions')) {
 			try {
 				const module = await import(new URL(this.getAttribute('functions'), document.baseURI));
@@ -110,13 +114,37 @@ export class FormEditor extends HTMLElement {
 		this.#restartPreview();
 	}
 
-	/* Host functions the rules may call by name (operators and field checks), as in evaluate(). */
+	/* Host functions the rules may call by name (operators and field checks), as in evaluate(). Added to the installed packages' functions. */
 	set functions(value) {
-		this.#functions = value ?? {};
+		this.#ownFunctions = value ?? {};
+		this.#mergeFunctions();
+	}
+	get functions() { return this.#functions; }
+
+	/* The installed field types: a registry from defineTypes()/loadPackages() (form-rules). Its `functions`, if any, become checks. */
+	set types(value) {
+		this.#types = value ?? defineTypes();
+		this.#mergeFunctions();
+	}
+	get types() { return this.#types; }
+
+	#mergeFunctions() {
+		this.#functions = { ...(this.#types.functions ?? {}), ...this.#ownFunctions };
 		if (this.#preview) this.#preview.functions = this.#functions;
 		if (this.#parts.main) this.#render(false);
 	}
-	get functions() { return this.#functions; }
+
+	/* The `types` attribute: URLs of type packages (types.json), space-separated. Core is always installed. */
+	async #loadTypes() {
+		const urls = (this.getAttribute('types') ?? '').split(/\s+/).filter(Boolean).map(url => new URL(url, document.baseURI).href);
+		try {
+			const registry = await loadPackages([CORE_TYPES, ...urls.filter(url => url !== CORE_TYPES)]);
+			this.types = registry;
+			if (registry.errors.length) this.#message = registry.errors.map(error => error.message).join('. ');
+		} catch (error) {
+			this.#message = `Could not load the field types: ${error.message}`;
+		}
+	}
 
 	get output() { return { form: clone(this.form), rules: clone(this.rules) }; }
 
@@ -295,7 +323,7 @@ export class FormEditor extends HTMLElement {
 
 	#errors() {
 		try {
-			return validate(this.form, this.rules, { functions: this.#functions }).errors;
+			return validate(this.form, this.rules, { functions: this.#functions, types: this.#types }).errors;
 		} catch (error) {
 			return [{ code: 'invalid', message: error.message }];
 		}

@@ -8,6 +8,7 @@ The short version:
 - **One pure engine.** `evaluate()` takes the documents and the answers and returns the state of the form. It does no I/O and reads no clock, so the same input gives the same output in the browser, in Node, and in any other runtime that passes the conformance fixtures.
 - **Native fields.** `<form-flow>` renders plain `<input>`, `<select>` and `<textarea>` in light DOM, styled by `ui/base` form.css, and uses the browser's own constraint validation.
 - **Closed vocabularies.** Conditions use a strict subset of JSON Logic; rules choose from a fixed list of actions. Anything domain-specific (CPR numbers, IBAN, …) is a host function you plug in, never part of the engine.
+- **Field types are data.** What an editor offers when adding a field comes from installed type packages (JSON): a generic core package, plus country or domain packages such as Denmark (CPR, CVR) or Banking (IBAN), each bringing its own checks. Nothing country-specific is in core.
 
 ---
 
@@ -19,6 +20,7 @@ The short version:
 | [`@browser.style/form-flow`](../ui/form-flow/) | `<form-flow>` | Renders a form step by step, runs the engine on every input, carries out its effects (fetch, emit, track), saves and resumes sessions |
 | [`@browser.style/form-editor`](../ui/form-editor/) | `<form-editor>` | Visual editor for developers and content editors; its output is the form JSON and the rule JSON |
 | [`@browser.style/form-embed`](../ui/form-embed/) | `<form-embed>` | Puts a published form on a client site with one script tag, in Shadow DOM or light DOM |
+| [`@browser.style/form-types-dk`](../ui/form-types/dk/), [`-banking`](../ui/form-types/banking/) | none | Optional field type packages: Danish CPR and CVR, IBAN; each with its checks. See [Field types](#field-types-and-packages) |
 
 Demos:
 
@@ -27,7 +29,8 @@ Demos:
 | [/ui/form-flow/](https://v4.browser.style/ui/form-flow/) | The insurance example: options narrowed by age and zip, a service patch, a goto |
 | [/ui/form-flow/loan.html](https://v4.browser.style/ui/form-flow/loan.html) | The advanced loan example: variables and a score, CPR checks, an eligibility service, inserted steps, tracking |
 | [/ui/form-flow/session.html](https://v4.browser.style/ui/form-flow/session.html) | Save and continue later, resume links, the done state |
-| [/ui/form-editor/](https://v4.browser.style/ui/form-editor/) | The editor; `?example=loan` opens the loan example |
+| [/ui/form-flow/contact.html](https://v4.browser.style/ui/form-flow/contact.html) | The core field types: text blocks, a hidden value, a file upload, consent |
+| [/ui/form-editor/](https://v4.browser.style/ui/form-editor/) | The editor; `?example=loan` opens the loan example, `?example=contact` the field types example |
 | [/ui/form-embed/](https://v4.browser.style/ui/form-embed/) | A "client site" embedding forms in shadow and light mode |
 
 How they fit together:
@@ -139,13 +142,18 @@ UCM-shaped: `properties` are the fields, `structure.layout` is the list of steps
 
 | Key | |
 |---|---|
-| `type` | `string`, `number`, `integer`, `boolean`, `select` |
-| `title`, `description` | Label and help text |
-| `required` | Starting value of the flag; rules may change it |
-| `default` | Starting value |
-| `validation` | `minimum`, `maximum`, `minLength`, `maxLength`, `pattern`; `check` (name or names of host functions); `messages` (text per issue code, replacing the default) |
+| `type` | `string`, `number`, `integer`, `boolean`, `select`; `content` (a text block, no value); `file` (uploads) |
+| `kind` | The field type it was made from (`email`, `consent`, `dk/cpr`, …), see [Field types](#field-types-and-packages). Optional and only for editors: the engine goes by `type` |
+| `title`, `description` | Label and help text (a text block's optional heading) |
+| `required` | Starting value of the flag; rules may change it. A required `boolean` must be `true`, like a required checkbox |
+| `default` | Starting value, used while the field has no answer |
+| `from` | Prefill from `context.<name>` or `facts.<name>` while the field has no answer (before `default`) |
+| `content` | Text block: the text; a blank line starts a paragraph |
+| `consent` | Consent fields: `{ text, notice: { label, url, version } }`, recorded with the answer |
+| `validation` | `minimum`, `maximum`, `minLength`, `maxLength`, `pattern`; for files `accept`, `maxSize` (bytes), `maxFiles`; `check` (name or names of host functions); `messages` (text per issue code, replacing the default) |
 | `options` | `choices: [{ value, label }]` for `select`; `multiple: true` for checkboxes |
-| `ui.widget` | `email`, `tel`, `url`, `date`, `time`, `textarea` for strings; `radio` for a select; `toggle` for a boolean |
+| `ui.widget` | `email`, `tel`, `url`, `date`, `time`, `textarea`, `hidden` for strings; `radio` for a select; `consent` for a boolean |
+| `ui.placeholder` | Placeholder text |
 | `ui.hidden` | Hidden unless a rule shows it |
 | `track` | `select` only: the chosen option may be sent to analytics. See [Tracking](#tracking-and-privacy) |
 | `privacy` | `none`, `personal` or `special`. See [Privacy](#privacy-settings) |
@@ -461,7 +469,65 @@ Rules for writing one:
 - **Warnings for doubt.** Return `level: "warning"` when the value is probably wrong but may be right (some CPR numbers issued since 2007 fail modulus 11).
 - **Every runtime needs them.** If forms are evaluated on a server later, the same functions must exist there under the same names.
 
-`ui/form-rules/examples/functions/checks.js` has working CPR, CVR, Luhn and IBAN checks to copy from.
+Functions usually come with a [field type package](#field-types-and-packages): `ui/form-types/dk/functions.js` has the CPR and CVR checks and `cprDate`, `ui/form-types/banking/functions.js` IBAN and Luhn.
+
+---
+
+## Field types and packages
+
+A **field type** is what an editor offers when someone adds a field: "Email", "Consent", "CPR number". It is data, not code: a title, a group, a short glyph, search keywords, and a **template**, the property a new field starts from. The engine never sees types; it only reads the properties they produce, so installing a package changes what the editor offers, not how forms are evaluated.
+
+Types come in packages, one JSON file each (schema `ui/form-rules/schemas/form-types.schema.json`):
+
+```json
+{
+  "package": "dk",
+  "title": "Denmark",
+  "version": "0.1.0",
+  "functions": "./functions.js",
+  "types": [
+    { "kind": "dk/cpr", "title": "CPR number", "description": "Danish personal identification number",
+      "group": "Contact", "glyph": "CPR", "privacy": "special", "keywords": ["national id", "personnummer"],
+      "template": { "type": "string", "privacy": "special", "validation": { "check": "dk-cpr" } },
+      "settings": ["placeholder", "checks"] }
+  ]
+}
+```
+
+| Package | Where | Types |
+|---|---|---|
+| Core | `ui/form-rules/types/core.json` | Text, Long text, Number, Whole number, Date, Time, Dropdown, Radio buttons, Checkboxes, Yes / no, Email, Phone, Web address, Consent, Text block, Hidden value, File upload |
+| Denmark | `ui/form-types/dk/` (`@browser.style/form-types-dk`) | CPR number (`dk/cpr`), CVR number (`dk/cvr`); checks `dk-cpr`, `dk-cvr`, operator `cprDate` |
+| Banking | `ui/form-types/banking/` (`@browser.style/form-types-banking`) | IBAN (`banking/iban`); checks `iban`, `luhn` |
+
+A Swedish personnummer, a UK National Insurance number or a company's customer number is a new package of the same shape; nothing in core or the editor changes. Kinds outside core start with the package name (`se/personnummer`), so two packages never collide.
+
+- **`settings`** lists what the editor's field panel shows besides label, id, help, required, hidden, privacy and step: `choices`, `multiple`, `range`, `length`, `pattern`, `checks`, `placeholder`, `default`, `content`, `consent`, `files`, `source`.
+- **`privacy`** is the level a new field starts with (a CPR number is `special`, an email `personal`).
+- **`functions`** points at the module with the package's checks, relative to the JSON file.
+
+The helpers are pure and exported by form-rules, so an editor in another host (the Umbraco backoffice) can bundle them:
+
+| Function | Does |
+|---|---|
+| `defineTypes(...packages)` | Merges package documents into a registry `{ packages, types, kinds, errors }` |
+| `loadTypes(urls, { fetch?, base? })` | Fetches package files, then `defineTypes` |
+| `loadPackages(urls, …)` | `loadTypes`, and imports each package's `functions`: `{ …registry, functions }` |
+| `typeOf(property, registry)` | A field's type: its `kind`, or for older fields the type whose template fits best (`type`, `ui.widget`, checks) |
+| `fieldFromType(type, { title })` | A new property from a type's template |
+| `changeType(property, type)` | Switches a field's type, keeping label, help, required and hidden |
+| `searchTypes(registry, query)`, `groupTypes(registry, types)` | What the editor's searchable picker shows |
+
+`validate(form, rules, { functions, types })` reports a field whose `kind` no installed package provides.
+
+### The core types that are more than an input
+
+| Type | Property | Behaviour |
+|---|---|---|
+| **Text block** | `{ "type": "content", "title": "…", "content": "…" }` | No value and never submitted. Rules can show and hide it like a field |
+| **Hidden value** | `{ "type": "string", "ui": { "widget": "hidden" }, "from": "context.campaign", "default": "direct" }` | Not shown; submitted like any answer. Takes the value from the page's context (or facts), else the default |
+| **Consent** | `{ "type": "boolean", "ui": { "widget": "consent" }, "required": true, "consent": { "text": "…", "notice": { "label": "Privacy notice", "url": "…", "version": "2026-10" } } }` | A checkbox with the wording as its label. Required means it must be ticked. On submit, `consentRecords(form, values)` gives `{ field, text, notice, form }` for each ticked box; `ff:submit` carries them as `consents`, with the time |
+| **File upload** | `{ "type": "file", "validation": { "accept": ".pdf,image/*", "maxSize": 5242880, "maxFiles": 2 } }` | The engine sees `[{ name, size, type }]` and checks `accept`, `maxSize` and `maxFiles`. The files themselves stay in the browser and travel only with the final submit, as `ff:submit`'s `files`; a draft never holds them |
 
 ---
 
@@ -536,13 +602,15 @@ The server contract `MockServer` stands in for: reject saves after submit with `
 
 ## Privacy settings
 
-Every field has a `privacy` level, set in the form definition (the editor's field panel will get a picker):
+Every field has a `privacy` level, set in the form definition or with the Privacy picker in the editor. A new field starts with its type's level:
 
 | Level | Meaning | Saved in a draft |
 |---|---|---|
 | `none` | Not personal: plan, product, purpose | Always (default for form fields) |
 | `personal` | Identifies a person: name, email, phone, address | Only after the person chose to keep the draft (device or server); default for fields from a patch |
 | `special` | Special category or national id: health, CPR | **Never.** It is filled in again on resume |
+
+File uploads are never saved in a draft either, whatever their level.
 
 Other privacy decisions built into the system:
 
@@ -584,7 +652,7 @@ The tracking `session` is random per run: not a user id, not stored, and not the
 
 ## The editor
 
-`<form-editor>` edits both documents at once: an outline of steps and fields, a field panel, rules shown as sentences with a When/Then/Otherwise builder, variables, services with sample replies, and a live `<form-flow explain>` preview. **Advanced** reveals ids, priorities, patterns, the listen list and raw JSON; it is off by default so content editors work with pickers only. Export is blocked while `validate()` reports problems. See the [form-editor readme](../ui/form-editor/readme.md).
+`<form-editor>` edits both documents at once: an outline of steps and fields, a field panel drawn from the field's type (its `settings`), a searchable type picker listing the installed packages (`types` attribute; core is always there), rules shown as sentences with a When/Then/Otherwise builder, variables, services with sample replies, and a live `<form-flow explain>` preview. **Advanced** reveals ids, priorities, patterns, the listen list and raw JSON; it is off by default so content editors work with pickers only. Export is blocked while `validate()` reports problems. See the [form-editor readme](../ui/form-editor/readme.md).
 
 ---
 
@@ -644,9 +712,8 @@ These are designed but deliberately deferred. Nothing above depends on them.
 | **Backend endpoints** | `MockServer` keeps drafts in `localStorage`; resume emails are mocked as `ff:link`; the beacon tracker needs an endpoint that appends rows | A draft store with the `MockServer` contract, a mailer for resume links, an event store for the beacon |
 | **API gateway** | Services are called directly: they must be public, CORS-enabled, with no keys | A gateway (e.g. a Cloudflare Worker) holding keys and CORS rules, plugged in through `flow.fetcher` |
 | **Iframe embed mode** | `mode="iframe"` reports an `ff:error` | A postMessage bridge with auto-height, required for forms with personal data |
-| **Editor privacy picker** | `privacy` is set in JSON | A picker in the field panel and a version bump on publish |
 | **Insights** | Events reach the tracker | A `<form-insights>` funnel dashboard |
-| **Field types** | `string`, `number`, `integer`, `boolean`, `select` | Richer widgets (file, address, repeaters) |
+| **Field types** | Core types plus installable packages, including text blocks, hidden values, consent and file uploads | Address, repeaters; where uploads are stored is up to each CMS adapter |
 
 ---
 

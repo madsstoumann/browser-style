@@ -1,0 +1,11 @@
+{
+	"$schema": "../../form-rules/schemas/form-types.schema.json",
+	"package": "banking",
+	"title": "Banking",
+	"description": "Bank account numbers, with their checks.",
+	"version": "0.1.0",
+	"functions": "./functions.js",
+	"types": [
+		{ "kind": "banking/iban", "title": "IBAN", "description": "International bank account number", "group": "Contact", "glyph": "IBAN", "privacy": "personal", "keywords": ["bank", "account", "payment", "sepa"], "template": { "type": "string", "title": "IBAN", "privacy": "personal", "validation": { "check": "iban" } }, "settings": ["placeholder", "checks"] }
+	]
+}

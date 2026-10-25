@@ -65,6 +65,48 @@
 		& [part=choices-inline] { border: 0; display: flex; flex-wrap: wrap; gap: .25rem 1.5ch; padding: 0; }
 		& [part=choices-inline] > legend { flex-basis: 100%; padding: 0; }
 		& [part=danger] { color: var(--color-error); }
+		& textarea[part=prose] { font-family: inherit; font-size: inherit; }
+	}
+
+	:where(form-editor) [part~=type] {
+		align-items: center;
+		& p { margin: 0; }
+		& [part=badge] { font-family: ui-monospace, monospace; font-size: .75rem; opacity: .7; }
+	}
+
+	:where(form-editor) [part=type-picker] {
+		border: 1px solid var(--_line);
+		border-radius: .5rem;
+		inline-size: min(36rem, 100% - 2rem);
+		max-block-size: min(40rem, 100dvb - 4rem);
+		padding: 0;
+		&::backdrop { background: color-mix(in oklab, CanvasText 30%, transparent); }
+		& form { display: grid; gap: .75rem; padding: var(--_gap); }
+		& header { align-items: center; }
+		& header button { background: none; border: 0; color: inherit; font-size: 1.25rem; padding: 0 .5rem; }
+		& [part=type-list] { display: grid; gap: .75rem; }
+		& h3 { margin: 0 0 .25rem; }
+		& h4 { font-size: .8125rem; margin: .5rem 0 .25rem; }
+		& ul { display: grid; gap: .25rem; grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr)); }
+		& li > button {
+			align-items: start;
+			background: none;
+			border: 1px solid var(--_line);
+			border-radius: .375rem;
+			color: inherit;
+			display: flex;
+			gap: .75ch;
+			inline-size: 100%;
+			justify-content: start;
+			padding: .5rem;
+			place-content: start;
+			text-align: start;
+			&:is(:hover, :focus-visible) { border-color: var(--_accent); }
+			&[aria-current=true] { background: color-mix(in oklab, var(--_accent) 12%, transparent); }
+			& > span:last-child { display: grid; }
+		}
+		& [part=badge] { flex-shrink: 0; font-family: ui-monospace, monospace; font-size: .6875rem; inline-size: 4ch; opacity: .7; padding-block-start: .2em; text-align: center; }
+		& [part=installed] { border-block-start: 1px solid var(--_line); padding-block-start: .5rem; }
 	}
 
 	:where(form-editor) [part=rules] {

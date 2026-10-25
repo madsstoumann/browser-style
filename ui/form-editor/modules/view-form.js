@@ -4,14 +4,72 @@
  */
 import { h, field, check, select, button } from './dom.js';
 import { addField, addStep, clone, moveItem, removeField, removeStep, renameField, renameStep, rulesUsingField, stepOfField, stepsOf } from './model.js';
+import { changeType, fieldFromType, groupTypes, searchTypes, typeOf } from '../../form-rules/index.js';
 
-const TYPES = [['string', 'Text'], ['number', 'Number'], ['integer', 'Whole number'], ['boolean', 'Yes / no'], ['select', 'Choice']];
-const WIDGETS = {
-	string: [['', 'Text'], ['email', 'Email'], ['tel', 'Phone'], ['url', 'Web address'], ['date', 'Date'], ['time', 'Time'], ['textarea', 'Long text']],
-	select: [['', 'Dropdown'], ['radio', 'Radio buttons']],
-	boolean: [['toggle', 'Switch']]
+/* Settings for a field whose type no installed package describes. */
+const FALLBACK_SETTINGS = {
+	string: ['placeholder', 'length', 'pattern', 'checks'],
+	number: ['range', 'checks'],
+	integer: ['range', 'checks'],
+	select: ['choices'],
+	content: ['content'],
+	file: ['files']
 };
-const TYPE_BADGE = { string: 'Aa', number: '123', integer: '123', boolean: 'y/n', select: '☰' };
+const MB = 1048576;
+const INSTALLED = 'From installed packages';
+
+const typeOfField = (editor, property) => typeOf(property, editor.types);
+const titleOf = (editor, id) => {
+	const property = editor.form.fields.properties[id];
+	return property?.title || typeOfField(editor, property)?.title || id;
+};
+
+/* === The type picker: a searchable list, grouped; types from packages other than core come last, under their package === */
+
+export function pickType(editor, { title = 'Add a field', current = null, onpick }) {
+	const registry = editor.types;
+	const search = h('input', { type: 'search', placeholder: 'Search field types', 'aria-label': 'Search field types', autocomplete: 'off' });
+	const list = h('div', { part: 'type-list' });
+	const dialog = h('dialog', { part: 'type-picker', 'aria-label': title },
+		h('form', { method: 'dialog' },
+			h('header', { part: 'row' }, h('h2', {}, title), h('button', { value: 'cancel', 'aria-label': 'Close' }, '×')),
+			search,
+			list));
+	const choose = type => {
+		dialog.close();
+		onpick(type);
+	};
+	const item = type => h('li', {}, button([
+		h('span', { part: 'badge' }, type.glyph ?? '?'),
+		h('span', {}, h('strong', {}, type.title), type.description ? h('small', {}, type.description) : null)
+	], () => choose(type), { 'aria-current': current === type.kind ? 'true' : null, 'data-kind': type.kind }));
+	const draw = () => {
+		const found = searchTypes(registry, search.value);
+		const own = found.filter(type => type.package === 'core');
+		const installed = registry.packages.filter(entry => entry.package !== 'core')
+			.map(entry => ({ entry, types: found.filter(type => type.package === entry.package) }))
+			.filter(group => group.types.length);
+		list.replaceChildren(...[
+			...groupTypes(registry, own).map(group => h('section', {}, h('h3', {}, group.group), h('ul', {}, group.types.map(item)))),
+			installed.length ? h('section', { part: 'installed' }, h('h3', {}, INSTALLED),
+				installed.map(({ entry, types }) => [h('h4', {}, entry.title), h('ul', {}, types.map(item))])) : null,
+			found.length ? null : h('p', {}, `No field type matches "${search.value}". Install a type package to add more.`)
+		].filter(Boolean));
+	};
+	search.addEventListener('input', draw);
+	search.addEventListener('keydown', event => {
+		if (event.key !== 'Enter') return;
+		event.preventDefault();
+		const first = searchTypes(registry, search.value)[0];
+		if (first) choose(first);
+	});
+	dialog.addEventListener('close', () => dialog.remove());
+	draw();
+	editor.append(dialog);
+	dialog.showModal();
+	search.focus();
+	return dialog;
+}
 
 /* === The outline (left pane) === */
 
@@ -26,16 +84,19 @@ export function renderOutline(editor) {
 			}),
 			step.hidden ? h('small', {}, 'only when a rule includes it') : null,
 			h('ul', {}, step.fields.map(id => h('li', {},
-				button([h('span', { part: 'badge' }, TYPE_BADGE[form.fields.properties[id]?.type] ?? '?'), ' ', form.fields.properties[id]?.title ?? id],
+				button([h('span', { part: 'badge' }, typeOfField(editor, form.fields.properties[id])?.glyph ?? '?'), ' ', titleOf(editor, id)],
 					() => editor.select({ view: 'form', step: step.id, field: id }),
 					{ part: 'outline-field', 'aria-current': selection.field === id ? 'true' : null })
 			)),
 			(step.slots ?? []).map(slot => h('li', { part: 'outline-slot' }, `slot: ${slot}`))),
-			button('+ Field', () => {
-				const result = addField(form, step.id, 'New field');
-				editor.commit({ form: result.form });
-				editor.select({ view: 'form', step: step.id, field: result.id });
-			}, { part: 'add' })
+			button('+ Field', () => pickType(editor, {
+				title: `Add a field to ${step.name}`,
+				onpick: type => {
+					const result = addField(form, step.id, null, fieldFromType(type));
+					editor.commit({ form: result.form });
+					editor.select({ view: 'form', step: step.id, field: result.id });
+				}
+			}), { part: 'add' })
 		))),
 		button('+ Step', () => {
 			const result = addStep(form, `Step ${steps.length + 1}`);
@@ -136,8 +197,13 @@ function fieldInspector(editor, id) {
 	const validation = property.validation ?? {};
 	const choices = property.options?.choices ?? [];
 	const numeric = choices.length > 0 && choices.every(choice => typeof choice.value === 'number');
-	const widgets = WIDGETS[property.type];
 	const index = step.fields.indexOf(id);
+	const type = typeOfField(editor, property);
+	const settings = new Set(type?.settings ?? FALLBACK_SETTINGS[property.type] ?? []);
+	const content = property.type === 'content';
+	const consent = property.ui?.widget === 'consent';
+	const setIn = (key, name, value) => update(p => { p[key] = { ...(p[key] ?? {}) }; setOrDelete(p[key], name, value); if (!Object.keys(p[key]).length) delete p[key]; });
+	const packageTitle = type && type.package !== 'core' ? editor.types.packages.find(entry => entry.package === type.package)?.title : null;
 
 	const moveWithin = direction => {
 		const next = clone(form);
@@ -147,8 +213,11 @@ function fieldInspector(editor, id) {
 	};
 
 	return h('section', { part: 'inspector' },
-		h('h2', {}, `Field: ${property.title ?? id}`),
-		field('Label', h('input', { value: property.title ?? '', onchange: e => update(p => { p.title = e.target.value; }) })),
+		h('h2', {}, `Field: ${titleOf(editor, id)}`),
+		h('div', { part: 'row type' },
+			h('p', {}, h('span', { part: 'badge' }, type?.glyph ?? '?'), ' ', type ? type.title : `Unknown type (${property.kind ?? property.type})`, packageTitle ? h('small', {}, ` from ${packageTitle}`) : null),
+			button('Change type', () => pickType(editor, { title: 'Change the field type', current: type?.kind, onpick: next => update((p, f) => { f.fields.properties[id] = changeType(p, next); }) }))),
+		field(content ? 'Heading' : consent ? 'Name in lists' : 'Label', h('input', { value: property.title ?? '', onchange: e => update(p => setOrDelete(p, 'title', e.target.value)) }), content ? 'Optional' : consent ? 'The person sees the consent text below, not this' : null),
 		field('Field id', h('input', {
 			value: id,
 			pattern: '[A-Za-z][A-Za-z0-9_]*',
@@ -160,35 +229,41 @@ function fieldInspector(editor, id) {
 				editor.select({ field: to });
 			}
 		}), 'The key in the submitted data; rules using it are updated'),
-		field('Help text', h('input', { value: property.description ?? '', onchange: e => update(p => setOrDelete(p, 'description', e.target.value)) })),
-		field('Type', select(TYPES, property.type, value => update(p => {
-			p.type = value;
-			if (value === 'select' && !p.options?.choices) p.options = { choices: [{ value: 'a', label: 'Option A' }, { value: 'b', label: 'Option B' }] };
-			if (value !== 'select') { delete p.options; delete p.track; }
-			if (p.ui?.widget && !(WIDGETS[value] ?? []).some(([w]) => w === p.ui.widget)) delete p.ui.widget;
-		}))),
-		widgets ? field('Shown as', select(widgets, property.ui?.widget ?? '', value => update(p => {
-			p.ui = { ...(p.ui ?? {}) };
-			setOrDelete(p.ui, 'widget', value);
-		}))) : null,
-		check('Required', property.required === true, value => update(p => setOrDelete(p, 'required', value))),
+		settings.has('content') ? field('Text', h('textarea', { part: 'prose', rows: 5, value: property.content ?? '', onchange: e => update(p => { p.content = e.target.value; }) }), 'A blank line starts a new paragraph') : null,
+		settings.has('consent') ? consentEditor(property, setIn) : null,
+		content ? null : field('Help text', h('input', { value: property.description ?? '', onchange: e => update(p => setOrDelete(p, 'description', e.target.value)) })),
+		settings.has('placeholder') ? field('Placeholder', h('input', { value: property.ui?.placeholder ?? '', onchange: e => setIn('ui', 'placeholder', e.target.value) })) : null,
+		content || property.ui?.widget === 'hidden' ? null : check(consent ? 'Must be ticked to send the form' : 'Required', property.required === true, value => update(p => setOrDelete(p, 'required', value))),
 		check('Hidden until a rule shows it', property.ui?.hidden === true, value => update(p => {
 			p.ui = { ...(p.ui ?? {}) };
 			setOrDelete(p.ui, 'hidden', value);
 		})),
-		property.type === 'select' ? choicesEditor(property, numeric, update) : null,
-		field('Privacy', select([['none', 'Not personal'], ['personal', 'Personal'], ['special', 'Special (health, national id, …)']], property.privacy ?? 'none', value => update(p => {
+		settings.has('choices') && property.type === 'select' ? choicesEditor(property, numeric, update) : null,
+		settings.has('default') ? field(property.ui?.widget === 'hidden' ? 'Value' : 'Starts with', h('input', {
+			type: property.type === 'number' || property.type === 'integer' ? 'number' : 'text',
+			value: property.default ?? '',
+			onchange: e => update(p => setOrDelete(p, 'default', e.target.value === '' ? '' : (p.type === 'number' || p.type === 'integer' ? Number(e.target.value) : e.target.value)))
+		}), property.ui?.widget === 'hidden' ? 'Used when the page gives none' : null) : null,
+		settings.has('source') ? field('Take the value from', h('input', {
+			value: property.from ?? '', placeholder: 'context.campaign', pattern: '(context|facts)\\..+',
+			onchange: e => update(p => setOrDelete(p, 'from', e.target.value.trim()))
+		}), 'context.<name> is set by the page that shows the form; facts.<name> by events') : null,
+		settings.has('files') ? filesEditor(property.validation ?? {}, setIn) : null,
+		content ? null : field('Privacy', select([['none', 'Not personal'], ['personal', 'Personal'], ['special', 'Special (health, national id, …)']], property.privacy ?? 'none', value => update(p => {
 			setOrDelete(p, 'privacy', value === 'none' ? '' : value);
 			if (value !== 'none') delete p.track;
 		})), 'Special data is never saved in a draft; personal and special data never go to analytics'),
-		property.type === 'select' && (property.privacy ?? 'none') === 'none' ? check('Send the chosen option to analytics', property.track === true, value => update(p => setOrDelete(p, 'track', value))) : null,
-		property.type === 'number' || property.type === 'integer' ? h('div', { part: 'row' },
+		property.type === 'select' && !property.options?.multiple && (property.privacy ?? 'none') === 'none' ? check('Send the chosen option to analytics', property.track === true, value => update(p => setOrDelete(p, 'track', value))) : null,
+		settings.has('range') ? h('div', { part: 'row' },
 			field('Lowest', h('input', { type: 'number', value: validation.minimum ?? '', onchange: e => update(p => { p.validation = { ...(p.validation ?? {}) }; setOrDelete(p.validation, 'minimum', e.target.value === '' ? '' : Number(e.target.value)); }) })),
 			field('Highest', h('input', { type: 'number', value: validation.maximum ?? '', onchange: e => update(p => { p.validation = { ...(p.validation ?? {}) }; setOrDelete(p.validation, 'maximum', e.target.value === '' ? '' : Number(e.target.value)); }) }))
 		) : null,
-		property.type === 'string' && editor.advanced ? field('Pattern', h('input', { value: validation.pattern ?? '', onchange: e => update(p => { p.validation = { ...(p.validation ?? {}) }; setOrDelete(p.validation, 'pattern', e.target.value); }) }), 'A regular expression, for example ^[0-9]{4}$') : null,
-		property.type === 'string' ? field('Min. length', h('input', { type: 'number', min: 0, value: validation.minLength ?? '', onchange: e => update(p => { p.validation = { ...(p.validation ?? {}) }; setOrDelete(p.validation, 'minLength', e.target.value === '' ? '' : Number(e.target.value)); }) })) : null,
-		checksEditor(editor, validation, update),
+		settings.has('pattern') && editor.advanced ? field('Pattern', h('input', { value: validation.pattern ?? '', onchange: e => update(p => { p.validation = { ...(p.validation ?? {}) }; setOrDelete(p.validation, 'pattern', e.target.value); }) }), 'A regular expression, for example ^[0-9]{4}$') : null,
+		settings.has('length') ? h('div', { part: 'row' },
+			field('Min. length', h('input', { type: 'number', min: 0, value: validation.minLength ?? '', onchange: e => setIn('validation', 'minLength', e.target.value === '' ? '' : Number(e.target.value)) })),
+			field('Max. length', h('input', { type: 'number', min: 1, value: validation.maxLength ?? '', onchange: e => setIn('validation', 'maxLength', e.target.value === '' ? '' : Number(e.target.value)) }))
+		) : null,
+		settings.has('checks') ? checksEditor(editor, validation, update) : null,
 		field('Step', select(stepsOf(form).map(s => [s.id, s.name]), step.id, value => {
 			const next = clone(form);
 			stepsOf(next).forEach(s => { s.fields = s.fields.filter(f => f !== id); });
@@ -208,11 +283,36 @@ function fieldInspector(editor, id) {
 		)
 	);
 
+	function consentEditor(p, set) {
+		const notice = p.consent?.notice ?? {};
+		const setNotice = (name, value) => update(q => {
+			q.consent = { ...(q.consent ?? {}), notice: { ...(q.consent?.notice ?? {}) } };
+			setOrDelete(q.consent.notice, name, value);
+		});
+		return h('fieldset', { part: 'consent' },
+			h('legend', {}, 'Consent'),
+			field('What the person agrees to', h('textarea', { part: 'prose', rows: 3, value: p.consent?.text ?? '', onchange: e => update(q => { q.consent = { ...(q.consent ?? {}), text: e.target.value }; }) }), 'Recorded word for word with the answer'),
+			h('div', { part: 'row' },
+				field('Link text', h('input', { value: notice.label ?? '', onchange: e => setNotice('label', e.target.value) })),
+				field('Notice version', h('input', { value: notice.version ?? '', onchange: e => setNotice('version', e.target.value) }), 'Raise it when the notice changes')),
+			field('Privacy notice address', h('input', { type: 'url', value: notice.url ?? '', onchange: e => setNotice('url', e.target.value) })));
+	}
+
+	function filesEditor(rules, set) {
+		return h('fieldset', { part: 'files' },
+			h('legend', {}, 'Files'),
+			field('Allowed types', h('input', { value: rules.accept ?? '', placeholder: '.pdf,image/*', onchange: e => set('validation', 'accept', e.target.value.trim()) }), 'Empty allows any file'),
+			h('div', { part: 'row' },
+				field('Largest file (MB)', h('input', { type: 'number', min: 0.1, step: 0.1, value: rules.maxSize ? Math.round(rules.maxSize / MB * 10) / 10 : '', onchange: e => set('validation', 'maxSize', e.target.value === '' ? '' : Math.round(Number(e.target.value) * MB)) })),
+				field('Number of files', h('input', { type: 'number', min: 1, value: rules.maxFiles ?? 1, onchange: e => set('validation', 'maxFiles', Number(e.target.value) || 1) }))),
+			h('p', {}, h('small', {}, 'Files are only sent with the final submit and are never saved in a draft.')));
+	}
+
 	function choicesEditor(p, isNumeric, apply) {
 		const parse = text => (isNumeric && NUMBER_TEXT.test(text) ? Number(text) : text);
 		return h('fieldset', { part: 'choices' },
 			h('legend', {}, 'Choices'),
-			check('Several can be chosen', p.options?.multiple === true, value => apply(q => { q.options = { ...q.options }; setOrDelete(q.options, 'multiple', value); })),
+			settings.has('multiple') ? check('Several can be chosen', p.options?.multiple === true, value => apply(q => { q.options = { ...q.options }; setOrDelete(q.options, 'multiple', value); })) : null,
 			check('Values are numbers (rules can compare them)', isNumeric, value => apply(q => {
 				q.options.choices = q.options.choices.map((choice, i) => ({ ...choice, value: value ? (NUMBER_TEXT.test(String(choice.value)) ? Number(choice.value) : i + 1) : String(choice.value) }));
 			})),

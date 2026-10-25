@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Form Flow: field types</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="color-scheme" content="light dark">
+	<meta name="description" content="A contact form using the core field types: text blocks, a hidden value, a file upload and consent.">
+	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="../step/ui-step.css">
+	<link rel="stylesheet" href="index.css">
+	<style>
+		body { max-inline-size: 60ch; margin-inline: auto; padding: 2ch; }
+		.demo-log { font-size: smaller; max-block-size: 16em; overflow: auto; overflow-wrap: anywhere; }
+	</style>
+</head>
+<body>
+	<h1>UI: Components &gt; FormFlow &gt; Field types</h1>
+	<p>
+		A <a href="../form-rules/examples/contact.form.json">contact form</a> using the newer
+		<a href="../form-rules/types/core.json">core field types</a>: text blocks, a hidden <em>campaign</em> value
+		(add <code>?campaign=spring</code> to the address), a file upload that is only sent with the final submit, and two consent boxes
+		whose wording and notice version are recorded with the answers. Choose <em>A complaint</em> and the attachment becomes required.
+	</p>
+
+	<form-flow form="../form-rules/examples/contact.form.json" rules="../form-rules/examples/contact.rules.json" explain></form-flow>
+
+	<h2>Submitted</h2>
+	<pre class="demo-log" id="log"></pre>
+
+	<script type="module">
+		import './index.js';
+		const flow = document.querySelector('form-flow');
+		const campaign = new URLSearchParams(location.search).get('campaign');
+		if (campaign) flow.context = { campaign };
+		flow.addEventListener('ff:submit', ({ detail }) => {
+			const files = Object.fromEntries(Object.entries(detail.files).map(([id, list]) => [id, list.map(file => `${file.name} (${file.size} bytes)`)]));
+			document.getElementById('log').textContent = JSON.stringify({ values: detail.values, files, consents: detail.consents }, null, 2);
+		});
+	</script>
+</body>
+</html>

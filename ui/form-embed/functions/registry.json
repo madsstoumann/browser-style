@@ -1,8 +1,8 @@
 {
-	"$comment": "Host functions a published form may name. Name → module; the module exports { functions }. Reviewed code only: forms never carry script URLs.",
-	"cprDate": "../../form-rules/examples/functions/checks.js",
-	"dk-cpr": "../../form-rules/examples/functions/checks.js",
-	"dk-cvr": "../../form-rules/examples/functions/checks.js",
-	"luhn": "../../form-rules/examples/functions/checks.js",
-	"iban": "../../form-rules/examples/functions/checks.js"
+	"$comment": "Host functions a published form may name. Name → module; the module exports { functions }. Reviewed code only: forms never carry script URLs. The modules are the installed field type packages (ui/form-types/*).",
+	"cprDate": "../../form-types/dk/functions.js",
+	"dk-cpr": "../../form-types/dk/functions.js",
+	"dk-cvr": "../../form-types/dk/functions.js",
+	"luhn": "../../form-types/banking/functions.js",
+	"iban": "../../form-types/banking/functions.js"
 }

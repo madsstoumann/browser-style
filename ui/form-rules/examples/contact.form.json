@@ -1,0 +1,52 @@
+{
+	"$schema": "../schemas/form-definition.schema.json",
+	"id": "form-contact",
+	"model": "form-definition",
+	"meta": { "locale": "en", "status": "published", "version": 1 },
+	"fields": {
+		"title": "Contact us",
+		"structure": {
+			"layout": [
+				{ "area": "main", "type": "step", "id": "message", "name": "Your message", "fields": ["intro", "name", "email", "topic", "message", "attachment", "campaign"] },
+				{ "area": "main", "type": "step", "id": "send", "name": "Send", "fields": ["privacyNote", "contactConsent", "newsletter"] }
+			]
+		},
+		"type": "object",
+		"properties": {
+			"intro": { "kind": "text-block", "type": "content", "title": "How can we help?", "content": "Tell us what it is about and we answer within two working days.\n\nFor urgent matters, call us instead." },
+			"name": { "kind": "text", "type": "string", "privacy": "personal", "title": "Name", "required": true, "ui": { "placeholder": "First and last name" } },
+			"email": { "kind": "email", "type": "string", "privacy": "personal", "title": "Email", "required": true, "ui": { "widget": "email" } },
+			"topic": {
+				"kind": "select",
+				"type": "select",
+				"title": "Topic",
+				"required": true,
+				"track": true,
+				"options": { "choices": [
+					{ "value": "question", "label": "A question" },
+					{ "value": "complaint", "label": "A complaint" },
+					{ "value": "other", "label": "Something else" }
+				] }
+			},
+			"message": { "kind": "textarea", "type": "string", "privacy": "personal", "title": "Message", "required": true, "ui": { "widget": "textarea" }, "validation": { "minLength": 10, "maxLength": 2000 } },
+			"attachment": { "kind": "file", "type": "file", "privacy": "personal", "title": "Attachment", "description": "PDF or image, up to 5 MB", "validation": { "accept": ".pdf,image/*", "maxSize": 5242880, "maxFiles": 2 } },
+			"campaign": { "kind": "hidden", "type": "string", "title": "Campaign", "ui": { "widget": "hidden" }, "from": "context.campaign", "default": "direct" },
+			"privacyNote": { "kind": "text-block", "type": "content", "content": "We only use your details to answer you." },
+			"contactConsent": {
+				"kind": "consent",
+				"type": "boolean",
+				"title": "Consent to be contacted",
+				"required": true,
+				"ui": { "widget": "consent" },
+				"consent": { "text": "I agree that you may store my details to answer my enquiry.", "notice": { "label": "Privacy notice", "url": "https://example.com/privacy", "version": "2026-10" } }
+			},
+			"newsletter": {
+				"kind": "consent",
+				"type": "boolean",
+				"title": "Newsletter",
+				"ui": { "widget": "consent" },
+				"consent": { "text": "Send me the monthly newsletter. I can unsubscribe at any time.", "notice": { "label": "Privacy notice", "url": "https://example.com/privacy", "version": "2026-10" } }
+			}
+		}
+	}
+}

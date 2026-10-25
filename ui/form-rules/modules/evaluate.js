@@ -6,7 +6,7 @@
  * `effects` for the host to carry out.
  */
 
-import { apply, FUNCTIONS, runCheck, truthy } from './logic.js';
+import { apply, FUNCTIONS, getPath, runCheck, truthy } from './logic.js';
 import { actionName, actionTargets, FLAG_ACTIONS, gotoFrom, gotoOf, RESTRICTIVE, STEP_ACTIONS } from './actions.js';
 import { normalizeForm, normalizeRuleSet, withPatchFields } from './form.js';
 
@@ -209,8 +209,22 @@ const DEFAULT_MESSAGES = {
 	maximum: rule => `Must be at most ${rule}`,
 	minLength: rule => `Must be at least ${rule} characters`,
 	maxLength: rule => `Must be at most ${rule} characters`,
-	pattern: () => 'Does not match the expected format'
+	pattern: () => 'Does not match the expected format',
+	maxFiles: rule => (rule === 1 ? 'Choose one file' : `Choose at most ${rule} files`),
+	maxSize: rule => `Each file must be at most ${formatSize(rule)}`,
+	accept: rule => `Allowed file types: ${rule}`
 };
+
+const formatSize = bytes => (bytes >= 1048576 ? `${Math.round(bytes / 104857.6) / 10} MB` : `${Math.ceil(bytes / 1024)} KB`);
+
+/* Whether a file ({ name, type }) matches an accept list like ".pdf,image/*". */
+export function accepts(accept, file) {
+	const list = String(accept ?? '').split(',').map(item => item.trim().toLowerCase()).filter(Boolean);
+	if (!list.length) return true;
+	const name = String(file?.name ?? '').toLowerCase();
+	const type = String(file?.type ?? '').toLowerCase();
+	return list.some(item => (item.startsWith('.') ? name.endsWith(item) : item.endsWith('/*') ? type.startsWith(item.slice(0, -1)) : type === item));
+}
 
 /* The field's own constraints (validation in the form definition), as issues. */
 function constraintIssues(id, property, value, functions) {
@@ -227,12 +241,34 @@ function constraintIssues(id, property, value, functions) {
 		if (typeof validation.maxLength === 'number' && value.length > validation.maxLength) fail('maxLength', validation.maxLength);
 		if (typeof validation.pattern === 'string' && !new RegExp(`^(?:${validation.pattern.replace(/^\^|\$$/g, '')})$`, 'u').test(value)) fail('pattern');
 	}
+	if (property?.type === 'file' && Array.isArray(value)) {
+		if (typeof validation.maxFiles === 'number' && value.length > validation.maxFiles) fail('maxFiles', validation.maxFiles);
+		if (typeof validation.maxSize === 'number' && value.some(file => file?.size > validation.maxSize)) fail('maxSize', validation.maxSize);
+		if (validation.accept && !value.every(file => accepts(validation.accept, file))) fail('accept', validation.accept);
+		return found;
+	}
 	for (const name of [].concat(validation.check ?? [])) {
 		const result = runCheck(functions, name, value);
 		if (result) found.push({ field: id, code: result.code, message: messages[result.code] ?? messages[name] ?? result.message, ...(result.level ? { level: result.level } : {}) });
 	}
 	return found;
 }
+
+/* Prefills: a field with no answer yet (no key in values) reads `from` (context.* or facts.*), then its `default`. */
+function withPrefill(form, values, input) {
+	const filled = { ...values };
+	for (const [id, field] of form.fields) {
+		const property = field.property ?? {};
+		if (Object.hasOwn(values, id) || property.type === 'content') continue;
+		let value = typeof property.from === 'string' ? getPath({ context: input.context ?? {}, facts: input.facts ?? {} }, property.from) : null;
+		if (value === null && property.default !== undefined) value = property.default;
+		if (value !== null && value !== undefined) filled[id] = value;
+	}
+	return filled;
+}
+
+/* A field with no value of its own (a text block). */
+export const hasNoValue = property => property?.type === 'content';
 
 /* Values a condition can read: only fields that are currently visible. */
 const visibleValues = (values, fields) => Object.fromEntries(
@@ -242,7 +278,7 @@ const visibleValues = (values, fields) => Object.fromEntries(
 export function evaluate(formDefinition, ruleSetDocument, input = {}) {
 	const baseForm = normalizeForm(formDefinition);
 	const ruleSet = normalizeRuleSet(ruleSetDocument);
-	const values = input.values ?? {};
+	const values = withPrefill(baseForm, input.values ?? {}, input);
 	const hasPrevious = Array.isArray(input.previous?.matched);
 	const previousMatched = new Set(input.previous?.matched ?? []);
 	const baseRules = ruleSet.rules;
@@ -299,6 +335,8 @@ export function evaluate(formDefinition, ruleSetDocument, input = {}) {
 	const issues = [...state.issues];
 	for (const [id, field] of Object.entries(state.fields)) {
 		if (!field.visible || !field.enabled) continue;
+		const property = form.fields.get(id)?.property;
+		if (hasNoValue(property)) continue;
 		let value = values[id];
 		if (state.assigned.has(id)) {
 			const decision = decide(state.assigned.get(id), null);
@@ -312,8 +350,9 @@ export function evaluate(formDefinition, ruleSetDocument, input = {}) {
 				value = undefined;
 			}
 		}
-		if (field.required && isEmpty(value)) issues.push({ field: id, code: 'required' });
-		if (!isEmpty(value)) issues.push(...constraintIssues(id, form.fields.get(id)?.property, value, input.functions));
+		/* A required yes/no or consent must be ticked, as the browser's own required checkbox. */
+		if (field.required && (isEmpty(value) || (property?.type === 'boolean' && value !== true))) issues.push({ field: id, code: 'required' });
+		if (!isEmpty(value)) issues.push(...constraintIssues(id, property, value, input.functions));
 		for (const entry of state.invalid.get(id) ?? []) {
 			issues.push({ field: id, code: entry.code, message: entry.message, ...(entry.level ? { level: entry.level } : {}), rule: entry.rule });
 		}

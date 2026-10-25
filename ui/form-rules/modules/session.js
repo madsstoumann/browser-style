@@ -4,7 +4,7 @@
  *
  * A session only stores what `evaluate()` cannot rebuild: the values of visible fields, the facts,
  * the current step and the matched rules (so `emit` does not fire again on resume). Fields marked
- * `privacy: "special"` are never stored. Patches and context are not stored either: patches are
+ * `privacy: "special"` and file uploads are never stored. Patches and context are not stored either: patches are
  * re-fetched (their requests are keyed by the values), context comes from the host.
  */
 import { normalizeForm, normalizeRuleSet, unwrap } from './form.js';
@@ -34,6 +34,9 @@ export function privacyOf(definition, ruleSet, id) {
 	const patch = normalizeRuleSet(ruleSet).patches.find(p => p.fields?.[id]);
 	return patch ? (patch.fields[id].privacy ?? 'personal') : 'personal';
 }
+
+/* File uploads go with the final submit only, so a draft never holds them. */
+const isFileField = (definition, id) => normalizeForm(definition).properties[id]?.type === 'file';
 
 export const isFinal = session => session?.status !== 'draft';
 export const isExpired = (session, now) => Boolean(session?.expires) && session.expires <= now;
@@ -71,7 +74,7 @@ export function createSession({ id, definition, ruleSet, owner = { kind: 'anonym
 export function snapshot(session, { definition, ruleSet, state, step = null, facts = {}, now }) {
 	if (isFinal(session)) throw new Error(`session ${session.id} is ${session.status}`);
 	const values = Object.fromEntries(Object.entries(state.values ?? {})
-		.filter(([id]) => privacyOf(definition, ruleSet, id) !== 'special'));
+		.filter(([id]) => privacyOf(definition, ruleSet, id) !== 'special' && !isFileField(definition, id)));
 	return {
 		...session,
 		rev: session.rev + 1,
@@ -133,6 +136,7 @@ export function resume(session, { definition, ruleSet, now, functions, today }) 
 		const patched = id.includes('.') || rules.patches.some(patch => patch.fields?.[id]);
 		if (!known[id] && !patched) changes.push({ field: id, change: 'removed' });
 		else if (privacyOf(definition, ruleSet, id) === 'special') changes.push({ field: id, change: 'special' });
+		else if (isFileField(definition, id)) continue;
 		else values[id] = value;
 	}
 
