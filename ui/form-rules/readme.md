@@ -26,7 +26,7 @@ const state = evaluate(form, rules, { values, context, facts, previous, today: '
 | `values` | What would be submitted: visible, enabled fields only, `setValue` applied, unavailable options removed |
 | `matched` | Ids of the rules that matched |
 | `effects` | `fetch` and `emit` requests for the host to carry out, and `track` edges (`rule.enter` / `rule.leave`) of rules marked `"track": true` |
-| `issues` | `{ field, code, message?, level? }`: `required`, `option-unavailable`, the field's own constraints (`minimum`, `pattern`, …), its checks, and `invalid` rules. `level: "warning"` does not block |
+| `issues` | `{ field, code, message?, level? }`: `required`, `option-unavailable`, `type` (the answer is not the JSON type its field gives it, such as a list posted for a text field; it is not submitted), the field's own constraints (`minimum`, `pattern`, …), its checks, and `invalid` rules. `level: "warning"` does not block |
 | `explain` | Which rules decided each flag, e.g. `"plan.options": ["senior-north"]`; a rule's `else` branch shows as `"senior-north:else"` |
 
 Pass the previous state's `matched` as `previous` so `emit` and `track` fire once per change, not on every evaluation.

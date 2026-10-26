@@ -226,6 +226,26 @@ export function accepts(accept, file) {
 	return list.some(item => (item.startsWith('.') ? name.endsWith(item) : item.endsWith('/*') ? type.startsWith(item.slice(0, -1)) : type === item));
 }
 
+/* Whether a posted value has the JSON shape its field's type gives it. Anything can be posted, so a server
+   must not run text constraints only when the value happens to be text: an array posted for an email field
+   would skip its pattern and be stored. A field without a type takes one plain value (or a list, when multiple). */
+const isChoice = item => typeof item === 'string' || (typeof item === 'number' && Number.isFinite(item));
+export function hasValueType(property, value) {
+	const multiple = property?.options?.multiple === true;
+	switch (property?.type) {
+		case 'string': return typeof value === 'string';
+		case 'number': return typeof value === 'number' && Number.isFinite(value);
+		case 'integer': return Number.isInteger(value);
+		case 'boolean': return typeof value === 'boolean';
+		case 'select': return multiple ? Array.isArray(value) && value.every(isChoice) : isChoice(value);
+		case 'file': return Array.isArray(value) && value.every(file => file && typeof file === 'object' && !Array.isArray(file) && typeof file.name === 'string');
+		default: {
+			const plain = item => isChoice(item) || typeof item === 'boolean';
+			return multiple ? Array.isArray(value) && value.every(plain) : plain(value);
+		}
+	}
+}
+
 /* The field's own constraints (validation in the form definition), as issues. */
 function constraintIssues(id, property, value, functions) {
 	const validation = property?.validation ?? {};
@@ -262,6 +282,8 @@ function withPrefill(form, values, input) {
 		if (Object.hasOwn(values, id) || property.type === 'content') continue;
 		let value = typeof property.from === 'string' ? getPath({ context: input.context ?? {}, facts: input.facts ?? {} }, property.from) : null;
 		if (value === null && property.default !== undefined) value = property.default;
+		/* A text field prefilled from a number or a yes/no keeps it as text, so it passes the type check. */
+		if (property.type === 'string' && (typeof value === 'number' || typeof value === 'boolean')) value = String(value);
 		if (value !== null && value !== undefined) filled[id] = value;
 	}
 	return filled;
@@ -342,6 +364,9 @@ export function evaluate(formDefinition, ruleSetDocument, input = {}) {
 			const decision = decide(state.assigned.get(id), null);
 			value = decision.value;
 			state.explain[`${id}.value`] = decision.rules;
+		} else if (!isEmpty(value) && !hasValueType(property, value)) {
+			issues.push({ field: id, code: 'type' });
+			value = undefined;
 		}
 		if (!isEmpty(value) && field.options) {
 			const chosen = Array.isArray(value) ? value : [value];

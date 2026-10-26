@@ -4,7 +4,7 @@
  * The same module runs in the browser and in Node.
  */
 
-export { evaluate, accepts, hasNoValue } from './modules/evaluate.js';
+export { evaluate, accepts, hasNoValue, hasValueType } from './modules/evaluate.js';
 export { validate } from './modules/validate.js';
 export { merge, expirePatches, MAX_PATCH_DEPTH, PATCH_PRIORITY_CEILING } from './modules/merge.js';
 export { handleEvent } from './modules/events.js';
