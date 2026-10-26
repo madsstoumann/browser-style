@@ -4,7 +4,7 @@
  * Fields are plain native controls in light DOM, so @browser.style/base form.css styles them.
  * Every input re-evaluates the rules; the engine's effects (fetch, emit) are carried out here.
  */
-import { consentRecords, evaluate, expirePatches, handleEvent, merge, normalizeForm, normalizeRuleSet, privacyOf } from '../form-rules/index.js';
+import { consentRecords, evaluate, expirePatches, handleEvent, merge, normalizeForm, normalizeRuleSet, privacyOf, safeUrl } from '../form-rules/index.js';
 import { FlowTracking, validityCode } from './tracking.js';
 
 const INPUT_TYPES = ['color', 'date', 'datetime-local', 'email', 'month', 'password', 'search', 'tel', 'time', 'url', 'week'];
@@ -233,11 +233,13 @@ export default class FormFlow extends HTMLElement {
 		/* The wording is the label, so what is recorded is what the person saw. */
 		if (widget === 'consent') {
 			const notice = property.consent?.notice;
+			/* The link may come from a service's patch: only http(s) or relative, never javascript: */
+			const noticeUrl = safeUrl(notice?.url);
 			return h('label', { 'data-field': id, part: 'field consent' },
 				h('input', { type: 'checkbox', name: id, checked: value === true }),
 				h('span', {},
 					property.consent?.text ?? property.title ?? id,
-					notice?.url ? [' ', h('a', { href: notice.url, target: '_blank', rel: 'noopener' }, notice.label ?? 'Privacy notice')] : null,
+					noticeUrl ? [' ', h('a', { href: noticeUrl, target: '_blank', rel: 'noopener' }, notice.label ?? 'Privacy notice')] : null,
 					h('abbr', { title: 'Required', hidden: true }, '*'),
 					property.description ? h('small', {}, property.description) : null));
 		}

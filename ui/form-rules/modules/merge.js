@@ -15,6 +15,19 @@ import { normalizeForm, normalizeRuleSet } from './form.js';
 export const PATCH_PRIORITY_CEILING = -1;
 export const MAX_PATCH_DEPTH = 2;
 
+/* What a patch field is, for the service's allow list: its widget when that widget asks for something sensitive
+   (a password, a hidden value, a consent), else its type. */
+const SENSITIVE_WIDGETS = ['password', 'hidden', 'consent'];
+export function patchFieldKind(property) {
+	const widget = property?.ui?.widget;
+	if (SENSITIVE_WIDGETS.includes(widget)) return widget;
+	return property?.type ?? 'string';
+}
+
+/* What a service may add when its rule set entry has no `fields` list: plain questions and text blocks.
+   Passwords, hidden values, consents and file uploads need the service to be named for them. */
+export const PATCH_FIELD_KINDS = Object.freeze(['string', 'number', 'integer', 'boolean', 'select', 'content']);
+
 /* Rewrites `values.<local>` to `values.<ns>.<local>` for the patch's own fields. */
 function renameReads(logic, localFields, ns) {
 	if (Array.isArray(logic)) return logic.map(item => renameReads(item, localFields, ns));
@@ -71,6 +84,12 @@ export function merge(formDefinition, ruleSetDocument, patch, { owner = null, se
 	}
 
 	const localFields = new Set(Object.keys(patch.fields ?? {}));
+	/* A compromised service must not be able to ask for a password or slip in a hidden value or consent. */
+	const allowedKinds = Array.isArray(ruleSet.services?.[ns]?.fields) ? ruleSet.services[ns].fields : PATCH_FIELD_KINDS;
+	localFields.forEach(id => {
+		const kind = patchFieldKind(patch.fields[id]);
+		if (!allowedKinds.includes(kind)) fail('field-kind', `Service "${ns}" may not add a ${kind} field ("${id}"); list "${kind}" in the service's "fields" to allow it`, `fields.${id}`);
+	});
 	const qualify = id => (localFields.has(id) ? `${ns}.${id}` : id);
 	const fields = {};
 	localFields.forEach(id => { fields[`${ns}.${id}`] = patch.fields[id]; });

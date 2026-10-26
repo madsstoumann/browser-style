@@ -1,5 +1,5 @@
 /**
- * validate(form, ruleSet) → { valid, errors: [{ code, message, path }] }
+ * validate(form, ruleSet) → { valid, errors: [{ code, message, path }], warnings: [same shape] }
  *
  * Checks a form definition and its rule set together, before anything runs:
  * unknown fields, steps, slots, services, operators and actions, duplicate ids,
@@ -32,7 +32,9 @@ const PREFILL_ROOTS = ['context', 'facts'];
 /* `types`: a registry from defineTypes()/loadTypes(); when given, every `kind` must be one of its types. */
 export function validate(formDefinition, ruleSetDocument, { functions = {}, types = null } = {}) {
 	const errors = [];
+	const warnings = [];
 	const fail = (code, message, path) => errors.push({ code, message, path });
+	const warn = (code, message, path) => warnings.push({ code, message, path });
 	const rawForm = unwrap(formDefinition);
 	const form = normalizeForm(formDefinition);
 	const ruleSet = normalizeRuleSet(ruleSetDocument);
@@ -85,7 +87,12 @@ export function validate(formDefinition, ruleSetDocument, { functions = {}, type
 		if (service?.method && !['GET', 'POST'].includes(service.method)) fail('service', `Service "${name}" method must be GET or POST`, `services.${name}.method`);
 		(service?.send ?? []).forEach(id => {
 			if (!form.fields.has(id)) fail('field', `Service "${name}" sends unknown field "${id}"`, `services.${name}.send`);
+			/* Answers that leave the site: special-category ones only to a service named as a processor, personal ones with a warning. */
+			const privacy = rawForm.properties?.[id]?.privacy ?? 'none';
+			if (privacy === 'special' && service.processor !== true) fail('privacy', `Service "${name}" sends "${id}", which is special-category data; mark the service "processor": true if it may receive it`, `services.${name}.send`);
+			else if (privacy === 'personal' && service.processor !== true) warn('privacy', `Service "${name}" receives personal data ("${id}"); mark it "processor": true once it is covered by a data processing agreement`, `services.${name}.send`);
 		});
+		if (service?.fields !== undefined && !(Array.isArray(service.fields) && service.fields.every(kind => typeof kind === 'string'))) fail('service', `Service "${name}" fields must be a list of field types or widgets`, `services.${name}.fields`);
 	}
 
 	ruleSet.listen.forEach((listener, index) => {
@@ -261,5 +268,5 @@ export function validate(formDefinition, ruleSetDocument, { functions = {}, type
 	};
 	[...fieldGraph.keys()].forEach(node => visit(node, []));
 
-	return { valid: errors.length === 0, errors };
+	return { valid: errors.length === 0, errors, warnings };
 }

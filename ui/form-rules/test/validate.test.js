@@ -10,7 +10,7 @@ const withRules = (...extra) => ({ ...rules.fields, id: rules.id, rules: [...rul
 const codes = result => result.errors.map(error => error.code);
 
 test('the insurance example is valid', () => {
-	assert.deepEqual(validate(form, rules), { valid: true, errors: [] });
+	assert.deepEqual(validate(form, rules), { valid: true, errors: [], warnings: [] });
 });
 
 test('unknown fields, steps, actions and operators are reported', () => {

@@ -15,7 +15,7 @@ const applicant = { cpr: '070761-4285', name: 'Ib Hansen', email: 'ib@example.dk
 const codes = state => state.issues.map(issue => `${issue.field}:${issue.code}`);
 
 test('the loan example is valid with its functions, and names the ones missing without them', () => {
-	assert.deepEqual(validate(form, rules, { functions }), { valid: true, errors: [] });
+	assert.deepEqual(validate(form, rules, { functions }), { valid: true, errors: [], warnings: [] });
 	assert.deepEqual(validate(form, rules).errors.map(error => error.code).sort(), ['function', 'function', 'function', 'operator']);
 });
 
