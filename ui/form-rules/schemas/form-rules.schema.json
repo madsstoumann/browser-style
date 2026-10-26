@@ -70,7 +70,9 @@
 							"url": { "type": "string", "format": "uri-reference" },
 							"method": { "enum": ["GET", "POST"], "description": "POST (default) sends the values as a JSON body; GET sends them as query parameters" },
 							"send": { "type": "array", "items": { "type": "string" } },
-							"timeoutMs": { "type": "integer", "minimum": 0 }
+							"timeoutMs": { "type": "integer", "minimum": 0 },
+							"fields": { "type": "array", "items": { "type": "string" }, "description": "Field types and widgets a reply may add. Default: string, number, integer, boolean, select, content. Name password, hidden, consent or file to allow them" },
+							"processor": { "type": "boolean", "description": "The service is covered by a data processing agreement, so it may receive personal and special-category answers" }
 						},
 						"additionalProperties": false
 					}

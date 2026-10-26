@@ -14,8 +14,8 @@
 			"risk": { "type": "string", "title": "Risk", "initial": "normal" }
 		},
 		"services": {
-			"eligibility": { "url": "/ui/form-rules/examples/api/eligibility.json", "method": "GET", "send": ["cpr", "amount", "income"], "timeoutMs": 4000 },
-			"partner": { "url": "/ui/form-rules/examples/api/co-applicant.json", "method": "GET", "send": ["cpr"], "timeoutMs": 4000 }
+			"eligibility": { "url": "/ui/form-rules/examples/api/eligibility.json", "method": "GET", "send": ["cpr", "amount", "income"], "timeoutMs": 4000, "processor": true },
+			"partner": { "url": "/ui/form-rules/examples/api/co-applicant.json", "method": "GET", "send": ["cpr"], "timeoutMs": 4000, "processor": true }
 		},
 		"rules": [
 			{

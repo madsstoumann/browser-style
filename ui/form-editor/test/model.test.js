@@ -41,7 +41,7 @@ test('renaming a field updates steps, rules and services', () => {
 	assert.equal(result.renamed, true);
 	assert.ok(result.form.fields.properties.postcode);
 	assert.deepEqual(result.rules.fields.services.offers.send, ['ageGroup', 'postcode']);
-	assert.deepEqual(validate(result.form, result.rules), { valid: true, errors: [] });
+	assert.deepEqual(validate(result.form, result.rules), { valid: true, errors: [], warnings: [] });
 	assert.deepEqual(rulesUsingField(result.rules, 'postcode'), ['senior-north', 'roadside-region', 'outside-area']);
 	assert.equal(renameField(form, rules, 'zip', 'plan').renamed, false);
 });

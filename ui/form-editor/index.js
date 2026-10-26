@@ -321,16 +321,20 @@ export class FormEditor extends HTMLElement {
 
 	/* === Status, import, export === */
 
-	#errors() {
+	#check() {
 		try {
-			return validate(this.form, this.rules, { functions: this.#functions, types: this.#types }).errors;
+			return validate(this.form, this.rules, { functions: this.#functions, types: this.#types });
 		} catch (error) {
-			return [{ code: 'invalid', message: error.message }];
+			return { errors: [{ code: 'invalid', message: error.message }], warnings: [] };
 		}
 	}
 
+	#errors() {
+		return this.#check().errors;
+	}
+
 	#renderStatus() {
-		const errors = this.#errors();
+		const { errors, warnings = [] } = this.#check();
 		this.#parts.export.disabled = errors.length > 0;
 		this.#parts.export.title = errors.length ? 'Fix the problems below to export' : '';
 		const summary = errors.length ? `${errors.length} problem${errors.length > 1 ? 's' : ''} to fix before export` : 'No problems: ready to export';
@@ -338,7 +342,9 @@ export class FormEditor extends HTMLElement {
 			...(this.#message ? [h('p', {}, this.#message)] : []),
 			errors.length
 				? h('details', { open: errors.length < 4 }, h('summary', { part: 'problem' }, summary), h('ul', {}, errors.map(error => h('li', {}, error.message, error.path ? h('small', {}, ` (${error.path})`) : null))))
-				: h('p', { part: 'ok' }, summary)
+				: h('p', { part: 'ok' }, summary),
+			/* Warnings do not block export: things to check, such as personal data going to a service. */
+			...(warnings.length ? [h('details', {}, h('summary', { part: 'warning' }, `${warnings.length} thing${warnings.length > 1 ? 's' : ''} to check`), h('ul', {}, warnings.map(warning => h('li', {}, warning.message, warning.path ? h('small', {}, ` (${warning.path})`) : null))))] : [])
 		);
 	}
 

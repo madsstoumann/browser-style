@@ -66,7 +66,7 @@ async function loadFunctions(names = []) {
 	const registry = await once(`registry`, async () => JSON.parse(await fetchText(registryUrl)));
 	const functions = {};
 	await Promise.all(names.map(async name => {
-		if (!registry[name] || name === '$comment') throw new Error(`Unknown function: ${name}`);
+		if (!Object.hasOwn(registry, name) || typeof registry[name] !== 'string' || name === '$comment') throw new Error(`Unknown function: ${name}`);
 		const module = await import(new URL(registry[name], registryUrl));
 		const fn = module.functions?.[name] ?? module[name];
 		if (typeof fn !== 'function') throw new Error(`${registry[name]} has no function ${name}`);

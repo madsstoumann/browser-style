@@ -549,6 +549,16 @@ A reply carrying only `data` is a backend check: conditions read it as `services
 
 Set `flow.fetcher = async (effect, service) => patch` to route requests through a proxy or return mocks; returning `undefined` falls back to the built-in request. The editor's preview uses sample replies (`samples` attribute) instead of calling services.
 
+**What a reply may add.** A service's reply can add questions, but by default only plain ones: text, numbers, yes/no, choices and text blocks. A password, a hidden value, a consent or a file upload is refused (`field-kind`) unless the service lists it, so a compromised service cannot ask for a password or slip in a hidden answer. List what a service may add with `fields`:
+
+```json
+"services": { "partner": { "url": "/api/partner", "send": ["cpr"], "fields": ["string", "select", "consent"], "processor": true } }
+```
+
+**Personal data to services.** `validate()` refuses a service that is sent a `special` answer and warns about one that is sent a `personal` answer, until the service is marked `"processor": true`: covered by a data processing agreement. The editor shows the warnings under "things to check"; they do not block export.
+
+**Links from data.** A URL that comes from a form, a reply or a stored entry is shown as a link only when `safeUrl()` lets it through: `http:`, `https:` or relative. form-flow uses it for consent notice links.
+
 **For now, browsers call services directly.** A service must be public, accept CORS from the sites the form runs on, and need no secret key. See [Deferred](#not-built-yet).
 
 ---

@@ -94,7 +94,7 @@ const operators = {
 
 /* Runs a host function used as a field check: null when the value passes, else { code, message, level? }. */
 export function runCheck(functions, name, value) {
-	const fn = functions?.[name];
+	const fn = functions && Object.hasOwn(functions, name) ? functions[name] : undefined;
 	if (typeof fn !== 'function') throw new Error(`Unknown function "${name}"`);
 	return fn(value) ?? null;
 }
@@ -155,7 +155,9 @@ export function apply(logic, data = {}) {
 
 	if (Object.hasOwn(special, op)) return special[op](args, data);
 	if (Object.hasOwn(operators, op)) return operators[op](...args.map(arg => apply(arg, data)));
-	const fn = data?.[FUNCTIONS]?.[op];
+	const functions = data?.[FUNCTIONS];
+	/* Own properties only: Object.prototype methods ("constructor", "toString") are not host functions. */
+	const fn = functions && Object.hasOwn(functions, op) ? functions[op] : undefined;
 	if (typeof fn === 'function') return fn(...args.map(arg => apply(arg, data))) ?? null;
 	throw new Error(`Unknown operator "${op}"`);
 }
