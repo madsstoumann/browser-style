@@ -710,7 +710,7 @@ Everything in the browser can be changed by the person using it: values, variabl
 
 | Input | In the browser | On the server's re-check |
 |---|---|---|
-| `values` | The answers | Posted, then filtered again: hidden and skipped fields dropped, `setValue` applied, options, required and validation checked |
+| `values` | The answers | Posted, then filtered again: hidden and skipped fields dropped, `setValue` applied, each answer held to its field's JSON type (a `type` issue otherwise, so a list posted for an email field cannot skip its pattern), options, required and validation checked |
 | `vars.*` | Computed | **Not posted.** Computed again from the answers |
 | `services.*` | The browser's fetch replies | **Not posted.** The server calls the services itself |
 | `context.*` | Set by the page | Built by `trustedContext()`: keys the server supplies win, keys declared `"from": "server"` are never taken from the page |
