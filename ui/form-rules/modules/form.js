@@ -58,6 +58,7 @@ export function normalizeRuleSet(ruleSet) {
 	const rules = unwrap(ruleSet);
 	return {
 		...rules,
+		context: rules.context ?? {},
 		services: rules.services ?? {},
 		listen: rules.listen ?? [],
 		rules: rules.rules ?? [],

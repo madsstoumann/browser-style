@@ -9,6 +9,7 @@
 import { operatorsOf, readsOf, OPERATORS } from './logic.js';
 import { actionName, actionTargets, ACTIONS, gotoFrom, gotoOf, VARIABLE_ACTIONS } from './actions.js';
 import { normalizeForm, normalizeRuleSet, unwrap } from './form.js';
+import { CONTEXT_SOURCES } from './context.js';
 
 const INPUT_ROOTS = ['values', 'context', 'facts', 'step', 'today', 'vars', 'services'];
 /* Only these change what a condition can read, since hidden values read as absent. */
@@ -95,6 +96,12 @@ export function validate(formDefinition, ruleSetDocument, { functions = {}, type
 		if (listener?.set && !String(listener.set).startsWith('facts.')) fail('listener', '"set" may only write under facts.', path);
 		if (listener?.patch && !slotIds.has(listener.patch.into)) fail('slot', `Unknown slot "${listener.patch.into}"`, `${path}.patch.into`);
 	});
+
+	/* Context keys: where each may come from when a server re-checks a submit (page or server). */
+	for (const [key, entry] of Object.entries(ruleSet.context ?? {})) {
+		if (!/^[A-Za-z_][\w]*$/.test(key)) fail('context', `Context key "${key}" must be a plain identifier`, `context.${key}`);
+		if (!entry || typeof entry !== 'object' || !CONTEXT_SOURCES.includes(entry.from ?? 'page')) fail('context', `Context key "${key}" must come "from" one of: ${CONTEXT_SOURCES.join(', ')}`, `context.${key}`);
+	}
 
 	/* Variables: computed from an expression, or written by rules (set / add) from an initial value. */
 	const variables = ruleSet.variables ?? {};
