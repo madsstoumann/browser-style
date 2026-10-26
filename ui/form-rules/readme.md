@@ -38,7 +38,7 @@ Pass the previous state's `matched` as `previous` so `emit` and `track` fire onc
 | Document | Schema | Example |
 | --- | --- | --- |
 | Form definition: UCM-shaped properties, steps as `structure.layout` entries of type `step`, `slots` for remote fields | `schemas/form-definition.schema.json` | `examples/insurance.form.json` |
-| Rule set: `variables`, `services`, `listen`, `rules` | `schemas/form-rules.schema.json` | `examples/insurance.rules.json`, `examples/loan.rules.json` (advanced) |
+| Rule set: `context`, `variables`, `services`, `listen`, `rules` | `schemas/form-rules.schema.json` | `examples/insurance.rules.json`, `examples/loan.rules.json` (advanced) |
 | Patch: extra fields, steps, rules and data from a service or event | `schemas/form-patch.schema.json` | `examples/offers.patch.json`, `examples/api/*.json` |
 
 Both the form and the rule set may be plain objects or UCF content (`{ id, model, meta, fields }`).
@@ -91,6 +91,12 @@ A rule set may declare `variables`, which conditions read as `vars.<name>`:
 ```
 
 A **computed** variable is an expression over the values (and earlier variables). Any other variable starts at `initial`; matching rules `set` it (priority wins) and then `add` to it. Every evaluation starts again from `initial`, so the same answers always give the same score: nothing counts twice. `validate()` refuses a rule that feeds its own input (reads `vars.score` and adds to it), undeclared names and writes to computed variables. `explain["vars.score"]` lists the rules that changed it. Example: `examples/loan.rules.json`.
+
+Variables are never submitted: a server re-check computes them again from the answers.
+
+## Server context
+
+A server that re-checks a submit must not believe the page's `context`. A rule set declares the keys only the server may supply, `"context": { "segment": { "from": "server" } }`, and the server evaluates with `trustedContext(rules, { page, server })`: keys the server supplies win, keys declared `"from": "server"` are never taken from the page, other keys come from the page. `validate()` checks the declaration. See [What a server can trust](../../docs/forms.md#what-a-server-can-trust).
 
 ## Validation
 

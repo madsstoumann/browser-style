@@ -185,6 +185,7 @@ Values are typed by the definition: a choice with value `30` comes back as the n
 |---|---|
 | `form` | Id of the form definition the rules belong to |
 | `version` | Raise on every publish; an incoming `replace` event only applies a higher version |
+| `context` | Where each `context.<key>` may come from when a server re-checks a submit: `{ "segment": { "from": "server" } }`. See [What a server can trust](#what-a-server-can-trust) |
 | `variables` | Named values the rules compute or write, read as `vars.<name>`. See [Variables](#variables) |
 | `services` | Named endpoints: `url`, `method` (`POST` default, or `GET`), `send` (the field ids sent), `timeoutMs` (default 5000 in form-flow) |
 | `listen` | The incoming events the rule set accepts. See [Events](#events-both-ways) |
@@ -400,6 +401,7 @@ An action is an object with one key. The list is closed: `validate()` refuses an
 - Every evaluation starts again from `initial`, so the same answers always give the same score; nothing counts twice when the user goes back and forth.
 - `validate()` refuses a rule that reads the variable it adds to, undeclared names and writes to computed variables.
 - `explain["vars.score"]` lists the rules that changed it.
+- Variables are never submitted. A server that re-checks a submit computes them again from the answers, so changing them in the browser changes nothing that is stored. See [What a server can trust](#what-a-server-can-trust).
 
 ---
 
@@ -702,13 +704,48 @@ form-embed {
 
 ---
 
+## What a server can trust
+
+Everything in the browser can be changed by the person using it: values, variables, which step is shown, the engine itself. So a server never takes the browser's word for anything it can work out itself. It re-runs the same engine on the posted answers and stores only what that run lets through (the UCS adapters in universal-content-model do exactly this).
+
+| Input | In the browser | On the server's re-check |
+|---|---|---|
+| `values` | The answers | Posted, then filtered again: hidden and skipped fields dropped, `setValue` applied, options, required and validation checked |
+| `vars.*` | Computed | **Not posted.** Computed again from the answers |
+| `services.*` | The browser's fetch replies | **Not posted.** The server calls the services itself |
+| `context.*` | Set by the page | Built by `trustedContext()`: keys the server supplies win, keys declared `"from": "server"` are never taken from the page |
+| `facts.*` | Written by incoming events | **Not posted.** The server evaluates with no facts |
+
+**Context.** The page sets `context`, and the page is in the user's hands, so a server must not believe a `context.segment` of `"gold"` because the browser says so. Declare the keys that decide something:
+
+```json
+"context": {
+  "segment":  { "from": "server", "title": "Member segment" },
+  "campaign": { "from": "page" }
+}
+```
+
+A server builds the context it evaluates with from its own knowledge and the page's:
+
+```js
+import { trustedContext } from '@browser.style/form-rules';
+const context = trustedContext(rules, { page: posted.context, server: { segment: member?.segment ?? null } });
+```
+
+A key the server supplies always wins. A key declared `"from": "server"` is dropped from the page's context even when the server has no value for it, so it reads as `null`. Undeclared keys come from the page, as before, which suits harmless ones like `channel` and `campaign`. The browser keeps evaluating with the page's context, so the page should still set server keys (rendered into it by the CMS) to show the right fields.
+
+**Facts.** Facts come from events in the browser, so a server cannot check them. A rule that blocks or grants something on a fact is enforced in the browser only. Anything that must hold on the server belongs in a service the rules `fetch` (the server replays it) or in a server context key.
+
+**Services.** The server sends the posted answers a service names in `send`. A service that answers for a person (a credit check, a member lookup) must identify them from something the server knows, not from an answer the person could change.
+
+---
+
 ## Not built yet
 
 These are designed but deliberately deferred. Nothing above depends on them.
 
 | | Today | Later |
 |---|---|---|
-| **Server-side evaluation** | The engine runs in the browser only. A submitted form is not re-checked | The same rules run on the server (Node, or a .NET port that passes `fixtures/*.json`) to re-validate submissions and send `where: "server"` events |
 | **Backend endpoints** | `MockServer` keeps drafts in `localStorage`; resume emails are mocked as `ff:link`; the beacon tracker needs an endpoint that appends rows | A draft store with the `MockServer` contract, a mailer for resume links, an event store for the beacon |
 | **API gateway** | Services are called directly: they must be public, CORS-enabled, with no keys | A gateway (e.g. a Cloudflare Worker) holding keys and CORS rules, plugged in through `flow.fetcher` |
 | **Iframe embed mode** | `mode="iframe"` reports an `ff:error` | A postMessage bridge with auto-height, required for forms with personal data |

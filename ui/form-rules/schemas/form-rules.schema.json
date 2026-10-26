@@ -33,6 +33,20 @@
 				"form": { "type": "string", "description": "Id of the form definition these rules belong to" },
 				"version": { "type": "integer", "minimum": 1 },
 				"patchPriorityCeiling": { "type": "number", "description": "Highest priority a mounted patch rule may have. Default -1." },
+				"context": {
+					"type": "object",
+					"description": "Where each context.<key> may come from when a server re-checks a submit. \"server\": only the server supplies it, the page's value is ignored. \"page\" (the default for undeclared keys): the page may set it",
+					"propertyNames": { "pattern": "^[A-Za-z_][A-Za-z0-9_]*$" },
+					"additionalProperties": {
+						"type": "object",
+						"properties": {
+							"from": { "enum": ["page", "server"] },
+							"title": { "type": "string" },
+							"type": { "enum": ["number", "string", "boolean", "object"] }
+						},
+						"additionalProperties": false
+					}
+				},
 				"variables": {
 					"type": "object",
 					"description": "Read as vars.<name>. Either computed from an expression, or written by rules (set, then add) starting from an initial value",
