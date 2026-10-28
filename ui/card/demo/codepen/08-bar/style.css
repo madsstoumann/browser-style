@@ -1,0 +1,68 @@
+/*
+ * Pen 08 — A bar instead of dots
+ * Load Pen 01 (base) as an external stylesheet first.
+ * Keep the markers — make them equal, seamless segments of one line.
+ */
+.carousel.bar {
+	--bar-hit: 0.875rem;      /* the clickable height of a segment */
+	--bar-track: rgb(255 255 255 / 0.5);
+	--bar-thumb: #fff;
+	anchor-name: --bar;
+	anchor-scope: --bar;
+}
+.carousel.bar.below {
+	--bar-track: color-mix(in oklab, CanvasText 25%, transparent);
+	--bar-thumb: CanvasText;
+}
+/* the REAL scrollbar, styled — natively draggable */
+.carousel.scrollbar {
+	--scrollbar-thumb: color-mix(in oklab, CanvasText 55%, transparent);
+	--scrollbar-track: color-mix(in oklab, CanvasText 12%, transparent);
+	padding-block-end: 0.5rem;
+	scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+	scrollbar-width: thin;
+}
+
+@supports (scroll-marker-group: after) {
+	.carousel.bar {
+		&::scroll-marker-group {
+			gap: 0;
+			/* as wide as the carousel: anchor-size() measures the anchor */
+			inline-size: calc(anchor-size(--bar inline) - 2 * var(--inset));
+			position-anchor: --bar;
+		}
+		& > *::scroll-marker {
+			background: linear-gradient(var(--bar-track) 0 0) center / 100% 1px no-repeat;
+			block-size: var(--bar-hit);
+			border-radius: 0;
+			flex: 1;
+			inline-size: auto;
+		}
+		& > *::scroll-marker:target-current {
+			background: linear-gradient(var(--bar-thumb) 0 0) center / 100% 3px no-repeat;
+		}
+	}
+	/* below the image: back in flow, full width for free */
+	.carousel.bar.below::scroll-marker-group {
+		inline-size: auto;
+		justify-self: normal;
+		margin-block-start: 0.5rem;
+		position: static;
+	}
+	/* the base hides the scrollbar when controls exist — this one wants it back */
+	.carousel.scrollbar { scrollbar-width: thin; }
+}
+
+/* fallback buttons */
+.carousel-polyfill.bar {
+	& .carousel-dots { gap: 0; inset-inline: var(--inset); }
+	& .carousel-dot {
+		aspect-ratio: auto;
+		background: linear-gradient(var(--bar-track) 0 0) center / 100% 1px no-repeat;
+		block-size: var(--bar-hit);
+		border-radius: 0;
+		flex: 1;
+		&[aria-current] { background: linear-gradient(var(--bar-thumb) 0 0) center / 100% 3px no-repeat; }
+	}
+	&.below .carousel-dots { margin-block-start: 0.5rem; position: static; }
+}

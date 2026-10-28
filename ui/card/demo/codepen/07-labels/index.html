@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>CSS Carousels — 07 Labels and a timeline</title>
+	<!-- CodePen: add Pen 01's CSS as an external stylesheet (Settings → CSS) -->
+	<link rel="stylesheet" href="../01-basics/style.css">
+	<link rel="stylesheet" href="style.css">
+	<!-- CodePen: add Pen 01's JS as an external script — the fallback for Safari/Firefox -->
+	<script type="module" src="../01-basics/script.js"></script>
+</head>
+<body>
+<!-- CodePen: HTML panel = everything inside <body>. CSS panel = style.css. -->
+<main>
+	<header>
+		<h1>CSS Carousels — Labels and a timeline</h1>
+		<p>Markers can hold text: <code>content: attr()</code> reads it straight off the slide.</p>
+	</header>
+	<div class="demos">
+		<figure class="demo">
+			<div class="carousel labels no-arrows">
+				<img src="https://v4.browser.style/assets/images/spring.jpg" alt="Spring blossom" data-label="Spring" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/summer.jpg" alt="Summer beach" data-label="Summer" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/autumn.jpg" alt="Autumn leaves" data-label="Autumn" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/winter.jpg" alt="Snowy forest" data-label="Winter" loading="lazy">
+			</div>
+			<figcaption><strong>Labels</strong> — <code>content: attr(data-label)</code>.</figcaption>
+		</figure>
+
+		<figure class="demo">
+			<div class="carousel labels">
+				<img src="https://v4.browser.style/assets/images/hubble.png" alt="Galaxy photographed by a space telescope" data-label="Space" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/quantum.png" alt="Quantum computer" data-label="Quantum" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/websummit.png" alt="Conference stage" data-label="Events" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/world.png" alt="Globe" data-label="World" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/finance.png" alt="Charts on a desk" data-label="Finance" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/city.png" alt="City skyline" data-label="Cities" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/river.png" alt="River through a valley" data-label="Nature" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/mindfulness.png" alt="Person meditating in a forest" data-label="Mindfulness" loading="lazy">
+			</div>
+			<figcaption><strong>Too many labels?</strong> The group caps to the carousel and scrolls — the current label scrolls into view by itself.</figcaption>
+		</figure>
+	</div>
+
+	<div class="demos">
+		<figure class="demo">
+			<div class="carousel timeline" style="--carousel-ratio: 16 / 9">
+				<img src="https://v4.browser.style/assets/images/hammershus.png" alt="1250 — Castle built on Bornholm" data-date="1250" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/elephants.png" alt="1880 — Expedition to the savannah" data-date="1880" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/city.png" alt="1960 — The city grows up" data-date="1960" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/hubble.png" alt="1990 — A telescope in orbit" data-date="1990" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/quantum.png" alt="2020 — Quantum computing" data-date="2020" loading="lazy">
+			</div>
+			<figcaption><strong>Timeline</strong> — <code>data-date</code> is what you see, <code>alt</code> is what a screen reader hears.</figcaption>
+		</figure>
+	</div>
+</main>
+</body>
+</html>

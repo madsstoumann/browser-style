@@ -1,0 +1,38 @@
+/*
+ * Pen 14 — A gated quiz
+ * Load Pen 01 (base) as an external stylesheet first.
+ * Every slide AFTER an unanswered question simply doesn't exist yet —
+ * so there's nothing to scroll to, and "Next" disables itself.
+ */
+.carousel.quiz {
+	--carousel-ratio: 16 / 9;
+	--dot-bg: color-mix(in oklab, currentColor 25%, transparent);
+	--dot-active: color-mix(in oklab, currentColor 75%, transparent);
+	--arrow-bg: color-mix(in oklab, CanvasText 10%, Canvas);
+	--arrow-bg-hover: color-mix(in oklab, CanvasText 20%, Canvas);
+	--arrow-top: calc(anchor(bottom) - var(--inset) - var(--arrow-size));
+	background: color-mix(in oklab, Canvas, CanvasText 6%);
+}
+.quiz fieldset {
+	align-content: center;
+	border: 0;
+	display: grid;
+	gap: 0.5rem;
+	margin: 0;
+	padding: 1.5rem 1.5rem 4rem;
+	& legend { float: left; font-size: 1.25rem; font-weight: 700; margin-block-end: 0.5rem; }
+	& label { align-items: center; display: flex; gap: 0.5rem; }
+}
+
+/* the whole trick */
+.carousel.quiz > :has(:invalid) ~ * { display: none; }
+
+@supports (scroll-marker-group: after) {
+	.carousel.quiz::scroll-marker-group {
+		bottom: calc(anchor(bottom) + var(--inset) + (var(--arrow-size) - var(--dot-size)) / 2);
+	}
+}
+.carousel-polyfill.quiz {
+	& .carousel-arrow { inset-block: auto var(--inset); }
+	& .carousel-dots { align-items: center; min-block-size: var(--arrow-size); }
+}

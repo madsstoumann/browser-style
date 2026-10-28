@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>CSS Carousels — 02 Arrow styles</title>
+	<!-- CodePen: add Pen 01's CSS as an external stylesheet (Settings → CSS) -->
+	<link rel="stylesheet" href="../01-basics/style.css">
+	<link rel="stylesheet" href="style.css">
+	<!-- CodePen: add Pen 01's JS as an external script — the fallback for Safari/Firefox -->
+	<script type="module" src="../01-basics/script.js"></script>
+</head>
+<body>
+<!-- CodePen: HTML panel = everything inside <body>. CSS panel = style.css. -->
+<main>
+	<header>
+		<h1>CSS Carousels — Arrow styles</h1>
+		<p>Arrows are pseudo-elements, so shape, size, glyph and ink are just CSS.</p>
+	</header>
+	<div class="demos">
+		<figure class="demo">
+			<div class="carousel arrows-square">
+				<img src="https://v4.browser.style/assets/images/hubble.png" alt="Galaxy photographed by a space telescope" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/quantum.png" alt="Quantum computer" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/websummit.png" alt="Conference stage" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/world.png" alt="Globe" loading="lazy">
+			</div>
+			<figcaption><strong>Square</strong> — <code>--arrow-radius: 0</code>. Try <code>.arrows-rounded</code> too.</figcaption>
+		</figure>
+
+		<figure class="demo">
+			<div class="carousel arrows-arrow arrows-dark">
+				<img src="https://v4.browser.style/assets/images/finance.png" alt="Charts on a desk" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/city.png" alt="City skyline" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/river.png" alt="River through a valley" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/mindfulness.png" alt="Person meditating in a forest" loading="lazy">
+			</div>
+			<figcaption><strong>Dark, full arrow</strong> — a different SVG and a darker plate.</figcaption>
+		</figure>
+
+		<figure class="demo">
+			<div class="carousel arrows-bare">
+				<img src="https://v4.browser.style/assets/images/hubble.png" alt="Galaxy photographed by a space telescope" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/elephants.png" alt="Elephants on the savannah" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/hammershus.png" alt="Castle ruin on a cliff" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/world.png" alt="Globe" loading="lazy">
+			</div>
+			<figcaption><strong>Bare glyph</strong> — the SVG is a <code>mask</code>, <code>background</code> is the ink.</figcaption>
+		</figure>
+
+		<figure class="demo">
+			<div class="carousel arrows-bare arrows-arrow ink-dark">
+				<img src="https://v4.browser.style/assets/images/ergochair.png" alt="Office chair" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/aurasoundpro.png" alt="Headphones" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/popovers.png" alt="Speech bubbles" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/gastronomy.png" alt="Plated dinner" loading="lazy">
+			</div>
+			<figcaption><strong>Bare, dark ink</strong> — for light images.</figcaption>
+		</figure>
+
+		<figure class="demo">
+			<div class="carousel arrows-sm">
+				<img src="https://v4.browser.style/assets/images/mindfulness.png" alt="Person meditating in a forest" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/world.png" alt="Globe" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/quantum.png" alt="Quantum computer" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/city.png" alt="City skyline" loading="lazy">
+			</div>
+			<figcaption><strong>Small</strong> — <code>--arrow-size</code> and <code>--dot-size</code>.</figcaption>
+		</figure>
+
+		<figure class="demo">
+			<div class="carousel arrows-lg">
+				<img src="https://v4.browser.style/assets/images/autumn.jpg" alt="Autumn leaves" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/winter.jpg" alt="Snowy forest" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/spring.jpg" alt="Spring blossom" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/summer.jpg" alt="Summer beach" loading="lazy">
+			</div>
+			<figcaption><strong>Large</strong>.</figcaption>
+		</figure>
+
+		<figure class="demo">
+			<div class="carousel arrows-reveal arrows-hide-end">
+				<img src="https://v4.browser.style/assets/images/elephants.png" alt="Elephants on the savannah" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/hammershus.png" alt="Castle ruin on a cliff" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/hubble.png" alt="Galaxy photographed by a space telescope" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/river.png" alt="River through a valley" loading="lazy">
+			</div>
+			<figcaption><strong>Reveal on hover</strong> + <strong>hide at the ends</strong> — the first slide has no Previous.</figcaption>
+		</figure>
+	</div>
+</main>
+</body>
+</html>

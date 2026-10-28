@@ -1,0 +1,77 @@
+/*
+ * Pen 03 — Placing the controls
+ * Load Pen 01 (base) as an external stylesheet first.
+ * The controls are absolutely positioned against the carousel with anchor():
+ * change the inset, and they move.
+ */
+/* outside arrows sit on the page, not the image */
+.carousel.arrows-outside {
+	--arrow-bg: color-mix(in oklab, CanvasText 10%, Canvas);
+	--arrow-bg-hover: color-mix(in oklab, CanvasText 20%, Canvas);
+}
+
+@supports (scroll-marker-group: after) {
+	/* arrows: top or bottom row instead of the middle */
+	.carousel.arrows-top    { --arrow-top: calc(anchor(top) + var(--inset)); }
+	.carousel.arrows-bottom { --arrow-top: calc(anchor(bottom) - var(--inset) - var(--arrow-size)); }
+
+	/* arrows: both in one corner, as a pair */
+	.carousel.arrows-pair::scroll-button(inline-start) {
+		inset-inline-start: auto;
+		inset-inline-end: calc(anchor(self-end) + var(--inset) + var(--arrow-size) + 0.5rem);
+	}
+	.carousel.arrows-pair.arrows-start {
+		&::scroll-button(inline-start) {
+			inset-inline-end: auto;
+			inset-inline-start: calc(anchor(self-start) + var(--inset));
+		}
+		&::scroll-button(inline-end) {
+			inset-inline-end: auto;
+			inset-inline-start: calc(anchor(self-start) + var(--inset) + var(--arrow-size) + 0.5rem);
+		}
+	}
+
+	/* dots: top edge, or pinned to a side */
+	.carousel.dots-top::scroll-marker-group { bottom: auto; top: calc(anchor(top) + var(--inset)); }
+	.carousel.dots-start::scroll-marker-group {
+		inset-inline-start: calc(anchor(self-start) + var(--inset));
+		justify-self: auto;
+	}
+	.carousel.dots-end::scroll-marker-group {
+		inset-inline-end: calc(anchor(self-end) + var(--inset));
+		justify-self: auto;
+	}
+	/* sharing a row with the arrows? Centre the dots on them */
+	.carousel:is(.arrows-top, .arrows-bottom)::scroll-marker-group {
+		align-items: center;
+		min-block-size: var(--arrow-size);
+	}
+
+	/* arrows OUTSIDE the image: shrink the carousel, push the arrows past its edges */
+	.carousel.arrows-outside {
+		margin-inline: calc(var(--arrow-size) + 0.5rem);
+
+		&::scroll-button(inline-start) { inset-inline-start: calc(anchor(self-start) - var(--arrow-size) - 0.5rem); }
+		&::scroll-button(inline-end)   { inset-inline-end: calc(anchor(self-end) - var(--arrow-size) - 0.5rem); }
+	}
+}
+
+/* the fallback buttons live in a positioned wrapper, so plain insets do the same job */
+.carousel-polyfill {
+	&.arrows-top .carousel-arrow { inset-block-start: var(--inset); }
+	&.arrows-bottom .carousel-arrow { inset-block-start: auto; inset-block-end: var(--inset); }
+	&:is(.arrows-top, .arrows-bottom) .carousel-dots { align-items: center; min-block-size: var(--arrow-size); }
+	&.arrows-pair [data-dir="prev"] { inset-inline-start: auto; inset-inline-end: calc(var(--inset) + var(--arrow-size) + 0.5rem); }
+	&.arrows-pair.arrows-start {
+		& [data-dir="prev"] { inset-inline-end: auto; inset-inline-start: var(--inset); }
+		& [data-dir="next"] { inset-inline-end: auto; inset-inline-start: calc(var(--inset) + var(--arrow-size) + 0.5rem); }
+	}
+	&.dots-top .carousel-dots { inset-block: var(--inset) auto; }
+	&.dots-start .carousel-dots { justify-content: start; padding-inline: var(--inset); }
+	&.dots-end .carousel-dots { justify-content: end; padding-inline: var(--inset); }
+	&.arrows-outside {
+		& > .carousel { margin-inline: calc(var(--arrow-size) + 0.5rem); }
+		& [data-dir="prev"] { inset-inline-start: 0; }
+		& [data-dir="next"] { inset-inline-end: 0; }
+	}
+}

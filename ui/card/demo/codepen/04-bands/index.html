@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>CSS Carousels — 04 Controls in a band</title>
+	<!-- CodePen: add Pen 01's CSS as an external stylesheet (Settings → CSS) -->
+	<link rel="stylesheet" href="../01-basics/style.css">
+	<link rel="stylesheet" href="style.css">
+	<!-- CodePen: add Pen 01's JS as an external script — the fallback for Safari/Firefox -->
+	<script type="module" src="../01-basics/script.js"></script>
+</head>
+<body>
+<!-- CodePen: HTML panel = everything inside <body>. CSS panel = style.css. -->
+<main>
+	<header>
+		<h1>CSS Carousels — Controls in a band</h1>
+		<p>Move the controls off the image and into a strip of their own. The ink follows <code>currentColor</code>, so dark mode just works.</p>
+	</header>
+	<div class="demos">
+		<figure class="demo">
+			<div class="carousel band">
+				<img src="https://v4.browser.style/assets/images/hubble.png" alt="Galaxy photographed by a space telescope" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/quantum.png" alt="Quantum computer" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/websummit.png" alt="Conference stage" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/world.png" alt="Globe" loading="lazy">
+			</div>
+			<figcaption><strong>Band below</strong> — dots centred, arrows at the ends.</figcaption>
+		</figure>
+
+		<figure class="demo">
+			<div class="carousel band dots-start">
+				<img src="https://v4.browser.style/assets/images/finance.png" alt="Charts on a desk" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/city.png" alt="City skyline" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/river.png" alt="River through a valley" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/mindfulness.png" alt="Person meditating in a forest" loading="lazy">
+			</div>
+			<figcaption><strong>Dots start, arrows as a pair</strong> — the classic listing look.</figcaption>
+		</figure>
+
+		<figure class="demo">
+			<div class="carousel band dots-start above">
+				<img src="https://v4.browser.style/assets/images/elephants.png" alt="Elephants on the savannah" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/hammershus.png" alt="Castle ruin on a cliff" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/autumn.jpg" alt="Autumn leaves" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/winter.jpg" alt="Snowy forest" loading="lazy">
+			</div>
+			<figcaption><strong>Band above</strong> — <code>scroll-marker-group: before</code>.</figcaption>
+		</figure>
+
+		<figure class="demo">
+			<div class="carousel band dots-only-band">
+				<img src="https://v4.browser.style/assets/images/ergochair.png" alt="Office chair" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/aurasoundpro.png" alt="Headphones" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/gastronomy.png" alt="Plated dinner" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/spring.jpg" alt="Spring blossom" loading="lazy">
+			</div>
+			<figcaption><strong>Split</strong> — dots in the band, arrows on the image.</figcaption>
+		</figure>
+	</div>
+</main>
+</body>
+</html>

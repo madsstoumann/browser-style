@@ -1,0 +1,225 @@
+/*
+ * CSS Carousels — base styles (Pen 01)
+ * Every other pen in the series loads this file as an external stylesheet,
+ * then adds its own few rules on top.
+ *
+ * Two parts:
+ *   1. Page — the bare minimum to make a demo page readable.
+ *   2. Carousel — a scroll-snap row + native dots and arrows.
+ */
+
+/* === 1. Page === */
+*, *::before, *::after { box-sizing: border-box; }
+
+:root {
+	color-scheme: light dark;
+	font-family: ui-sans-serif, system-ui, sans-serif;
+	line-height: 1.5;
+}
+body {
+	background: Canvas;
+	color: CanvasText;
+	margin: 0;
+	padding: 2rem 1rem 4rem;
+}
+main {
+	display: grid;
+	gap: 2.5rem;
+	margin-inline: auto;
+	max-inline-size: 64rem;
+}
+h1, h2, h3 { line-height: 1.2; margin: 0; text-wrap: balance; }
+h1 { font-size: 2rem; }
+h2 { font-size: 1.25rem; }
+p { margin: 0; text-wrap: pretty; }
+img { display: block; max-inline-size: 100%; }
+code { font-size: 0.875em; }
+
+/* a two-up grid of demos */
+.demos {
+	display: grid;
+	gap: 2rem;
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+}
+/* one demo: the carousel + a caption. A plain block, so anything the
+   carousel generates *after* itself (the dots) lands below it in flow */
+.demo { margin: 0; }
+.demo figcaption {
+	color: color-mix(in oklab, CanvasText 70%, transparent);
+	font-size: 0.875rem;
+	margin-block-start: 0.75rem;
+}
+
+/* === 2. Carousel === */
+.carousel {
+	/* tokens — every pen tweaks these instead of rewriting rules */
+	--carousel-ratio: 4 / 3;
+	--carousel-radius: 0.75rem;
+	--carousel-gap: 0px;
+	--inset: 0.75rem;              /* distance from the edge to the controls */
+
+	--dot-size: 0.6rem;
+	--dot-gap: 0.5rem;
+	--dot-bg: rgb(255 255 255 / 0.5);
+	--dot-active: #fff;
+
+	--arrow-size: 2.25rem;
+	--arrow-radius: 50%;
+	--arrow-bg: rgb(255 255 255 / 0.75);
+	--arrow-bg-hover: rgb(255 255 255 / 0.95);
+	--arrow-glyph: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18l6-6-6-6'/%3E%3C/svg%3E");
+
+	aspect-ratio: var(--carousel-ratio);
+	border-radius: var(--carousel-radius);
+	display: flex;
+	gap: var(--carousel-gap);
+	overflow-x: auto;
+	overscroll-behavior-x: contain;
+	scroll-snap-type: x mandatory;
+}
+/* every direct child is a slide */
+.carousel > * {
+	flex: 0 0 100%;
+	scroll-snap-align: start;
+}
+.carousel > img {
+	block-size: 100%;
+	inline-size: 100%;
+	object-fit: cover;
+}
+@media (prefers-reduced-motion: no-preference) {
+	.carousel { scroll-behavior: smooth; }
+}
+
+/* Dots and arrows — only where the browser can draw them.
+   Everywhere else, the carousel is still a swipeable scroll-snap row. */
+@supports (scroll-marker-group: after) {
+	.carousel {
+		scroll-marker-group: after;
+		scrollbar-width: none;
+
+		/* the dots' container — anchored to the carousel's bottom edge */
+		&::scroll-marker-group {
+			bottom: calc(anchor(bottom) + var(--inset));
+			display: flex;
+			gap: var(--dot-gap);
+			justify-self: anchor-center;
+			position: absolute;
+			position-anchor: auto;
+		}
+
+		/* one dot per slide. A marker is styled like a link by default,
+		   so `color: inherit` keeps currentColor-based tokens honest */
+		& > *::scroll-marker {
+			background: var(--dot-bg);
+			block-size: var(--dot-size);
+			border-radius: 50%;
+			color: inherit;
+			content: "";
+			flex: none;
+			inline-size: var(--dot-size);
+		}
+		& > *::scroll-marker:target-current {
+			background: var(--dot-active);
+		}
+		& > *::scroll-marker:focus-visible {
+			outline: 2px solid var(--dot-active);
+			outline-offset: 2px;
+		}
+
+		/* the arrows */
+		&::scroll-button(*) {
+			aspect-ratio: 1;
+			background: var(--arrow-glyph) center / 70% no-repeat var(--arrow-bg);
+			border: 0;
+			border-radius: var(--arrow-radius);
+			box-shadow: 0 1px 3px rgb(0 0 0 / 0.2);
+			color: inherit;
+			cursor: pointer;
+			inline-size: var(--arrow-size);
+			position: absolute;
+			position-anchor: auto;
+			top: var(--arrow-top, calc(anchor(center) - var(--arrow-size) / 2));
+			transition: background-color 0.15s, opacity 0.15s, scale 0.15s;
+		}
+		&::scroll-button(*):hover { background-color: var(--arrow-bg-hover); }
+		&::scroll-button(*):focus-visible {
+			outline: 2px solid CanvasText;
+			outline-offset: 3px;
+		}
+		&::scroll-button(*):disabled {
+			cursor: default;
+			opacity: 0.4;
+		}
+		/* "content: <visible> / <accessible name>" */
+		&::scroll-button(inline-start) {
+			content: "" / "Previous";
+			inset-inline-start: calc(anchor(self-start) + var(--inset));
+			rotate: 180deg;
+		}
+		&::scroll-button(inline-end) {
+			content: "" / "Next";
+			inset-inline-end: calc(anchor(self-end) + var(--inset));
+		}
+		/* the keywords name the scroll ACTION, so RTL flips the sides for free —
+		   only the glyph needs turning around */
+		&:dir(rtl)::scroll-button(inline-start) { rotate: none; }
+		&:dir(rtl)::scroll-button(inline-end) { rotate: 180deg; }
+	}
+
+	/* opt-outs */
+	.carousel.no-dots { scroll-marker-group: none; }
+	.carousel.no-arrows::scroll-button(*) { content: none; }
+	/* no controls at all? Then keep the scrollbar, so mouse users can still scroll */
+	.carousel.no-dots.no-arrows { scrollbar-width: auto; }
+}
+
+/* === 3. Fallback controls ===
+   Real <button>s, added by the JS only where the native pseudos are missing
+   (Safari, Firefox). Same tokens, so they look the same. */
+.carousel-polyfill {
+	position: relative;
+	& > .carousel { scrollbar-width: none; }
+	& > .carousel::-webkit-scrollbar { display: none; }
+}
+.carousel-arrow {
+	aspect-ratio: 1;
+	background: var(--arrow-glyph) center / 70% no-repeat var(--arrow-bg);
+	border: 0;
+	border-radius: var(--arrow-radius);
+	box-shadow: 0 1px 3px rgb(0 0 0 / 0.2);
+	cursor: pointer;
+	inline-size: var(--arrow-size);
+	inset-block-start: calc(50% - var(--arrow-size) / 2);
+	padding: 0;
+	position: absolute;
+	transition: background-color 0.15s, opacity 0.15s;
+	&:hover { background-color: var(--arrow-bg-hover); }
+	&:focus-visible { outline: 2px solid CanvasText; outline-offset: 3px; }
+	&:disabled { cursor: default; opacity: 0.4; }
+	&[data-dir="prev"] { inset-inline-start: var(--inset); rotate: 180deg; }
+	&[data-dir="next"] { inset-inline-end: var(--inset); }
+	&:dir(rtl)[data-dir="prev"] { rotate: none; }
+	&:dir(rtl)[data-dir="next"] { rotate: 180deg; }
+}
+.carousel-dots {
+	display: flex;
+	gap: var(--dot-gap);
+	inset-block-end: var(--inset);
+	inset-inline: 0;
+	justify-content: center;
+	pointer-events: none;
+	position: absolute;
+}
+.carousel-dot {
+	aspect-ratio: 1;
+	background: var(--dot-bg);
+	border: 0;
+	border-radius: 50%;
+	cursor: pointer;
+	inline-size: var(--dot-size);
+	padding: 0;
+	pointer-events: auto;
+	&[aria-current] { background: var(--dot-active); }
+	&:focus-visible { outline: 2px solid var(--dot-active); outline-offset: 2px; }
+}

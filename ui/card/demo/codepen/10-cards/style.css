@@ -1,0 +1,62 @@
+/*
+ * Pen 10 — More than one slide per view
+ * Load Pen 01 (base) as an external stylesheet first.
+ * A slide doesn't have to be 100% wide. Cards, peeks, pages.
+ */
+.card {
+	background: color-mix(in oklab, Canvas, CanvasText 6%);
+	border-radius: 0.75rem;
+	display: grid;
+	gap: 0.25rem;
+	grid-template-rows: auto auto 1fr;
+	overflow: clip;
+	& img { aspect-ratio: 4 / 3; inline-size: 100%; object-fit: cover; }
+	& h3 { font-size: 1rem; padding: 0.5rem 1rem 0; }
+	& p { font-size: 0.875rem; padding: 0 1rem 1rem; }
+}
+
+.carousel.cards {
+	--carousel-ratio: auto;
+	--carousel-radius: 0;
+	--carousel-gap: 1rem;
+	--per-view: 3;
+	/* the dots sit below, on the page */
+	--dot-bg: color-mix(in oklab, currentColor 25%, transparent);
+	--dot-active: color-mix(in oklab, currentColor 75%, transparent);
+	/* N slides per view: subtract the gaps, then divide */
+	& > * { flex-basis: calc((100% - (var(--per-view) - 1) * var(--carousel-gap)) / var(--per-view)); }
+}
+@media (width < 40rem) {
+	.carousel.cards { --per-view: 1.25; } /* a peek of the next card says "swipe me" */
+}
+
+/* centred slides, peeking in on BOTH sides */
+.carousel.cards.centered {
+	--per-view: 1;
+	padding-inline: 12%;
+	scroll-padding-inline: 12%;
+	& > * { scroll-snap-align: center; }
+}
+
+/* pages: snap — and show a dot — on every 3rd card only */
+.carousel.cards.paged > :not(:nth-child(3n + 1)) { scroll-snap-align: none; }
+
+@supports (scroll-marker-group: after) {
+	.carousel.cards {
+		&::scroll-marker-group {
+			justify-content: center;
+			justify-self: normal;
+			margin-block-start: 1rem;
+			position: static;
+		}
+		/* centre the arrows on the IMAGES, not the whole card */
+		--arrow-top: calc(anchor(top) + (anchor-size(width) / var(--per-view) * 0.75 - var(--arrow-size)) / 2);
+	}
+	.carousel.cards.paged > :not(:nth-child(3n + 1))::scroll-marker { content: none; }
+}
+
+/* fallback buttons */
+.carousel-polyfill.cards {
+	& .carousel-dots { margin-block-start: 1rem; position: static; }
+	& .carousel-arrow { inset-block-start: calc(40% - var(--arrow-size) / 2); }
+}

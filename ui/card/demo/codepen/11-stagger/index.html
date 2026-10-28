@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>CSS Carousels — 11 Stagger</title>
+	<!-- CodePen: add Pen 01's CSS as an external stylesheet (Settings → CSS) -->
+	<link rel="stylesheet" href="../01-basics/style.css">
+	<link rel="stylesheet" href="style.css">
+	<!-- CodePen: add Pen 01's JS as an external script — the fallback for Safari/Firefox -->
+	<script type="module" src="../01-basics/script.js"></script>
+</head>
+<body>
+<!-- CodePen: HTML panel = everything inside <body>. CSS panel = style.css. -->
+<main>
+	<header>
+		<h1>CSS Carousels — Stagger</h1>
+		<p>Every slide is a <code>scroll-state</code> container: its content waits until the slide snaps — then cascades in.</p>
+	</header>
+	<div class="demos">
+		<figure class="demo">
+			<div class="carousel stagger" style="--carousel-ratio: 16 / 9">
+				<article class="slide" aria-label="Light from the beginning"><img src="https://v4.browser.style/assets/images/hubble.png" alt="Galaxy photographed by a space telescope" loading="lazy"><div class="slide-content"><small>Science</small><h2>Light from the beginning</h2><p>Thirteen billion years, one photograph.</p><a href="#">Read more</a></div></article>
+				<article class="slide" aria-label="At the water hole"><img src="https://v4.browser.style/assets/images/elephants.png" alt="Elephants on the savannah" loading="lazy"><div class="slide-content"><small>Nature</small><h2>At the water hole</h2><p>The herd arrives at dusk.</p><a href="#">Read more</a></div></article>
+				<article class="slide" aria-label="A castle on the cliff"><img src="https://v4.browser.style/assets/images/hammershus.png" alt="Castle ruin on a cliff" loading="lazy"><div class="slide-content"><small>History</small><h2>A castle on the cliff</h2><p>Seven centuries above the Baltic.</p><a href="#">Read more</a></div></article>
+				<article class="slide" aria-label="The city at night"><img src="https://v4.browser.style/assets/images/city.png" alt="City skyline" loading="lazy"><div class="slide-content"><small>Travel</small><h2>The city at night</h2><p>Glass, steel and evening light.</p><a href="#">Read more</a></div></article>
+			</div>
+			<figcaption><strong>Rise</strong> — swipe, click an arrow, or a dot: the content cascades in every time.</figcaption>
+		</figure>
+	</div>
+
+	<div class="demos">
+		<figure class="demo">
+			<div class="carousel stagger stagger-slow" style="--carousel-ratio: 16 / 9">
+				<article class="slide stagger" aria-label="Spring"><img src="https://v4.browser.style/assets/images/spring.jpg" alt="Spring blossom" loading="lazy"><div class="slide-content"><small>Rise</small><h2>Spring</h2><p>The default: content rises in.</p><a href="#">Read more</a></div></article>
+				<article class="slide stagger-fall" aria-label="Summer"><img src="https://v4.browser.style/assets/images/summer.jpg" alt="Summer beach" loading="lazy"><div class="slide-content"><small>Fall</small><h2>Summer</h2><p>From above.</p><a href="#">Read more</a></div></article>
+				<article class="slide stagger-left" aria-label="Autumn"><img src="https://v4.browser.style/assets/images/autumn.jpg" alt="Autumn leaves" loading="lazy"><div class="slide-content"><small>Left</small><h2>Autumn</h2><p>From the start.</p><a href="#">Read more</a></div></article>
+				<article class="slide stagger-zoom" aria-label="Winter"><img src="https://v4.browser.style/assets/images/winter.jpg" alt="Snowy forest" loading="lazy"><div class="slide-content"><small>Zoom</small><h2>Winter</h2><p>Scales up from 60%.</p><a href="#">Read more</a></div></article>
+				<article class="slide stagger-blur" aria-label="Rivers"><img src="https://v4.browser.style/assets/images/river.png" alt="River through a valley" loading="lazy"><div class="slide-content"><small>Blur</small><h2>Rivers</h2><p>Comes into focus.</p><a href="#">Read more</a></div></article>
+			</div>
+			<figcaption><strong>One effect per slide</strong> — the custom properties inherit, so the closest one wins. And a slower <code>--stagger-step</code>.</figcaption>
+		</figure>
+	</div>
+</main>
+</body>
+</html>

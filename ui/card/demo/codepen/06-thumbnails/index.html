@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>CSS Carousels — 06 Thumbnails</title>
+	<!-- CodePen: add Pen 01's CSS as an external stylesheet (Settings → CSS) -->
+	<link rel="stylesheet" href="../01-basics/style.css">
+	<link rel="stylesheet" href="style.css">
+	<!-- CodePen: add Pen 01's JS as an external script — the fallback for Safari/Firefox -->
+	<script type="module" src="../01-basics/script.js"></script>
+</head>
+<body>
+<!-- CodePen: HTML panel = everything inside <body>. CSS panel = style.css. -->
+<main>
+	<header>
+		<h1>CSS Carousels — Thumbnails</h1>
+		<p>Custom properties inherit into <code>::scroll-marker</code>. Set one per slide, read it in the marker.</p>
+	</header>
+	<div class="demos">
+		<figure class="demo">
+			<div class="carousel thumbs">
+				<img src="https://v4.browser.style/assets/images/elephants.png" alt="Elephants on the savannah" style="--thumb: url(https://v4.browser.style/assets/images/elephants.png)" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/hammershus.png" alt="Castle ruin on a cliff" style="--thumb: url(https://v4.browser.style/assets/images/hammershus.png)" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/autumn.jpg" alt="Autumn leaves" style="--thumb: url(https://v4.browser.style/assets/images/autumn.jpg)" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/winter.jpg" alt="Snowy forest" style="--thumb: url(https://v4.browser.style/assets/images/winter.jpg)" loading="lazy">
+			</div>
+			<figcaption><strong>Thumbnails</strong> — <code>background: var(--thumb)</code> on the marker.</figcaption>
+		</figure>
+
+		<figure class="demo">
+			<div class="carousel thumbs thumbs-end no-arrows">
+				<img src="https://v4.browser.style/assets/images/spring.jpg" alt="Spring blossom" style="--thumb: url(https://v4.browser.style/assets/images/spring.jpg)" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/summer.jpg" alt="Summer beach" style="--thumb: url(https://v4.browser.style/assets/images/summer.jpg)" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/autumn.jpg" alt="Autumn leaves" style="--thumb: url(https://v4.browser.style/assets/images/autumn.jpg)" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/winter.jpg" alt="Snowy forest" style="--thumb: url(https://v4.browser.style/assets/images/winter.jpg)" loading="lazy">
+			</div>
+			<figcaption><strong>In a corner</strong>, no arrows — the thumbnails are the navigation.</figcaption>
+		</figure>
+	</div>
+
+	<div class="demos">
+		<figure class="demo">
+			<div class="carousel thumbs strip" style="--carousel-ratio: 16 / 9">
+				<img src="https://v4.browser.style/assets/images/hubble.png" alt="Galaxy photographed by a space telescope" style="--thumb: url(https://v4.browser.style/assets/images/hubble.png)" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/quantum.png" alt="Quantum computer" style="--thumb: url(https://v4.browser.style/assets/images/quantum.png)" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/websummit.png" alt="Conference stage" style="--thumb: url(https://v4.browser.style/assets/images/websummit.png)" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/world.png" alt="Globe" style="--thumb: url(https://v4.browser.style/assets/images/world.png)" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/finance.png" alt="Charts on a desk" style="--thumb: url(https://v4.browser.style/assets/images/finance.png)" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/city.png" alt="City skyline" style="--thumb: url(https://v4.browser.style/assets/images/city.png)" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/river.png" alt="River through a valley" style="--thumb: url(https://v4.browser.style/assets/images/river.png)" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/mindfulness.png" alt="Person meditating in a forest" style="--thumb: url(https://v4.browser.style/assets/images/mindfulness.png)" loading="lazy">
+			</div>
+			<figcaption><strong>Filmstrip</strong> — the group flows below the image, and scrolls when it overflows.</figcaption>
+		</figure>
+	</div>
+</main>
+</body>
+</html>

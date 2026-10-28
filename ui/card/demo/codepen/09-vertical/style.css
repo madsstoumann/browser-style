@@ -1,0 +1,67 @@
+/*
+ * Pen 09 — Vertical carousel
+ * Load Pen 01 (base) as an external stylesheet first.
+ * Swap the axis: a column, y-snapping, and the block-direction buttons.
+ */
+.carousel.vertical {
+	flex-direction: column;
+	overflow: hidden auto;
+	scroll-snap-type: y mandatory;
+}
+
+@supports (scroll-marker-group: after) {
+	.carousel.vertical {
+		/* dots: a column at the inline-end edge */
+		&::scroll-marker-group {
+			align-self: anchor-center;
+			bottom: auto;
+			flex-direction: column;
+			inset-inline-end: calc(anchor(self-end) + var(--inset));
+			justify-self: auto;
+		}
+		/* there is nothing to scroll inline … */
+		&::scroll-button(inline-start),
+		&::scroll-button(inline-end) { content: none; }
+		/* … so use the block buttons: up and down */
+		&::scroll-button(block-start) {
+			content: "" / "Previous";
+			justify-self: anchor-center;
+			rotate: -90deg;
+			top: calc(anchor(top) + var(--inset));
+		}
+		&::scroll-button(block-end) {
+			content: "" / "Next";
+			justify-self: anchor-center;
+			rotate: 90deg;
+			top: calc(anchor(bottom) - var(--inset) - var(--arrow-size));
+		}
+	}
+	/* the arrows as a stacked pair, bottom-start */
+	.carousel.vertical.arrows-stack {
+		&::scroll-button(block-start),
+		&::scroll-button(block-end) {
+			inset-inline-start: calc(anchor(self-start) + var(--inset));
+			justify-self: auto;
+		}
+		&::scroll-button(block-start) { top: calc(anchor(bottom) - var(--inset) - 2 * var(--arrow-size) - 0.5rem); }
+	}
+}
+
+/* fallback buttons — the JS adds .is-vertical when the carousel snaps on y */
+.carousel-polyfill.is-vertical {
+	& .carousel-dots {
+		flex-direction: column;
+		inset-block: 0;
+		inset-inline: auto var(--inset);
+		justify-content: center;
+	}
+	& .carousel-arrow {
+		inset-inline: calc(50% - var(--arrow-size) / 2) auto;
+	}
+	& [data-dir="prev"] { inset-block-start: var(--inset); rotate: -90deg; }
+	& [data-dir="next"] { inset-block: auto var(--inset); rotate: 90deg; }
+	&.arrows-stack {
+		& .carousel-arrow { inset-inline-start: var(--inset); }
+		& [data-dir="prev"] { inset-block: auto calc(var(--inset) + var(--arrow-size) + 0.5rem); }
+	}
+}

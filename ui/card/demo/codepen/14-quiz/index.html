@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>CSS Carousels — 14 A gated quiz</title>
+	<!-- CodePen: add Pen 01's CSS as an external stylesheet (Settings → CSS) -->
+	<link rel="stylesheet" href="../01-basics/style.css">
+	<link rel="stylesheet" href="style.css">
+	<!-- CodePen: add Pen 01's JS as an external script — the fallback for Safari/Firefox -->
+	<script type="module" src="../01-basics/script.js"></script>
+</head>
+<body>
+<!-- CodePen: HTML panel = everything inside <body>. CSS panel = style.css. -->
+<main>
+	<header>
+		<h1>CSS Carousels — A gated quiz</h1>
+		<p><code>:has()</code> meets scroll-snap: the next slide appears when the question is answered.</p>
+	</header>
+	<div class="demos">
+		<figure class="demo">
+			<form class="carousel quiz">
+				<fieldset aria-label="Question 1"><legend>Which property makes a scroller snap?</legend><label><input type="radio" name="q1" required> <code>scroll-snap-type</code></label><label><input type="radio" name="q1" required> <code>snap-scroll</code></label><label><input type="radio" name="q1" required> <code>overflow-snap</code></label></fieldset>
+				<fieldset aria-label="Question 2"><legend>Which pseudo-element draws the dots?</legend><label><input type="radio" name="q2" required> <code>::scroll-dot</code></label><label><input type="radio" name="q2" required> <code>::scroll-marker</code></label><label><input type="radio" name="q2" required> <code>::marker</code></label></fieldset>
+				<fieldset aria-label="Question 3"><legend>Which pseudo-class marks the current dot?</legend><label><input type="radio" name="q3" required> <code>:current</code></label><label><input type="radio" name="q3" required> <code>:checked</code></label><label><input type="radio" name="q3" required> <code>:target-current</code></label></fieldset>
+				<fieldset aria-label="Done"><legend>All done! 🎉</legend><p>Every answer unlocked the next slide — without a single line of JavaScript.</p></fieldset>
+			</form>
+			<figcaption><strong>Answer to continue</strong> — <code>.quiz > :has(:invalid) ~ * { display: none; }</code>. A required radio group is <code>:invalid</code> until one is picked.</figcaption>
+		</figure>
+	</div>
+</main>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>CSS Carousels — 09 Vertical</title>
+	<!-- CodePen: add Pen 01's CSS as an external stylesheet (Settings → CSS) -->
+	<link rel="stylesheet" href="../01-basics/style.css">
+	<link rel="stylesheet" href="style.css">
+	<!-- CodePen: add Pen 01's JS as an external script — the fallback for Safari/Firefox -->
+	<script type="module" src="../01-basics/script.js"></script>
+</head>
+<body>
+<!-- CodePen: HTML panel = everything inside <body>. CSS panel = style.css. -->
+<main>
+	<header>
+		<h1>CSS Carousels — Vertical</h1>
+		<p>Same carousel, other axis.</p>
+	</header>
+	<div class="demos">
+		<figure class="demo">
+			<div class="carousel vertical">
+				<img src="https://v4.browser.style/assets/images/hubble.png" alt="Galaxy photographed by a space telescope" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/quantum.png" alt="Quantum computer" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/websummit.png" alt="Conference stage" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/world.png" alt="Globe" loading="lazy">
+			</div>
+			<figcaption><strong>Vertical</strong> — <code>::scroll-button(block-start)</code> and <code>(block-end)</code>.</figcaption>
+		</figure>
+
+		<figure class="demo">
+			<div class="carousel vertical arrows-stack">
+				<img src="https://v4.browser.style/assets/images/elephants.png" alt="Elephants on the savannah" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/hammershus.png" alt="Castle ruin on a cliff" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/autumn.jpg" alt="Autumn leaves" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/winter.jpg" alt="Snowy forest" loading="lazy">
+			</div>
+			<figcaption><strong>Stacked arrows</strong>, bottom start.</figcaption>
+		</figure>
+	</div>
+</main>
+</body>
+</html>

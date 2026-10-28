@@ -1,0 +1,93 @@
+/*
+ * Pen 12 — Scroll-driven animations
+ * Load Pen 01 (base) as an external stylesheet first.
+ *
+ * A normal animation runs on a CLOCK: 0s → 0.75s.
+ * A scroll-driven animation runs on a TIMELINE: 0% → 100% of a scroll.
+ * Scroll forward, it plays. Scroll back, it rewinds.
+ */
+.card {
+	background: color-mix(in oklab, Canvas, CanvasText 6%);
+	border-radius: 0.75rem;
+	overflow: clip;
+	& img { aspect-ratio: 4 / 3; inline-size: 100%; object-fit: cover; }
+	& h3 { font-size: 1rem; padding: 0.75rem 1rem 1rem; }
+}
+.carousel.cards {
+	--carousel-ratio: auto;
+	--carousel-radius: 0;
+	--carousel-gap: 1rem;
+	--dot-bg: color-mix(in oklab, currentColor 25%, transparent);
+	--dot-active: color-mix(in oklab, currentColor 75%, transparent);
+	--arrow-top: calc(anchor(top) + 4rem);
+	& > * { flex-basis: calc((100% - 2 * var(--carousel-gap)) / 3); }
+}
+@media (width < 40rem) {
+	.carousel.cards > * { flex-basis: 80%; }
+}
+@supports (scroll-marker-group: after) {
+	.carousel.cards::scroll-marker-group {
+		justify-self: normal;
+		justify-content: center;
+		margin-block-start: 1rem;
+		position: static;
+	}
+}
+.carousel-polyfill.cards .carousel-dots { margin-block-start: 1rem; position: static; }
+
+/* the progress line under demo 2 */
+.progress {
+	background: color-mix(in oklab, CanvasText 15%, transparent);
+	block-size: 3px;
+	margin-block-start: 0.75rem;
+	&::after {
+		background: CanvasText;
+		block-size: 100%;
+		content: "";
+		display: block;
+		scale: 0 1;
+		transform-origin: 0 50%;
+	}
+}
+
+@keyframes reveal {
+	from { opacity: 0; scale: 0.8; translate: 3rem 0; }
+}
+@keyframes grow {
+	to { scale: 1 1; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	@supports (animation-timeline: view()) {
+		/* 1. each card animates as it moves INTO the carousel's view.
+		   view(inline) = "my visibility in my scroller, along the inline axis" */
+		.carousel.reveal > * {
+			animation: reveal linear both;
+			animation-range: entry 0% entry 100%;
+			animation-timeline: view(inline);
+		}
+
+		/* 2. a NAMED timeline: the carousel's own scroll progress, shared with
+		   an element outside it. timeline-scope lifts the name up to a common
+		   ancestor, so the .progress next to it can see it */
+		.demo:has(.with-progress) { timeline-scope: --carousel; }
+		.carousel.with-progress { scroll-timeline: --carousel inline; }
+		.demo:has(.with-progress) .progress::after {
+			animation: grow linear both;
+			animation-timeline: --carousel;
+		}
+	}
+
+	/* 3. scroll-TRIGGERED: the scroll only decides WHEN — the animation then
+	   runs on the clock, once, and stays. Chrome 145+ */
+	@supports (timeline-trigger-name: --t) {
+		.carousel.trigger > * {
+			animation: reveal 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
+			animation-range: normal;
+			animation-timeline: auto;
+			animation-trigger: --card play-forwards;
+			timeline-trigger: --card view(inline) entry 25% exit 0%;
+			trigger-scope: --card;
+		}
+	}
+}
