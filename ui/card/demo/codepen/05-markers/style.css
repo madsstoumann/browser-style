@@ -1,0 +1,78 @@
+/*
+ * Pen 05 — Dots, pills and colourways
+ * Load Pen 01 (base) as an external stylesheet first.
+ * A ::scroll-marker is just a box — any size, shape or colour.
+ */
+.carousel.dots-lg { --dot-size: 0.8rem; }
+.carousel:is(.dots-pill, .dots-hybrid) {
+	--pill-width: 1.5rem;
+	--pill-height: 0.35rem;
+	--pill-track: rgb(255 255 255 / 0.35);
+	--autoplay: 5s;
+}
+/* colourways: a ring around every dot */
+.carousel.dots-ring {
+	--ring: rgb(255 255 255 / 0.3);
+	--ring-active: #fff;
+}
+
+@supports (scroll-marker-group: after) {
+	.carousel::scroll-marker-group { align-items: center; }
+
+	/* pills — wider than tall, fully rounded */
+	.carousel.dots-pill > *::scroll-marker {
+		background: var(--pill-track);
+		block-size: var(--pill-height);
+		border-radius: 1rem;
+		inline-size: var(--pill-width);
+	}
+	/* pill as a timer: the current pill fills up */
+	@media (prefers-reduced-motion: no-preference) {
+		.carousel.dots-pill > *::scroll-marker:target-current {
+			animation: pill-fill var(--autoplay) linear forwards;
+			background: linear-gradient(var(--dot-active) 0 0) 0 0 / 0% 100% no-repeat var(--pill-track);
+		}
+	}
+
+	/* hybrid — round dots, the current one stretches into a pill */
+	.carousel.dots-hybrid > *::scroll-marker {
+		transition: inline-size 0.3s ease, border-radius 0.3s ease;
+	}
+	.carousel.dots-hybrid > *::scroll-marker:target-current {
+		border-radius: 1rem;
+		inline-size: var(--pill-width);
+	}
+
+	/* colourways — each slide sets --dot-bg / --dot-active inline. The marker
+	   is a pseudo-element OF the slide, so it inherits that slide's colours */
+	.carousel.dots-ring > *::scroll-marker { box-shadow: 0 0 0 2px var(--ring); }
+	.carousel.dots-ring > *::scroll-marker:target-current { box-shadow: 0 0 0 2px var(--ring-active); }
+}
+
+@keyframes pill-fill {
+	to { background-size: 100% 100%; }
+}
+
+/* fallback buttons */
+.carousel-polyfill {
+	& .carousel-dots { align-items: center; }
+	&.dots-pill .carousel-dot {
+		aspect-ratio: auto;
+		background: var(--pill-track);
+		block-size: var(--pill-height);
+		border-radius: 1rem;
+		inline-size: var(--pill-width);
+	}
+	&.dots-hybrid .carousel-dot {
+		transition: inline-size 0.3s ease, border-radius 0.3s ease;
+		&[aria-current] { aspect-ratio: auto; block-size: var(--dot-size); border-radius: 1rem; inline-size: var(--pill-width); }
+	}
+	&.dots-ring .carousel-dot { box-shadow: 0 0 0 2px var(--ring); }
+	&.dots-ring .carousel-dot[aria-current] { box-shadow: 0 0 0 2px var(--ring-active); }
+}
+@media (prefers-reduced-motion: no-preference) {
+	.carousel-polyfill.dots-pill .carousel-dot[aria-current] {
+		animation: pill-fill var(--autoplay) linear forwards;
+		background: linear-gradient(var(--dot-active) 0 0) 0 0 / 0% 100% no-repeat var(--pill-track);
+	}
+}

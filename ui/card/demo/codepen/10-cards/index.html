@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>CSS Carousels — 10 More than one per view</title>
+	<!-- CodePen: add Pen 01's CSS as an external stylesheet (Settings → CSS) -->
+	<link rel="stylesheet" href="../01-basics/style.css">
+	<link rel="stylesheet" href="style.css">
+	<!-- CodePen: add Pen 01's JS as an external script — the fallback for Safari/Firefox -->
+	<script type="module" src="../01-basics/script.js"></script>
+</head>
+<body>
+<!-- CodePen: HTML panel = everything inside <body>. CSS panel = style.css. -->
+<main>
+	<header>
+		<h1>CSS Carousels — More than one per view</h1>
+		<p>A slide is any child — so it can be a card, and it doesn’t have to fill the carousel.</p>
+	</header>
+	<div class="demos">
+		<figure class="demo">
+			<div class="carousel cards">
+				<article class="card" aria-label="Deep space"><img src="https://v4.browser.style/assets/images/hubble.png" alt="Galaxy photographed by a space telescope" loading="lazy"><h3>Deep space</h3><p>A galaxy, photographed from orbit.</p></article>
+				<article class="card" aria-label="Quantum"><img src="https://v4.browser.style/assets/images/quantum.png" alt="Quantum computer" loading="lazy"><h3>Quantum</h3><p>Cold machines, warm promises.</p></article>
+				<article class="card" aria-label="Web Summit"><img src="https://v4.browser.style/assets/images/websummit.png" alt="Conference stage" loading="lazy"><h3>Web Summit</h3><p>Three days of talks and coffee.</p></article>
+				<article class="card" aria-label="Atlas"><img src="https://v4.browser.style/assets/images/world.png" alt="Globe" loading="lazy"><h3>Atlas</h3><p>Every border, one globe.</p></article>
+				<article class="card" aria-label="Finance"><img src="https://v4.browser.style/assets/images/finance.png" alt="Charts on a desk" loading="lazy"><h3>Finance</h3><p>Charts that only go up.</p></article>
+				<article class="card" aria-label="Cities"><img src="https://v4.browser.style/assets/images/city.png" alt="City skyline" loading="lazy"><h3>Cities</h3><p>Glass, steel and evening light.</p></article>
+				<article class="card" aria-label="Rivers"><img src="https://v4.browser.style/assets/images/river.png" alt="River through a valley" loading="lazy"><h3>Rivers</h3><p>Slow water through green valleys.</p></article>
+				<article class="card" aria-label="Breathe"><img src="https://v4.browser.style/assets/images/mindfulness.png" alt="Person meditating in a forest" loading="lazy"><h3>Breathe</h3><p>Ten minutes, no phone.</p></article>
+				<article class="card" aria-label="Savannah"><img src="https://v4.browser.style/assets/images/elephants.png" alt="Elephants on the savannah" loading="lazy"><h3>Savannah</h3><p>A herd at the water hole.</p></article>
+			</div>
+			<figcaption><strong>Three per view</strong> — <code>flex-basis: calc((100% - gaps) / var(--per-view))</code>. One dot per card.</figcaption>
+		</figure>
+	</div>
+
+	<div class="demos">
+		<figure class="demo">
+			<div class="carousel cards paged">
+				<article class="card" aria-label="Deep space"><img src="https://v4.browser.style/assets/images/hubble.png" alt="Galaxy photographed by a space telescope" loading="lazy"><h3>Deep space</h3><p>A galaxy, photographed from orbit.</p></article>
+				<article class="card" aria-label="Quantum"><img src="https://v4.browser.style/assets/images/quantum.png" alt="Quantum computer" loading="lazy"><h3>Quantum</h3><p>Cold machines, warm promises.</p></article>
+				<article class="card" aria-label="Web Summit"><img src="https://v4.browser.style/assets/images/websummit.png" alt="Conference stage" loading="lazy"><h3>Web Summit</h3><p>Three days of talks and coffee.</p></article>
+				<article class="card" aria-label="Atlas"><img src="https://v4.browser.style/assets/images/world.png" alt="Globe" loading="lazy"><h3>Atlas</h3><p>Every border, one globe.</p></article>
+				<article class="card" aria-label="Finance"><img src="https://v4.browser.style/assets/images/finance.png" alt="Charts on a desk" loading="lazy"><h3>Finance</h3><p>Charts that only go up.</p></article>
+				<article class="card" aria-label="Cities"><img src="https://v4.browser.style/assets/images/city.png" alt="City skyline" loading="lazy"><h3>Cities</h3><p>Glass, steel and evening light.</p></article>
+				<article class="card" aria-label="Rivers"><img src="https://v4.browser.style/assets/images/river.png" alt="River through a valley" loading="lazy"><h3>Rivers</h3><p>Slow water through green valleys.</p></article>
+				<article class="card" aria-label="Breathe"><img src="https://v4.browser.style/assets/images/mindfulness.png" alt="Person meditating in a forest" loading="lazy"><h3>Breathe</h3><p>Ten minutes, no phone.</p></article>
+				<article class="card" aria-label="Savannah"><img src="https://v4.browser.style/assets/images/elephants.png" alt="Elephants on the savannah" loading="lazy"><h3>Savannah</h3><p>A herd at the water hole.</p></article>
+			</div>
+			<figcaption><strong>Pages</strong> — only every 3rd card snaps and gets a marker. Three dots, three pages.</figcaption>
+		</figure>
+	</div>
+
+	<div class="demos">
+		<figure class="demo">
+			<div class="carousel cards centered">
+				<article class="card" aria-label="Deep space"><img src="https://v4.browser.style/assets/images/hubble.png" alt="Galaxy photographed by a space telescope" loading="lazy"><h3>Deep space</h3><p>A galaxy, photographed from orbit.</p></article>
+				<article class="card" aria-label="Quantum"><img src="https://v4.browser.style/assets/images/quantum.png" alt="Quantum computer" loading="lazy"><h3>Quantum</h3><p>Cold machines, warm promises.</p></article>
+				<article class="card" aria-label="Web Summit"><img src="https://v4.browser.style/assets/images/websummit.png" alt="Conference stage" loading="lazy"><h3>Web Summit</h3><p>Three days of talks and coffee.</p></article>
+				<article class="card" aria-label="Atlas"><img src="https://v4.browser.style/assets/images/world.png" alt="Globe" loading="lazy"><h3>Atlas</h3><p>Every border, one globe.</p></article>
+				<article class="card" aria-label="Finance"><img src="https://v4.browser.style/assets/images/finance.png" alt="Charts on a desk" loading="lazy"><h3>Finance</h3><p>Charts that only go up.</p></article>
+			</div>
+			<figcaption><strong>Centred, peeking both sides</strong> — <code>scroll-snap-align: center</code> + <code>scroll-padding-inline</code>.</figcaption>
+		</figure>
+	</div>
+</main>
+</body>
+</html>

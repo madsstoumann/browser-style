@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>CSS Carousels — 08 A bar instead of dots</title>
+	<!-- CodePen: add Pen 01's CSS as an external stylesheet (Settings → CSS) -->
+	<link rel="stylesheet" href="../01-basics/style.css">
+	<link rel="stylesheet" href="style.css">
+	<!-- CodePen: add Pen 01's JS as an external script — the fallback for Safari/Firefox -->
+	<script type="module" src="../01-basics/script.js"></script>
+</head>
+<body>
+<!-- CodePen: HTML panel = everything inside <body>. CSS panel = style.css. -->
+<main>
+	<header>
+		<h1>CSS Carousels — A bar instead of dots</h1>
+		<p>One segment per slide, <code>flex: 1</code> each — a progress bar you can click anywhere.</p>
+	</header>
+	<div class="demos">
+		<figure class="demo">
+			<div class="carousel bar">
+				<img src="https://v4.browser.style/assets/images/hubble.png" alt="Galaxy photographed by a space telescope" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/quantum.png" alt="Quantum computer" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/websummit.png" alt="Conference stage" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/world.png" alt="Globe" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/finance.png" alt="Charts on a desk" loading="lazy">
+			</div>
+			<figcaption><strong>Bar on the image</strong> — sized with <code>anchor-size()</code>.</figcaption>
+		</figure>
+
+		<figure class="demo">
+			<div class="carousel bar below">
+				<img src="https://v4.browser.style/assets/images/elephants.png" alt="Elephants on the savannah" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/hammershus.png" alt="Castle ruin on a cliff" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/autumn.jpg" alt="Autumn leaves" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/winter.jpg" alt="Snowy forest" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/spring.jpg" alt="Spring blossom" loading="lazy">
+			</div>
+			<figcaption><strong>Bar below</strong> — in flow, full width.</figcaption>
+		</figure>
+
+		<figure class="demo">
+			<div class="carousel scrollbar no-dots no-arrows">
+				<img src="https://v4.browser.style/assets/images/mindfulness.png" alt="Person meditating in a forest" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/world.png" alt="Globe" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/city.png" alt="City skyline" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/river.png" alt="River through a valley" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/summer.jpg" alt="Summer beach" loading="lazy">
+			</div>
+			<figcaption><strong>The real scrollbar</strong> — <code>::-webkit-scrollbar</code> parts in Chrome and Safari (always visible), <code>scrollbar-color</code> in Firefox. Draggable, and no JS fallback needed.</figcaption>
+		</figure>
+	</div>
+</main>
+</body>
+</html>

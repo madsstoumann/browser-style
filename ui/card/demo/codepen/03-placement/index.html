@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>CSS Carousels — 03 Placing the controls</title>
+	<!-- CodePen: add Pen 01's CSS as an external stylesheet (Settings → CSS) -->
+	<link rel="stylesheet" href="../01-basics/style.css">
+	<link rel="stylesheet" href="style.css">
+	<!-- CodePen: add Pen 01's JS as an external script — the fallback for Safari/Firefox -->
+	<script type="module" src="../01-basics/script.js"></script>
+</head>
+<body>
+<!-- CodePen: HTML panel = everything inside <body>. CSS panel = style.css. -->
+<main>
+	<header>
+		<h1>CSS Carousels — Placing the controls</h1>
+		<p>Anchor positioning measures against the carousel itself — so the controls go wherever we point them.</p>
+	</header>
+	<div class="demos">
+		<figure class="demo">
+			<div class="carousel arrows-top">
+				<img src="https://v4.browser.style/assets/images/hubble.png" alt="Galaxy photographed by a space telescope" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/quantum.png" alt="Quantum computer" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/websummit.png" alt="Conference stage" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/world.png" alt="Globe" loading="lazy">
+			</div>
+			<figcaption><strong>Arrows at the top</strong> — <code>top: calc(anchor(top) + …)</code>.</figcaption>
+		</figure>
+
+		<figure class="demo">
+			<div class="carousel arrows-bottom">
+				<img src="https://v4.browser.style/assets/images/finance.png" alt="Charts on a desk" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/city.png" alt="City skyline" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/river.png" alt="River through a valley" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/mindfulness.png" alt="Person meditating in a forest" loading="lazy">
+			</div>
+			<figcaption><strong>Bottom row</strong> — dots and arrows share a row.</figcaption>
+		</figure>
+
+		<figure class="demo">
+			<div class="carousel arrows-pair arrows-bottom dots-start">
+				<img src="https://v4.browser.style/assets/images/elephants.png" alt="Elephants on the savannah" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/hammershus.png" alt="Castle ruin on a cliff" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/autumn.jpg" alt="Autumn leaves" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/winter.jpg" alt="Snowy forest" loading="lazy">
+			</div>
+			<figcaption><strong>A pair, bottom end</strong> — dots start.</figcaption>
+		</figure>
+
+		<figure class="demo">
+			<div class="carousel arrows-pair arrows-start arrows-top dots-top dots-end">
+				<img src="https://v4.browser.style/assets/images/popovers.png" alt="Speech bubbles" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/ergochair.png" alt="Office chair" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/aurasoundpro.png" alt="Headphones" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/gastronomy.png" alt="Plated dinner" loading="lazy">
+			</div>
+			<figcaption><strong>A pair, top start</strong> — dots top end.</figcaption>
+		</figure>
+
+		<figure class="demo">
+			<div class="carousel arrows-outside">
+				<img src="https://v4.browser.style/assets/images/spring.jpg" alt="Spring blossom" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/summer.jpg" alt="Summer beach" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/autumn.jpg" alt="Autumn leaves" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/winter.jpg" alt="Snowy forest" loading="lazy">
+			</div>
+			<figcaption><strong>Outside</strong> — the carousel shrinks, the arrows sit in the gap.</figcaption>
+		</figure>
+	</div>
+</main>
+</body>
+</html>

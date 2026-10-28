@@ -1,0 +1,52 @@
+/*
+ * Pen 13 — Dynamic dots (the Instagram kind)
+ * Load Pen 01 (base) as an external stylesheet first.
+ *
+ * Past five slides, the dots become a five-slot WINDOW: the dots near the
+ * current one are full size, the rest shrink toward the edges — and the
+ * strip glides along as you swipe. All from ONE number: scroll progress.
+ */
+
+/* a registered property can be animated — and this one inherits into the markers */
+@property --progress {
+	syntax: "<number>";
+	inherits: true;
+	initial-value: 0;
+}
+@keyframes progress {
+	to { --progress: 1; }
+}
+
+.carousel.dynamic {
+	--dot-size: 0.5rem;
+	--pitch: calc(var(--dot-size) + var(--dot-gap));   /* one dot + one gap */
+	--window: calc(5 * var(--pitch) - var(--dot-gap)); /* five of them */
+}
+
+@supports (scroll-marker-group: after) and (animation-timeline: scroll()) and (order: sibling-index()) {
+	.carousel.dynamic {
+		/* 0 → 1 as the carousel scrolls from start to end */
+		animation: progress linear both;
+		animation-timeline: scroll(self inline);
+
+		/* a fixed five-dot window. Clipped, NOT scrollable */
+		&::scroll-marker-group {
+			inline-size: var(--window);
+			overflow: clip;
+		}
+		& > *::scroll-marker {
+			/* which slide is "current", as a number: progress × (slides − 1),
+			   kept one away from either end so the window never runs out */
+			--center: clamp(1, var(--progress) * (sibling-count() - 1), sibling-count() - 2);
+			/* how far THIS dot is from the current one (always positive) */
+			--distance: abs(sibling-index() - 1 - var(--center));
+			display: block; /* an inline marker can't be scaled */
+			opacity: clamp(0.6, 1.6 - 0.3 * var(--distance), 1);
+			scale: clamp(0.4, 1.3 - 0.3 * var(--distance), 1);
+		}
+		/* the glide: push the whole strip left by margin on the FIRST dot */
+		& > :first-child::scroll-marker {
+			margin-inline-start: calc(-1 * var(--pitch) * clamp(0, var(--progress) * (sibling-count() - 1) - 2, sibling-count() - 5));
+		}
+	}
+}

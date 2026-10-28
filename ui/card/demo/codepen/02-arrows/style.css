@@ -1,0 +1,80 @@
+/*
+ * Pen 02 — Arrow styles
+ * Load Pen 01 (base) as an external stylesheet first.
+ * An arrow is a pseudo-element: style it like any other box.
+ */
+
+/* Tokens live outside @supports, so the JS fallback buttons pick them up too */
+
+/* shape — it's just border-radius */
+.carousel.arrows-square { --arrow-radius: 0; }
+.carousel.arrows-rounded { --arrow-radius: 0.375rem; }
+
+/* size */
+.carousel.arrows-sm { --arrow-size: 1.75rem; --dot-size: 0.45rem; }
+.carousel.arrows-lg { --arrow-size: 3rem; --dot-size: 0.8rem; }
+
+/* glyph — swap the SVG */
+.carousel.arrows-arrow {
+	--arrow-glyph: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M12 5l7 7-7 7'/%3E%3C/svg%3E");
+}
+
+/* dark plate, white glyph */
+.carousel.arrows-dark {
+	--arrow-bg: rgb(0 0 0 / 0.6);
+	--arrow-bg-hover: rgb(0 0 0 / 0.8);
+	--arrow-glyph: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9.5 18l6-6-6-6'/%3E%3C/svg%3E");
+}
+/* the glyph colour is baked into the data-URI, so a combination needs its own SVG */
+.carousel.arrows-dark.arrows-arrow {
+	--arrow-glyph: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M12 5l7 7-7 7'/%3E%3C/svg%3E");
+}
+
+/* ink for the bare glyph below */
+.carousel.arrows-bare { --arrow-ink: #fff; }
+.carousel.arrows-bare.ink-dark {
+	--arrow-ink: rgb(0 0 0 / 0.8);
+	--dot-bg: rgb(0 0 0 / 0.25);
+	--dot-active: rgb(0 0 0 / 0.7);
+}
+
+@supports (scroll-marker-group: after) {
+	/* bare — no plate. The SVG becomes a MASK, and background-color paints
+	   the glyph, so one SVG gives us any colour we like */
+	.carousel.arrows-bare {
+		&::scroll-button(*) {
+			background: var(--arrow-ink);
+			box-shadow: none;
+			mask: var(--arrow-glyph) center / round(calc(var(--arrow-size) * 0.9), 2px) no-repeat;
+		}
+		&::scroll-button(*):hover { scale: 1.2; }
+	}
+
+	/* hide a dead-end arrow instead of dimming it */
+	.carousel.arrows-hide-end::scroll-button(*):disabled { opacity: 0; }
+
+	/* reveal on hover — only on devices that CAN hover, so touch keeps them */
+	@media (hover: hover) {
+		.carousel.arrows-reveal {
+			&::scroll-button(*) { opacity: 0; }
+			&:is(:hover, :focus-within)::scroll-button(*),
+			&::scroll-button(*):focus-visible { opacity: 1; }
+			&:is(:hover, :focus-within)::scroll-button(*):disabled { opacity: 0.4; }
+		}
+	}
+}
+
+/* the same three ideas for the fallback buttons */
+.carousel-polyfill.arrows-bare .carousel-arrow {
+	background: var(--arrow-ink);
+	box-shadow: none;
+	mask: var(--arrow-glyph) center / round(calc(var(--arrow-size) * 0.9), 2px) no-repeat;
+}
+.carousel-polyfill.arrows-hide-end .carousel-arrow:disabled { opacity: 0; }
+@media (hover: hover) {
+	.carousel-polyfill.arrows-reveal {
+		& .carousel-arrow { opacity: 0; }
+		&:is(:hover, :focus-within) .carousel-arrow { opacity: 1; }
+		&:is(:hover, :focus-within) .carousel-arrow:disabled { opacity: 0.4; }
+	}
+}

@@ -1,0 +1,73 @@
+/*
+ * Pen 06 — Thumbnails
+ * Load Pen 01 (base) as an external stylesheet first.
+ * Each slide sets --thumb: url(…) inline. Its marker inherits it — one rule,
+ * any number of thumbnails.
+ */
+.carousel.thumbs {
+	--thumb-size: 3rem;          /* height of a thumbnail */
+	--thumb-ratio: 4 / 3;
+	--thumb-border: rgb(255 255 255 / 0.5);
+	--thumb-border-active: #fff;
+}
+/* the strip sits on the page, so the active border follows the text colour */
+.carousel.thumbs.strip {
+	--thumb-border: transparent;
+	--thumb-border-active: CanvasText;
+}
+
+@supports (scroll-marker-group: after) {
+	.carousel.thumbs {
+		& > *::scroll-marker {
+			aspect-ratio: var(--thumb-ratio);
+			background: var(--thumb) center / cover;
+			block-size: var(--thumb-size);
+			border: 2px solid var(--thumb-border);
+			border-radius: 0.25rem;
+			inline-size: auto;
+		}
+		& > *::scroll-marker:target-current {
+			border-color: var(--thumb-border-active);
+		}
+	}
+	/* in a corner instead of centred */
+	.carousel.thumbs.thumbs-end::scroll-marker-group {
+		inset-inline-end: calc(anchor(self-end) + var(--inset));
+		justify-self: auto;
+	}
+	/* a filmstrip below the image: back in normal flow, and scrollable.
+	   The group is a scroll container of its own — and the browser keeps
+	   the current thumbnail scrolled into view */
+	.carousel.thumbs.strip::scroll-marker-group {
+		justify-self: normal; /* undo anchor-center, or the static group collapses */
+		margin-block-start: 0.5rem;
+		block-size: calc(var(--thumb-size) + 4px); /* the 2px padding, top and bottom */
+		overflow-x: auto;
+		padding: 2px;
+		position: static;
+		scrollbar-width: none;
+	}
+}
+
+/* fallback buttons */
+.carousel-polyfill.thumbs {
+	& .carousel-dot {
+		aspect-ratio: var(--thumb-ratio);
+		background: var(--thumb) center / cover;
+		block-size: var(--thumb-size);
+		border: 2px solid var(--thumb-border);
+		border-radius: 0.25rem;
+		flex: none;
+		inline-size: auto;
+		&[aria-current] { border-color: var(--thumb-border-active); }
+	}
+	&.thumbs-end .carousel-dots { justify-content: end; padding-inline: var(--inset); }
+	&.strip .carousel-dots {
+		justify-content: start;
+		margin-block-start: 0.5rem;
+		overflow-x: auto;
+		padding: 2px;
+		position: static;
+		scrollbar-width: none;
+	}
+}

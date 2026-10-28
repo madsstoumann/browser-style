@@ -1,0 +1,96 @@
+/*
+ * Pen 04 — Controls in a band
+ * Load Pen 01 (base) as an external stylesheet first.
+ * The dots' group is a real box, generated as a SIBLING of the carousel.
+ * Drop `position: absolute`, and it simply flows below (or above) the image.
+ */
+
+/* the band sits on the page, not the image — so the ink comes from currentColor */
+.carousel.band {
+	--band: 3rem;
+	--dot-bg: color-mix(in oklab, currentColor 25%, transparent);
+	--dot-active: color-mix(in oklab, currentColor 75%, transparent);
+	--arrow-ink: color-mix(in oklab, currentColor 80%, transparent);
+	--arrow-bg-hover: color-mix(in oklab, currentColor 10%, transparent);
+}
+
+@supports (scroll-marker-group: after) {
+	.carousel.band {
+		/* in flow: the group takes up room, so nothing overlaps the image */
+		&::scroll-marker-group {
+			align-items: center;
+			justify-content: center;
+			justify-self: normal; /* undo the base's anchor-center, or the group shrinks to 0 */
+			min-block-size: var(--band);
+			position: static;
+		}
+		/* bare glyphs, painted in the band ink */
+		&::scroll-button(*) {
+			background: var(--arrow-ink);
+			box-shadow: none;
+			mask: var(--arrow-glyph) center / round(calc(var(--arrow-size) * 0.8), 2px) no-repeat;
+			top: calc(anchor(bottom) + (var(--band) - var(--arrow-size)) / 2);
+		}
+		&::scroll-button(*):hover { scale: 1.15; }
+		&::scroll-button(inline-start) { inset-inline-start: anchor(self-start); }
+		&::scroll-button(inline-end) { inset-inline-end: anchor(self-end); }
+	}
+	/* dots at the start, arrows as a pair at the end */
+	.carousel.band.dots-start {
+		&::scroll-marker-group { justify-content: start; }
+		&::scroll-button(inline-start) {
+			inset-inline-start: auto;
+			inset-inline-end: calc(anchor(self-end) + var(--arrow-size) + 0.25rem);
+		}
+	}
+	/* the band ABOVE: generate the group before the carousel */
+	.carousel.band.above {
+		scroll-marker-group: before;
+		&::scroll-button(*) { top: calc(anchor(top) - var(--band) + (var(--band) - var(--arrow-size)) / 2); }
+	}
+	/* split: dots in the band, arrows stay on the image */
+	.carousel.band.dots-only-band::scroll-button(*) {
+		background: var(--arrow-glyph) center / var(--arrow-glyph-size) no-repeat rgb(255 255 255 / 0.75);
+		box-shadow: 0 1px 3px rgb(0 0 0 / 0.2);
+		mask: none;
+		top: calc(anchor(center) - var(--arrow-size) / 2);
+	}
+	.carousel.band.dots-only-band {
+		&::scroll-button(inline-start) { inset-inline-start: calc(anchor(self-start) + var(--inset)); }
+		&::scroll-button(inline-end) { inset-inline-end: calc(anchor(self-end) + var(--inset)); }
+	}
+}
+
+/* fallback buttons: the same band, built from the wrapper */
+.carousel-polyfill.band {
+	& .carousel-dots {
+		align-items: center;
+		min-block-size: var(--band);
+		position: static;
+	}
+	& .carousel-arrow {
+		background: var(--arrow-ink);
+		box-shadow: none;
+		inset-block: auto calc((var(--band) - var(--arrow-size)) / 2);
+		mask: var(--arrow-glyph) center / round(calc(var(--arrow-size) * 0.8), 2px) no-repeat;
+	}
+	& [data-dir="prev"] { inset-inline-start: 0; }
+	& [data-dir="next"] { inset-inline-end: 0; }
+	&.dots-start {
+		& .carousel-dots { justify-content: start; }
+		& [data-dir="prev"] { inset-inline-start: auto; inset-inline-end: calc(var(--arrow-size) + 0.25rem); }
+	}
+	&.above {
+		display: flex;
+		flex-direction: column-reverse;
+		& .carousel-arrow { inset-block: calc((var(--band) - var(--arrow-size)) / 2) auto; }
+	}
+	&.dots-only-band .carousel-arrow {
+		background: var(--arrow-glyph) center / var(--arrow-glyph-size) no-repeat rgb(255 255 255 / 0.75);
+		box-shadow: 0 1px 3px rgb(0 0 0 / 0.2);
+		inset-block: calc((100% - var(--band) - var(--arrow-size)) / 2) auto;
+		mask: none;
+	}
+	&.dots-only-band [data-dir="prev"] { inset-inline-start: var(--inset); }
+	&.dots-only-band [data-dir="next"] { inset-inline-end: var(--inset); }
+}

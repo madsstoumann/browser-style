@@ -1,0 +1,155 @@
+/*
+ * Pen 07 — Labels and a timeline
+ * Load Pen 01 (base) as an external stylesheet first.
+ * A marker can show TEXT: content: attr(…) reads an attribute of its slide.
+ */
+.carousel.labels {
+	--label-color: #fff;
+	--label-border: rgb(255 255 255 / 0.55);
+	--label-bg-active: rgb(255 255 255 / 0.25);
+	--group-bg: rgb(0 0 0 / 0.35);
+	anchor-name: --labels;
+	anchor-scope: --labels; /* one name, many carousels — keep each to itself */
+}
+.carousel.timeline {
+	--band: 4rem;
+	--node-width: 7rem;
+	--node-dot: 0.75rem;
+	--rail: color-mix(in oklab, CanvasText 25%, transparent);
+	--node-ink: color-mix(in oklab, CanvasText 65%, transparent);
+	--node-ink-active: CanvasText;
+}
+
+@supports (scroll-marker-group: after) {
+	/* --- labels: a text pill per slide --- */
+	.carousel.labels {
+		&::scroll-marker-group {
+			background: var(--group-bg);
+			border-radius: 2rem;
+			/* never wider than the carousel — and scrollable when it is */
+			max-inline-size: calc(anchor-size(--labels inline) - 2 * var(--inset));
+			overflow-x: auto;
+			padding: 0.375rem;
+			position-anchor: --labels;
+			scrollbar-width: none;
+		}
+		& > *::scroll-marker {
+			background: transparent;
+			block-size: auto;
+			border: 1px solid var(--label-border);
+			border-radius: 2rem;
+			color: var(--label-color);
+			content: attr(data-label);
+			font-size: 0.8125rem;
+			inline-size: auto;
+			padding: 0.25em 0.875em;
+			text-decoration: none;
+			white-space: nowrap;
+		}
+		& > *::scroll-marker:target-current {
+			background: var(--label-bg-active);
+			border-color: transparent;
+		}
+	}
+
+	/* --- timeline: a dot on a rail, and a date underneath --- */
+	.carousel.timeline {
+		&::scroll-marker-group {
+			gap: 0; /* a gap would break the rail into dashes */
+			justify-content: safe center; /* centred — until it overflows */
+			justify-self: normal;
+			margin-block-start: 0.75rem;
+			min-block-size: var(--band);
+			overflow-x: auto;
+			position: static;
+			scrollbar-width: none;
+		}
+		/* a pseudo-element has no ::before of its own — so the dot and the
+		   rail are two background layers on the marker itself */
+		& > *::scroll-marker {
+			background:
+				radial-gradient(circle at 50% calc(var(--node-dot) / 2), Canvas 0 calc(var(--node-dot) / 2 - 2px), var(--rail) calc(var(--node-dot) / 2 - 1.5px) calc(var(--node-dot) / 2), #0000 calc(var(--node-dot) / 2 + 0.5px)),
+				linear-gradient(to right, #0000 var(--rail-start, 0%), var(--rail) 0 var(--rail-end, 100%), #0000 0) 0 calc(var(--node-dot) / 2 - 1px) / 100% 2px no-repeat;
+			block-size: auto;
+			border-radius: 0;
+			color: var(--node-ink);
+			content: attr(data-date);
+			flex: 0 0 var(--node-width);
+			font-size: 0.875rem;
+			inline-size: auto;
+			padding-block-start: calc(var(--node-dot) + 0.5rem);
+			text-align: center;
+			text-decoration: none;
+		}
+		/* the rail starts and ends AT a dot (the custom properties feed the gradient) */
+		& > :first-child::scroll-marker { --rail-start: 50%; }
+		& > :last-child::scroll-marker { --rail-end: 50%; }
+		& > *::scroll-marker:target-current {
+			background:
+				radial-gradient(circle at 50% calc(var(--node-dot) / 2), var(--node-ink-active) 0 calc(var(--node-dot) / 2), #0000 calc(var(--node-dot) / 2 + 0.5px)),
+				linear-gradient(to right, #0000 var(--rail-start, 0%), var(--rail) 0 var(--rail-end, 100%), #0000 0) 0 calc(var(--node-dot) / 2 - 1px) / 100% 2px no-repeat;
+			color: var(--node-ink-active);
+			font-weight: 700;
+		}
+	}
+}
+
+/* fallback buttons — the JS copies data-label / data-date into each button */
+.carousel-polyfill.labels {
+	& .carousel-dots {
+		background: var(--group-bg);
+		border-radius: 2rem;
+		inset-inline: var(--inset);
+		justify-content: start;
+		margin-inline: auto;
+		overflow-x: auto;
+		padding: 0.375rem;
+		scrollbar-width: none;
+		inline-size: fit-content;
+		max-inline-size: calc(100% - 2 * var(--inset));
+	}
+	& .carousel-dot {
+		aspect-ratio: auto;
+		background: transparent;
+		border: 1px solid var(--label-border);
+		border-radius: 2rem;
+		color: var(--label-color);
+		font: inherit;
+		font-size: 0.8125rem;
+		inline-size: auto;
+		padding: 0.25em 0.875em;
+		white-space: nowrap;
+		&[aria-current] { background: var(--label-bg-active); border-color: transparent; }
+	}
+}
+.carousel-polyfill.timeline {
+	& .carousel-dots {
+		gap: 0;
+		justify-content: safe center;
+		margin-block-start: 0.75rem;
+		min-block-size: var(--band);
+		overflow-x: auto;
+		position: static;
+	}
+	& .carousel-dot {
+		aspect-ratio: auto;
+		background:
+			radial-gradient(circle at 50% calc(var(--node-dot) / 2), Canvas 0 calc(var(--node-dot) / 2 - 2px), var(--rail) calc(var(--node-dot) / 2 - 1.5px) calc(var(--node-dot) / 2), #0000 calc(var(--node-dot) / 2 + 0.5px)),
+			linear-gradient(to right, #0000 var(--rail-start, 0%), var(--rail) 0 var(--rail-end, 100%), #0000 0) 0 calc(var(--node-dot) / 2 - 1px) / 100% 2px no-repeat;
+		border-radius: 0;
+		color: var(--node-ink);
+		flex: 0 0 var(--node-width);
+		font: inherit;
+		font-size: 0.875rem;
+		padding: calc(var(--node-dot) + 0.5rem) 0 0;
+		&:first-child { --rail-start: 50%; }
+		&:last-child { --rail-end: 50%; }
+		&[aria-current] {
+			background:
+				radial-gradient(circle at 50% calc(var(--node-dot) / 2), var(--node-ink-active) 0 calc(var(--node-dot) / 2), #0000 calc(var(--node-dot) / 2 + 0.5px)),
+				linear-gradient(to right, #0000 var(--rail-start, 0%), var(--rail) 0 var(--rail-end, 100%), #0000 0) 0 calc(var(--node-dot) / 2 - 1px) / 100% 2px no-repeat;
+			color: var(--node-ink-active);
+			font-weight: 700;
+		}
+	}
+}

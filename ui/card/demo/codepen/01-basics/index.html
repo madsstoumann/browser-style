@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>CSS Carousels — 01 Basics</title>
+	<link rel="stylesheet" href="style.css">
+	<script type="module" src="script.js"></script>
+</head>
+<body>
+<!-- CodePen: HTML panel = everything inside <body>. CSS panel = style.css. -->
+<main>
+	<header>
+		<h1>CSS Carousels — Basics</h1>
+		<p>A scroll-snap row. Dots are <code>::scroll-marker</code>, arrows are <code>::scroll-button()</code>. No JavaScript.</p>
+	</header>
+
+	<div class="demos">
+		<figure class="demo">
+			<div class="carousel no-dots no-arrows">
+				<img src="https://v4.browser.style/assets/images/hubble.png" alt="Galaxy photographed by a space telescope" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/finance.png" alt="Charts on a desk" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/river.png" alt="River through a valley" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/gastronomy.png" alt="Plated dinner" loading="lazy">
+			</div>
+			<figcaption><strong>Swipe only</strong> — <code>scroll-snap-type</code> and nothing else.</figcaption>
+		</figure>
+
+		<figure class="demo">
+			<div class="carousel no-arrows">
+				<img src="https://v4.browser.style/assets/images/mindfulness.png" alt="Person meditating" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/world.png" alt="Globe" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/quantum.png" alt="Quantum computer" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/city.png" alt="City skyline" loading="lazy">
+			</div>
+			<figcaption><strong>Dots</strong> — <code>scroll-marker-group</code> + <code>::scroll-marker</code>.</figcaption>
+		</figure>
+
+		<figure class="demo">
+			<div class="carousel no-dots">
+				<img src="https://v4.browser.style/assets/images/popovers.png" alt="Speech bubbles" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/ergochair.png" alt="Office chair" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/aurasoundpro.png" alt="Headphones" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/websummit.png" alt="Conference stage" loading="lazy">
+			</div>
+			<figcaption><strong>Arrows</strong> — <code>::scroll-button(inline-start)</code> and <code>(inline-end)</code>.</figcaption>
+		</figure>
+
+		<figure class="demo">
+			<div class="carousel">
+				<img src="https://v4.browser.style/assets/images/hubble.png" alt="Galaxy photographed by a space telescope" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/quantum.png" alt="Quantum computer" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/websummit.png" alt="Conference stage" loading="lazy">
+				<img src="https://v4.browser.style/assets/images/world.png" alt="Globe" loading="lazy">
+			</div>
+			<figcaption><strong>Both</strong> — the default <code>.carousel</code>.</figcaption>
+		</figure>
+	</div>
+</main>
+</body>
+</html>
