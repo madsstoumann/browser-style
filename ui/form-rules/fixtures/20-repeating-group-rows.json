@@ -1,0 +1,87 @@
+{
+	"description": "Rows are cleaned and checked one by one; issues name the row and the row field",
+	"form": "../examples/order.form.json",
+	"rules": "../examples/order.rules.json",
+	"input": {
+		"values": {
+			"lines": [
+				{
+					"product": "coffee",
+					"qty": 25
+				},
+				{
+					"product": "soup",
+					"qty": 1
+				},
+				{},
+				{
+					"qty": 2,
+					"extra": true
+				}
+			],
+			"tip": 0
+		},
+		"today": "2026-10-28"
+	},
+	"expect": {
+		"values": {
+			"lines": [
+				{
+					"product": "coffee",
+					"qty": 25
+				},
+				{
+					"qty": 1
+				},
+				{
+					"qty": 2
+				}
+			],
+			"tip": 0,
+			"items": 28,
+			"subtotal": 750,
+			"total": 750
+		},
+		"issues": [
+			{
+				"field": "lines",
+				"code": "maximum",
+				"message": "Must be at most 20",
+				"row": 0,
+				"item": "qty"
+			},
+			{
+				"field": "lines",
+				"row": 1,
+				"item": "product",
+				"code": "option-unavailable"
+			},
+			{
+				"field": "lines",
+				"row": 2,
+				"item": "product",
+				"code": "required"
+			},
+			{
+				"field": "country",
+				"code": "required"
+			},
+			{
+				"field": "city",
+				"code": "required"
+			},
+			{
+				"field": "street",
+				"code": "required"
+			},
+			{
+				"field": "date",
+				"code": "required"
+			},
+			{
+				"field": "email",
+				"code": "required"
+			}
+		]
+	}
+}

@@ -1,0 +1,71 @@
+{
+	"description": "Calculated fields show their variables, a posted total is ignored, and a cake needs two days notice (some)",
+	"form": "../examples/order.form.json",
+	"rules": "../examples/order.rules.json",
+	"input": {
+		"values": {
+			"lines": [
+				{
+					"product": "tea",
+					"qty": 2
+				},
+				{
+					"product": "cake",
+					"qty": 1,
+					"note": "Birthday"
+				}
+			],
+			"tip": 10,
+			"total": 1,
+			"country": "dk",
+			"city": "copenhagen",
+			"street": "Strøget",
+			"date": "2026-10-29",
+			"email": "ada@example.org"
+		},
+		"choices": {
+			"city": [
+				{
+					"value": "copenhagen",
+					"label": "Copenhagen"
+				}
+			]
+		},
+		"today": "2026-10-28"
+	},
+	"expect": {
+		"values": {
+			"lines": [
+				{
+					"product": "tea",
+					"qty": 2
+				},
+				{
+					"product": "cake",
+					"qty": 1,
+					"note": "Birthday"
+				}
+			],
+			"tip": 10,
+			"items": 3,
+			"subtotal": 90,
+			"total": 99,
+			"country": "dk",
+			"city": "copenhagen",
+			"street": "Strøget",
+			"date": "2026-10-29",
+			"email": "ada@example.org"
+		},
+		"issues": [
+			{
+				"field": "date",
+				"code": "cake-notice",
+				"message": "Cake needs two days' notice",
+				"rule": "cake-needs-date"
+			}
+		],
+		"matched": [
+			"cake-needs-date"
+		]
+	}
+}

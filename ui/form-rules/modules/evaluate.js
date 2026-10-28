@@ -374,6 +374,11 @@ export function evaluate(formDefinition, ruleSetDocument, input = {}) {
 	const baseForm = normalizeForm(formDefinition);
 	const ruleSet = normalizeRuleSet(ruleSetDocument);
 	const values = withPrefill(baseForm, input.values ?? {}, input);
+	/* Rules read a repeating group's rows as they would be submitted: only its item keys, each of its type. */
+	const readable = { ...values };
+	for (const [id, field] of baseForm.fields) {
+		if (field.property?.type === 'list' && Array.isArray(values[id])) readable[id] = listRows(id, field.property, values[id], input).rows;
+	}
 	const hasPrevious = Array.isArray(input.previous?.matched);
 	const previousMatched = new Set(input.previous?.matched ?? []);
 	const baseRules = ruleSet.rules;
@@ -394,7 +399,7 @@ export function evaluate(formDefinition, ruleSetDocument, input = {}) {
 		form = withPatchFields(baseForm, patches);
 		const rules = [...baseRules, ...patches.flatMap(patch => patch.rules ?? [])];
 		const base = {
-			values: visibleValues(values, fieldsSeen),
+			values: visibleValues(readable, fieldsSeen),
 			context: input.context ?? {},
 			facts: input.facts ?? {},
 			step: input.step ?? null,
@@ -468,7 +473,7 @@ export function evaluate(formDefinition, ruleSetDocument, input = {}) {
 		if (value !== undefined) submit[id] = value;
 	}
 
-	const visibleView = visibleValues(values, state.fields);
+	const visibleView = visibleValues(readable, state.fields);
 	/* A visible field with a sourced list asks for it; the key changes when the answers it sends do. */
 	for (const [id, field] of Object.entries(state.fields)) {
 		const property = form.fields.get(id)?.property;

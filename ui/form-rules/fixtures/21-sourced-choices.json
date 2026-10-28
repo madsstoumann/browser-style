@@ -1,0 +1,80 @@
+{
+	"description": "A choice list from a service is asked for with the answers it depends on, and the fetched list is checked like static choices",
+	"form": "../examples/order.form.json",
+	"rules": "../examples/order.rules.json",
+	"input": {
+		"values": {
+			"lines": [
+				{
+					"product": "tea",
+					"qty": 1
+				}
+			],
+			"tip": 0,
+			"country": "se",
+			"city": "copenhagen"
+		},
+		"choices": {
+			"city": [
+				{
+					"value": "stockholm",
+					"label": "Stockholm"
+				},
+				{
+					"value": "malmo",
+					"label": "Malmö"
+				}
+			]
+		},
+		"today": "2026-10-28"
+	},
+	"expect": {
+		"values": {
+			"lines": [
+				{
+					"product": "tea",
+					"qty": 1
+				}
+			],
+			"tip": 0,
+			"items": 1,
+			"subtotal": 25,
+			"total": 25,
+			"country": "se"
+		},
+		"issues": [
+			{
+				"field": "city",
+				"code": "option-unavailable"
+			},
+			{
+				"field": "city",
+				"code": "required"
+			},
+			{
+				"field": "street",
+				"code": "required"
+			},
+			{
+				"field": "date",
+				"code": "required"
+			},
+			{
+				"field": "email",
+				"code": "required"
+			}
+		],
+		"effects": [
+			{
+				"type": "options",
+				"field": "city",
+				"service": "cities",
+				"url": "/ui/form-rules/examples/api/cities.json",
+				"send": {
+					"country": "se"
+				},
+				"key": "cities:{\"country\":\"se\"}"
+			}
+		]
+	}
+}
