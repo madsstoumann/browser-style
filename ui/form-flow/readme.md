@@ -62,7 +62,9 @@ Every input re-runs `evaluate()` and applies the result:
 | `form`, `rules` | URLs of the form definition and the rule set |
 | `explain` | Shows a "Why" list of which rule decided what |
 | `track-context` | Context keys `form.start` may carry (default `channel campaign`) |
-| `label-prev`, `label-next`, `label-submit`, `label-unavailable`, `label-required` | Button and message texts |
+| `label-prev`, `label-next`, `label-submit`, `label-unavailable`, `label-required`, `label-add-row`, `label-remove-row`, … | Button and message texts; they win over the language pack |
+| `locale` | URL of a language pack, `locales/<lang>.json` (`en`, `da`, `de`, `sv`, `nb`, `fr`, `es`): `{ locale, labels, messages }`. Also sets number formatting. `flow.locale = pack` does the same |
+| `packages` | URLs of type and widget packages (`types.json`), space-separated: their checks become functions, their widgets controls. The page's own `flow.functions` win |
 
 ## Field types
 
@@ -76,10 +78,22 @@ Every input re-runs `evaluate()` and applies the result:
 | `select` | `<select>`; a radio group with `ui.widget: "radio"`; checkboxes with `options.multiple` |
 | `content` | A text block: optional `title` as a heading, `content` as paragraphs. No control |
 | `file` | `<input type="file">` with `accept` and `multiple` (when `maxFiles` > 1). The engine sees name, size and type only; the files go out with `ff:submit` |
+| `number` with `ui.widget: "range"` | A slider with an `<output>` showing the value; `ui.step` |
+| any type with `from: "vars.x"` (`ui.widget: "output"`) | A calculated value: `<output>`, formatted with `ui.format` (`Intl.NumberFormat` options) |
+| `list` | A repeating group: a `<fieldset>` with one row per item, as a table (`ui.widget: "table"`) or stacked rows (the default), with Add and Remove buttons. Add is disabled at `maxItems`; issues are shown on the cell they belong to |
+| `select` with `options.source` | A `<select>` whose options come from the service, fetched again when the fields it is sent change |
+| `string` with `options.source` | An `<input>` with a `<datalist>` of suggestions, fetched as the person types (`q` parameter, after `options.minLength` characters) |
+| any `ui.widget` from a widget package | That package's control, see [Widgets](#widgets) |
+
+Titles, help texts, text blocks and messages may hold placeholders, `{values.total}` or `{vars.score}`, filled on every change and formatted like the field. Demo: `order.html`.
 
 Which types an editor offers, and under what names, is data: see the [forms guide](../../docs/forms.md#field-types-and-packages). Demo: `contact.html`.
 
 Values are typed from the definition: a choice `30` comes back as the number `30`.
+
+## Widgets
+
+`flow.widgets = { name: adapter }` adds controls for `ui.widget` values beyond the native ones; the `packages` attribute fills it from widget packages. The rich text, `<auto-suggest>` and `<data-grid>` packages are in [form-widgets](../form-widgets/), and the adapter contract is in the [forms guide](../../docs/forms.md#widget-packages). A widget only changes how an answer is typed: without its package, a field falls back to the native control.
 
 ## Tracking
 

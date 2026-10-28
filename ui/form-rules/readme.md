@@ -62,7 +62,9 @@ Both the form and the rule set may be plain objects or UCF content (`{ id, model
 }
 ```
 
-Conditions are a strict subset of [JSON Logic](https://jsonlogic.com): no `==` / `!=`, no type coercion, `num` for explicit number conversion, missing values read as `null`. Conditions can read `values.*`, `context.*`, `facts.*` and `step`.
+Conditions are a strict subset of [JSON Logic](https://jsonlogic.com): no `==` / `!=`, no type coercion, `num` for explicit number conversion, missing values read as `null`. Conditions can read `values.*`, `vars.*`, `context.*`, `facts.*`, `services.*`, `step` and `today`.
+
+Beyond comparison and arithmetic there are text operators (`startsWith`, `endsWith`, `lower`, `upper`, `trim`, `length`, `substr`, `in`, `cat`), dates (`yearsBetween`, `daysBetween`, `datePart`), and list operators that run once per item (`map`, `filter`, `reduce`, `some`, `all`, `none`, `sum`). The full table is in the [forms guide](../../docs/forms.md#operators).
 
 Actions: `show`, `hide`, `enable`, `disable`, `require`, `optional`, `setValue`, `clear`, `options` (`only` / `exclude`), `skip`, `include`, `goto`, `set` / `add` (variables), `invalid`, `fetch`, `emit`.
 
@@ -78,6 +80,14 @@ Actions: `show`, `hide`, `enable`, `disable`, `require`, `optional`, `setValue`,
 Field types are data: `types/core.json` is the core package (text, choices, email, phone, consent, text block, hidden value, file upload, …), and country or domain packages such as `ui/form-types/dk` add their own, with their checks. `defineTypes`, `loadTypes`, `loadPackages`, `typeOf`, `fieldFromType`, `changeType`, `searchTypes` and `groupTypes` read them; all are pure. Schema: `schemas/form-types.schema.json`. The [forms guide](../../docs/forms.md#field-types-and-packages) explains the format.
 
 Property types beyond the plain inputs: `content` (a text block, never submitted), `file` (value `[{ name, size, type }]`, checked against `accept`, `maxSize`, `maxFiles`, never saved in a draft), a `boolean` with `ui.widget: "consent"` (`consentRecords(form, values)` gives what each ticked box said), and any field may prefill `from` `context.*` / `facts.*` or its `default`. A required boolean must be `true`.
+
+- **Calculated values**: `from: "vars.<name>"` makes a field whose value is always the variable's; a posted value is ignored. `calculatedFrom(property)` names the variable.
+- **Repeating groups**: `type: "list"` with `items.properties`; the value is an array of rows, cleaned and checked cell by cell (issues carry `row` and `item`), with `validation.minItems` / `maxItems`.
+- **Option sources**: `options.source` names a service. A select gets its list from it (the engine emits an `options` effect; pass the list back as `input.choices[field]` to check answers against it); a string only gets suggestions.
+- **Placeholders**: `{values.x}`, `{vars.x}`, `{context.x}`, `{facts.x}` in titles, help, text blocks and messages; `fillText()` and `placeholdersOf()` are exported, and `validate()` checks what they name.
+- **Messages**: `input.messages` replaces the default text per issue code (`{limit}` is the limit), which is how form-flow's language packs translate them.
+
+`loadPackages(urls, { widgets: true })` also imports a package's browser-only `widgets` module (see [form-widgets](../form-widgets/)).
 
 ## Variables
 
