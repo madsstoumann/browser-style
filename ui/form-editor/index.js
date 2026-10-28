@@ -138,7 +138,10 @@ export class FormEditor extends HTMLElement {
 
 	#mergeFunctions() {
 		this.#functions = { ...(this.#types.functions ?? {}), ...this.#ownFunctions };
-		if (this.#preview) this.#preview.functions = this.#functions;
+		if (this.#preview) {
+			this.#preview.functions = this.#functions;
+			if (this.#types.widgets) this.#preview.widgets = this.#types.widgets;
+		}
 		if (this.#parts.main) this.#render(false);
 	}
 
@@ -146,7 +149,7 @@ export class FormEditor extends HTMLElement {
 	async #loadTypes() {
 		const urls = (this.getAttribute('types') ?? '').split(/\s+/).filter(Boolean).map(url => new URL(url, document.baseURI).href);
 		try {
-			const registry = await loadPackages([CORE_TYPES, ...urls.filter(url => url !== CORE_TYPES)]);
+			const registry = await loadPackages([CORE_TYPES, ...urls.filter(url => url !== CORE_TYPES)], { widgets: true });
 			this.types = registry;
 			if (registry.errors.length) this.#message = registry.errors.map(error => error.message).join('. ');
 		} catch (error) {
