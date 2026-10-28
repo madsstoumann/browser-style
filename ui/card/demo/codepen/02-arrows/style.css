@@ -23,7 +23,7 @@
 .carousel.arrows-dark {
 	--arrow-bg: rgb(0 0 0 / 0.6);
 	--arrow-bg-hover: rgb(0 0 0 / 0.8);
-	--arrow-glyph: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18l6-6-6-6'/%3E%3C/svg%3E");
+	--arrow-glyph: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9.5 18l6-6-6-6'/%3E%3C/svg%3E");
 }
 /* the glyph colour is baked into the data-URI, so a combination needs its own SVG */
 .carousel.arrows-dark.arrows-arrow {
@@ -45,7 +45,7 @@
 		&::scroll-button(*) {
 			background: var(--arrow-ink);
 			box-shadow: none;
-			mask: var(--arrow-glyph) center / 90% no-repeat;
+			mask: var(--arrow-glyph) center / round(calc(var(--arrow-size) * 0.9), 2px) no-repeat;
 		}
 		&::scroll-button(*):hover { scale: 1.2; }
 	}
@@ -68,7 +68,7 @@
 .carousel-polyfill.arrows-bare .carousel-arrow {
 	background: var(--arrow-ink);
 	box-shadow: none;
-	mask: var(--arrow-glyph) center / 90% no-repeat;
+	mask: var(--arrow-glyph) center / round(calc(var(--arrow-size) * 0.9), 2px) no-repeat;
 }
 .carousel-polyfill.arrows-hide-end .carousel-arrow:disabled { opacity: 0; }
 @media (hover: hover) {

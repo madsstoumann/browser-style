@@ -67,7 +67,9 @@ code { font-size: 0.875em; }
 	--arrow-radius: 50%;
 	--arrow-bg: rgb(255 255 255 / 0.75);
 	--arrow-bg-hover: rgb(255 255 255 / 0.95);
-	--arrow-glyph: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18l6-6-6-6'/%3E%3C/svg%3E");
+	/* whole, even pixels: the glyph lands on the pixel grid, so it stays centred */
+	--arrow-glyph-size: round(calc(var(--arrow-size) * 2 / 3), 2px);
+	--arrow-glyph: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9.5 18l6-6-6-6'/%3E%3C/svg%3E");
 
 	aspect-ratio: var(--carousel-ratio);
 	border-radius: var(--carousel-radius);
@@ -130,7 +132,7 @@ code { font-size: 0.875em; }
 		/* the arrows */
 		&::scroll-button(*) {
 			aspect-ratio: 1;
-			background: var(--arrow-glyph) center / 70% no-repeat var(--arrow-bg);
+			background: var(--arrow-glyph) center / var(--arrow-glyph-size) no-repeat var(--arrow-bg);
 			border: 0;
 			border-radius: var(--arrow-radius);
 			box-shadow: 0 1px 3px rgb(0 0 0 / 0.2);
@@ -184,7 +186,7 @@ code { font-size: 0.875em; }
 }
 .carousel-arrow {
 	aspect-ratio: 1;
-	background: var(--arrow-glyph) center / 70% no-repeat var(--arrow-bg);
+	background: var(--arrow-glyph) center / var(--arrow-glyph-size) no-repeat var(--arrow-bg);
 	border: 0;
 	border-radius: var(--arrow-radius);
 	box-shadow: 0 1px 3px rgb(0 0 0 / 0.2);

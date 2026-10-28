@@ -28,7 +28,7 @@
 		&::scroll-button(*) {
 			background: var(--arrow-ink);
 			box-shadow: none;
-			mask: var(--arrow-glyph) center / 80% no-repeat;
+			mask: var(--arrow-glyph) center / round(calc(var(--arrow-size) * 0.8), 2px) no-repeat;
 			top: calc(anchor(bottom) + (var(--band) - var(--arrow-size)) / 2);
 		}
 		&::scroll-button(*):hover { scale: 1.15; }
@@ -50,7 +50,7 @@
 	}
 	/* split: dots in the band, arrows stay on the image */
 	.carousel.band.dots-only-band::scroll-button(*) {
-		background: var(--arrow-glyph) center / 70% no-repeat rgb(255 255 255 / 0.75);
+		background: var(--arrow-glyph) center / var(--arrow-glyph-size) no-repeat rgb(255 255 255 / 0.75);
 		box-shadow: 0 1px 3px rgb(0 0 0 / 0.2);
 		mask: none;
 		top: calc(anchor(center) - var(--arrow-size) / 2);
@@ -72,7 +72,7 @@
 		background: var(--arrow-ink);
 		box-shadow: none;
 		inset-block: auto calc((var(--band) - var(--arrow-size)) / 2);
-		mask: var(--arrow-glyph) center / 80% no-repeat;
+		mask: var(--arrow-glyph) center / round(calc(var(--arrow-size) * 0.8), 2px) no-repeat;
 	}
 	& [data-dir="prev"] { inset-inline-start: 0; }
 	& [data-dir="next"] { inset-inline-end: 0; }
@@ -86,7 +86,7 @@
 		& .carousel-arrow { inset-block: calc((var(--band) - var(--arrow-size)) / 2) auto; }
 	}
 	&.dots-only-band .carousel-arrow {
-		background: var(--arrow-glyph) center / 70% no-repeat rgb(255 255 255 / 0.75);
+		background: var(--arrow-glyph) center / var(--arrow-glyph-size) no-repeat rgb(255 255 255 / 0.75);
 		box-shadow: 0 1px 3px rgb(0 0 0 / 0.2);
 		inset-block: calc((100% - var(--band) - var(--arrow-size)) / 2) auto;
 		mask: none;

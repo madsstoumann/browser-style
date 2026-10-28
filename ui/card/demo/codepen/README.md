@@ -62,9 +62,9 @@ with different values*, so in the pens they collapse into modifier classes:
 | 09 Vertical | `axis(y)` + arrows/sets | the same carousel on the other axis |
 | 10 More than one per view | `<lay-out overflow>`: pages, peek (`frame`), full-screen center | slide width ≠ 100%; snap-align tricks |
 | 11 Stagger | `stagger`, `ani(rise/fall/lft/rgt/zom/blr/fde)`, per-slide `ani()` | `scroll-state` container + `sibling-index()` delays |
-| 12 Scroll-driven | `<lay-out stagger>` `view(inline)` reveal, `stagger~="trigger"` | `animation-timeline` and `timeline-trigger` |
+| 12 Scroll-driven | `<lay-out stagger>` view-timeline reveal, `stagger~="trigger"` | `view-timeline` and `timeline-trigger` |
 | 13 Dynamic dots | `mrk(dyn)` | a scroll-driven *number* doing the maths |
-| 14 A gated quiz | `nav(end)` + `gate` | `:has(:invalid) ~ * { display: none }` |
+| 14 A gated quiz | `nav(end)` + `gate` | `:has(:invalid) ~ * { display: none }`, plus right/wrong feedback, coloured step markers and a CSS-counter score |
 
 **Left out on purpose:**
 

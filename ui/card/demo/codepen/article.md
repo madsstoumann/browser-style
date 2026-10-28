@@ -133,7 +133,7 @@ The browser also *disables* the buttons when there's nowhere left to scroll, so 
 ```css
 .carousel::scroll-button(*) {
   aspect-ratio: 1;
-  background: var(--arrow-glyph) center / 70% no-repeat rgb(255 255 255 / 0.75);
+  background: var(--arrow-glyph) center / round(calc(2.25rem * 2 / 3), 2px) no-repeat rgb(255 255 255 / 0.75);
   border: 0;
   border-radius: 50%;
   inline-size: 2.25rem;
@@ -144,6 +144,10 @@ The browser also *disables* the buttons when there's nowhere left to scroll, so 
 ```
 
 `--arrow-glyph` is a chevron SVG in a data-URI. Both buttons use the same chevron, and the "previous" button is simply rotated.
+
+Why `round()` and not just `70%`? I tried that first, and the chevrons looked *off*. Hmm, not good. 70% of 36px is 25.2px, so the glyph lands between pixels and gets snapped half a pixel down and to the side. And because the "previous" button is rotated, its chevron snaps the *other* way. `round(…, 2px)` gives us a whole, even number of pixels, which leaves the same whole number of pixels on either side.
+
+There's an optical part too: a chevron's ink leans toward its open side, so the path is nudged half a unit toward the tip (`M9.5 18…` instead of `M9 18…`). Small things, but you *see* them.
 
 ---
 
@@ -233,7 +237,7 @@ The nicest trick is the **bare glyph**: no circle, just the chevron, in *any* co
 ```css
 .carousel.arrows-bare::scroll-button(*) {
   background: var(--arrow-ink, #fff);
-  mask: var(--arrow-glyph) center / 90% no-repeat;
+  mask: var(--arrow-glyph) center / round(calc(var(--arrow-size) * 0.9), 2px) no-repeat;
 }
 ```
 
@@ -504,6 +508,22 @@ Or skip the markers and style the **real** scrollbar, which is natively draggabl
 }
 ```
 
+Hmm, not good. On a Mac, Chrome keeps that one as an *overlay* scrollbar, so it's invisible until you scroll, which is exactly when you don't need it. The old `::-webkit-scrollbar` parts give us a classic, *always visible* bar in both Chrome and Safari. One catch: Chrome ignores the parts while the standard properties are set, so we reset them first:
+
+```css
+@supports selector(::-webkit-scrollbar) {
+  .carousel.scrollbar {
+    scrollbar-color: auto;
+    scrollbar-width: auto;
+  }
+  .carousel.scrollbar::-webkit-scrollbar { height: 8px; }
+  .carousel.scrollbar::-webkit-scrollbar-track { background: var(--track); border-radius: 8px; }
+  .carousel.scrollbar::-webkit-scrollbar-thumb { background: var(--thumb); border-radius: 8px; }
+}
+```
+
+Firefox doesn't have the parts, so it keeps `scrollbar-color`. Much better!
+
 {% codepen TODO-08 %}
 
 ---
@@ -682,23 +702,29 @@ So far everything has run on a clock: `0.75s`, from start to finish. A **scroll-
 }
 
 .carousel.reveal > * {
+  view-timeline: --slide inline;
+}
+.carousel.reveal > * > .card {
   animation: reveal linear both;
-  animation-timeline: view(inline);
   animation-range: entry 0% entry 100%;
+  animation-timeline: --slide;
 }
 ```
 
 Let's break this down:
 
-- `animation: reveal linear both`: a perfectly normal animation. But notice there's *no duration*. The timeline provides it.
-- `animation-timeline: view(inline)`: "my timeline is *my own visibility* in my scroller, along the inline axis". This is a **view timeline**.
-- `animation-range: entry 0% entry 100%`: only use the part of the timeline where I'm *entering* the view. At `entry 0%` the card's leading edge just touches the carousel's edge. At `entry 100%` the card is fully inside.
+- `view-timeline: --slide inline` turns each slide into a **view timeline**: "my visibility in my scroller, along the inline axis". It goes from 0% to 100% as the slide travels through the carousel.
+- `animation: reveal linear both` is a perfectly normal animation. But notice there's *no duration*. The timeline provides it.
+- `animation-timeline: --slide` hooks the card up to its slide's timeline.
+- `animation-range: entry 0% entry 100%` uses only the part of the timeline where the slide is *entering* the view. At `entry 0%` the slide's leading edge just touches the carousel's edge. At `entry 100%` it's fully inside.
 
-So as a card slides in from the right, it scales and fades in, *exactly* as fast as you scroll. Stop halfway, and it stops halfway. Scroll back, and it rewinds. 
+So as a card slides in from the right, it scales and fades in, *exactly* as fast as you scroll. Stop halfway, and it stops halfway. Scroll back, and it rewinds.
+
+But why the extra `.card` inside each slide? My first version animated the slides themselves, and the first card ended up cut off. Hmm, not good. A snap area is the slide's *transformed* box, so when a slide is scaled and moved 3rem to the side, the carousel snaps to *that*, and stays there when the animation ends. Lesson learned: animate something *inside* the slide, and leave the slide (the snap target) alone. (For the same reason, this demo snaps on every third card only, using the "pages" trick from earlier, so it shows three dots for three pages instead of nine.)
 
 ![Cards scaling in as they enter the carousel](TODO)
 
-A view timeline belongs to the element itself. There's also a **scroll timeline**, which is the scroll progress of a *scroller*, from 0% to 100%. Let's give our carousel a *named* one, and use it on an element *outside* the carousel, a progress line:
+A view timeline belongs to the element itself. There's also a **scroll timeline**, which is the scroll progress of a *scroller*, from 0% to 100%. Let's give our carousel a *named* one, and use it on an element *outside* the carousel: a progress line in the band below, where the dots would normally be:
 
 ```css
 .demo { timeline-scope: --carousel; }
@@ -723,16 +749,18 @@ Scroll-driven is great, but sometimes you want a *proper* animation: one with a 
 
 ```css
 .carousel.trigger > * {
+  timeline-trigger: --slide view(inline) entry 25% exit 0%;
+  trigger-scope: --slide;
+}
+.carousel.trigger > * > .card {
   animation: reveal 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
-  animation-trigger: --card play-forwards;
-  timeline-trigger: --card view(inline) entry 25% exit 0%;
-  trigger-scope: --card;
+  animation-trigger: --slide play-forwards;
 }
 ```
 
-- `timeline-trigger` defines a trigger called `--card`: it *activates* when the card is 25% into its entry, and *deactivates* when it has fully exited.
-- `animation-trigger: --card play-forwards` means "when `--card` activates, play the animation forwards". It's a normal, timed, one-shot animation.
-- `trigger-scope` keeps each card's `--card` to itself.
+- `timeline-trigger` defines a trigger called `--slide`: it *activates* when the slide is 25% into its entry, and *deactivates* when it has fully exited.
+- `animation-trigger: --slide play-forwards` means "when `--slide` activates, play the animation forwards". It's a normal, timed, one-shot animation.
+- `trigger-scope` keeps each slide's `--slide` to itself.
 
 This one is brand new (Chrome 145+), so keep it in an `@supports (timeline-trigger-name: --t)` block. Other browsers simply show the cards.
 
@@ -786,8 +814,8 @@ One last thing, because it made me smile. What if each slide is a question, and 
 <form class="carousel quiz">
   <fieldset>
     <legend>Which pseudo-element draws the dots?</legend>
-    <label><input type="radio" name="q2" required> ::scroll-dot</label>
-    <label><input type="radio" name="q2" required> ::scroll-marker</label>
+    <label><input type="radio" name="q2" value="wrong" required> ::scroll-dot</label>
+    <label><input type="radio" name="q2" value="correct" required> ::scroll-marker</label>
     …
   </fieldset>
   …
@@ -801,6 +829,48 @@ One last thing, because it made me smile. What if each slide is a question, and 
 ```
 
 A `required` radio group is `:invalid` until one option is picked. Every slide *after* an unanswered question doesn't exist, so there's nothing to scroll to. The "Next" button disables itself, and the dot for the next question isn't even generated. Answer, and the next slide (and its dot) appears.
+
+### Right or wrong?
+
+A quiz without feedback is no fun. The correct option carries `value="correct"`, and `:has()` does the rest:
+
+```css
+/* you picked the right one */
+.quiz label:has([value="correct"]:checked) { border-color: var(--right); }
+
+/* you picked a wrong one … */
+.quiz label:has(:checked:not([value="correct"])) { border-color: var(--wrong); }
+
+/* … so show the right one as well */
+.quiz fieldset:has(:checked) label:has([value="correct"]) { border-color: var(--right); }
+
+/* and lock the question */
+.quiz fieldset:has(:checked) label { pointer-events: none; }
+```
+
+A `::after` on the label adds a ✓ or ✗, and a hidden feedback line under the options gets switched on the same way.
+
+Even the dots join in. Set a custom property on an answered fieldset, and because a `::scroll-marker` inherits from its slide, the dot turns green or red:
+
+```css
+.quiz fieldset:has([value="correct"]:checked) { --step: var(--right); }
+.quiz fieldset:has(:checked:not([value="correct"])) { --step: var(--wrong); }
+
+.quiz > *::scroll-marker {
+  background: var(--step, Canvas);
+  content: attr(data-label); /* 1, 2, 3 … */
+}
+```
+
+And the score on the last slide? A CSS counter. It counts every correct, checked answer, in document order, so by the time we reach the final slide it holds the total:
+
+```css
+.quiz { counter-reset: score; }
+.quiz [value="correct"]:checked { counter-increment: score; }
+.quiz .score span::before { content: counter(score); }
+```
+
+> **Note:** Yes, anyone can read the answers in the source. This is a carousel demo, not an exam!
 
 {% codepen TODO-14 %}
 
@@ -851,7 +921,7 @@ To recap:
 | Per-slide dots | custom properties inherit into `::scroll-marker` |
 | Text in dots | `content: attr(data-label)` |
 | Stagger on snap | `container-type: scroll-state` + `sibling-index()` delays |
-| Reveal on scroll | `animation-timeline: view(inline)` |
+| Reveal on scroll | `view-timeline` on the slide, animate what is inside it |
 | Play once on scroll | `timeline-trigger` + `animation-trigger` |
 
 All 14 demos are in this CodePen collection:

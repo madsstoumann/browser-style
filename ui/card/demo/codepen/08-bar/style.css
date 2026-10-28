@@ -16,11 +16,27 @@
 }
 /* the REAL scrollbar, styled — natively draggable */
 .carousel.scrollbar {
+	--scrollbar-size: 8px;
 	--scrollbar-thumb: color-mix(in oklab, CanvasText 55%, transparent);
 	--scrollbar-track: color-mix(in oklab, CanvasText 12%, transparent);
+	border-radius: 0; /* round the slides instead, so the bar isn't clipped */
 	padding-block-end: 0.5rem;
 	scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
 	scrollbar-width: thin;
+	& > * { border-radius: var(--carousel-radius); }
+}
+/* Chrome + Safari: the ::-webkit-scrollbar parts give a classic, ALWAYS visible
+   bar (macOS overlay scrollbars hide until you scroll). Chrome ignores the parts
+   while scrollbar-color/-width are set, so reset those here */
+@supports selector(::-webkit-scrollbar) {
+	.carousel.scrollbar.scrollbar {
+		scrollbar-color: auto;
+		scrollbar-width: auto;
+		&::-webkit-scrollbar { height: var(--scrollbar-size); }
+		&::-webkit-scrollbar-track { background: var(--scrollbar-track); border-radius: var(--scrollbar-size); }
+		&::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: var(--scrollbar-size); }
+		&::-webkit-scrollbar-thumb:hover { background: CanvasText; }
+	}
 }
 
 @supports (scroll-marker-group: after) {
@@ -49,8 +65,6 @@
 		margin-block-start: 0.5rem;
 		position: static;
 	}
-	/* the base hides the scrollbar when controls exist — this one wants it back */
-	.carousel.scrollbar { scrollbar-width: thin; }
 }
 
 /* fallback buttons */
