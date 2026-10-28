@@ -39,6 +39,27 @@
 			gap: var(--spacing-sm, .5rem);
 			& > input { flex-shrink: 0; margin-block-start: .2em; }
 		}
+		& [part~=range] {
+			display: grid;
+			gap: var(--label-gap, .25rem) var(--spacing-sm, .5rem);
+			grid-template-columns: 1fr auto;
+			& > span { grid-column: 1 / -1; }
+		}
+		& output { font-variant-numeric: tabular-nums; }
+		& [part~=output] { display: grid; gap: var(--label-gap, .25rem); & output { font-size: var(--form-flow-output-fs, 1.25rem); font-weight: 700; } }
+		& [part~=list] {
+			display: grid;
+			gap: var(--spacing-sm, .5rem);
+			min-inline-size: 0;
+			& [part=table] { overflow-x: auto; }
+			& table { border-collapse: collapse; inline-size: 100%; }
+			& :is(th, td) { padding-block: var(--spacing-xs, .25rem); padding-inline-end: var(--spacing-sm, .5rem); text-align: start; vertical-align: middle; }
+			& td :is(input:not([type=checkbox]), select) { inline-size: 100%; min-inline-size: 8ch; }
+			& [part=rows] { display: grid; gap: var(--spacing-md, 1rem); list-style: none; margin: 0; padding: 0; }
+			& [part=rows] > li { align-items: end; border: 1px solid var(--color-border); border-radius: var(--radius-md, .5rem); display: flex; flex-wrap: wrap; gap: var(--spacing-sm, .5rem); padding: var(--spacing-sm, .5rem); }
+			& [part=rows] [part=field] { display: grid; flex: 1 1 12ch; gap: var(--label-gap, .25rem); }
+			& [data-list-add] { justify-self: start; }
+		}
 		& [data-slot] {
 			display: grid;
 			gap: var(--fieldset-gap, .5rem);
