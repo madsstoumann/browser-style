@@ -53,6 +53,7 @@
 			min-inline-size: 0;
 			& [part=table] { overflow-x: auto; }
 			& table { border-collapse: collapse; inline-size: 100%; }
+			& :is(table, th, td) { background: none; border: 0; }
 			& :is(th, td) { padding-block: var(--spacing-xs, .25rem); padding-inline-end: var(--spacing-sm, .5rem); text-align: start; vertical-align: middle; }
 			& td :is(input:not([type=checkbox]), select) { inline-size: 100%; min-inline-size: 8ch; }
 			& [part=rows] { display: grid; gap: var(--spacing-md, 1rem); list-style: none; margin: 0; padding: 0; }

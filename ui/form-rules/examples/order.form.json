@@ -1,0 +1,42 @@
+{
+	"$schema": "../schemas/form-definition.schema.json",
+	"id": "form-order",
+	"model": "form-definition",
+	"meta": { "locale": "en", "status": "published", "version": 1 },
+	"fields": {
+		"title": "Order for delivery",
+		"structure": {
+			"layout": [
+				{ "area": "main", "type": "step", "id": "order", "name": "Your order", "fields": ["intro", "lines", "tip", "items", "subtotal", "total"] },
+				{ "area": "main", "type": "step", "id": "delivery", "name": "Delivery", "fields": ["country", "city", "street", "date", "email", "summary"] }
+			]
+		},
+		"type": "object",
+		"properties": {
+			"intro": { "kind": "text-block", "type": "content", "title": "What would you like?", "content": "Tea is 25, coffee 30 and cake 40 a piece. Add a row for each item." },
+			"lines": {
+				"kind": "repeater",
+				"type": "list",
+				"title": "Order lines",
+				"required": true,
+				"ui": { "widget": "table" },
+				"items": { "properties": {
+					"product": { "type": "select", "title": "Product", "required": true, "options": { "choices": [{ "value": "tea", "label": "Tea" }, { "value": "coffee", "label": "Coffee" }, { "value": "cake", "label": "Cake" }] } },
+					"qty": { "type": "integer", "title": "Quantity", "required": true, "validation": { "minimum": 1, "maximum": 20 } },
+					"note": { "type": "string", "title": "Note", "validation": { "maxLength": 60 } }
+				} },
+				"validation": { "maxItems": 6 }
+			},
+			"tip": { "kind": "slider", "type": "number", "title": "Tip for the courier (%)", "default": 5, "ui": { "widget": "range", "step": 1 }, "validation": { "minimum": 0, "maximum": 20 } },
+			"items": { "kind": "calculated", "type": "integer", "title": "Items", "from": "vars.items", "ui": { "widget": "output" } },
+			"subtotal": { "kind": "calculated", "type": "number", "title": "Subtotal", "from": "vars.subtotal", "ui": { "widget": "output", "format": { "style": "currency", "currency": "DKK" } } },
+			"total": { "kind": "calculated", "type": "number", "title": "Total with tip", "from": "vars.total", "ui": { "widget": "output", "format": { "style": "currency", "currency": "DKK" } } },
+			"country": { "kind": "select", "type": "select", "title": "Country", "required": true, "options": { "choices": [{ "value": "dk", "label": "Denmark" }, { "value": "se", "label": "Sweden" }] } },
+			"city": { "kind": "select", "type": "select", "title": "City", "required": true, "description": "The list comes from a service and depends on the country", "options": { "source": "cities" } },
+			"street": { "kind": "suggest", "type": "string", "title": "Street", "required": true, "privacy": "personal", "description": "Type two letters for suggestions", "ui": { "widget": "suggest" }, "options": { "source": "streets" } },
+			"date": { "kind": "date", "type": "string", "title": "Delivery date", "required": true, "ui": { "widget": "date" } },
+			"email": { "kind": "email", "type": "string", "title": "Email for the receipt", "required": true, "privacy": "personal", "ui": { "widget": "email" } },
+			"summary": { "kind": "text-block", "type": "content", "content": "{values.items} items for {values.total}, delivered to {values.street}, {values.city}." }
+		}
+	}
+}

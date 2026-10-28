@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Form Flow: calculations and rows</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="color-scheme" content="light dark">
+	<meta name="description" content="An order form with a repeating group, calculated totals, a slider, lists from a service, type-ahead and text rules.">
+	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="../step/ui-step.css">
+	<link rel="stylesheet" href="index.css">
+	<style>
+		body { max-inline-size: 70ch; margin-inline: auto; padding: 2ch; }
+		.demo-log { font-size: smaller; max-block-size: 16em; overflow: auto; overflow-wrap: anywhere; }
+	</style>
+</head>
+<body>
+	<main>
+		<h1>UI: Components &gt; FormFlow &gt; Calculations and rows</h1>
+		<p>
+			An <a href="../form-rules/examples/order.form.json">order form</a> and its <a href="../form-rules/examples/order.rules.json">rules</a>:
+			order lines in a repeating group shown as a table, totals worked out by the rules and shown as calculated values, a slider,
+			a city list that depends on the country, street type-ahead, and text in the form that fills in answers.
+			Pick a Sunday and the date is refused; an email ending in <em>@example.com</em> gets a warning.
+		</p>
+
+		<form-flow form="../form-rules/examples/order.form.json" rules="../form-rules/examples/order.rules.json" explain></form-flow>
+
+		<h2>Submitted</h2>
+		<pre class="demo-log" id="log"></pre>
+	</main>
+
+	<script type="module">
+		import './index.js';
+		const flow = document.querySelector('form-flow');
+		/* The services are static files; filter them here as a real service would. */
+		flow.fetcher = async (effect, service) => {
+			if (effect.type !== 'options' && effect.type !== 'suggest') return undefined;
+			const list = await (await fetch(service.url)).json();
+			if (effect.service === 'cities') return list.filter(city => city.country === effect.send.country);
+			const q = effect.send.q.toLowerCase();
+			return list.filter(street => street.city === effect.send.city && street.value.toLowerCase().includes(q));
+		};
+		flow.addEventListener('ff:submit', ({ detail }) => {
+			document.getElementById('log').textContent = JSON.stringify(detail.values, null, 2);
+		});
+	</script>
+</body>
+</html>
