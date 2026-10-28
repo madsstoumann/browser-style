@@ -1,0 +1,42 @@
+{
+  "name": "@browser.style/form-types-eu",
+  "version": "0.1.0",
+  "description": "EU field types for @browser.style/form-rules: VAT numbers, with a format check per member state.",
+  "type": "module",
+  "module": "functions.js",
+  "exports": {
+    ".": "./functions.js",
+    "./types.json": "./types.json"
+  },
+  "files": [
+    "functions.js",
+    "types.json",
+    "readme.md"
+  ],
+  "peerDependencies": {
+    "@browser.style/form-rules": "^0.1.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "browser.style",
+    "form",
+    "form-rules",
+    "field-types",
+    "eu",
+    "vat"
+  ],
+  "author": "Mads Stoumann",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/form-types/eu"
+  },
+  "bugs": {
+    "url": "https://github.com/madsstoumann/browser-style/issues"
+  },
+  "homepage": "https://browser.style/ui/form-types/eu"
+}

@@ -1,0 +1,29 @@
+{
+	"locale": "da",
+	"labels": {
+		"prev": "Tilbage",
+		"next": "Næste",
+		"submit": "Send",
+		"required": "Vælg mindst én",
+		"unavailable": "Denne mulighed findes ikke længere",
+		"add-row": "+ Tilføj række",
+		"remove-row": "Fjern",
+		"required-row": "Tilføj mindst én række",
+		"required-marker": "Skal udfyldes",
+		"explain": "Hvorfor",
+		"yes": "ja",
+		"no": "nej"
+	},
+	"messages": {
+		"minimum": "Skal være mindst {limit}",
+		"maximum": "Må højst være {limit}",
+		"minLength": "Skal være mindst {limit} tegn",
+		"maxLength": "Må højst være {limit} tegn",
+		"pattern": "Har ikke det forventede format",
+		"maxFiles": "Vælg højst {limit} filer",
+		"maxSize": "Hver fil må højst fylde {limit}",
+		"accept": "Tilladte filtyper: {limit}",
+		"minItems": "Tilføj mindst {limit} rækker",
+		"maxItems": "Højst {limit} rækker"
+	}
+}

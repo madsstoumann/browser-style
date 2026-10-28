@@ -1,0 +1,29 @@
+{
+	"locale": "sv",
+	"labels": {
+		"prev": "Tillbaka",
+		"next": "Nästa",
+		"submit": "Skicka",
+		"required": "Välj minst ett alternativ",
+		"unavailable": "Det här alternativet finns inte längre",
+		"add-row": "+ Lägg till rad",
+		"remove-row": "Ta bort",
+		"required-row": "Lägg till minst en rad",
+		"required-marker": "Obligatoriskt",
+		"explain": "Varför",
+		"yes": "ja",
+		"no": "nej"
+	},
+	"messages": {
+		"minimum": "Måste vara minst {limit}",
+		"maximum": "Får vara högst {limit}",
+		"minLength": "Minst {limit} tecken",
+		"maxLength": "Högst {limit} tecken",
+		"pattern": "Har inte det förväntade formatet",
+		"maxFiles": "Välj högst {limit} filer",
+		"maxSize": "Varje fil får vara högst {limit}",
+		"accept": "Tillåtna filtyper: {limit}",
+		"minItems": "Lägg till minst {limit} rader",
+		"maxItems": "Högst {limit} rader"
+	}
+}

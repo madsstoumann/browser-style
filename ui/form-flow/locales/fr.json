@@ -1,0 +1,29 @@
+{
+	"locale": "fr",
+	"labels": {
+		"prev": "Retour",
+		"next": "Suivant",
+		"submit": "Envoyer",
+		"required": "Choisissez au moins une option",
+		"unavailable": "Cette option n’est plus disponible",
+		"add-row": "+ Ajouter une ligne",
+		"remove-row": "Supprimer",
+		"required-row": "Ajoutez au moins une ligne",
+		"required-marker": "Obligatoire",
+		"explain": "Pourquoi",
+		"yes": "oui",
+		"no": "non"
+	},
+	"messages": {
+		"minimum": "Doit être au moins {limit}",
+		"maximum": "Doit être au plus {limit}",
+		"minLength": "Au moins {limit} caractères",
+		"maxLength": "Au plus {limit} caractères",
+		"pattern": "Ne correspond pas au format attendu",
+		"maxFiles": "Choisissez au plus {limit} fichiers",
+		"maxSize": "Chaque fichier doit faire au plus {limit}",
+		"accept": "Types de fichiers autorisés : {limit}",
+		"minItems": "Ajoutez au moins {limit} lignes",
+		"maxItems": "Au plus {limit} lignes"
+	}
+}

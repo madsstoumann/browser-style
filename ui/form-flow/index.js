@@ -38,7 +38,7 @@ async function fetchJSON(url) {
 }
 
 export default class FormFlow extends HTMLElement {
-	static observedAttributes = ['form', 'rules'];
+	static observedAttributes = ['form', 'rules', 'locale'];
 
 	#definition = null;
 	#form = null;
@@ -54,6 +54,8 @@ export default class FormFlow extends HTMLElement {
 	#element;
 	/* Lists fetched for sourced choice fields: { [id]: [{ value, label }] } */
 	#choices = {};
+	/* A language pack (locales/*.json): { locale, labels, messages } */
+	#locale = null;
 	#suggestTimers = new Map();
 	/* Text nodes with {values.x} / {vars.x} placeholders, and the text they were written as. */
 	#templates = new Map();
@@ -85,11 +87,21 @@ export default class FormFlow extends HTMLElement {
 	}
 
 	async attributeChangedCallback(name, oldValue, newValue) {
+		if (name === 'locale') {
+			if (oldValue === newValue || !this.#form) return;
+			try {
+				this.locale = newValue ? await fetchJSON(new URL(newValue, document.baseURI)) : null;
+			} catch (error) {
+				this.#dispatch('ff:error', { error });
+			}
+			return;
+		}
 		if (oldValue !== null && oldValue !== newValue && this.isConnected) await this.load();
 	}
 
 	async load() {
 		try {
+			if (this.getAttribute('locale')) this.#locale = await fetchJSON(new URL(this.getAttribute('locale'), document.baseURI));
 			const [definition, rules] = await Promise.all([
 				fetchJSON(new URL(this.getAttribute('form'), document.baseURI)),
 				this.getAttribute('rules') ? fetchJSON(new URL(this.getAttribute('rules'), document.baseURI)) : EMPTY_RULES
@@ -123,6 +135,17 @@ export default class FormFlow extends HTMLElement {
 		});
 		this.#render();
 		this.update();
+	}
+
+	/* A language pack: { locale, labels: { next, … }, messages: { minimum: 'At least {limit}', … } }. label-* attributes still win. */
+	set locale(value) {
+		this.#locale = value ?? null;
+		if (this.#form) this.setup(this.#definition, this.#rules, { values: this.#values, step: this.#current, previous: { matched: this.#previous }, keepTracking: true });
+	}
+	get locale() { return this.#locale; }
+
+	#label(name, fallback) {
+		return this.getAttribute(`label-${name}`) ?? this.#locale?.labels?.[name] ?? fallback;
 	}
 
 	/* Host functions the rules call by name (operators and field checks): { name: fn } */
@@ -188,12 +211,12 @@ export default class FormFlow extends HTMLElement {
 			form.append(fieldset);
 		}
 		form.append(h('nav', { part: 'nav' },
-			h('button', { type: 'button', 'data-action': 'prev' }, this.getAttribute('label-prev') ?? 'Back'),
-			h('button', { type: 'button', 'data-action': 'next' }, this.getAttribute('label-next') ?? 'Next'),
-			h('button', { type: 'submit' }, this.getAttribute('label-submit') ?? 'Send')
+			h('button', { type: 'button', 'data-action': 'prev' }, this.#label('prev', 'Back')),
+			h('button', { type: 'button', 'data-action': 'next' }, this.#label('next', 'Next')),
+			h('button', { type: 'submit' }, this.#label('submit', 'Send'))
 		));
 		if (this.hasAttribute('explain')) {
-			form.append(h('details', { part: 'explain' }, h('summary', {}, 'Why'), h('ul')));
+			form.append(h('details', { part: 'explain' }, h('summary', {}, this.#label('explain', 'Why')), h('ul')));
 		}
 
 		form.addEventListener('input', event => this.#onInput(event));
@@ -222,7 +245,7 @@ export default class FormFlow extends HTMLElement {
 	}
 
 	get #lang() {
-		return this.closest('[lang]')?.lang || navigator.language;
+		return this.#locale?.locale || this.closest('[lang]')?.lang || navigator.language;
 	}
 
 	/* A value as text: numbers use the field's ui.format (Intl.NumberFormat options) in the page language. */
@@ -231,7 +254,7 @@ export default class FormFlow extends HTMLElement {
 		if (typeof value === 'number') {
 			try { return new Intl.NumberFormat(this.#lang, property?.ui?.format ?? {}).format(value); } catch { return String(value); }
 		}
-		if (typeof value === 'boolean') return value ? (this.getAttribute('label-yes') ?? 'yes') : (this.getAttribute('label-no') ?? 'no');
+		if (typeof value === 'boolean') return value ? (this.#label('yes', 'yes')) : (this.#label('no', 'no'));
 		const label = choicesOf(property).find(choice => choice.value === value)?.label;
 		if (label) return label;
 		return Array.isArray(value) ? value.map(item => this.#formatValue(item, property)).join(', ') : String(value);
@@ -246,7 +269,7 @@ export default class FormFlow extends HTMLElement {
 	#labelText(id, property) {
 		return h('span', {},
 			this.#text(property?.title ?? id),
-			h('abbr', { title: 'Required', hidden: true }, '*'),
+			h('abbr', { title: this.#label('required-marker', 'Required'), hidden: true }, '*'),
 			property?.description ? h('small', {}, this.#text(property.description)) : null
 		);
 	}
@@ -282,7 +305,7 @@ export default class FormFlow extends HTMLElement {
 				h('span', {},
 					property.consent?.text ?? property.title ?? id,
 					noticeUrl ? [' ', h('a', { href: noticeUrl, target: '_blank', rel: 'noopener' }, notice.label ?? 'Privacy notice')] : null,
-					h('abbr', { title: 'Required', hidden: true }, '*'),
+					h('abbr', { title: this.#label('required-marker', 'Required'), hidden: true }, '*'),
 					property.description ? h('small', {}, property.description) : null));
 		}
 		/* Files stay in the browser until the final submit; the engine only sees { name, size, type }. */
@@ -369,14 +392,14 @@ export default class FormFlow extends HTMLElement {
 		} else {
 			element.append(h('ol', { part: 'rows' }, start.map(row => this.#renderRow(id, property, row))));
 		}
-		element.append(h('button', { type: 'button', 'data-list-add': id }, this.getAttribute('label-add-row') ?? '+ Add row'));
+		element.append(h('button', { type: 'button', 'data-list-add': id }, this.#label('add-row', '+ Add row')));
 		return element;
 	}
 
 	#renderRow(id, property, row = {}) {
 		const table = property.ui?.widget === 'table';
 		const items = Object.entries(property.items?.properties ?? {});
-		const remove = h('button', { type: 'button', 'data-list-remove': id }, this.getAttribute('label-remove-row') ?? 'Remove');
+		const remove = h('button', { type: 'button', 'data-list-remove': id }, this.#label('remove-row', 'Remove'));
 		const cells = items.map(([key, item]) => {
 			const control = this.#control(`${id}.${key}`, item, row[key], { 'data-item': key });
 			if (table) {
@@ -540,6 +563,7 @@ export default class FormFlow extends HTMLElement {
 				today: localToday(),
 				functions: this.#functions,
 				choices: this.#choices,
+				messages: this.#locale?.messages,
 				previous: this.#previous ? { matched: this.#previous } : undefined
 			});
 		} catch (error) {
@@ -604,9 +628,9 @@ export default class FormFlow extends HTMLElement {
 				note.textContent = this.#fill(warning.message, state);
 			} else note?.remove();
 			if (error) first?.setCustomValidity(this.#fill(error.message, state));
-			else if (unavailable.has(id)) first?.setCustomValidity(this.getAttribute('label-unavailable') ?? 'This option is no longer available');
+			else if (unavailable.has(id)) first?.setCustomValidity(this.#label('unavailable', 'This option is no longer available'));
 			else if (group && field.required && controls[0]?.type === 'checkbox' && isEmpty(this.#values[id])) {
-				first?.setCustomValidity(this.getAttribute('label-required') ?? 'Choose at least one');
+				first?.setCustomValidity(this.#label('required', 'Choose at least one'));
 			}
 		}
 	}
@@ -630,13 +654,13 @@ export default class FormFlow extends HTMLElement {
 		for (const issue of issues) {
 			if (issue.row === undefined) continue;
 			const control = filled[issue.row]?.querySelector(`[data-item="${CSS.escape(issue.item)}"]`);
-			const text = issue.message ? this.#fill(issue.message, state) : issue.code === 'option-unavailable' ? (this.getAttribute('label-unavailable') ?? 'This option is no longer available') : null;
+			const text = issue.message ? this.#fill(issue.message, state) : issue.code === 'option-unavailable' ? (this.#label('unavailable', 'This option is no longer available')) : null;
 			if (control && text) control.setCustomValidity(text);
 		}
 		const own = issues.find(issue => issue.row === undefined && issue.message && issue.level !== 'warning');
 		const first = rows[0]?.querySelector('[data-item]');
 		if (own) first?.setCustomValidity(this.#fill(own.message, state));
-		else if (field.required && !filled.length) first?.setCustomValidity(this.getAttribute('label-required-row') ?? 'Add at least one row');
+		else if (field.required && !filled.length) first?.setCustomValidity(this.#label('required-row', 'Add at least one row'));
 		const add = element.querySelector('[data-list-add]');
 		if (add) add.disabled = typeof property?.validation?.maxItems === 'number' && rows.length >= property.validation.maxItems;
 	}
