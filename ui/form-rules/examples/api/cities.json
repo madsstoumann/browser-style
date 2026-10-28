@@ -1,0 +1,8 @@
+[
+	{ "value": "copenhagen", "label": "Copenhagen", "country": "dk" },
+	{ "value": "aarhus", "label": "Aarhus", "country": "dk" },
+	{ "value": "odense", "label": "Odense", "country": "dk" },
+	{ "value": "stockholm", "label": "Stockholm", "country": "se" },
+	{ "value": "malmo", "label": "Malmö", "country": "se" },
+	{ "value": "gothenburg", "label": "Gothenburg", "country": "se" }
+]

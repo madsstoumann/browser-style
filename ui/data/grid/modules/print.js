@@ -1,4 +1,5 @@
-import PrintPreview from '../../print-preview/index.js';
+/* Loaded on the first print only, so a grid without printing never downloads it. */
+const PRINT_PREVIEW = new URL('../../../../apps/utilities/print-preview/index.js', import.meta.url).href;
 import { applySorting, filterData } from './render.table.js';
 
 export function setupPrint(context) {
@@ -68,7 +69,7 @@ export function setupPrint(context) {
 	}
 }
 
-export function printTable(context, directPrint = false) {
+export async function printTable(context, directPrint = false) {
 	try {
 		if (!context.state?.tbody?.length) {
 			context.log('No data to print', '#F00');
@@ -76,6 +77,7 @@ export function printTable(context, directPrint = false) {
 		}
 
 		if (!context.printPreview) {
+			await import(PRINT_PREVIEW);
 			setupPrint(context);
 		}
 

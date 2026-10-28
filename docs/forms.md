@@ -20,7 +20,8 @@ The short version:
 | [`@browser.style/form-flow`](../ui/form-flow/) | `<form-flow>` | Renders a form step by step, runs the engine on every input, carries out its effects (fetch, emit, track), saves and resumes sessions |
 | [`@browser.style/form-editor`](../ui/form-editor/) | `<form-editor>` | Visual editor for developers and content editors; its output is the form JSON and the rule JSON |
 | [`@browser.style/form-embed`](../ui/form-embed/) | `<form-embed>` | Puts a published form on a client site with one script tag, in Shadow DOM or light DOM |
-| [`@browser.style/form-types-dk`](../ui/form-types/dk/), [`-banking`](../ui/form-types/banking/) | none | Optional field type packages: Danish CPR and CVR, IBAN; each with its checks. See [Field types](#field-types-and-packages) |
+| [`@browser.style/form-types-dk`](../ui/form-types/dk/), [`-banking`](../ui/form-types/banking/), [`-formats`](../ui/form-types/formats/), [`-postcodes`](../ui/form-types/postcodes/), [`-eu`](../ui/form-types/eu/) | none | Optional field type packages: Danish CPR and CVR, IBAN, ISBN and barcodes, postcodes for 15 countries, EU VAT numbers; each with its checks. See [Field types](#field-types-and-packages) |
+| [`@browser.style/form-widget-*`](../ui/form-widgets/) | none | Optional controls: rich text, type-ahead with `<auto-suggest>`, a spreadsheet grid with `<data-grid>`. Loaded only when a field uses them. See [Widget packages](#widget-packages) |
 
 Demos:
 
@@ -30,7 +31,9 @@ Demos:
 | [/ui/form-flow/loan.html](https://v4.browser.style/ui/form-flow/loan.html) | The advanced loan example: variables and a score, CPR checks, an eligibility service, inserted steps, tracking |
 | [/ui/form-flow/session.html](https://v4.browser.style/ui/form-flow/session.html) | Save and continue later, resume links, the done state |
 | [/ui/form-flow/contact.html](https://v4.browser.style/ui/form-flow/contact.html) | The core field types: text blocks, a hidden value, a file upload, consent |
-| [/ui/form-editor/](https://v4.browser.style/ui/form-editor/) | The editor; `?example=loan` opens the loan example, `?example=contact` the field types example |
+| [/ui/form-flow/order.html](https://v4.browser.style/ui/form-flow/order.html) | Order lines as rows, calculated totals, a slider, a city list from a service that depends on the country, street type-ahead, date and text rules, placeholders |
+| [/ui/form-widgets/](https://v4.browser.style/ui/form-widgets/) | The three widget packages: rich text, `<auto-suggest>`, `<data-grid>` |
+| [/ui/form-editor/](https://v4.browser.style/ui/form-editor/) | The editor; `?example=loan` opens the loan example, `?example=contact` the field types example, `?example=order` the order example |
 | [/ui/form-embed/](https://v4.browser.style/ui/form-embed/) | A "client site" embedding forms in shadow and light mode |
 
 How they fit together:
@@ -142,17 +145,20 @@ UCM-shaped: `properties` are the fields, `structure.layout` is the list of steps
 
 | Key | |
 |---|---|
-| `type` | `string`, `number`, `integer`, `boolean`, `select`; `content` (a text block, no value); `file` (uploads) |
+| `type` | `string`, `number`, `integer`, `boolean`, `select`; `content` (a text block, no value); `file` (uploads); `list` (a repeating group, see [Repeating groups](#repeating-groups)) |
 | `kind` | The field type it was made from (`email`, `consent`, `dk/cpr`, …), see [Field types](#field-types-and-packages). Optional and only for editors: the engine goes by `type` |
 | `title`, `description` | Label and help text (a text block's optional heading) |
 | `required` | Starting value of the flag; rules may change it. A required `boolean` must be `true`, like a required checkbox |
 | `default` | Starting value, used while the field has no answer |
-| `from` | Prefill from `context.<name>` or `facts.<name>` while the field has no answer (before `default`) |
-| `content` | Text block: the text; a blank line starts a paragraph |
+| `from` | Prefill from `context.<name>` or `facts.<name>` while the field has no answer (before `default`). `vars.<name>` makes a [calculated value](#calculated-values-and-placeholders) |
+| `content` | Text block: the text; a blank line starts a paragraph. May hold [placeholders](#calculated-values-and-placeholders) |
 | `consent` | Consent fields: `{ text, notice: { label, url, version } }`, recorded with the answer |
-| `validation` | `minimum`, `maximum`, `minLength`, `maxLength`, `pattern`; for files `accept`, `maxSize` (bytes), `maxFiles`; `check` (name or names of host functions); `messages` (text per issue code, replacing the default) |
-| `options` | `choices: [{ value, label }]` for `select`; `multiple: true` for checkboxes |
-| `ui.widget` | `email`, `tel`, `url`, `date`, `time`, `textarea`, `hidden` for strings; `radio` for a select; `consent` for a boolean |
+| `validation` | `minimum`, `maximum`, `minLength`, `maxLength`, `pattern`; for files `accept`, `maxSize` (bytes), `maxFiles`; `check` (name or names of host functions); `messages` (text per issue code, replacing the default); for lists `minItems`, `maxItems` |
+| `options` | `choices: [{ value, label }]` for `select`; `multiple: true` for checkboxes; `source` (a service name) for a list or suggestions from a service, `minLength` before suggesting. See [Option sources](#option-sources-and-type-ahead) |
+| `items` | `list` only: `{ properties }`, the fields of one row |
+| `ui.widget` | `email`, `tel`, `url`, `date`, `time`, `textarea`, `hidden`, `suggest` for strings; `radio` for a select; `consent` for a boolean; `range` (a slider) for numbers; `output` for a calculated value; `table` or `rows` for a list; or a name a [widget package](#widget-packages) provides |
+| `ui.format` | `Intl.NumberFormat` options for showing a number (`{ "style": "currency", "currency": "DKK" }`), in outputs and placeholders |
+| `ui.step` | Step of a slider or number input |
 | `ui.placeholder` | Placeholder text |
 | `ui.hidden` | Hidden unless a rule shows it |
 | `track` | `select` only: the chosen option may be sent to analytics. See [Tracking](#tracking-and-privacy) |
@@ -341,12 +347,25 @@ Conditions, variable formulas and computed values are a strict subset of [JSON L
 | `num` | `{ "num": { "var": "values.zip" } }` | Explicit conversion: a numeric string to a number, anything else `null` |
 | `+`, `-`, `*`, `/`, `%` | | Numbers only, else `null`; division by zero is `null` |
 | `min`, `max`, `round` | `{ "round": [{ "/": [a, b] }, 2] }` | `round` takes decimal places |
+| `sum` | `{ "sum": [1, 2, 3] }`, `{ "sum": { "var": "values.amounts" } }` | Adds numbers; anything else counts as nothing |
 | `cat` | `{ "cat": ["DK-", { "var": "values.zip" }] }` | Joins as text |
+| `startsWith`, `endsWith` | `{ "startsWith": [{ "var": "values.zip" }, "8"] }` | Text only, case-sensitive; wrap both sides in `lower` for "any case" |
+| `lower`, `upper`, `trim` | `{ "lower": { "var": "values.email" } }` | Text only, else `null` |
+| `length` | `{ ">": [{ "length": { "var": "values.lines" } }, 2] }` | Characters in a text, items in a list, else `null` |
+| `substr` | `{ "substr": [{ "var": "values.cpr" }, 0, 6] }` | Start, then optional length; negative counts from the end |
 | `yearsBetween`, `daysBetween` | `{ "yearsBetween": [{ "var": "values.birth" }, { "var": "today" }] }` | ISO dates |
+| `datePart` | `{ "===": [{ "datePart": [{ "var": "values.date" }, "weekday"] }, 7] }` | `year`, `month`, `day`, `weekday` (1 Monday to 7 Sunday) or `week` (ISO week) of an ISO date |
+| `map`, `filter` | `{ "map": [{ "var": "values.lines" }, { "var": "qty" }] }` | The second argument runs once per item, with the item as its data (`{ "var": "qty" }` reads the row's `qty`) |
+| `reduce` | `{ "reduce": [list, { "+": [{ "var": "accumulator" }, { "var": "current.qty" }] }, 0] }` | As in JSON Logic |
+| `some`, `all`, `none` | `{ "some": [{ "var": "values.lines" }, { "===": [{ "var": "product" }, "cake"] }] }` | `all` of an empty list is false |
 | `check` | `{ "check": ["dk-cpr", { "var": "values.cpr" }] }` | True when the host check passes (warnings pass) |
 | *any host function* | `{ "cprDate": [{ "var": "values.cpr" }] }` | See [Custom functions](#custom-functions) |
 
-What is deliberately **not** there: `==` and `!=` (coercion makes runtimes disagree), and any operator that reads a clock or does I/O. An unknown operator throws, and `validate()` reports it before anything runs.
+Inside `map`, `filter`, `reduce`, `some`, `all` and `none`, `var` reads the item, not the form: a rule that needs an answer from outside the list inside the loop should compute it into a variable first.
+
+The editor writes the text words as these operators: *contains* is `in`, *starts with* and *ends with* are themselves, and all three are case-insensitive (both sides wrapped in `lower`) unless *match case* is ticked. Any comparison can be against a value or against another field (`{ "<": [{ "var": "values.from" }, { "var": "values.to" }] }`).
+
+What is deliberately **not** there: `==` and `!=` (coercion makes runtimes disagree), regular expressions in conditions (runtimes differ; use `validation.pattern` or a host check), and any operator that reads a clock or does I/O. An unknown operator throws, and `validate()` reports it before anything runs.
 
 **What a condition can read**
 
@@ -359,6 +378,97 @@ What is deliberately **not** there: `==` and `!=` (coercion makes runtimes disag
 | `services.<service>.<key>` | A mounted patch's `data` |
 | `step` | The current step id |
 | `today` | The date passed in |
+
+---
+
+## Calculated values and placeholders
+
+A **calculated value** is a field the person sees but never types: a total, a price, a score. It is a field with `from: "vars.<name>"`, and its value is always the variable's, so the rules do the arithmetic once and both the form and the server show the same result.
+
+```json
+"variables": {
+  "subtotal": { "type": "number", "compute": { "sum": { "map": [{ "var": "values.lines" }, { "*": [{ "var": ["qty", 0] }, { "var": ["price", 0] }] }] } } }
+}
+```
+
+```json
+"subtotal": { "type": "number", "title": "Subtotal", "from": "vars.subtotal",
+  "ui": { "widget": "output", "format": { "style": "currency", "currency": "DKK" } } }
+```
+
+- A calculated value is submitted like any answer, but a posted value is ignored: the engine always takes the variable's, so the server's re-check stores what the server worked out. A value of the wrong type for the field is dropped.
+- It cannot be `required`, and `setValue` or `clear` cannot target it. `validate()` reports an undeclared variable and a calculation that depends on itself.
+- `<form-flow>` draws it as `<output>`, formatted with `ui.format` in the form's language.
+
+**Placeholders.** A text block, a title, a help text and a message may say `{values.total}`, `{vars.score}`, `{context.campaign}` or `{facts.segment}`. They are filled on every change, with the same formatting as the field (`ui.format`, the chosen option's label for a choice). `{{` and `}}` write a literal brace. `validate()` reports a placeholder that names an unknown field or variable.
+
+```json
+"summary": { "type": "content", "content": "{values.items} items for {values.total}, delivered to {values.street}." }
+```
+
+`fillText(text, data, { format })` and `placeholdersOf(text)` are exported by form-rules, so a server can fill the same texts in a receipt.
+
+---
+
+## Repeating groups
+
+A field of type `list` is a set of rows with the same fields: order lines, children, previous jobs.
+
+```json
+"lines": { "type": "list", "title": "Order lines", "required": true,
+  "ui": { "widget": "table" },
+  "items": { "properties": {
+    "product": { "type": "select", "title": "Product", "required": true, "options": { "choices": [ … ] } },
+    "qty": { "type": "integer", "title": "Quantity", "required": true, "validation": { "minimum": 1 } }
+  } },
+  "validation": { "minItems": 1, "maxItems": 6 } }
+```
+
+- The value is an array of row objects: `[{ "product": "tea", "qty": 2 }]`. Rows that are wholly empty are dropped; keys that are not in `items` are dropped; each cell is held to its field's type.
+- `required` on the list means at least one row; `required` on a row field applies to every filled row. `minItems` and `maxItems` count rows.
+- Each cell is checked like a field: choices, range, length, pattern and checks. An issue carries `row` and `item` as well as `field` (`{ field: "lines", row: 0, item: "qty", code: "minimum" }`), so form-flow marks the right cell.
+- Rules read the whole list: `{ "length": { "var": "values.lines" } }`, `{ "some": [{ "var": "values.lines" }, …] }`, or a total in a variable. Actions apply to the list as one field (show, hide, require, …), not to single rows.
+- `ui.widget` is `table` (one line per row, for a few short fields) or `rows` (each row stacked as a group, the default, for rows with many fields). With the [grid widget package](#widget-packages), `data-grid` gives a spreadsheet with keyboard navigation.
+
+---
+
+## Option sources and type-ahead
+
+A list of choices that comes from a service, rather than from the form, names it in `options.source`:
+
+```json
+"services": { "cities": { "url": "/api/cities", "method": "GET", "send": ["country"] } }
+```
+
+```json
+"city":   { "type": "select", "title": "City", "options": { "source": "cities" } },
+"street": { "type": "string", "title": "Street", "ui": { "widget": "suggest" }, "options": { "source": "streets", "minLength": 2 } }
+```
+
+- **A select with a source** (a *lookup*) gets its options from the service. The engine emits an `options` effect whenever the field is visible and the fields the service is sent have changed; form-flow calls the service and expects `[{ value, label }]` (or `{ choices: [...] }`). Because `send` names earlier answers, lists cascade: a new country gives a new list of cities. Rules can still narrow the list with the `options` action.
+- **A string with a source** only suggests. form-flow calls the service as the person types (after `minLength` characters, debounced, with the text as `q`) and shows the replies in a native `<datalist>`, or in `<auto-suggest>` with the [suggest widget package](#widget-packages). Any text is a valid answer.
+- `flow.fetcher` sees these calls too, so a proxy or a mock serves them like any other service.
+- The engine checks a sourced answer against the list only when the list is passed in as `input.choices[field]`; otherwise it checks the type only. See [What a server can trust](#what-a-server-can-trust).
+
+---
+
+## Snippets
+
+A snippet is a group of fields with the rules that belong to them, saved as one JSON file so editors do not build an address or a contact block again for every form. The editor's **+ Field** picker lists the installed snippets under *Snippets: several fields at once*.
+
+```json
+{
+  "snippet": "contact",
+  "title": "Contact details",
+  "fields": ["name", "email", "phone"],
+  "properties": { "name": { … }, "email": { … }, "phone": { … } },
+  "rules": [{ "id": "contact-way", "when": { "and": [{ "!": { "var": "values.email" } }, { "!": { "var": "values.phone" } }] }, "then": [{ "require": ["email"] }] }]
+}
+```
+
+Inserting one copies its fields into the chosen step and its rules, variables and services into the rule set. An id that is already taken gets a number (`email2`), and every rule, placeholder and service that names it is renamed with it, so a form can hold two addresses. A snippet is a copy: changing the snippet file later does not change forms that used it.
+
+Snippets are data like type packages: `ui/form-editor/snippets/` has `address`, `contact` and `consent`, and the editor's `snippets` attribute lists the files to offer. `insertSnippet(form, rules, snippet, stepId)` and `snippetProblems(snippet)` are in `ui/form-editor/modules/snippets.js`.
 
 ---
 
@@ -498,15 +608,19 @@ Types come in packages, one JSON file each (schema `ui/form-rules/schemas/form-t
 
 | Package | Where | Types |
 |---|---|---|
-| Core | `ui/form-rules/types/core.json` | Text, Long text, Number, Whole number, Date, Time, Dropdown, Radio buttons, Checkboxes, Yes / no, Email, Phone, Web address, Consent, Text block, Hidden value, File upload |
+| Core | `ui/form-rules/types/core.json` | Text, Long text, Number, Whole number, Slider, Date, Time, Dropdown, Radio buttons, Checkboxes, Repeating group, List from a service, Type-ahead, Yes / no, Email, Phone, Web address, Consent, Text block, Hidden value, Calculated value, File upload |
 | Denmark | `ui/form-types/dk/` (`@browser.style/form-types-dk`) | CPR number (`dk/cpr`), CVR number (`dk/cvr`); checks `dk-cpr`, `dk-cvr`, operator `cprDate` |
 | Banking | `ui/form-types/banking/` (`@browser.style/form-types-banking`) | IBAN (`banking/iban`); checks `iban`, `luhn` |
+| Formats | `ui/form-types/formats/` (`@browser.style/form-types-formats`) | ISBN, barcode (EAN / GTIN), IP address, UUID, colour; checks `isbn`, `gtin`, `ipv4` |
+| Postcodes | `ui/form-types/postcodes/` (`@browser.style/form-types-postcodes`) | A postcode type per country (`postcodes/dk`, `postcodes/uk`, … 15 countries); checks `postcodeDk`, `postcodeUk`, … with an example in the message |
+| EU | `ui/form-types/eu/` (`@browser.style/form-types-eu`) | EU VAT number (`eu/vat`); check `euVat`, the format of each member state |
 
 A Swedish personnummer, a UK National Insurance number or a company's customer number is a new package of the same shape; nothing in core or the editor changes. Kinds outside core start with the package name (`se/personnummer`), so two packages never collide.
 
-- **`settings`** lists what the editor's field panel shows besides label, id, help, required, hidden, privacy and step: `choices`, `multiple`, `range`, `length`, `pattern`, `checks`, `placeholder`, `default`, `content`, `consent`, `files`, `source`.
+- **`settings`** lists what the editor's field panel shows besides label, id, help, required, hidden, privacy and step: `choices`, `multiple`, `range`, `length`, `pattern`, `checks`, `placeholder`, `default`, `content`, `consent`, `files`, `source` (where a hidden value comes from), `calculated` (variable and format), `items` (the row fields), `rows` (fewest, most, shown as), `optionSource` (the service a list comes from).
 - **`privacy`** is the level a new field starts with (a CPR number is `special`, an email `personal`).
 - **`functions`** points at the module with the package's checks, relative to the JSON file.
+- **`widgets`** (browser only) points at a module of control adapters. See [Widget packages](#widget-packages).
 
 The helpers are pure and exported by form-rules, so an editor in another host (the Umbraco backoffice) can bundle them:
 
@@ -514,7 +628,7 @@ The helpers are pure and exported by form-rules, so an editor in another host (t
 |---|---|
 | `defineTypes(...packages)` | Merges package documents into a registry `{ packages, types, kinds, errors }` |
 | `loadTypes(urls, { fetch?, base? })` | Fetches package files, then `defineTypes` |
-| `loadPackages(urls, …)` | `loadTypes`, and imports each package's `functions`: `{ …registry, functions }` |
+| `loadPackages(urls, { widgets? })` | `loadTypes`, and imports each package's `functions` (and with `widgets: true` its `widgets`): `{ …registry, functions, widgets }` |
 | `typeOf(property, registry)` | A field's type: its `kind`, or for older fields the type whose template fits best (`type`, `ui.widget`, checks) |
 | `fieldFromType(type, { title })` | A new property from a type's template |
 | `changeType(property, type)` | Switches a field's type, keeping label, help, required and hidden |
@@ -533,6 +647,57 @@ The helpers are pure and exported by form-rules, so an editor in another host (t
 
 ---
 
+## Widget packages
+
+browser.style has richer controls than the native ones: `<rich-text>`, `<auto-suggest>`, `<data-grid>`. They are too heavy to load with every form, so each is a **widget package**: a type package whose `types.json` names a `widgets` module.
+
+| Package | Where | `ui.widget` | For |
+|---|---|---|---|
+| Rich text | `ui/form-widgets/rich-text/` (`@browser.style/form-widget-rich-text`) | `rich-text` | A `string` holding HTML: bold, italic, lists, links |
+| Suggest | `ui/form-widgets/suggest/` (`@browser.style/form-widget-suggest`) | `auto-suggest` | A `string` with `options.source`: type-ahead with keyboard navigation |
+| Grid | `ui/form-widgets/grid/` (`@browser.style/form-widget-grid`) | `data-grid` | A `list`: the rows as a spreadsheet |
+
+```html
+<form-flow form="order.form.json" rules="order.rules.json"
+  packages="/ui/form-widgets/grid/types.json /ui/form-widgets/suggest/types.json"></form-flow>
+```
+
+- The `widgets` module holds only small adapters. An adapter imports its component, and its stylesheet, the first time a field on the page uses it, so a form without such a field downloads nothing more.
+- Without the package, the same field falls back to a native control (a text area, an input with a `<datalist>`, the built-in rows table). The value, the rules and the server's re-check are the same either way: a widget changes how an answer is typed, never what it is.
+- The editor loads widget packages like type packages (`types` attribute), so its preview shows them.
+
+**An adapter** is `{ render, read, write?, load?, group?, ownLabel? }`:
+
+| Member | |
+|---|---|
+| `render({ id, property, value, flow, service })` | Returns the control's element. Mark the element that holds the value with `data-widget-control` |
+| `read(control, property)` | The control's value, typed for the field |
+| `write(control, value, property)` | Puts a value back (a `setValue`, a resumed draft) |
+| `load(flow)` | Imports the component; called once, before the first render |
+| `group` | `true` when the control is a group (a grid), so it is labelled by a `<fieldset>` and `<legend>` |
+| `ownLabel` | `true` when the component draws its own label |
+
+The control dispatches `input` (or `change`) when its value changes, and `<form-flow>` re-evaluates. An adapter never puts answers into HTML as markup: `<auto-suggest>` and `<data-grid>` interpolate text into templates, so their adapters escape it, and rich text is cleaned to a short allowlist of tags in the browser. **A server must clean rich text again**, since a posted value can hold anything.
+
+---
+
+## Language packs
+
+`<form-flow locale="/ui/form-flow/locales/da.json">` sets the texts the form itself writes: buttons, row controls, the required marker, the default messages. Packs ship for `en`, `da`, `de`, `sv`, `nb`, `fr` and `es`; another language is one JSON file of the same shape.
+
+```json
+{ "locale": "da",
+  "labels": { "prev": "Tilbage", "next": "Næste", "submit": "Send", "add-row": "+ Tilføj række", … },
+  "messages": { "minimum": "Skal være mindst {limit}", "maxItems": "Højst {limit} rækker", … } }
+```
+
+- `labels` are form-flow's own texts; a `label-*` attribute still wins.
+- `messages` are passed to the engine as `input.messages`, so the default text per issue code follows the language; `{limit}` is the field's limit. A field's own `validation.messages` still wins.
+- `locale` also decides number and date formatting in outputs and placeholders. Without a pack, the language is the nearest `lang` attribute, then the browser's.
+- The form's own wording (titles, help, choices) is content and is translated per language in the CMS, not here.
+
+---
+
 ## Services and patches
 
 A service is a URL the browser calls when a rule says `fetch`. form-flow sends the fields listed in `send`, as a JSON body (`POST`) or as query parameters (`GET`), with a timeout. The reply is a patch, merged as described above.
@@ -546,6 +711,8 @@ A service is a URL the browser calls when a rule says `fetch`. form-flow sends t
 ```
 
 A reply carrying only `data` is a backend check: conditions read it as `services.eligibility.approved`, and `wait` keeps the user on the step until it is in (`aria-busy` on the button). See `examples/api/eligibility.json` and the loan demo.
+
+Services also feed [option lists and type-ahead](#option-sources-and-type-ahead); those calls go through the same `send`, `method` and `fetcher`.
 
 Set `flow.fetcher = async (effect, service) => patch` to route requests through a proxy or return mocks; returning `undefined` falls back to the built-in request. The editor's preview uses sample replies (`samples` attribute) instead of calling services.
 
@@ -746,6 +913,12 @@ A key the server supplies always wins. A key declared `"from": "server"` is drop
 
 **Facts.** Facts come from events in the browser, so a server cannot check them. A rule that blocks or grants something on a fact is enforced in the browser only. Anything that must hold on the server belongs in a service the rules `fetch` (the server replays it) or in a server context key.
 
+**Calculated values** are worked out again from the answers; a posted one is ignored.
+
+**Lists from services.** A sourced select is checked against its list only when the server passes the list in as `input.choices`; without it, the answer is only held to its type. A server that must refuse a city that is not on the list fetches the list itself and passes it in.
+
+**Rich text** is HTML typed in the browser. Clean it on the server with an allowlist before storing or showing it, whatever the browser did.
+
 **Services.** The server sends the posted answers a service names in `send`. A service that answers for a person (a credit check, a member lookup) must identify them from something the server knows, not from an answer the person could change.
 
 ---
@@ -760,7 +933,8 @@ These are designed but deliberately deferred. Nothing above depends on them.
 | **API gateway** | Services are called directly: they must be public, CORS-enabled, with no keys | A gateway (e.g. a Cloudflare Worker) holding keys and CORS rules, plugged in through `flow.fetcher` |
 | **Iframe embed mode** | `mode="iframe"` reports an `ff:error` | A postMessage bridge with auto-height, required for forms with personal data |
 | **Insights** | Events reach the tracker | A `<form-insights>` funnel dashboard |
-| **Field types** | Core types plus installable packages, including text blocks, hidden values, consent and file uploads | Address, repeaters; where uploads are stored is up to each CMS adapter |
+| **Field types** | Core types plus installable packages, including text blocks, hidden values, consent, file uploads, repeating groups, calculated values and lists from services | Rules that act on single rows of a repeating group; where uploads are stored is up to each CMS adapter |
+| **Personal invitations** | A form can prefill from `context` | Invitation links with per-person prefill and one answer per invitation (adapter level) |
 
 ---
 

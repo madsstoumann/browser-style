@@ -1,0 +1,51 @@
+{
+	"description": "A Sunday delivery is refused (datePart), an @example.com address only warns (endsWith on lower)",
+	"form": "../examples/order.form.json",
+	"rules": "../examples/order.rules.json",
+	"input": {
+		"values": {
+			"lines": [
+				{
+					"product": "tea",
+					"qty": 1
+				}
+			],
+			"tip": 0,
+			"country": "dk",
+			"city": "copenhagen",
+			"street": "Strøget",
+			"date": "2026-11-01",
+			"email": "Ada@Example.COM"
+		},
+		"choices": {
+			"city": [
+				{
+					"value": "copenhagen",
+					"label": "Copenhagen"
+				}
+			]
+		},
+		"today": "2026-10-28"
+	},
+	"expect": {
+		"issues": [
+			{
+				"field": "date",
+				"code": "sunday",
+				"message": "We do not deliver on Sundays",
+				"rule": "no-sunday"
+			},
+			{
+				"field": "email",
+				"code": "test-address",
+				"message": "{values.email} looks like a test address",
+				"level": "warning",
+				"rule": "test-address"
+			}
+		],
+		"matched": [
+			"no-sunday",
+			"test-address"
+		]
+	}
+}

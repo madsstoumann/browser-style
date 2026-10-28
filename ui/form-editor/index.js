@@ -9,6 +9,7 @@ import { h, button } from './modules/dom.js';
 import { asUcf, clone, emptyForm, emptyRules } from './modules/model.js';
 import { renderOutline, renderFormView } from './modules/view-form.js';
 import { renderRulesView } from './modules/view-rules.js';
+import { loadSnippets } from './modules/snippets.js';
 
 const DRAFT_KEY = 'form-editor:draft';
 const CORE_TYPES = new URL('../form-rules/types/core.json', import.meta.url).href;
@@ -48,6 +49,8 @@ export class FormEditor extends HTMLElement {
 	form = emptyForm();
 	rules = emptyRules(this.form.id);
 	samples = {};
+	/* Snippets offered in the field picker: from the `snippets` attribute (URLs), or set directly. */
+	snippets = [];
 	selection = { view: 'form', step: null, field: null, rule: null };
 	advanced = false;
 	#past = [];
@@ -68,6 +71,11 @@ export class FormEditor extends HTMLElement {
 		if (this.getAttribute('form')) this.#draftKey = `${DRAFT_KEY}:${this.getAttribute('form')}`;
 		const draft = storage.read(this.#draftKey);
 		await this.#loadTypes();
+		if (this.getAttribute('snippets')) {
+			const { snippets, errors } = await loadSnippets(this.getAttribute('snippets').split(/\s+/).filter(Boolean).map(url => new URL(url, document.baseURI).href));
+			this.snippets = snippets;
+			if (errors.length) this.#message = errors.map(error => error.message).join('. ');
+		}
 		if (this.getAttribute('functions')) {
 			try {
 				const module = await import(new URL(this.getAttribute('functions'), document.baseURI));
@@ -130,7 +138,10 @@ export class FormEditor extends HTMLElement {
 
 	#mergeFunctions() {
 		this.#functions = { ...(this.#types.functions ?? {}), ...this.#ownFunctions };
-		if (this.#preview) this.#preview.functions = this.#functions;
+		if (this.#preview) {
+			this.#preview.functions = this.#functions;
+			if (this.#types.widgets) this.#preview.widgets = this.#types.widgets;
+		}
 		if (this.#parts.main) this.#render(false);
 	}
 
@@ -138,7 +149,7 @@ export class FormEditor extends HTMLElement {
 	async #loadTypes() {
 		const urls = (this.getAttribute('types') ?? '').split(/\s+/).filter(Boolean).map(url => new URL(url, document.baseURI).href);
 		try {
-			const registry = await loadPackages([CORE_TYPES, ...urls.filter(url => url !== CORE_TYPES)]);
+			const registry = await loadPackages([CORE_TYPES, ...urls.filter(url => url !== CORE_TYPES)], { widgets: true });
 			this.types = registry;
 			if (registry.errors.length) this.#message = registry.errors.map(error => error.message).join('. ');
 		} catch (error) {
@@ -316,7 +327,11 @@ export class FormEditor extends HTMLElement {
 	async #sampleReply(effect) {
 		const text = this.samples[effect.service];
 		if (!text) return undefined;
-		return { ...JSON.parse(text), expires: new Date(Date.now() + 36e5).toISOString() };
+		const reply = JSON.parse(text);
+		/* A list service's sample is the list; type-ahead keeps the entries that contain the typed text. */
+		if (effect.type === 'options') return reply;
+		if (effect.type === 'suggest') return (Array.isArray(reply) ? reply : []).filter(item => String(item?.label ?? item?.value ?? item).toLowerCase().includes(effect.send.q.toLowerCase()));
+		return { ...reply, expires: new Date(Date.now() + 36e5).toISOString() };
 	}
 
 	/* === Status, import, export === */

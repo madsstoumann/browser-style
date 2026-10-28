@@ -10,6 +10,7 @@
     "ui/data/*",
     "ui/charts/*",
     "ui/form-types/*",
+    "ui/form-widgets/*",
     "ui/design-tokens/*",
     "cms/baseline",
     "cms/editors/*"

@@ -1,0 +1,12 @@
+[
+	{ "value": "Nørregade", "city": "copenhagen" },
+	{ "value": "Nørrebrogade", "city": "copenhagen" },
+	{ "value": "Vesterbrogade", "city": "copenhagen" },
+	{ "value": "Strøget", "city": "copenhagen" },
+	{ "value": "Søndergade", "city": "aarhus" },
+	{ "value": "Ryesgade", "city": "aarhus" },
+	{ "value": "Vestergade", "city": "odense" },
+	{ "value": "Drottninggatan", "city": "stockholm" },
+	{ "value": "Södra Förstadsgatan", "city": "malmo" },
+	{ "value": "Kungsportsavenyen", "city": "gothenburg" }
+]

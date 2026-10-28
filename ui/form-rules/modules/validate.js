@@ -10,6 +10,7 @@ import { operatorsOf, readsOf, OPERATORS } from './logic.js';
 import { actionName, actionTargets, ACTIONS, gotoFrom, gotoOf, VARIABLE_ACTIONS } from './actions.js';
 import { normalizeForm, normalizeRuleSet, unwrap } from './form.js';
 import { CONTEXT_SOURCES } from './context.js';
+import { placeholdersOf } from './text.js';
 
 const INPUT_ROOTS = ['values', 'context', 'facts', 'step', 'today', 'vars', 'services'];
 /* Only these change what a condition can read, since hidden values read as absent. */
@@ -26,8 +27,9 @@ function checksOf(logic, found = []) {
 	return found;
 }
 
-const PROPERTY_TYPES = ['string', 'number', 'integer', 'boolean', 'select', 'content', 'file'];
-const PREFILL_ROOTS = ['context', 'facts'];
+const PROPERTY_TYPES = ['string', 'number', 'integer', 'boolean', 'select', 'content', 'file', 'list'];
+const ITEM_TYPES = ['string', 'number', 'integer', 'boolean', 'select'];
+const PREFILL_ROOTS = ['context', 'facts', 'vars'];
 
 /* `types`: a registry from defineTypes()/loadTypes(); when given, every `kind` must be one of its types. */
 export function validate(formDefinition, ruleSetDocument, { functions = {}, types = null } = {}) {
@@ -38,6 +40,8 @@ export function validate(formDefinition, ruleSetDocument, { functions = {}, type
 	const rawForm = unwrap(formDefinition);
 	const form = normalizeForm(formDefinition);
 	const ruleSet = normalizeRuleSet(ruleSetDocument);
+	const ruleSetVariables = ruleSet.variables ?? {};
+	const calculatedFields = new Map();
 
 	/* The form */
 	if (!form.steps.length) fail('form-steps', 'The form has no steps (structure.layout entries of type "step")', 'structure.layout');
@@ -63,7 +67,14 @@ export function validate(formDefinition, ruleSetDocument, { functions = {}, type
 		const at = `properties.${id}`;
 		if (!PROPERTY_TYPES.includes(property?.type)) fail('type', `Field "${id}" has the type "${property?.type}"; use one of ${PROPERTY_TYPES.join(', ')}`, `${at}.type`);
 		if (property?.kind !== undefined && types && !types.kinds[property.kind]) fail('kind', `Field "${id}" is a "${property.kind}", which no installed type package provides`, `${at}.kind`);
-		if (property?.from !== undefined && !(typeof property.from === 'string' && PREFILL_ROOTS.includes(property.from.split('.')[0]) && property.from.includes('.'))) fail('from', `Field "${id}" can only be prefilled from context.* or facts.*`, `${at}.from`);
+		if (property?.from !== undefined && !(typeof property.from === 'string' && PREFILL_ROOTS.includes(property.from.split('.')[0]) && property.from.includes('.'))) fail('from', `Field "${id}" can only take its value from context.*, facts.* or vars.*`, `${at}.from`);
+		if (typeof property?.from === 'string' && property.from.startsWith('vars.')) {
+			const name = property.from.slice(5);
+			if (!Object.hasOwn(ruleSetVariables, name)) fail('variable', `Field "${id}" shows "${property.from}", which the rule set does not declare`, `${at}.from`);
+			if (property.required) fail('calculated', `"${id}" is calculated, so it cannot be required`, `${at}.required`);
+			if (property.type === 'content' || property.type === 'file') fail('calculated', `A ${property.type === 'file' ? 'file field' : 'text block'} cannot be calculated`, `${at}.type`);
+			calculatedFields.set(id, `vars.${name}`);
+		} else if (property?.ui?.widget === 'output') fail('calculated', `Calculated field "${id}" needs the variable it shows ("from": "vars.<name>")`, `${at}.from`);
 		if (property?.type === 'content') {
 			if (property.required) fail('content', `"${id}" is a text block, so it cannot be required`, `${at}.required`);
 			if (property.validation) fail('content', `"${id}" is a text block, so it has nothing to validate`, `${at}.validation`);
@@ -72,11 +83,46 @@ export function validate(formDefinition, ruleSetDocument, { functions = {}, type
 			if (property.type !== 'boolean') fail('consent', `Consent field "${id}" must be a boolean`, `${at}.type`);
 			if (typeof property.consent?.text !== 'string' || !property.consent.text.trim()) fail('consent', `Consent field "${id}" needs the wording the person agrees to (consent.text)`, `${at}.consent.text`);
 		}
+		if (property?.options?.source !== undefined) {
+			const source = property.options.source;
+			if (typeof source !== 'string' || !normalizeRuleSet(ruleSetDocument).services[source]) fail('service', `Field "${id}" takes its choices from unknown service "${source}"`, `${at}.options.source`);
+			if (property.type !== 'select' && property.type !== 'string') fail('options', `Field "${id}" takes its choices from a service, so it must be a choice field (select) or text with suggestions (string)`, `${at}.type`);
+			if (property.options.choices) warn('options', `Field "${id}" has both choices and a source; the source is ignored`, `${at}.options`);
+		}
+		if (property?.type === 'list') {
+			const items = property.items?.properties;
+			if (!items || typeof items !== 'object' || !Object.keys(items).length) fail('list', `Repeating group "${id}" needs the fields of a row (items.properties)`, `${at}.items`);
+			else for (const [key, item] of Object.entries(items)) {
+				if (!/^[A-Za-z][\w]*$/.test(key)) fail('list', `Row field "${key}" in "${id}" must be a plain identifier`, `${at}.items.properties.${key}`);
+				if (!ITEM_TYPES.includes(item?.type)) fail('list', `Row field "${key}" in "${id}" has the type "${item?.type}"; use one of ${ITEM_TYPES.join(', ')}`, `${at}.items.properties.${key}.type`);
+				[].concat(item?.validation?.check ?? []).forEach(name => {
+					if (typeof functions[name] !== 'function') fail('function', `Row field "${key}" in "${id}" uses the check "${name}", which no function provides`, `${at}.items.properties.${key}.validation.check`);
+				});
+			}
+			const { minItems, maxItems } = property.validation ?? {};
+			if (minItems !== undefined && !(Number.isInteger(minItems) && minItems >= 0)) fail('list', `minItems of "${id}" must be a whole number`, `${at}.validation.minItems`);
+			if (maxItems !== undefined && !(Number.isInteger(maxItems) && maxItems >= 1)) fail('list', `maxItems of "${id}" must be a whole number above 0`, `${at}.validation.maxItems`);
+			if (Number.isInteger(minItems) && Number.isInteger(maxItems) && minItems > maxItems) fail('list', `"${id}" asks for more rows than it allows`, `${at}.validation`);
+		}
 		if (property?.type === 'file' && property.default !== undefined) fail('file', `File field "${id}" cannot have a default`, `${at}.default`);
 		[].concat(property?.validation?.check ?? []).forEach(name => {
 			if (typeof functions[name] !== 'function') fail('function', `Field "${id}" uses the check "${name}", which no function provides`, `properties.${id}.validation.check`);
 		});
 	}
+
+	/* Placeholders in texts ({values.x}, {vars.x}) must read a field or a declared variable. */
+	const checkPlaceholders = (text, at) => placeholdersOf(text).forEach(path => {
+		const [root, name] = path.split('.');
+		if (root === 'values' && !form.fields.has(path.slice(7))) fail('placeholder', `"{${path}}" reads unknown field "${path.slice(7)}"`, at);
+		if (root === 'vars' && !Object.hasOwn(ruleSetVariables, name)) fail('placeholder', `"{${path}}" reads undeclared variable "${name}"`, at);
+	});
+	for (const [id, property] of Object.entries(rawForm.properties ?? {})) {
+		['title', 'description', 'content'].forEach(key => checkPlaceholders(property?.[key], `properties.${id}.${key}`));
+		Object.entries(property?.validation?.messages ?? {}).forEach(([code, text]) => checkPlaceholders(text, `properties.${id}.validation.messages.${code}`));
+	}
+	ruleSet.rules.forEach((rule, index) => ['then', 'else'].forEach(branch => (rule?.[branch] ?? []).forEach((action, i) => {
+		if (action?.invalid) checkPlaceholders(action.invalid.message, `rules[${index}].${branch}[${i}].invalid.message`);
+	})));
 
 	/* The rule set */
 	const formId = form.id;
@@ -196,14 +242,18 @@ export function validate(formDefinition, ruleSetDocument, { functions = {}, type
 				if (!stepIds.has(id)) fail('step', `Action targets unknown step "${id}"`, at);
 				else form.steps.find(step => step.id === id).fields.forEach(field => ruleWrites.add(field));
 			});
-			if (name === 'setValue' || name === 'clear') fields.forEach(id => assignedFields.add(id));
+			if (name === 'setValue' || name === 'clear') fields.forEach(id => {
+				assignedFields.add(id);
+				if (calculatedFields.has(id)) fail('calculated', `${name} cannot target "${id}": it is calculated from ${calculatedFields.get(id)}`, at);
+			});
 			if (['setValue', 'clear', 'require'].includes(name)) fields.forEach(id => {
 				const type = form.fields.get(id)?.property?.type;
 				if (type === 'content' || (type === 'file' && name === 'setValue')) fail('action', `${name} cannot target "${id}", a ${type === 'content' ? 'text block' : 'file field'}`, at);
 			});
 			if (name === 'options') {
 				const choices = form.fields.get(value?.field)?.choices;
-				if (form.fields.has(value?.field) && !choices) fail('options', `Field "${value.field}" has no choices to narrow`, at);
+				const sourced = typeof form.fields.get(value?.field)?.property?.options?.source === 'string';
+				if (form.fields.has(value?.field) && !choices && !sourced) fail('options', `Field "${value.field}" has no choices to narrow`, at);
 				[...(value?.only ?? []), ...(value?.exclude ?? [])].forEach(option => {
 					if (choices && !choices.includes(option)) fail('options', `"${option}" is not a choice of "${value.field}"`, at);
 				});
@@ -251,6 +301,7 @@ export function validate(formDefinition, ruleSetDocument, { functions = {}, type
 		if (!fieldGraph.has(from)) fieldGraph.set(from, new Set());
 		writes.get(ruleId).forEach(to => fieldGraph.get(from).add(to));
 	}));
+	calculatedFields.forEach((variable, id) => computedReads.set(id, new Set([variable])));
 	computedReads.forEach((readNodes, node) => readNodes.forEach(from => {
 		if (!fieldGraph.has(from)) fieldGraph.set(from, new Set());
 		fieldGraph.get(from).add(node);

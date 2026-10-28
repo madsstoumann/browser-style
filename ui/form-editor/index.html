@@ -15,16 +15,19 @@
 <body>
 	<form-editor></form-editor>
 	<script type="module">
-		/* ?example=loan opens the advanced example, ?example=contact the field types example; each example keeps its own draft. */
+		/* ?example=loan opens the advanced example, ?example=contact the field types example, ?example=order rows and calculations; each example keeps its own draft. */
 		const examples = {
 			insurance: { form: '../form-rules/examples/insurance.form.json', rules: '../form-rules/examples/insurance.rules.json', samples: '{ "offers": "../form-rules/examples/offers.patch.json" }' },
 			loan: { form: '../form-rules/examples/loan.form.json', rules: '../form-rules/examples/loan.rules.json' },
-			contact: { form: '../form-rules/examples/contact.form.json', rules: '../form-rules/examples/contact.rules.json' }
+			contact: { form: '../form-rules/examples/contact.form.json', rules: '../form-rules/examples/contact.rules.json' },
+			order: { form: '../form-rules/examples/order.form.json', rules: '../form-rules/examples/order.rules.json', samples: '{ "cities": "../form-rules/examples/api/cities.json", "streets": "../form-rules/examples/api/streets.json" }' }
 		};
 		const example = examples[new URLSearchParams(location.search).get('example')] ?? examples.insurance;
 		const editor = document.querySelector('form-editor');
-		/* The installed field type packages (core is always there). The Danish and banking packages bring their checks. */
-		editor.setAttribute('types', '../form-types/dk/types.json ../form-types/banking/types.json');
+		/* The installed field type packages (core is always there): country and format packages bring checks, widget packages controls. */
+		editor.setAttribute('types', ['dk', 'banking', 'eu', 'postcodes', 'formats'].map(name => `../form-types/${name}/types.json`).concat(['rich-text', 'suggest', 'grid'].map(name => `../form-widgets/${name}/types.json`)).join(' '));
+		/* Snippets: groups of fields (with their rules) offered in the same picker. */
+		editor.setAttribute('snippets', 'snippets/address.json snippets/contact.json snippets/consent.json');
 		Object.entries(example).forEach(([name, value]) => editor.setAttribute(name, value));
 		await import('./index.js');
 	</script>

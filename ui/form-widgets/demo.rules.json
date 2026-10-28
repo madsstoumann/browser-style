@@ -1,0 +1,13 @@
+{
+	"$schema": "../form-rules/schemas/form-rules.schema.json",
+	"id": "rules-widgets-demo",
+	"model": "form-rules",
+	"meta": { "locale": "en", "status": "published" },
+	"fields": {
+		"form": "form-widgets-demo",
+		"version": 1,
+		"services": { "streets": { "url": "/ui/form-rules/examples/api/streets.json", "method": "GET" } },
+		"variables": { "total": { "type": "number", "compute": { "sum": { "map": [{ "var": "values.expenses" }, { "var": ["amount", 0] }] } } } },
+		"rules": []
+	}
+}

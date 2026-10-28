@@ -1,0 +1,11 @@
+{
+	"$schema": "../../form-rules/schemas/form-types.schema.json",
+	"package": "eu",
+	"title": "European Union",
+	"description": "EU-wide identifiers, with their checks.",
+	"version": "0.1.0",
+	"functions": "./functions.js",
+	"types": [
+		{ "kind": "eu/vat", "title": "EU VAT number", "description": "A VAT number with its country code, such as DK12345678", "group": "Contact", "glyph": "VAT", "keywords": ["vat", "moms", "tax", "company", "business", "vies"], "template": { "type": "string", "title": "VAT number", "ui": { "placeholder": "DK12345678" }, "validation": { "check": "euVat" } }, "settings": ["placeholder", "checks"] }
+	]
+}

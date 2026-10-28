@@ -3,7 +3,8 @@
  * Every view gets `editor`: { form, rules, selection, advanced, commit({ form?, rules? }), select({ … }) }.
  */
 import { h, field, check, select, button } from './dom.js';
-import { addField, addStep, clone, moveItem, removeField, removeStep, renameField, renameStep, rulesUsingField, stepOfField, stepsOf } from './model.js';
+import { addField, addStep, clone, fieldId, moveItem, removeField, removeStep, renameField, renameStep, rulesUsingField, stepOfField, stepsOf } from './model.js';
+import { insertSnippet } from './snippets.js';
 import { changeType, fieldFromType, groupTypes, searchTypes, typeOf } from '../../form-rules/index.js';
 
 /* Settings for a field whose type no installed package describes. */
@@ -13,8 +14,11 @@ const FALLBACK_SETTINGS = {
 	integer: ['range', 'checks'],
 	select: ['choices'],
 	content: ['content'],
-	file: ['files']
+	file: ['files'],
+	list: ['items', 'rows']
 };
+const ITEM_TYPES = [['string', 'Text'], ['number', 'Number'], ['integer', 'Whole number'], ['boolean', 'Yes / no'], ['select', 'Choice']];
+const FORMATS = [['', 'Plain number'], ['decimal', 'Two decimals'], ['currency', 'Amount of money'], ['percent', 'Percent']];
 const MB = 1048576;
 const INSTALLED = 'From installed packages';
 
@@ -26,7 +30,7 @@ const titleOf = (editor, id) => {
 
 /* === The type picker: a searchable list, grouped; types from packages other than core come last, under their package === */
 
-export function pickType(editor, { title = 'Add a field', current = null, onpick }) {
+export function pickType(editor, { title = 'Add a field', current = null, onpick, onsnippet = null }) {
 	const registry = editor.types;
 	const search = h('input', { type: 'search', placeholder: 'Search field types', 'aria-label': 'Search field types', autocomplete: 'off' });
 	const list = h('div', { part: 'type-list' });
@@ -43,8 +47,17 @@ export function pickType(editor, { title = 'Add a field', current = null, onpick
 		h('span', { part: 'badge' }, type.glyph ?? '?'),
 		h('span', {}, h('strong', {}, type.title), type.description ? h('small', {}, type.description) : null)
 	], () => choose(type), { 'aria-current': current === type.kind ? 'true' : null, 'data-kind': type.kind }));
+	const snippetItem = snippet => h('li', {}, button([
+		h('span', { part: 'badge' }, '⧉'),
+		h('span', {}, h('strong', {}, snippet.title ?? snippet.snippet), h('small', {}, snippet.description ?? `${(snippet.fields ?? Object.keys(snippet.properties)).length} fields`))
+	], () => { dialog.close(); onsnippet(snippet); }, { 'data-snippet': snippet.snippet }));
+	const matchingSnippets = () => {
+		const words = search.value.toLowerCase().split(/\s+/).filter(Boolean);
+		return onsnippet ? (editor.snippets ?? []).filter(snippet => words.every(word => [snippet.title, snippet.description, snippet.snippet, ...(snippet.keywords ?? [])].join(' ').toLowerCase().includes(word))) : [];
+	};
 	const draw = () => {
 		const found = searchTypes(registry, search.value);
+		const snippets = matchingSnippets();
 		const own = found.filter(type => type.package === 'core');
 		const installed = registry.packages.filter(entry => entry.package !== 'core')
 			.map(entry => ({ entry, types: found.filter(type => type.package === entry.package) }))
@@ -53,7 +66,8 @@ export function pickType(editor, { title = 'Add a field', current = null, onpick
 			...groupTypes(registry, own).map(group => h('section', {}, h('h3', {}, group.group), h('ul', {}, group.types.map(item)))),
 			installed.length ? h('section', { part: 'installed' }, h('h3', {}, INSTALLED),
 				installed.map(({ entry, types }) => [h('h4', {}, entry.title), h('ul', {}, types.map(item))])) : null,
-			found.length ? null : h('p', {}, `No field type matches "${search.value}". Install a type package to add more.`)
+			snippets.length ? h('section', { part: 'snippets' }, h('h3', {}, 'Snippets: several fields at once'), h('ul', {}, snippets.map(snippetItem))) : null,
+			found.length || snippets.length ? null : h('p', {}, `No field type matches "${search.value}". Install a type package to add more.`)
 		].filter(Boolean));
 	};
 	search.addEventListener('input', draw);
@@ -95,6 +109,11 @@ export function renderOutline(editor) {
 					const result = addField(form, step.id, null, fieldFromType(type));
 					editor.commit({ form: result.form });
 					editor.select({ view: 'form', step: step.id, field: result.id });
+				},
+				onsnippet: snippet => {
+					const result = insertSnippet(form, editor.rules, snippet, step.id);
+					editor.commit({ form: result.form, rules: result.rules });
+					editor.select({ view: 'form', step: step.id, field: result.fields[0] ?? null });
 				}
 			}), { part: 'add' })
 		))),
@@ -233,7 +252,7 @@ function fieldInspector(editor, id) {
 		settings.has('consent') ? consentEditor(property, setIn) : null,
 		content ? null : field('Help text', h('input', { value: property.description ?? '', onchange: e => update(p => setOrDelete(p, 'description', e.target.value)) })),
 		settings.has('placeholder') ? field('Placeholder', h('input', { value: property.ui?.placeholder ?? '', onchange: e => setIn('ui', 'placeholder', e.target.value) })) : null,
-		content || property.ui?.widget === 'hidden' ? null : check(consent ? 'Must be ticked to send the form' : 'Required', property.required === true, value => update(p => setOrDelete(p, 'required', value))),
+		content || property.ui?.widget === 'hidden' || settings.has('calculated') ? null : check(consent ? 'Must be ticked to send the form' : 'Required', property.required === true, value => update(p => setOrDelete(p, 'required', value))),
 		check('Hidden until a rule shows it', property.ui?.hidden === true, value => update(p => {
 			p.ui = { ...(p.ui ?? {}) };
 			setOrDelete(p.ui, 'hidden', value);
@@ -249,6 +268,15 @@ function fieldInspector(editor, id) {
 			onchange: e => update(p => setOrDelete(p, 'from', e.target.value.trim()))
 		}), 'context.<name> is set by the page that shows the form; facts.<name> by events') : null,
 		settings.has('files') ? filesEditor(property.validation ?? {}, setIn) : null,
+		settings.has('calculated') ? calculatedEditor(property) : null,
+		settings.has('optionSource') ? field('Ask this service', select([['', '…'], ...Object.keys(rules.fields.services ?? {})], property.options?.source ?? '', value => update(p => { p.options = { ...(p.options ?? {}), source: value }; })),
+			property.type === 'string' ? 'Called as the person types, with q set to the text' : 'It returns the list as [{ value, label }]; add services under Rules') : null,
+		settings.has('items') ? itemsEditor(property) : null,
+		settings.has('rows') ? h('div', { part: 'row' },
+			field('Fewest rows', h('input', { type: 'number', min: 0, value: validation.minItems ?? '', onchange: e => setIn('validation', 'minItems', e.target.value === '' ? '' : Number(e.target.value)) })),
+			field('Most rows', h('input', { type: 'number', min: 1, value: validation.maxItems ?? '', onchange: e => setIn('validation', 'maxItems', e.target.value === '' ? '' : Number(e.target.value)) })),
+			field('Show as', select([['table', 'A table'], ['rows', 'Stacked rows']], property.ui?.widget === 'table' ? 'table' : 'rows', value => setIn('ui', 'widget', value === 'table' ? 'table' : ''))))
+			: null,
 		content ? null : field('Privacy', select([['none', 'Not personal'], ['personal', 'Personal'], ['special', 'Special (health, national id, …)']], property.privacy ?? 'none', value => update(p => {
 			setOrDelete(p, 'privacy', value === 'none' ? '' : value);
 			if (value !== 'none') delete p.track;
@@ -296,6 +324,54 @@ function fieldInspector(editor, id) {
 				field('Link text', h('input', { value: notice.label ?? '', onchange: e => setNotice('label', e.target.value) })),
 				field('Notice version', h('input', { value: notice.version ?? '', onchange: e => setNotice('version', e.target.value) }), 'Raise it when the notice changes')),
 			field('Privacy notice address', h('input', { type: 'url', value: notice.url ?? '', onchange: e => setNotice('url', e.target.value) })));
+	}
+
+	/* A calculated value shows a variable from the rule set, formatted. */
+	function calculatedEditor(p) {
+		const variables = Object.entries(rules.fields.variables ?? {}).map(([name, v]) => [`vars.${name}`, v.title ?? name]);
+		const format = p.ui?.format ?? {};
+		const kind = format.style === 'currency' ? 'currency' : format.style === 'percent' ? 'percent' : format.minimumFractionDigits === 2 ? 'decimal' : '';
+		const setFormat = (next, currency = format.currency ?? 'EUR') => update(q => {
+			q.ui = { ...(q.ui ?? {}) };
+			if (next === 'currency') q.ui.format = { style: 'currency', currency };
+			else if (next === 'percent') q.ui.format = { style: 'percent' };
+			else if (next === 'decimal') q.ui.format = { minimumFractionDigits: 2, maximumFractionDigits: 2 };
+			else delete q.ui.format;
+		});
+		return h('fieldset', { part: 'calculated' },
+			h('legend', {}, 'Calculated value'),
+			field('Shows', select([['', '…'], ...variables], p.from ?? '', value => update(q => setOrDelete(q, 'from', value))), variables.length ? 'The rules work it out; the server works it out again' : 'Add a variable under Rules first'),
+			h('div', { part: 'row' },
+				field('Format', select(FORMATS, kind, value => setFormat(value))),
+				kind === 'currency' ? field('Currency', h('input', { value: format.currency ?? '', size: 4, maxLength: 3, onchange: e => setFormat('currency', e.target.value.trim().toUpperCase() || 'EUR') }), 'ISO code, for example DKK') : null));
+	}
+
+	/* The fields of one row in a repeating group. */
+	function itemsEditor(p) {
+		const items = Object.entries(p.items?.properties ?? {});
+		const setItems = fn => update(q => {
+			q.items = { ...(q.items ?? {}), properties: { ...(q.items?.properties ?? {}) } };
+			fn(q.items.properties);
+		});
+		return h('fieldset', { part: 'choices' },
+			h('legend', {}, 'Fields in each row'),
+			h('ol', {}, items.map(([key, item]) => h('li', { part: 'row' },
+				field('Label', h('input', { value: item.title ?? '', onchange: e => setItems(all => { all[key] = { ...all[key], title: e.target.value }; }) })),
+				field('Type', select(ITEM_TYPES, item.type, type => setItems(all => {
+					all[key] = { ...all[key], type };
+					if (type === 'select' && !all[key].options?.choices) all[key].options = { choices: [{ value: 'a', label: 'Option A' }, { value: 'b', label: 'Option B' }] };
+					if (type !== 'select') delete all[key].options;
+				}))),
+				check('Required', item.required === true, on => setItems(all => { all[key] = { ...all[key] }; setOrDelete(all[key], 'required', on); })),
+				item.type === 'select' ? field('Choices', h('input', {
+					value: (item.options?.choices ?? []).map(choice => choice.label).join(', '),
+					onchange: e => setItems(all => { all[key] = { ...all[key], options: { choices: e.target.value.split(',').map(text => text.trim()).filter(Boolean).map(label => ({ value: fieldId(label), label })) } }; })
+				}), 'Comma-separated') : null,
+				button('Remove', () => setItems(all => { delete all[key]; }), { 'aria-label': `Remove ${item.title ?? key}`, disabled: items.length <= 1 })))),
+			button('+ Row field', () => setItems(all => {
+				const key = fieldId(`Field ${items.length + 1}`, Object.keys(all));
+				all[key] = { type: 'string', title: `Field ${items.length + 1}` };
+			})));
 	}
 
 	function filesEditor(rules, set) {

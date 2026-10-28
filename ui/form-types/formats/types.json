@@ -1,0 +1,15 @@
+{
+	"$schema": "../../form-rules/schemas/form-types.schema.json",
+	"package": "formats",
+	"title": "Formats",
+	"description": "Common identifiers and codes, with their checks.",
+	"version": "0.1.0",
+	"functions": "./functions.js",
+	"types": [
+		{ "kind": "formats/isbn", "title": "ISBN", "description": "A book number, ISBN-10 or ISBN-13", "group": "Answers", "glyph": "ISBN", "keywords": ["book", "isbn"], "template": { "type": "string", "title": "ISBN", "validation": { "check": "isbn" } }, "settings": ["placeholder", "checks"] },
+		{ "kind": "formats/gtin", "title": "Barcode (EAN / GTIN)", "description": "A product barcode number", "group": "Answers", "glyph": "EAN", "keywords": ["ean", "gtin", "upc", "barcode", "product"], "template": { "type": "string", "title": "Barcode", "validation": { "check": "gtin" } }, "settings": ["placeholder", "checks"] },
+		{ "kind": "formats/ipv4", "title": "IP address", "description": "An IPv4 address, such as 192.168.0.1", "group": "Answers", "glyph": "IP", "keywords": ["ip", "network", "address"], "template": { "type": "string", "title": "IP address", "validation": { "check": "ipv4" } }, "settings": ["placeholder", "checks"] },
+		{ "kind": "formats/uuid", "title": "UUID", "description": "A 36-character identifier", "group": "Answers", "glyph": "ID", "keywords": ["uuid", "guid", "identifier"], "template": { "type": "string", "title": "UUID", "validation": { "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$", "messages": { "pattern": "Write it as 8-4-4-4-12 hexadecimal characters" } } }, "settings": ["placeholder"] },
+		{ "kind": "formats/colour", "title": "Colour", "description": "A colour, picked with the browser's colour picker", "group": "Answers", "glyph": "◐", "keywords": ["color", "colour", "hex"], "template": { "type": "string", "title": "Colour", "ui": { "widget": "color" }, "validation": { "pattern": "^#[0-9a-fA-F]{6}$" } }, "settings": ["default"] }
+	]
+}

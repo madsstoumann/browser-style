@@ -1,0 +1,20 @@
+{
+	"snippet": "contact",
+	"title": "Contact details",
+	"description": "Name, email and phone; one way to reach the person is required",
+	"keywords": ["contact", "name", "email", "phone", "person"],
+	"fields": ["name", "email", "phone"],
+	"properties": {
+		"name": { "kind": "text", "type": "string", "title": "Name", "required": true, "privacy": "personal" },
+		"email": { "kind": "email", "type": "string", "title": "Email", "privacy": "personal", "ui": { "widget": "email" } },
+		"phone": { "kind": "tel", "type": "string", "title": "Phone", "privacy": "personal", "ui": { "widget": "tel" } }
+	},
+	"rules": [
+		{
+			"id": "contact-way",
+			"title": "Ask for email or phone",
+			"when": { "and": [{ "!": { "var": "values.email" } }, { "!": { "var": "values.phone" } }] },
+			"then": [{ "require": ["email"] }]
+		}
+	]
+}

@@ -1,0 +1,42 @@
+{
+	"$schema": "../schemas/form-rules.schema.json",
+	"id": "rules-order",
+	"model": "form-rules",
+	"meta": { "locale": "en", "status": "published" },
+	"fields": {
+		"form": "form-order",
+		"version": 1,
+		"services": {
+			"cities": { "url": "/ui/form-rules/examples/api/cities.json", "method": "GET", "send": ["country"] },
+			"streets": { "url": "/ui/form-rules/examples/api/streets.json", "method": "GET", "send": ["city"] }
+		},
+		"variables": {
+			"items": { "type": "number", "title": "Number of items", "compute": { "sum": { "map": [{ "var": "values.lines" }, { "var": ["qty", 0] }] } } },
+			"subtotal": { "type": "number", "title": "Subtotal", "compute": { "sum": { "map": [{ "var": "values.lines" }, { "*": [{ "var": ["qty", 0] }, { "if": [{ "===": [{ "var": "product" }, "tea"] }, 25, { "===": [{ "var": "product" }, "coffee"] }, 30, { "===": [{ "var": "product" }, "cake"] }, 40, 0] }] }] } } },
+			"total": { "type": "number", "title": "Total with tip", "compute": { "round": [{ "*": [{ "var": "vars.subtotal" }, { "+": [1, { "/": [{ "var": ["values.tip", 0] }, 100] }] }] }, 2] } }
+		},
+		"rules": [
+			{
+				"id": "no-sunday",
+				"title": "No deliveries on Sundays",
+				"when": { "===": [{ "datePart": [{ "var": "values.date" }, "weekday"] }, 7] },
+				"then": [{ "invalid": { "field": "date", "code": "sunday", "message": "We do not deliver on Sundays" } }]
+			},
+			{
+				"id": "test-address",
+				"title": "Warn about test addresses",
+				"when": { "endsWith": [{ "lower": { "var": "values.email" } }, "@example.com"] },
+				"then": [{ "invalid": { "field": "email", "code": "test-address", "level": "warning", "message": "{values.email} looks like a test address" } }]
+			},
+			{
+				"id": "cake-needs-date",
+				"title": "Cake orders need two days' notice",
+				"when": { "and": [
+					{ "some": [{ "var": "values.lines" }, { "===": [{ "var": "product" }, "cake"] }] },
+					{ "<": [{ "daysBetween": [{ "var": "today" }, { "var": "values.date" }] }, 2] }
+				] },
+				"then": [{ "invalid": { "field": "date", "code": "cake-notice", "message": "Cake needs two days' notice" } }]
+			}
+		]
+	}
+}

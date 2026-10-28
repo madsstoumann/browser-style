@@ -1,0 +1,29 @@
+{
+	"locale": "nb",
+	"labels": {
+		"prev": "Tilbake",
+		"next": "Neste",
+		"submit": "Send",
+		"required": "Velg minst ett alternativ",
+		"unavailable": "Dette alternativet finnes ikke lenger",
+		"add-row": "+ Legg til rad",
+		"remove-row": "Fjern",
+		"required-row": "Legg til minst én rad",
+		"required-marker": "Må fylles ut",
+		"explain": "Hvorfor",
+		"yes": "ja",
+		"no": "nei"
+	},
+	"messages": {
+		"minimum": "Må være minst {limit}",
+		"maximum": "Kan være høyst {limit}",
+		"minLength": "Minst {limit} tegn",
+		"maxLength": "Høyst {limit} tegn",
+		"pattern": "Har ikke forventet format",
+		"maxFiles": "Velg høyst {limit} filer",
+		"maxSize": "Hver fil kan være høyst {limit}",
+		"accept": "Tillatte filtyper: {limit}",
+		"minItems": "Legg til minst {limit} rader",
+		"maxItems": "Høyst {limit} rader"
+	}
+}

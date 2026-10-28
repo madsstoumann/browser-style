@@ -31,8 +31,14 @@ function decide(contributions, restrictive) {
 	return { value, rules: winners.filter(c => c.value === value).map(c => c.rule) };
 }
 
+/* A choice field (select) whose list comes from a service: options.source names it. On a text field the service only suggests. */
+export const sourceOf = property => (typeof property?.options?.source === 'string' ? property.options.source : null);
+const isSuggest = property => property?.type !== 'select';
+/* The list a host fetched for a sourced field (input.choices[id]): [{ value, label }] or plain values. */
+const suppliedChoices = list => (Array.isArray(list) ? list.map(choice => (choice && typeof choice === 'object' ? choice.value : choice)) : null);
+
 function resolve(form, results, input) {
-	const { previousMatched, hasPrevious, data } = input;
+	const { previousMatched, hasPrevious, data, choices = {} } = input;
 	const fieldFlags = new Map();
 	const stepFlags = new Map();
 	const optionRules = new Map();
@@ -146,7 +152,8 @@ function resolve(form, results, input) {
 
 	const fields = {};
 	for (const [id, field] of form.fields) {
-		const state = { step: field.step, source: field.source, visible: !field.hidden, enabled: true, required: field.required, options: field.choices ? [...field.choices] : null };
+		const supplied = sourceOf(field.property) ? suppliedChoices(choices[id]) : null;
+		const state = { step: field.step, source: field.source, visible: !field.hidden, enabled: true, required: field.required, options: field.choices ? [...field.choices] : supplied };
 		for (const flag of ['visible', 'enabled', 'required']) {
 			const key = `${id}|${flag}`;
 			if (!fieldFlags.has(key)) continue;
@@ -212,8 +219,19 @@ const DEFAULT_MESSAGES = {
 	pattern: () => 'Does not match the expected format',
 	maxFiles: rule => (rule === 1 ? 'Choose one file' : `Choose at most ${rule} files`),
 	maxSize: rule => `Each file must be at most ${formatSize(rule)}`,
-	accept: rule => `Allowed file types: ${rule}`
+	accept: rule => `Allowed file types: ${rule}`,
+	minItems: rule => (rule === 1 ? 'Add at least one row' : `Add at least ${rule} rows`),
+	maxItems: rule => (rule === 1 ? 'Only one row is allowed' : `At most ${rule} rows`)
 };
+
+/* Input messages (input.messages, for example from a language pack) are text with {limit} for the rule's number. */
+const messageFor = (messages, code, rule) => {
+	const text = messages?.[code];
+	if (typeof text === 'string') return text.replaceAll('{limit}', code === 'maxSize' ? formatSize(rule) : String(rule ?? ''));
+	return DEFAULT_MESSAGES[code](rule);
+};
+
+export const ITEM_TYPES = ['string', 'number', 'integer', 'boolean', 'select'];
 
 const formatSize = bytes => (bytes >= 1048576 ? `${Math.round(bytes / 104857.6) / 10} MB` : `${Math.ceil(bytes / 1024)} KB`);
 
@@ -239,6 +257,7 @@ export function hasValueType(property, value) {
 		case 'boolean': return typeof value === 'boolean';
 		case 'select': return multiple ? Array.isArray(value) && value.every(isChoice) : isChoice(value);
 		case 'file': return Array.isArray(value) && value.every(file => file && typeof file === 'object' && !Array.isArray(file) && typeof file.name === 'string');
+		case 'list': return Array.isArray(value) && value.every(row => row !== null && typeof row === 'object' && !Array.isArray(row));
 		default: {
 			const plain = item => isChoice(item) || typeof item === 'boolean';
 			return multiple ? Array.isArray(value) && value.every(plain) : plain(value);
@@ -247,11 +266,11 @@ export function hasValueType(property, value) {
 }
 
 /* The field's own constraints (validation in the form definition), as issues. */
-function constraintIssues(id, property, value, functions) {
+function constraintIssues(id, property, value, { functions, messages: inputMessages } = {}) {
 	const validation = property?.validation ?? {};
 	const messages = validation.messages ?? {};
 	const found = [];
-	const fail = (code, rule) => found.push({ field: id, code, message: messages[code] ?? DEFAULT_MESSAGES[code](rule) });
+	const fail = (code, rule) => found.push({ field: id, code, message: messages[code] ?? messageFor(inputMessages, code, rule) });
 	if (typeof value === 'number') {
 		if (typeof validation.minimum === 'number' && value < validation.minimum) fail('minimum', validation.minimum);
 		if (typeof validation.maximum === 'number' && value > validation.maximum) fail('maximum', validation.maximum);
@@ -260,6 +279,11 @@ function constraintIssues(id, property, value, functions) {
 		if (typeof validation.minLength === 'number' && value.length < validation.minLength) fail('minLength', validation.minLength);
 		if (typeof validation.maxLength === 'number' && value.length > validation.maxLength) fail('maxLength', validation.maxLength);
 		if (typeof validation.pattern === 'string' && !new RegExp(`^(?:${validation.pattern.replace(/^\^|\$$/g, '')})$`, 'u').test(value)) fail('pattern');
+	}
+	if (property?.type === 'list' && Array.isArray(value)) {
+		if (typeof validation.minItems === 'number' && value.length < validation.minItems) fail('minItems', validation.minItems);
+		if (typeof validation.maxItems === 'number' && value.length > validation.maxItems) fail('maxItems', validation.maxItems);
+		return found;
 	}
 	if (property?.type === 'file' && Array.isArray(value)) {
 		if (typeof validation.maxFiles === 'number' && value.length > validation.maxFiles) fail('maxFiles', validation.maxFiles);
@@ -274,11 +298,60 @@ function constraintIssues(id, property, value, functions) {
 	return found;
 }
 
+/* A calculated field shows a variable: `from: "vars.total"`. Its value is always the variable's, never an answer. */
+export const calculatedFrom = property => (typeof property?.from === 'string' && property.from.startsWith('vars.') ? property.from.slice(5) : null);
+
+const calculatedValue = (property, vars) => {
+	const value = vars[calculatedFrom(property)] ?? null;
+	return value !== null && hasValueType(property, value) ? value : null;
+};
+
+/* A repeating group's rows, cleaned: only its item keys, each of its type. Wholly empty rows are dropped.
+   Issues carry { row, item } besides the field. */
+function listRows(id, property, rows, input) {
+	const items = property?.items?.properties ?? {};
+	const issues = [];
+	const kept = [];
+	for (const row of rows) {
+		const clean = {};
+		const rowIssues = [];
+		const at = { row: kept.length };
+		for (const [key, item] of Object.entries(items)) {
+			const value = row[key];
+			const where = { ...at, item: key };
+			if (isEmpty(value)) {
+				if (item?.required) rowIssues.push({ field: id, ...where, code: 'required' });
+				continue;
+			}
+			if (!ITEM_TYPES.includes(item?.type) || !hasValueType(item, value)) {
+				rowIssues.push({ field: id, ...where, code: 'type' });
+				continue;
+			}
+			const choices = item.options?.choices?.map(choice => choice?.value ?? choice);
+			if (choices && !(Array.isArray(value) ? value : [value]).every(option => choices.includes(option))) {
+				rowIssues.push({ field: id, ...where, code: 'option-unavailable' });
+				continue;
+			}
+			if (item.type === 'boolean' && item.required && value !== true) rowIssues.push({ field: id, ...where, code: 'required' });
+			rowIssues.push(...constraintIssues(id, item, value, input).map(issue => ({ ...issue, ...where })));
+			clean[key] = value;
+		}
+		if (!Object.keys(clean).length && Object.keys(items).every(key => isEmpty(row[key]))) continue;
+		kept.push(clean);
+		issues.push(...rowIssues);
+	}
+	return { rows: kept, issues };
+}
+
 /* Prefills: a field with no answer yet (no key in values) reads `from` (context.* or facts.*), then its `default`. */
 function withPrefill(form, values, input) {
 	const filled = { ...values };
 	for (const [id, field] of form.fields) {
 		const property = field.property ?? {};
+		if (calculatedFrom(property)) {
+			delete filled[id];
+			continue;
+		}
 		if (Object.hasOwn(values, id) || property.type === 'content') continue;
 		let value = typeof property.from === 'string' ? getPath({ context: input.context ?? {}, facts: input.facts ?? {} }, property.from) : null;
 		if (value === null && property.default !== undefined) value = property.default;
@@ -301,6 +374,11 @@ export function evaluate(formDefinition, ruleSetDocument, input = {}) {
 	const baseForm = normalizeForm(formDefinition);
 	const ruleSet = normalizeRuleSet(ruleSetDocument);
 	const values = withPrefill(baseForm, input.values ?? {}, input);
+	/* Rules read a repeating group's rows as they would be submitted: only its item keys, each of its type. */
+	const readable = { ...values };
+	for (const [id, field] of baseForm.fields) {
+		if (field.property?.type === 'list' && Array.isArray(values[id])) readable[id] = listRows(id, field.property, values[id], input).rows;
+	}
 	const hasPrevious = Array.isArray(input.previous?.matched);
 	const previousMatched = new Set(input.previous?.matched ?? []);
 	const baseRules = ruleSet.rules;
@@ -321,7 +399,7 @@ export function evaluate(formDefinition, ruleSetDocument, input = {}) {
 		form = withPatchFields(baseForm, patches);
 		const rules = [...baseRules, ...patches.flatMap(patch => patch.rules ?? [])];
 		const base = {
-			values: visibleValues(values, fieldsSeen),
+			values: visibleValues(readable, fieldsSeen),
 			context: input.context ?? {},
 			facts: input.facts ?? {},
 			step: input.step ?? null,
@@ -330,11 +408,14 @@ export function evaluate(formDefinition, ruleSetDocument, input = {}) {
 			[FUNCTIONS]: input.functions ?? {}
 		};
 		vars = computeVars(declared, base, accumulated);
+		for (const [id, field] of form.fields) {
+			if (calculatedFrom(field.property) && fieldsSeen[id]?.visible) base.values[id] = calculatedValue(field.property, vars);
+		}
 		const data = { ...base, vars };
 		const results = rules.map(rule => ({ rule, matched: truthy(apply(rule.when ?? true, data)) }));
 		matched = results.filter(result => result.matched).map(result => result.rule.id);
 
-		state = resolve(form, results, { previousMatched, hasPrevious, data });
+		state = resolve(form, results, { previousMatched, hasPrevious, data, choices: input.choices });
 		const nextAccumulated = accumulate(declared, state);
 		const matchedSet = new Set(matched);
 		const nextPatches = ruleSet.patches.filter(patch => patch.owner == null || matchedSet.has(patch.owner));
@@ -360,13 +441,20 @@ export function evaluate(formDefinition, ruleSetDocument, input = {}) {
 		const property = form.fields.get(id)?.property;
 		if (hasNoValue(property)) continue;
 		let value = values[id];
-		if (state.assigned.has(id)) {
+		if (calculatedFrom(property)) {
+			value = calculatedValue(property, vars) ?? undefined;
+		} else if (state.assigned.has(id)) {
 			const decision = decide(state.assigned.get(id), null);
 			value = decision.value;
 			state.explain[`${id}.value`] = decision.rules;
 		} else if (!isEmpty(value) && !hasValueType(property, value)) {
 			issues.push({ field: id, code: 'type' });
 			value = undefined;
+		}
+		if (property?.type === 'list' && Array.isArray(value)) {
+			const list = listRows(id, property, value, input);
+			issues.push(...list.issues);
+			value = list.rows;
 		}
 		if (!isEmpty(value) && field.options) {
 			const chosen = Array.isArray(value) ? value : [value];
@@ -377,7 +465,7 @@ export function evaluate(formDefinition, ruleSetDocument, input = {}) {
 		}
 		/* A required yes/no or consent must be ticked, as the browser's own required checkbox. */
 		if (field.required && (isEmpty(value) || (property?.type === 'boolean' && value !== true))) issues.push({ field: id, code: 'required' });
-		if (!isEmpty(value)) issues.push(...constraintIssues(id, property, value, input.functions));
+		if (!isEmpty(value)) issues.push(...constraintIssues(id, property, value, input));
 		for (const entry of state.invalid.get(id) ?? []) {
 			issues.push({ field: id, code: entry.code, message: entry.message, ...(entry.level ? { level: entry.level } : {}), rule: entry.rule });
 		}
@@ -385,8 +473,20 @@ export function evaluate(formDefinition, ruleSetDocument, input = {}) {
 		if (value !== undefined) submit[id] = value;
 	}
 
-	const visibleView = visibleValues(values, state.fields);
+	const visibleView = visibleValues(readable, state.fields);
+	/* A visible field with a sourced list asks for it; the key changes when the answers it sends do. */
+	for (const [id, field] of Object.entries(state.fields)) {
+		const property = form.fields.get(id)?.property;
+		const name = sourceOf(property);
+		if (!name || !field.visible || isSuggest(property) || form.fields.get(id).choices) continue;
+		state.effects.push({ type: 'options', field: id, service: name });
+	}
 	const effects = state.effects.map(effect => {
+		if (effect.type === 'options') {
+			const service = ruleSet.services[effect.service] ?? {};
+			const send = Object.fromEntries((service.send ?? []).map(field => [field, visibleView[field] ?? null]));
+			return { ...effect, url: service.url ?? null, send, key: `${effect.service}:${stableKey(send)}` };
+		}
 		if (effect.type !== 'fetch') return effect;
 		const service = ruleSet.services[effect.service] ?? {};
 		const send = Object.fromEntries((service.send ?? []).map(field => [field, visibleView[field] ?? null]));

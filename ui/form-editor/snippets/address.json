@@ -1,0 +1,13 @@
+{
+	"snippet": "address",
+	"title": "Postal address",
+	"description": "Street, postcode, city and country",
+	"keywords": ["address", "post", "delivery", "street", "zip"],
+	"fields": ["street", "postcode", "city", "country"],
+	"properties": {
+		"street": { "kind": "text", "type": "string", "title": "Street and number", "required": true, "privacy": "personal", "ui": { "placeholder": "Main Street 1" } },
+		"postcode": { "kind": "text", "type": "string", "title": "Postcode", "required": true, "privacy": "personal", "validation": { "maxLength": 10 } },
+		"city": { "kind": "text", "type": "string", "title": "City", "required": true, "privacy": "personal" },
+		"country": { "kind": "text", "type": "string", "title": "Country", "required": true }
+	}
+}

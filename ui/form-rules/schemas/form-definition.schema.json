@@ -55,10 +55,32 @@
 			"type": "object",
 			"required": ["type"],
 			"properties": {
-				"type": { "enum": ["string", "number", "integer", "boolean", "select", "content", "file"], "description": "content: a text block with no value (never submitted); file: uploads, whose value is [{ name, size, type }] and which are never saved in a draft" },
+				"type": { "enum": ["string", "number", "integer", "boolean", "select", "content", "file", "list"], "description": "content: a text block with no value (never submitted); file: uploads, whose value is [{ name, size, type }] and which are never saved in a draft; list: a repeating group, whose value is an array of rows (objects of items.properties)" },
 				"kind": { "type": "string", "description": "The field type from an installed type package (types/core.json, dk/cpr, …) the field was made from; tells an editor which settings to show. Optional: typeOf() infers it from type and ui.widget" },
 				"content": { "type": "string", "description": "Text block only: the text, plain; a blank line starts a new paragraph" },
-				"from": { "type": "string", "pattern": "^(context|facts)\\.", "description": "Prefill from context.* or facts.* while the field has no answer (for example a hidden campaign value)" },
+				"from": { "type": "string", "pattern": "^(context|facts|vars)\\.", "description": "Prefill from context.* or facts.* while the field has no answer (for example a hidden campaign value); vars.* makes a calculated field, whose value is always that rule-set variable" },
+				"items": {
+					"type": "object",
+					"description": "Repeating groups (type list) only: the fields of one row",
+					"required": ["properties"],
+					"properties": {
+						"properties": {
+							"type": "object",
+							"additionalProperties": {
+								"type": "object",
+								"required": ["type"],
+								"properties": {
+									"type": { "enum": ["string", "number", "integer", "boolean", "select"] },
+									"title": { "type": "string" },
+									"required": { "type": "boolean" },
+									"validation": { "type": "object" },
+									"options": { "type": "object" },
+									"ui": { "type": "object" }
+								}
+							}
+						}
+					}
+				},
 				"consent": {
 					"type": "object",
 					"description": "Consent fields (ui.widget consent) only: the wording and the notice it refers to, recorded with the answer",
@@ -92,6 +114,8 @@
 						"accept": { "type": "string", "description": "File fields: allowed types, as the accept attribute (.pdf,image/*)" },
 						"maxSize": { "type": "integer", "minimum": 1, "description": "File fields: largest file in bytes" },
 						"maxFiles": { "type": "integer", "minimum": 1, "description": "File fields: how many files (1 by default)" },
+						"minItems": { "type": "integer", "minimum": 0, "description": "Repeating groups: fewest rows" },
+						"maxItems": { "type": "integer", "minimum": 1, "description": "Repeating groups: most rows" },
 						"check": {
 							"description": "Names of host functions (evaluate input.functions) that check the value: null passes, { code, message, level? } fails",
 							"oneOf": [{ "type": "string" }, { "type": "array", "items": { "type": "string" } }]
@@ -107,6 +131,8 @@
 					"type": "object",
 					"properties": {
 						"multiple": { "type": "boolean" },
+						"source": { "type": "string", "description": "A service in the rule set: on a choice field (select) it returns the list as [{ value, label }]; on a text field it suggests as the person types (q)" },
+						"minLength": { "type": "integer", "minimum": 0, "description": "Text with a source: letters typed before suggestions are asked for (2)" },
 						"choices": {
 							"type": "array",
 							"items": {
@@ -120,7 +146,10 @@
 				"ui": {
 					"type": "object",
 					"properties": {
-						"widget": { "type": "string", "description": "email, tel, url, date, time, textarea, radio, consent, hidden, …" },
+						"widget": { "type": "string", "description": "email, tel, url, date, time, textarea, radio, consent, hidden, range (slider), output (calculated), table (repeating group), suggest, or one from a widget package (rich-text, auto-suggest, data-grid, …)" },
+						"format": { "type": "object", "description": "How a number is shown as text (calculated values, placeholders): Intl.NumberFormat options, such as { \"style\": \"currency\", \"currency\": \"DKK\" }" },
+						"step": { "type": ["number", "string"], "description": "Number and slider fields: the step between values" },
+						"toolbar": { "type": "string", "description": "The rich-text widget's toolbar" },
 						"placeholder": { "type": "string" },
 						"hidden": { "type": "boolean", "description": "Hidden unless a rule shows it" }
 					}

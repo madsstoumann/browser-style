@@ -4,7 +4,7 @@
  * Fields are plain native controls in light DOM, so @browser.style/base form.css styles them.
  * Every input re-evaluates the rules; the engine's effects (fetch, emit) are carried out here.
  */
-import { consentRecords, evaluate, expirePatches, handleEvent, merge, normalizeForm, normalizeRuleSet, privacyOf, safeUrl } from '../form-rules/index.js';
+import { calculatedFrom, consentRecords, evaluate, expirePatches, fillText, handleEvent, loadPackages, merge, normalizeForm, normalizeRuleSet, placeholdersOf, privacyOf, safeUrl } from '../form-rules/index.js';
 import { FlowTracking, validityCode } from './tracking.js';
 
 const INPUT_TYPES = ['color', 'date', 'datetime-local', 'email', 'month', 'password', 'search', 'tel', 'time', 'url', 'week'];
@@ -38,7 +38,7 @@ async function fetchJSON(url) {
 }
 
 export default class FormFlow extends HTMLElement {
-	static observedAttributes = ['form', 'rules'];
+	static observedAttributes = ['form', 'rules', 'locale'];
 
 	#definition = null;
 	#form = null;
@@ -52,6 +52,15 @@ export default class FormFlow extends HTMLElement {
 	#requests = new Map();
 	#files = new Map();
 	#element;
+	/* Lists fetched for sourced choice fields: { [id]: [{ value, label }] } */
+	#choices = {};
+	/* Controls for ui.widget values beyond the native ones, from widget packages: { name: adapter } (readme § Widgets) */
+	#widgets = {};
+	/* A language pack (locales/*.json): { locale, labels, messages } */
+	#locale = null;
+	#suggestTimers = new Map();
+	/* Text nodes with {values.x} / {vars.x} placeholders, and the text they were written as. */
+	#templates = new Map();
 
 	/* Replace to fetch patches another way (a proxy, a mock): async (effect, service) => patch, or undefined for the built-in request */
 	fetcher = null;
@@ -80,11 +89,28 @@ export default class FormFlow extends HTMLElement {
 	}
 
 	async attributeChangedCallback(name, oldValue, newValue) {
+		if (name === 'locale') {
+			if (oldValue === newValue || !this.#form) return;
+			try {
+				this.locale = newValue ? await fetchJSON(new URL(newValue, document.baseURI)) : null;
+			} catch (error) {
+				this.#dispatch('ff:error', { error });
+			}
+			return;
+		}
 		if (oldValue !== null && oldValue !== newValue && this.isConnected) await this.load();
 	}
 
 	async load() {
 		try {
+			if (this.getAttribute('locale')) this.#locale = await fetchJSON(new URL(this.getAttribute('locale'), document.baseURI));
+			/* Type packages: their checks become functions, their widgets controls. The page's own functions win. */
+			if (this.getAttribute('packages')) {
+				const registry = await loadPackages(this.getAttribute('packages').split(/\s+/).filter(Boolean).map(url => new URL(url, document.baseURI).href), { widgets: true });
+				this.#functions = { ...registry.functions, ...this.#functions };
+				this.#widgets = { ...registry.widgets, ...this.#widgets };
+				if (registry.errors.length) this.#dispatch('ff:error', { errors: registry.errors });
+			}
 			const [definition, rules] = await Promise.all([
 				fetchJSON(new URL(this.getAttribute('form'), document.baseURI)),
 				this.getAttribute('rules') ? fetchJSON(new URL(this.getAttribute('rules'), document.baseURI)) : EMPTY_RULES
@@ -108,6 +134,7 @@ export default class FormFlow extends HTMLElement {
 		this.#previous = previous?.matched;
 		this.#requests.clear();
 		this.#files.clear();
+		this.#choices = {};
 		if (!keepTracking || !this.#tracking) this.#tracking = new FlowTracking(event => this.#track(event), {
 			contextKeys: (this.getAttribute('track-context') ?? 'channel campaign').split(/\s+/).filter(Boolean),
 			contextOf: () => this.#context,
@@ -119,12 +146,30 @@ export default class FormFlow extends HTMLElement {
 		this.update();
 	}
 
+	/* A language pack: { locale, labels: { next, … }, messages: { minimum: 'At least {limit}', … } }. label-* attributes still win. */
+	set locale(value) {
+		this.#locale = value ?? null;
+		if (this.#form) this.setup(this.#definition, this.#rules, { values: this.#values, step: this.#current, previous: { matched: this.#previous }, keepTracking: true });
+	}
+	get locale() { return this.#locale; }
+
+	#label(name, fallback) {
+		return this.getAttribute(`label-${name}`) ?? this.#locale?.labels?.[name] ?? fallback;
+	}
+
 	/* Host functions the rules call by name (operators and field checks): { name: fn } */
 	set functions(value) {
 		this.#functions = value ?? {};
 		if (this.#form) this.update();
 	}
 	get functions() { return this.#functions; }
+
+	/* Widget adapters by ui.widget name: { render({ id, property, value, flow, service }), read(control, property), write?(control, value, property), load?(), group? } */
+	set widgets(value) {
+		this.#widgets = value ?? {};
+		if (this.#form) this.setup(this.#definition, this.#rules, { values: this.#values, step: this.#current, previous: { matched: this.#previous }, keepTracking: true });
+	}
+	get widgets() { return this.#widgets; }
 
 	get definition() { return this.#definition; }
 	get state() { return this.#state; }
@@ -172,21 +217,22 @@ export default class FormFlow extends HTMLElement {
 	/* === Rendering === */
 
 	#render() {
+		this.#templates.clear();
 		const form = h('form', { part: 'form', noValidate: true });
 		form.append(h('ol', { class: 'ui-step', part: 'steps' }));
 		for (const step of this.#form.steps) {
 			const fieldset = h('fieldset', { part: 'step', 'data-step': step.id }, h('legend', {}, step.name));
-			step.fields.forEach(id => fieldset.append(this.#renderField(id, this.#form.fields.get(id).property)));
+			step.fields.forEach(id => fieldset.append(this.#renderField(id, this.#propertyOf(id))));
 			step.slots.forEach(slot => fieldset.append(h('div', { 'data-slot': slot, part: 'slot' })));
 			form.append(fieldset);
 		}
 		form.append(h('nav', { part: 'nav' },
-			h('button', { type: 'button', 'data-action': 'prev' }, this.getAttribute('label-prev') ?? 'Back'),
-			h('button', { type: 'button', 'data-action': 'next' }, this.getAttribute('label-next') ?? 'Next'),
-			h('button', { type: 'submit' }, this.getAttribute('label-submit') ?? 'Send')
+			h('button', { type: 'button', 'data-action': 'prev' }, this.#label('prev', 'Back')),
+			h('button', { type: 'button', 'data-action': 'next' }, this.#label('next', 'Next')),
+			h('button', { type: 'submit' }, this.#label('submit', 'Send'))
 		));
 		if (this.hasAttribute('explain')) {
-			form.append(h('details', { part: 'explain' }, h('summary', {}, 'Why'), h('ul')));
+			form.append(h('details', { part: 'explain' }, h('summary', {}, this.#label('explain', 'Why')), h('ul')));
 		}
 
 		form.addEventListener('input', event => this.#onInput(event));
@@ -196,6 +242,9 @@ export default class FormFlow extends HTMLElement {
 			const action = event.target.closest('[data-action]')?.dataset.action;
 			if (action === 'next') this.#move(1);
 			if (action === 'prev') this.#move(-1);
+			const add = event.target.closest('[data-list-add]');
+			const remove = event.target.closest('[data-list-remove]');
+			if (add || remove) this.#changeRows(add?.dataset.listAdd ?? remove.dataset.listRemove, remove?.closest('[data-row]'));
 		});
 		form.addEventListener('submit', event => this.#onSubmit(event));
 
@@ -204,26 +253,71 @@ export default class FormFlow extends HTMLElement {
 		this.replaceChildren(form);
 	}
 
+	/* A text node; one with placeholders is refilled on every update. */
+	#text(text) {
+		const node = document.createTextNode(text ?? '');
+		if (placeholdersOf(text).length) this.#templates.set(node, text);
+		return node;
+	}
+
+	get #lang() {
+		return this.#locale?.locale || this.closest('[lang]')?.lang || navigator.language;
+	}
+
+	/* A value as text: numbers use the field's ui.format (Intl.NumberFormat options) in the page language. */
+	#formatValue(value, property) {
+		if (value === null || value === undefined || value === '') return '';
+		if (typeof value === 'number') {
+			try { return new Intl.NumberFormat(this.#lang, property?.ui?.format ?? {}).format(value); } catch { return String(value); }
+		}
+		if (typeof value === 'boolean') return value ? (this.#label('yes', 'yes')) : (this.#label('no', 'no'));
+		const label = choicesOf(property).find(choice => choice.value === value)?.label;
+		if (label) return label;
+		return Array.isArray(value) ? value.map(item => this.#formatValue(item, property)).join(', ') : String(value);
+	}
+
+	#fill(text, state = this.#state) {
+		if (!state || !placeholdersOf(text).length) return text;
+		const data = { values: state.values, vars: state.vars, context: this.#context, facts: this.#store.facts ?? {} };
+		return fillText(text, data, { format: (value, path) => this.#formatValue(value, path.startsWith('values.') ? this.#propertyOf(path.slice(7)) : null) });
+	}
+
 	#labelText(id, property) {
 		return h('span', {},
-			property?.title ?? id,
-			h('abbr', { title: 'Required', hidden: true }, '*'),
-			property?.description ? h('small', {}, property.description) : null
+			this.#text(property?.title ?? id),
+			h('abbr', { title: this.#label('required-marker', 'Required'), hidden: true }, '*'),
+			property?.description ? h('small', {}, this.#text(property.description)) : null
 		);
 	}
 
 	#renderField(id, property = {}) {
 		const value = Object.hasOwn(this.#values, id) ? this.#values[id] : property.default;
 		const widget = property.ui?.widget;
-		const placeholder = property.ui?.placeholder;
 		const validation = property.validation ?? {};
 		const choices = choicesOf(property);
 
 		/* A text block: no control and no value. Blank lines start new paragraphs. */
 		if (property.type === 'content') {
 			return h('div', { 'data-field': id, part: 'field content' },
-				property.title ? h('strong', {}, property.title) : null,
-				String(property.content ?? '').split(/\n\s*\n/).map(text => text.trim()).filter(Boolean).map(text => h('p', {}, text)));
+				property.title ? h('strong', {}, this.#text(property.title)) : null,
+				String(property.content ?? '').split(/\n\s*\n/).map(text => text.trim()).filter(Boolean).map(text => h('p', {}, this.#text(text))));
+		}
+		/* A control from a widget package; it loads its component the first time a field uses it. */
+		const adapter = widget && Object.hasOwn(this.#widgets, widget) ? this.#widgets[widget] : null;
+		if (adapter) {
+			Promise.resolve(adapter.load?.(this)).catch(error => this.#dispatch('ff:error', { error, widget }));
+			const service = normalizeRuleSet(this.#rules).services[property.options?.source];
+			const control = adapter.render({ id, property, value, flow: this, service });
+			control.setAttribute('data-widget-control', '');
+			/* group: a fieldset with a legend; ownLabel: the component draws its label; otherwise a label around it. */
+			if (adapter.ownLabel) return h('div', { 'data-field': id, 'data-widget': widget, part: 'field widget' }, control);
+			return adapter.group
+				? h('fieldset', { 'data-field': id, 'data-widget': widget, part: 'field widget' }, h('legend', {}, this.#labelText(id, property)), control)
+				: h('label', { 'data-field': id, 'data-widget': widget, part: 'field widget' }, this.#labelText(id, property), control);
+		}
+		/* A calculated value: shown, never typed; the engine computes it from a variable. */
+		if (calculatedFrom(property) || widget === 'output') {
+			return h('label', { 'data-field': id, part: 'field output' }, this.#labelText(id, property), h('output', { name: id }));
 		}
 		/* Sent with the answers, never shown. The engine fills it from `from` or `default`. */
 		if (widget === 'hidden') {
@@ -240,7 +334,7 @@ export default class FormFlow extends HTMLElement {
 				h('span', {},
 					property.consent?.text ?? property.title ?? id,
 					noticeUrl ? [' ', h('a', { href: noticeUrl, target: '_blank', rel: 'noopener' }, notice.label ?? 'Privacy notice')] : null,
-					h('abbr', { title: 'Required', hidden: true }, '*'),
+					h('abbr', { title: this.#label('required-marker', 'Required'), hidden: true }, '*'),
 					property.description ? h('small', {}, property.description) : null));
 		}
 		/* Files stay in the browser until the final submit; the engine only sees { name, size, type }. */
@@ -261,31 +355,124 @@ export default class FormFlow extends HTMLElement {
 			);
 		}
 
-		let control;
+		if (property.type === 'list') return this.#renderList(id, property, value);
+		if (property.type === 'boolean') {
+			return h('label', { 'data-field': id, part: 'field' }, this.#control(id, property, value), this.#labelText(id, property));
+		}
+		if (widget === 'range') {
+			/* A slider shows its value next to it; ui/base form.css styles the track. */
+			return h('label', { 'data-field': id, part: 'field range' }, this.#labelText(id, property), this.#control(id, property, value), h('output', { 'data-of': id }));
+		}
+		const control = this.#control(id, property, value);
+		return h('label', { 'data-field': id, part: 'field' }, this.#labelText(id, property), control);
+	}
+
+	/* One native control for a plain value: a dropdown, a switch, a number, a slider, a text area or an input. */
+	#control(name, property, value, attributes = {}) {
+		const widget = property.ui?.widget;
+		const validation = property.validation ?? {};
+		const placeholder = property.ui?.placeholder;
 		if (property.type === 'select') {
-			control = h('select', { name: id },
+			return h('select', { name, ...attributes },
 				h('option', { value: '' }, ''),
-				choices.map(choice => h('option', { value: String(choice.value), selected: String(choice.value) === String(value) }, choice.label))
+				choicesOf(property).map(choice => h('option', { value: String(choice.value), selected: String(choice.value) === String(value) }, choice.label))
 			);
-		} else if (property.type === 'boolean') {
-			control = h('input', { type: 'checkbox', role: 'switch', name: id, checked: value === true });
-			return h('label', { 'data-field': id, part: 'field' }, control, this.#labelText(id, property));
-		} else if (property.type === 'number' || property.type === 'integer') {
-			control = h('input', {
-				type: 'number', name: id, value: value ?? '',
-				min: validation.minimum, max: validation.maximum,
-				step: property.type === 'integer' ? '1' : 'any'
-			});
-		} else if (widget === 'textarea') {
-			control = h('textarea', { name: id, placeholder, minLength: validation.minLength, maxLength: validation.maxLength }, value ?? '');
-		} else {
-			control = h('input', {
-				type: INPUT_TYPES.includes(widget) ? widget : 'text', name: id, value: value ?? '', placeholder,
-				pattern: validation.pattern?.replace(/^\^|\$$/g, ''),
-				minLength: validation.minLength, maxLength: validation.maxLength
+		}
+		if (property.type === 'boolean') return h('input', { type: 'checkbox', role: 'switch', name, checked: value === true, ...attributes });
+		if (widget === 'range') {
+			return h('input', {
+				type: 'range', name, value: value ?? '', ...attributes,
+				min: validation.minimum ?? 0, max: validation.maximum ?? 100,
+				step: property.ui?.step ?? (property.type === 'integer' ? '1' : 'any')
 			});
 		}
-		return h('label', { 'data-field': id, part: 'field' }, this.#labelText(id, property), control);
+		if (property.type === 'number' || property.type === 'integer') {
+			return h('input', {
+				type: 'number', name, value: value ?? '', ...attributes,
+				min: validation.minimum, max: validation.maximum,
+				step: property.ui?.step ?? (property.type === 'integer' ? '1' : 'any')
+			});
+		}
+		if (widget === 'textarea') return h('textarea', { name, placeholder, minLength: validation.minLength, maxLength: validation.maxLength, ...attributes }, value ?? '');
+		/* Type-ahead: suggestions from the field's service, in a native datalist. */
+		if (property.type === 'string' && property.options?.source) {
+			const list = `${this.id || 'form-flow'}-${name}-suggestions`;
+			return [h('input', { type: 'text', name, value: value ?? '', placeholder, autocomplete: 'off', list, ...attributes, minLength: validation.minLength, maxLength: validation.maxLength }), h('datalist', { id: list })];
+		}
+		return h('input', {
+			type: INPUT_TYPES.includes(widget) ? widget : 'text', name, value: value ?? '', placeholder, ...attributes,
+			pattern: validation.pattern?.replace(/^\^|\$$/g, ''),
+			minLength: validation.minLength, maxLength: validation.maxLength
+		});
+	}
+
+	/* A repeating group: rows of the same fields, as a table (ui.widget "table") or stacked, with add and remove. */
+	#renderList(id, property, value) {
+		const element = h('fieldset', { 'data-field': id, 'data-list': property.ui?.widget === 'table' ? 'table' : 'rows', part: 'field list' },
+			h('legend', {}, this.#labelText(id, property)));
+		const rows = Array.isArray(value) ? value : [];
+		const minimum = Math.max(property.validation?.minItems ?? 0, property.required ? 1 : 0);
+		const start = rows.length ? rows : Array.from({ length: Math.max(minimum, 1) }, () => ({}));
+		if (element.dataset.list === 'table') {
+			const items = Object.entries(property.items?.properties ?? {});
+			element.append(h('div', { part: 'table' }, h('table', {},
+				h('thead', {}, h('tr', {}, items.map(([key, item]) => h('th', { scope: 'col' }, this.#text(item.title ?? key))), h('td'))),
+				h('tbody', {}, start.map(row => this.#renderRow(id, property, row))))));
+		} else {
+			element.append(h('ol', { part: 'rows' }, start.map(row => this.#renderRow(id, property, row))));
+		}
+		element.append(h('button', { type: 'button', 'data-list-add': id }, this.#label('add-row', '+ Add row')));
+		return element;
+	}
+
+	#renderRow(id, property, row = {}) {
+		const table = property.ui?.widget === 'table';
+		const items = Object.entries(property.items?.properties ?? {});
+		const remove = h('button', { type: 'button', 'data-list-remove': id }, this.#label('remove-row', 'Remove'));
+		const cells = items.map(([key, item]) => {
+			const control = this.#control(`${id}.${key}`, item, row[key], { 'data-item': key });
+			if (table) {
+				[].concat(control)[0].setAttribute('aria-label', item.title ?? key);
+				return h('td', {}, control);
+			}
+			return item.type === 'boolean'
+				? h('label', { part: 'field' }, control, this.#text(item.title ?? key))
+				: h('label', { part: 'field' }, h('span', {}, this.#text(item.title ?? key)), control);
+		});
+		return table ? h('tr', { 'data-row': '' }, cells, h('td', {}, remove)) : h('li', { 'data-row': '' }, cells, remove);
+	}
+
+	/* Adds a row, or removes one; the last row is emptied instead of removed. */
+	#changeRows(id, row) {
+		const element = this.#fieldElement(id);
+		const property = this.#propertyOf(id);
+		if (!element || !property) return;
+		if (row && this.#listRows(element).length > 1) row.remove();
+		else if (row) row.querySelectorAll('[data-item]').forEach(control => { if (control.type === 'checkbox') control.checked = false; else control.value = ''; });
+		else {
+			const next = this.#renderRow(id, property);
+			this.#listRows(element).at(-1)?.after(next) ?? element.querySelector('tbody, ol').append(next);
+			next.querySelector('[data-item]')?.focus();
+		}
+		this.#values[id] = this.#readValue(id);
+		this.#tracking?.input(id);
+		this.update();
+	}
+
+	#listRows(element) {
+		return [...element.querySelectorAll('[data-row]')];
+	}
+
+	#readRow(id, row) {
+		const items = this.#propertyOf(id)?.items?.properties ?? {};
+		const value = {};
+		for (const control of row.querySelectorAll('[data-item]')) {
+			const item = items[control.dataset.item];
+			const raw = control.type === 'checkbox' ? control.checked : control.value;
+			const converted = item?.type === 'boolean' ? raw : this.#convertWith(item, raw);
+			if (converted !== undefined && !(item?.type === 'boolean' && converted === false)) value[control.dataset.item] = converted;
+		}
+		return value;
 	}
 
 	#fieldElement(id) {
@@ -324,7 +511,10 @@ export default class FormFlow extends HTMLElement {
 	/* === Values === */
 
 	#convert(id, raw) {
-		const property = this.#propertyOf(id);
+		return this.#convertWith(this.#propertyOf(id), raw);
+	}
+
+	#convertWith(property, raw) {
 		const choice = choicesOf(property).find(c => String(c.value) === raw);
 		if (choice) return choice.value;
 		if (property?.type === 'number' || property?.type === 'integer') return raw === '' ? undefined : Number(raw);
@@ -333,13 +523,23 @@ export default class FormFlow extends HTMLElement {
 
 	#propertyOf(id) {
 		const field = this.#form.fields.get(id);
-		if (field) return field.property;
-		return normalizeRuleSet(this.#rules).patches.find(patch => patch.fields?.[id])?.fields[id];
+		const property = field ? field.property : normalizeRuleSet(this.#rules).patches.find(patch => patch.fields?.[id])?.fields[id];
+		/* A sourced field gets the list its service returned as its choices. */
+		const list = this.#choices[id];
+		return list && property?.options?.source && property.type === 'select' ? { ...property, options: { ...property.options, choices: list } } : property;
 	}
 
 	#readValue(id) {
 		const element = this.#fieldElement(id);
 		if (!element) return undefined;
+		if (element.dataset.widget) {
+			const value = this.#widgets[element.dataset.widget]?.read(element.querySelector('[data-widget-control]'), this.#propertyOf(id));
+			return value === '' || value === null ? undefined : value;
+		}
+		if (element.dataset.list) {
+			const rows = this.#listRows(element).map(row => this.#readRow(id, row)).filter(row => Object.keys(row).length);
+			return rows.length ? rows : undefined;
+		}
 		const controls = [...element.querySelectorAll('input, select, textarea')];
 		const first = controls[0];
 		if (first?.type === 'file') {
@@ -356,6 +556,14 @@ export default class FormFlow extends HTMLElement {
 	#writeValue(id, value) {
 		const element = this.#fieldElement(id);
 		if (!element) return;
+		if (element.dataset.list) {
+			element.replaceWith(this.#renderField(id, this.#propertyOf(id)));
+			return;
+		}
+		if (element.dataset.widget) {
+			this.#widgets[element.dataset.widget]?.write?.(element.querySelector('[data-widget-control]'), value, this.#propertyOf(id));
+			return;
+		}
 		const controls = [...element.querySelectorAll('input, select, textarea')];
 		const wanted = (Array.isArray(value) ? value : [value]).map(String);
 		for (const control of controls) {
@@ -370,8 +578,9 @@ export default class FormFlow extends HTMLElement {
 	}
 
 	#onInput(event) {
-		const id = event.target.name;
+		const id = event.target.closest('[data-list], [data-widget]')?.dataset.field ?? event.target.name;
 		if (!id || !this.#fieldElement(id)) return;
+		if (event.type === 'input' && event.target.list) this.#suggest(id, event.target);
 		this.#values[id] = this.#readValue(id);
 		this.#tracking?.input(id);
 		this.update();
@@ -390,6 +599,8 @@ export default class FormFlow extends HTMLElement {
 				step: { current: this.#current },
 				today: localToday(),
 				functions: this.#functions,
+				choices: this.#choices,
+				messages: this.#locale?.messages,
 				previous: this.#previous ? { matched: this.#previous } : undefined
 			});
 		} catch (error) {
@@ -400,6 +611,7 @@ export default class FormFlow extends HTMLElement {
 		this.#state = state;
 		this.#syncPatchFields(state);
 		this.#applyFields(state);
+		this.#applyTexts(state);
 		this.#applySteps(state);
 		this.#applyExplain(state);
 		this.#tracking?.update(state, this.#current, state.effects);
@@ -412,6 +624,23 @@ export default class FormFlow extends HTMLElement {
 		for (const [id, field] of Object.entries(state.fields)) {
 			const element = this.#fieldElement(id);
 			if (!element) continue;
+			if (element.dataset.list) {
+				this.#applyList(id, element, field, state);
+				continue;
+			}
+			if (element.dataset.widget) {
+				element.hidden = !field.visible;
+				const control = element.querySelector('[data-widget-control]');
+				control.toggleAttribute('disabled', !field.visible || !field.enabled);
+				control.toggleAttribute('required', field.required);
+				const marker = element.querySelector('abbr');
+				if (marker) marker.hidden = !field.required;
+				if (state.explain[`${id}.value`]) {
+					this.#values[id] = state.values[id];
+					this.#writeValue(id, state.values[id]);
+				}
+				continue;
+			}
 			const controls = [...element.querySelectorAll('input, select, textarea')];
 			const group = element.tagName === 'FIELDSET';
 			element.hidden = !field.visible || element.hasAttribute('data-hidden-value');
@@ -446,14 +675,55 @@ export default class FormFlow extends HTMLElement {
 			let note = element.nextElementSibling?.matches('[part="warning"]') ? element.nextElementSibling : null;
 			if (warning && field.visible) {
 				if (!note) element.after(note = h('small', { part: 'warning', role: 'status' }));
-				note.textContent = warning.message;
+				note.textContent = this.#fill(warning.message, state);
 			} else note?.remove();
-			if (error) first?.setCustomValidity(error.message);
-			else if (unavailable.has(id)) first?.setCustomValidity(this.getAttribute('label-unavailable') ?? 'This option is no longer available');
+			if (error) first?.setCustomValidity(this.#fill(error.message, state));
+			else if (unavailable.has(id)) first?.setCustomValidity(this.#label('unavailable', 'This option is no longer available'));
 			else if (group && field.required && controls[0]?.type === 'checkbox' && isEmpty(this.#values[id])) {
-				first?.setCustomValidity(this.getAttribute('label-required') ?? 'Choose at least one');
+				first?.setCustomValidity(this.#label('required', 'Choose at least one'));
 			}
 		}
+	}
+
+	/* Row issues ({ row, item }) count rows with a value, as the engine does: empty rows are not submitted. */
+	#applyList(id, element, field, state) {
+		const property = this.#propertyOf(id);
+		element.hidden = !field.visible;
+		element.disabled = !field.visible || !field.enabled;
+		const marker = element.querySelector('legend abbr');
+		if (marker) marker.hidden = !field.required;
+		const rows = this.#listRows(element);
+		const filled = rows.filter(row => Object.keys(this.#readRow(id, row)).length);
+		const issues = state.issues.filter(issue => issue.field === id);
+		const items = property?.items?.properties ?? {};
+		/* A row field is required once its row has a value; the first row also when the group itself is required. */
+		rows.forEach((row, index) => row.querySelectorAll('[data-item]').forEach(control => {
+			control.required = items[control.dataset.item]?.required === true && (filled.includes(row) || (field.required && index === 0));
+			control.setCustomValidity('');
+		}));
+		for (const issue of issues) {
+			if (issue.row === undefined) continue;
+			const control = filled[issue.row]?.querySelector(`[data-item="${CSS.escape(issue.item)}"]`);
+			const text = issue.message ? this.#fill(issue.message, state) : issue.code === 'option-unavailable' ? (this.#label('unavailable', 'This option is no longer available')) : null;
+			if (control && text) control.setCustomValidity(text);
+		}
+		const own = issues.find(issue => issue.row === undefined && issue.message && issue.level !== 'warning');
+		const first = rows[0]?.querySelector('[data-item]');
+		if (own) first?.setCustomValidity(this.#fill(own.message, state));
+		else if (field.required && !filled.length) first?.setCustomValidity(this.#label('required-row', 'Add at least one row'));
+		const add = element.querySelector('[data-list-add]');
+		if (add) add.disabled = typeof property?.validation?.maxItems === 'number' && rows.length >= property.validation.maxItems;
+	}
+
+	#applyTexts(state) {
+		for (const [node, text] of this.#templates) {
+			if (!this.#element?.contains(node)) this.#templates.delete(node);
+			else node.data = this.#fill(text, state);
+		}
+		this.querySelectorAll('output[name], output[data-of]').forEach(output => {
+			const id = output.getAttribute('name') ?? output.dataset.of;
+			output.value = this.#formatValue(state.values[id], this.#propertyOf(id));
+		});
 	}
 
 	#applySteps(state) {
@@ -492,6 +762,8 @@ export default class FormFlow extends HTMLElement {
 		for (const effect of state.effects) {
 			if (effect.type === 'emit') {
 				this.#dispatch('ff:emit', { type: effect.event, data: effect.data, rule: effect.rule, where: effect.where });
+			} else if (effect.type === 'options' && !this.#requests.has(effect.key)) {
+				this.#fetchChoices(effect);
 			} else if (effect.type === 'fetch' && !this.#requests.has(effect.key)) {
 				const request = this.#fetchPatch(effect);
 				if (effect.wait) {
@@ -524,6 +796,51 @@ export default class FormFlow extends HTMLElement {
 			this.#tracking?.service('error', { service: effect.service, ms: ms(), status });
 			this.#dispatch('ff:error', { error, effect });
 		}
+	}
+
+	/* A sourced choice list: the reply is [{ value, label }] (or { choices: [...] }); the field is drawn again with it. */
+	async #fetchChoices(effect) {
+		this.#requests.set(effect.key, 'pending');
+		const service = normalizeRuleSet(this.#rules).services[effect.service] ?? {};
+		try {
+			let reply;
+			if (this.fetcher) reply = await this.fetcher(effect, service);
+			if (reply === undefined) reply = await this.#request(effect, service);
+			const list = (Array.isArray(reply) ? reply : reply?.choices ?? []).map(choice => (choice && typeof choice === 'object' ? { value: choice.value, label: String(choice.label ?? choice.value) } : { value: choice, label: String(choice) }));
+			this.#requests.set(effect.key, 'done');
+			this.#choices[effect.field] = list;
+			const element = this.#fieldElement(effect.field);
+			element?.replaceWith(this.#renderField(effect.field, this.#propertyOf(effect.field)));
+			this.update();
+		} catch (error) {
+			this.#requests.set(effect.key, 'error');
+			this.#dispatch('ff:error', { error, effect });
+		}
+	}
+
+	/* Asks the field's service for suggestions once typing pauses: GET adds q, POST sends it with the answers. */
+	#suggest(id, input) {
+		clearTimeout(this.#suggestTimers.get(id));
+		const property = this.#propertyOf(id);
+		const name = property?.options?.source;
+		const text = input.value.trim();
+		if (!name || text.length < (property.options.minLength ?? 2)) return;
+		this.#suggestTimers.set(id, setTimeout(async () => {
+			const service = normalizeRuleSet(this.#rules).services[name] ?? {};
+			const send = Object.fromEntries((service.send ?? []).map(field => [field, this.#state?.values[field] ?? null]));
+			const effect = { type: 'suggest', field: id, service: name, url: service.url, send: { ...send, q: text } };
+			try {
+				let reply;
+				if (this.fetcher) reply = await this.fetcher(effect, service);
+				if (reply === undefined) reply = await this.#request(effect, service);
+				const list = Array.isArray(reply) ? reply : reply?.choices ?? [];
+				input.list?.replaceChildren(...list.slice(0, property.options.max ?? 10).map(item => (item && typeof item === 'object'
+					? h('option', { value: String(item.value ?? item.label) }, item.label && item.label !== item.value ? String(item.label) : '')
+					: h('option', { value: String(item) }))));
+			} catch (error) {
+				this.#dispatch('ff:error', { error, effect });
+			}
+		}, 250));
 	}
 
 	/* POST sends the values as JSON; GET sends them as query parameters (a static file works as a service). */

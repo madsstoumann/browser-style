@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Form widget packages</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="color-scheme" content="light dark">
+	<meta name="description" content="Optional widget packages for form-flow: rich text, search suggestions and a spreadsheet grid, loaded only when a form uses them.">
+	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="../step/ui-step.css">
+	<link rel="stylesheet" href="../form-flow/index.css">
+	<style>
+		body { max-inline-size: 70ch; margin-inline: auto; padding: 2ch; }
+		.demo-log { font-size: smaller; max-block-size: 16em; overflow: auto; overflow-wrap: anywhere; }
+	</style>
+</head>
+<body>
+	<main>
+		<h1>UI: Components &gt; FormFlow &gt; Widget packages</h1>
+		<p>
+			Three optional packages give <code>&lt;form-flow&gt;</code> heavier controls: <a href="suggest/readme.md">search suggestions</a>
+			with <code>&lt;auto-suggest&gt;</code>, a <a href="grid/readme.md">spreadsheet</a> with <code>&lt;data-grid&gt;</code> for a repeating group,
+			and <a href="rich-text/readme.md">formatted text</a> with <code>&lt;rich-text&gt;</code>. The page names the packages in the
+			<code>packages</code> attribute; each component is only downloaded when a field uses it.
+		</p>
+
+		<form-flow form="demo.form.json" rules="demo.rules.json" packages="suggest/types.json grid/types.json rich-text/types.json"></form-flow>
+
+		<h2>Submitted</h2>
+		<pre class="demo-log" id="log"></pre>
+	</main>
+	<script type="module">
+		import '../form-flow/index.js';
+		const flow = document.querySelector('form-flow');
+		flow.addEventListener('ff:submit', ({ detail }) => { document.getElementById('log').textContent = JSON.stringify(detail.values, null, 2); });
+		flow.addEventListener('ff:error', ({ detail }) => console.error(detail.error ?? detail.errors));
+	</script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+{
+	"locale": "de",
+	"labels": {
+		"prev": "Zurück",
+		"next": "Weiter",
+		"submit": "Senden",
+		"required": "Bitte mindestens eine Option wählen",
+		"unavailable": "Diese Option ist nicht mehr verfügbar",
+		"add-row": "+ Zeile hinzufügen",
+		"remove-row": "Entfernen",
+		"required-row": "Bitte mindestens eine Zeile hinzufügen",
+		"required-marker": "Pflichtfeld",
+		"explain": "Warum",
+		"yes": "ja",
+		"no": "nein"
+	},
+	"messages": {
+		"minimum": "Muss mindestens {limit} sein",
+		"maximum": "Darf höchstens {limit} sein",
+		"minLength": "Mindestens {limit} Zeichen",
+		"maxLength": "Höchstens {limit} Zeichen",
+		"pattern": "Entspricht nicht dem erwarteten Format",
+		"maxFiles": "Höchstens {limit} Dateien",
+		"maxSize": "Jede Datei darf höchstens {limit} groß sein",
+		"accept": "Erlaubte Dateitypen: {limit}",
+		"minItems": "Mindestens {limit} Zeilen",
+		"maxItems": "Höchstens {limit} Zeilen"
+	}
+}

@@ -27,3 +27,21 @@ export function daysBetween(from, to) {
 	const b = isoDate(to);
 	return a && b ? Math.round((Date.parse(b) - Date.parse(a)) / 864e5) : null;
 }
+
+const PARTS = ['year', 'month', 'day', 'weekday', 'week'];
+
+/* One part of an ISO date as a number: year, month, day, weekday (Monday 1 … Sunday 7) or ISO week. */
+export function datePart(value, part) {
+	const date = isoDate(value);
+	if (!date || !PARTS.includes(part)) return null;
+	const [y, m, d] = date.split('-').map(Number);
+	if (part === 'year') return y;
+	if (part === 'month') return m;
+	if (part === 'day') return d;
+	const utc = new Date(Date.UTC(y, m - 1, d));
+	const weekday = utc.getUTCDay() || 7;
+	if (part === 'weekday') return weekday;
+	utc.setUTCDate(d + 4 - weekday);
+	const yearStart = Date.UTC(utc.getUTCFullYear(), 0, 1);
+	return Math.ceil(((utc - yearStart) / 864e5 + 1) / 7);
+}
