@@ -20,6 +20,7 @@ const choicesOf = property => property?.options?.choices ?? [];
 
 /* Operators that make sense for a field, as [op, words]. */
 function operatorsFor(property) {
+	if (property?.type === 'list') return ['filled', 'empty'].map(op => [op, OPERATOR_WORDS[op]]);
 	const ops = ['===', '!=='];
 	const choices = choicesOf(property);
 	const numericChoices = choices.length && choices.every(c => typeof c.value === 'number');
@@ -352,7 +353,7 @@ function servicesEditor(editor, commitRules) {
 	const fieldIds = stepsOf(form).flatMap(step => step.fields);
 	return h('details', { part: 'services', open: Object.keys(services).length > 0 },
 		h('summary', {}, `Services (${Object.keys(services).length})`),
-		h('p', {}, h('small', {}, 'A rule can fetch extra fields and rules from a service. The preview uses the sample reply, or calls the URL when there is none. Samples are not exported.')),
+		h('p', {}, h('small', {}, 'A rule can fetch extra fields and rules from a service, and a choice or type-ahead field can take its list from one. The preview uses the sample reply, or calls the URL when there is none. Samples are not exported.')),
 		Object.entries(services).map(([name, service]) => h('fieldset', { part: 'service' },
 			h('legend', {}, name),
 			field('URL', h('input', { type: 'url', value: service.url ?? '', onchange: e => commitRules(f => { f.services[name].url = e.target.value; }) })),

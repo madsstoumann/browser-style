@@ -316,7 +316,11 @@ export class FormEditor extends HTMLElement {
 	async #sampleReply(effect) {
 		const text = this.samples[effect.service];
 		if (!text) return undefined;
-		return { ...JSON.parse(text), expires: new Date(Date.now() + 36e5).toISOString() };
+		const reply = JSON.parse(text);
+		/* A list service's sample is the list; type-ahead keeps the entries that contain the typed text. */
+		if (effect.type === 'options') return reply;
+		if (effect.type === 'suggest') return (Array.isArray(reply) ? reply : []).filter(item => String(item?.label ?? item?.value ?? item).toLowerCase().includes(effect.send.q.toLowerCase()));
+		return { ...reply, expires: new Date(Date.now() + 36e5).toISOString() };
 	}
 
 	/* === Status, import, export === */

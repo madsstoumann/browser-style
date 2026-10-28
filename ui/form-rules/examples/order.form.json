@@ -32,7 +32,7 @@
 			"subtotal": { "kind": "calculated", "type": "number", "title": "Subtotal", "from": "vars.subtotal", "ui": { "widget": "output", "format": { "style": "currency", "currency": "DKK" } } },
 			"total": { "kind": "calculated", "type": "number", "title": "Total with tip", "from": "vars.total", "ui": { "widget": "output", "format": { "style": "currency", "currency": "DKK" } } },
 			"country": { "kind": "select", "type": "select", "title": "Country", "required": true, "options": { "choices": [{ "value": "dk", "label": "Denmark" }, { "value": "se", "label": "Sweden" }] } },
-			"city": { "kind": "select", "type": "select", "title": "City", "required": true, "description": "The list comes from a service and depends on the country", "options": { "source": "cities" } },
+			"city": { "kind": "lookup", "type": "select", "title": "City", "required": true, "description": "The list comes from a service and depends on the country", "options": { "source": "cities" } },
 			"street": { "kind": "suggest", "type": "string", "title": "Street", "required": true, "privacy": "personal", "description": "Type two letters for suggestions", "ui": { "widget": "suggest" }, "options": { "source": "streets" } },
 			"date": { "kind": "date", "type": "string", "title": "Delivery date", "required": true, "ui": { "widget": "date" } },
 			"email": { "kind": "email", "type": "string", "title": "Email for the receipt", "required": true, "privacy": "personal", "ui": { "widget": "email" } },
