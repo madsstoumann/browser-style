@@ -26,6 +26,8 @@
 		const editor = document.querySelector('form-editor');
 		/* The installed field type packages (core is always there). The Danish and banking packages bring their checks. */
 		editor.setAttribute('types', '../form-types/dk/types.json ../form-types/banking/types.json');
+		/* Snippets: groups of fields (with their rules) offered in the same picker. */
+		editor.setAttribute('snippets', 'snippets/address.json snippets/contact.json snippets/consent.json');
 		Object.entries(example).forEach(([name, value]) => editor.setAttribute(name, value));
 		await import('./index.js');
 	</script>

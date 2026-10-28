@@ -4,6 +4,7 @@
  */
 import { h, field, check, select, button } from './dom.js';
 import { addField, addStep, clone, fieldId, moveItem, removeField, removeStep, renameField, renameStep, rulesUsingField, stepOfField, stepsOf } from './model.js';
+import { insertSnippet } from './snippets.js';
 import { changeType, fieldFromType, groupTypes, searchTypes, typeOf } from '../../form-rules/index.js';
 
 /* Settings for a field whose type no installed package describes. */
@@ -29,7 +30,7 @@ const titleOf = (editor, id) => {
 
 /* === The type picker: a searchable list, grouped; types from packages other than core come last, under their package === */
 
-export function pickType(editor, { title = 'Add a field', current = null, onpick }) {
+export function pickType(editor, { title = 'Add a field', current = null, onpick, onsnippet = null }) {
 	const registry = editor.types;
 	const search = h('input', { type: 'search', placeholder: 'Search field types', 'aria-label': 'Search field types', autocomplete: 'off' });
 	const list = h('div', { part: 'type-list' });
@@ -46,8 +47,17 @@ export function pickType(editor, { title = 'Add a field', current = null, onpick
 		h('span', { part: 'badge' }, type.glyph ?? '?'),
 		h('span', {}, h('strong', {}, type.title), type.description ? h('small', {}, type.description) : null)
 	], () => choose(type), { 'aria-current': current === type.kind ? 'true' : null, 'data-kind': type.kind }));
+	const snippetItem = snippet => h('li', {}, button([
+		h('span', { part: 'badge' }, '⧉'),
+		h('span', {}, h('strong', {}, snippet.title ?? snippet.snippet), h('small', {}, snippet.description ?? `${(snippet.fields ?? Object.keys(snippet.properties)).length} fields`))
+	], () => { dialog.close(); onsnippet(snippet); }, { 'data-snippet': snippet.snippet }));
+	const matchingSnippets = () => {
+		const words = search.value.toLowerCase().split(/\s+/).filter(Boolean);
+		return onsnippet ? (editor.snippets ?? []).filter(snippet => words.every(word => [snippet.title, snippet.description, snippet.snippet, ...(snippet.keywords ?? [])].join(' ').toLowerCase().includes(word))) : [];
+	};
 	const draw = () => {
 		const found = searchTypes(registry, search.value);
+		const snippets = matchingSnippets();
 		const own = found.filter(type => type.package === 'core');
 		const installed = registry.packages.filter(entry => entry.package !== 'core')
 			.map(entry => ({ entry, types: found.filter(type => type.package === entry.package) }))
@@ -56,7 +66,8 @@ export function pickType(editor, { title = 'Add a field', current = null, onpick
 			...groupTypes(registry, own).map(group => h('section', {}, h('h3', {}, group.group), h('ul', {}, group.types.map(item)))),
 			installed.length ? h('section', { part: 'installed' }, h('h3', {}, INSTALLED),
 				installed.map(({ entry, types }) => [h('h4', {}, entry.title), h('ul', {}, types.map(item))])) : null,
-			found.length ? null : h('p', {}, `No field type matches "${search.value}". Install a type package to add more.`)
+			snippets.length ? h('section', { part: 'snippets' }, h('h3', {}, 'Snippets: several fields at once'), h('ul', {}, snippets.map(snippetItem))) : null,
+			found.length || snippets.length ? null : h('p', {}, `No field type matches "${search.value}". Install a type package to add more.`)
 		].filter(Boolean));
 	};
 	search.addEventListener('input', draw);
@@ -98,6 +109,11 @@ export function renderOutline(editor) {
 					const result = addField(form, step.id, null, fieldFromType(type));
 					editor.commit({ form: result.form });
 					editor.select({ view: 'form', step: step.id, field: result.id });
+				},
+				onsnippet: snippet => {
+					const result = insertSnippet(form, editor.rules, snippet, step.id);
+					editor.commit({ form: result.form, rules: result.rules });
+					editor.select({ view: 'form', step: step.id, field: result.fields[0] ?? null });
 				}
 			}), { part: 'add' })
 		))),

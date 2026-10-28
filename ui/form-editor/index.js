@@ -9,6 +9,7 @@ import { h, button } from './modules/dom.js';
 import { asUcf, clone, emptyForm, emptyRules } from './modules/model.js';
 import { renderOutline, renderFormView } from './modules/view-form.js';
 import { renderRulesView } from './modules/view-rules.js';
+import { loadSnippets } from './modules/snippets.js';
 
 const DRAFT_KEY = 'form-editor:draft';
 const CORE_TYPES = new URL('../form-rules/types/core.json', import.meta.url).href;
@@ -48,6 +49,8 @@ export class FormEditor extends HTMLElement {
 	form = emptyForm();
 	rules = emptyRules(this.form.id);
 	samples = {};
+	/* Snippets offered in the field picker: from the `snippets` attribute (URLs), or set directly. */
+	snippets = [];
 	selection = { view: 'form', step: null, field: null, rule: null };
 	advanced = false;
 	#past = [];
@@ -68,6 +71,11 @@ export class FormEditor extends HTMLElement {
 		if (this.getAttribute('form')) this.#draftKey = `${DRAFT_KEY}:${this.getAttribute('form')}`;
 		const draft = storage.read(this.#draftKey);
 		await this.#loadTypes();
+		if (this.getAttribute('snippets')) {
+			const { snippets, errors } = await loadSnippets(this.getAttribute('snippets').split(/\s+/).filter(Boolean).map(url => new URL(url, document.baseURI).href));
+			this.snippets = snippets;
+			if (errors.length) this.#message = errors.map(error => error.message).join('. ');
+		}
 		if (this.getAttribute('functions')) {
 			try {
 				const module = await import(new URL(this.getAttribute('functions'), document.baseURI));

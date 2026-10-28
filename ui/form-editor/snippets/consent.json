@@ -1,0 +1,11 @@
+{
+	"snippet": "consent",
+	"title": "Privacy note and consent",
+	"description": "A short privacy note and a consent box with the notice version",
+	"keywords": ["gdpr", "privacy", "consent", "agree", "terms"],
+	"fields": ["privacyNote", "consent"],
+	"properties": {
+		"privacyNote": { "kind": "text-block", "type": "content", "title": "How we use your details", "content": "We use your details only to answer you, and delete them when we are done." },
+		"consent": { "kind": "consent", "type": "boolean", "required": true, "ui": { "widget": "consent" }, "consent": { "text": "I agree that you may store my details to answer me.", "notice": { "label": "Privacy notice", "url": "", "version": "1" } } }
+	}
+}
