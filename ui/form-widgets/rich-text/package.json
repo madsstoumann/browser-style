@@ -1,0 +1,44 @@
+{
+  "name": "@browser.style/form-widget-rich-text",
+  "version": "0.1.0",
+  "description": "Rich-text widget for @browser.style/form-flow: formatted text with <rich-text>, cleaned to an allowlist of tags.",
+  "type": "module",
+  "module": "widgets.js",
+  "exports": {
+    ".": "./widgets.js",
+    "./types.json": "./types.json"
+  },
+  "files": [
+    "widgets.js",
+    "types.json",
+    "readme.md"
+  ],
+  "peerDependencies": {
+    "@browser.style/form-flow": "^0.1.0",
+    "@browser.style/form-rules": "^0.1.0",
+    "@browser.style/rich-text": "^1.0.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "browser.style",
+    "form",
+    "form-flow",
+    "widget",
+    "rich-text",
+    "wysiwyg"
+  ],
+  "author": "Mads Stoumann",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/form-widgets/rich-text"
+  },
+  "bugs": {
+    "url": "https://github.com/madsstoumann/browser-style/issues"
+  },
+  "homepage": "https://browser.style/ui/form-widgets/rich-text"
+}

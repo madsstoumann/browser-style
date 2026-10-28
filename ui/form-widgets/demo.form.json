@@ -1,0 +1,24 @@
+{
+	"$schema": "../form-rules/schemas/form-definition.schema.json",
+	"id": "form-widgets-demo",
+	"model": "form-definition",
+	"meta": { "locale": "en", "status": "published", "version": 1 },
+	"fields": {
+		"title": "Widget packages",
+		"structure": { "layout": [{ "area": "main", "type": "step", "id": "one", "name": "Your expenses", "fields": ["street", "expenses", "total", "comment"] }] },
+		"type": "object",
+		"properties": {
+			"street": { "kind": "suggest/search", "type": "string", "title": "Street", "ui": { "widget": "auto-suggest", "placeholder": "Type two letters" }, "options": { "source": "streets" } },
+			"expenses": {
+				"kind": "grid/sheet",
+				"type": "list",
+				"title": "Expenses",
+				"ui": { "widget": "data-grid" },
+				"items": { "properties": { "item": { "type": "string", "title": "Item", "required": true }, "amount": { "type": "number", "title": "Amount", "validation": { "minimum": 0 } } } },
+				"validation": { "maxItems": 20 }
+			},
+			"total": { "kind": "calculated", "type": "number", "title": "Total", "from": "vars.total", "ui": { "widget": "output", "format": { "style": "currency", "currency": "EUR" } } },
+			"comment": { "kind": "rich-text/text", "type": "string", "title": "Comment", "ui": { "widget": "rich-text" }, "validation": { "maxLength": 2000 } }
+		}
+	}
+}

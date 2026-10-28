@@ -1,6 +1,6 @@
 /**
  * Field types as data. A package is a JSON document listing the types it adds:
- * { package, title, description?, version?, functions?, types: [{ kind, title, description, group, glyph,
+ * { package, title, description?, version?, functions?, widgets?, types: [{ kind, title, description, group, glyph,
  *   keywords?, privacy?, template, settings? }] }
  * The core package is types/core.json; country and domain packages (CPR, IBAN, …) are installed on their own.
  * Everything here is pure, so an editor in another host can bundle it (loadTypes only fetches what it is given).
@@ -151,11 +151,20 @@ export function groupTypes(registry, types = registry.types) {
 	return groups;
 }
 
-/* Like loadTypes, and also imports each package's `functions` module (relative to its types.json): { …registry, functions }. */
-export async function loadPackages(sources, { fetch: get, base, load = url => import(url) } = {}) {
+/* Like loadTypes, and also imports each package's `functions` module (relative to its types.json): { …registry, functions }.
+   With { widgets: true } (a browser host) it also imports each package's `widgets` module: { …, widgets: { name: adapter } }. */
+export async function loadPackages(sources, { fetch: get, base, load = url => import(url), widgets: withWidgets = false } = {}) {
 	const registry = await loadTypes(sources, { fetch: get, base });
 	const functions = {};
+	const widgets = {};
 	for (const entry of registry.packages) {
+		if (withWidgets && entry.widgets && entry.url) {
+			const module = await load(new URL(entry.widgets, entry.url).href);
+			for (const [name, adapter] of Object.entries(module.default ?? module.widgets ?? {})) {
+				if (widgets[name] && widgets[name] !== adapter) registry.errors.push({ code: 'widgets', message: `The widget "${name}" is provided twice (again by "${entry.package}")`, package: entry.package });
+				else widgets[name] = adapter;
+			}
+		}
 		if (!entry.functions) continue;
 		if (!entry.url) {
 			registry.errors.push({ code: 'functions', message: `"${entry.package}" names functions, but was not loaded from a URL to find them from`, package: entry.package });
@@ -167,5 +176,5 @@ export async function loadPackages(sources, { fetch: get, base, load = url => im
 			else functions[name] = fn;
 		}
 	}
-	return { ...registry, functions };
+	return withWidgets ? { ...registry, functions, widgets } : { ...registry, functions };
 }

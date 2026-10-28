@@ -1,0 +1,11 @@
+{
+	"$schema": "../../form-rules/schemas/form-types.schema.json",
+	"package": "grid",
+	"title": "Spreadsheet grid",
+	"description": "A repeating group drawn as an editable spreadsheet with <data-grid>.",
+	"version": "0.1.0",
+	"widgets": "./widgets.js",
+	"types": [
+		{ "kind": "grid/sheet", "title": "Spreadsheet", "description": "Rows and columns typed like a spreadsheet: budgets, time sheets, inventories", "group": "Choices", "glyph": "▦", "keywords": ["grid", "spreadsheet", "table", "matrix", "data-grid", "rows"], "template": { "type": "list", "ui": { "widget": "data-grid" }, "items": { "properties": { "item": { "type": "string", "title": "Item" }, "amount": { "type": "number", "title": "Amount" } } } }, "settings": ["items", "rows"] }
+	]
+}

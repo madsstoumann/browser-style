@@ -1,0 +1,45 @@
+{
+  "name": "@browser.style/form-widget-suggest",
+  "version": "0.1.0",
+  "description": "Type-ahead widget for @browser.style/form-flow: search suggestions from a service with <auto-suggest>.",
+  "type": "module",
+  "module": "widgets.js",
+  "exports": {
+    ".": "./widgets.js",
+    "./types.json": "./types.json"
+  },
+  "files": [
+    "widgets.js",
+    "types.json",
+    "readme.md",
+    "auto-suggest.css"
+  ],
+  "peerDependencies": {
+    "@browser.style/form-flow": "^0.1.0",
+    "@browser.style/form-rules": "^0.1.0",
+    "@browser.style/auto-suggest": "^1.0.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "browser.style",
+    "form",
+    "form-flow",
+    "widget",
+    "autocomplete",
+    "auto-suggest"
+  ],
+  "author": "Mads Stoumann",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/form-widgets/suggest"
+  },
+  "bugs": {
+    "url": "https://github.com/madsstoumann/browser-style/issues"
+  },
+  "homepage": "https://browser.style/ui/form-widgets/suggest"
+}

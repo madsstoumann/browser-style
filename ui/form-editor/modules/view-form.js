@@ -270,7 +270,7 @@ function fieldInspector(editor, id) {
 		settings.has('files') ? filesEditor(property.validation ?? {}, setIn) : null,
 		settings.has('calculated') ? calculatedEditor(property) : null,
 		settings.has('optionSource') ? field('Ask this service', select([['', '…'], ...Object.keys(rules.fields.services ?? {})], property.options?.source ?? '', value => update(p => { p.options = { ...(p.options ?? {}), source: value }; })),
-			property.ui?.widget === 'suggest' ? 'Called as the person types, with q set to the text' : 'It returns the list as [{ value, label }]; add services under Rules') : null,
+			property.type === 'string' ? 'Called as the person types, with q set to the text' : 'It returns the list as [{ value, label }]; add services under Rules') : null,
 		settings.has('items') ? itemsEditor(property) : null,
 		settings.has('rows') ? h('div', { part: 'row' },
 			field('Fewest rows', h('input', { type: 'number', min: 0, value: validation.minItems ?? '', onchange: e => setIn('validation', 'minItems', e.target.value === '' ? '' : Number(e.target.value)) })),

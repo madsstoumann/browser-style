@@ -31,9 +31,9 @@ function decide(contributions, restrictive) {
 	return { value, rules: winners.filter(c => c.value === value).map(c => c.rule) };
 }
 
-/* A choice field whose list comes from a service: options.source names it. Type-ahead fields (ui.widget suggest) only suggest. */
+/* A choice field (select) whose list comes from a service: options.source names it. On a text field the service only suggests. */
 export const sourceOf = property => (typeof property?.options?.source === 'string' ? property.options.source : null);
-const isSuggest = property => property?.ui?.widget === 'suggest';
+const isSuggest = property => property?.type !== 'select';
 /* The list a host fetched for a sourced field (input.choices[id]): [{ value, label }] or plain values. */
 const suppliedChoices = list => (Array.isArray(list) ? list.map(choice => (choice && typeof choice === 'object' ? choice.value : choice)) : null);
 

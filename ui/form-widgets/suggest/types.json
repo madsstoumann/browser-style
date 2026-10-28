@@ -1,0 +1,11 @@
+{
+	"$schema": "../../form-rules/schemas/form-types.schema.json",
+	"package": "suggest",
+	"title": "Search suggestions",
+	"description": "Type-ahead with <auto-suggest> as the control: keyboard navigation, a popover list and status text.",
+	"version": "0.1.0",
+	"widgets": "./widgets.js",
+	"types": [
+		{ "kind": "suggest/search", "title": "Search with suggestions", "description": "Text with a list of matches from a service as the person types", "group": "Choices", "glyph": "⌕+", "keywords": ["autocomplete", "auto-suggest", "typeahead", "search", "lookup"], "template": { "type": "string", "ui": { "widget": "auto-suggest" }, "options": { "source": "" } }, "settings": ["optionSource", "placeholder"] }
+	]
+}

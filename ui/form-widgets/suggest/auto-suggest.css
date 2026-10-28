@@ -1,0 +1,16 @@
+:host { display: block; }
+[part=row] { display: grid; gap: var(--label-gap, .25rem); }
+[part=input] {
+	background: var(--color-field, Field);
+	block-size: var(--input-block-size, 2.5rem);
+	border: var(--input-border-width, 1px) solid var(--color-border, GrayText);
+	border-radius: var(--input-radius, .25em);
+	box-sizing: border-box;
+	color: inherit;
+	font: inherit;
+	inline-size: 100%;
+	padding: var(--input-padding-block, .5rem) var(--input-padding-inline, 1.25ch);
+	&:focus-visible { border-color: var(--ring-color, Highlight); outline: var(--ring-width, 2px) solid var(--ring-color, Highlight); outline-offset: var(--ring-offset, 0); }
+}
+[part=list][popover] { background: var(--color-surface, Canvas); border: 1px solid var(--color-border, GrayText); margin: 0; padding: 0; position-area: block-end span-inline-end; }
+[part=slots] { font-size: smaller; }

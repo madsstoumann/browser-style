@@ -4,7 +4,7 @@
  * Fields are plain native controls in light DOM, so @browser.style/base form.css styles them.
  * Every input re-evaluates the rules; the engine's effects (fetch, emit) are carried out here.
  */
-import { calculatedFrom, consentRecords, evaluate, expirePatches, fillText, handleEvent, merge, normalizeForm, normalizeRuleSet, placeholdersOf, privacyOf, safeUrl } from '../form-rules/index.js';
+import { calculatedFrom, consentRecords, evaluate, expirePatches, fillText, handleEvent, loadPackages, merge, normalizeForm, normalizeRuleSet, placeholdersOf, privacyOf, safeUrl } from '../form-rules/index.js';
 import { FlowTracking, validityCode } from './tracking.js';
 
 const INPUT_TYPES = ['color', 'date', 'datetime-local', 'email', 'month', 'password', 'search', 'tel', 'time', 'url', 'week'];
@@ -54,6 +54,8 @@ export default class FormFlow extends HTMLElement {
 	#element;
 	/* Lists fetched for sourced choice fields: { [id]: [{ value, label }] } */
 	#choices = {};
+	/* Controls for ui.widget values beyond the native ones, from widget packages: { name: adapter } (readme § Widgets) */
+	#widgets = {};
 	/* A language pack (locales/*.json): { locale, labels, messages } */
 	#locale = null;
 	#suggestTimers = new Map();
@@ -102,6 +104,13 @@ export default class FormFlow extends HTMLElement {
 	async load() {
 		try {
 			if (this.getAttribute('locale')) this.#locale = await fetchJSON(new URL(this.getAttribute('locale'), document.baseURI));
+			/* Type packages: their checks become functions, their widgets controls. The page's own functions win. */
+			if (this.getAttribute('packages')) {
+				const registry = await loadPackages(this.getAttribute('packages').split(/\s+/).filter(Boolean).map(url => new URL(url, document.baseURI).href), { widgets: true });
+				this.#functions = { ...registry.functions, ...this.#functions };
+				this.#widgets = { ...registry.widgets, ...this.#widgets };
+				if (registry.errors.length) this.#dispatch('ff:error', { errors: registry.errors });
+			}
 			const [definition, rules] = await Promise.all([
 				fetchJSON(new URL(this.getAttribute('form'), document.baseURI)),
 				this.getAttribute('rules') ? fetchJSON(new URL(this.getAttribute('rules'), document.baseURI)) : EMPTY_RULES
@@ -154,6 +163,13 @@ export default class FormFlow extends HTMLElement {
 		if (this.#form) this.update();
 	}
 	get functions() { return this.#functions; }
+
+	/* Widget adapters by ui.widget name: { render({ id, property, value, flow, service }), read(control, property), write?(control, value, property), load?(), group? } */
+	set widgets(value) {
+		this.#widgets = value ?? {};
+		if (this.#form) this.setup(this.#definition, this.#rules, { values: this.#values, step: this.#current, previous: { matched: this.#previous }, keepTracking: true });
+	}
+	get widgets() { return this.#widgets; }
 
 	get definition() { return this.#definition; }
 	get state() { return this.#state; }
@@ -286,6 +302,19 @@ export default class FormFlow extends HTMLElement {
 				property.title ? h('strong', {}, this.#text(property.title)) : null,
 				String(property.content ?? '').split(/\n\s*\n/).map(text => text.trim()).filter(Boolean).map(text => h('p', {}, this.#text(text))));
 		}
+		/* A control from a widget package; it loads its component the first time a field uses it. */
+		const adapter = widget && Object.hasOwn(this.#widgets, widget) ? this.#widgets[widget] : null;
+		if (adapter) {
+			Promise.resolve(adapter.load?.(this)).catch(error => this.#dispatch('ff:error', { error, widget }));
+			const service = normalizeRuleSet(this.#rules).services[property.options?.source];
+			const control = adapter.render({ id, property, value, flow: this, service });
+			control.setAttribute('data-widget-control', '');
+			/* group: a fieldset with a legend; ownLabel: the component draws its label; otherwise a label around it. */
+			if (adapter.ownLabel) return h('div', { 'data-field': id, 'data-widget': widget, part: 'field widget' }, control);
+			return adapter.group
+				? h('fieldset', { 'data-field': id, 'data-widget': widget, part: 'field widget' }, h('legend', {}, this.#labelText(id, property)), control)
+				: h('label', { 'data-field': id, 'data-widget': widget, part: 'field widget' }, this.#labelText(id, property), control);
+		}
 		/* A calculated value: shown, never typed; the engine computes it from a variable. */
 		if (calculatedFrom(property) || widget === 'output') {
 			return h('label', { 'data-field': id, part: 'field output' }, this.#labelText(id, property), h('output', { name: id }));
@@ -366,7 +395,7 @@ export default class FormFlow extends HTMLElement {
 		}
 		if (widget === 'textarea') return h('textarea', { name, placeholder, minLength: validation.minLength, maxLength: validation.maxLength, ...attributes }, value ?? '');
 		/* Type-ahead: suggestions from the field's service, in a native datalist. */
-		if (widget === 'suggest') {
+		if (property.type === 'string' && property.options?.source) {
 			const list = `${this.id || 'form-flow'}-${name}-suggestions`;
 			return [h('input', { type: 'text', name, value: value ?? '', placeholder, autocomplete: 'off', list, ...attributes, minLength: validation.minLength, maxLength: validation.maxLength }), h('datalist', { id: list })];
 		}
@@ -497,12 +526,16 @@ export default class FormFlow extends HTMLElement {
 		const property = field ? field.property : normalizeRuleSet(this.#rules).patches.find(patch => patch.fields?.[id])?.fields[id];
 		/* A sourced field gets the list its service returned as its choices. */
 		const list = this.#choices[id];
-		return list && property?.options?.source && property.ui?.widget !== 'suggest' ? { ...property, options: { ...property.options, choices: list } } : property;
+		return list && property?.options?.source && property.type === 'select' ? { ...property, options: { ...property.options, choices: list } } : property;
 	}
 
 	#readValue(id) {
 		const element = this.#fieldElement(id);
 		if (!element) return undefined;
+		if (element.dataset.widget) {
+			const value = this.#widgets[element.dataset.widget]?.read(element.querySelector('[data-widget-control]'), this.#propertyOf(id));
+			return value === '' || value === null ? undefined : value;
+		}
 		if (element.dataset.list) {
 			const rows = this.#listRows(element).map(row => this.#readRow(id, row)).filter(row => Object.keys(row).length);
 			return rows.length ? rows : undefined;
@@ -527,6 +560,10 @@ export default class FormFlow extends HTMLElement {
 			element.replaceWith(this.#renderField(id, this.#propertyOf(id)));
 			return;
 		}
+		if (element.dataset.widget) {
+			this.#widgets[element.dataset.widget]?.write?.(element.querySelector('[data-widget-control]'), value, this.#propertyOf(id));
+			return;
+		}
 		const controls = [...element.querySelectorAll('input, select, textarea')];
 		const wanted = (Array.isArray(value) ? value : [value]).map(String);
 		for (const control of controls) {
@@ -541,7 +578,7 @@ export default class FormFlow extends HTMLElement {
 	}
 
 	#onInput(event) {
-		const id = event.target.closest('[data-list]')?.dataset.field ?? event.target.name;
+		const id = event.target.closest('[data-list], [data-widget]')?.dataset.field ?? event.target.name;
 		if (!id || !this.#fieldElement(id)) return;
 		if (event.type === 'input' && event.target.list) this.#suggest(id, event.target);
 		this.#values[id] = this.#readValue(id);
@@ -589,6 +626,19 @@ export default class FormFlow extends HTMLElement {
 			if (!element) continue;
 			if (element.dataset.list) {
 				this.#applyList(id, element, field, state);
+				continue;
+			}
+			if (element.dataset.widget) {
+				element.hidden = !field.visible;
+				const control = element.querySelector('[data-widget-control]');
+				control.toggleAttribute('disabled', !field.visible || !field.enabled);
+				control.toggleAttribute('required', field.required);
+				const marker = element.querySelector('abbr');
+				if (marker) marker.hidden = !field.required;
+				if (state.explain[`${id}.value`]) {
+					this.#values[id] = state.values[id];
+					this.#writeValue(id, state.values[id]);
+				}
 				continue;
 			}
 			const controls = [...element.querySelectorAll('input, select, textarea')];

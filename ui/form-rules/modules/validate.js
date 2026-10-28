@@ -86,7 +86,7 @@ export function validate(formDefinition, ruleSetDocument, { functions = {}, type
 		if (property?.options?.source !== undefined) {
 			const source = property.options.source;
 			if (typeof source !== 'string' || !normalizeRuleSet(ruleSetDocument).services[source]) fail('service', `Field "${id}" takes its choices from unknown service "${source}"`, `${at}.options.source`);
-			if (property.ui?.widget !== 'suggest' && property.type !== 'select') fail('options', `Field "${id}" takes its choices from a service, so it must be a choice field (select) or a type-ahead (ui.widget suggest)`, `${at}.type`);
+			if (property.type !== 'select' && property.type !== 'string') fail('options', `Field "${id}" takes its choices from a service, so it must be a choice field (select) or text with suggestions (string)`, `${at}.type`);
 			if (property.options.choices) warn('options', `Field "${id}" has both choices and a source; the source is ignored`, `${at}.options`);
 		}
 		if (property?.type === 'list') {

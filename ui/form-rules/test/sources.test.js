@@ -42,6 +42,6 @@ test('the fetched list is checked like static choices, and rules can narrow it',
 test('sources must name a service', () => {
 	const bad = structuredClone(form);
 	bad.properties.city.options.source = 'nope';
-	bad.properties.street.ui = {};
+	bad.properties.street.type = 'number';
 	assert.deepEqual(validate(bad, rules).errors.map(error => error.code), ['service', 'options']);
 });

@@ -1,0 +1,11 @@
+{
+	"$schema": "../../form-rules/schemas/form-types.schema.json",
+	"package": "rich-text",
+	"title": "Rich text",
+	"description": "Formatted text (bold, lists, links), with <rich-text> as the control.",
+	"version": "0.1.0",
+	"widgets": "./widgets.js",
+	"types": [
+		{ "kind": "rich-text/text", "title": "Formatted text", "description": "Text with bold, italics, lists and links; sent as HTML", "group": "Answers", "glyph": "B𝐼", "keywords": ["rich text", "wysiwyg", "html", "formatted", "editor"], "template": { "type": "string", "ui": { "widget": "rich-text" }, "validation": { "maxLength": 10000 } }, "settings": ["length"] }
+	]
+}

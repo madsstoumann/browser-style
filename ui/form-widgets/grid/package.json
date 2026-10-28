@@ -1,0 +1,45 @@
+{
+  "name": "@browser.style/form-widget-grid",
+  "version": "0.1.0",
+  "description": "Spreadsheet widget for @browser.style/form-flow: a repeating group as an editable <data-grid>.",
+  "type": "module",
+  "module": "widgets.js",
+  "exports": {
+    ".": "./widgets.js",
+    "./types.json": "./types.json"
+  },
+  "files": [
+    "widgets.js",
+    "types.json",
+    "readme.md"
+  ],
+  "peerDependencies": {
+    "@browser.style/form-flow": "^0.1.0",
+    "@browser.style/form-rules": "^0.1.0",
+    "@browser.style/data-grid": "^1.0.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "browser.style",
+    "form",
+    "form-flow",
+    "widget",
+    "grid",
+    "spreadsheet",
+    "data-grid"
+  ],
+  "author": "Mads Stoumann",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/form-widgets/grid"
+  },
+  "bugs": {
+    "url": "https://github.com/madsstoumann/browser-style/issues"
+  },
+  "homepage": "https://browser.style/ui/form-widgets/grid"
+}

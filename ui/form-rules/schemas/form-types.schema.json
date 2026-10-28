@@ -29,6 +29,10 @@
 			"type": "string",
 			"description": "A module, relative to this file, whose default export is { name: fn }: the checks and operators the types use"
 		},
+		"widgets": {
+			"type": "string",
+			"description": "Browser only: a module, relative to this file, whose default export is { widget: adapter }, the controls <form-flow> draws for ui.widget. Adapters load their component only when a field uses it"
+		},
 		"types": {
 			"type": "array",
 			"items": {
