@@ -6,9 +6,10 @@
  * - Comparisons between values of different types are false, never coerced.
  * - `num` converts explicitly: a numeric string becomes a number, anything else null.
  * - A missing variable is null, and an unknown operator throws.
+ * - Text operators are case-sensitive; wrap both sides in `lower` to compare without case.
  */
 
-import { daysBetween, yearsBetween } from './dates.js';
+import { datePart, daysBetween, yearsBetween } from './dates.js';
 
 /* Where data carries the host's functions (input.functions): operators and field checks by name. */
 export const FUNCTIONS = Symbol('functions');
@@ -87,10 +88,42 @@ const operators = {
 	min: (...args) => args.length && numeric(args) ? Math.min(...args) : null,
 	max: (...args) => args.length && numeric(args) ? Math.max(...args) : null,
 	round: (a, places = 0) => numeric([a, places]) ? Math.round(a * 10 ** places) / 10 ** places : null,
+	sum: (...args) => {
+		const list = args.flat();
+		return numeric(list) ? list.reduce((total, v) => total + v, 0) : null;
+	},
+	/* Text */
+	startsWith: (a, b) => typeof a === 'string' && typeof b === 'string' && a.startsWith(b),
+	endsWith: (a, b) => typeof a === 'string' && typeof b === 'string' && a.endsWith(b),
+	lower: a => typeof a === 'string' ? a.toLowerCase() : null,
+	upper: a => typeof a === 'string' ? a.toUpperCase() : null,
+	trim: a => typeof a === 'string' ? a.trim() : null,
+	length: a => Array.isArray(a) ? a.length : typeof a === 'string' ? Array.from(a).length : null,
+	substr: (a, start = 0, length) => {
+		if (typeof a !== 'string' || !numeric([start])) return null;
+		const chars = Array.from(a);
+		const from = start < 0 ? Math.max(chars.length + start, 0) : start;
+		if (length === undefined) return chars.slice(from).join('');
+		if (!numeric([length])) return null;
+		return chars.slice(from, length < 0 ? chars.length + length : from + length).join('');
+	},
 	/* Dates are ISO strings; pass "today" in with { "var": "today" }. */
 	yearsBetween: (a, b) => yearsBetween(a, b),
-	daysBetween: (a, b) => daysBetween(a, b)
+	daysBetween: (a, b) => daysBetween(a, b),
+	datePart: (a, part) => datePart(a, part)
 };
+
+/* Array operators run their logic once per item, with the item as data (JSON Logic semantics). */
+const scoped = (item, data) => {
+	const scope = item !== null && typeof item === 'object' && !Array.isArray(item) ? { ...item } : item;
+	if (scope && typeof scope === 'object' && data?.[FUNCTIONS]) Object.defineProperty(scope, FUNCTIONS, { value: data[FUNCTIONS] });
+	return scope;
+};
+const listOf = (arg, data) => {
+	const list = apply(arg, data);
+	return Array.isArray(list) ? list : [];
+};
+const SCOPED = new Set(['map', 'filter', 'reduce', 'some', 'all', 'none']);
 
 /* Runs a host function used as a field check: null when the value passes, else { code, message, level? }. */
 export function runCheck(functions, name, value) {
@@ -135,6 +168,16 @@ const special = {
 		const result = runCheck(data?.[FUNCTIONS], name, value);
 		return !result || result.level === 'warning';
 	},
+	map: ([list, logic], data) => listOf(list, data).map(item => apply(logic, scoped(item, data))),
+	filter: ([list, logic], data) => listOf(list, data).filter(item => truthy(apply(logic, scoped(item, data)))),
+	reduce: ([list, logic, initial = null], data) => listOf(list, data).reduce((accumulator, current) => apply(logic, scoped({ current, accumulator }, data)), apply(initial, data)),
+	some: ([list, logic], data) => listOf(list, data).some(item => truthy(apply(logic, scoped(item, data)))),
+	/* Like JSON Logic, "all" of an empty list is false. */
+	all: ([list, logic], data) => {
+		const items = listOf(list, data);
+		return items.length > 0 && items.every(item => truthy(apply(logic, scoped(item, data))));
+	},
+	none: ([list, logic], data) => !listOf(list, data).some(item => truthy(apply(logic, scoped(item, data)))),
 	missing: (args, data) => args.map(arg => apply(arg, data)).flat().filter(path => getPath(data, path) === null || getPath(data, path) === '')
 };
 
@@ -177,6 +220,8 @@ export function readsOf(logic, found = new Set()) {
 		if (Array.isArray(args) && args.length > 1) readsOf(args[1], found);
 		return found;
 	}
+	/* Logic inside an array operator reads the item, not the form, so only the list is a read. */
+	if (SCOPED.has(op)) return readsOf(Array.isArray(args) ? args[0] : args, found);
 	if (op === 'missing') {
 		(Array.isArray(args) ? args : [args]).forEach(path => typeof path === 'string' && found.add(path));
 		return found;

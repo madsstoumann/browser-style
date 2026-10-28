@@ -69,3 +69,29 @@ test('goto and step-inserting fetches read as sentences', () => {
 	assert.equal(summarize(form, health), 'When Age group is at least 50+: fetch extra steps from health after Your cover.');
 	assert.equal(summarize(form, { when: true, then: [{ goto: { step: 'review', from: 'you' } }] }), 'Always: go to Review after About you.');
 });
+
+test('text operators ignore case unless match case is on, and survive a round trip', () => {
+	const contains = { in: ['example', { lower: { var: 'values.zip' } }] };
+	const node = parseCondition(contains).items[0];
+	assert.deepEqual([node.op, node.value, node.matchCase], ['contains', 'example', false]);
+	assert.deepEqual(serializeCondition(parseCondition(contains)), contains);
+	const starts = { startsWith: [{ var: 'values.zip' }, 'DK'] };
+	assert.deepEqual(serializeCondition(parseCondition(starts)), starts);
+	assert.equal(parseCondition(starts).items[0].matchCase, true);
+	const not = { '!': { in: ['x', { lower: { var: 'values.zip' } }] } };
+	assert.equal(parseCondition(not).items[0].op, 'notcontains');
+	assert.deepEqual(serializeCondition(parseCondition(not)), not);
+	const typed = { kind: 'group', mode: 'and', wrapped: true, items: [{ kind: 'cond', path: 'values.zip', num: false, op: 'endsWith', value: 'AB' }] };
+	assert.deepEqual(serializeCondition(typed), { endsWith: [{ lower: { var: 'values.zip' } }, 'ab'] });
+	assert.equal(summarize(form, { when: starts, then: [] }), 'When Zip code starts with “DK” (match case): do nothing.');
+	/* Upper-case text against a lowered field could never match, so it stays raw. */
+	assert.equal(parseCondition({ startsWith: [{ lower: { var: 'values.zip' } }, 'DK'] }).items[0].kind, 'raw');
+});
+
+test('a field can be compared with another field', () => {
+	const logic = { '>': [{ num: { var: 'values.zip' } }, { num: { var: 'values.age' } }] };
+	const node = parseCondition(logic).items[0];
+	assert.deepEqual([node.path, node.other, node.num], ['values.zip', 'values.age', true]);
+	assert.deepEqual(serializeCondition(parseCondition(logic)), logic);
+	assert.match(summarize(form, { when: { '===': [{ var: 'values.plan' }, { var: 'values.zip' }] }, then: [] }), /^When Plan is Zip code/);
+});

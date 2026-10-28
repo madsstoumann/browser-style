@@ -4,7 +4,10 @@
  *
  * Tree nodes:
  *   { kind: 'group', mode: 'and' | 'or', items: [ … ], wrapped? }
- *   { kind: 'cond', path, num, op, value }     op: === !== > >= < <= in notin filled empty
+ *   { kind: 'cond', path, num, op, value, other?, matchCase? }
+ *     op: === !== > >= < <= in notin filled empty contains notcontains startsWith endsWith
+ *     other: a second path, compared instead of value (field-to-field)
+ *     matchCase: text operators ignore case unless this is true
  *   { kind: 'raw', logic }
  */
 import { isRule } from '../../form-rules/modules/logic.js';
@@ -13,8 +16,10 @@ import { actionName } from '../../form-rules/modules/actions.js';
 export const COMPARE = ['===', '!==', '>', '>=', '<', '<='];
 export const OPERATOR_WORDS = {
 	'===': 'is', '!==': 'is not', '>': 'is above', '>=': 'is at least', '<': 'is below', '<=': 'is at most',
-	in: 'is one of', notin: 'is not one of', filled: 'is filled in', empty: 'is empty'
+	in: 'is one of', notin: 'is not one of', filled: 'is filled in', empty: 'is empty',
+	contains: 'contains', notcontains: 'does not contain', startsWith: 'starts with', endsWith: 'ends with'
 };
+export const TEXT_OPS = ['contains', 'notcontains', 'startsWith', 'endsWith'];
 
 const varPath = node => {
 	if (!isRule(node) || !('var' in node)) return null;
@@ -36,6 +41,17 @@ const readOf = node => {
 	return null;
 };
 
+/* A text read: { path, matchCase } for { var } or { lower: { var } }. */
+const textReadOf = node => {
+	const path = varPath(node);
+	if (path) return { path, matchCase: true };
+	if (isRule(node) && 'lower' in node) {
+		const innerPath = varPath(Array.isArray(node.lower) ? node.lower[0] : node.lower);
+		if (innerPath) return { path: innerPath, matchCase: false };
+	}
+	return null;
+};
+
 const isLiteral = value => value === null || ['string', 'number', 'boolean'].includes(typeof value);
 
 function parseNode(logic) {
@@ -50,14 +66,23 @@ function parseNode(logic) {
 		if (read && !read.num) return { kind: 'cond', path: read.path, num: false, op: op === '!!' ? 'filled' : 'empty', value: null };
 		const inner = op === '!' && parseNode(args[0]);
 		if (inner?.kind === 'cond' && inner.op === 'in') return { ...inner, op: 'notin' };
+		if (inner?.kind === 'cond' && inner.op === 'contains') return { ...inner, op: 'notcontains' };
 	}
 	if (COMPARE.includes(op) && args.length === 2) {
 		const read = readOf(args[0]);
 		if (read && isLiteral(args[1])) return { kind: 'cond', ...read, op, value: args[1] };
+		const other = readOf(args[1]);
+		if (read && other && read.num === other.num) return { kind: 'cond', ...read, op, value: null, other: other.path };
 	}
 	if (op === 'in' && args.length === 2) {
 		const read = readOf(args[0]);
 		if (read && Array.isArray(args[1]) && args[1].every(isLiteral)) return { kind: 'cond', ...read, op: 'in', value: args[1] };
+		const text = textReadOf(args[1]);
+		if (text && typeof args[0] === 'string' && (text.matchCase || args[0] === args[0].toLowerCase())) return { kind: 'cond', path: text.path, num: false, op: 'contains', value: args[0], matchCase: text.matchCase };
+	}
+	if ((op === 'startsWith' || op === 'endsWith') && args.length === 2) {
+		const text = textReadOf(args[0]);
+		if (text && typeof args[1] === 'string' && (text.matchCase || args[1] === args[1].toLowerCase())) return { kind: 'cond', path: text.path, num: false, op, value: args[1], matchCase: text.matchCase };
 	}
 	return { kind: 'raw', logic };
 }
@@ -76,6 +101,15 @@ function serializeNode(node) {
 	if (node.op === 'empty') return { '!': { var: node.path } };
 	if (node.op === 'in') return { in: [read, node.value ?? []] };
 	if (node.op === 'notin') return { '!': { in: [read, node.value ?? []] } };
+	if (TEXT_OPS.includes(node.op)) {
+		const text = String(node.value ?? '');
+		const subject = node.matchCase ? { var: node.path } : { lower: { var: node.path } };
+		const needle = node.matchCase ? text : text.toLowerCase();
+		if (node.op === 'contains') return { in: [needle, subject] };
+		if (node.op === 'notcontains') return { '!': { in: [needle, subject] } };
+		return { [node.op]: [subject, needle] };
+	}
+	if (node.other) return { [node.op]: [read, node.num ? { num: { var: node.other } } : { var: node.other }] };
 	return { [node.op]: [read, node.value ?? null] };
 }
 
@@ -113,7 +147,7 @@ function logicText(form, logic) {
 	const [op] = Object.keys(logic);
 	const args = Array.isArray(logic[op]) ? logic[op] : [logic[op]];
 	if (op === 'var') return typeof args[0] === 'string' ? pathLabel(form, args[0]) : 'a value';
-	if (op === 'num') return logicText(form, args[0]);
+	if (op === 'num' || op === 'lower') return logicText(form, args[0]);
 	if (op === '!') return `not (${logicText(form, args[0])})`;
 	if (op === '!!') return `${logicText(form, args[0])} is filled in`;
 	if (op === 'check') return `${logicText(form, args[1])} passes ${args[0]}`;
@@ -131,6 +165,8 @@ function conditionText(form, node, nested = false) {
 	const label = pathLabel(form, node.path);
 	const word = OPERATOR_WORDS[node.op];
 	if (node.op === 'filled' || node.op === 'empty') return `${label} ${word}`;
+	if (node.other) return `${label} ${word} ${pathLabel(form, node.other)}`;
+	if (TEXT_OPS.includes(node.op)) return `${label} ${word} “${node.value ?? ''}”${node.matchCase ? ' (match case)' : ''}`;
 	return `${label} ${word} ${valueLabel(form, node.path, node.value)}`;
 }
 
