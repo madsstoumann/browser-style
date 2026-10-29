@@ -23,7 +23,7 @@
 				"items": { "properties": {
 					"product": { "type": "select", "title": "Product", "required": true, "options": { "choices": [{ "value": "tea", "label": "Tea" }, { "value": "coffee", "label": "Coffee" }, { "value": "cake", "label": "Cake" }] } },
 					"qty": { "type": "integer", "title": "Quantity", "required": true, "validation": { "minimum": 1, "maximum": 20 } },
-					"note": { "type": "string", "title": "Note", "validation": { "maxLength": 60 } }
+					"note": { "type": "string", "title": "Note for the baker", "validation": { "maxLength": 60 } }
 				} },
 				"validation": { "maxItems": 6 }
 			},

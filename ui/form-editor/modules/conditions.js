@@ -120,19 +120,26 @@ export function serializeCondition(tree) {
 
 /* === Plain language === */
 
-const propertyOf = (form, path) => (path.startsWith('values.') ? form.fields.properties?.[path.slice(7)] : null);
+/* In a row rule (forEach), row.x reads an item of the current row and index its position. */
+const itemsOf = (form, list) => form.fields.properties?.[list]?.items?.properties ?? {};
+const propertyOf = (form, path, list) => {
+	if (path.startsWith('values.')) return form.fields.properties?.[path.slice(7)];
+	if (list && path.startsWith('row.')) return itemsOf(form, list)[path.slice(4)];
+	return null;
+};
 
-export function pathLabel(form, path) {
-	const property = propertyOf(form, path);
-	if (property) return property.title ?? path.slice(7);
+export function pathLabel(form, path, list) {
+	const property = propertyOf(form, path, list);
+	if (property) return property.title ?? path.slice(path.indexOf('.') + 1);
+	if (list && path === 'index') return 'row number (from 0)';
 	const [root, ...rest] = path.split('.');
 	if (root === 'vars') return rest.join('.');
 	return `${root} ${rest.join('.')}`.trim();
 }
 
-export function valueLabel(form, path, value) {
-	if (Array.isArray(value)) return value.map(item => valueLabel(form, path, item)).join(', ');
-	const choice = propertyOf(form, path)?.options?.choices?.find(c => c.value === value);
+export function valueLabel(form, path, value, list) {
+	if (Array.isArray(value)) return value.map(item => valueLabel(form, path, item, list)).join(', ');
+	const choice = propertyOf(form, path, list)?.options?.choices?.find(c => c.value === value);
 	if (choice) return choice.label;
 	if (value === true) return 'yes';
 	if (value === false) return 'no';
@@ -142,43 +149,49 @@ export function valueLabel(form, path, value) {
 const WORDS = { ...OPERATOR_WORDS, '*': '×', '/': '÷', '+': '+', '-': '−', and: 'and', or: 'or' };
 
 /* Any JSON Logic as readable text, for conditions the builder cannot draw. */
-function logicText(form, logic) {
-	if (!isRule(logic)) return Array.isArray(logic) ? logic.map(item => logicText(form, item)).join(', ') : valueLabel(form, '', logic);
+function logicText(form, logic, list) {
+	if (!isRule(logic)) return Array.isArray(logic) ? logic.map(item => logicText(form, item, list)).join(', ') : valueLabel(form, '', logic);
 	const [op] = Object.keys(logic);
 	const args = Array.isArray(logic[op]) ? logic[op] : [logic[op]];
-	if (op === 'var') return typeof args[0] === 'string' ? pathLabel(form, args[0]) : 'a value';
-	if (op === 'num' || op === 'lower') return logicText(form, args[0]);
-	if (op === '!') return `not (${logicText(form, args[0])})`;
-	if (op === '!!') return `${logicText(form, args[0])} is filled in`;
-	if (op === 'check') return `${logicText(form, args[1])} passes ${args[0]}`;
-	if (op in WORDS && args.length >= 2) return args.map(arg => logicText(form, arg)).join(` ${WORDS[op]} `);
-	return `${op}(${args.map(arg => logicText(form, arg)).join(', ')})`;
+	if (op === 'var') return typeof args[0] === 'string' ? pathLabel(form, args[0], list) : 'a value';
+	if (op === 'num' || op === 'lower') return logicText(form, args[0], list);
+	if (op === '!') return `not (${logicText(form, args[0], list)})`;
+	if (op === '!!') return `${logicText(form, args[0], list)} is filled in`;
+	if (op === 'check') return `${logicText(form, args[1], list)} passes ${args[0]}`;
+	if (op in WORDS && args.length >= 2) return args.map(arg => logicText(form, arg, list)).join(` ${WORDS[op]} `);
+	return `${op}(${args.map(arg => logicText(form, arg, list)).join(', ')})`;
 }
 
-function conditionText(form, node, nested = false) {
-	if (node.kind === 'raw') return logicText(form, node.logic);
+function conditionText(form, node, nested = false, list) {
+	if (node.kind === 'raw') return logicText(form, node.logic, list);
 	if (node.kind === 'group') {
 		if (!node.items.length) return 'always';
-		const text = node.items.map(item => conditionText(form, item, true)).join(node.mode === 'and' ? ' and ' : ' or ');
+		const text = node.items.map(item => conditionText(form, item, true, list)).join(node.mode === 'and' ? ' and ' : ' or ');
 		return nested && node.items.length > 1 ? `(${text})` : text;
 	}
-	const label = pathLabel(form, node.path);
+	const label = pathLabel(form, node.path, list);
 	const word = OPERATOR_WORDS[node.op];
 	if (node.op === 'filled' || node.op === 'empty') return `${label} ${word}`;
-	if (node.other) return `${label} ${word} ${pathLabel(form, node.other)}`;
+	if (node.other) return `${label} ${word} ${pathLabel(form, node.other, list)}`;
 	if (TEXT_OPS.includes(node.op)) return `${label} ${word} “${node.value ?? ''}”${node.matchCase ? ' (match case)' : ''}`;
-	return `${label} ${word} ${valueLabel(form, node.path, node.value)}`;
+	return `${label} ${word} ${valueLabel(form, node.path, node.value, list)}`;
 }
 
-const fieldTitle = (form, id) => form.fields.properties?.[id]?.title ?? id;
+/* A row rule targets list.item: named by the item's title. */
+const fieldTitle = (form, id) => {
+	const [list, item] = String(id).split('.');
+	if (item && form.fields.properties?.[list]?.type === 'list') return itemsOf(form, list)[item]?.title ?? item;
+	return form.fields.properties?.[id]?.title ?? id;
+};
+const valuePath = id => (String(id).includes('.') ? `row.${String(id).split('.')[1]}` : `values.${id}`);
 const stepName = (form, id) => (form.fields.structure?.layout ?? []).find(step => step.id === id)?.name ?? id;
-const list = value => (Array.isArray(value) ? value : [value]);
+const asList = value => (Array.isArray(value) ? value : [value]);
 
-export function actionText(form, action) {
+export function actionText(form, action, list) {
 	const name = actionName(action);
 	const value = action[name];
-	const fields = () => list(value).map(id => fieldTitle(form, id)).join(', ');
-	const steps = () => list(value).map(id => stepName(form, id)).join(', ');
+	const fields = () => asList(value).map(id => fieldTitle(form, id)).join(', ');
+	const steps = () => asList(value).map(id => stepName(form, id)).join(', ');
 	switch (name) {
 		case 'show': return `show ${fields()}`;
 		case 'hide': return `hide ${fields()}`;
@@ -187,7 +200,7 @@ export function actionText(form, action) {
 		case 'require': return `make ${fields()} required`;
 		case 'optional': return `make ${fields()} optional`;
 		case 'clear': return `clear ${fields()}`;
-		case 'setValue': return `set ${fieldTitle(form, value.field)} to ${valueLabel(form, `values.${value.field}`, value.value)}`;
+		case 'setValue': return `set ${fieldTitle(form, value.field)} to ${valueLabel(form, valuePath(value.field), value.value, list)}`;
 		case 'options': {
 			const field = fieldTitle(form, value.field);
 			const parts = [];
@@ -213,10 +226,12 @@ export function actionText(form, action) {
 const capitalize = text => text.charAt(0).toUpperCase() + text.slice(1);
 
 export function summarize(form, rule) {
-	const condition = conditionText(form, parseCondition(rule.when));
-	const then = (rule.then ?? []).map(action => actionText(form, action));
-	const otherwise = (rule.else ?? []).map(action => actionText(form, action));
+	const list = rule.forEach;
+	const condition = conditionText(form, parseCondition(rule.when), false, list);
+	const then = (rule.then ?? []).map(action => actionText(form, action, list));
+	const otherwise = (rule.else ?? []).map(action => actionText(form, action, list));
 	let text = condition === 'always' ? 'Always' : `When ${condition}`;
+	if (list) text = `For each row of ${fieldTitle(form, list)}: ${condition === 'always' ? 'always' : `when ${condition}`}`;
 	text += then.length ? `: ${then.join(', ')}.` : ': do nothing.';
 	if (otherwise.length) text += ` ${capitalize(`otherwise ${otherwise.join(', ')}`)}.`;
 	return text;

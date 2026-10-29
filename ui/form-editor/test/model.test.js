@@ -95,3 +95,17 @@ test('a field can be compared with another field', () => {
 	assert.deepEqual(serializeCondition(parseCondition(logic)), logic);
 	assert.match(summarize(form, { when: { '===': [{ var: 'values.plan' }, { var: 'values.zip' }] }, then: [] }), /^When Plan is Zip code/);
 });
+
+test('row rules read as sentences and follow a renamed list', () => {
+	const order = load('../../form-rules/examples/order.form.json');
+	const orderRules = load('../../form-rules/examples/order.rules.json');
+	const cake = orderRules.fields.rules.find(r => r.id === 'cake-note');
+	assert.deepEqual(serializeCondition(parseCondition(cake.when)), cake.when);
+	assert.match(summarize(order, cake), /^For each row of [^:]+: when Product is Cake: make Note for the baker required\. Otherwise hide Note for the baker\.$/);
+	const result = renameField(order, orderRules, 'lines', 'basket');
+	const renamed = result.rules.fields.rules.find(r => r.id === 'cake-note');
+	assert.equal(renamed.forEach, 'basket');
+	assert.deepEqual(renamed.then, [{ require: 'basket.note' }]);
+	assert.ok(rulesUsingField(orderRules, 'lines').includes('many-cakes'));
+	assert.deepEqual(validate(result.form, result.rules).errors, []);
+});

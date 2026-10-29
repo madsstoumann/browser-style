@@ -7,7 +7,7 @@
  */
 
 import { apply, FUNCTIONS, getPath, runCheck, truthy } from './logic.js';
-import { actionName, actionTargets, FLAG_ACTIONS, gotoFrom, gotoOf, RESTRICTIVE, STEP_ACTIONS } from './actions.js';
+import { actionName, actionTargets, FLAG_ACTIONS, gotoFrom, gotoOf, RESTRICTIVE, rowTarget, STEP_ACTIONS } from './actions.js';
 import { normalizeForm, normalizeRuleSet, withPatchFields } from './form.js';
 
 const MAX_PASSES = 16;
@@ -178,6 +178,73 @@ function resolve(form, results, input) {
 	return { steps, fields, assigned, effects, explain, jumps, issues, varSets, varAdds, invalid };
 }
 
+/* A row rule ("forEach": "lines") runs once per row of a repeating group, reading the row as row.* and its
+   position as index. Its actions target the row's own fields as "lines.note". Cell keys: "lines|0|note". */
+const ROW_FLAGS = ['visible', 'enabled', 'required'];
+
+function resolveRows(form, rowRules, data) {
+	const flags = new Map();
+	const assigned = new Map();
+	const invalid = new Map();
+	const matched = new Set();
+	const push = (map, key, entry) => {
+		if (!map.has(key)) map.set(key, []);
+		map.get(key).push(entry);
+	};
+	for (const rule of rowRules) {
+		const list = rule.forEach;
+		const rows = data.values[list];
+		if (!Array.isArray(rows)) continue;
+		const priority = rule.priority ?? 0;
+		rows.forEach((row, index) => {
+			const hit = truthy(apply(rule.when ?? true, { ...data, row, index }));
+			if (hit) matched.add(rule.id);
+			for (const action of (hit ? rule.then : rule.else) ?? []) {
+				const name = actionName(action);
+				const value = action[name];
+				const source = hit ? rule.id : `${rule.id}:else`;
+				const cell = item => `${list}|${index}|${item}`;
+				if (name in FLAG_ACTIONS) {
+					const [flag, flagValue] = FLAG_ACTIONS[name];
+					actionTargets(action).fields.map(target => rowTarget(list, target)).filter(Boolean)
+						.forEach(item => push(flags, `${cell(item)}|${flag}`, { value: flagValue, priority, rule: source }));
+				} else if (name === 'setValue' || name === 'clear') {
+					actionTargets(action).fields.map(target => rowTarget(list, target)).filter(Boolean)
+						.forEach(item => push(assigned, cell(item), { value: name === 'clear' ? null : value.value ?? null, priority, rule: source }));
+				} else if (name === 'invalid') {
+					const item = rowTarget(list, value.field);
+					if (item) push(invalid, cell(item), { code: value.code ?? 'invalid', message: value.message ?? null, level: value.level, rule: source });
+				}
+			}
+		});
+	}
+
+	/* Every cell of a list some row rule targets: its own required and hidden, then the rules' decisions. */
+	const rows = {};
+	const explain = {};
+	for (const list of new Set(rowRules.map(rule => rule.forEach))) {
+		const items = form.fields.get(list)?.property?.items?.properties ?? {};
+		const count = Array.isArray(data.values[list]) ? data.values[list].length : 0;
+		rows[list] = Array.from({ length: count }, (_, index) => Object.fromEntries(Object.entries(items).map(([item, property]) => {
+			const state = { visible: property?.ui?.hidden !== true, enabled: true, required: property?.required === true };
+			for (const flag of ROW_FLAGS) {
+				const key = `${list}|${index}|${item}|${flag}`;
+				if (!flags.has(key)) continue;
+				const decision = decide(flags.get(key), RESTRICTIVE[flag]);
+				state[flag] = decision.value;
+				explain[`${list}[${index}].${item}.${flag}`] = decision.rules;
+			}
+			return [item, state];
+		})));
+	}
+	return { rows, assigned, invalid, matched, explain };
+}
+
+/* A list's rows as rules read them: cells a row rule hides or disables are absent. */
+const rowsView = (rows, cells) => (Array.isArray(rows) && cells ? rows.map((row, index) => Object.fromEntries(
+	Object.entries(row).filter(([item]) => !cells[index] || !cells[index][item] || (cells[index][item].visible && cells[index][item].enabled))
+)) : rows);
+
 /* Variables a rule set declares: computed ones from their expression, the others from rules (set, then add). */
 function computeVars(declared, base, accumulated) {
 	const vars = { ...accumulated };
@@ -308,7 +375,7 @@ const calculatedValue = (property, vars) => {
 
 /* A repeating group's rows, cleaned: only its item keys, each of its type. Wholly empty rows are dropped.
    Issues carry { row, item } besides the field. */
-function listRows(id, property, rows, input) {
+function listRows(id, property, rows, input, cellOf = () => null) {
 	const items = property?.items?.properties ?? {};
 	const issues = [];
 	const kept = [];
@@ -317,10 +384,14 @@ function listRows(id, property, rows, input) {
 		const rowIssues = [];
 		const at = { row: kept.length };
 		for (const [key, item] of Object.entries(items)) {
-			const value = row[key];
+			const cell = cellOf(at.row, key);
+			if (cell && (!cell.visible || !cell.enabled)) continue;
+			const required = cell ? cell.required : item?.required === true;
+			const value = cell?.assigned ? cell.assigned.value : row[key];
 			const where = { ...at, item: key };
+			for (const entry of cell?.invalid ?? []) rowIssues.push({ field: id, ...where, code: entry.code, message: entry.message, ...(entry.level ? { level: entry.level } : {}), rule: entry.rule });
 			if (isEmpty(value)) {
-				if (item?.required) rowIssues.push({ field: id, ...where, code: 'required' });
+				if (required) rowIssues.push({ field: id, ...where, code: 'required' });
 				continue;
 			}
 			if (!ITEM_TYPES.includes(item?.type) || !hasValueType(item, value)) {
@@ -332,7 +403,7 @@ function listRows(id, property, rows, input) {
 				rowIssues.push({ field: id, ...where, code: 'option-unavailable' });
 				continue;
 			}
-			if (item.type === 'boolean' && item.required && value !== true) rowIssues.push({ field: id, ...where, code: 'required' });
+			if (item.type === 'boolean' && required && value !== true) rowIssues.push({ field: id, ...where, code: 'required' });
 			rowIssues.push(...constraintIssues(id, item, value, input).map(issue => ({ ...issue, ...where })));
 			clean[key] = value;
 		}
@@ -387,6 +458,8 @@ export function evaluate(formDefinition, ruleSetDocument, input = {}) {
 	let accumulated = accumulate(declared, { varSets: new Map(), varAdds: new Map(), explain: {} });
 	let vars = {};
 	let patches = [];
+	let cellsSeen = {};
+	let rowState = { rows: {}, assigned: new Map(), invalid: new Map(), matched: new Set(), explain: {} };
 	let fieldsSeen = Object.fromEntries([...baseForm.fields].map(([id, field]) => [id, { visible: !field.hidden && !baseForm.steps.find(step => step.id === field.step)?.hidden }]));
 	let lastKey = null;
 	let state;
@@ -397,9 +470,13 @@ export function evaluate(formDefinition, ruleSetDocument, input = {}) {
 		if (pass === MAX_PASSES) throw new Error('Rules do not settle: a rule keeps hiding a field another rule reads');
 
 		form = withPatchFields(baseForm, patches);
-		const rules = [...baseRules, ...patches.flatMap(patch => patch.rules ?? [])];
+		const allRules = [...baseRules, ...patches.flatMap(patch => patch.rules ?? [])];
+		const rules = allRules.filter(rule => typeof rule.forEach !== 'string');
+		const rowRules = allRules.filter(rule => typeof rule.forEach === 'string');
+		const shown = visibleValues(readable, fieldsSeen);
+		for (const list of Object.keys(cellsSeen)) if (Object.hasOwn(shown, list)) shown[list] = rowsView(shown[list], cellsSeen[list]);
 		const base = {
-			values: visibleValues(readable, fieldsSeen),
+			values: shown,
 			context: input.context ?? {},
 			facts: input.facts ?? {},
 			step: input.step ?? null,
@@ -413,7 +490,9 @@ export function evaluate(formDefinition, ruleSetDocument, input = {}) {
 		}
 		const data = { ...base, vars };
 		const results = rules.map(rule => ({ rule, matched: truthy(apply(rule.when ?? true, data)) }));
-		matched = results.filter(result => result.matched).map(result => result.rule.id);
+		rowState = resolveRows(form, rowRules, data);
+		const hits = new Set([...results.filter(result => result.matched).map(result => result.rule.id), ...rowState.matched]);
+		matched = allRules.filter(rule => hits.has(rule.id)).map(rule => rule.id);
 
 		state = resolve(form, results, { previousMatched, hasPrevious, data, choices: input.choices });
 		const nextAccumulated = accumulate(declared, state);
@@ -424,12 +503,14 @@ export function evaluate(formDefinition, ruleSetDocument, input = {}) {
 			patches: nextPatches.map(patch => patch.id),
 			steps: state.steps.filter(step => step.visible).map(step => step.id),
 			vars: nextAccumulated,
-			visible: Object.entries(state.fields).filter(([, field]) => field.visible).map(([id]) => id)
+			visible: Object.entries(state.fields).filter(([, field]) => field.visible).map(([id]) => id),
+			cells: rowState.rows
 		});
 		if (key === lastKey) break;
 		lastKey = key;
 		patches = nextPatches;
 		fieldsSeen = state.fields;
+		cellsSeen = rowState.rows;
 		accumulated = nextAccumulated;
 	}
 
@@ -452,7 +533,16 @@ export function evaluate(formDefinition, ruleSetDocument, input = {}) {
 			value = undefined;
 		}
 		if (property?.type === 'list' && Array.isArray(value)) {
-			const list = listRows(id, property, value, input);
+			const cells = rowState.rows[id];
+			const cellOf = cells ? (index, item) => {
+				const cell = cells[index]?.[item];
+				if (!cell) return null;
+				const key = `${id}|${index}|${item}`;
+				const assigned = rowState.assigned.has(key) ? decide(rowState.assigned.get(key), null) : null;
+				if (assigned) state.explain[`${id}[${index}].${item}.value`] = assigned.rules;
+				return { ...cell, assigned, invalid: rowState.invalid.get(key) ?? [] };
+			} : undefined;
+			const list = listRows(id, property, value, input, cellOf);
 			issues.push(...list.issues);
 			value = list.rows;
 		}
@@ -503,11 +593,12 @@ export function evaluate(formDefinition, ruleSetDocument, input = {}) {
 		jumps: state.jumps,
 		vars,
 		fields: state.fields,
+		rows: rowState.rows,
 		values: submit,
 		matched,
 		patches: patches.map(patch => patch.id),
 		effects,
 		issues,
-		explain: state.explain
+		explain: { ...state.explain, ...rowState.explain }
 	};
 }

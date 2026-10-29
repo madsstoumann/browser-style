@@ -427,10 +427,31 @@ A field of type `list` is a set of rows with the same fields: order lines, child
 - The value is an array of row objects: `[{ "product": "tea", "qty": 2 }]`. Rows that are wholly empty are dropped; keys that are not in `items` are dropped; each cell is held to its field's type.
 - `required` on the list means at least one row; `required` on a row field applies to every filled row. `minItems` and `maxItems` count rows.
 - Each cell is checked like a field: choices, range, length, pattern and checks. An issue carries `row` and `item` as well as `field` (`{ field: "lines", row: 0, item: "qty", code: "minimum" }`), so form-flow marks the right cell.
-- Rules read the whole list: `{ "length": { "var": "values.lines" } }`, `{ "some": [{ "var": "values.lines" }, …] }`, or a total in a variable. Actions apply to the list as one field (show, hide, require, …), not to single rows.
+- Rules read the whole list: `{ "length": { "var": "values.lines" } }`, `{ "some": [{ "var": "values.lines" }, …] }`, or a total in a variable. Such a rule's actions apply to the list as one field (show, hide, require, …). To act on single rows, use a row rule (below).
 - `ui.widget` is `table` (one line per row, for a few short fields) or `rows` (each row stacked as a group, the default, for rows with many fields). With the [grid widget package](#widget-packages), `data-grid` gives a spreadsheet with keyboard navigation.
 
 ---
+
+### Row rules
+
+A rule with `"forEach": "<list>"` runs once for every filled row of that list. Its condition reads the current row as `row.<item>` and its position as `index` (from 0), next to everything a form rule reads. Its actions change cells of that row, named `<list>.<item>`:
+
+```json
+{
+  "id": "cake-note",
+  "forEach": "lines",
+  "when": { "===": [{ "var": "row.product" }, "cake"] },
+  "then": [{ "require": "lines.note" }],
+  "else": [{ "hide": "lines.note" }]
+}
+```
+
+- Row actions are `show`, `hide`, `enable`, `disable`, `require`, `optional`, `setValue`, `clear` and `invalid`. Step, variable, fetch and event actions are refused, since they would fire once per row.
+- The result has `rows`: `rows.lines[0].note` is `{ visible, enabled, required }`, for every list a row rule targets. `explain` names cells the same way, as `lines[0].note.visible`.
+- A hidden or disabled cell behaves like a hidden field: it is not submitted, and other rules do not see it. `invalid` gives a row issue (`{ field: "lines", row: 0, item: "qty", code }`), and `level: "warning"` only warns.
+- `index` and `row` count filled rows, the same rows issues count, so a wholly empty row in the middle does not shift them.
+- `validate()` refuses a row rule that reads `row.x` and hides, disables, sets or clears `x`, and one that reads the whole list while hiding its cells, because either would never settle.
+- In the editor, **Runs** on a rule switches it between "Once for the form" and "For each row of …"; the field pickers then offer the row's fields. The order example (`?example=order`) has two row rules.
 
 ## Option sources and type-ahead
 

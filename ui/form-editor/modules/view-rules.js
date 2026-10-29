@@ -5,14 +5,17 @@
 import { h, field, check, select, button } from './dom.js';
 import { clone, moveItem, newRule, slugify, stepsOf } from './model.js';
 import { COMPARE, OPERATOR_WORDS, TEXT_OPS, parseCondition, serializeCondition, summarize } from './conditions.js';
-import { actionName } from '../../form-rules/modules/actions.js';
+import { ROW_ACTIONS, actionName } from '../../form-rules/modules/actions.js';
 
 const FIELD_VERBS = [['invalid', 'Mark as invalid'], ['show', 'Show'], ['hide', 'Hide'], ['enable', 'Enable'], ['disable', 'Disable'], ['require', 'Require'], ['optional', 'Make optional'], ['clear', 'Clear'], ['setValue', 'Set value of'], ['only', 'Offer only, in'], ['exclude', 'Remove options from']];
 const STEP_VERBS = [['skip', 'Skip step'], ['include', 'Include step'], ['goto', 'Go to step']];
 const OTHER_VERBS = [['add', 'Add to variable'], ['set', 'Set variable'], ['fetch', 'Fetch from service'], ['emit', 'Send event']];
 
-const propertyOf = (form, path, rules) => {
+const itemsOf = (form, list) => form.fields.properties[list]?.items?.properties ?? {};
+const propertyOf = (form, path, rules, list) => {
 	if (path?.startsWith('values.')) return form.fields.properties[path.slice(7)];
+	if (list && path?.startsWith('row.')) return itemsOf(form, list)[path.slice(4)];
+	if (list && path === 'index') return { type: 'integer' };
 	if (path?.startsWith('vars.')) return { type: rules?.fields.variables?.[path.slice(5)]?.type ?? 'number' };
 	return null;
 };
@@ -59,11 +62,13 @@ function valueEditor(property, value, onchange, { many = false, label = 'Value',
 
 /* === Conditions === */
 
-function conditionRow(editor, node, onchange, onremove) {
+function conditionRow(editor, node, onchange, onremove, list) {
 	const { form } = editor;
-	const property = propertyOf(form, node.path, editor.rules);
+	const property = propertyOf(form, node.path, editor.rules, list);
 	const variables = Object.entries(editor.rules.fields.variables ?? {}).map(([name, v]) => [`vars.${name}`, `${v.title ?? name} (variable)`]);
-	const fields = [...stepsOf(form).flatMap(step => step.fields.filter(id => form.fields.properties[id]?.type !== 'content').map(id => [`values.${id}`, `${form.fields.properties[id]?.title ?? id} (${step.name})`])), ...variables];
+	/* A row rule reads the cells of the current row first. */
+	const rowFields = list ? [...Object.entries(itemsOf(form, list)).map(([key, item]) => [`row.${key}`, `${item.title ?? key} (this row)`]), ['index', 'Row number (from 0)']] : [];
+	const fields = [...rowFields, ...stepsOf(form).flatMap(step => step.fields.filter(id => form.fields.properties[id]?.type !== 'content').map(id => [`values.${id}`, `${form.fields.properties[id]?.title ?? id} (${step.name})`])), ...variables];
 	const known = fields.some(([path]) => path === node.path);
 	const fieldOptions = [...fields, ['other', 'Context, fact or service…']];
 	const ops = operatorsFor(property);
@@ -74,12 +79,12 @@ function conditionRow(editor, node, onchange, onremove) {
 	const comparable = COMPARE.includes(node.op);
 	const others = fields.filter(([path]) => path !== node.path);
 	/* A string field compared as a number needs num(); choice and number fields do not. */
-	const withNum = (next, prop = propertyOf(form, next.path, editor.rules)) => ({ ...next, num: COMPARE.slice(2).includes(next.op) && (prop?.type === 'string' || !prop) });
+	const withNum = (next, prop = propertyOf(form, next.path, editor.rules, list)) => ({ ...next, num: COMPARE.slice(2).includes(next.op) && (prop?.type === 'string' || !prop) });
 
 	return h('li', { part: 'condition' },
 		select(fieldOptions, known ? node.path : 'other', value => {
 			if (value === 'other') onchange({ ...node, path: 'context.', value: null });
-			else onchange(withNum({ ...node, path: value, value: propertyOf(form, value, editor.rules)?.type === 'boolean' ? true : null, op: '===' }));
+			else onchange(withNum({ ...node, path: value, value: propertyOf(form, value, editor.rules, list)?.type === 'boolean' ? true : null, op: '===' }));
 		}, { 'aria-label': 'Field' }),
 		known ? null : h('input', { value: node.path, 'aria-label': 'Path, for example context.channel or facts.pricing.region', onchange: e => onchange(withNum({ ...node, path: e.target.value.trim() })) }),
 		select(ops, node.op, op => {
@@ -99,10 +104,12 @@ function conditionRow(editor, node, onchange, onremove) {
 	);
 }
 
-function groupEditor(editor, node, onchange, depth = 0, onremove = null) {
+function groupEditor(editor, node, onchange, depth = 0, onremove = null, list) {
 	const setItem = (index, item) => onchange({ ...node, items: node.items.map((current, i) => (i === index ? item : current)) });
 	const removeItem = index => onchange({ ...node, items: node.items.filter((_, i) => i !== index) });
 	const firstField = stepsOf(editor.form).flatMap(step => step.fields)[0];
+	const firstItem = list ? Object.keys(itemsOf(editor.form, list))[0] : null;
+	const firstPath = firstItem ? `row.${firstItem}` : firstField ? `values.${firstField}` : 'context.';
 
 	return h('div', { part: depth ? 'group nested' : 'group' },
 		h('div', { part: 'row' },
@@ -111,12 +118,12 @@ function groupEditor(editor, node, onchange, depth = 0, onremove = null) {
 		),
 		node.items.length ? null : h('p', {}, h('small', {}, 'No conditions: the rule always applies.')),
 		h('ul', {}, node.items.map((item, index) => {
-			if (item.kind === 'group') return h('li', {}, groupEditor(editor, item, next => setItem(index, next), depth + 1, () => removeItem(index)));
+			if (item.kind === 'group') return h('li', {}, groupEditor(editor, item, next => setItem(index, next), depth + 1, () => removeItem(index), list));
 			if (item.kind === 'raw') return h('li', { part: 'condition' }, rawEditor(editor, item.logic, logic => setItem(index, { kind: 'raw', logic }), 'Custom condition'), button('Remove', () => removeItem(index)));
-			return conditionRow(editor, item, next => setItem(index, next), () => removeItem(index));
+			return conditionRow(editor, item, next => setItem(index, next), () => removeItem(index), list);
 		})),
 		h('div', { part: 'row' },
-			button('+ Condition', () => onchange({ ...node, items: [...node.items, { kind: 'cond', path: firstField ? `values.${firstField}` : 'context.', num: false, op: 'filled', value: null }] })),
+			button('+ Condition', () => onchange({ ...node, items: [...node.items, { kind: 'cond', path: firstPath, num: false, op: 'filled', value: null }] })),
 			depth < 2 ? button('+ Group', () => onchange({ ...node, items: [...node.items, { kind: 'group', mode: 'or', items: [] }] })) : null
 		)
 	);
@@ -175,12 +182,15 @@ function fromRow(row) {
 	}
 }
 
-function actionRow(editor, action, onchange, onremove) {
+function actionRow(editor, action, onchange, onremove, list) {
 	const { form, rules } = editor;
 	const row = toRow(action);
 	if (row.verb === 'raw') return h('li', { part: 'action' }, rawEditor(editor, action, onchange, 'Custom action'), button('Remove', onremove));
 	const set = patch => onchange(fromRow({ ...row, ...patch }));
-	const fieldList = stepsOf(form).flatMap(step => step.fields.map(id => [id, form.fields.properties[id]?.title ?? id]));
+	/* A row rule acts on the cells of its row (list.item), with a shorter list of verbs. */
+	const fieldList = list
+		? Object.entries(itemsOf(form, list)).map(([key, item]) => [`${list}.${key}`, item.title ?? key])
+		: stepsOf(form).flatMap(step => step.fields.map(id => [id, form.fields.properties[id]?.title ?? id]));
 	const choiceFields = fieldList.filter(([id]) => choicesOf(form.fields.properties[id]).length);
 	const isField = FIELD_VERBS.some(([verb]) => verb === row.verb);
 	const isStep = STEP_VERBS.some(([verb]) => verb === row.verb);
@@ -188,7 +198,8 @@ function actionRow(editor, action, onchange, onremove) {
 	const slots = stepsOf(form).flatMap(step => step.slots ?? []);
 	const variables = Object.keys(rules.fields.variables ?? {});
 
-	const verbSelect = select([...FIELD_VERBS, ...STEP_VERBS, ...OTHER_VERBS], row.verb, verb => {
+	const verbs = list ? FIELD_VERBS.filter(([verb]) => ROW_ACTIONS.has(verb)) : [...FIELD_VERBS, ...STEP_VERBS, ...OTHER_VERBS];
+	const verbSelect = select(verbs, row.verb, verb => {
 		const firstField = (verb === 'only' || verb === 'exclude' ? choiceFields : fieldList)[0]?.[0] ?? '';
 		if (FIELD_VERBS.some(([v]) => v === verb)) set({ verb, target: isField && row.target ? row.target : firstField, values: [], value: null, rest: [], message: verb === 'invalid' ? 'Please check this value' : undefined });
 		else if (verb === 'add' || verb === 'set') set({ verb, variable: variables[0] ?? '', value: verb === 'add' ? 1 : null });
@@ -201,7 +212,7 @@ function actionRow(editor, action, onchange, onremove) {
 	if (isField) {
 		const targets = row.verb === 'only' || row.verb === 'exclude' ? choiceFields : fieldList;
 		detail.push(select(targets, row.target, target => set({ target, values: [], value: null }), { 'aria-label': 'Field' }));
-		const property = form.fields.properties[row.target];
+		const property = list ? itemsOf(form, list)[String(row.target).slice(list.length + 1)] : form.fields.properties[row.target];
 		if (row.verb === 'setValue') detail.push(h('span', {}, 'to'), valueEditor(property, row.value, value => set({ value })));
 		if (row.verb === 'invalid') {
 			detail.push(h('input', { value: row.message ?? '', 'aria-label': 'Message', placeholder: 'Message', onchange: e => set({ message: e.target.value }) }),
@@ -238,12 +249,14 @@ function actionRow(editor, action, onchange, onremove) {
 	return h('li', { part: 'action' }, verbSelect, detail, button('Remove', onremove, { 'aria-label': 'Remove action' }));
 }
 
-function actionList(editor, actions, onchange) {
-	const firstField = stepsOf(editor.form).flatMap(step => step.fields)[0] ?? '';
+const firstTarget = (form, list) => (list ? `${list}.${Object.keys(itemsOf(form, list))[0] ?? ''}` : stepsOf(form).flatMap(step => step.fields)[0] ?? '');
+
+function actionList(editor, actions, onchange, list) {
+	const firstField = firstTarget(editor.form, list);
 	return h('div', {},
 		h('ul', {}, actions.map((action, index) => actionRow(editor, action,
 			next => onchange(actions.map((a, i) => (i === index ? next : a))),
-			() => onchange(actions.filter((_, i) => i !== index))))),
+			() => onchange(actions.filter((_, i) => i !== index)), list))),
 		button('+ Action', () => onchange([...actions, { show: firstField }]))
 	);
 }
@@ -283,6 +296,8 @@ export function renderRulesView(editor) {
 
 function ruleEditor(editor, rule, index, count, updateRule, commitRules) {
 	const tree = parseCondition(rule.when);
+	const list = rule.forEach;
+	const lists = stepsOf(editor.form).flatMap(step => step.fields).filter(id => editor.form.fields.properties[id]?.type === 'list');
 	return h('div', { part: 'rule-editor' },
 		h('div', { part: 'row' },
 			field('Title', h('input', { value: rule.title ?? '', onchange: e => updateRule(rule.id, r => { r.title = e.target.value; }) })),
@@ -297,13 +312,23 @@ function ruleEditor(editor, rule, index, count, updateRule, commitRules) {
 				editor.select({ rule: id });
 			}
 		})) : null,
+		lists.length || list ? field('Runs', select([['', 'Once for the form'], ...lists.map(id => [id, `For each row of ${editor.form.fields.properties[id]?.title ?? id}`])], list ?? '', next => {
+			const used = rule.when !== true && rule.when !== undefined || (rule.then ?? []).length || rule.else;
+			if (used && !confirm('Changing this clears the rule\'s conditions and actions, since they read and change other fields. Continue?')) { editor.select({}); return; }
+			updateRule(rule.id, r => {
+			if (next) r.forEach = next; else delete r.forEach;
+			r.when = true;
+			r.then = [{ show: firstTarget(editor.form, next) }];
+			delete r.else;
+			});
+		}), list ? 'Conditions read this row; actions change its cells' : null) : null,
 		check('Track this rule in analytics', rule.track === true, value => updateRule(rule.id, r => { if (value) r.track = true; else delete r.track; })),
 		h('h3', {}, 'When'),
-		groupEditor(editor, tree, next => updateRule(rule.id, r => { r.when = serializeCondition(next); })),
+		groupEditor(editor, tree, next => updateRule(rule.id, r => { r.when = serializeCondition(next); }), 0, null, list),
 		h('h3', {}, 'Then'),
-		actionList(editor, rule.then ?? [], then => updateRule(rule.id, r => { r.then = then; })),
-		rule.else ? [h('h3', {}, 'Otherwise'), actionList(editor, rule.else, otherwise => updateRule(rule.id, r => { if (otherwise.length) r.else = otherwise; else delete r.else; }))]
-			: button('+ Otherwise', () => updateRule(rule.id, r => { r.else = [{ show: stepsOf(editor.form).flatMap(s => s.fields)[0] ?? '' }]; })),
+		actionList(editor, rule.then ?? [], then => updateRule(rule.id, r => { r.then = then; }), list),
+		rule.else ? [h('h3', {}, 'Otherwise'), actionList(editor, rule.else, otherwise => updateRule(rule.id, r => { if (otherwise.length) r.else = otherwise; else delete r.else; }), list)]
+			: button('+ Otherwise', () => updateRule(rule.id, r => { r.else = [{ show: firstTarget(editor.form, list) }]; })),
 		h('div', { part: 'row' },
 			button('Move up', () => commitRules(f => { f.rules = moveItem(f.rules, index, -1); }), { disabled: index === 0 }),
 			button('Move down', () => commitRules(f => { f.rules = moveItem(f.rules, index, 1); }), { disabled: index === count - 1 }),
