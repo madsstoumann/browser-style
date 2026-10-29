@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { parseCondition, serializeCondition, summarize } from '../modules/conditions.js';
-import { addField, addStep, emptyForm, emptyRules, fieldId, newRule, renameField, renameStep, rulesUsingField, slugify } from '../modules/model.js';
+import { addField, addNamedCondition, addStep, emptyForm, emptyRules, fieldId, nameCondition, newRule, renameField, renameStep, rulesUsingField, slugify, usesOfVariable } from '../modules/model.js';
 import { validate } from '../../form-rules/index.js';
 
 const load = path => JSON.parse(readFileSync(new URL(path, import.meta.url), 'utf8'));
@@ -66,7 +66,7 @@ test('goto and step-inserting fetches read as sentences', () => {
 	const goto = rules.fields.rules.find(rule => rule.id === 'outside-area');
 	assert.equal(summarize(form, goto), 'When Zip code is at least 9000: go to Review.');
 	const health = rules.fields.rules.find(rule => rule.id === 'senior-health');
-	assert.equal(summarize(form, health), 'When Age group is at least 50+: fetch extra steps from health after Your cover.');
+	assert.equal(summarize(form, health, rules), 'When Is senior customer: fetch extra steps from health after Your cover.');
 	assert.equal(summarize(form, { when: true, then: [{ goto: { step: 'review', from: 'you' } }] }), 'Always: go to Review after About you.');
 });
 
@@ -108,4 +108,19 @@ test('row rules read as sentences and follow a renamed list', () => {
 	assert.deepEqual(renamed.then, [{ require: 'basket.note' }]);
 	assert.ok(rulesUsingField(orderRules, 'lines').includes('many-cakes'));
 	assert.deepEqual(validate(result.form, result.rules).errors, []);
+});
+
+test('a condition can be named, and rules read it by its name', () => {
+	const result = nameCondition(rules, 'senior-north', 'Older and north');
+	assert.equal(result.name, 'olderAndNorth');
+	const rule = result.rules.fields.rules.find(r => r.id === 'senior-north');
+	assert.deepEqual(rule.when, { '===': [{ var: 'vars.olderAndNorth' }, true] });
+	assert.deepEqual(result.rules.fields.variables.olderAndNorth.compute, rules.fields.rules[0].when);
+	assert.match(summarize(form, rule, result.rules), /^When Older and north: /);
+	assert.match(summarize(form, { when: { '===': [{ var: 'vars.isSenior' }, false] }, then: [] }, rules), /^When not Is senior customer:/);
+	assert.deepEqual(usesOfVariable(result.rules, 'olderAndNorth'), ['senior-north']);
+	assert.deepEqual(validate(form, result.rules).errors, []);
+	const added = addNamedCondition(rules, 'Is senior customer');
+	assert.equal(added.name, 'isSeniorCustomer');
+	assert.equal(added.rules.fields.variables.isSeniorCustomer.compute, true);
 });

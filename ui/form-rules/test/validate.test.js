@@ -77,7 +77,7 @@ test('a fetch may name a step to insert after, which must exist', () => {
 test('variables must be declared, and rules may not write computed ones or feed their own input', () => {
 	const result = validate(form, {
 		...rules.fields, id: rules.id,
-		variables: { score: { type: 'number', initial: 0 }, age: { compute: { yearsBetween: ['2000-01-01', { var: 'today' }] } } },
+		variables: { ...rules.fields.variables, score: { type: 'number', initial: 0 }, age: { compute: { yearsBetween: ['2000-01-01', { var: 'today' }] } } },
 		rules: [...rules.fields.rules,
 			{ id: 'ghost-var', when: { '>': [{ var: 'vars.nope' }, 1] }, then: [] },
 			{ id: 'write-computed', when: true, then: [{ set: { var: 'age', value: 3 } }] },

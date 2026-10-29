@@ -167,3 +167,32 @@ export function newRule(rules, title = 'New rule') {
 	next.fields.rules = [...(next.fields.rules ?? []), { id, title, when: { and: [] }, then: [] }];
 	return { rules: next, id };
 }
+
+/* Named conditions: a computed yes/no variable, read in rules as { "===": [{ "var": "vars.x" }, true] }. */
+export const isNamedCondition = definition => definition?.type === 'boolean' && 'compute' in (definition ?? {});
+
+export function addNamedCondition(rules, title, compute = true) {
+	const next = clone(rules);
+	const taken = Object.keys(next.fields.variables ?? {});
+	const name = fieldId(title, taken).replace(/^field/, 'is');
+	next.fields.variables = { ...(next.fields.variables ?? {}), [name]: { type: 'boolean', title, compute } };
+	return { rules: next, name };
+}
+
+/* Moves a rule's condition into a named condition and makes the rule read it. */
+export function nameCondition(rules, ruleId, title) {
+	const rule = (rules.fields.rules ?? []).find(r => r.id === ruleId);
+	if (!rule || rule.forEach) return { rules, name: null };
+	const result = addNamedCondition(rules, title, rule.when ?? true);
+	result.rules.fields.rules.find(r => r.id === ruleId).when = { '===': [{ var: `vars.${result.name}` }, true] };
+	return result;
+}
+
+/* Ids of the rules, and names of the variables, that read a variable. */
+export function usesOfVariable(rules, name) {
+	const reads = value => JSON.stringify(value ?? null).includes(`"vars.${name}"`);
+	return [
+		...(rules.fields.rules ?? []).filter(rule => reads([rule.when, rule.then, rule.else])).map(rule => rule.id),
+		...Object.entries(rules.fields.variables ?? {}).filter(([other, definition]) => other !== name && reads(definition.compute)).map(([other]) => `vars.${other}`)
+	];
+}
