@@ -27,6 +27,10 @@ export const VARIABLE_ACTIONS = ['add', 'set'];
 
 export const ACTIONS = Object.freeze([...Object.keys(FLAG_ACTIONS), 'setValue', 'clear', 'options', ...Object.keys(STEP_ACTIONS), 'goto', ...VARIABLE_ACTIONS, 'invalid', 'fetch', 'emit']);
 
+/* What a rule for each row ("forEach") may do: only the row's own fields, written "list.item". */
+export const ROW_ACTIONS = new Set([...Object.keys(FLAG_ACTIONS), 'setValue', 'clear', 'invalid']);
+export const rowTarget = (list, target) => (typeof target === 'string' && target.startsWith(`${list}.`) ? target.slice(list.length + 1) : null);
+
 /* What a patch rule may do to a field or step that belongs to the base form: only narrow it. */
 export const NARROWING = new Set(['hide', 'disable', 'require', 'options', 'skip', 'goto', 'invalid', 'emit', 'fetch']);
 

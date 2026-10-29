@@ -7,7 +7,7 @@
  */
 
 import { operatorsOf, readsOf, OPERATORS } from './logic.js';
-import { actionName, actionTargets, ACTIONS, gotoFrom, gotoOf, VARIABLE_ACTIONS } from './actions.js';
+import { actionName, actionTargets, ACTIONS, gotoFrom, gotoOf, ROW_ACTIONS, rowTarget, VARIABLE_ACTIONS } from './actions.js';
 import { normalizeForm, normalizeRuleSet, unwrap } from './form.js';
 import { CONTEXT_SOURCES } from './context.js';
 import { placeholdersOf } from './text.js';
@@ -15,6 +15,8 @@ import { placeholdersOf } from './text.js';
 const INPUT_ROOTS = ['values', 'context', 'facts', 'step', 'today', 'vars', 'services'];
 /* Only these change what a condition can read, since hidden values read as absent. */
 const VISIBILITY = new Set(['show', 'hide', 'skip', 'include']);
+/* Row actions that take a cell out of what rules read. */
+const CELL_HIDING = new Set(['show', 'hide', 'enable', 'disable']);
 
 /* Names used by the "check" operator. */
 function checksOf(logic, found = []) {
@@ -205,8 +207,19 @@ export function validate(formDefinition, ruleSetDocument, { functions = {}, type
 			if (typeof name !== 'string' || typeof functions[name] !== 'function') fail('function', `"check" uses "${name}", which no function provides`, `${path}.when`);
 		});
 		const fieldReads = new Set();
+		/* A row rule runs once per row of a repeating group: it reads row.* and index, and acts on that row's fields. */
+		const list = rule.forEach;
+		const isRowRule = list !== undefined;
+		const items = isRowRule ? form.fields.get(list)?.property?.items?.properties : null;
+		if (isRowRule && (typeof list !== 'string' || form.fields.get(list)?.property?.type !== 'list')) fail('row-rule', `"forEach" must name a repeating group; "${list}" is not one`, `${path}.forEach`);
+		const rowReads = new Set();
 		readsOf(rule.when ?? true).forEach(variable => {
 			const [root, ...rest] = variable.split('.');
+			if (isRowRule && (root === 'row' || root === 'index')) {
+				if (root === 'row' && items && !Object.hasOwn(items, rest[0])) fail('field', `Condition reads "${variable}", but "${list}" has no row field "${rest[0]}"`, `${path}.when`);
+				if (root === 'row') rowReads.add(rest[0]);
+				return;
+			}
 			if (!INPUT_ROOTS.includes(root)) {
 				fail('variable', `"${variable}" must start with ${INPUT_ROOTS.join(', ')}`, `${path}.when`);
 				return;
@@ -234,6 +247,20 @@ export function validate(formDefinition, ruleSetDocument, { functions = {}, type
 			}
 			const value = action[name];
 			const { fields, steps } = actionTargets(action);
+			if (isRowRule) {
+				if (!ROW_ACTIONS.has(name)) {
+					fail('row-rule', `A rule for each row can only show, hide, enable, disable, require, make optional, set, clear or mark the row's own fields; not "${name}"`, at);
+					return;
+				}
+				fields.forEach(target => {
+					const item = rowTarget(list, target);
+					if (!item || !items || !Object.hasOwn(items, item)) fail('field', `Action targets "${target}"; a rule for each row of "${list}" targets "${list}.<row field>"`, at);
+					else if (rowReads.has(item) && (CELL_HIDING.has(name) || name === 'setValue' || name === 'clear')) fail('cycle', `Rule "${rule.id}" reads row.${item} and also changes it`, at);
+					else if (fieldReads.has(list) && CELL_HIDING.has(name)) fail('cycle', `Rule "${rule.id}" reads values.${list} and also hides or disables its row fields`, at);
+				});
+				if (name === 'invalid' && typeof value?.message !== 'string') fail('invalid', 'invalid needs a message', at);
+				return;
+			}
 			fields.forEach(id => {
 				if (!form.fields.has(id)) fail('field', `Action targets unknown field "${id}"`, at);
 				else if (VISIBILITY.has(name)) ruleWrites.add(id);

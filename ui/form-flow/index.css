@@ -60,6 +60,9 @@
 			& [part=rows] > li { align-items: end; border: 1px solid var(--color-border); border-radius: var(--radius-md, .5rem); display: flex; flex-wrap: wrap; gap: var(--spacing-sm, .5rem); padding: var(--spacing-sm, .5rem); }
 			& [part=rows] [part=field] { display: grid; flex: 1 1 12ch; gap: var(--label-gap, .25rem); }
 			& [data-list-add] { justify-self: start; }
+			& td[data-cell-hidden] > * { visibility: hidden; }
+			& label[data-cell-hidden] { display: none; }
+			& td small[part=warning] { display: block; }
 		}
 		& [data-slot] {
 			display: grid;

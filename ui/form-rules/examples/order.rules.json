@@ -17,6 +17,21 @@
 		},
 		"rules": [
 			{
+				"id": "cake-note",
+				"title": "A cake line needs a note; other lines have none",
+				"forEach": "lines",
+				"when": { "===": [{ "var": "row.product" }, "cake"] },
+				"then": [{ "require": "lines.note" }],
+				"else": [{ "hide": "lines.note" }]
+			},
+			{
+				"id": "many-cakes",
+				"title": "Warn about large cake orders",
+				"forEach": "lines",
+				"when": { "and": [{ "===": [{ "var": "row.product" }, "cake"] }, { ">": [{ "var": "row.qty" }, 10] }] },
+				"then": [{ "invalid": { "field": "lines.qty", "code": "many-cakes", "level": "warning", "message": "More than 10 cakes may take an extra day" } }]
+			},
+			{
 				"id": "no-sunday",
 				"title": "No deliveries on Sundays",
 				"when": { "===": [{ "datePart": [{ "var": "values.date" }, "weekday"] }, 7] },

@@ -1,0 +1,144 @@
+{
+	"description": "Rules for each row: a cake line needs a note, other lines hide it, and a large cake order warns on its own row",
+	"form": "../examples/order.form.json",
+	"rules": "../examples/order.rules.json",
+	"input": {
+		"values": {
+			"lines": [
+				{
+					"product": "tea",
+					"qty": 2,
+					"note": "no sugar"
+				},
+				{
+					"product": "cake",
+					"qty": 12
+				},
+				{
+					"product": "cake",
+					"qty": 1,
+					"note": "Birthday"
+				}
+			],
+			"tip": 0,
+			"country": "dk",
+			"city": "copenhagen",
+			"street": "Strøget",
+			"date": "2026-10-31",
+			"email": "ada@example.org"
+		},
+		"choices": {
+			"city": [
+				{
+					"value": "copenhagen",
+					"label": "Copenhagen"
+				}
+			]
+		},
+		"today": "2026-10-28"
+	},
+	"expect": {
+		"values": {
+			"lines": [
+				{
+					"product": "tea",
+					"qty": 2
+				},
+				{
+					"product": "cake",
+					"qty": 12
+				},
+				{
+					"product": "cake",
+					"qty": 1,
+					"note": "Birthday"
+				}
+			],
+			"tip": 0,
+			"items": 15,
+			"subtotal": 570,
+			"total": 570,
+			"country": "dk",
+			"city": "copenhagen",
+			"street": "Strøget",
+			"date": "2026-10-31",
+			"email": "ada@example.org"
+		},
+		"matched": [
+			"cake-note",
+			"many-cakes"
+		],
+		"issues": [
+			{
+				"field": "lines",
+				"row": 1,
+				"item": "qty",
+				"code": "many-cakes",
+				"message": "More than 10 cakes may take an extra day",
+				"level": "warning",
+				"rule": "many-cakes"
+			},
+			{
+				"field": "lines",
+				"row": 1,
+				"item": "note",
+				"code": "required"
+			}
+		],
+		"rows": {
+			"lines": [
+				{
+					"product": {
+						"visible": true,
+						"enabled": true,
+						"required": true
+					},
+					"qty": {
+						"visible": true,
+						"enabled": true,
+						"required": true
+					},
+					"note": {
+						"visible": false,
+						"enabled": true,
+						"required": false
+					}
+				},
+				{
+					"product": {
+						"visible": true,
+						"enabled": true,
+						"required": true
+					},
+					"qty": {
+						"visible": true,
+						"enabled": true,
+						"required": true
+					},
+					"note": {
+						"visible": true,
+						"enabled": true,
+						"required": true
+					}
+				},
+				{
+					"product": {
+						"visible": true,
+						"enabled": true,
+						"required": true
+					},
+					"qty": {
+						"visible": true,
+						"enabled": true,
+						"required": true
+					},
+					"note": {
+						"visible": true,
+						"enabled": true,
+						"required": true
+					}
+				}
+			]
+		}
+	}
+}

@@ -696,16 +696,34 @@ export default class FormFlow extends HTMLElement {
 		const filled = rows.filter(row => Object.keys(this.#readRow(id, row)).length);
 		const issues = state.issues.filter(issue => issue.field === id);
 		const items = property?.items?.properties ?? {};
+		/* Rules for each row (forEach) decide each filled row's cells; state.rows counts filled rows, as issues do. */
+		const cells = state.rows?.[id];
+		const submitted = Array.isArray(state.values[id]) ? state.values[id] : [];
+		element.querySelectorAll('[data-row-warning]').forEach(note => note.remove());
 		/* A row field is required once its row has a value; the first row also when the group itself is required. */
 		rows.forEach((row, index) => row.querySelectorAll('[data-item]').forEach(control => {
-			control.required = items[control.dataset.item]?.required === true && (filled.includes(row) || (field.required && index === 0));
+			const key = control.dataset.item;
+			const at = filled.indexOf(row);
+			const cell = at >= 0 ? cells?.[at]?.[key] : null;
+			const visible = cell ? cell.visible : items[key]?.ui?.hidden !== true;
+			const wrapper = control.closest('td, label');
+			if (wrapper) wrapper.toggleAttribute('data-cell-hidden', !visible);
+			control.disabled = !visible || cell?.enabled === false;
+			control.required = visible && (cell ? cell.required : items[key]?.required === true) && (at >= 0 || (field.required && index === 0));
+			if (cell && state.explain[`${id}[${at}].${key}.value`]) {
+				const value = submitted[at]?.[key] ?? null;
+				if (control.type === 'checkbox') control.checked = value === true;
+				else control.value = value ?? '';
+			}
 			control.setCustomValidity('');
 		}));
 		for (const issue of issues) {
 			if (issue.row === undefined) continue;
 			const control = filled[issue.row]?.querySelector(`[data-item="${CSS.escape(issue.item)}"]`);
 			const text = issue.message ? this.#fill(issue.message, state) : issue.code === 'option-unavailable' ? (this.#label('unavailable', 'This option is no longer available')) : null;
-			if (control && text) control.setCustomValidity(text);
+			if (!control || !text) continue;
+			if (issue.level === 'warning') control.after(h('small', { part: 'warning', role: 'status', 'data-row-warning': '' }, text));
+			else control.setCustomValidity(text);
 		}
 		const own = issues.find(issue => issue.row === undefined && issue.message && issue.level !== 'warning');
 		const first = rows[0]?.querySelector('[data-item]');
