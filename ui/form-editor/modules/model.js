@@ -108,9 +108,11 @@ export function renameField(form, rules, from, to) {
 	if (Array.isArray(nextForm.fields.required)) nextForm.fields.required = nextForm.fields.required.map(id => (id === from ? to : id));
 
 	const nextRules = clone(rules);
-	const swap = id => (id === from ? to : id);
+	/* A row rule targets list.item, so a renamed list renames the prefix too. */
+	const swap = id => (id === from ? to : typeof id === 'string' && id.startsWith(`${from}.`) ? `${to}${id.slice(from.length)}` : id);
 	nextRules.fields.rules = (nextRules.fields.rules ?? []).map(rule => ({
 		...rule,
+		...(rule.forEach === from ? { forEach: to } : {}),
 		when: renameReads(rule.when, from, to),
 		then: (rule.then ?? []).map(action => renameTargets(action, swap)),
 		...(rule.else ? { else: rule.else.map(action => renameTargets(action, swap)) } : {})
@@ -140,7 +142,7 @@ export function renameStep(form, rules, from, to) {
 export function rulesUsingField(rules, id) {
 	return (rules.fields.rules ?? []).filter(rule => {
 		const text = JSON.stringify([rule.when, rule.then, rule.else]);
-		return text.includes(`"values.${id}"`) || text.includes(`"values.${id}.`) || text.includes(`"${id}"`);
+		return rule.forEach === id || text.includes(`"values.${id}"`) || text.includes(`"values.${id}.`) || text.includes(`"${id}"`) || text.includes(`"${id}.`);
 	}).map(rule => rule.id);
 }
 

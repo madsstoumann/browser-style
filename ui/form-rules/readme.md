@@ -23,6 +23,7 @@ const state = evaluate(form, rules, { values, context, facts, previous, today: '
 | `jumps` | The gotos taken: `{ from, to, rules }` |
 | `vars` | The rule set's variables after this evaluation |
 | `fields` | Per field: `visible`, `enabled`, `required`, `options` (narrowed choices), `step`, `source` |
+| `rows` | Per cell of a list that row rules act on: `rows.lines[0].note` is `{ visible, enabled, required }` |
 | `values` | What would be submitted: visible, enabled fields only, `setValue` applied, unavailable options removed |
 | `matched` | Ids of the rules that matched |
 | `effects` | `fetch` and `emit` requests for the host to carry out, and `track` edges (`rule.enter` / `rule.leave`) of rules marked `"track": true` |
@@ -82,7 +83,7 @@ Field types are data: `types/core.json` is the core package (text, choices, emai
 Property types beyond the plain inputs: `content` (a text block, never submitted), `file` (value `[{ name, size, type }]`, checked against `accept`, `maxSize`, `maxFiles`, never saved in a draft), a `boolean` with `ui.widget: "consent"` (`consentRecords(form, values)` gives what each ticked box said), and any field may prefill `from` `context.*` / `facts.*` or its `default`. A required boolean must be `true`.
 
 - **Calculated values**: `from: "vars.<name>"` makes a field whose value is always the variable's; a posted value is ignored. `calculatedFrom(property)` names the variable.
-- **Repeating groups**: `type: "list"` with `items.properties`; the value is an array of rows, cleaned and checked cell by cell (issues carry `row` and `item`), with `validation.minItems` / `maxItems`.
+- **Repeating groups**: `type: "list"` with `items.properties`; the value is an array of rows, cleaned and checked cell by cell (issues carry `row` and `item`), with `validation.minItems` / `maxItems`. A rule with `forEach: "<list>"` runs per row: it reads `row.<item>` and `index`, acts on `<list>.<item>`, and the result's `rows` holds each cell's `{ visible, enabled, required }`.
 - **Option sources**: `options.source` names a service. A select gets its list from it (the engine emits an `options` effect; pass the list back as `input.choices[field]` to check answers against it); a string only gets suggestions.
 - **Placeholders**: `{values.x}`, `{vars.x}`, `{context.x}`, `{facts.x}` in titles, help, text blocks and messages; `fillText()` and `placeholdersOf()` are exported, and `validate()` checks what they name.
 - **Messages**: `input.messages` replaces the default text per issue code (`{limit}` is the limit), which is how form-flow's language packs translate them.
