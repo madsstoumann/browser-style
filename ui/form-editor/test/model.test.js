@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { parseCondition, serializeCondition, summarize } from '../modules/conditions.js';
-import { addField, addNamedCondition, addStep, emptyForm, emptyRules, fieldId, nameCondition, newRule, renameField, renameStep, rulesUsingField, slugify, usesOfVariable } from '../modules/model.js';
+import { addField, addNamedCondition, copyRule, fieldsOfRule, pasteRule, addStep, emptyForm, emptyRules, fieldId, nameCondition, newRule, renameField, renameStep, rulesUsingField, slugify, usesOfVariable } from '../modules/model.js';
 import { validate } from '../../form-rules/index.js';
 
 const load = path => JSON.parse(readFileSync(new URL(path, import.meta.url), 'utf8'));
@@ -123,4 +123,20 @@ test('a condition can be named, and rules read it by its name', () => {
 	const added = addNamedCondition(rules, 'Is senior customer');
 	assert.equal(added.name, 'isSeniorCustomer');
 	assert.equal(added.rules.fields.variables.isSeniorCustomer.compute, true);
+});
+
+test('a rule is copied with what it needs and pasted into another form', () => {
+	const copied = copyRule(rules, 'senior-health');
+	assert.deepEqual(Object.keys(copied.variables), ['isSenior']);
+	assert.deepEqual(Object.keys(copied.services), ['health']);
+	assert.deepEqual(fieldsOfRule(rules.fields.rules[0]).sort(), ['ageGroup', 'plan', 'zip']);
+	const again = pasteRule(form, rules, copied);
+	assert.equal(again.id, 'senior-health-2');
+	assert.deepEqual(again.missing, []);
+	const other = emptyForm('other');
+	const pasted = pasteRule(other, emptyRules('other'), copied);
+	assert.deepEqual(pasted.rules.fields.rules.map(rule => rule.id), ['senior-health']);
+	assert.deepEqual(pasted.missing, ['ageGroup'], 'read through the named condition');
+	assert.deepEqual(pasted.rules.fields.variables.isSenior, rules.fields.variables.isSenior);
+	assert.deepEqual(pasteRule(other, emptyRules('other'), copyRule(rules, 'senior-north')).missing.sort(), ['ageGroup', 'plan', 'zip']);
 });

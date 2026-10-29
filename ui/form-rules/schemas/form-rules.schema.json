@@ -109,6 +109,7 @@
 				"priority": { "type": "number" },
 				"track": { "type": "boolean", "description": "Report rule.enter / rule.leave to analytics as track effects" },
 				"forEach": { "type": "string", "description": "A repeating group (list field): the rule runs once per row, reads row.* and index, and acts only on that row's fields, written \"<list>.<row field>\" (show, hide, enable, disable, require, optional, setValue, clear, invalid)" },
+				"note": { "type": "string", "description": "A note for editors: why the rule exists, who asked for it. The engine ignores it" },
 				"when": { "$ref": "#/definitions/logic" },
 				"then": { "type": "array", "items": { "$ref": "#/definitions/action" } },
 				"else": { "type": "array", "items": { "$ref": "#/definitions/action" } }
