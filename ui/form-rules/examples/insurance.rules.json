@@ -15,6 +15,9 @@
 			{ "type": "rules.published", "replace": "rules" },
 			{ "type": "campaign.started", "patch": { "namespace": "campaign", "into": "cover.extra" } }
 		],
+		"variables": {
+			"isSenior": { "type": "boolean", "title": "Is senior customer", "compute": { ">=": [{ "var": "values.ageGroup" }, 50] } }
+		},
 		"rules": [
 			{
 				"id": "senior-north",
@@ -65,7 +68,7 @@
 			{
 				"id": "senior-health",
 				"title": "Over 50s answer health questions",
-				"when": { ">=": [{ "var": "values.ageGroup" }, 50] },
+				"when": { "===": [{ "var": "vars.isSenior" }, true] },
 				"then": [{ "fetch": { "service": "health", "after": "cover" } }]
 			},
 			{

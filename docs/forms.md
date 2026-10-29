@@ -534,6 +534,26 @@ An action is an object with one key. The list is closed: `validate()` refuses an
 - `explain["vars.score"]` lists the rules that changed it.
 - Variables are never submitted. A server that re-checks a submit computes them again from the answers, so changing them in the browser changes nothing that is stored. See [What a server can trust](#what-a-server-can-trust).
 
+
+### Named conditions
+
+A named condition is a computed yes/no variable with a title. It lets one condition be written once and used by many rules:
+
+```json
+"variables": {
+  "isSenior": { "type": "boolean", "title": "Is senior customer", "compute": { ">=": [{ "var": "values.ageGroup" }, 50] } }
+}
+```
+
+A rule reads it as `{ "===": [{ "var": "vars.isSenior" }, true] }`. The engine needs nothing new for this; the editor treats such variables as their own kind:
+
+- **Named conditions** in the Rules view lists them and builds each one with the same pickers as a rule's When.
+- A rule's field picker offers them as "Is senior customer (named condition)", and the rule then reads "When Is senior customer: …", or "When not Is senior customer: …".
+- **Save as named condition…** under a rule's When moves its condition into a new named condition and makes the rule use it.
+- Deleting one lists the rules and variables that still read it.
+
+The insurance example's `senior-health` rule uses `isSenior`.
+
 ---
 
 ## Validation

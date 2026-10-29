@@ -3,7 +3,7 @@
  * and the services rules can fetch from.
  */
 import { h, field, check, select, button } from './dom.js';
-import { clone, moveItem, newRule, slugify, stepsOf } from './model.js';
+import { addNamedCondition, clone, isNamedCondition, moveItem, nameCondition, newRule, slugify, stepsOf, usesOfVariable } from './model.js';
 import { COMPARE, OPERATOR_WORDS, TEXT_OPS, parseCondition, serializeCondition, summarize } from './conditions.js';
 import { ROW_ACTIONS, actionName } from '../../form-rules/modules/actions.js';
 
@@ -65,7 +65,7 @@ function valueEditor(property, value, onchange, { many = false, label = 'Value',
 function conditionRow(editor, node, onchange, onremove, list) {
 	const { form } = editor;
 	const property = propertyOf(form, node.path, editor.rules, list);
-	const variables = Object.entries(editor.rules.fields.variables ?? {}).map(([name, v]) => [`vars.${name}`, `${v.title ?? name} (variable)`]);
+	const variables = Object.entries(editor.rules.fields.variables ?? {}).map(([name, v]) => [`vars.${name}`, `${v.title ?? name} (${isNamedCondition(v) ? 'named condition' : 'variable'})`]);
 	/* A row rule reads the cells of the current row first. */
 	const rowFields = list ? [...Object.entries(itemsOf(form, list)).map(([key, item]) => [`row.${key}`, `${item.title ?? key} (this row)`]), ['index', 'Row number (from 0)']] : [];
 	const fields = [...rowFields, ...stepsOf(form).flatMap(step => step.fields.filter(id => form.fields.properties[id]?.type !== 'content').map(id => [`values.${id}`, `${form.fields.properties[id]?.title ?? id} (${step.name})`])), ...variables];
@@ -278,7 +278,7 @@ export function renderRulesView(editor) {
 		h('ol', { part: 'rules' }, list.map((rule, index) => {
 			const open = selection.rule === rule.id;
 			return h('li', { part: open ? 'rule open' : 'rule' },
-				button(h('span', {}, h('strong', {}, rule.title ?? rule.id), h('br'), h('small', {}, summarize(form, rule))),
+				button(h('span', {}, h('strong', {}, rule.title ?? rule.id), h('br'), h('small', {}, summarize(form, rule, rules))),
 					() => editor.select({ view: 'rules', rule: open ? null : rule.id }), { part: 'rule-summary', 'aria-expanded': String(open) }),
 				open ? ruleEditor(editor, rule, index, list.length, updateRule, commitRules) : null
 			);
@@ -288,6 +288,7 @@ export function renderRulesView(editor) {
 			editor.commit({ rules: result.rules });
 			editor.select({ view: 'rules', rule: result.id });
 		}, { part: 'add' }),
+		namedConditionsEditor(editor, commitRules),
 		variablesEditor(editor, commitRules),
 		servicesEditor(editor, commitRules),
 		editor.advanced ? rawEditor(editor, rules.fields.listen ?? [], listen => commitRules(f => { f.listen = listen; }), 'Events this rule set listens for') : null
@@ -325,6 +326,11 @@ function ruleEditor(editor, rule, index, count, updateRule, commitRules) {
 		check('Track this rule in analytics', rule.track === true, value => updateRule(rule.id, r => { if (value) r.track = true; else delete r.track; })),
 		h('h3', {}, 'When'),
 		groupEditor(editor, tree, next => updateRule(rule.id, r => { r.when = serializeCondition(next); }), 0, null, list),
+		!list && tree.items.length && !(tree.items.length === 1 && isNamedCondition(editor.rules.fields.variables?.[tree.items[0].path?.slice(5)])) ? button('Save as named condition…', () => {
+			const title = prompt('Name the condition, for example "Is senior customer"', rule.title ?? '')?.trim();
+			if (!title) return;
+			editor.commit({ rules: nameCondition(editor.rules, rule.id, title).rules });
+		}) : null,
 		h('h3', {}, 'Then'),
 		actionList(editor, rule.then ?? [], then => updateRule(rule.id, r => { r.then = then; }), list),
 		rule.else ? [h('h3', {}, 'Otherwise'), actionList(editor, rule.else, otherwise => updateRule(rule.id, r => { if (otherwise.length) r.else = otherwise; else delete r.else; }), list)]
@@ -341,8 +347,37 @@ function ruleEditor(editor, rule, index, count, updateRule, commitRules) {
 	);
 }
 
+/* Named conditions: yes/no variables computed from a condition, built with the same pickers as a rule. */
+function namedConditionsEditor(editor, commitRules) {
+	const named = Object.entries(editor.rules.fields.variables ?? {}).filter(([, definition]) => isNamedCondition(definition));
+	return h('details', { part: 'services', open: named.length > 0 },
+		h('summary', {}, `Named conditions (${named.length})`),
+		h('p', {}, h('small', {}, 'A condition with a name, such as "Is senior customer". Rules pick it like a field; change it here and every rule that uses it follows.')),
+		named.map(([name, definition]) => h('fieldset', { part: 'service' },
+			h('legend', {}, definition.title ?? name),
+			field('Name', h('input', { value: definition.title ?? '', onchange: e => commitRules(f => { f.variables[name].title = e.target.value; }) }), editor.advanced ? `vars.${name}` : null),
+			groupEditor(editor, parseCondition(definition.compute), next => commitRules(f => { f.variables[name].compute = serializeCondition(next); })),
+			button('Delete named condition', () => {
+				const uses = usesOfVariable(editor.rules, name);
+				if (!confirm(uses.length ? `"${definition.title ?? name}" is used by ${uses.join(', ')}. Delete it anyway?` : `Delete "${definition.title ?? name}"?`)) return;
+				commitRules(f => { delete f.variables[name]; });
+			}, { part: 'danger' })
+		)),
+		h('form', {
+			part: 'row',
+			onsubmit: event => {
+				event.preventDefault();
+				const title = String(new FormData(event.target).get('title')).trim();
+				if (title) editor.commit({ rules: addNamedCondition(editor.rules, title).rules });
+			}
+		},
+		field('New named condition', h('input', { name: 'title', required: true, placeholder: 'Is senior customer' })),
+		h('button', { type: 'submit' }, 'Add'))
+	);
+}
+
 function variablesEditor(editor, commitRules) {
-	const variables = editor.rules.fields.variables ?? {};
+	const variables = Object.fromEntries(Object.entries(editor.rules.fields.variables ?? {}).filter(([, definition]) => !isNamedCondition(definition)));
 	const count = Object.keys(variables).length;
 	return h('details', { part: 'services', open: count > 0 },
 		h('summary', {}, `Variables (${count})`),

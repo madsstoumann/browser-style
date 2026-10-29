@@ -122,24 +122,29 @@ export function serializeCondition(tree) {
 
 /* In a row rule (forEach), row.x reads an item of the current row and index its position. */
 const itemsOf = (form, list) => form.fields.properties?.[list]?.items?.properties ?? {};
-const propertyOf = (form, path, list) => {
+/* scope: { list, rules } — the row rule's list, and the rule set for variable titles. */
+export const namedCondition = (rules, path) => {
+	const definition = path?.startsWith('vars.') ? rules?.fields?.variables?.[path.slice(5)] : null;
+	return definition?.type === 'boolean' && 'compute' in definition ? definition : null;
+};
+const propertyOf = (form, path, scope) => {
 	if (path.startsWith('values.')) return form.fields.properties?.[path.slice(7)];
-	if (list && path.startsWith('row.')) return itemsOf(form, list)[path.slice(4)];
+	if (scope?.list && path.startsWith('row.')) return itemsOf(form, scope.list)[path.slice(4)];
 	return null;
 };
 
-export function pathLabel(form, path, list) {
-	const property = propertyOf(form, path, list);
+export function pathLabel(form, path, scope) {
+	const property = propertyOf(form, path, scope);
 	if (property) return property.title ?? path.slice(path.indexOf('.') + 1);
-	if (list && path === 'index') return 'row number (from 0)';
+	if (scope?.list && path === 'index') return 'row number (from 0)';
 	const [root, ...rest] = path.split('.');
-	if (root === 'vars') return rest.join('.');
+	if (root === 'vars') return scope?.rules?.fields?.variables?.[rest.join('.')]?.title ?? rest.join('.');
 	return `${root} ${rest.join('.')}`.trim();
 }
 
-export function valueLabel(form, path, value, list) {
-	if (Array.isArray(value)) return value.map(item => valueLabel(form, path, item, list)).join(', ');
-	const choice = propertyOf(form, path, list)?.options?.choices?.find(c => c.value === value);
+export function valueLabel(form, path, value, scope) {
+	if (Array.isArray(value)) return value.map(item => valueLabel(form, path, item, scope)).join(', ');
+	const choice = propertyOf(form, path, scope)?.options?.choices?.find(c => c.value === value);
 	if (choice) return choice.label;
 	if (value === true) return 'yes';
 	if (value === false) return 'no';
@@ -149,32 +154,36 @@ export function valueLabel(form, path, value, list) {
 const WORDS = { ...OPERATOR_WORDS, '*': '×', '/': '÷', '+': '+', '-': '−', and: 'and', or: 'or' };
 
 /* Any JSON Logic as readable text, for conditions the builder cannot draw. */
-function logicText(form, logic, list) {
-	if (!isRule(logic)) return Array.isArray(logic) ? logic.map(item => logicText(form, item, list)).join(', ') : valueLabel(form, '', logic);
+function logicText(form, logic, scope) {
+	if (!isRule(logic)) return Array.isArray(logic) ? logic.map(item => logicText(form, item, scope)).join(', ') : valueLabel(form, '', logic);
 	const [op] = Object.keys(logic);
 	const args = Array.isArray(logic[op]) ? logic[op] : [logic[op]];
-	if (op === 'var') return typeof args[0] === 'string' ? pathLabel(form, args[0], list) : 'a value';
-	if (op === 'num' || op === 'lower') return logicText(form, args[0], list);
-	if (op === '!') return `not (${logicText(form, args[0], list)})`;
-	if (op === '!!') return `${logicText(form, args[0], list)} is filled in`;
-	if (op === 'check') return `${logicText(form, args[1], list)} passes ${args[0]}`;
-	if (op in WORDS && args.length >= 2) return args.map(arg => logicText(form, arg, list)).join(` ${WORDS[op]} `);
-	return `${op}(${args.map(arg => logicText(form, arg, list)).join(', ')})`;
+	if (op === 'var') return typeof args[0] === 'string' ? pathLabel(form, args[0], scope) : 'a value';
+	if (op === 'num' || op === 'lower') return logicText(form, args[0], scope);
+	if (op === '!') return `not (${logicText(form, args[0], scope)})`;
+	if (op === '!!') return `${logicText(form, args[0], scope)} is filled in`;
+	if (op === 'check') return `${logicText(form, args[1], scope)} passes ${args[0]}`;
+	if (op in WORDS && args.length >= 2) return args.map(arg => logicText(form, arg, scope)).join(` ${WORDS[op]} `);
+	return `${op}(${args.map(arg => logicText(form, arg, scope)).join(', ')})`;
 }
 
-function conditionText(form, node, nested = false, list) {
-	if (node.kind === 'raw') return logicText(form, node.logic, list);
+function conditionText(form, node, nested = false, scope) {
+	if (node.kind === 'raw') return logicText(form, node.logic, scope);
 	if (node.kind === 'group') {
 		if (!node.items.length) return 'always';
-		const text = node.items.map(item => conditionText(form, item, true, list)).join(node.mode === 'and' ? ' and ' : ' or ');
+		const text = node.items.map(item => conditionText(form, item, true, scope)).join(node.mode === 'and' ? ' and ' : ' or ');
 		return nested && node.items.length > 1 ? `(${text})` : text;
 	}
-	const label = pathLabel(form, node.path, list);
+	const label = pathLabel(form, node.path, scope);
+	/* A named condition reads as its title: "Is senior customer", "not Is senior customer". */
+	if (namedCondition(scope?.rules, node.path) && (node.op === '===' || node.op === '!==') && typeof node.value === 'boolean') {
+		return (node.op === '===') === node.value ? label : `not ${label}`;
+	}
 	const word = OPERATOR_WORDS[node.op];
 	if (node.op === 'filled' || node.op === 'empty') return `${label} ${word}`;
-	if (node.other) return `${label} ${word} ${pathLabel(form, node.other, list)}`;
+	if (node.other) return `${label} ${word} ${pathLabel(form, node.other, scope)}`;
 	if (TEXT_OPS.includes(node.op)) return `${label} ${word} “${node.value ?? ''}”${node.matchCase ? ' (match case)' : ''}`;
-	return `${label} ${word} ${valueLabel(form, node.path, node.value, list)}`;
+	return `${label} ${word} ${valueLabel(form, node.path, node.value, scope)}`;
 }
 
 /* A row rule targets list.item: named by the item's title. */
@@ -187,7 +196,7 @@ const valuePath = id => (String(id).includes('.') ? `row.${String(id).split('.')
 const stepName = (form, id) => (form.fields.structure?.layout ?? []).find(step => step.id === id)?.name ?? id;
 const asList = value => (Array.isArray(value) ? value : [value]);
 
-export function actionText(form, action, list) {
+export function actionText(form, action, scope) {
 	const name = actionName(action);
 	const value = action[name];
 	const fields = () => asList(value).map(id => fieldTitle(form, id)).join(', ');
@@ -200,7 +209,7 @@ export function actionText(form, action, list) {
 		case 'require': return `make ${fields()} required`;
 		case 'optional': return `make ${fields()} optional`;
 		case 'clear': return `clear ${fields()}`;
-		case 'setValue': return `set ${fieldTitle(form, value.field)} to ${valueLabel(form, valuePath(value.field), value.value, list)}`;
+		case 'setValue': return `set ${fieldTitle(form, value.field)} to ${valueLabel(form, valuePath(value.field), value.value, scope)}`;
 		case 'options': {
 			const field = fieldTitle(form, value.field);
 			const parts = [];
@@ -225,11 +234,12 @@ export function actionText(form, action, list) {
 
 const capitalize = text => text.charAt(0).toUpperCase() + text.slice(1);
 
-export function summarize(form, rule) {
+export function summarize(form, rule, rules) {
 	const list = rule.forEach;
-	const condition = conditionText(form, parseCondition(rule.when), false, list);
-	const then = (rule.then ?? []).map(action => actionText(form, action, list));
-	const otherwise = (rule.else ?? []).map(action => actionText(form, action, list));
+	const scope = { list, rules };
+	const condition = conditionText(form, parseCondition(rule.when), false, scope);
+	const then = (rule.then ?? []).map(action => actionText(form, action, scope));
+	const otherwise = (rule.else ?? []).map(action => actionText(form, action, scope));
 	let text = condition === 'always' ? 'Always' : `When ${condition}`;
 	if (list) text = `For each row of ${fieldTitle(form, list)}: ${condition === 'always' ? 'always' : `when ${condition}`}`;
 	text += then.length ? `: ${then.join(', ')}.` : ': do nothing.';
