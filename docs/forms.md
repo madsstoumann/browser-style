@@ -923,6 +923,23 @@ A key the server supplies always wins. A key declared `"from": "server"` is drop
 
 ---
 
+## Identity confirmation (designed, not built)
+
+Some forms must know who is answering: an application, a consent that has to hold up, a form that shows a person their own data. Most countries have a national or bank-run electronic identity for this: MitID in Denmark, BankID in Sweden and Norway, the bank IDs in Finland, Smart-ID and Mobile-ID in the Baltics, itsme in Belgium, DigiD and iDIN in the Netherlands, the online ID card in Germany, SPID and CIE in Italy, Cl@ve in Spain, FranceConnect in France and ID Austria. The UK and the US have none for private services, so sites there use document-and-selfie checks. Under eIDAS 2, every EU member state must offer an EU Digital Identity Wallet from around the end of 2026. These details change, so check each scheme before relying on it.
+
+Sites rarely connect to each scheme directly. A broker (Criipto, Signicat and others) puts many of them behind one OpenID Connect login. The client signs an agreement with the broker and pays per login. Brokers have free test environments with test users.
+
+Identity fits the existing design without engine changes. It is an adapter feature with a small browser part:
+
+1. **Providers are data.** One JSON profile per provider (MitID, Swedish BankID, itsme, the EU wallet, …), like the privacy profiles: the broker's OpenID Connect settings (issuer, client id, scopes) and a map from the provider's claims to our names. Secrets stay in the server's configuration. A new country is a new file, never code.
+2. **A "Confirm identity" field type** draws a "Continue with MitID" button. It saves the draft, sends the person through the adapter to the broker and back, and the form continues where it was.
+3. **Claims become server-owned context.** The adapter keeps the verified result (`context.identity.verified`, `name`, `birthdate`, the assurance level) and supplies it as [server context](#what-a-server-can-trust), keys declared `"from": "server"`. The browser can never claim them, and the server's re-check believes only its own copy. Rules then prefill and lock fields (`from: "context.identity.name"` with `disable`) or refuse a submit until the person is verified (`invalid` when `context.identity.verified` is not true).
+4. **Privacy.** A national id number (the Danish CPR) is `special`. Store only what the form asks for, encrypted like other special fields. MitID gives a person id by default; matching it to a CPR number is a separate lookup at the broker.
+
+Proving who someone is and signing a document are separate services in most schemes; a form usually needs only the first. Identity overlaps with [personal invitations](#not-built-yet), since both decide who is answering, and the two are designed together.
+
+---
+
 ## Not built yet
 
 These are designed but deliberately deferred. Nothing above depends on them.
@@ -935,6 +952,7 @@ These are designed but deliberately deferred. Nothing above depends on them.
 | **Insights** | Events reach the tracker | A `<form-insights>` funnel dashboard |
 | **Field types** | Core types plus installable packages, including text blocks, hidden values, consent, file uploads, repeating groups, calculated values and lists from services | Rules that act on single rows of a repeating group; where uploads are stored is up to each CMS adapter |
 | **Personal invitations** | A form can prefill from `context` | Invitation links with per-person prefill and one answer per invitation (adapter level) |
+| **Identity confirmation** | Server context keys can carry who the person is | A "Confirm identity" field type and per-provider OpenID Connect profiles in the adapter, see [Identity confirmation](#identity-confirmation-designed-not-built) |
 
 ---
 
