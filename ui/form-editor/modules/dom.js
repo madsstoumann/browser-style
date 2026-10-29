@@ -25,3 +25,10 @@ export const select = (options, value, onchange, attributes = {}) => h('select',
 );
 
 export const button = (label, onclick, attributes = {}) => h('button', { type: 'button', ...attributes, onclick }, label);
+
+/* Saves a JSON document as a file. */
+export const download = (name, doc) => {
+	const url = URL.createObjectURL(new Blob([`${JSON.stringify(doc, null, '\t')}\n`], { type: 'application/json' }));
+	h('a', { href: url, download: name }).click();
+	setTimeout(() => URL.revokeObjectURL(url), 1000);
+};

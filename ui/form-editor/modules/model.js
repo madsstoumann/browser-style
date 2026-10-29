@@ -3,7 +3,7 @@
  * No DOM: everything here runs in Node too (see test/model.test.js).
  */
 import { isRule } from '../../form-rules/modules/logic.js';
-import { renameTargets } from '../../form-rules/modules/actions.js';
+import { actionName, actionTargets, renameTargets } from '../../form-rules/modules/actions.js';
 
 export const clone = value => structuredClone(value);
 
@@ -195,4 +195,78 @@ export function usesOfVariable(rules, name) {
 		...(rules.fields.rules ?? []).filter(rule => reads([rule.when, rule.then, rule.else])).map(rule => rule.id),
 		...Object.entries(rules.fields.variables ?? {}).filter(([other, definition]) => other !== name && reads(definition.compute)).map(([other]) => `vars.${other}`)
 	];
+}
+
+/* Every var path a piece of JSON Logic (or a document) reads. */
+function readsOf(value, found = new Set()) {
+	if (Array.isArray(value)) value.forEach(item => readsOf(item, found));
+	else if (value && typeof value === 'object') {
+		if (isRule(value) && 'var' in value) {
+			const path = Array.isArray(value.var) ? value.var[0] : value.var;
+			if (typeof path === 'string') found.add(path);
+		}
+		Object.values(value).forEach(item => readsOf(item, found));
+	} else if (typeof value === 'string') {
+		for (const [, path] of value.matchAll(/\{((?:values|vars)\.[\w.]+)\}/g)) found.add(path);
+		if (/^vars\.\w+$/.test(value)) found.add(value);
+	}
+	return found;
+}
+
+/* The field ids a rule reads or acts on (a row target list.item counts as its list). */
+export function fieldsOfRule(rule) {
+	const fields = new Set(rule.forEach ? [rule.forEach] : []);
+	readsOf(rule.when).forEach(path => { if (path.startsWith('values.')) fields.add(path.slice(7).split('.')[0]); });
+	[...(rule.then ?? []), ...(rule.else ?? [])].forEach(action => {
+		actionTargets(action).fields.forEach(id => fields.add(String(id).split('.')[0]));
+		readsOf(action[actionName(action)]).forEach(path => { if (path.startsWith('values.')) fields.add(path.slice(7).split('.')[0]); });
+	});
+	return [...fields];
+}
+
+/* The variables and services a set of rules (and field properties) need, following computed variables. */
+export function dependenciesOf(rules, parts) {
+	const declared = rules.fields.variables ?? {};
+	const variables = {};
+	const services = {};
+	const visit = value => {
+		readsOf(value).forEach(path => {
+			const name = path.startsWith('vars.') ? path.slice(5) : null;
+			if (name && declared[name] && !variables[name]) { variables[name] = clone(declared[name]); visit(declared[name].compute); }
+		});
+		JSON.stringify(value ?? null).replace(/"(?:service|source)":"([^"]+)"/g, (_, name) => {
+			if (rules.fields.services?.[name]) services[name] = clone(rules.fields.services[name]);
+			return '';
+		});
+		JSON.stringify(value ?? null).replace(/"var":"([^"]+)"/g, (_, name) => {
+			if (declared[name] && !variables[name]) { variables[name] = clone(declared[name]); visit(declared[name].compute); }
+			return '';
+		});
+	};
+	parts.forEach(visit);
+	return { variables, services };
+}
+
+/* A rule with what it needs, to paste into another form. */
+export function copyRule(rules, ruleId) {
+	const rule = (rules.fields.rules ?? []).find(r => r.id === ruleId);
+	if (!rule) return null;
+	return { kind: 'form-editor/rule', rule: clone(rule), ...dependenciesOf(rules, [rule]) };
+}
+
+/* Adds a copied rule: a free id, plus the variables and services it needs that the rule set lacks.
+   Returns the fields it uses that this form does not have. */
+export function pasteRule(form, rules, copied) {
+	const next = clone(rules);
+	const ids = (next.fields.rules ?? []).map(rule => rule.id);
+	const id = slugify(copied.rule.id, ids);
+	next.fields.rules = [...(next.fields.rules ?? []), { ...clone(copied.rule), id }];
+	for (const key of ['variables', 'services']) {
+		const extra = Object.entries(copied[key] ?? {}).filter(([name]) => !next.fields[key]?.[name]);
+		if (extra.length) next.fields[key] = { ...(next.fields[key] ?? {}), ...Object.fromEntries(extra.map(([name, value]) => [name, clone(value)])) };
+	}
+	const used = new Set(fieldsOfRule(copied.rule));
+	Object.values(copied.variables ?? {}).forEach(definition => readsOf(definition.compute).forEach(path => { if (path.startsWith('values.')) used.add(path.slice(7).split('.')[0]); }));
+	const missing = [...used].filter(field => !form.fields.properties[field]);
+	return { rules: next, id, missing };
 }

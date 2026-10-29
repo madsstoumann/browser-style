@@ -489,7 +489,15 @@ A snippet is a group of fields with the rules that belong to them, saved as one 
 
 Inserting one copies its fields into the chosen step and its rules, variables and services into the rule set. An id that is already taken gets a number (`email2`), and every rule, placeholder and service that names it is renamed with it, so a form can hold two addresses. A snippet is a copy: changing the snippet file later does not change forms that used it.
 
-Snippets are data like type packages: `ui/form-editor/snippets/` has `address`, `contact` and `consent`, and the editor's `snippets` attribute lists the files to offer. `insertSnippet(form, rules, snippet, stepId)` and `snippetProblems(snippet)` are in `ui/form-editor/modules/snippets.js`.
+Snippets are data like type packages: `ui/form-editor/snippets/` has `address`, `contact` and `consent`, and the editor's `snippets` attribute lists the files to offer. `insertSnippet(form, rules, snippet, stepId)`, `extractSnippet(form, rules, fieldIds, { title })` and `snippetProblems(snippet)` are in `ui/form-editor/modules/snippets.js`.
+
+**Your own snippets.** A step's **Save fields as snippet…** picks some of its fields and saves them, with the rules that use only those fields and the variables and services those rules need. A rule that also uses another field is left out, and the editor says which ones. Saved snippets are kept in this browser and listed under *Your snippets* in every form's picker. **Download** gives the JSON file, which can go into a `snippets` folder for everyone to use.
+
+### Working with many rules
+
+- **Notes.** A rule's `note` is for editors: why it is there, who asked for it. The engine ignores it. The Rules view shows it under the sentence.
+- **Copy and paste.** **Copy rule** keeps the rule, with the variables and services it needs, for any form in this browser (and puts it on the clipboard as JSON). **Paste rule** in another form adds it under a free id. It adds the variables and services that form lacks and says which of the rule's fields that form does not have.
+- **Find a rule.** With more than three rules, the Rules view has a search box (title, note and wording) and a field picker ("only rules that use Zip code").
 
 ---
 

@@ -2,9 +2,9 @@
  * The form designer: the steps-and-fields outline, and inspectors for the form, a step and a field.
  * Every view gets `editor`: { form, rules, selection, advanced, commit({ form?, rules? }), select({ … }) }.
  */
-import { h, field, check, select, button } from './dom.js';
+import { h, field, check, select, button, download } from './dom.js';
 import { addField, addStep, clone, fieldId, moveItem, removeField, removeStep, renameField, renameStep, rulesUsingField, stepOfField, stepsOf } from './model.js';
-import { insertSnippet } from './snippets.js';
+import { extractSnippet, insertSnippet } from './snippets.js';
 import { changeType, fieldFromType, groupTypes, searchTypes, typeOf } from '../../form-rules/index.js';
 
 /* Settings for a field whose type no installed package describes. */
@@ -47,27 +47,37 @@ export function pickType(editor, { title = 'Add a field', current = null, onpick
 		h('span', { part: 'badge' }, type.glyph ?? '?'),
 		h('span', {}, h('strong', {}, type.title), type.description ? h('small', {}, type.description) : null)
 	], () => choose(type), { 'aria-current': current === type.kind ? 'true' : null, 'data-kind': type.kind }));
-	const snippetItem = snippet => h('li', {}, button([
+	const snippetItem = (snippet, own = false) => h('li', { part: own ? 'own' : null }, button([
 		h('span', { part: 'badge' }, '⧉'),
 		h('span', {}, h('strong', {}, snippet.title ?? snippet.snippet), h('small', {}, snippet.description ?? `${(snippet.fields ?? Object.keys(snippet.properties)).length} fields`))
-	], () => { dialog.close(); onsnippet(snippet); }, { 'data-snippet': snippet.snippet }));
-	const matchingSnippets = () => {
+	], () => { dialog.close(); onsnippet(snippet); }, { 'data-snippet': snippet.snippet }),
+	own ? [
+		button('Download', () => download(`${snippet.snippet}.json`, snippet), { 'aria-label': `Download ${snippet.title ?? snippet.snippet}` }),
+		button('Delete', () => {
+			if (!confirm(`Delete your snippet "${snippet.title ?? snippet.snippet}"?`)) return;
+			editor.deleteSnippet(snippet.snippet);
+			draw();
+		}, { part: 'danger', 'aria-label': `Delete ${snippet.title ?? snippet.snippet}` })
+	] : null);
+	const matching = snippets => {
 		const words = search.value.toLowerCase().split(/\s+/).filter(Boolean);
-		return onsnippet ? (editor.snippets ?? []).filter(snippet => words.every(word => [snippet.title, snippet.description, snippet.snippet, ...(snippet.keywords ?? [])].join(' ').toLowerCase().includes(word))) : [];
+		return onsnippet ? (snippets ?? []).filter(snippet => words.every(word => [snippet.title, snippet.description, snippet.snippet, ...(snippet.keywords ?? [])].join(' ').toLowerCase().includes(word))) : [];
 	};
 	const draw = () => {
 		const found = searchTypes(registry, search.value);
-		const snippets = matchingSnippets();
-		const own = found.filter(type => type.package === 'core');
+		const snippets = matching(editor.snippets);
+		const own = matching(editor.ownSnippets);
+		const core = found.filter(type => type.package === 'core');
 		const installed = registry.packages.filter(entry => entry.package !== 'core')
 			.map(entry => ({ entry, types: found.filter(type => type.package === entry.package) }))
 			.filter(group => group.types.length);
 		list.replaceChildren(...[
-			...groupTypes(registry, own).map(group => h('section', {}, h('h3', {}, group.group), h('ul', {}, group.types.map(item)))),
+			...groupTypes(registry, core).map(group => h('section', {}, h('h3', {}, group.group), h('ul', {}, group.types.map(item)))),
 			installed.length ? h('section', { part: 'installed' }, h('h3', {}, INSTALLED),
 				installed.map(({ entry, types }) => [h('h4', {}, entry.title), h('ul', {}, types.map(item))])) : null,
-			snippets.length ? h('section', { part: 'snippets' }, h('h3', {}, 'Snippets: several fields at once'), h('ul', {}, snippets.map(snippetItem))) : null,
-			found.length || snippets.length ? null : h('p', {}, `No field type matches "${search.value}". Install a type package to add more.`)
+			snippets.length ? h('section', { part: 'snippets' }, h('h3', {}, 'Snippets: several fields at once'), h('ul', {}, snippets.map(snippet => snippetItem(snippet)))) : null,
+			own.length ? h('section', { part: 'snippets' }, h('h3', {}, 'Your snippets'), h('ul', {}, own.map(snippet => snippetItem(snippet, true)))) : null,
+			found.length || snippets.length || own.length ? null : h('p', {}, `No field type matches "${search.value}". Install a type package to add more.`)
 		].filter(Boolean));
 	};
 	search.addEventListener('input', draw);
@@ -187,6 +197,7 @@ function stepInspector(editor, stepId) {
 				if (slots.length) s.slots = slots; else delete s.slots;
 			})
 		}), 'Comma-separated, for example cover.extra'),
+		step.fields.length ? button('Save fields as snippet…', () => saveSnippetDialog(editor, step)) : null,
 		h('div', { part: 'row' },
 			button('Move up', () => move(-1), { disabled: index <= 0 }),
 			button('Move down', () => move(1), { disabled: index >= form.fields.structure.layout.length - 1 }),
@@ -199,6 +210,39 @@ function stepInspector(editor, stepId) {
 			}, { part: 'danger', disabled: steps.length <= 1 })
 		)
 	);
+}
+
+/* Saves some of a step's fields, with the rules that use only them, as one of the editor's own snippets. */
+function saveSnippetDialog(editor, step) {
+	const { form, rules } = editor;
+	const title = h('input', { name: 'title', required: true, value: step.name });
+	const description = h('input', { name: 'description' });
+	const boxes = step.fields.map(id => h('input', { type: 'checkbox', name: 'field', value: id, checked: true, onchange: () => boxes[0].setCustomValidity('') }));
+	const result = () => extractSnippet(form, rules, boxes.filter(box => box.checked).map(box => box.value), { title: title.value.trim(), description: description.value.trim() });
+	const dialog = h('dialog', { part: 'type-picker', 'aria-label': 'Save as snippet' },
+		h('form', {
+			method: 'dialog',
+			onsubmit: event => {
+				if (!boxes.some(box => box.checked) && event.submitter?.value !== 'cancel') { event.preventDefault(); boxes[0].setCustomValidity('Pick at least one field'); boxes[0].reportValidity(); return; }
+				const { snippet, skipped } = result();
+				if (event.submitter?.value === 'download') download(`${snippet.snippet}.json`, snippet);
+				else if (event.submitter?.value === 'save') {
+					if (editor.ownSnippets.some(s => s.snippet === snippet.snippet) && !confirm(`Replace your snippet "${snippet.title}"?`)) { event.preventDefault(); return; }
+					editor.saveSnippet(snippet);
+				} else return;
+				editor.notify(`Snippet "${snippet.title}" ${event.submitter.value === 'save' ? 'saved: find it under + Field' : 'downloaded'}.${skipped.length ? ` Left out rules that also use other fields: ${skipped.join(', ')}.` : ''}`);
+			}
+		},
+		h('header', { part: 'row' }, h('h2', {}, 'Save as snippet'), h('button', { value: 'cancel', 'aria-label': 'Close', formnovalidate: true }, '×')),
+		field('Title', title),
+		field('Description', description, 'Shown in the + Field picker'),
+		h('fieldset', {}, h('legend', {}, 'Fields'), step.fields.map((id, i) => h('label', {}, boxes[i], titleOf(editor, id)))),
+		h('p', {}, h('small', {}, 'Rules that use only these fields come along, with the variables and services they need. Your snippets are kept in this browser; download one to share it as a file.')),
+		h('div', { part: 'row' }, h('button', { value: 'save' }, 'Save'), h('button', { value: 'download' }, 'Download'))));
+	dialog.addEventListener('close', () => dialog.remove());
+	editor.append(dialog);
+	dialog.showModal();
+	title.select();
 }
 
 const NUMBER_TEXT = /^-?\d+(\.\d+)?$/;

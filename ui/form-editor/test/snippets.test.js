@@ -41,3 +41,18 @@ test('every bundled snippet is well formed and validates on its own', () => {
 	}
 	assert.ok(snippetProblems({ properties: {}, fields: ['x'] }).length === 2);
 });
+
+test('fields become a snippet with the rules that use only them', async () => {
+	const { extractSnippet, insertSnippet: insert } = await import('../modules/snippets.js');
+	const order = JSON.parse(readFileSync(new URL('../../form-rules/examples/order.form.json', import.meta.url), 'utf8'));
+	const orderRules = JSON.parse(readFileSync(new URL('../../form-rules/examples/order.rules.json', import.meta.url), 'utf8'));
+	const { snippet, skipped } = extractSnippet(order, orderRules, ['lines', 'items', 'subtotal'], { title: 'Order lines' });
+	assert.equal(snippet.snippet, 'order-lines');
+	assert.deepEqual(snippet.fields, ['lines', 'items', 'subtotal']);
+	assert.ok(snippet.rules.some(rule => rule.id === 'cake-note'));
+	assert.ok(snippet.variables.items, 'the variable a calculated field shows comes along');
+	assert.ok(Array.isArray(skipped));
+	const empty = { id: 'x', fields: { structure: { layout: [{ type: 'step', id: 'one', name: 'One', fields: [] }] }, properties: {} } };
+	const result = insert(empty, { fields: { rules: [] } }, snippet, 'one');
+	assert.deepEqual(result.fields, ['lines', 'items', 'subtotal']);
+});

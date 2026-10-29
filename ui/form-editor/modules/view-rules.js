@@ -3,7 +3,7 @@
  * and the services rules can fetch from.
  */
 import { h, field, check, select, button } from './dom.js';
-import { addNamedCondition, clone, isNamedCondition, moveItem, nameCondition, newRule, slugify, stepsOf, usesOfVariable } from './model.js';
+import { addNamedCondition, clone, copyRule, fieldsOfRule, isNamedCondition, moveItem, nameCondition, newRule, pasteRule, slugify, stepsOf, usesOfVariable } from './model.js';
 import { COMPARE, OPERATOR_WORDS, TEXT_OPS, parseCondition, serializeCondition, summarize } from './conditions.js';
 import { ROW_ACTIONS, actionName } from '../../form-rules/modules/actions.js';
 
@@ -272,22 +272,53 @@ export function renderRulesView(editor) {
 		editor.commit({ rules: next });
 	};
 	const updateRule = (id, fn) => commitRules(f => { fn(f.rules.find(rule => rule.id === id)); });
+	const copied = editor.clipboard?.kind === 'form-editor/rule' ? editor.clipboard : null;
+
+	/* Filtering hides rows in place, so typing never re-renders the list. */
+	const items = list.map((rule, index) => {
+		const open = selection.rule === rule.id;
+		const summary = summarize(form, rule, rules);
+		const item = h('li', { part: open ? 'rule open' : 'rule' },
+			button(h('span', {}, h('strong', {}, rule.title ?? rule.id), h('br'), h('small', {}, summary), rule.note ? [h('br'), h('small', { part: 'note' }, `Note: ${rule.note}`)] : null),
+				() => editor.select({ view: 'rules', rule: open ? null : rule.id }), { part: 'rule-summary', 'aria-expanded': String(open) }),
+			open ? ruleEditor(editor, rule, index, list.length, updateRule, commitRules) : null
+		);
+		return { item, rule, open, text: [rule.id, rule.title, rule.note, summary].join(' ').toLowerCase(), fields: fieldsOfRule(rule) };
+	});
+	const count = h('small', { 'aria-live': 'polite' });
+	const filter = () => {
+		const words = (selection.ruleQuery ?? '').toLowerCase().split(/\s+/).filter(Boolean);
+		let shown = 0;
+		items.forEach(({ item, open, text, fields, rule }) => {
+			const usesField = !selection.ruleField || fields.includes(selection.ruleField) || JSON.stringify(rule).includes(`"values.${selection.ruleField}`);
+			item.hidden = !open && !(usesField && words.every(word => text.includes(word)));
+			if (!item.hidden) shown++;
+		});
+		count.textContent = shown === items.length ? '' : `${shown} of ${items.length} rules`;
+	};
+	const fieldOptions = stepsOf(form).flatMap(step => step.fields).filter(id => form.fields.properties[id]?.type !== 'content').map(id => [id, form.fields.properties[id]?.title ?? id]);
+	const filters = list.length > 3 || selection.ruleQuery || selection.ruleField ? h('div', { part: 'row filter' },
+		h('input', { type: 'search', value: selection.ruleQuery ?? '', placeholder: 'Find a rule', 'aria-label': 'Find a rule by title, note or wording', oninput: e => { selection.ruleQuery = e.target.value; filter(); } }),
+		select([['', 'Any field'], ...fieldOptions], selection.ruleField ?? '', value => { selection.ruleField = value || undefined; filter(); }, { 'aria-label': 'Only rules that use this field' }),
+		count) : null;
+	filter();
 
 	return h('section', { part: 'inspector' },
 		h('h2', {}, 'Rules'),
-		h('ol', { part: 'rules' }, list.map((rule, index) => {
-			const open = selection.rule === rule.id;
-			return h('li', { part: open ? 'rule open' : 'rule' },
-				button(h('span', {}, h('strong', {}, rule.title ?? rule.id), h('br'), h('small', {}, summarize(form, rule, rules))),
-					() => editor.select({ view: 'rules', rule: open ? null : rule.id }), { part: 'rule-summary', 'aria-expanded': String(open) }),
-				open ? ruleEditor(editor, rule, index, list.length, updateRule, commitRules) : null
-			);
-		})),
-		button('+ Rule', () => {
-			const result = newRule(rules, `Rule ${list.length + 1}`);
-			editor.commit({ rules: result.rules });
-			editor.select({ view: 'rules', rule: result.id });
-		}, { part: 'add' }),
+		filters,
+		h('ol', { part: 'rules' }, items.map(({ item }) => item)),
+		h('div', { part: 'row' },
+			button('+ Rule', () => {
+				const result = newRule(rules, `Rule ${list.length + 1}`);
+				editor.commit({ rules: result.rules });
+				editor.select({ view: 'rules', rule: result.id });
+			}, { part: 'add' }),
+			copied ? button(`Paste rule “${copied.rule.title ?? copied.rule.id}”`, () => {
+				const result = pasteRule(form, rules, copied);
+				editor.commit({ rules: result.rules });
+				editor.select({ view: 'rules', rule: result.id });
+				if (result.missing.length) editor.notify(`Pasted. This form has no field ${result.missing.join(', ')}: pick other fields in the rule.`);
+			}, { part: 'add' }) : null),
 		namedConditionsEditor(editor, commitRules),
 		variablesEditor(editor, commitRules),
 		servicesEditor(editor, commitRules),
@@ -323,6 +354,7 @@ function ruleEditor(editor, rule, index, count, updateRule, commitRules) {
 			delete r.else;
 			});
 		}), list ? 'Conditions read this row; actions change its cells' : null) : null,
+		field('Note', h('textarea', { rows: 2, value: rule.note ?? '', onchange: e => updateRule(rule.id, r => { const note = e.target.value.trim(); if (note) r.note = note; else delete r.note; }) }), 'For editors: why the rule is there. Not shown to people filling in the form'),
 		check('Track this rule in analytics', rule.track === true, value => updateRule(rule.id, r => { if (value) r.track = true; else delete r.track; })),
 		h('h3', {}, 'When'),
 		groupEditor(editor, tree, next => updateRule(rule.id, r => { r.when = serializeCondition(next); }), 0, null, list),
@@ -338,6 +370,10 @@ function ruleEditor(editor, rule, index, count, updateRule, commitRules) {
 		h('div', { part: 'row' },
 			button('Move up', () => commitRules(f => { f.rules = moveItem(f.rules, index, -1); }), { disabled: index === 0 }),
 			button('Move down', () => commitRules(f => { f.rules = moveItem(f.rules, index, 1); }), { disabled: index === count - 1 }),
+			button('Copy rule', () => {
+				editor.clipboard = copyRule(editor.rules, rule.id);
+				editor.notify(`Copied "${rule.title ?? rule.id}". Open another form's Rules and choose Paste rule.`);
+			}),
 			button('Delete rule', () => {
 				if (!confirm(`Delete the rule "${rule.title ?? rule.id}"?`)) return;
 				commitRules(f => { f.rules = f.rules.filter(r => r.id !== rule.id); });

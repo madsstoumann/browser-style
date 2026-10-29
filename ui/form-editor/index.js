@@ -5,13 +5,16 @@
  */
 import '../form-flow/index.js';
 import { defineTypes, loadPackages, validate } from '../form-rules/index.js';
-import { h, button } from './modules/dom.js';
+import { h, button, download } from './modules/dom.js';
 import { asUcf, clone, emptyForm, emptyRules } from './modules/model.js';
 import { renderOutline, renderFormView } from './modules/view-form.js';
 import { renderRulesView } from './modules/view-rules.js';
 import { loadSnippets } from './modules/snippets.js';
 
 const DRAFT_KEY = 'form-editor:draft';
+/* Shared by every form in this browser: the editor's own snippets, and a copied rule. */
+const SNIPPETS_KEY = 'form-editor:snippets';
+const CLIPBOARD_KEY = 'form-editor:clipboard';
 const CORE_TYPES = new URL('../form-rules/types/core.json', import.meta.url).href;
 const HISTORY = 50;
 
@@ -39,11 +42,6 @@ export function detectModel(doc) {
 	return null;
 }
 
-const download = (name, doc) => {
-	const url = URL.createObjectURL(new Blob([`${JSON.stringify(doc, null, '\t')}\n`], { type: 'application/json' }));
-	h('a', { href: url, download: name }).click();
-	setTimeout(() => URL.revokeObjectURL(url), 1000);
-};
 
 export class FormEditor extends HTMLElement {
 	form = emptyForm();
@@ -165,6 +163,33 @@ export class FormEditor extends HTMLElement {
 		this.form = form;
 		this.rules = rules;
 		this.#changed();
+	}
+
+	/* Snippets saved from this editor, kept in this browser; download one to share it as a file. */
+	get ownSnippets() { return storage.read(SNIPPETS_KEY) ?? []; }
+
+	saveSnippet(snippet) {
+		storage.write(SNIPPETS_KEY, [...this.ownSnippets.filter(s => s.snippet !== snippet.snippet), snippet]);
+		this.#render(false);
+	}
+
+	deleteSnippet(id) {
+		storage.write(SNIPPETS_KEY, this.ownSnippets.filter(s => s.snippet !== id));
+	}
+
+	/* A copied rule (see copyRule in modules/model.js), readable from any form in this browser. */
+	get clipboard() { return storage.read(CLIPBOARD_KEY); }
+
+	set clipboard(copied) {
+		storage.write(CLIPBOARD_KEY, copied);
+		navigator.clipboard?.writeText(JSON.stringify(copied, null, '\t')).catch(() => {});
+		this.#render(false);
+	}
+
+	/* A short message in the status bar. */
+	notify(message) {
+		this.#message = message;
+		this.#renderStatus();
 	}
 
 	select(patch) {

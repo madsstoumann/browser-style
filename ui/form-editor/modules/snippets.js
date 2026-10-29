@@ -5,7 +5,7 @@
  * A snippet: { snippet, title, description?, keywords?, fields: [ids in order], properties, variables?, services?, rules? }
  * No DOM: runs in Node too (see test/snippets.test.js).
  */
-import { clone, fieldId, fieldIds, renameField, slugify, stepsOf } from './model.js';
+import { clone, dependenciesOf, fieldId, fieldIds, fieldsOfRule, renameField, slugify, stepsOf } from './model.js';
 
 const replaceIn = (value, pairs) => {
 	let text = JSON.stringify(value);
@@ -76,6 +76,29 @@ export function insertSnippet(form, rules, snippet, stepId) {
 	if (Object.keys(variables).length) nextRules.fields.variables = replaceIn(variables, pairs);
 	if (Object.keys(services).length) nextRules.fields.services = services;
 	return { form: nextForm, rules: nextRules, fields: part.fields.structure.layout[0].fields, renamed };
+}
+
+/* Makes a snippet of some fields: their properties, the rules that use only them, and the variables
+   and services those need. Rules that also use other fields are left out and listed in `skipped`. */
+export function extractSnippet(form, rules, ids, { title, description, keywords } = {}) {
+	const order = stepsOf(form).flatMap(step => step.fields).filter(id => ids.includes(id));
+	const properties = Object.fromEntries(order.map(id => [id, clone(form.fields.properties[id])]));
+	const kept = [];
+	const skipped = [];
+	for (const rule of rules.fields.rules ?? []) {
+		const fields = fieldsOfRule(rule);
+		if (!fields.some(id => order.includes(id))) continue;
+		if (fields.every(id => order.includes(id))) kept.push(clone(rule));
+		else skipped.push(rule.id);
+	}
+	const { variables, services } = dependenciesOf(rules, [...kept, properties]);
+	const snippet = { snippet: slugify(title || order[0] || 'snippet'), title: title || order.join(', '), fields: order, properties };
+	if (description) snippet.description = description;
+	if (keywords?.length) snippet.keywords = keywords;
+	if (kept.length) snippet.rules = kept;
+	if (Object.keys(variables).length) snippet.variables = variables;
+	if (Object.keys(services).length) snippet.services = services;
+	return { snippet, skipped };
 }
 
 /* Loads snippet files (URLs); a file holds one snippet or { snippets: [...] }. */
