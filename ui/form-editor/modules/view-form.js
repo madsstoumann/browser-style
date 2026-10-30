@@ -237,6 +237,15 @@ function panelInspector(editor, panelId) {
 		}), 'Rules that hide or show this panel are updated') : null,
 		field('Place', select(PLACES, panel.place ?? 'aside', value => update(p => { p.place = value; }))),
 		check('Only shown when a rule includes it', panel.hidden === true, value => update(p => { if (value) p.hidden = true; else delete p.hidden; })),
+		whenPicker(editor, panel.showWhen, {
+			label: 'Show this panel', always: true,
+			apply: (value, nextRules) => {
+				const next = clone(form);
+				const p = panelsOf(next).find(x => x.id === panelId);
+				if (value === undefined) delete p.showWhen; else p.showWhen = value;
+				editor.commit(nextRules ? { form: next, rules: nextRules } : { form: next });
+			}
+		}),
 		h('div', { part: 'row' },
 			button('Delete panel', () => {
 				if (!confirm(`Delete "${panel.name || panel.id}" and its ${panel.fields.length} text(s) and value(s)?`)) return;
