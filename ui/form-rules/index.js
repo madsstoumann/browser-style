@@ -5,7 +5,8 @@
  */
 
 export { evaluate, accepts, calculatedFrom, hasNoValue, hasValueType } from './modules/evaluate.js';
-export { fillText, placeholdersOf, PLACEHOLDER_ROOTS } from './modules/text.js';
+export { fillText, placeholdersOf, textData, PLACEHOLDER_ROOTS } from './modules/text.js';
+export { conditionOf, implicitRules, matchingCases, noteOf } from './modules/show.js';
 export { validate } from './modules/validate.js';
 export { merge, expirePatches, patchFieldKind, MAX_PATCH_DEPTH, PATCH_PRIORITY_CEILING, PATCH_FIELD_KINDS } from './modules/merge.js';
 export { handleEvent } from './modules/events.js';

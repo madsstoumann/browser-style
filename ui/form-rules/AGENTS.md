@@ -19,6 +19,7 @@ Design proposal: "Rule engine for multi-step forms" (claude.ai artifact, Forms p
 | `modules/events.js` | `handleEvent()`: facts, rule set replacement, event patches |
 | `modules/session.js` | Session helpers: `createSession`, `snapshot` (never special or file values), `resume`, … |
 | `modules/types.js` | Field types as data: `defineTypes`, `loadTypes`, `loadPackages`, `typeOf`, `fieldFromType`, `changeType`, `searchTypes`. Core package in `types/core.json`; country packages live in `ui/form-types/*` |
+| `modules/show.js` | Texts that follow the answers: `conditionOf` (named condition or JSON Logic), `implicitRules` (showWhen as rules), `matchingCases`, `noteOf` |
 | `modules/consent.js` | `consentRecords()`: what each ticked consent field said |
 
 ## Invariants
@@ -36,4 +37,5 @@ Design proposal: "Rule engine for multi-step forms" (claude.ai artifact, Forms p
 
 - Field ids from patches contain a dot (`offers.travelCover`). `getPath` matches the longest flat key first, so `values.offers.travelCover` resolves to the flat key.
 - `evaluate` expects typed values: a select with numeric choices needs a number, not the string `FormData` gives. Converting is the host's job (`<form-flow>`).
+- `showWhen` rules are generated in every pass from the (patched) form, ids `showWhen:<field>` and `showWhen:step:<id>`, and validated with the rule set's rules at the path they were written (`rule.at`).
 - `emit` fires on edges, which needs `input.previous.matched`. Without `previous`, every `on: "enter"` emit in an active `then` or `else` list fires.

@@ -20,6 +20,7 @@
 			insurance: { form: '../form-rules/examples/insurance.form.json', rules: '../form-rules/examples/insurance.rules.json', samples: '{ "offers": "../form-rules/examples/offers.patch.json" }' },
 			loan: { form: '../form-rules/examples/loan.form.json', rules: '../form-rules/examples/loan.rules.json' },
 			contact: { form: '../form-rules/examples/contact.form.json', rules: '../form-rules/examples/contact.rules.json' },
+			'drug-ticket': { form: '../form-rules/examples/drug-ticket.form.json', rules: '../form-rules/examples/drug-ticket.rules.json' },
 			order: { form: '../form-rules/examples/order.form.json', rules: '../form-rules/examples/order.rules.json', samples: '{ "cities": "../form-rules/examples/api/cities.json", "streets": "../form-rules/examples/api/streets.json" }' }
 		};
 		const example = examples[new URLSearchParams(location.search).get('example')] ?? examples.insurance;

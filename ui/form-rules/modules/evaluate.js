@@ -9,6 +9,7 @@
 import { apply, FUNCTIONS, getPath, runCheck, truthy } from './logic.js';
 import { actionName, actionTargets, FLAG_ACTIONS, gotoFrom, gotoOf, RESTRICTIVE, rowTarget, STEP_ACTIONS } from './actions.js';
 import { normalizeForm, normalizeRuleSet, withPatchFields } from './form.js';
+import { implicitRules, matchingCases, noteOf } from './show.js';
 
 const MAX_PASSES = 16;
 
@@ -465,12 +466,14 @@ export function evaluate(formDefinition, ruleSetDocument, input = {}) {
 	let state;
 	let matched;
 	let form;
+	let data;
 
 	for (let pass = 0; pass <= MAX_PASSES; pass++) {
 		if (pass === MAX_PASSES) throw new Error('Rules do not settle: a rule keeps hiding a field another rule reads');
 
 		form = withPatchFields(baseForm, patches);
-		const allRules = [...baseRules, ...patches.flatMap(patch => patch.rules ?? [])];
+		/* showWhen on fields and steps runs as rules of its own, so explain and a server see it like any other. */
+		const allRules = [...baseRules, ...implicitRules(form), ...patches.flatMap(patch => patch.rules ?? [])];
 		const rules = allRules.filter(rule => typeof rule.forEach !== 'string');
 		const rowRules = allRules.filter(rule => typeof rule.forEach === 'string');
 		const shown = visibleValues(readable, fieldsSeen);
@@ -488,7 +491,7 @@ export function evaluate(formDefinition, ruleSetDocument, input = {}) {
 		for (const [id, field] of form.fields) {
 			if (calculatedFrom(field.property) && fieldsSeen[id]?.visible) base.values[id] = calculatedValue(field.property, vars);
 		}
-		const data = { ...base, vars };
+		data = { ...base, vars };
 		const results = rules.map(rule => ({ rule, matched: truthy(apply(rule.when ?? true, data)) }));
 		rowState = resolveRows(form, rowRules, data);
 		const hits = new Set([...results.filter(result => result.matched).map(result => result.rule.id), ...rowState.matched]);
@@ -563,6 +566,17 @@ export function evaluate(formDefinition, ruleSetDocument, input = {}) {
 		if (value !== undefined) submit[id] = value;
 	}
 
+	/* Text blocks with cases: which cases match. Chosen choices with a note: the note. Only for visible fields. */
+	const notes = {};
+	for (const [id, field] of Object.entries(state.fields)) {
+		const property = form.fields.get(id)?.property;
+		if (property?.type === 'content' && Array.isArray(property.cases)) {
+			field.cases = field.visible ? matchingCases(property, condition => truthy(apply(condition, data))) : [];
+		}
+		const note = field.visible ? noteOf(property, submit[id]) : null;
+		if (note !== null) notes[id] = note;
+	}
+
 	const visibleView = visibleValues(readable, state.fields);
 	/* A visible field with a sourced list asks for it; the key changes when the answers it sends do. */
 	for (const [id, field] of Object.entries(state.fields)) {
@@ -595,6 +609,7 @@ export function evaluate(formDefinition, ruleSetDocument, input = {}) {
 		fields: state.fields,
 		rows: rowState.rows,
 		values: submit,
+		notes,
 		matched,
 		patches: patches.map(patch => patch.id),
 		effects,

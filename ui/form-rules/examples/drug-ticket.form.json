@@ -1,0 +1,73 @@
+{
+	"$schema": "../schemas/form-definition.schema.json",
+	"id": "form-drug-ticket",
+	"model": "form-definition",
+	"meta": { "locale": "en", "status": "published", "version": 1 },
+	"fields": {
+		"title": "What does it cost to drive with illegal drugs in your blood?",
+		"description": "A calculator: every text that depends on the answers is a choice note, a text block with cases or a field with showWhen. The rule set has no visibility rules.",
+		"structure": {
+			"layout": [
+				{ "type": "step", "id": "calc", "name": "Your situation", "fields": [
+					"income", "drug", "thcLevel", "licenseYears",
+					"headline", "sanctions",
+					"fine", "doctorFee", "bloodAnalysis", "victimFund", "courseFee", "retestFee", "total",
+					"importantToKnow"
+				] }
+			]
+		},
+		"type": "object",
+		"properties": {
+			"income": {
+				"type": "integer", "title": "Annual income before tax", "description": "Your actual or expected annual income before tax.", "default": 50000,
+				"privacy": "personal", "validation": { "minimum": 0, "maximum": 200000 },
+				"ui": { "widget": "range", "step": 1000, "format": { "style": "currency", "currency": "USD", "maximumFractionDigits": 0 } }
+			},
+			"drug": {
+				"type": "select", "title": "Select drug", "default": "cannabis", "required": true, "ui": { "widget": "radio" },
+				"options": { "choices": [
+					{ "value": "cannabis", "label": "Cannabis" },
+					{ "value": "opioids", "label": "Opioids" },
+					{ "value": "cocaine", "label": "Cocaine" },
+					{ "value": "nitrous", "label": "Nitrous oxide", "note": "If you have nitrous oxide in the car, you can additionally be fined $1,500 for transporting dangerous goods and $500 – $7,500 for possession, depending on the amount." },
+					{ "value": "other", "label": "Other", "note": "E.g.: amphetamine, ecstasy, benzodiazepines, ketamine etc." }
+				] }
+			},
+			"thcLevel": {
+				"type": "select", "title": "THC level in blood", "default": "low", "showWhen": "isThc", "ui": { "widget": "radio" },
+				"options": { "choices": [
+					{ "value": "low", "label": "Low", "note": "Low THC level corresponds to 0.001–0.003 mg/kg blood." },
+					{ "value": "medium", "label": "Medium", "note": "Medium THC level corresponds to 0.003–0.009 mg/kg blood." },
+					{ "value": "high", "label": "High", "note": "High THC level corresponds to over 0.009 mg/kg blood." }
+				] }
+			},
+			"licenseYears": {
+				"type": "select", "title": "How long have you had your driver's license?", "default": "under3", "showWhen": "medThc", "ui": { "widget": "radio" },
+				"options": { "choices": [ { "value": "over3", "label": "Over 3 years" }, { "value": "under3", "label": "Under 3 years" } ] }
+			},
+			"headline": { "type": "number", "title": "Estimated cost (rounded)", "from": "vars.totalRounded", "ui": { "widget": "output", "format": { "style": "currency", "currency": "USD", "maximumFractionDigits": 0 } } },
+			"sanctions": {
+				"type": "content", "title": "Sanctions", "show": "all",
+				"cases": [
+					{ "when": "lowThc", "content": "1 penalty point on license" },
+					{ "when": "newDriver", "content": "Driving ban" },
+					{ "when": "experiencedDriver", "content": "License revoked conditionally" },
+					{ "when": "revoked", "content": "License revoked unconditionally for 3 years" },
+					{ "when": "serious", "content": "Alcohol, Drug and Traffic Course" },
+					{ "when": "serious", "content": "New theory and driving test" }
+				]
+			},
+			"fine": { "type": "number", "title": "Fine amount", "from": "vars.fine", "ui": { "widget": "output", "format": { "style": "currency", "currency": "USD", "maximumFractionDigits": 0 } } },
+			"doctorFee": { "type": "number", "title": "Blood sample collection", "from": "vars.doctorFee", "ui": { "widget": "output", "format": { "style": "currency", "currency": "USD", "maximumFractionDigits": 0 } } },
+			"bloodAnalysis": { "type": "number", "title": "Blood sample analysis", "from": "vars.bloodAnalysis", "ui": { "widget": "output", "format": { "style": "currency", "currency": "USD", "maximumFractionDigits": 0 } } },
+			"victimFund": { "type": "number", "title": "Victim Fund", "from": "vars.victimFund", "showWhen": "serious", "ui": { "widget": "output", "format": { "style": "currency", "currency": "USD", "maximumFractionDigits": 0 } } },
+			"courseFee": { "type": "number", "title": "DUI Course", "from": "vars.courseFee", "showWhen": "serious", "ui": { "widget": "output", "format": { "style": "currency", "currency": "USD", "maximumFractionDigits": 0 } } },
+			"retestFee": { "type": "number", "title": "New theory and driving test", "from": "vars.retestFee", "showWhen": "serious", "ui": { "widget": "output", "format": { "style": "currency", "currency": "USD", "maximumFractionDigits": 0 } } },
+			"total": { "type": "number", "title": "Total expenses (approx.)", "from": "vars.total", "ui": { "widget": "output", "format": { "style": "currency", "currency": "USD", "maximumFractionDigits": 0 } } },
+			"importantToKnow": {
+				"type": "content", "title": "Important to know",
+				"content": "The calculation of sanctions for driving with illegal drugs is indicative and may differ in specific cases, depending on the circumstances.\n\nIt is always the court's decision that applies. The calculations apply to first-time offenses without traffic accidents. In case of recurrence or traffic accidents, the penalty increases."
+			}
+		}
+	}
+}

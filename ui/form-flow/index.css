@@ -33,6 +33,7 @@
 			gap: var(--spacing-xs, .25rem);
 			& p { margin: 0; }
 		}
+		& [part~=note] { display: block; white-space: pre-line; }
 		& [part~=consent] {
 			align-items: start;
 			display: flex;
@@ -83,5 +84,7 @@
 			font-size: smaller;
 			& ul { margin: 0; padding-inline-start: 2ch; }
 		}
+		/* Last, so a rule that hides a text block, a calculated value, a slider or a list wins over their display: grid. */
+		& [hidden] { display: none; }
 	}
 }

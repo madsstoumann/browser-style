@@ -1,0 +1,53 @@
+{
+	"description": "showWhen: another drug hides the THC level and license question; explain names the showWhen rule",
+	"form": "../examples/drug-ticket.form.json",
+	"rules": "../examples/drug-ticket.rules.json",
+	"input": {
+		"values": {
+			"income": 60000,
+			"drug": "other",
+			"thcLevel": "low"
+		}
+	},
+	"expect": {
+		"values": {
+			"income": 60000,
+			"drug": "other",
+			"headline": 3600,
+			"fine": 2400,
+			"doctorFee": 20,
+			"bloodAnalysis": 400,
+			"victimFund": 80,
+			"courseFee": 500,
+			"retestFee": 200,
+			"total": 3600
+		},
+		"matched": [
+			"showWhen:thcLevel",
+			"showWhen:licenseYears"
+		],
+		"fields": {
+			"thcLevel": {
+				"visible": false
+			},
+			"licenseYears": {
+				"visible": false
+			},
+			"sanctions": {
+				"cases": [
+					3,
+					4,
+					5
+				]
+			}
+		},
+		"notes": {
+			"drug": "E.g.: amphetamine, ecstasy, benzodiazepines, ketamine etc."
+		},
+		"explain": {
+			"thcLevel.visible": [
+				"showWhen:thcLevel"
+			]
+		}
+	}
+}

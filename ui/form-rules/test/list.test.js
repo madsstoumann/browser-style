@@ -34,7 +34,8 @@ test('rows are cleaned, checked per row and summed', () => {
 	assert.deepEqual(state.values.lines, [{ product: 'tea', qty: 2, price: 10 }, { product: 'cake', qty: 0, price: 25 }, {}]);
 	assert.deepEqual(state.issues.map(({ row, item, code }) => [row, item, code]), [[1, 'qty', 'minimum'], [2, 'product', 'option-unavailable'], [2, 'qty', 'type']]);
 	assert.deepEqual(state.matched, ['cake']);
-	assert.equal(state.vars.total, null);
+	/* The row without a price counts as nothing. */
+	assert.equal(state.vars.total, 20);
 	assert.equal(evaluate(form, rules, { values: { lines: [{ product: 'tea', qty: 2, price: 10 }, { product: 'cake', qty: 1, price: 25 }] } }).values.total, 45);
 	assert.deepEqual(validate(form, rules).errors, []);
 });

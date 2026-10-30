@@ -87,11 +87,13 @@ const operators = {
 	'%': (a, b) => numeric([a, b]) && b !== 0 ? a % b : null,
 	min: (...args) => args.length && numeric(args) ? Math.min(...args) : null,
 	max: (...args) => args.length && numeric(args) ? Math.max(...args) : null,
-	round: (a, places = 0) => numeric([a, places]) ? Math.round(a * 10 ** places) / 10 ** places : null,
-	sum: (...args) => {
-		const list = args.flat();
-		return numeric(list) ? list.reduce((total, v) => total + v, 0) : null;
+	/* Negative places round to tens, hundreds, …: dividing by a power of ten keeps whole numbers exact. */
+	round: (a, places = 0) => {
+		if (!numeric([a, places])) return null;
+		return places < 0 ? Math.round(a / 10 ** -places) * 10 ** -places : Math.round(a * 10 ** places) / 10 ** places;
 	},
+	/* Anything that is not a number counts as nothing, so one empty item does not empty the total. */
+	sum: (...args) => args.flat().filter(v => typeof v === 'number' && Number.isFinite(v)).reduce((total, v) => total + v, 0),
 	/* Text */
 	startsWith: (a, b) => typeof a === 'string' && typeof b === 'string' && a.startsWith(b),
 	endsWith: (a, b) => typeof a === 'string' && typeof b === 'string' && a.endsWith(b),

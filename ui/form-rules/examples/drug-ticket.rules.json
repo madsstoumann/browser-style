@@ -1,0 +1,28 @@
+{
+	"$schema": "../schemas/form-rules.schema.json",
+	"id": "rules-drug-ticket",
+	"model": "form-rules",
+	"meta": { "locale": "en", "status": "published" },
+	"fields": {
+		"form": "form-drug-ticket",
+		"version": 1,
+		"variables": {
+			"isThc": { "type": "boolean", "title": "Drug is cannabis", "compute": { "===": [{ "var": "values.drug" }, "cannabis"] } },
+			"lowThc": { "type": "boolean", "title": "Low THC level", "compute": { "and": [{ "var": "vars.isThc" }, { "===": [{ "var": "values.thcLevel" }, "low"] }] } },
+			"medThc": { "type": "boolean", "title": "Medium THC level", "compute": { "and": [{ "var": "vars.isThc" }, { "===": [{ "var": "values.thcLevel" }, "medium"] }] } },
+			"serious": { "type": "boolean", "title": "More than a low THC level", "compute": { "!": { "var": "vars.lowThc" } } },
+			"newDriver": { "type": "boolean", "title": "Medium THC, license under 3 years", "compute": { "and": [{ "var": "vars.medThc" }, { "===": [{ "var": "values.licenseYears" }, "under3"] }] } },
+			"experiencedDriver": { "type": "boolean", "title": "Medium THC, license over 3 years", "compute": { "and": [{ "var": "vars.medThc" }, { "===": [{ "var": "values.licenseYears" }, "over3"] }] } },
+			"revoked": { "type": "boolean", "title": "High THC or another drug", "compute": { "and": [{ "!": { "var": "vars.lowThc" } }, { "!": { "var": "vars.medThc" } }] } },
+			"fine": { "type": "number", "compute": { "max": [500, { "round": { "/": [{ "var": ["values.income", 0] }, { "if": [{ "var": "vars.lowThc" }, 50, 25] }] } }] } },
+			"doctorFee": { "type": "number", "compute": 20 },
+			"bloodAnalysis": { "type": "number", "compute": { "if": [{ "var": "vars.isThc" }, 300, 400] } },
+			"victimFund": { "type": "number", "compute": { "if": [{ "var": "vars.serious" }, 80, 0] } },
+			"courseFee": { "type": "number", "compute": { "if": [{ "var": "vars.serious" }, 500, 0] } },
+			"retestFee": { "type": "number", "compute": { "if": [{ "var": "vars.serious" }, 200, 0] } },
+			"total": { "type": "number", "compute": { "sum": [{ "var": "vars.fine" }, { "var": "vars.doctorFee" }, { "var": "vars.bloodAnalysis" }, { "var": "vars.victimFund" }, { "var": "vars.courseFee" }, { "var": "vars.retestFee" }] } },
+			"totalRounded": { "type": "number", "compute": { "round": [{ "var": "vars.total" }, -1] } }
+		},
+		"rules": []
+	}
+}

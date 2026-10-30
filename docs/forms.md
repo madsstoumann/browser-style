@@ -31,9 +31,10 @@ Demos:
 | [/ui/form-flow/loan.html](https://v4.browser.style/ui/form-flow/loan.html) | The advanced loan example: variables and a score, CPR checks, an eligibility service, inserted steps, tracking |
 | [/ui/form-flow/session.html](https://v4.browser.style/ui/form-flow/session.html) | Save and continue later, resume links, the done state |
 | [/ui/form-flow/contact.html](https://v4.browser.style/ui/form-flow/contact.html) | The core field types: text blocks, a hidden value, a file upload, consent |
+| [/ui/form-flow/drug-ticket.html](https://v4.browser.style/ui/form-flow/drug-ticket.html) | Texts that follow the answers: choice notes, a text block with cases, fields shown when a named condition holds |
 | [/ui/form-flow/order.html](https://v4.browser.style/ui/form-flow/order.html) | Order lines as rows, calculated totals, a slider, a city list from a service that depends on the country, street type-ahead, date and text rules, placeholders |
 | [/ui/form-widgets/](https://v4.browser.style/ui/form-widgets/) | The three widget packages: rich text, `<auto-suggest>`, `<data-grid>` |
-| [/ui/form-editor/](https://v4.browser.style/ui/form-editor/) | The editor; `?example=loan` opens the loan example, `?example=contact` the field types example, `?example=order` the order example |
+| [/ui/form-editor/](https://v4.browser.style/ui/form-editor/) | The editor; `?example=loan` opens the loan example, `?example=contact` the field types example, `?example=order` the order example, `?example=drug-ticket` the texts example |
 | [/ui/form-embed/](https://v4.browser.style/ui/form-embed/) | A "client site" embedding forms in shadow and light mode |
 
 How they fit together:
@@ -346,8 +347,8 @@ Conditions, variable formulas and computed values are a strict subset of [JSON L
 | `missing` | `{ "missing": ["values.email"] }` | The paths that are `null` or empty |
 | `num` | `{ "num": { "var": "values.zip" } }` | Explicit conversion: a numeric string to a number, anything else `null` |
 | `+`, `-`, `*`, `/`, `%` | | Numbers only, else `null`; division by zero is `null` |
-| `min`, `max`, `round` | `{ "round": [{ "/": [a, b] }, 2] }` | `round` takes decimal places |
-| `sum` | `{ "sum": [1, 2, 3] }`, `{ "sum": { "var": "values.amounts" } }` | Adds numbers; anything else counts as nothing |
+| `min`, `max`, `round` | `{ "round": [{ "/": [a, b] }, 2] }` | `round` takes decimal places; negative places round to tens (-1), hundreds (-2) |
+| `sum` | `{ "sum": [1, 2, 3] }`, `{ "sum": { "var": "values.amounts" } }` | Adds numbers; anything else (an empty value) counts as nothing |
 | `cat` | `{ "cat": ["DK-", { "var": "values.zip" }] }` | Joins as text |
 | `startsWith`, `endsWith` | `{ "startsWith": [{ "var": "values.zip" }, "8"] }` | Text only, case-sensitive; wrap both sides in `lower` for "any case" |
 | `lower`, `upper`, `trim` | `{ "lower": { "var": "values.email" } }` | Text only, else `null` |
@@ -407,6 +408,48 @@ A **calculated value** is a field the person sees but never types: a total, a pr
 ```
 
 `fillText(text, data, { format })` and `placeholdersOf(text)` are exported by form-rules, so a server can fill the same texts in a receipt.
+
+---
+
+## Texts that follow the answers
+
+Many forms explain the answer just given: what a level means, which sanctions apply, a warning for one choice. Writing each variant as its own text block plus a rule that hides it works, but nothing in the field says when it shows, and a translator copies logic. Three things are written on the form instead, from simplest to most general. The [drug-ticket example](https://v4.browser.style/ui/form-flow/drug-ticket.html) uses all three and its rule set has no visibility rules.
+
+**A note on a choice.** Text shown under the field while that choice is chosen:
+
+```json
+"thcLevel": { "type": "select", "ui": { "widget": "radio" }, "options": { "choices": [
+  { "value": "low", "label": "Low", "note": "Low corresponds to 0.001–0.003 mg/kg blood." },
+  { "value": "medium", "label": "Medium", "note": "Medium corresponds to 0.003–0.009 mg/kg blood." } ] } }
+```
+
+The engine returns the chosen choice's note as `state.notes.thcLevel` (a list for a multiple choice; nothing while the field is hidden). Any other text can show it with `{values.thcLevel.note}`.
+
+**A text block with cases.** For a text that depends on several answers:
+
+```json
+"sanctions": { "type": "content", "title": "Sanctions", "show": "all", "cases": [
+  { "when": "lowThc", "content": "1 penalty point on your license" },
+  { "when": "newDriver", "content": "Driving ban" },
+  { "when": "revoked", "content": "License revoked unconditionally for 3 years" } ],
+  "content": "No sanctions" }
+```
+
+- `show: "all"` (the default) shows every matching case, `"first"` only the first. `content` is shown when no case matches.
+- The engine returns the positions of the matching cases, `state.fields.sanctions.cases: [0, 2]`, so a server filling a receipt or an email shows exactly the texts the person saw. A hidden text block has no cases.
+- Case texts may have placeholders.
+
+**Show this field when.** Any field, and any step, can have `showWhen`:
+
+```json
+"licenseYears": { "type": "select", "title": "How long have you had your license?", "showWhen": "medThc", … }
+```
+
+The engine runs it as a rule of its own, `showWhen:<field>` (`showWhen:step:<step>` for a step), which hides the field (skips the step) while the condition is false. Since it is a rule like any other, hidden is absent, `explain` names it, `matched` lists it while it hides, a server re-check applies it, and a rule of higher priority can still show the field.
+
+**Conditions by name.** `when` and `showWhen` take the name of a [named condition](#named-conditions) (`"lowThc"`, read as `vars.lowThc === true`) or JSON Logic. Write names: the form definition is what gets translated per language in the CMS, so a translation then carries only texts and names, and fixing a condition fixes it in every language.
+
+`validate()` reports a case without a condition or text, an unknown named condition, a `show` other than all or first, cases on anything but a text block, and placeholders in notes and cases that read nothing. `conditionOf`, `implicitRules`, `matchingCases`, `noteOf` and `textData(state, { context, facts })` (the data `fillText` needs, with notes) are exported.
 
 ---
 

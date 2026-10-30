@@ -31,6 +31,7 @@ export function normalizeForm(definition) {
 			id,
 			name: entry.name ?? id,
 			hidden: entry.hidden === true,
+			...(entry.showWhen !== undefined ? { showWhen: entry.showWhen } : {}),
 			source: 'form',
 			fields: [...(entry.fields ?? [])],
 			slots: [...(entry.slots ?? [])]

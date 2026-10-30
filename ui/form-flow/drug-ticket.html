@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Form Flow: texts that follow the answers</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="color-scheme" content="light dark">
+	<meta name="description" content="A fine calculator where every text that depends on the answers is a choice note, a text block with cases or a field shown when a named condition holds. No visibility rules.">
+	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="../step/ui-step.css">
+	<link rel="stylesheet" href="index.css">
+	<style>
+		body { max-inline-size: 70ch; margin-inline: auto; padding: 2ch; }
+	</style>
+</head>
+<body>
+	<main>
+		<h1>UI: Components &gt; FormFlow &gt; Texts that follow the answers</h1>
+		<p>
+			A <a href="../form-rules/examples/drug-ticket.form.json">fine calculator</a> whose <a href="../form-rules/examples/drug-ticket.rules.json">rule set</a> has
+			named conditions and calculations, and no rules at all. The texts are written on the form:
+			a <strong>note on a choice</strong> (pick a THC level, or Nitrous oxide or Other),
+			a <strong>text block with cases</strong> (Sanctions lists every case whose named condition holds),
+			and <strong>Show this field when</strong> (the THC level only for cannabis, the license question only for a medium level, the course and test fees only above a low level).
+			Open it in the <a href="../form-editor/?example=drug-ticket">form editor</a>.
+		</p>
+
+		<form-flow form="../form-rules/examples/drug-ticket.form.json" rules="../form-rules/examples/drug-ticket.rules.json" explain></form-flow>
+	</main>
+
+	<script type="module">
+		import './index.js';
+	</script>
+</body>
+</html>

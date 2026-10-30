@@ -90,6 +90,9 @@ test('array operators run their logic per item', () => {
 	assert.deepEqual(apply({ map: [null, { var: 'x' }] }), []);
 	assert.equal(apply({ sum: [1, 2, 3] }), 6);
 	assert.equal(apply({ sum: [[]] }), 0);
+	assert.equal(apply({ sum: [1, null, '2', 3] }), 4);
+	assert.equal(apply({ round: [1234.5, -1] }), 1230);
+	assert.equal(apply({ round: [3155, -2] }), 3200);
 });
 
 test('readsOf skips logic that reads array items', async () => {
