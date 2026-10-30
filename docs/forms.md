@@ -449,6 +449,8 @@ The engine runs it as a rule of its own, `showWhen:<field>` (`showWhen:step:<ste
 
 **Conditions by name.** `when` and `showWhen` take the name of a [named condition](#named-conditions) (`"lowThc"`, read as `vars.lowThc === true`) or JSON Logic. Write names: the form definition is what gets translated per language in the CMS, so a translation then carries only texts and names, and fixing a condition fixes it in every language.
 
+**In the editor.** Each choice row has **Text shown when chosen**. A text block has **Texts that depend on the answers**: "+ Case" adds a row reading *When [named condition] Show: [text]*, with **Show** set to every matching text or only the first, and the block's own text becomes the text when no case matches. Every field and step has **Show this field** (or step): *Always* or a named condition. The pickers list the named conditions by title; **+ New named condition…** asks for a name and adds one to the rule set, and **Edit "…"** below the picker builds it with the same pickers as a rule's When (changing it there changes it everywhere). A condition written as JSON Logic shows as "A condition of its own", with **Save as named condition…**. Deleting a named condition lists the fields and steps that still use it, and renaming a field updates the conditions on the form.
+
 `validate()` reports a case without a condition or text, an unknown named condition, a `show` other than all or first, cases on anything but a text block, and placeholders in notes and cases that read nothing. `conditionOf`, `implicitRules`, `matchingCases`, `noteOf` and `textData(state, { context, facts })` (the data `fillText` needs, with notes) are exported.
 
 ---

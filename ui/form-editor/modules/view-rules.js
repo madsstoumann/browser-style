@@ -104,7 +104,7 @@ function conditionRow(editor, node, onchange, onremove, list) {
 	);
 }
 
-function groupEditor(editor, node, onchange, depth = 0, onremove = null, list) {
+export function groupEditor(editor, node, onchange, depth = 0, onremove = null, list) {
 	const setItem = (index, item) => onchange({ ...node, items: node.items.map((current, i) => (i === index ? item : current)) });
 	const removeItem = index => onchange({ ...node, items: node.items.filter((_, i) => i !== index) });
 	const firstField = stepsOf(editor.form).flatMap(step => step.fields)[0];
@@ -130,7 +130,7 @@ function groupEditor(editor, node, onchange, depth = 0, onremove = null, list) {
 }
 
 /* JSON the builder cannot draw: read-only unless Advanced is on. */
-function rawEditor(editor, value, onchange, label) {
+export function rawEditor(editor, value, onchange, label) {
 	return field(label, h('textarea', {
 		rows: 4, readOnly: !editor.advanced, value: JSON.stringify(value, null, 1),
 		onchange: e => {
@@ -394,7 +394,7 @@ function namedConditionsEditor(editor, commitRules) {
 			field('Name', h('input', { value: definition.title ?? '', onchange: e => commitRules(f => { f.variables[name].title = e.target.value; }) }), editor.advanced ? `vars.${name}` : null),
 			groupEditor(editor, parseCondition(definition.compute), next => commitRules(f => { f.variables[name].compute = serializeCondition(next); })),
 			button('Delete named condition', () => {
-				const uses = usesOfVariable(editor.rules, name);
+				const uses = usesOfVariable(editor.rules, name, editor.form);
 				if (!confirm(uses.length ? `"${definition.title ?? name}" is used by ${uses.join(', ')}. Delete it anyway?` : `Delete "${definition.title ?? name}"?`)) return;
 				commitRules(f => { delete f.variables[name]; });
 			}, { part: 'danger' })

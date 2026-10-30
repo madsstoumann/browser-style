@@ -5,6 +5,7 @@
 import { h, field, check, select, button, download } from './dom.js';
 import { addField, addStep, clone, fieldId, moveItem, removeField, removeStep, renameField, renameStep, rulesUsingField, stepOfField, stepsOf } from './model.js';
 import { extractSnippet, insertSnippet } from './snippets.js';
+import { whenPicker } from './when.js';
 import { changeType, fieldFromType, groupTypes, searchTypes, typeOf } from '../../form-rules/index.js';
 
 /* Settings for a field whose type no installed package describes. */
@@ -190,6 +191,15 @@ function stepInspector(editor, stepId) {
 			}
 		}), 'Rules that skip or include this step are updated') : null,
 		check('Only shown when a rule includes it', step.hidden === true, value => update(s => { if (value) s.hidden = true; else delete s.hidden; })),
+		whenPicker(editor, step.showWhen, {
+			label: 'Show this step', always: true,
+			apply: (value, nextRules) => {
+				const next = clone(form);
+				const s = stepsOf(next).find(x => x.id === stepId);
+				if (value === undefined) delete s.showWhen; else s.showWhen = value;
+				editor.commit(nextRules ? { form: next, rules: nextRules } : { form: next });
+			}
+		}),
 		field('Slots for fields from services', h('input', {
 			value: (step.slots ?? []).join(', '),
 			onchange: e => update(s => {
@@ -257,6 +267,12 @@ function fieldInspector(editor, id) {
 		editor.commit({ form: next });
 	};
 	const setOrDelete = (object, key, value) => { if (value === '' || value === undefined || value === null || value === false) delete object[key]; else object[key] = value; };
+	/* A change that may also add a named condition to the rule set. */
+	const updateWith = (fn, nextRules) => {
+		const next = clone(form);
+		fn(next.fields.properties[id], next);
+		editor.commit(nextRules ? { form: next, rules: nextRules } : { form: next });
+	};
 	const validation = property.validation ?? {};
 	const choices = property.options?.choices ?? [];
 	const numeric = choices.length > 0 && choices.every(choice => typeof choice.value === 'number');
@@ -292,7 +308,8 @@ function fieldInspector(editor, id) {
 				editor.select({ field: to });
 			}
 		}), 'The key in the submitted data; rules using it are updated'),
-		settings.has('content') ? field('Text', h('textarea', { part: 'prose', rows: 5, value: property.content ?? '', onchange: e => update(p => { p.content = e.target.value; }) }), 'A blank line starts a new paragraph') : null,
+		settings.has('content') ? casesEditor(property) : null,
+		settings.has('content') ? field(property.cases ? 'Text when no case matches' : 'Text', h('textarea', { part: 'prose', rows: property.cases ? 2 : 5, value: property.content ?? '', onchange: e => update(p => setOrDelete(p, 'content', e.target.value)) }), property.cases ? 'Optional' : 'A blank line starts a new paragraph') : null,
 		settings.has('consent') ? consentEditor(property, setIn) : null,
 		content ? null : field('Help text', h('input', { value: property.description ?? '', onchange: e => update(p => setOrDelete(p, 'description', e.target.value)) })),
 		settings.has('placeholder') ? field('Placeholder', h('input', { value: property.ui?.placeholder ?? '', onchange: e => setIn('ui', 'placeholder', e.target.value) })) : null,
@@ -301,6 +318,10 @@ function fieldInspector(editor, id) {
 			p.ui = { ...(p.ui ?? {}) };
 			setOrDelete(p.ui, 'hidden', value);
 		})),
+		property.ui?.widget === 'hidden' ? null : whenPicker(editor, property.showWhen, {
+			label: 'Show this field', always: true,
+			apply: (value, nextRules) => updateWith(p => setOrDelete(p, 'showWhen', value), nextRules)
+		}),
 		settings.has('choices') && property.type === 'select' ? choicesEditor(property, numeric, update) : null,
 		settings.has('default') ? field(property.ui?.widget === 'hidden' ? 'Value' : 'Starts with', h('input', {
 			type: property.type === 'number' || property.type === 'integer' ? 'number' : 'text',
@@ -354,6 +375,23 @@ function fieldInspector(editor, id) {
 			}, { part: 'danger' })
 		)
 	);
+
+	/* A text block with cases: "When <named condition> show: …". */
+	function casesEditor(p) {
+		const cases = p.cases ?? [];
+		const setCase = (index, fn, nextRules) => updateWith(q => { fn(q.cases[index]); }, nextRules);
+		return h('fieldset', { part: 'cases' },
+			h('legend', {}, 'Texts that depend on the answers'),
+			cases.length ? field('Show', select([['all', 'Every matching text'], ['first', 'Only the first matching text']], p.show ?? 'all', value => update(q => setOrDelete(q, 'show', value === 'first' ? 'first' : '')))) : h('p', {}, h('small', {}, 'Add a case to show a text only when a condition holds, for example "When Medium THC level show: Driving ban".')),
+			h('ol', {}, cases.map((entry, index) => h('li', {},
+				whenPicker(editor, entry.when, { label: 'When', apply: (value, nextRules) => setCase(index, item => { if (value === undefined) delete item.when; else item.when = value; }, nextRules) }),
+				field('Show', h('textarea', { rows: 2, value: entry.content ?? '', onchange: e => setCase(index, item => { item.content = e.target.value; }) })),
+				h('div', { part: 'row' },
+					button('Move up', () => update(q => { q.cases = moveItem(q.cases, index, -1); }), { disabled: index === 0 }),
+					button('Remove', () => update(q => { q.cases.splice(index, 1); if (!q.cases.length) { delete q.cases; delete q.show; } }), { part: 'danger', 'aria-label': `Remove case ${index + 1}` }))
+			))),
+			button('+ Case', () => update(q => { q.cases = [...(q.cases ?? []), { content: '' }]; })));
+	}
 
 	function consentEditor(p, set) {
 		const notice = p.consent?.notice ?? {};
@@ -439,7 +477,8 @@ function fieldInspector(editor, id) {
 			h('ol', {}, (p.options?.choices ?? []).map((choice, i) => h('li', { part: 'row' },
 				field('Label', h('input', { value: choice.label, onchange: e => apply(q => { q.options.choices[i].label = e.target.value; }) })),
 				field('Value', h('input', { value: String(choice.value), onchange: e => apply(q => { q.options.choices[i].value = parse(e.target.value); }) })),
-				button('Remove', () => apply(q => { q.options.choices.splice(i, 1); }), { 'aria-label': `Remove ${choice.label}`, disabled: p.options.choices.length <= 1 })
+				button('Remove', () => apply(q => { q.options.choices.splice(i, 1); }), { 'aria-label': `Remove ${choice.label}`, disabled: p.options.choices.length <= 1 }),
+				Object.assign(field('Text shown when chosen', h('input', { value: choice.note ?? '', onchange: e => apply(q => setOrDelete(q.options.choices[i], 'note', e.target.value)) }), 'Optional; texts elsewhere can show it as {values.' + id + '.note}'), { part: 'note' })
 			))),
 			button('+ Choice', () => apply(q => {
 				const n = q.options.choices.length + 1;
