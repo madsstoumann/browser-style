@@ -106,8 +106,18 @@ export function renameField(form, rules, from, to) {
 	nextForm.fields.properties = properties;
 	stepsOf(nextForm).forEach(step => { step.fields = step.fields.map(id => (id === from ? to : id)); });
 	if (Array.isArray(nextForm.fields.required)) nextForm.fields.required = nextForm.fields.required.map(id => (id === from ? to : id));
+	/* Conditions written on the form: showWhen and text cases (a named condition's name needs nothing). */
+	const renameWhen = when => (when && typeof when === 'object' ? renameReads(when, from, to) : when);
+	for (const property of Object.values(nextForm.fields.properties)) {
+		if (property?.showWhen !== undefined) property.showWhen = renameWhen(property.showWhen);
+		(property?.cases ?? []).forEach(entry => { if (entry) entry.when = renameWhen(entry.when); });
+	}
+	stepsOf(nextForm).forEach(step => { if (step.showWhen !== undefined) step.showWhen = renameWhen(step.showWhen); });
 
 	const nextRules = clone(rules);
+	Object.values(nextRules.fields.variables ?? {}).forEach(definition => {
+		if (definition && 'compute' in definition) definition.compute = renameReads(definition.compute, from, to);
+	});
 	/* A row rule targets list.item, so a renamed list renames the prefix too. */
 	const swap = id => (id === from ? to : typeof id === 'string' && id.startsWith(`${from}.`) ? `${to}${id.slice(from.length)}` : id);
 	nextRules.fields.rules = (nextRules.fields.rules ?? []).map(rule => ({
@@ -188,12 +198,17 @@ export function nameCondition(rules, ruleId, title) {
 	return result;
 }
 
-/* Ids of the rules, and names of the variables, that read a variable. */
-export function usesOfVariable(rules, name) {
+/* Ids of the rules, names of the variables, and (given the form) fields and steps that read a variable.
+   showWhen and text cases name a named condition by its name. */
+export function usesOfVariable(rules, name, form = null) {
 	const reads = value => JSON.stringify(value ?? null).includes(`"vars.${name}"`);
+	const names = value => value === name || reads(value);
+	const properties = Object.entries(form?.fields?.properties ?? {});
 	return [
 		...(rules.fields.rules ?? []).filter(rule => reads([rule.when, rule.then, rule.else])).map(rule => rule.id),
-		...Object.entries(rules.fields.variables ?? {}).filter(([other, definition]) => other !== name && reads(definition.compute)).map(([other]) => `vars.${other}`)
+		...Object.entries(rules.fields.variables ?? {}).filter(([other, definition]) => other !== name && reads(definition.compute)).map(([other]) => `vars.${other}`),
+		...properties.filter(([, property]) => names(property?.showWhen) || (property?.cases ?? []).some(entry => names(entry?.when))).map(([id, property]) => `field "${property?.title ?? id}"`),
+		...(form ? stepsOf(form) : []).filter(step => names(step.showWhen)).map(step => `step "${step.name ?? step.id}"`)
 	];
 }
 

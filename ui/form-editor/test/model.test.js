@@ -140,3 +140,16 @@ test('a rule is copied with what it needs and pasted into another form', () => {
 	assert.deepEqual(pasted.rules.fields.variables.isSenior, rules.fields.variables.isSenior);
 	assert.deepEqual(pasteRule(other, emptyRules('other'), copyRule(rules, 'senior-north')).missing.sort(), ['ageGroup', 'plan', 'zip']);
 });
+
+test('texts that follow the answers: uses of a named condition, and renaming a field they read', () => {
+	const drugForm = load('../../form-rules/examples/drug-ticket.form.json');
+	const drugRules = load('../../form-rules/examples/drug-ticket.rules.json');
+	assert.deepEqual(usesOfVariable(drugRules, 'medThc', drugForm), ['vars.newDriver', 'vars.experiencedDriver', 'vars.revoked', 'field "How long have you had your driver\'s license?"']);
+	assert.deepEqual(usesOfVariable(drugRules, 'lowThc', drugForm).filter(use => use.startsWith('field')), ['field "Sanctions"']);
+	const inline = structuredClone(drugForm);
+	inline.fields.properties.thcLevel.showWhen = { '===': [{ var: 'values.drug' }, 'cannabis'] };
+	const result = renameField(inline, drugRules, 'drug', 'substance');
+	assert.deepEqual(result.form.fields.properties.thcLevel.showWhen, { '===': [{ var: 'values.substance' }, 'cannabis'] });
+	assert.deepEqual(result.rules.fields.variables.isThc.compute, { '===': [{ var: 'values.substance' }, 'cannabis'] });
+	assert.deepEqual(validate(result.form, result.rules).errors, []);
+});

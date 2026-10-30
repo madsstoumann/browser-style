@@ -84,7 +84,7 @@
 			font-size: smaller;
 			& ul { margin: 0; padding-inline-start: 2ch; }
 		}
-		/* Last, so a rule that hides a text block, a calculated value, a slider or a list wins over their display: grid. */
-		& [hidden] { display: none; }
+		/* A field a rule hides stays hidden whatever display a page or host (the editor's preview) gives it. */
+		& [hidden] { display: none !important; }
 	}
 }
