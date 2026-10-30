@@ -1,0 +1,56 @@
+{
+	"description": "Texts that follow the answers: showWhen hides fields as rules of their own, a text block lists its matching cases, a chosen choice gives its note",
+	"form": "../examples/drug-ticket.form.json",
+	"rules": "../examples/drug-ticket.rules.json",
+	"input": {
+		"values": {
+			"income": 60000,
+			"drug": "cannabis",
+			"thcLevel": "medium",
+			"licenseYears": "over3"
+		}
+	},
+	"expect": {
+		"values": {
+			"income": 60000,
+			"drug": "cannabis",
+			"thcLevel": "medium",
+			"licenseYears": "over3",
+			"headline": 3500,
+			"fine": 2400,
+			"doctorFee": 20,
+			"bloodAnalysis": 300,
+			"victimFund": 80,
+			"courseFee": 500,
+			"retestFee": 200,
+			"total": 3500
+		},
+		"matched": [],
+		"path": [
+			"calc"
+		],
+		"issues": [],
+		"fields": {
+			"thcLevel": {
+				"visible": true
+			},
+			"licenseYears": {
+				"visible": true
+			},
+			"sanctions": {
+				"visible": true,
+				"cases": [
+					2,
+					4,
+					5
+				]
+			},
+			"victimFund": {
+				"visible": true
+			}
+		},
+		"notes": {
+			"thcLevel": "Medium THC level corresponds to 0.003–0.009 mg/kg blood."
+		}
+	}
+}

@@ -76,7 +76,7 @@ Every input re-runs `evaluate()` and applies the result:
 | `boolean` | `<input type="checkbox" role="switch">` |
 | `boolean` with `ui.widget: "consent"` | A plain checkbox labelled with `consent.text` and a link to `consent.notice.url` |
 | `select` | `<select>`; a radio group with `ui.widget: "radio"`; checkboxes with `options.multiple` |
-| `content` | A text block: optional `title` as a heading, `content` as paragraphs. No control |
+| `content` | A text block: optional `title` as a heading, `content` as paragraphs. No control. With `cases`, each case is a `part="case"` block shown while the engine lists it, and `content` when none matches |
 | `file` | `<input type="file">` with `accept` and `multiple` (when `maxFiles` > 1). The engine sees name, size and type only; the files go out with `ff:submit` |
 | `number` with `ui.widget: "range"` | A slider with an `<output>` showing the value; `ui.step` |
 | any type with `from: "vars.x"` (`ui.widget: "output"`) | A calculated value: `<output>`, formatted with `ui.format` (`Intl.NumberFormat` options) |
@@ -86,6 +86,8 @@ Every input re-runs `evaluate()` and applies the result:
 | any `ui.widget` from a widget package | That package's control, see [Widgets](#widgets) |
 
 Titles, help texts, text blocks and messages may hold placeholders, `{values.total}` or `{vars.score}`, filled on every change and formatted like the field. Demo: `order.html`.
+
+A choice with a `note` shows it under the field while chosen (`<small part="note">`). Fields with `showWhen` are hidden by the engine like any rule-hidden field. Demo: `drug-ticket.html`.
 
 Which types an editor offers, and under what names, is data: see the [forms guide](../../docs/forms.md#field-types-and-packages). Demo: `contact.html`.
 

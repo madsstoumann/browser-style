@@ -24,3 +24,10 @@ export function fillText(text, data = {}, { format = plain } = {}) {
 export function placeholdersOf(text) {
 	return typeof text === 'string' ? [...text.matchAll(PLACEHOLDER)].map(match => match[1]).filter(Boolean) : [];
 }
+
+/* What texts read from an evaluated state: its values and variables, and each chosen choice's note as {values.x.note}. */
+export function textData(state, { context = {}, facts = {} } = {}) {
+	const values = { ...(state?.values ?? {}) };
+	for (const [id, note] of Object.entries(state?.notes ?? {})) values[`${id}.note`] = note;
+	return { values, vars: state?.vars ?? {}, context, facts };
+}

@@ -11,6 +11,7 @@ import { actionName, actionTargets, ACTIONS, gotoFrom, gotoOf, ROW_ACTIONS, rowT
 import { normalizeForm, normalizeRuleSet, unwrap } from './form.js';
 import { CONTEXT_SOURCES } from './context.js';
 import { placeholdersOf } from './text.js';
+import { conditionOf, implicitRules } from './show.js';
 
 const INPUT_ROOTS = ['values', 'context', 'facts', 'step', 'today', 'vars', 'services'];
 /* Only these change what a condition can read, since hidden values read as absent. */
@@ -112,15 +113,38 @@ export function validate(formDefinition, ruleSetDocument, { functions = {}, type
 		});
 	}
 
+	/* Conditions of text cases, checked with the rules' conditions below. */
+	const caseConditions = [];
 	/* Placeholders in texts ({values.x}, {vars.x}) must read a field or a declared variable. */
 	const checkPlaceholders = (text, at) => placeholdersOf(text).forEach(path => {
 		const [root, name] = path.split('.');
-		if (root === 'values' && !form.fields.has(path.slice(7))) fail('placeholder', `"{${path}}" reads unknown field "${path.slice(7)}"`, at);
+		/* {values.x.note} reads the note of the choice made in x. */
+		const noteOf = path.endsWith('.note') ? path.slice(7, -5) : null;
+		if (root === 'values' && noteOf && !form.fields.has(path.slice(7))) {
+			if (!form.fields.get(noteOf)?.choices) fail('placeholder', `"{${path}}" reads the note of "${noteOf}", which is not a field with choices`, at);
+		} else if (root === 'values' && !form.fields.has(path.slice(7))) fail('placeholder', `"{${path}}" reads unknown field "${path.slice(7)}"`, at);
 		if (root === 'vars' && !Object.hasOwn(ruleSetVariables, name)) fail('placeholder', `"{${path}}" reads undeclared variable "${name}"`, at);
 	});
 	for (const [id, property] of Object.entries(rawForm.properties ?? {})) {
 		['title', 'description', 'content'].forEach(key => checkPlaceholders(property?.[key], `properties.${id}.${key}`));
 		Object.entries(property?.validation?.messages ?? {}).forEach(([code, text]) => checkPlaceholders(text, `properties.${id}.validation.messages.${code}`));
+		(property?.options?.choices ?? []).forEach((choice, i) => {
+			if (choice?.note === undefined) return;
+			if (typeof choice.note !== 'string') fail('note', `The note on choice "${choice.value}" of "${id}" must be text`, `properties.${id}.options.choices[${i}].note`);
+			else checkPlaceholders(choice.note, `properties.${id}.options.choices[${i}].note`);
+		});
+		if (property?.cases !== undefined || property?.show !== undefined) {
+			if (property.type !== 'content') fail('cases', `Only a text block can have cases; "${id}" is a ${property.type}`, `properties.${id}.cases`);
+			if (!Array.isArray(property.cases)) fail('cases', `The cases of "${id}" must be a list`, `properties.${id}.cases`);
+			if (property.show !== undefined && !['all', 'first'].includes(property.show)) fail('cases', `"show" of "${id}" must be "all" or "first"`, `properties.${id}.show`);
+			(Array.isArray(property.cases) ? property.cases : []).forEach((entry, i) => {
+				const at = `properties.${id}.cases[${i}]`;
+				if (typeof entry?.content !== 'string') fail('cases', `Case ${i + 1} of "${id}" needs its text (content)`, `${at}.content`);
+				else checkPlaceholders(entry.content, `${at}.content`);
+				if (entry?.when === undefined || entry.when === null || (typeof entry.when !== 'string' && typeof entry.when !== 'object')) fail('cases', `Case ${i + 1} of "${id}" needs a condition (when): a named condition or JSON Logic`, `${at}.when`);
+				else caseConditions.push({ when: conditionOf(entry.when), at: `${at}.when` });
+			});
+		}
 	}
 	ruleSet.rules.forEach((rule, index) => ['then', 'else'].forEach(branch => (rule?.[branch] ?? []).forEach((action, i) => {
 		if (action?.invalid) checkPlaceholders(action.invalid.message, `rules[${index}].${branch}[${i}].invalid.message`);
@@ -187,8 +211,10 @@ export function validate(formDefinition, ruleSetDocument, { functions = {}, type
 	const reads = new Map();
 	const assignedFields = new Set();
 
-	ruleSet.rules.forEach((rule, index) => {
-		const path = `rules[${index}]`;
+	/* showWhen on fields and steps runs as rules; they are checked as rules, at the place they were written. */
+	[...ruleSet.rules, ...implicitRules(form)].forEach((rule, index) => {
+		const path = rule?.at ?? `rules[${index}]`;
+		const whenAt = rule?.at ?? `${path}.when`;
 		if (typeof rule?.id !== 'string' || !rule.id) {
 			fail('rule-id', 'Every rule needs an id', path);
 			return;
@@ -200,11 +226,11 @@ export function validate(formDefinition, ruleSetDocument, { functions = {}, type
 
 		/* Conditions */
 		operatorsOf(rule.when ?? true).forEach(op => {
-			if (op === '==' || op === '!=') fail('operator', `"${op}" coerces types; use "${op}="`, `${path}.when`);
-			else if (!OPERATORS.includes(op) && typeof functions[op] !== 'function') fail('operator', `Unknown operator "${op}"`, `${path}.when`);
+			if (op === '==' || op === '!=') fail('operator', `"${op}" coerces types; use "${op}="`, whenAt);
+			else if (!OPERATORS.includes(op) && typeof functions[op] !== 'function') fail('operator', `Unknown operator "${op}"`, whenAt);
 		});
 		checksOf(rule.when ?? true).forEach(name => {
-			if (typeof name !== 'string' || typeof functions[name] !== 'function') fail('function', `"check" uses "${name}", which no function provides`, `${path}.when`);
+			if (typeof name !== 'string' || typeof functions[name] !== 'function') fail('function', `"check" uses "${name}", which no function provides`, whenAt);
 		});
 		const fieldReads = new Set();
 		/* A row rule runs once per row of a repeating group: it reads row.* and index, and acts on that row's fields. */
@@ -216,21 +242,21 @@ export function validate(formDefinition, ruleSetDocument, { functions = {}, type
 		readsOf(rule.when ?? true).forEach(variable => {
 			const [root, ...rest] = variable.split('.');
 			if (isRowRule && (root === 'row' || root === 'index')) {
-				if (root === 'row' && items && !Object.hasOwn(items, rest[0])) fail('field', `Condition reads "${variable}", but "${list}" has no row field "${rest[0]}"`, `${path}.when`);
+				if (root === 'row' && items && !Object.hasOwn(items, rest[0])) fail('field', `Condition reads "${variable}", but "${list}" has no row field "${rest[0]}"`, whenAt);
 				if (root === 'row') rowReads.add(rest[0]);
 				return;
 			}
 			if (!INPUT_ROOTS.includes(root)) {
-				fail('variable', `"${variable}" must start with ${INPUT_ROOTS.join(', ')}`, `${path}.when`);
+				fail('variable', `"${variable}" must start with ${INPUT_ROOTS.join(', ')}`, whenAt);
 				return;
 			}
 			if (root === 'values') {
 				const field = rest.join('.');
-				if (!form.fields.has(field)) fail('field', `Condition reads unknown field "${field}"`, `${path}.when`);
+				if (!form.fields.has(field)) fail('field', `Condition reads unknown field "${field}"`, whenAt);
 				fieldReads.add(field);
 			}
 			if (root === 'vars') {
-				if (!Object.hasOwn(variables, rest[0])) fail('variable', `"${variable}" is not a declared variable`, `${path}.when`);
+				if (!Object.hasOwn(variables, rest[0])) fail('variable', `"${variable}" is not a declared variable`, whenAt);
 				fieldReads.add(`vars.${rest[0]}`);
 			}
 		});
@@ -315,6 +341,20 @@ export function validate(formDefinition, ruleSetDocument, { functions = {}, type
 			}
 		}));
 		writes.set(rule.id, ruleWrites);
+	});
+
+	/* A text case reads like a condition, but changes nothing, so it can take part in no loop. */
+	caseConditions.forEach(({ when, at }) => {
+		operatorsOf(when).forEach(op => {
+			if (op === '==' || op === '!=') fail('operator', `"${op}" coerces types; use "${op}="`, at);
+			else if (!OPERATORS.includes(op) && typeof functions[op] !== 'function') fail('operator', `Unknown operator "${op}"`, at);
+		});
+		readsOf(when).forEach(variable => {
+			const [root, ...rest] = variable.split('.');
+			if (!INPUT_ROOTS.includes(root)) fail('variable', `"${variable}" must start with ${INPUT_ROOTS.join(', ')}`, at);
+			else if (root === 'values' && !form.fields.has(rest.join('.'))) fail('field', `Condition reads unknown field "${rest.join('.')}"`, at);
+			else if (root === 'vars' && !Object.hasOwn(variables, rest[0])) fail('variable', `"${variable}" is not a declared named condition or variable`, at);
+		});
 	});
 
 	/* A field set by setValue must not steer any rule, or a rule could change its own input. */

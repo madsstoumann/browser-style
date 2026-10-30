@@ -4,7 +4,7 @@
  * Fields are plain native controls in light DOM, so @browser.style/base form.css styles them.
  * Every input re-evaluates the rules; the engine's effects (fetch, emit) are carried out here.
  */
-import { calculatedFrom, consentRecords, evaluate, expirePatches, fillText, handleEvent, loadPackages, merge, normalizeForm, normalizeRuleSet, placeholdersOf, privacyOf, safeUrl } from '../form-rules/index.js';
+import { calculatedFrom, consentRecords, evaluate, expirePatches, fillText, handleEvent, loadPackages, merge, normalizeForm, normalizeRuleSet, placeholdersOf, privacyOf, safeUrl, textData } from '../form-rules/index.js';
 import { FlowTracking, validityCode } from './tracking.js';
 
 const INPUT_TYPES = ['color', 'date', 'datetime-local', 'email', 'month', 'password', 'search', 'tel', 'time', 'url', 'week'];
@@ -278,7 +278,7 @@ export default class FormFlow extends HTMLElement {
 
 	#fill(text, state = this.#state) {
 		if (!state || !placeholdersOf(text).length) return text;
-		const data = { values: state.values, vars: state.vars, context: this.#context, facts: this.#store.facts ?? {} };
+		const data = textData(state, { context: this.#context, facts: this.#store.facts ?? {} });
 		return fillText(text, data, { format: (value, path) => this.#formatValue(value, path.startsWith('values.') ? this.#propertyOf(path.slice(7)) : null) });
 	}
 
@@ -291,16 +291,29 @@ export default class FormFlow extends HTMLElement {
 	}
 
 	#renderField(id, property = {}) {
+		const element = this.#fieldMarkup(id, property);
+		/* A choice field with notes: the chosen choice's note, under the field (state.notes). */
+		if (choicesOf(property).some(choice => typeof choice.note === 'string') && !element.dataset.widget) {
+			element.append(h('small', { part: 'note', 'data-note': '', role: 'status', hidden: true }));
+		}
+		return element;
+	}
+
+	#fieldMarkup(id, property = {}) {
 		const value = Object.hasOwn(this.#values, id) ? this.#values[id] : property.default;
 		const widget = property.ui?.widget;
 		const validation = property.validation ?? {};
 		const choices = choicesOf(property);
 
-		/* A text block: no control and no value. Blank lines start new paragraphs. */
+		/* A text block: no control and no value. Blank lines start new paragraphs. With cases, each case is shown
+		   while the engine lists it (state.fields[id].cases), and the text block's own text when none matches. */
 		if (property.type === 'content') {
+			const paragraphs = text => String(text ?? '').split(/\n\s*\n/).map(part => part.trim()).filter(Boolean).map(part => h('p', {}, this.#text(part)));
+			const cases = Array.isArray(property.cases) ? property.cases : null;
 			return h('div', { 'data-field': id, part: 'field content' },
 				property.title ? h('strong', {}, this.#text(property.title)) : null,
-				String(property.content ?? '').split(/\n\s*\n/).map(text => text.trim()).filter(Boolean).map(text => h('p', {}, this.#text(text))));
+				cases ? cases.map((entry, index) => h('div', { part: 'case', 'data-case': index, hidden: true }, paragraphs(entry?.content))) : paragraphs(property.content),
+				cases && property.content ? h('div', { part: 'case', 'data-case-default': '', hidden: true }, paragraphs(property.content)) : null);
 		}
 		/* A control from a widget package; it loads its component the first time a field uses it. */
 		const adapter = widget && Object.hasOwn(this.#widgets, widget) ? this.#widgets[widget] : null;
@@ -646,6 +659,17 @@ export default class FormFlow extends HTMLElement {
 			element.hidden = !field.visible || element.hasAttribute('data-hidden-value');
 			const marker = element.querySelector('abbr');
 			if (marker) marker.hidden = !field.required;
+			if (field.cases) {
+				element.querySelectorAll('[data-case]').forEach(entry => { entry.hidden = !field.cases.includes(Number(entry.dataset.case)); });
+				const fallback = element.querySelector('[data-case-default]');
+				if (fallback) fallback.hidden = field.cases.length > 0;
+			}
+			const noteElement = element.querySelector(':scope > [data-note]');
+			if (noteElement) {
+				const note = state.notes?.[id] ?? null;
+				noteElement.hidden = note === null;
+				noteElement.textContent = note === null ? '' : [].concat(note).map(text => this.#fill(text, state)).join('\n');
+			}
 
 			if (state.explain[`${id}.value`]) {
 				this.#values[id] = state.values[id];
