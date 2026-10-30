@@ -3,7 +3,7 @@
  * Every view gets `editor`: { form, rules, selection, advanced, commit({ form?, rules? }), select({ … }) }.
  */
 import { h, field, check, select, button, download } from './dom.js';
-import { addField, addStep, clone, fieldId, moveItem, removeField, removeStep, renameField, renameStep, rulesUsingField, stepOfField, stepsOf } from './model.js';
+import { addField, addPanel, addStep, clone, fieldId, moveItem, panelsOf, removeField, removeStep, renameField, renameStep, rulesUsingField, sectionsOf, stepOfField, stepsOf } from './model.js';
 import { extractSnippet, insertSnippet } from './snippets.js';
 import { whenPicker } from './when.js';
 import { changeType, fieldFromType, groupTypes, searchTypes, typeOf } from '../../form-rules/index.js';
@@ -22,6 +22,10 @@ const ITEM_TYPES = [['string', 'Text'], ['number', 'Number'], ['integer', 'Whole
 const FORMATS = [['', 'Plain number'], ['decimal', 'Two decimals'], ['currency', 'Amount of money'], ['percent', 'Percent']];
 const MB = 1048576;
 const INSTALLED = 'From installed packages';
+const MODES = [['steps', 'One step at a time'], ['page', 'All on one page'], ['reveal', 'One page that unfolds']];
+const PLACES = [['aside', 'Beside the form (below it on narrow screens)'], ['end', 'After the steps'], ['start', 'Before the steps']];
+/* A result panel shows, never asks: text blocks and calculated values only. */
+const PANEL_KINDS = type => type.template?.type === 'content' || type.template?.ui?.widget === 'output';
 
 const typeOfField = (editor, property) => typeOf(property, editor.types);
 const titleOf = (editor, id) => {
@@ -31,7 +35,7 @@ const titleOf = (editor, id) => {
 
 /* === The type picker: a searchable list, grouped; types from packages other than core come last, under their package === */
 
-export function pickType(editor, { title = 'Add a field', current = null, onpick, onsnippet = null }) {
+export function pickType(editor, { title = 'Add a field', current = null, onpick, onsnippet = null, only = null }) {
 	const registry = editor.types;
 	const search = h('input', { type: 'search', placeholder: 'Search field types', 'aria-label': 'Search field types', autocomplete: 'off' });
 	const list = h('div', { part: 'type-list' });
@@ -64,8 +68,9 @@ export function pickType(editor, { title = 'Add a field', current = null, onpick
 		const words = search.value.toLowerCase().split(/\s+/).filter(Boolean);
 		return onsnippet ? (snippets ?? []).filter(snippet => words.every(word => [snippet.title, snippet.description, snippet.snippet, ...(snippet.keywords ?? [])].join(' ').toLowerCase().includes(word))) : [];
 	};
+	const searchFor = text => searchTypes(registry, text).filter(type => !only || only(type));
 	const draw = () => {
-		const found = searchTypes(registry, search.value);
+		const found = searchFor(search.value);
 		const snippets = matching(editor.snippets);
 		const own = matching(editor.ownSnippets);
 		const core = found.filter(type => type.package === 'core');
@@ -85,7 +90,7 @@ export function pickType(editor, { title = 'Add a field', current = null, onpick
 	search.addEventListener('keydown', event => {
 		if (event.key !== 'Enter') return;
 		event.preventDefault();
-		const first = searchTypes(registry, search.value)[0];
+		const first = searchFor(search.value)[0];
 		if (first) choose(first);
 	});
 	dialog.addEventListener('close', () => dialog.remove());
@@ -101,6 +106,7 @@ export function pickType(editor, { title = 'Add a field', current = null, onpick
 export function renderOutline(editor) {
 	const { form, selection } = editor;
 	const steps = stepsOf(form);
+	const panels = panelsOf(form);
 	return h('nav', { 'aria-label': 'Steps and fields' },
 		h('h2', {}, 'Steps and fields'),
 		h('ol', { part: 'outline' }, steps.map((step, index) => h('li', {},
@@ -132,7 +138,29 @@ export function renderOutline(editor) {
 			const result = addStep(form, `Step ${steps.length + 1}`);
 			editor.commit({ form: result.form });
 			editor.select({ view: 'form', step: result.id, field: null });
-		}, { part: 'add' })
+		}, { part: 'add' }),
+		panels.length ? h('ul', { part: 'outline' }, panels.map(panel => h('li', {},
+			button(['▣ ', panel.name || 'Result panel'], () => editor.select({ view: 'form', step: panel.id, field: null }), {
+				part: 'outline-step', 'aria-current': selection.step === panel.id && !selection.field ? 'true' : null
+			}),
+			h('ul', {}, panel.fields.map(id => h('li', {},
+				button([h('span', { part: 'badge' }, typeOfField(editor, form.fields.properties[id])?.glyph ?? '?'), ' ', titleOf(editor, id)],
+					() => editor.select({ view: 'form', step: panel.id, field: id }),
+					{ part: 'outline-field', 'aria-current': selection.field === id ? 'true' : null })))),
+			button('+ Text or value', () => pickType(editor, {
+				title: `Add to ${panel.name || 'the result panel'}`,
+				only: PANEL_KINDS,
+				onpick: type => {
+					const result = addField(form, panel.id, null, fieldFromType(type));
+					editor.commit({ form: result.form });
+					editor.select({ view: 'form', step: panel.id, field: result.id });
+				}
+			}), { part: 'add' })))) : null,
+		button('+ Result panel', () => {
+			const result = addPanel(form, 'Result');
+			editor.commit({ form: result.form });
+			editor.select({ view: 'form', step: result.id, field: null });
+		}, { part: 'add', title: 'Texts and calculated values shown beside the form, whichever step is current' })
 	);
 }
 
@@ -142,6 +170,7 @@ export function renderFormView(editor) {
 	const { form, selection } = editor;
 	if (selection.field && form.fields.properties[selection.field]) return fieldInspector(editor, selection.field);
 	if (selection.step && stepsOf(form).some(step => step.id === selection.step)) return stepInspector(editor, selection.step);
+	if (selection.step && panelsOf(form).some(panel => panel.id === selection.step)) return panelInspector(editor, selection.step);
 	return formInspector(editor);
 }
 
@@ -159,8 +188,61 @@ function formInspector(editor) {
 		field('Form id', h('input', { value: form.id, pattern: '[a-z0-9][a-z0-9\\-]*', onchange: e => update((f, r) => { f.id = e.target.value; r.fields.form = e.target.value; }) }), 'Lowercase letters, digits and dashes'),
 		field('Rule set id', h('input', { value: rules.id, onchange: e => update((f, r) => { r.id = e.target.value; }) })),
 		field('Rule set version', h('input', { type: 'number', min: 1, value: rules.fields.version ?? 1, onchange: e => update((f, r) => { r.fields.version = Number(e.target.value) || 1; }) }), 'Raise it when you publish changed rules'),
+		presentEditor(form, update),
 		h('p', {}, h('small', {}, 'Select a step or a field in the outline to edit it.'))
 	);
+}
+
+/* structure.present: how the form is shown. Left out when it is the default (steps, manual, a Send button). */
+function presentEditor(form, update) {
+	const present = form.fields.structure?.present ?? {};
+	const set = (key, value, fallback) => update(f => {
+		const next = { ...(f.fields.structure.present ?? {}) };
+		if (value === fallback) delete next[key];
+		else next[key] = value;
+		if (Object.keys(next).length) f.fields.structure.present = next;
+		else delete f.fields.structure.present;
+	});
+	const mode = present.mode ?? 'steps';
+	return h('fieldset', { part: 'present' },
+		h('legend', {}, 'How it is shown'),
+		field('Layout', select(MODES, mode, value => set('mode', value, 'steps')),
+			mode === 'page' ? 'Every step is a section on one page' : mode === 'reveal' ? 'The next section appears when the one before is complete' : 'Back and Next between steps'),
+		mode === 'page' ? null : check('Move on when a choice is made', present.advance === 'auto', value => set('advance', value ? 'auto' : 'manual', 'manual')),
+		check('Nothing is sent (a calculator)', present.submit === false, value => set('submit', !value, true)),
+		present.submit === false ? h('small', {}, 'No Send button; results update as the person answers. Add a result panel for the totals and texts.') : null);
+}
+
+function panelInspector(editor, panelId) {
+	const { form, rules } = editor;
+	const panel = panelsOf(form).find(p => p.id === panelId);
+	const update = fn => {
+		const next = clone(form);
+		fn(panelsOf(next).find(p => p.id === panelId), next);
+		editor.commit({ form: next });
+	};
+	return h('section', { part: 'inspector' },
+		h('h2', {}, `Result panel: ${panel.name || panel.id}`),
+		h('p', {}, h('small', {}, 'Texts and calculated values shown whichever step is current, in every layout. A panel asks nothing, so it never stops Next or Send.')),
+		field('Heading', h('input', { value: panel.name ?? '', onchange: e => update(p => { if (e.target.value) p.name = e.target.value; else delete p.name; }) }), 'Optional'),
+		editor.advanced ? field('Panel id', h('input', {
+			value: panel.id,
+			pattern: '[a-z0-9][a-z0-9\\-]*',
+			onchange: e => {
+				const result = renameStep(form, rules, panel.id, e.target.value.trim());
+				if (!result.renamed) { e.target.value = panel.id; return; }
+				editor.commit({ form: result.form, rules: result.rules });
+				editor.select({ step: e.target.value.trim() });
+			}
+		}), 'Rules that hide or show this panel are updated') : null,
+		field('Place', select(PLACES, panel.place ?? 'aside', value => update(p => { p.place = value; }))),
+		check('Only shown when a rule includes it', panel.hidden === true, value => update(p => { if (value) p.hidden = true; else delete p.hidden; })),
+		h('div', { part: 'row' },
+			button('Delete panel', () => {
+				if (!confirm(`Delete "${panel.name || panel.id}" and its ${panel.fields.length} text(s) and value(s)?`)) return;
+				editor.commit({ form: removeStep(form, panelId) });
+				editor.select({ step: null, field: null });
+			}, { part: 'danger' })));
 }
 
 function stepInspector(editor, stepId) {
@@ -286,7 +368,7 @@ function fieldInspector(editor, id) {
 
 	const moveWithin = direction => {
 		const next = clone(form);
-		const s = stepsOf(next).find(x => x.id === step.id);
+		const s = sectionsOf(next).find(x => x.id === step.id);
 		s.fields = moveItem(s.fields, index, direction);
 		editor.commit({ form: next });
 	};
@@ -357,10 +439,10 @@ function fieldInspector(editor, id) {
 			field('Max. length', h('input', { type: 'number', min: 1, value: validation.maxLength ?? '', onchange: e => setIn('validation', 'maxLength', e.target.value === '' ? '' : Number(e.target.value)) }))
 		) : null,
 		settings.has('checks') ? checksEditor(editor, validation, update) : null,
-		field('Step', select(stepsOf(form).map(s => [s.id, s.name]), step.id, value => {
+		field('Step', select(sectionsOf(form).filter(s => s.type === 'step' || content || settings.has('calculated') || s.id === step.id).map(s => [s.id, s.type === 'panel' ? `${s.name || s.id} (panel)` : s.name]), step.id, value => {
 			const next = clone(form);
-			stepsOf(next).forEach(s => { s.fields = s.fields.filter(f => f !== id); });
-			stepsOf(next).find(s => s.id === value).fields.push(id);
+			sectionsOf(next).forEach(s => { s.fields = s.fields.filter(f => f !== id); });
+			sectionsOf(next).find(s => s.id === value).fields.push(id);
 			editor.commit({ form: next });
 			editor.select({ step: value });
 		})),

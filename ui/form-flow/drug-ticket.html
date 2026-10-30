@@ -10,7 +10,11 @@
 	<link rel="stylesheet" href="../step/ui-step.css">
 	<link rel="stylesheet" href="index.css">
 	<style>
-		body { max-inline-size: 70ch; margin-inline: auto; padding: 2ch; }
+		body { max-inline-size: 90ch; margin-inline: auto; padding: 2ch; }
+		.demo-controls { display: flex; flex-wrap: wrap; gap: 2ch; align-items: end; margin-block: 2ch; }
+		.demo-log { font-size: smaller; max-block-size: 12em; overflow: auto; overflow-wrap: anywhere; }
+		form-flow [data-field=headline] { grid-template-columns: 1fr; & output { font-size: 2rem; } }
+		form-flow [data-field=total] { border-block-start: 1px solid var(--color-border); padding-block-start: .5rem; }
 	</style>
 </head>
 <body>
@@ -24,12 +28,40 @@
 			and <strong>Show this field when</strong> (the THC level only for cannabis, the license question only for a medium level, the course and test fees only above a low level).
 			Open it in the <a href="../form-editor/?example=drug-ticket">form editor</a>.
 		</p>
+		<p>
+			The form also says how it is shown, in <code>structure.present</code>: <code>{ "mode": "page", "submit": false }</code>,
+			so it is one page with no Send button. The costs and sanctions are in a <strong>result panel</strong> (a layout entry of type
+			<code>panel</code>, placed <code>aside</code>), beside the questions when there is room and below them when there is not.
+			Try the same form as one page that unfolds, or one step at a time; the panel stays in every mode.
+		</p>
+
+		<div class="demo-controls">
+			<label>Show as
+				<select id="mode">
+					<option value="page" selected>All on one page (page)</option>
+					<option value="reveal">One page that unfolds (reveal)</option>
+					<option value="steps">One step at a time (steps)</option>
+				</select>
+			</label>
+		</div>
 
 		<form-flow form="../form-rules/examples/drug-ticket.form.json" rules="../form-rules/examples/drug-ticket.rules.json" explain></form-flow>
+
+		<h2>Tracking</h2>
+		<p>A calculator sends nothing, so once the answers rest it reports <code>form.result</code> with the choices marked <code>"track": true</code>. The income and the totals are left out.</p>
+		<ol class="demo-log" id="log" reversed></ol>
 	</main>
 
 	<script type="module">
 		import './index.js';
+		const flow = document.querySelector('form-flow');
+		document.getElementById('mode').addEventListener('change', event => flow.setAttribute('mode', event.target.value));
+		flow.addEventListener('ff:track', ({ detail }) => {
+			if (!['form.view', 'form.start', 'form.result'].includes(detail.type)) return;
+			const item = document.createElement('li');
+			item.textContent = `${detail.type} ${JSON.stringify(detail.data)}`;
+			document.getElementById('log').prepend(item);
+		});
 	</script>
 </body>
 </html>

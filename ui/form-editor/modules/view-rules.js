@@ -3,7 +3,7 @@
  * and the services rules can fetch from.
  */
 import { h, field, check, select, button } from './dom.js';
-import { addNamedCondition, clone, copyRule, fieldsOfRule, isNamedCondition, moveItem, nameCondition, newRule, pasteRule, slugify, stepsOf, usesOfVariable } from './model.js';
+import { addNamedCondition, clone, copyRule, fieldsOfRule, isNamedCondition, moveItem, nameCondition, newRule, pasteRule, sectionsOf, slugify, stepsOf, usesOfVariable } from './model.js';
 import { COMPARE, OPERATOR_WORDS, TEXT_OPS, parseCondition, serializeCondition, summarize } from './conditions.js';
 import { ROW_ACTIONS, actionName } from '../../form-rules/modules/actions.js';
 
@@ -68,7 +68,7 @@ function conditionRow(editor, node, onchange, onremove, list) {
 	const variables = Object.entries(editor.rules.fields.variables ?? {}).map(([name, v]) => [`vars.${name}`, `${v.title ?? name} (${isNamedCondition(v) ? 'named condition' : 'variable'})`]);
 	/* A row rule reads the cells of the current row first. */
 	const rowFields = list ? [...Object.entries(itemsOf(form, list)).map(([key, item]) => [`row.${key}`, `${item.title ?? key} (this row)`]), ['index', 'Row number (from 0)']] : [];
-	const fields = [...rowFields, ...stepsOf(form).flatMap(step => step.fields.filter(id => form.fields.properties[id]?.type !== 'content').map(id => [`values.${id}`, `${form.fields.properties[id]?.title ?? id} (${step.name})`])), ...variables];
+	const fields = [...rowFields, ...sectionsOf(form).flatMap(step => step.fields.filter(id => form.fields.properties[id]?.type !== 'content').map(id => [`values.${id}`, `${form.fields.properties[id]?.title ?? id} (${step.name})`])), ...variables];
 	const known = fields.some(([path]) => path === node.path);
 	const fieldOptions = [...fields, ['other', 'Context, fact or service…']];
 	const ops = operatorsFor(property);
@@ -190,7 +190,7 @@ function actionRow(editor, action, onchange, onremove, list) {
 	/* A row rule acts on the cells of its row (list.item), with a shorter list of verbs. */
 	const fieldList = list
 		? Object.entries(itemsOf(form, list)).map(([key, item]) => [`${list}.${key}`, item.title ?? key])
-		: stepsOf(form).flatMap(step => step.fields.map(id => [id, form.fields.properties[id]?.title ?? id]));
+		: sectionsOf(form).flatMap(step => step.fields.map(id => [id, form.fields.properties[id]?.title ?? id]));
 	const choiceFields = fieldList.filter(([id]) => choicesOf(form.fields.properties[id]).length);
 	const isField = FIELD_VERBS.some(([verb]) => verb === row.verb);
 	const isStep = STEP_VERBS.some(([verb]) => verb === row.verb);
@@ -221,7 +221,9 @@ function actionRow(editor, action, onchange, onremove, list) {
 		if (row.verb === 'only' || row.verb === 'exclude') detail.push(valueEditor(property, row.values, values => set({ values }), { many: true, label: 'Options' }));
 	} else if (isStep) {
 		const stepOptions = stepsOf(form).map(step => [step.id, step.name]);
-		detail.push(select(stepOptions, row.target, target => set({ target }), { 'aria-label': 'Step' }));
+		/* skip and include also hide and show a result panel; goto only reaches steps. */
+		const targets = row.verb === 'goto' ? stepOptions : sectionsOf(form).map(step => [step.id, step.type === 'panel' ? `${step.name || step.id} (panel)` : step.name]);
+		detail.push(select(targets, row.target, target => set({ target }), { 'aria-label': 'Step' }));
 		if (row.verb === 'goto') {
 			detail.push(h('span', {}, 'when leaving'), select([['', 'the step it reads'], ...stepOptions], row.from ?? '', from => set({ from: from || undefined }), { 'aria-label': 'Jump from step' }));
 		}
@@ -296,7 +298,7 @@ export function renderRulesView(editor) {
 		});
 		count.textContent = shown === items.length ? '' : `${shown} of ${items.length} rules`;
 	};
-	const fieldOptions = stepsOf(form).flatMap(step => step.fields).filter(id => form.fields.properties[id]?.type !== 'content').map(id => [id, form.fields.properties[id]?.title ?? id]);
+	const fieldOptions = sectionsOf(form).flatMap(step => step.fields).filter(id => form.fields.properties[id]?.type !== 'content').map(id => [id, form.fields.properties[id]?.title ?? id]);
 	const filters = list.length > 3 || selection.ruleQuery || selection.ruleField ? h('div', { part: 'row filter' },
 		h('input', { type: 'search', value: selection.ruleQuery ?? '', placeholder: 'Find a rule', 'aria-label': 'Find a rule by title, note or wording', oninput: e => { selection.ruleQuery = e.target.value; filter(); } }),
 		select([['', 'Any field'], ...fieldOptions], selection.ruleField ?? '', value => { selection.ruleField = value || undefined; filter(); }, { 'aria-label': 'Only rules that use this field' }),

@@ -36,6 +36,20 @@ Every input re-runs `evaluate()` and applies the result:
 
 **Next** validates the current step with native constraint validation. **Send** validates every visible step and dispatches `ff:submit`.
 
+### Layouts and result panels
+
+`structure.present` in the form definition says how the form is shown ([guide](../../docs/forms.md#how-a-form-is-shown)); the `mode` attribute overrides its mode, and `flow.present` reads the result.
+
+| `mode` | In the DOM |
+| --- | --- |
+| `steps` | One `<fieldset part="step">` at a time, the step list, Back / Next / Send |
+| `page` | Every step on the path, as sections; no step list, no Back or Next; Send at the end |
+| `reveal` | Sections up to the first incomplete one; a Continue button (`label-continue`) for a section with only optional questions |
+
+`advance: "auto"` moves on (or scrolls the next section into view) when a single choice completes the current step. `submit: false` hides Send, ignores Enter and reports `form.result` instead of `form.submit`. The `<form>` carries `data-mode`, `data-calculator` and `data-aside`.
+
+Result panels render as `<aside part="panel" data-panel data-place="aside">` inside `<div part="aside">`, beside `<div part="main">` (the steps and the buttons) when `<form-flow>` is at least 44rem wide (a container query) and below it otherwise; `start` and `end` panels are `<section part="panel">` before and after the steps. A calculated value in a panel is a line, label then amount. Custom properties: `--form-flow-panel-bg`, `--form-flow-panel-padding`, `--form-flow-panel-radius`, `--form-flow-aside-width`, `--form-flow-aside-top`. Demo: `drug-ticket.html`.
+
 ## Effects and events
 
 - `fetch` effects are sent to the service URL with the fields the service declares in `send` (POST as JSON, or GET as query parameters with `"method": "GET"`). The reply is merged as a patch: its fields appear in their slot, its steps after the step the fetch named. Set `flow.fetcher = async (effect, service) => patch` to use a proxy or a mock; return `undefined` to fall back to the built-in request.
@@ -60,6 +74,7 @@ Every input re-runs `evaluate()` and applies the result:
 | Attribute | |
 | --- | --- |
 | `form`, `rules` | URLs of the form definition and the rule set |
+| `mode` | `steps`, `page` or `reveal`: shows the form another way than its `structure.present.mode` (a preview, a demo) |
 | `explain` | Shows a "Why" list of which rule decided what |
 | `track-context` | Context keys `form.start` may carry (default `channel campaign`) |
 | `label-prev`, `label-next`, `label-submit`, `label-unavailable`, `label-required`, `label-add-row`, `label-remove-row`, … | Button and message texts; they win over the language pack |
@@ -114,7 +129,7 @@ form-flow describes the funnel as `ff:track` events and hands each one to `flow.
 | --- | --- | --- |
 | `form.view` | The form is rendered | |
 | `form.start` | First input | `entry`, `context` (only the `track-context` keys) |
-| `step.view` | A step is shown | `from`, `via`: `start`, `resume`, `next`, `back`, `goto`, `rule`, `submit`, `goTo()` |
+| `step.view` | A step is shown, or on one page a section is reached | `from`, `via`: `start`, `resume`, `next`, `back`, `goto`, `rule`, `submit`, `goTo()`, `page`, `reveal` |
 | `step.leave` | A step is left | `ms` on the step, `direction` |
 | `step.blocked` | Next or Send refused | `fields`, `codes` |
 | `field.error` | A field gets a message the user sees | `field`, `code`, `level`, `rule?` |
@@ -122,7 +137,8 @@ form-flow describes the funnel as `ff:track` events and hands each one to `flow.
 | `rule.enter` / `rule.leave` | A rule with `"track": true` starts or stops matching | `rule` |
 | `service.request` / `service.reply` / `service.error` | A fetch runs | `service`, `wait`, `ms`, `status` |
 | `form.submit` | Sent | `ms`, `jumps`, `patches`, `warnings?`, `choices?` |
-| `form.abandon` | The page is hidden or left before Send | `lastField`, `ms`, `choices?` |
+| `form.result` | A calculator (`submit: false`): the answers have rested for 1.5 s. Calculated values are not sent | `ms`, `choices?` |
+| `form.abandon` | The page is hidden or left before Send (not after a calculator's `form.result`) | `lastField`, `ms`, `choices?` |
 | `form.resume` | A saved session is reopened (instead of `form.view`; the run counts as started) | `age?` |
 
 **Ids, never values.** Events carry field, step and rule ids, issue codes and durations. The only values are `choices`: the chosen option of `select` fields marked `"track": true` in the form definition (the loan demo marks `purpose` and `term`). `validate()` refuses `track` on a field with `privacy: "personal"` or `"special"`, and the tracker drops choices of patch fields (personal by default). A `special` field also sends no `field.revisit`, since repeated corrections of a health answer are themselves sensitive.

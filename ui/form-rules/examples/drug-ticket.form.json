@@ -5,16 +5,16 @@
 	"meta": { "locale": "en", "status": "published", "version": 1 },
 	"fields": {
 		"title": "What does it cost to drive with illegal drugs in your blood?",
-		"description": "A calculator: every text that depends on the answers is a choice note, a text block with cases or a field with showWhen. The rule set has no visibility rules.",
+		"description": "A calculator shown on one page with no Send button and a result panel beside the questions. Every text that depends on the answers is a choice note, a text block with cases or a field with showWhen. The rule set has no visibility rules.",
 		"structure": {
 			"layout": [
-				{ "type": "step", "id": "calc", "name": "Your situation", "fields": [
-					"income", "drug", "thcLevel", "licenseYears",
+				{ "type": "step", "id": "calc", "name": "Your situation", "fields": ["income", "drug", "thcLevel", "licenseYears", "importantToKnow"] },
+				{ "type": "panel", "id": "result", "name": "Your estimated cost", "place": "aside", "fields": [
 					"headline", "sanctions",
-					"fine", "doctorFee", "bloodAnalysis", "victimFund", "courseFee", "retestFee", "total",
-					"importantToKnow"
+					"fine", "doctorFee", "bloodAnalysis", "victimFund", "courseFee", "retestFee", "total"
 				] }
-			]
+			],
+			"present": { "mode": "page", "submit": false }
 		},
 		"type": "object",
 		"properties": {
@@ -24,7 +24,7 @@
 				"ui": { "widget": "range", "step": 1000, "format": { "style": "currency", "currency": "USD", "maximumFractionDigits": 0 } }
 			},
 			"drug": {
-				"type": "select", "title": "Select drug", "default": "cannabis", "required": true, "ui": { "widget": "radio" },
+				"type": "select", "title": "Select drug", "track": true, "default": "cannabis", "required": true, "ui": { "widget": "radio" },
 				"options": { "choices": [
 					{ "value": "cannabis", "label": "Cannabis" },
 					{ "value": "opioids", "label": "Opioids" },
@@ -34,7 +34,7 @@
 				] }
 			},
 			"thcLevel": {
-				"type": "select", "title": "THC level in blood", "default": "low", "showWhen": "isThc", "ui": { "widget": "radio" },
+				"type": "select", "title": "THC level in blood", "track": true, "default": "low", "showWhen": "isThc", "ui": { "widget": "radio" },
 				"options": { "choices": [
 					{ "value": "low", "label": "Low", "note": "Low THC level corresponds to 0.001–0.003 mg/kg blood." },
 					{ "value": "medium", "label": "Medium", "note": "Medium THC level corresponds to 0.003–0.009 mg/kg blood." },
@@ -42,7 +42,7 @@
 				] }
 			},
 			"licenseYears": {
-				"type": "select", "title": "How long have you had your driver's license?", "default": "under3", "showWhen": "medThc", "ui": { "widget": "radio" },
+				"type": "select", "title": "How long have you had your driver's license?", "track": true, "default": "under3", "showWhen": "medThc", "ui": { "widget": "radio" },
 				"options": { "choices": [ { "value": "over3", "label": "Over 3 years" }, { "value": "under3", "label": "Under 3 years" } ] }
 			},
 			"headline": { "type": "number", "title": "Estimated cost (rounded)", "from": "vars.totalRounded", "ui": { "widget": "output", "format": { "style": "currency", "currency": "USD", "maximumFractionDigits": 0 } } },

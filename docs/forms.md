@@ -32,6 +32,7 @@ Demos:
 | [/ui/form-flow/session.html](https://v4.browser.style/ui/form-flow/session.html) | Save and continue later, resume links, the done state |
 | [/ui/form-flow/contact.html](https://v4.browser.style/ui/form-flow/contact.html) | The core field types: text blocks, a hidden value, a file upload, consent |
 | [/ui/form-flow/drug-ticket.html](https://v4.browser.style/ui/form-flow/drug-ticket.html) | Texts that follow the answers: choice notes, a text block with cases, fields shown when a named condition holds |
+| [/ui/form-flow/drug-ticket.html](https://v4.browser.style/ui/form-flow/drug-ticket.html) | A calculator on one page with a result panel beside it, texts that follow the answers, and a switch between the three layouts |
 | [/ui/form-flow/order.html](https://v4.browser.style/ui/form-flow/order.html) | Order lines as rows, calculated totals, a slider, a city list from a service that depends on the country, street type-ahead, date and text rules, placeholders |
 | [/ui/form-widgets/](https://v4.browser.style/ui/form-widgets/) | The three widget packages: rich text, `<auto-suggest>`, `<data-grid>` |
 | [/ui/form-editor/](https://v4.browser.style/ui/form-editor/) | The editor; `?example=loan` opens the loan example, `?example=contact` the field types example, `?example=order` the order example, `?example=drug-ticket` the texts example |
@@ -128,7 +129,8 @@ UCM-shaped: `properties` are the fields, `structure.layout` is the list of steps
 | `id`, `title` | |
 | `version` | Raise it on every publish. Sessions record it, and a draft from an older version is migrated on resume |
 | `resetDrafts` | Raise it when old answers no longer make sense: saved drafts then start over |
-| `structure.layout[]` | The steps, in order |
+| `structure.layout[]` | The steps, in order, and any result panels |
+| `structure.present` | How the form is shown: one step at a time, on one page, or a page that unfolds. See [How a form is shown](#how-a-form-is-shown) |
 | `properties` | The fields, by id |
 
 **Step**
@@ -141,6 +143,18 @@ UCM-shaped: `properties` are the fields, `structure.layout` is the list of steps
 | `fields` | Field ids, in order |
 | `hidden` | Left out of the path unless a rule `include`s it |
 | `slots` | Named places where fields from a service reply may land (`"cover.extra"`) |
+| `showWhen` | Skipped while this is false, see [Texts that follow the answers](#texts-that-follow-the-answers) |
+
+**Result panel** (see [How a form is shown](#how-a-form-is-shown))
+
+| Key | |
+|---|---|
+| `type` | Always `"panel"` |
+| `id` | Lowercase, `a-z0-9-`, not used by a step |
+| `name` | Optional heading |
+| `place` | `aside` (default: beside the form when there is room, after it when not), `end` (after the steps), `start` (before them) |
+| `fields` | Text blocks and calculated values only |
+| `hidden`, `showWhen` | As on a step |
 
 **Field (property)**
 
@@ -452,6 +466,40 @@ The engine runs it as a rule of its own, `showWhen:<field>` (`showWhen:step:<ste
 **In the editor.** Each choice row has **Text shown when chosen**. A text block has **Texts that depend on the answers**: "+ Case" adds a row reading *When [named condition] Show: [text]*, with **Show** set to every matching text or only the first, and the block's own text becomes the text when no case matches. Every field and step has **Show this field** (or step): *Always* or a named condition. The pickers list the named conditions by title; **+ New named condition…** asks for a name and adds one to the rule set, and **Edit "…"** below the picker builds it with the same pickers as a rule's When (changing it there changes it everywhere). A condition written as JSON Logic shows as "A condition of its own", with **Save as named condition…**. Deleting a named condition lists the fields and steps that still use it, and renaming a field updates the conditions on the form.
 
 `validate()` reports a case without a condition or text, an unknown named condition, a `show` other than all or first, cases on anything but a text block, and placeholders in notes and cases that read nothing. `conditionOf`, `implicitRules`, `matchingCases`, `noteOf` and `textData(state, { context, facts })` (the data `fillText` needs, with notes) are exported.
+
+---
+
+## How a form is shown
+
+The same form and rules can run one step at a time, as one page, or as one page that grows as the person answers. That is a choice about presentation only, so it is one setting on the form, `structure.present`, and the engine keeps steps as they are: on one page a step is simply a section.
+
+```json
+"structure": {
+  "present": { "mode": "page", "advance": "manual", "submit": false },
+  "layout": [
+    { "type": "step", "id": "calc", "name": "Your situation", "fields": ["income", "drug", "thcLevel"] },
+    { "type": "panel", "id": "result", "name": "Your estimated cost", "place": "aside", "fields": ["headline", "sanctions", "total"] }
+  ]
+}
+```
+
+| Setting | | Good for |
+|---|---|---|
+| `mode: "steps"` (default) | One step at a time, Back and Next, a step list | Long forms, applications |
+| `mode: "page"` | Every step on the path at once, as sections with headings; one Send at the end | Short forms, calculators, contact forms |
+| `mode: "reveal"` | One page; the next section appears when the one before is complete, with a Continue button for a section that asks only optional questions | Guided questions, "find the right product" |
+| `advance: "auto"` | Moves on as soon as a single choice (radio buttons or a dropdown) completes the current step: to the next step in `steps` mode, scrolling the next section into view in `reveal`. Not on the last step: Send is still pressed | One question per screen |
+| `submit: false` | A calculator: no Send button, nothing is sent, results update as the person answers. Tracking reports `form.result` instead of `form.submit` | Price and fee calculators |
+
+A section is **complete** when its controls are valid and, if it asks anything, at least one of its questions has an answer (a default counts).
+
+**Result panels.** A layout entry of type `panel` holds text blocks and calculated values, never questions, so it never blocks Next or Send. It is shown in every mode and on every step: in steps mode it is a running total or a summary next to a long application. `skip` and `include` work on a panel as on a step (rules and `showWhen`), and its values are hidden, and not submitted, while it is hidden. Panels are never on the `path`; `state.panels` lists them with `visible`.
+
+**Rules are the same in every mode.** `skip` hides a section on one page, `goto` hides the sections it passes over, and hidden is absent. Validation runs on Next (or Continue) for the current section and over every section on the path on Send; an invalid section further down is opened and focused.
+
+**Sessions and tracking.** On one page the current step is the furthest section the person has reached, so a saved draft resumes there, and `step.view` (with `via: "page"` or `"reveal"`) is reported as each section is reached: funnels still work.
+
+`<form-flow mode="…">` overrides the mode for a preview or a demo. In the editor, the form panel has **How it is shown** (layout, *Move on when a choice is made*, *Nothing is sent (a calculator)*), and **+ Result panel** in the outline adds a panel. The [drug-ticket example](https://v4.browser.style/ui/form-flow/drug-ticket.html) is one step and one panel, in page mode with `submit: false`, with a switch to see it in the other modes.
 
 ---
 
@@ -908,13 +956,13 @@ consentBanner.onAccept = () => tracker.grant();   // sends what was buffered
 consentBanner.onReject = () => tracker.revoke();  // drops it
 ```
 
-Events: `form.view`, `form.start`, `step.view`, `step.leave`, `step.blocked`, `field.error`, `field.revisit`, `rule.enter` / `rule.leave`, `service.request` / `service.reply` / `service.error`, `form.submit`, `form.abandon`, `form.resume`. All share one flat envelope `{ type, form, rules, version, session, seq, at, step, index, path, data }`. The full table is in the [form-flow readme](../ui/form-flow/readme.md#tracking).
+Events: `form.view`, `form.start`, `step.view`, `step.leave`, `step.blocked`, `field.error`, `field.revisit`, `rule.enter` / `rule.leave`, `service.request` / `service.reply` / `service.error`, `form.submit`, `form.result` (a calculator, once its answers rest), `form.abandon`, `form.resume`. All share one flat envelope `{ type, form, rules, version, session, seq, at, step, index, path, data }`. The full table is in the [form-flow readme](../ui/form-flow/readme.md#tracking).
 
 The settings an author controls:
 
 | Setting | Where | Effect |
 |---|---|---|
-| `"track": true` on a `select` field | Form definition (editor: *may go to analytics*) | Its chosen option is sent as `choices` on `form.submit` and `form.abandon`. `validate()` refuses it on any other type, so typed text never reaches a tracker. Never mark a field whose options are personal |
+| `"track": true` on a `select` field | Form definition (editor: *may go to analytics*) | Its chosen option is sent as `choices` on `form.submit`, `form.result` and `form.abandon`. `validate()` refuses it on any other type, so typed text never reaches a tracker. Never mark a field whose options are personal |
 | `"track": true` on a rule | Rule set (editor: *Track this rule*) | Sends `rule.enter` / `rule.leave` with the rule id |
 | `track-context` attribute | `<form-flow>` | Which context keys `form.start` may carry (default `channel campaign`) |
 | The tracker itself | Host code | Set it only when consent allows, or use `consent: false` and `grant()` |

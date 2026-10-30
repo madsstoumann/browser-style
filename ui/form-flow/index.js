@@ -4,11 +4,14 @@
  * Fields are plain native controls in light DOM, so @browser.style/base form.css styles them.
  * Every input re-evaluates the rules; the engine's effects (fetch, emit) are carried out here.
  */
-import { calculatedFrom, consentRecords, evaluate, expirePatches, fillText, handleEvent, loadPackages, merge, normalizeForm, normalizeRuleSet, placeholdersOf, privacyOf, safeUrl, textData } from '../form-rules/index.js';
+import { calculatedFrom, consentRecords, evaluate, expirePatches, fillText, handleEvent, loadPackages, merge, normalizeForm, normalizeRuleSet, placeholdersOf, PRESENT_MODES, privacyOf, safeUrl, textData } from '../form-rules/index.js';
 import { FlowTracking, validityCode } from './tracking.js';
 
 const INPUT_TYPES = ['color', 'date', 'datetime-local', 'email', 'month', 'password', 'search', 'tel', 'time', 'url', 'week'];
 const EMPTY_RULES = { id: 'none', rules: [] };
+/* How long a calculator waits after the last answer before it reports form.result, and auto-advance before it moves. */
+const RESULT_DELAY = 1500;
+const ADVANCE_DELAY = 250;
 
 /* Builds an element: h('label', { for: 'x' }, 'text', child) */
 function h(tag, attributes = {}, ...children) {
@@ -38,7 +41,7 @@ async function fetchJSON(url) {
 }
 
 export default class FormFlow extends HTMLElement {
-	static observedAttributes = ['form', 'rules', 'locale'];
+	static observedAttributes = ['form', 'rules', 'locale', 'mode'];
 
 	#definition = null;
 	#form = null;
@@ -76,6 +79,8 @@ export default class FormFlow extends HTMLElement {
 		else this.#tracking?.resume();
 	};
 	#onPageHide = () => this.#abandon();
+	#resultTimer = null;
+	#advanceTimer = null;
 
 	async connectedCallback() {
 		document.addEventListener('visibilitychange', this.#onVisibility);
@@ -96,6 +101,11 @@ export default class FormFlow extends HTMLElement {
 			} catch (error) {
 				this.#dispatch('ff:error', { error });
 			}
+			return;
+		}
+		/* The mode attribute shows the same form another way (a preview, a demo); it wins over structure.present.mode. */
+		if (name === 'mode') {
+			if (oldValue !== newValue && this.#form) this.setup(this.#definition, this.#rules, { values: this.#values, step: this.#current, previous: { matched: this.#previous }, keepTracking: true });
 			return;
 		}
 		if (oldValue !== null && oldValue !== newValue && this.isConnected) await this.load();
@@ -153,6 +163,13 @@ export default class FormFlow extends HTMLElement {
 	}
 	get locale() { return this.#locale; }
 
+	/* structure.present: { mode: steps | page | reveal, advance: manual | auto, submit } */
+	get present() {
+		const present = this.#form?.present ?? { mode: 'steps', advance: 'manual', submit: true };
+		const mode = this.getAttribute('mode');
+		return PRESENT_MODES.includes(mode) ? { ...present, mode } : present;
+	}
+
 	#label(name, fallback) {
 		return this.getAttribute(`label-${name}`) ?? this.#locale?.labels?.[name] ?? fallback;
 	}
@@ -207,6 +224,18 @@ export default class FormFlow extends HTMLElement {
 
 	#goTo(stepId, via) {
 		if (!this.#state?.path.includes(stepId)) return false;
+		/* On one page every section is there already: scroll to it; in reveal, an unopened one opens first. */
+		if (this.present.mode !== 'steps') {
+			const { path } = this.#state;
+			if (path.indexOf(stepId) > path.indexOf(this.#current)) {
+				this.#tracking?.step(this.#current, stepId, via);
+				this.#current = stepId;
+				this.update();
+				this.#dispatch('ff:step', { step: stepId });
+			}
+			this.querySelector(`fieldset[data-step="${CSS.escape(stepId)}"]`)?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+			return true;
+		}
 		this.#tracking?.step(this.#current, stepId, via);
 		this.#current = stepId;
 		this.update();
@@ -218,22 +247,29 @@ export default class FormFlow extends HTMLElement {
 
 	#render() {
 		this.#templates.clear();
-		const form = h('form', { part: 'form', noValidate: true });
-		form.append(h('ol', { class: 'ui-step', part: 'steps' }));
+		const { mode, submit } = this.present;
+		const panels = place => this.#form.panels.filter(panel => panel.place === place).map(panel => this.#renderPanel(panel));
+		const aside = panels('aside');
+		const form = h('form', { part: 'form', noValidate: true, 'data-mode': mode, 'data-calculator': !submit, 'data-aside': aside.length > 0 });
+		/* The steps and their buttons; aside panels sit next to this column when there is room. */
+		const main = h('div', { part: 'main' });
+		main.append(h('ol', { class: 'ui-step', part: 'steps', hidden: mode !== 'steps' }), ...panels('start'));
 		for (const step of this.#form.steps) {
 			const fieldset = h('fieldset', { part: 'step', 'data-step': step.id }, h('legend', {}, step.name));
 			step.fields.forEach(id => fieldset.append(this.#renderField(id, this.#propertyOf(id))));
 			step.slots.forEach(slot => fieldset.append(h('div', { 'data-slot': slot, part: 'slot' })));
-			form.append(fieldset);
+			main.append(fieldset);
 		}
-		form.append(h('nav', { part: 'nav' },
+		main.append(...panels('end'), h('nav', { part: 'nav' },
 			h('button', { type: 'button', 'data-action': 'prev' }, this.#label('prev', 'Back')),
-			h('button', { type: 'button', 'data-action': 'next' }, this.#label('next', 'Next')),
+			h('button', { type: 'button', 'data-action': 'next' }, mode === 'reveal' ? this.#label('continue', 'Continue') : this.#label('next', 'Next')),
 			h('button', { type: 'submit' }, this.#label('submit', 'Send'))
 		));
 		if (this.hasAttribute('explain')) {
-			form.append(h('details', { part: 'explain' }, h('summary', {}, this.#label('explain', 'Why')), h('ul')));
+			main.append(h('details', { part: 'explain' }, h('summary', {}, this.#label('explain', 'Why')), h('ul')));
 		}
+		form.append(main);
+		if (aside.length) form.append(h('div', { part: 'aside' }, aside));
 
 		form.addEventListener('input', event => this.#onInput(event));
 		form.addEventListener('change', event => this.#onInput(event));
@@ -251,6 +287,13 @@ export default class FormFlow extends HTMLElement {
 		this.#element?.remove();
 		this.#element = form;
 		this.replaceChildren(form);
+	}
+
+	/* A result panel: text blocks and calculated values, shown whichever step is current. */
+	#renderPanel(panel) {
+		return h(panel.place === 'aside' ? 'aside' : 'section', { part: 'panel', 'data-panel': panel.id, 'data-place': panel.place },
+			panel.name ? h('h2', { part: 'panel-title' }, this.#text(panel.name)) : null,
+			panel.fields.map(id => this.#renderField(id, this.#propertyOf(id))));
 	}
 
 	/* A text node; one with placeholders is refilled on every update. */
@@ -597,6 +640,43 @@ export default class FormFlow extends HTMLElement {
 		this.#values[id] = this.#readValue(id);
 		this.#tracking?.input(id);
 		this.update();
+		if (event.type === 'change') this.#autoAdvance(id);
+		if (!this.present.submit) this.#reportResult();
+	}
+
+	/* advance "auto": a single choice that completes the current step moves on (steps) or brings the next section into view (reveal). */
+	#autoAdvance(id) {
+		const { mode, advance } = this.present;
+		const property = this.#propertyOf(id);
+		if (advance !== 'auto' || mode === 'page' || property?.type !== 'select' || property.options?.multiple) return;
+		const step = this.#state?.fields[id]?.step;
+		const { path } = this.#state;
+		if (mode === 'steps') {
+			if (step !== this.#current || path.indexOf(step) >= path.length - 1 || !this.#complete(step)) return;
+			clearTimeout(this.#advanceTimer);
+			this.#advanceTimer = setTimeout(() => { if (this.#current === step) this.#move(1); }, ADVANCE_DELAY);
+		} else if (this.#complete(step)) {
+			const next = path[path.indexOf(step) + 1];
+			if (next) this.querySelector(`fieldset[data-step="${CSS.escape(next)}"]`)?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+		}
+	}
+
+	/* A calculator sends nothing, so once the answers rest it reports form.result (tracked choices only). */
+	#reportResult() {
+		clearTimeout(this.#resultTimer);
+		this.#resultTimer = setTimeout(() => this.#state && this.#tracking?.result(this.#state), RESULT_DELAY);
+	}
+
+	/* A step is complete when its controls are valid and, if it asks anything, at least one answer is given. */
+	#complete(stepId) {
+		const fieldset = this.querySelector(`fieldset[data-step="${CSS.escape(stepId)}"]`);
+		if (!fieldset || ![...fieldset.querySelectorAll('input, select, textarea')].every(control => control.disabled || control.validity.valid)) return false;
+		const asks = Object.entries(this.#state.fields).filter(([id, field]) => {
+			if (field.step !== stepId || !field.visible) return false;
+			const property = this.#propertyOf(id);
+			return property?.type !== 'content' && !calculatedFrom(property) && property?.ui?.widget !== 'output' && property?.ui?.widget !== 'hidden';
+		});
+		return !asks.length || asks.some(([id]) => !isEmpty(this.#values[id]) || !isEmpty(this.#state.values[id]));
 	}
 
 	/* === Evaluation === */
@@ -777,19 +857,41 @@ export default class FormFlow extends HTMLElement {
 			this.#current = order.slice(from).find(id => path.includes(id)) ?? path.at(-1) ?? null;
 			if (before) this.#tracking?.step(before, this.#current, 'rule');
 		}
-		for (const step of state.steps) {
-			const fieldset = this.querySelector(`fieldset[data-step="${CSS.escape(step.id)}"]`);
-			fieldset.disabled = !step.visible;
-			fieldset.hidden = step.id !== this.#current;
+		const { mode, submit } = this.present;
+		/* On one page, the current step is the first one not yet complete: the furthest the person has come. */
+		if (mode !== 'steps') {
+			let index = path.indexOf(this.#current);
+			while (index >= 0 && index < path.length - 1 && this.#complete(path[index])) {
+				this.#tracking?.step(path[index], path[index + 1], mode);
+				index++;
+				this.#current = path[index];
+				this.#dispatch('ff:step', { step: this.#current });
+			}
 		}
 		const index = path.indexOf(this.#current);
+		for (const step of state.steps) {
+			const fieldset = this.querySelector(`fieldset[data-step="${CSS.escape(step.id)}"]`);
+			const at = path.indexOf(step.id);
+			fieldset.disabled = !step.visible;
+			fieldset.hidden = mode === 'steps' ? step.id !== this.#current : at < 0 || (mode === 'reveal' && at > index);
+		}
+		for (const panel of state.panels ?? []) {
+			const element = this.querySelector(`[data-panel="${CSS.escape(panel.id)}"]`);
+			if (element) element.hidden = !panel.visible;
+		}
 		this.querySelector('[part="steps"]').replaceChildren(...path.map((id, i) => {
 			const step = state.steps.find(s => s.id === id);
 			return h('li', { class: i === index ? '--active' : null, 'aria-current': i === index ? 'step' : null }, step.name);
 		}));
-		this.querySelector('[data-action="prev"]').disabled = index <= 0;
-		this.querySelector('[data-action="next"]').hidden = index >= path.length - 1;
-		this.querySelector('[type="submit"]').hidden = index < path.length - 1;
+		const last = index >= path.length - 1;
+		const prev = this.querySelector('[data-action="prev"]');
+		const next = this.querySelector('[data-action="next"]');
+		const send = this.querySelector('[type="submit"]');
+		prev.disabled = index <= 0;
+		prev.hidden = mode !== 'steps';
+		next.hidden = mode === 'page' || last;
+		send.hidden = !submit || (mode !== 'page' && !last);
+		this.querySelector('[part="nav"]').hidden = [prev, next, send].every(button => button.hidden);
 	}
 
 	#applyExplain(state) {
@@ -939,6 +1041,8 @@ export default class FormFlow extends HTMLElement {
 
 	async #onSubmit(event) {
 		event.preventDefault();
+		/* A calculator has nothing to send; Enter in a field does nothing. */
+		if (!this.present.submit) return;
 		this.update();
 		await this.#settle();
 		if (!this.#state.path.every(stepId => this.#validStep(stepId))) return;

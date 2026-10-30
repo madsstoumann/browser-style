@@ -115,3 +115,19 @@ test('special fields send no revisit and only privacy-none choices are sent', ()
 	assert.ok(!events.some(event => event.type === 'field.revisit'));
 	assert.deepEqual(events.at(-1).data.choices, { term: 3 });
 });
+
+test('a calculator reports form.result with tracked choices only, and is then not abandoned', () => {
+	const events = [];
+	const properties = { plan: { type: 'select', track: true }, total: { type: 'number' } };
+	const tracking = new FlowTracking(event => events.push(event), { propertyOf: id => properties[id] });
+	tracking.update(state(), 'a');
+	tracking.result(state({ values: { plan: 'plus', total: 1234 } }));
+	assert.ok(!events.some(event => event.type === 'form.result'), 'nothing before the first answer');
+	tracking.input('plan');
+	tracking.result(state({ values: { plan: 'plus', total: 1234 } }));
+	const result = events.at(-1);
+	assert.equal(result.type, 'form.result');
+	assert.deepEqual(result.data.choices, { plan: 'plus' });
+	assert.ok(!JSON.stringify(events).includes('1234'));
+	assert.equal(tracking.abandon(), false);
+});

@@ -8,7 +8,8 @@
 
 import { operatorsOf, readsOf, OPERATORS } from './logic.js';
 import { actionName, actionTargets, ACTIONS, gotoFrom, gotoOf, ROW_ACTIONS, rowTarget, VARIABLE_ACTIONS } from './actions.js';
-import { normalizeForm, normalizeRuleSet, unwrap } from './form.js';
+import { normalizeForm, normalizeRuleSet, PANEL_PLACES, PRESENT_MODES, unwrap } from './form.js';
+import { calculatedFrom } from './evaluate.js';
 import { CONTEXT_SOURCES } from './context.js';
 import { placeholdersOf } from './text.js';
 import { conditionOf, implicitRules } from './show.js';
@@ -59,6 +60,31 @@ export function validate(formDefinition, ruleSetDocument, { functions = {}, type
 		if (placed.has(id)) fail('duplicate', `Field "${id}" is in steps "${placed.get(id)}" and "${step.id}"`, `structure.layout.${step.id}`);
 		placed.set(id, step.id);
 	}));
+	/* Panels show text blocks and calculated values only, so they never hold an answer to check. */
+	const panelIds = new Set();
+	form.panels.forEach(panel => {
+		if (stepIds.has(panel.id) || panelIds.has(panel.id)) fail('duplicate', `Panel id "${panel.id}" is already used by a step or panel`, `structure.layout.${panel.id}`);
+		panelIds.add(panel.id);
+		panel.fields.forEach(id => {
+			const property = rawForm.properties?.[id];
+			if (!property) fail('field', `Panel "${panel.id}" lists "${id}", which is not in properties`, `structure.layout.${panel.id}`);
+			else if (property.type !== 'content' && !calculatedFrom(property)) fail('panel', `Panel "${panel.id}" can only show text blocks and calculated values; "${id}" is a question`, `structure.layout.${panel.id}`);
+			if (placed.has(id)) fail('duplicate', `Field "${id}" is in "${placed.get(id)}" and panel "${panel.id}"`, `structure.layout.${panel.id}`);
+			placed.set(id, panel.id);
+		});
+	});
+	const present = rawForm.structure?.present;
+	if (present !== undefined) {
+		if (!present || typeof present !== 'object') fail('present', 'structure.present must be an object', 'structure.present');
+		else {
+			if (present.mode !== undefined && !PRESENT_MODES.includes(present.mode)) fail('present', `structure.present.mode "${present.mode}" is not one of ${PRESENT_MODES.join(', ')}`, 'structure.present.mode');
+			if (present.advance !== undefined && !['auto', 'manual'].includes(present.advance)) fail('present', 'structure.present.advance is "auto" or "manual"', 'structure.present.advance');
+			if (present.submit !== undefined && typeof present.submit !== 'boolean') fail('present', 'structure.present.submit is true or false', 'structure.present.submit');
+		}
+	}
+	(Array.isArray(rawForm.structure?.layout) ? rawForm.structure.layout : []).forEach((entry, index) => {
+		if (entry?.type === 'panel' && entry.place !== undefined && !PANEL_PLACES.includes(entry.place)) fail('panel', `Panel place "${entry.place}" is not one of ${PANEL_PLACES.join(', ')}`, `structure.layout[${index}].place`);
+	});
 	const slotIds = new Set();
 	form.steps.forEach(step => step.slots.forEach(slot => {
 		if (slotIds.has(slot)) fail('duplicate', `Slot "${slot}" is declared twice`, `structure.layout.${step.id}`);
@@ -292,7 +318,8 @@ export function validate(formDefinition, ruleSetDocument, { functions = {}, type
 				else if (VISIBILITY.has(name)) ruleWrites.add(id);
 			});
 			steps.forEach(id => {
-				if (!stepIds.has(id)) fail('step', `Action targets unknown step "${id}"`, at);
+				if (panelIds.has(id)) form.panels.find(panel => panel.id === id).fields.forEach(field => ruleWrites.add(field));
+				else if (!stepIds.has(id)) fail('step', `Action targets unknown step "${id}"`, at);
 				else form.steps.find(step => step.id === id).fields.forEach(field => ruleWrites.add(field));
 			});
 			if (name === 'setValue' || name === 'clear') fields.forEach(id => {

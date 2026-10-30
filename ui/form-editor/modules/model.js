@@ -51,12 +51,25 @@ export function emptyRules(formId, id = 'rules-new') {
 
 export const stepsOf = form => (form.fields.structure?.layout ?? []).filter(entry => entry.type === 'step');
 export const fieldIds = form => Object.keys(form.fields.properties ?? {});
-export const stepOfField = (form, id) => stepsOf(form).find(step => step.fields.includes(id));
+/* Steps and result panels: the layout entries that hold fields. */
+export const sectionsOf = form => (form.fields.structure?.layout ?? []).filter(entry => entry.type === 'step' || entry.type === 'panel');
+export const panelsOf = form => (form.fields.structure?.layout ?? []).filter(entry => entry.type === 'panel');
+export const stepOfField = (form, id) => sectionsOf(form).find(step => step.fields.includes(id));
 
 export function addStep(form, name) {
 	const next = clone(form);
-	const id = slugify(name, stepsOf(next).map(step => step.id));
-	next.fields.structure.layout.push({ area: 'main', type: 'step', id, name, fields: [] });
+	const id = slugify(name, sectionsOf(next).map(step => step.id));
+	/* Before the panels, so the layout reads steps first. */
+	const at = next.fields.structure.layout.findIndex(entry => entry.type === 'panel');
+	next.fields.structure.layout.splice(at < 0 ? next.fields.structure.layout.length : at, 0, { area: 'main', type: 'step', id, name, fields: [] });
+	return { form: next, id };
+}
+
+/* A result panel: text blocks and calculated values shown beside the form, whichever step is current. */
+export function addPanel(form, name = 'Result') {
+	const next = clone(form);
+	const id = slugify(name, sectionsOf(next).map(step => step.id));
+	next.fields.structure.layout.push({ type: 'panel', id, name, place: 'aside', fields: [] });
 	return { form: next, id };
 }
 
@@ -67,7 +80,7 @@ export function addField(form, stepId, title, type = 'string') {
 	const id = fieldId(title || property.title || property.kind?.split('/').pop() || property.type, fieldIds(next));
 	next.fields.properties[id] = { ...property, title: title ?? property.title };
 	if (property.type === 'select' && !property.options) next.fields.properties[id].options = { choices: [{ value: 'a', label: 'Option A' }, { value: 'b', label: 'Option B' }] };
-	stepsOf(next).find(step => step.id === stepId).fields.push(id);
+	sectionsOf(next).find(step => step.id === stepId).fields.push(id);
 	return { form: next, id };
 }
 
@@ -104,7 +117,7 @@ export function renameField(form, rules, from, to) {
 	const properties = {};
 	for (const [key, value] of Object.entries(nextForm.fields.properties)) properties[key === from ? to : key] = value;
 	nextForm.fields.properties = properties;
-	stepsOf(nextForm).forEach(step => { step.fields = step.fields.map(id => (id === from ? to : id)); });
+	sectionsOf(nextForm).forEach(step => { step.fields = step.fields.map(id => (id === from ? to : id)); });
 	if (Array.isArray(nextForm.fields.required)) nextForm.fields.required = nextForm.fields.required.map(id => (id === from ? to : id));
 	/* Conditions written on the form: showWhen and text cases (a named condition's name needs nothing). */
 	const renameWhen = when => (when && typeof when === 'object' ? renameReads(when, from, to) : when);
@@ -135,9 +148,9 @@ export function renameField(form, rules, from, to) {
 
 /* Renames a step id in the form and in skip/include actions. */
 export function renameStep(form, rules, from, to) {
-	if (from === to || !to || stepsOf(form).some(step => step.id === to)) return { form, rules, renamed: false };
+	if (from === to || !to || sectionsOf(form).some(step => step.id === to)) return { form, rules, renamed: false };
 	const nextForm = clone(form);
-	stepsOf(nextForm).forEach(step => { if (step.id === from) step.id = to; });
+	sectionsOf(nextForm).forEach(step => { if (step.id === from) step.id = to; });
 	const nextRules = clone(rules);
 	const swap = id => (id === from ? to : id);
 	nextRules.fields.rules = (nextRules.fields.rules ?? []).map(rule => ({
@@ -159,13 +172,13 @@ export function rulesUsingField(rules, id) {
 export function removeField(form, id) {
 	const next = clone(form);
 	delete next.fields.properties[id];
-	stepsOf(next).forEach(step => { step.fields = step.fields.filter(field => field !== id); });
+	sectionsOf(next).forEach(step => { step.fields = step.fields.filter(field => field !== id); });
 	return next;
 }
 
 export function removeStep(form, stepId) {
 	const next = clone(form);
-	const step = stepsOf(next).find(s => s.id === stepId);
+	const step = sectionsOf(next).find(s => s.id === stepId);
 	step?.fields.forEach(id => delete next.fields.properties[id]);
 	next.fields.structure.layout = next.fields.structure.layout.filter(entry => entry !== step);
 	return next;
