@@ -12,7 +12,7 @@ export { merge, expirePatches, patchFieldKind, MAX_PATCH_DEPTH, PATCH_PRIORITY_C
 export { handleEvent } from './modules/events.js';
 export { apply, getPath, OPERATORS } from './modules/logic.js';
 export { ACTIONS, ROW_ACTIONS, rowTarget } from './modules/actions.js';
-export { normalizeForm, normalizeRuleSet, unwrap } from './modules/form.js';
+export { normalizeForm, normalizeRuleSet, presentOf, unwrap, PANEL_PLACES, PRESENT_MODES } from './modules/form.js';
 export { defineTypes, loadTypes, loadPackages, typeOf, fieldFromType, changeType, searchTypes, groupTypes } from './modules/types.js';
 export { trustedContext, serverContextKeys, CONTEXT_SOURCES } from './modules/context.js';
 export { consentRecords } from './modules/consent.js';

@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { parseCondition, serializeCondition, summarize } from '../modules/conditions.js';
-import { addField, addNamedCondition, copyRule, fieldsOfRule, pasteRule, addStep, emptyForm, emptyRules, fieldId, nameCondition, newRule, renameField, renameStep, rulesUsingField, slugify, usesOfVariable } from '../modules/model.js';
+import { addField, addPanel, panelsOf, removeField, stepOfField, addNamedCondition, copyRule, fieldsOfRule, pasteRule, addStep, emptyForm, emptyRules, fieldId, nameCondition, newRule, renameField, renameStep, rulesUsingField, slugify, usesOfVariable } from '../modules/model.js';
 import { validate } from '../../form-rules/index.js';
 
 const load = path => JSON.parse(readFileSync(new URL(path, import.meta.url), 'utf8'));
@@ -152,4 +152,20 @@ test('texts that follow the answers: uses of a named condition, and renaming a f
 	assert.deepEqual(result.form.fields.properties.thcLevel.showWhen, { '===': [{ var: 'values.substance' }, 'cannabis'] });
 	assert.deepEqual(result.rules.fields.variables.isThc.compute, { '===': [{ var: 'values.substance' }, 'cannabis'] });
 	assert.deepEqual(validate(result.form, result.rules).errors, []);
+});
+
+test('result panels hold fields like steps, stay after the steps, and rename and delete with their rules', () => {
+	let form = emptyForm('calc');
+	const panel = addPanel(form, 'Result');
+	form = panel.form;
+	form = addStep(form, 'Step 2').form;
+	assert.deepEqual(form.fields.structure.layout.map(entry => entry.type), ['step', 'step', 'panel']);
+	const added = addField(form, panel.id, 'Total', { type: 'number', ui: { widget: 'output' } });
+	form = added.form;
+	assert.equal(stepOfField(form, added.id).id, 'result');
+	assert.deepEqual(panelsOf(form)[0].fields, [added.id]);
+	const rules = { id: 'r', model: 'form-rules', fields: { form: 'calc', rules: [{ id: 'x', when: true, then: [{ skip: 'result' }] }] } };
+	const renamed = renameStep(form, rules, 'result', 'totals');
+	assert.equal(renamed.rules.fields.rules[0].then[0].skip, 'totals');
+	assert.equal(removeField(renamed.form, added.id).fields.structure.layout[2].fields.length, 0);
 });

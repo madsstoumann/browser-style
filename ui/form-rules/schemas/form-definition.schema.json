@@ -32,7 +32,16 @@
 					"type": "object",
 					"required": ["layout"],
 					"properties": {
-						"layout": { "type": "array", "items": { "$ref": "#/definitions/step" } }
+						"layout": { "type": "array", "items": { "oneOf": [{ "$ref": "#/definitions/step" }, { "$ref": "#/definitions/panel" }] } },
+						"present": {
+							"type": "object",
+							"description": "How the form is shown. The rules and answers are the same in every mode",
+							"properties": {
+								"mode": { "enum": ["steps", "page", "reveal"], "default": "steps", "description": "steps: one step at a time with Back and Next; page: every step on the path at once, as sections; reveal: one page where the next section appears when the one before is complete" },
+								"advance": { "enum": ["manual", "auto"], "default": "manual", "description": "auto: move on as soon as a step is complete and its last answer was a choice" },
+								"submit": { "type": "boolean", "default": true, "description": "false: a calculator; no Send button, results update as the person answers" }
+							}
+						}
 					}
 				},
 				"properties": { "type": "object", "additionalProperties": { "$ref": "#/definitions/property" } }
@@ -55,6 +64,20 @@
 		"condition": {
 			"description": "The name of a named condition in the rule set (a yes/no computed variable, read as vars.<name> === true), or JSON Logic. Write names in a form that is translated, so a translation carries no logic",
 			"oneOf": [{ "type": "string", "pattern": "^[A-Za-z_][\\w]*$" }, { "type": ["object", "boolean"] }]
+		},
+		"panel": {
+			"type": "object",
+			"required": ["type", "id", "fields"],
+			"description": "A result panel: text blocks and calculated values shown whichever step is current, never on the path",
+			"properties": {
+				"type": { "const": "panel" },
+				"id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+				"name": { "type": "string", "description": "Optional heading" },
+				"place": { "enum": ["aside", "end", "start"], "default": "aside", "description": "aside: beside the form when there is room, else after it; end: after the steps; start: before them" },
+				"hidden": { "type": "boolean", "description": "Left out unless a rule includes it" },
+				"fields": { "type": "array", "items": { "type": "string" }, "description": "Text blocks and calculated values only" },
+				"showWhen": { "$ref": "#/definitions/condition", "description": "Hidden while this is false" }
+			}
 		},
 		"property": {
 			"type": "object",

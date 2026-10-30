@@ -149,7 +149,17 @@ function resolve(form, results, input) {
 		jumps.push({ from: step.id, to: target.to, rules });
 		index = target.at - 1;
 	}
-	const stepVisible = new Map(steps.map(step => [step.id, step.visible]));
+	/* A panel is shown unless it is hidden; skip and include work on it as on a step. */
+	const panels = (form.panels ?? []).map(panel => {
+		let visible = !panel.hidden;
+		if (stepFlags.has(panel.id)) {
+			const decision = decide(stepFlags.get(panel.id), false);
+			visible = decision.value;
+			explain[`step:${panel.id}`] = decision.rules;
+		}
+		return { id: panel.id, name: panel.name, place: panel.place, visible, fields: [...panel.fields] };
+	});
+	const stepVisible = new Map([...steps, ...panels].map(step => [step.id, step.visible]));
 
 	const fields = {};
 	for (const [id, field] of form.fields) {
@@ -176,7 +186,7 @@ function resolve(form, results, input) {
 		fields[id] = state;
 	}
 
-	return { steps, fields, assigned, effects, explain, jumps, issues, varSets, varAdds, invalid };
+	return { steps, panels, fields, assigned, effects, explain, jumps, issues, varSets, varAdds, invalid };
 }
 
 /* A row rule ("forEach": "lines") runs once per row of a repeating group, reading the row as row.* and its
@@ -461,7 +471,7 @@ export function evaluate(formDefinition, ruleSetDocument, input = {}) {
 	let patches = [];
 	let cellsSeen = {};
 	let rowState = { rows: {}, assigned: new Map(), invalid: new Map(), matched: new Set(), explain: {} };
-	let fieldsSeen = Object.fromEntries([...baseForm.fields].map(([id, field]) => [id, { visible: !field.hidden && !baseForm.steps.find(step => step.id === field.step)?.hidden }]));
+	let fieldsSeen = Object.fromEntries([...baseForm.fields].map(([id, field]) => [id, { visible: !field.hidden && ![...baseForm.steps, ...baseForm.panels].find(step => step.id === field.step)?.hidden }]));
 	let lastKey = null;
 	let state;
 	let matched;
@@ -504,7 +514,7 @@ export function evaluate(formDefinition, ruleSetDocument, input = {}) {
 		const key = stableKey({
 			matched,
 			patches: nextPatches.map(patch => patch.id),
-			steps: state.steps.filter(step => step.visible).map(step => step.id),
+			steps: [...state.steps, ...state.panels].filter(step => step.visible).map(step => step.id),
 			vars: nextAccumulated,
 			visible: Object.entries(state.fields).filter(([, field]) => field.visible).map(([id]) => id),
 			cells: rowState.rows
@@ -604,6 +614,8 @@ export function evaluate(formDefinition, ruleSetDocument, input = {}) {
 		version: ruleSet.version ?? null,
 		steps: state.steps,
 		path: state.steps.filter(step => step.visible).map(step => step.id),
+		panels: state.panels,
+		present: baseForm.present,
 		jumps: state.jumps,
 		vars,
 		fields: state.fields,

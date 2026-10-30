@@ -153,7 +153,17 @@ export class FlowTracking {
 		});
 	}
 
-	/* The page is hidden or left: once per hide, only for a started, unsent form. */
+	/* A calculator (structure.present.submit false) sends nothing: once its answers rest it reports what was chosen.
+	   Calculated values are left out, since they are derived from what the person typed. */
+	result(state) {
+		if (!this.#started) return;
+		this.#state = { ...state, current: this.#state?.current ?? null };
+		this.#done = true;
+		const choices = this.#choices();
+		this.#emit('form.result', { ms: Date.now() - this.#started, ...(choices ? { choices } : {}) });
+	}
+
+	/* The page is hidden or left: once per hide, only for a started, unsent form (a calculator with a result counts as sent). */
 	abandon() {
 		if (!this.#started || this.#done || this.#abandoned) return false;
 		this.#abandoned = true;

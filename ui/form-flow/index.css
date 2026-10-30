@@ -1,9 +1,34 @@
 @layer bs-component {
 	:where(form-flow) {
+		container-type: inline-size;
 		display: block;
-		& form {
+		& form, & [part=main] {
+			align-content: start;
 			display: grid;
 			gap: var(--form-flow-gap, var(--spacing-lg, 1.5rem));
+			min-inline-size: 0;
+		}
+		/* A result panel: beside the form when there is room (place aside), else before or after the steps. */
+		& [part~=panel]:not([hidden]) {
+			align-content: start;
+			background: var(--form-flow-panel-bg, var(--color-surface-alt, transparent));
+			border-radius: var(--form-flow-panel-radius, var(--radius-md, .5rem));
+			display: grid;
+			gap: var(--spacing-md, 1rem);
+			padding: var(--form-flow-panel-padding, var(--spacing-md, 1rem));
+		}
+		/* In a panel, a calculated value is a line: its label, then the amount at the end. */
+		& [part~=panel] [part~=output] { align-items: baseline; grid-template-columns: 1fr auto; & output { font-size: inherit; } }
+		& [part=panel-title] { font-size: var(--form-flow-legend-fs, 1.25rem); margin: 0; }
+		& [part=aside] { align-content: start; display: grid; gap: var(--form-flow-gap, var(--spacing-lg, 1.5rem)); }
+		@container (min-width: 44rem) {
+			& form[data-aside] { align-items: start; grid-template-columns: minmax(0, 1fr) minmax(16rem, var(--form-flow-aside-width, 22rem)); }
+			& [part=aside] { inset-block-start: var(--form-flow-aside-top, 1rem); position: sticky; }
+		}
+		/* One page: the steps are sections, one after another. */
+		& form:not([data-mode=steps]) fieldset[data-step]:not([hidden]) + fieldset[data-step]:not([hidden]) {
+			border-block-start: 1px solid var(--color-border);
+			padding-block-start: var(--form-flow-gap, var(--spacing-lg, 1.5rem));
 		}
 		& [part=steps] {
 			display: flex;
@@ -13,6 +38,8 @@
 		}
 		& fieldset[data-step] {
 			border: 0;
+			margin: 0;
+			min-inline-size: 0;
 			padding: 0;
 			& > legend {
 				font-size: var(--form-flow-legend-fs, 1.25rem);
@@ -84,7 +111,8 @@
 			font-size: smaller;
 			& ul { margin: 0; padding-inline-start: 2ch; }
 		}
-		/* A field a rule hides stays hidden whatever display a page or host (the editor's preview) gives it. */
+		/* Last, so a rule that hides a text block, a calculated value, a slider, a list, a step or a panel wins over its display.
+		   Important, because the step list's own stylesheet (ui-step) is outside this layer. */
 		& [hidden] { display: none !important; }
 	}
 }

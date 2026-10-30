@@ -23,6 +23,9 @@ fetch effect → POST (or this.fetcher) → merge() → #rules updated → updat
 - `noValidate` is set on the form: steps are validated one at a time in `#validStep`, because hidden steps' required controls would otherwise block submit.
 - A required boolean relies on native `required` (must be checked); the engine counts `false` as a value.
 - Tracking (`tracking.js`) is fed from a few hooks: `update()` (view, rule and error edges), `#onInput` (start, revisit, called before `update()` so the first error counts), `#goTo(step, via)` (every step change goes through it, with the reason), `#validStep` (blocked), `#fetchPatch` (service timing). A new navigation path must call `#goTo`, not set `#current`, or the funnel loses a step.
+- Layout modes (`this.present`, from `structure.present` or the `mode` attribute): in `page` and `reveal`, `#current` is the furthest section reached, not the one on screen. `#applySteps` moves it forward while `#complete()` holds (valid controls and at least one answer), calling `tracking.step(…, mode)` directly, the one place besides `#goTo` that does. `#goTo` never moves it backwards there; it only scrolls. Hiding is by `fieldset.hidden`; `#validStep` still validates hidden-but-on-path sections, so Send opens an invalid one further down.
+- Result panels render once in `#render` (`#renderPanel`); their fields are normal fields, so `#applyFields` / `#applyTexts` handle them. `#applySteps` only toggles each panel's `hidden` from `state.panels`.
+- `index.css` ends with `[hidden] { display: none !important }`; keep it last and important: the step list's ui-step stylesheet is outside the layer.
 - Abandon listens on `document` / `window` from `connectedCallback`; it fires once per hide and is re-armed when the page is visible again.
 
 ## Sessions (session.js)

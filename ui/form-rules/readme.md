@@ -20,6 +20,8 @@ const state = evaluate(form, rules, { values, context, facts, previous, today: '
 | Key | Holds |
 | --- | --- |
 | `steps`, `path` | Every step with `visible`, and the ids of the visible ones in order |
+| `panels` | Every result panel (`{ id, name, place, visible, fields }`); never on the path |
+| `present` | How the form is shown: `{ mode: steps \| page \| reveal, advance: manual \| auto, submit }` (`presentOf(form)`) |
 | `jumps` | The gotos taken: `{ from, to, rules }` |
 | `vars` | The rule set's variables after this evaluation |
 | `fields` | Per field: `visible`, `enabled`, `required`, `options` (narrowed choices), `step`, `source` |
@@ -86,6 +88,7 @@ Property types beyond the plain inputs: `content` (a text block, never submitted
 - **Repeating groups**: `type: "list"` with `items.properties`; the value is an array of rows, cleaned and checked cell by cell (issues carry `row` and `item`), with `validation.minItems` / `maxItems`. A rule with `forEach: "<list>"` runs per row: it reads `row.<item>` and `index`, acts on `<list>.<item>`, and the result's `rows` holds each cell's `{ visible, enabled, required }`.
 - **Option sources**: `options.source` names a service. A select gets its list from it (the engine emits an `options` effect; pass the list back as `input.choices[field]` to check answers against it); a string only gets suggestions.
 - **Placeholders**: `{values.x}`, `{vars.x}`, `{context.x}`, `{facts.x}` in titles, help, text blocks and messages; `fillText()` and `placeholdersOf()` are exported, and `validate()` checks what they name.
+- **Layouts and result panels**: `structure.present` (`mode`, `advance`, `submit`) is presentation only and returned as `present`. A layout entry of type `panel` holds text blocks and calculated values shown beside the steps; `skip` / `include` / `showWhen` hide and show it like a step, and its values are absent while it is hidden. `validate()` refuses questions in a panel, a panel id used by a step, and unknown modes and places. See the [guide](../../docs/forms.md#how-a-form-is-shown).
 - **Texts that follow the answers**: a choice's `note` (returned as `state.notes[field]`, read in texts as `{values.<field>.note}`; `textData(state)` builds what `fillText` needs), a text block's `cases` (`show: all | first`; the matching positions come back as `fields[id].cases`), and `showWhen` on any field or step, run as an implicit rule `showWhen:<id>`. Conditions are a named condition's name or JSON Logic (`conditionOf`). See the [guide](../../docs/forms.md#texts-that-follow-the-answers).
 - **Messages**: `input.messages` replaces the default text per issue code (`{limit}` is the limit), which is how form-flow's language packs translate them.
 

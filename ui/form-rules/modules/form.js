@@ -15,7 +15,22 @@ const choiceValues = property => {
 	return Array.isArray(choices) ? choices.map(choice => (choice && typeof choice === 'object' ? choice.value : choice)) : null;
 };
 
-/* A step is a `structure.layout` entry of type "step". */
+export const PRESENT_MODES = ['steps', 'page', 'reveal'];
+export const PANEL_PLACES = ['aside', 'end', 'start'];
+
+/* How the form is shown (structure.present): one step at a time, all on one page, or a page that unfolds.
+   advance "auto" moves on when a step's last answer is a choice; submit false makes a calculator with no Send. */
+export function presentOf(definition) {
+	const present = unwrap(definition).structure?.present ?? {};
+	return {
+		mode: PRESENT_MODES.includes(present.mode) ? present.mode : 'steps',
+		advance: present.advance === 'auto' ? 'auto' : 'manual',
+		submit: present.submit !== false
+	};
+}
+
+/* A step is a `structure.layout` entry of type "step". A "panel" entry holds text blocks and calculated values
+   shown beside, before or after the steps, whichever step is current; it is never on the path. */
 export function normalizeForm(definition) {
 	const form = unwrap(definition);
 	const properties = form.properties ?? {};
@@ -24,6 +39,20 @@ export function normalizeForm(definition) {
 	const steps = [];
 	const fields = new Map();
 	const slots = new Map();
+	const panels = [];
+	const addField = (fieldId, id, panel) => {
+		const property = properties[fieldId];
+		fields.set(fieldId, {
+			id: fieldId,
+			step: id,
+			...(panel ? { panel: true } : {}),
+			source: 'form',
+			property,
+			choices: choiceValues(property),
+			hidden: property?.ui?.hidden === true,
+			required: property?.required === true || requiredList.has(fieldId)
+		});
+	};
 
 	layout.filter(entry => entry?.type === 'step').forEach((entry, index) => {
 		const id = entry.id ?? `step-${index + 1}`;
@@ -38,21 +67,24 @@ export function normalizeForm(definition) {
 		};
 		steps.push(step);
 		step.slots.forEach(slot => slots.set(slot, id));
-		step.fields.forEach(fieldId => {
-			const property = properties[fieldId];
-			fields.set(fieldId, {
-				id: fieldId,
-				step: id,
-				source: 'form',
-				property,
-				choices: choiceValues(property),
-				hidden: property?.ui?.hidden === true,
-				required: property?.required === true || requiredList.has(fieldId)
-			});
-		});
+		step.fields.forEach(fieldId => addField(fieldId, id));
 	});
 
-	return { id: form.id, title: form.title, steps, fields, slots, properties };
+	layout.filter(entry => entry?.type === 'panel').forEach((entry, index) => {
+		const id = entry.id ?? `panel-${index + 1}`;
+		const panel = {
+			id,
+			name: entry.name ?? '',
+			place: PANEL_PLACES.includes(entry.place) ? entry.place : 'aside',
+			hidden: entry.hidden === true,
+			fields: [...(entry.fields ?? [])],
+			...(entry.showWhen !== undefined ? { showWhen: entry.showWhen } : {})
+		};
+		panels.push(panel);
+		panel.fields.forEach(fieldId => addField(fieldId, id, true));
+	});
+
+	return { id: form.id, title: form.title, steps, panels, fields, slots, properties, present: presentOf(form) };
 }
 
 export function normalizeRuleSet(ruleSet) {
