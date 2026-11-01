@@ -1,0 +1,21 @@
+{
+	"$schema": "../schemas/form-rules.schema.json",
+	"id": "rules-bmi",
+	"model": "form-rules",
+	"meta": { "locale": "en", "status": "published" },
+	"fields": {
+		"form": "form-bmi",
+		"version": 1,
+		"variables": {
+			"metres": { "type": "number", "title": "Height in metres", "compute": { "/": [{ "var": "values.height" }, 100] } },
+			"bmi": { "type": "number", "title": "BMI", "compute": { "round": [{ "/": [{ "var": "values.weight" }, { "*": [{ "var": "vars.metres" }, { "var": "vars.metres" }] }] }, 2] } },
+			"underweight": { "type": "boolean", "title": "Underweight", "compute": { "<": [{ "var": "vars.bmi" }, 18.5] } },
+			"normal": { "type": "boolean", "title": "Normal weight", "compute": { "and": [{ ">=": [{ "var": "vars.bmi" }, 18.5] }, { "<": [{ "var": "vars.bmi" }, 25] }] } },
+			"preObesity": { "type": "boolean", "title": "Pre-obesity", "compute": { "and": [{ ">=": [{ "var": "vars.bmi" }, 25] }, { "<": [{ "var": "vars.bmi" }, 30] }] } },
+			"obese1": { "type": "boolean", "title": "Obese I", "compute": { "and": [{ ">=": [{ "var": "vars.bmi" }, 30] }, { "<": [{ "var": "vars.bmi" }, 35] }] } },
+			"obese2": { "type": "boolean", "title": "Obese II", "compute": { "and": [{ ">=": [{ "var": "vars.bmi" }, 35] }, { "<": [{ "var": "vars.bmi" }, 40] }] } },
+			"obese3": { "type": "boolean", "title": "Obese III", "compute": { ">=": [{ "var": "vars.bmi" }, 40] } }
+		},
+		"rules": []
+	}
+}

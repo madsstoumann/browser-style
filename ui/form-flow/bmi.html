@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Form Flow: BMI calculator</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="color-scheme" content="light dark">
+	<meta name="description" content="The BMI calculator as a form: two sliders, a calculated value and a text block whose case is picked by named conditions. No rules and nothing sent.">
+	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="index.css">
+	<style>
+		body { max-inline-size: 70ch; margin-inline: auto; padding: 2ch; }
+		form-flow [data-field=bmi] output { font-size: 2rem; font-weight: 700; }
+		form-flow [data-field=category] [part~=case] { border-radius: .5em; color: #1a1a1a; padding: 1ch 2ch; }
+		form-flow [data-field=category] [part~=case] p { margin: 0; }
+		form-flow [data-field=category] [part~=case] p:first-child { font-weight: 700; }
+		form-flow [data-field=category] [data-case="0"] { background: #4691e2; }
+		form-flow [data-field=category] [data-case="1"] { background: #0cb764; }
+		form-flow [data-field=category] [data-case="2"] { background: #febf18; }
+		form-flow [data-field=category] [data-case="3"] { background: #fc8711; }
+		form-flow [data-field=category] [data-case="4"] { background: #ff6455; }
+		form-flow [data-field=category] [data-case="5"] { background: #cc1100; color: #fff; }
+	</style>
+</head>
+<body>
+	<main>
+		<h1>UI: Components &gt; FormFlow &gt; BMI calculator</h1>
+		<p>
+			The <a href="/apps/science/bmi/">BMI calculator</a> rebuilt as a <a href="../form-rules/examples/bmi.form.json">form</a>.
+			Height and weight are sliders whose units come from <code>ui.format</code>. The <a href="../form-rules/examples/bmi.rules.json">rule set</a>
+			computes the BMI as weight ÷ (metres × metres), rounded to two places, and six named conditions, one per WHO category.
+			The category is a text block with <code>cases</code> and <code>show: "first"</code>; the colours are page CSS on <code>[data-case]</code>.
+			The rule set has no rules, and the form is a calculator: <code>{ "mode": "page", "submit": false }</code>.
+			Open it in the <a href="../form-editor/?example=bmi">form editor</a>.
+		</p>
+		<form-flow form="../form-rules/examples/bmi.form.json" rules="../form-rules/examples/bmi.rules.json"></form-flow>
+	</main>
+	<script type="module">import './index.js';</script>
+</body>
+</html>

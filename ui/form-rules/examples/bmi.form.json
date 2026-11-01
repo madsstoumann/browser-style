@@ -1,0 +1,45 @@
+{
+	"$schema": "../schemas/form-definition.schema.json",
+	"id": "form-bmi",
+	"model": "form-definition",
+	"meta": { "locale": "en", "status": "published", "version": 1 },
+	"fields": {
+		"title": "BMI Calculator",
+		"description": "Your body mass index: your weight in relation to your height, used to screen for weight categories that may lead to health problems.",
+		"structure": {
+			"layout": [
+				{ "type": "step", "id": "body", "name": "Your body", "fields": ["height", "weight"] },
+				{ "type": "panel", "id": "result", "name": "Your BMI", "place": "end", "fields": ["bmi", "category"] }
+			],
+			"present": { "mode": "page", "submit": false }
+		},
+		"type": "object",
+		"properties": {
+			"height": {
+				"type": "number", "title": "Height", "default": 180, "privacy": "special",
+				"validation": { "minimum": 150, "maximum": 230 },
+				"ui": { "widget": "range", "step": 0.5, "format": { "style": "unit", "unit": "centimeter", "maximumFractionDigits": 1 } }
+			},
+			"weight": {
+				"type": "number", "title": "Weight", "default": 75, "privacy": "special",
+				"validation": { "minimum": 35, "maximum": 200 },
+				"ui": { "widget": "range", "step": 0.1, "format": { "style": "unit", "unit": "kilogram", "maximumFractionDigits": 1 } }
+			},
+			"bmi": {
+				"type": "number", "title": "Your BMI is", "from": "vars.bmi",
+				"ui": { "widget": "output", "format": { "minimumFractionDigits": 2, "maximumFractionDigits": 2 } }
+			},
+			"category": {
+				"type": "content", "title": "Category", "show": "first",
+				"cases": [
+					{ "when": "underweight", "content": "Underweight\n\nThe WHO regards a BMI of less than 18.5 as underweight and may indicate malnutrition, an eating disorder, or other health problems." },
+					{ "when": "normal", "content": "Normal\n\nA BMI between 18.5 and 25 is considered normal and healthy." },
+					{ "when": "preObesity", "content": "Pre-obesity\n\nPeople who fall into this category may be at risk of developing obesity. This was earlier classified as \"overweight\"." },
+					{ "when": "obese1", "content": "Obese I\n\nPeople who have BMI equal or over 30 may have obesity, which is defined as an abnormal or excessive accumulation of fat that may harm health." },
+					{ "when": "obese2", "content": "Obese II\n\nPeople who have BMI equal or over 30 may have obesity, which is defined as an abnormal or excessive accumulation of fat that may harm health." },
+					{ "when": "obese3", "content": "Obese III\n\nPeople who have BMI equal or over 30 may have obesity, which is defined as an abnormal or excessive accumulation of fat that may harm health." }
+				]
+			}
+		}
+	}
+}
