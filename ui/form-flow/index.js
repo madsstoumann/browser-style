@@ -436,10 +436,12 @@ export default class FormFlow extends HTMLElement {
 		}
 		if (property.type === 'boolean') return h('input', { type: 'checkbox', role: 'switch', name, checked: value === true, ...attributes });
 		if (widget === 'range') {
+			/* min, max and step before value: the browser clamps a value against the range it has when the value is set. */
 			return h('input', {
-				type: 'range', name, value: value ?? '', ...attributes,
+				type: 'range', name,
 				min: validation.minimum ?? 0, max: validation.maximum ?? 100,
-				step: property.ui?.step ?? (property.type === 'integer' ? '1' : 'any')
+				step: property.ui?.step ?? (property.type === 'integer' ? '1' : 'any'),
+				value: value ?? '', ...attributes
 			});
 		}
 		if (property.type === 'number' || property.type === 'integer') {

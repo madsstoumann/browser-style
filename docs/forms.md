@@ -33,9 +33,10 @@ Demos:
 | [/ui/form-flow/contact.html](https://v4.browser.style/ui/form-flow/contact.html) | The core field types: text blocks, a hidden value, a file upload, consent |
 | [/ui/form-flow/drug-ticket.html](https://v4.browser.style/ui/form-flow/drug-ticket.html) | Texts that follow the answers: choice notes, a text block with cases, fields shown when a named condition holds |
 | [/ui/form-flow/drug-ticket.html](https://v4.browser.style/ui/form-flow/drug-ticket.html) | A calculator on one page with a result panel beside it, texts that follow the answers, and a switch between the three layouts |
+| [/ui/form-flow/bmi.html](https://v4.browser.style/ui/form-flow/bmi.html) | The BMI calculator: two sliders with units, a calculated value with a power written as a product, and a category text picked by named conditions |
 | [/ui/form-flow/order.html](https://v4.browser.style/ui/form-flow/order.html) | Order lines as rows, calculated totals, a slider, a city list from a service that depends on the country, street type-ahead, date and text rules, placeholders |
 | [/ui/form-widgets/](https://v4.browser.style/ui/form-widgets/) | The three widget packages: rich text, `<auto-suggest>`, `<data-grid>` |
-| [/ui/form-editor/](https://v4.browser.style/ui/form-editor/) | The editor; `?example=loan` opens the loan example, `?example=contact` the field types example, `?example=order` the order example, `?example=drug-ticket` the texts example |
+| [/ui/form-editor/](https://v4.browser.style/ui/form-editor/) | The editor; `?example=loan` opens the loan example, `?example=contact` the field types example, `?example=order` the order example, `?example=drug-ticket` the texts example, `?example=bmi` the BMI calculator |
 | [/ui/form-embed/](https://v4.browser.style/ui/form-embed/) | A "client site" embedding forms in shadow and light mode |
 
 How they fit together:
