@@ -13,6 +13,7 @@ import { calculatedFrom } from './evaluate.js';
 import { CONTEXT_SOURCES } from './context.js';
 import { placeholdersOf } from './text.js';
 import { conditionOf, implicitRules } from './show.js';
+import { visibleWhenProblems } from './visible-when.js';
 
 const INPUT_ROOTS = ['values', 'context', 'facts', 'step', 'today', 'vars', 'services'];
 /* Only these change what a condition can read, since hidden values read as absent. */
@@ -171,6 +172,22 @@ export function validate(formDefinition, ruleSetDocument, { functions = {}, type
 				else caseConditions.push({ when: conditionOf(entry.when), at: `${at}.when` });
 			});
 		}
+	}
+	/* visibleWhen (the content models' grammar): a form hides what it cannot read, so each mistake is an error here.
+	   What it reads, and the named conditions it uses, are checked again with the rules it becomes. */
+	const fieldOf = id => rawForm.properties?.[id];
+	for (const [id, property] of Object.entries(rawForm.properties ?? {})) {
+		if (property?.visibleWhen !== undefined) visibleWhenProblems(property.visibleWhen, { fields: fieldOf, self: id, at: `properties.${id}.visibleWhen` }).forEach(message => fail('visible-when', message, `properties.${id}.visibleWhen`));
+		if (property?.type !== 'list') continue;
+		const items = property.items?.properties ?? {};
+		for (const [item, cell] of Object.entries(items)) {
+			const at = `properties.${id}.items.properties.${item}.visibleWhen`;
+			if (cell?.visibleWhen !== undefined) visibleWhenProblems(cell.visibleWhen, { fields: name => items[name], self: item, at }).forEach(message => fail('visible-when', message, at));
+		}
+	}
+	for (const entry of [...form.steps, ...form.panels]) {
+		const at = `structure.layout.${entry.id}.visibleWhen`;
+		if (entry.visibleWhen !== undefined) visibleWhenProblems(entry.visibleWhen, { fields: fieldOf, at }).forEach(message => fail('visible-when', message, at));
 	}
 	ruleSet.rules.forEach((rule, index) => ['then', 'else'].forEach(branch => (rule?.[branch] ?? []).forEach((action, i) => {
 		if (action?.invalid) checkPlaceholders(action.invalid.message, `rules[${index}].${branch}[${i}].invalid.message`);

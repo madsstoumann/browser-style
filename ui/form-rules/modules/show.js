@@ -1,6 +1,8 @@
+import { visibleWhenLogic } from './visible-when.js';
+
 /**
  * Texts and fields that follow the answers, written on the form instead of as rules:
- * `showWhen` on a field or a layout entry, `cases` on a text block, `note` on a choice.
+ * `showWhen` and `visibleWhen` on a field or a layout entry, `cases` on a text block, `note` on a choice.
  * A condition here is the name of a named condition ("lowThc", read as vars.lowThc === true) or JSON Logic,
  * so a translated form definition can carry names only and no logic.
  */
@@ -8,17 +10,24 @@
 /* A named condition's name, or a condition as it is. */
 export const conditionOf = when => (typeof when === 'string' ? { '===': [{ var: `vars.${when}` }, true] } : when ?? true);
 
-/* showWhen as rules the engine runs like any other: when the condition is false, the field is hidden or the step skipped.
+/* showWhen and visibleWhen as rules the engine runs like any other: when the condition is false, the field is hidden
+   or the step skipped; with both, both must hold. visibleWhen on a row field of a repeating group is a row rule.
    Each carries `at`, where it was written, for validation messages. */
 export function implicitRules(form) {
 	const rules = [];
 	for (const [id, field] of form.fields) {
-		if (field.property?.showWhen === undefined) continue;
-		rules.push({ id: `showWhen:${id}`, when: { '!': conditionOf(field.property.showWhen) }, then: [{ hide: id }], at: `properties.${id}.showWhen` });
+		const property = field.property;
+		if (property?.showWhen !== undefined) rules.push({ id: `showWhen:${id}`, when: { '!': conditionOf(property.showWhen) }, then: [{ hide: id }], at: `properties.${id}.showWhen` });
+		if (property?.visibleWhen !== undefined) rules.push({ id: `visibleWhen:${id}`, when: { '!': visibleWhenLogic(property.visibleWhen) }, then: [{ hide: id }], at: `properties.${id}.visibleWhen` });
+		if (property?.type !== 'list') continue;
+		for (const [item, cell] of Object.entries(property.items?.properties ?? {})) {
+			if (cell?.visibleWhen === undefined) continue;
+			rules.push({ id: `visibleWhen:${id}.${item}`, forEach: id, when: { '!': visibleWhenLogic(cell.visibleWhen, { base: 'row.' }) }, then: [{ hide: `${id}.${item}` }], at: `properties.${id}.items.properties.${item}.visibleWhen` });
+		}
 	}
 	for (const entry of [...form.steps, ...(form.panels ?? [])]) {
-		if (entry.showWhen === undefined) continue;
-		rules.push({ id: `showWhen:step:${entry.id}`, when: { '!': conditionOf(entry.showWhen) }, then: [{ skip: entry.id }], at: `structure.layout.${entry.id}.showWhen` });
+		if (entry.showWhen !== undefined) rules.push({ id: `showWhen:step:${entry.id}`, when: { '!': conditionOf(entry.showWhen) }, then: [{ skip: entry.id }], at: `structure.layout.${entry.id}.showWhen` });
+		if (entry.visibleWhen !== undefined) rules.push({ id: `visibleWhen:step:${entry.id}`, when: { '!': visibleWhenLogic(entry.visibleWhen) }, then: [{ skip: entry.id }], at: `structure.layout.${entry.id}.visibleWhen` });
 	}
 	return rules;
 }

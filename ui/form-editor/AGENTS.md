@@ -11,6 +11,7 @@
 | `index.js` | The element: state, undo stack, draft storage, toolbar, panes, preview, status, import/export |
 | `modules/model.js` | Pure edits: add/move/remove/rename for steps and fields (renames rewrite rules) |
 | `modules/conditions.js` | JSON Logic ↔ builder tree (`parseCondition`/`serializeCondition`), plus sentence summaries |
+| `modules/visible-when.js` | `visibleWhen` ↔ builder tree (`toTree`/`fromTree`) for **Show this … When…**, rename and uses |
 | `modules/view-form.js` | Outline pane, and the form/step/field inspectors |
 | `modules/view-rules.js` | Rule list, When/Then/Otherwise builder, services |
 | `modules/dom.js` | `h()` and small control builders. No innerHTML. |

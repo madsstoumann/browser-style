@@ -4,6 +4,7 @@
  */
 import { isRule } from '../../form-rules/modules/logic.js';
 import { actionName, actionTargets, renameTargets } from '../../form-rules/modules/actions.js';
+import { renameVisibleWhen, usesName } from './visible-when.js';
 
 export const clone = value => structuredClone(value);
 
@@ -123,9 +124,13 @@ export function renameField(form, rules, from, to) {
 	const renameWhen = when => (when && typeof when === 'object' ? renameReads(when, from, to) : when);
 	for (const property of Object.values(nextForm.fields.properties)) {
 		if (property?.showWhen !== undefined) property.showWhen = renameWhen(property.showWhen);
+		if (property?.visibleWhen !== undefined) property.visibleWhen = renameVisibleWhen(property.visibleWhen, from, to);
 		(property?.cases ?? []).forEach(entry => { if (entry) entry.when = renameWhen(entry.when); });
 	}
-	stepsOf(nextForm).forEach(step => { if (step.showWhen !== undefined) step.showWhen = renameWhen(step.showWhen); });
+	sectionsOf(nextForm).forEach(step => {
+		if (step.showWhen !== undefined) step.showWhen = renameWhen(step.showWhen);
+		if (step.visibleWhen !== undefined) step.visibleWhen = renameVisibleWhen(step.visibleWhen, from, to);
+	});
 
 	const nextRules = clone(rules);
 	Object.values(nextRules.fields.variables ?? {}).forEach(definition => {
@@ -216,12 +221,13 @@ export function nameCondition(rules, ruleId, title) {
 export function usesOfVariable(rules, name, form = null) {
 	const reads = value => JSON.stringify(value ?? null).includes(`"vars.${name}"`);
 	const names = value => value === name || reads(value);
+	const named = property => names(property?.showWhen) || usesName(property?.visibleWhen, name);
 	const properties = Object.entries(form?.fields?.properties ?? {});
 	return [
 		...(rules.fields.rules ?? []).filter(rule => reads([rule.when, rule.then, rule.else])).map(rule => rule.id),
 		...Object.entries(rules.fields.variables ?? {}).filter(([other, definition]) => other !== name && reads(definition.compute)).map(([other]) => `vars.${other}`),
-		...properties.filter(([, property]) => names(property?.showWhen) || (property?.cases ?? []).some(entry => names(entry?.when))).map(([id, property]) => `field "${property?.title ?? id}"`),
-		...(form ? stepsOf(form) : []).filter(step => names(step.showWhen)).map(step => `step "${step.name ?? step.id}"`)
+		...properties.filter(([, property]) => named(property) || (property?.cases ?? []).some(entry => names(entry?.when))).map(([id, property]) => `field "${property?.title ?? id}"`),
+		...(form ? stepsOf(form) : []).filter(named).map(step => `step "${step.name ?? step.id}"`)
 	];
 }
 

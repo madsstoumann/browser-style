@@ -58,8 +58,13 @@
 				"hidden": { "type": "boolean", "description": "Left out unless a rule includes it" },
 				"fields": { "type": "array", "items": { "type": "string" } },
 				"slots": { "type": "array", "items": { "type": "string" }, "description": "Places where patch fields may land" },
-				"showWhen": { "$ref": "#/definitions/condition", "description": "Skipped while this is false" }
+				"showWhen": { "$ref": "#/definitions/condition", "description": "Skipped while this is false" },
+				"visibleWhen": { "$ref": "#/definitions/visibleWhen", "description": "Skipped while this does not hold" }
 			}
+		},
+		"visibleWhen": {
+			"description": "The content models' condition (universal-content-model docs/UCM.md \"Conditional fields\"): a test on one field (is, in, notIn, empty, gt, gte, lt, lte, contains, startsWith, endsWith; matchCase for the text tests), all / any / not over conditions, or the name of a named condition. With showWhen as well, both must hold",
+			"oneOf": [{ "type": "string", "pattern": "^[A-Za-z_][\\w]*$" }, { "type": "object" }]
 		},
 		"condition": {
 			"description": "The name of a named condition in the rule set (a yes/no computed variable, read as vars.<name> === true), or JSON Logic. Write names in a form that is translated, so a translation carries no logic",
@@ -76,7 +81,8 @@
 				"place": { "enum": ["aside", "end", "start"], "default": "aside", "description": "aside: beside the form when there is room, else after it; end: after the steps; start: before them" },
 				"hidden": { "type": "boolean", "description": "Left out unless a rule includes it" },
 				"fields": { "type": "array", "items": { "type": "string" }, "description": "Text blocks and calculated values only" },
-				"showWhen": { "$ref": "#/definitions/condition", "description": "Hidden while this is false" }
+				"showWhen": { "$ref": "#/definitions/condition", "description": "Hidden while this is false" },
+				"visibleWhen": { "$ref": "#/definitions/visibleWhen", "description": "Hidden while this does not hold" }
 			}
 		},
 		"property": {
@@ -86,6 +92,7 @@
 				"type": { "enum": ["string", "number", "integer", "boolean", "select", "content", "file", "list"], "description": "content: a text block with no value (never submitted); file: uploads, whose value is [{ name, size, type }] and which are never saved in a draft; list: a repeating group, whose value is an array of rows (objects of items.properties)" },
 				"kind": { "type": "string", "description": "The field type from an installed type package (types/core.json, dk/cpr, …) the field was made from; tells an editor which settings to show. Optional: typeOf() infers it from type and ui.widget" },
 				"content": { "type": "string", "description": "Text block only: the text, plain; a blank line starts a new paragraph" },
+				"visibleWhen": { "$ref": "#/definitions/visibleWhen", "description": "Hidden while this does not hold; on a row field of a repeating group it reads the row" },
 				"from": { "type": "string", "pattern": "^(context|facts|vars)\\.", "description": "Prefill from context.* or facts.* while the field has no answer (for example a hidden campaign value); vars.* makes a calculated field, whose value is always that rule-set variable" },
 				"items": {
 					"type": "object",
