@@ -61,6 +61,7 @@ export function normalizeForm(definition) {
 			name: entry.name ?? id,
 			hidden: entry.hidden === true,
 			...(entry.showWhen !== undefined ? { showWhen: entry.showWhen } : {}),
+			...(entry.visibleWhen !== undefined ? { visibleWhen: entry.visibleWhen } : {}),
 			source: 'form',
 			fields: [...(entry.fields ?? [])],
 			slots: [...(entry.slots ?? [])]
@@ -78,7 +79,8 @@ export function normalizeForm(definition) {
 			place: PANEL_PLACES.includes(entry.place) ? entry.place : 'aside',
 			hidden: entry.hidden === true,
 			fields: [...(entry.fields ?? [])],
-			...(entry.showWhen !== undefined ? { showWhen: entry.showWhen } : {})
+			...(entry.showWhen !== undefined ? { showWhen: entry.showWhen } : {}),
+			...(entry.visibleWhen !== undefined ? { visibleWhen: entry.visibleWhen } : {})
 		};
 		panels.push(panel);
 		panel.fields.forEach(fieldId => addField(fieldId, id, true));

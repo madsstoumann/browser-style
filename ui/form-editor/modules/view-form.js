@@ -5,8 +5,14 @@
 import { h, field, check, select, button, download } from './dom.js';
 import { addField, addPanel, addStep, clone, fieldId, moveItem, panelsOf, removeField, removeStep, renameField, renameStep, rulesUsingField, sectionsOf, stepOfField, stepsOf } from './model.js';
 import { extractSnippet, insertSnippet } from './snippets.js';
-import { whenPicker } from './when.js';
+import { showPicker, whenPicker } from './when.js';
 import { changeType, fieldFromType, groupTypes, searchTypes, typeOf } from '../../form-rules/index.js';
+
+/* Writes "Show this …": both keys, an undefined one removed. */
+const writeWhen = (target, { showWhen, visibleWhen }) => {
+	if (showWhen === undefined) delete target.showWhen; else target.showWhen = showWhen;
+	if (visibleWhen === undefined) delete target.visibleWhen; else target.visibleWhen = visibleWhen;
+};
 
 /* Settings for a field whose type no installed package describes. */
 const FALLBACK_SETTINGS = {
@@ -237,12 +243,11 @@ function panelInspector(editor, panelId) {
 		}), 'Rules that hide or show this panel are updated') : null,
 		field('Place', select(PLACES, panel.place ?? 'aside', value => update(p => { p.place = value; }))),
 		check('Only shown when a rule includes it', panel.hidden === true, value => update(p => { if (value) p.hidden = true; else delete p.hidden; })),
-		whenPicker(editor, panel.showWhen, {
-			label: 'Show this panel', always: true,
-			apply: (value, nextRules) => {
+		showPicker(editor, panel, {
+			label: 'Show this panel',
+			apply: (values, nextRules) => {
 				const next = clone(form);
-				const p = panelsOf(next).find(x => x.id === panelId);
-				if (value === undefined) delete p.showWhen; else p.showWhen = value;
+				writeWhen(panelsOf(next).find(x => x.id === panelId), values);
 				editor.commit(nextRules ? { form: next, rules: nextRules } : { form: next });
 			}
 		}),
@@ -282,12 +287,11 @@ function stepInspector(editor, stepId) {
 			}
 		}), 'Rules that skip or include this step are updated') : null,
 		check('Only shown when a rule includes it', step.hidden === true, value => update(s => { if (value) s.hidden = true; else delete s.hidden; })),
-		whenPicker(editor, step.showWhen, {
-			label: 'Show this step', always: true,
-			apply: (value, nextRules) => {
+		showPicker(editor, step, {
+			label: 'Show this step',
+			apply: (values, nextRules) => {
 				const next = clone(form);
-				const s = stepsOf(next).find(x => x.id === stepId);
-				if (value === undefined) delete s.showWhen; else s.showWhen = value;
+				writeWhen(stepsOf(next).find(x => x.id === stepId), values);
 				editor.commit(nextRules ? { form: next, rules: nextRules } : { form: next });
 			}
 		}),
@@ -409,9 +413,9 @@ function fieldInspector(editor, id) {
 			p.ui = { ...(p.ui ?? {}) };
 			setOrDelete(p.ui, 'hidden', value);
 		})),
-		property.ui?.widget === 'hidden' ? null : whenPicker(editor, property.showWhen, {
-			label: 'Show this field', always: true,
-			apply: (value, nextRules) => updateWith(p => setOrDelete(p, 'showWhen', value), nextRules)
+		property.ui?.widget === 'hidden' ? null : showPicker(editor, property, {
+			label: 'Show this field',
+			apply: (values, nextRules) => updateWith(p => writeWhen(p, values), nextRules)
 		}),
 		settings.has('choices') && property.type === 'select' ? choicesEditor(property, numeric, update) : null,
 		settings.has('default') ? field(property.ui?.widget === 'hidden' ? 'Value' : 'Starts with', h('input', {

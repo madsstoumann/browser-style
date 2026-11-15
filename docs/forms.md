@@ -462,9 +462,30 @@ The engine returns the chosen choice's note as `state.notes.thcLevel` (a list fo
 
 The engine runs it as a rule of its own, `showWhen:<field>` (`showWhen:step:<step>` for a step), which hides the field (skips the step) while the condition is false. Since it is a rule like any other, hidden is absent, `explain` names it, `matched` lists it while it hides, a server re-check applies it, and a rule of higher priority can still show the field.
 
+**visibleWhen: the content models' condition.** Any field, row field of a repeating group, step or panel can also say when it shows with `visibleWhen`, the condition a CMS field uses in the content models ([UCM "Conditional fields"](https://github.com/madsstoumann/universal-content-model/blob/main/docs/UCM.md)). It needs no JSON Logic:
+
+```json
+"licenseYears": { "type": "select", "visibleWhen": { "all": [{ "field": "drug", "is": "cannabis" }, { "field": "thcLevel", "in": ["medium", "high"] }] } }
+```
+
+| Test | Holds when |
+|---|---|
+| `{ "field": "x", "is": v }`, `"in": [..]`, `"notIn": [..]` | the answer is that value, one of them, none of them (an empty answer is none of them). On a multiple choice, any chosen value counts |
+| `{ "field": "x", "empty": true }` / `false` | there is no answer: nothing, text of only spaces, or an empty list (0 and "no" are answers) |
+| `{ "field": "x", "gt": 1 }`, `gte`, `lt`, `lte` | the answer is a number above, at least, below, at most that one |
+| `{ "field": "x", "contains": "t" }`, `startsWith`, `endsWith` | the answer is text that holds, starts with, ends with that text, in any case; `"matchCase": true` tells case apart |
+| `{ "all": [..] }`, `{ "any": [..] }`, `{ "not": .. }` | every one, at least one, not |
+| `"isSenior"` | the named condition holds |
+
+- The engine runs it as a rule of its own, `visibleWhen:<field>` (`visibleWhen:step:<step>`; a row field's is a row rule, `visibleWhen:<list>.<item>`, reading its own row), exactly like `showWhen`. With both on one field, both must hold.
+- Values compare as the CMS compares them, as text: `"is": 3` and `"is": "3"` are the same test. `fixtures/visible-when/conformance.json` (copied from universal-content-model) holds the engine to the CMS reading on 620 cases.
+- A form fails closed: a condition the engine cannot read hides its field, where a CMS would show it. `validate()` names the mistake: a shape it does not know, a value a choice does not offer, a number test on what is not a number, a text test on what is not text, a field that is not there, and a condition that reads only the field it hides.
+- `field` names a form field by its id; there are no objects to read into, so a dot is part of the id (a patch field, `offers.extra`).
+- `visibleWhenLogic(condition, { base })` gives the JSON Logic it runs as, and `visibleWhenProblems()` what validate() says about it.
+
 **Conditions by name.** `when` and `showWhen` take the name of a [named condition](#named-conditions) (`"lowThc"`, read as `vars.lowThc === true`) or JSON Logic. Write names: the form definition is what gets translated per language in the CMS, so a translation then carries only texts and names, and fixing a condition fixes it in every language.
 
-**In the editor.** Each choice row has **Text shown when chosen**. A text block has **Texts that depend on the answers**: "+ Case" adds a row reading *When [named condition] Show: [text]*, with **Show** set to every matching text or only the first, and the block's own text becomes the text when no case matches. Every field and step has **Show this field** (or step): *Always* or a named condition. The pickers list the named conditions by title; **+ New named condition…** asks for a name and adds one to the rule set, and **Edit "…"** below the picker builds it with the same pickers as a rule's When (changing it there changes it everywhere). A condition written as JSON Logic shows as "A condition of its own", with **Save as named condition…**. Deleting a named condition lists the fields and steps that still use it, and renaming a field updates the conditions on the form.
+**In the editor.** Each choice row has **Text shown when chosen**. A text block has **Texts that depend on the answers**: "+ Case" adds a row reading *When [named condition] Show: [text]*, with **Show** set to every matching text or only the first, and the block's own text becomes the text when no case matches. Every field, step and panel has **Show this field** (or step, or panel): *Always*, **When…** or a named condition. **When…** draws the same rows as a rule's When and writes them as `visibleWhen`; a row that compares with another field, a variable or a context value makes it a condition of its own (JSON Logic in `showWhen`), and **Save as named condition…** names it. The pickers list the named conditions by title; **+ New named condition…** asks for a name and adds one to the rule set, and **Edit "…"** below the picker builds it with the same pickers as a rule's When (changing it there changes it everywhere). A condition written as JSON Logic shows as "A condition of its own", with **Save as named condition…**. Deleting a named condition lists the fields and steps that still use it, and renaming a field updates the conditions on the form.
 
 `validate()` reports a case without a condition or text, an unknown named condition, a `show` other than all or first, cases on anything but a text block, and placeholders in notes and cases that read nothing. `conditionOf`, `implicitRules`, `matchingCases`, `noteOf` and `textData(state, { context, facts })` (the data `fillText` needs, with notes) are exported.
 

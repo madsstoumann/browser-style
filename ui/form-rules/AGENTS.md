@@ -19,7 +19,8 @@ Design proposal: "Rule engine for multi-step forms" (claude.ai artifact, Forms p
 | `modules/events.js` | `handleEvent()`: facts, rule set replacement, event patches |
 | `modules/session.js` | Session helpers: `createSession`, `snapshot` (never special or file values), `resume`, … |
 | `modules/types.js` | Field types as data: `defineTypes`, `loadTypes`, `loadPackages`, `typeOf`, `fieldFromType`, `changeType`, `searchTypes`. Core package in `types/core.json`; country packages live in `ui/form-types/*` |
-| `modules/show.js` | Texts that follow the answers: `conditionOf` (named condition or JSON Logic), `implicitRules` (showWhen as rules), `matchingCases`, `noteOf` |
+| `modules/show.js` | Texts that follow the answers: `conditionOf` (named condition or JSON Logic), `implicitRules` (showWhen and visibleWhen as rules), `matchingCases`, `noteOf` |
+| `modules/visible-when.js` | The content models' `visibleWhen` grammar: `visibleWhenLogic` (to JSON Logic, every spelling a CMS counts as the same value), `visibleWhenProblems` (validate's checks). Held to `fixtures/visible-when/conformance.json`, a copy of universal-content-model's; copy it again when UCM changes the grammar |
 | `modules/consent.js` | `consentRecords()`: what each ticked consent field said |
 
 ## Invariants
