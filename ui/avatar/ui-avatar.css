@@ -11,6 +11,13 @@
 	initial-value: 0;
 }
 
+/* One computed plate colour per avatar, so random() is rolled once for background AND ink. Docs: readme.md § Colors */
+@property --_plate {
+	syntax: '<color>';
+	inherits: false;
+	initial-value: transparent;
+}
+
 @layer bs-component {
 	:where(ui-avatar) {
 		/* The random hue is the FALLBACK PLATE — it shows when a photo fails, and behind the
@@ -21,15 +28,16 @@
 		   invalid at computed-value time (i.e. transparent) and var()'s own fallback never
 		   fires. Gated, the `var(--color-button)` below is reached and every engine gets a
 		   plate. Docs: readme.md */
-		@supports (color: oklch(0.5 0.25 random(auto, 0, 360))) {
-			--ui-avatar-background: oklch(0.5 0.25 random(auto, 0, 360));
+		@supports (color: oklch(0.45 0.25 random(auto, 0, 360))) {
+			--ui-avatar-background: oklch(0.45 0.25 random(auto, 0, 360));
 		}
+		--_plate: var(--ui-avatar-background, var(--color-button));
 		aspect-ratio: 1 / 1;
-		background: var(--ui-avatar-background, var(--color-button));
+		background: var(--_plate);
 		block-size: var(--ui-avatar-size, 4em);
 		border: var(--ui-avatar-border-width, var(--border-width-thick)) solid var(--ui-avatar-border-color, var(--color-surface-alt));
 		border-radius: var(--ui-avatar-border-radius, var(--radius-circle));
-		color: var(--ui-avatar-color, contrast-color(var(--ui-avatar-background)));
+		color: var(--ui-avatar-color, contrast-color(var(--_plate)));
 		container-type: inline-size;
 		display: grid;
 		place-content: center;
@@ -147,7 +155,7 @@
 			--_is-counter: calc(1 - clamp(0, abs(sibling-index() - var(--_max) - 1), 1));
 			--_show-counter: calc(var(--_is-counter) * var(--_has-overflow));
 
-			background: color-mix(in oklch, var(--ui-avatar-background) calc((1 - var(--_show-counter)) * 100%), transparent calc(var(--_show-counter) * 100%));
+			background: color-mix(in oklch, var(--_plate) calc((1 - var(--_show-counter)) * 100%), transparent calc(var(--_show-counter) * 100%));
 			block-size: calc(var(--ui-avatar-size, 4em) * (1 - var(--_hidden)));
 			border-width: calc(var(--ui-avatar-border-width, var(--border-width-thick)) * (1 - var(--_hidden)));
 			counter-set: overflow calc(sibling-count() - var(--_max) - 1);

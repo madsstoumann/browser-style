@@ -376,7 +376,7 @@ The `overflow` attribute applies a neutral background and muted text color, matc
 
 | Token | Default | Description |
 |-------|---------|-------------|
-| `--ui-avatar-background` | `oklch(0.65 0.25 random(...))` | Background color (random per element) |
+| `--ui-avatar-background` | `oklch(0.45 0.25 random(...))` | Background color (random per element) |
 | `--ui-avatar-border-width` | `var(--border-width-thick, 2px)` | Border width |
 | `--ui-avatar-border-radius` | `50%` | Border radius |
 | `--ui-avatar-color` | `contrast-color(...)` | Text color (auto-contrast) |
@@ -389,6 +389,14 @@ The `overflow` attribute applies a neutral background and muted text color, matc
 | `--ui-avatar-status-size` | `20cqi` | Status indicator size |
 | `--ui-avatar-status-border-width` | `3cqi` | Status indicator border |
 | `--ui-avatar-status-inset` | `2cqi` | Status indicator position |
+
+### Colors
+
+The plate (`--ui-avatar-background`, default a random hue) is resolved once into a registered, non-inheriting `--_plate: <color>`, and both `background` and the `contrast-color()` ink read that. This matters because `random()` inside an unregistered custom property is only a token stream: every property that consumes it rolls its own value, so `background` and `color` used to get *different* hues, and the ink was picked for a colour that was not on screen (Lighthouse flagged black initials on magenta at 3.3:1). Registering the property computes the colour once per element.
+
+The random plate's lightness is `0.45`. At `0.5` (with chroma 0.25, gamut-clipped to sRGB) white text drops to 4.35:1 on teal/green hues; at `0.45` the worst hue is 5.36:1, so the initials pass WCAG AA on every hue.
+
+Initials sit in the same grid cell as the photo, under it. A lazy photo that has not loaded yet (or has failed) paints nothing, so the initials are what users and contrast checkers actually see — they must pass on their own, not rely on the photo covering them.
 
 ### Example: custom size and colors
 
