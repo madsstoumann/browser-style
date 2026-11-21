@@ -20,9 +20,9 @@ const CARTO = `${OSM} &copy; <a href="https://carto.com/attributions">CARTO</a>`
    without one. `osm` is dev/self-host only — the OSMF tile policy forbids a library
    defaulting to it. KEEP IN SYNC with map=tiles in ui/card/data/tokens.json. */
 export const TILES = {
-	positron: { url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', maxZoom: 20, subdomains: 'abcd', attribution: CARTO },
-	dark: { url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', maxZoom: 20, subdomains: 'abcd', attribution: CARTO },
-	voyager: { url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', maxZoom: 20, subdomains: 'abcd', attribution: CARTO },
+	positron: { carto: true, url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', maxZoom: 20, subdomains: 'abcd', attribution: CARTO },
+	dark: { carto: true, url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', maxZoom: 20, subdomains: 'abcd', attribution: CARTO },
+	voyager: { carto: true, url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', maxZoom: 20, subdomains: 'abcd', attribution: CARTO },
 	osm: { url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png', maxZoom: 19, subdomains: 'abc', attribution: OSM },
 	topo: { url: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', maxZoom: 17, subdomains: 'abc', attribution: `${OSM} · map style &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)` },
 	/* note {z}/{y}/{x} — Esri puts y before x */
@@ -90,8 +90,13 @@ export function createMap(canvas, config, points) {
 		zoomAnimation: !still
 	});
 
-	const layer = L.tileLayer(tiles.url, {
+	/* CARTO raster needs ?key= since 2026-09-25; a domain-restricted key also needs a Referer,
+	   which the demo pages' no-referrer meta strips. Docs: readme.md § Tiles */
+	const key = canvas.ownerDocument.querySelector('meta[name="ui-map-carto-key"]')?.content.trim();
+	const keyed = (record) => (record.carto && key ? `${record.url}?key=${encodeURIComponent(key)}` : record.url);
+	const layer = L.tileLayer(keyed(tiles), {
 		attribution: tiles.attribution,
+		referrerPolicy: key ? 'strict-origin-when-cross-origin' : false,
 		detectRetina: true,
 		maxZoom: tiles.maxZoom,
 		subdomains: tiles.subdomains || 'abc'
@@ -120,7 +125,7 @@ export function createMap(canvas, config, points) {
 		map.attributionControl.removeAttribution(current.attribution);
 		map.attributionControl.addAttribution(next.attribution);
 		current = next;
-		layer.setUrl(next.url);
+		layer.setUrl(keyed(next));
 	};
 	if (config.tiles === 'auto') {
 		watch = matchMedia('(prefers-color-scheme: dark)');

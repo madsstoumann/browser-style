@@ -88,8 +88,17 @@ the attribution control — it must not be spellable in the DSL.
 | `tiles(auto)` | positron or dark, following the colour scheme | — |
 
 `positron`, `dark` and `voyager` are the **raster twins** of the Positron, Dark Matter and
-Voyager styles on [openmaptiles.org](https://openmaptiles.org/styles/) — those are MapLibre
-*vector* styles and need an API key; these do not.
+Voyager styles on [openmaptiles.org](https://openmaptiles.org/styles/).
+
+> **CARTO needs a key since 25 September 2026.** Without one, every `positron`, `dark` and
+> `voyager` tile (and so `tiles(auto)`) is a single "API KEY REQUIRED" image
+> ([CARTO Basemaps FAQ](https://docs.carto.com/faqs/carto-basemaps)). Put the key on the page as
+> `<meta name="ui-map-carto-key" content="…">` and the engine appends `?key=` to the CARTO URLs;
+> with no meta nothing changes. The key is public once set (it is in every tile URL), so restrict
+> it to your hosts in the CARTO dashboard. A host-restricted key checks the Referer, so when the
+> key is present the tiles get `referrerpolicy="strict-origin-when-cross-origin"`, which overrides
+> a page-level `no-referrer`. On browser.style the meta is hardcoded in the three schema demo
+> pages (`ui/card/demo/schema*.html`); the key is host-restricted in the CARTO dashboard.
 
 > **`tiles(osm)` is not a production default.** The
 > [OSMF Tile Usage Policy](https://operations.osmfoundation.org/policies/tiles/) forbids a
