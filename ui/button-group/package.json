@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/button-group",
-  "version": "4.1.0",
+  "version": "4.1.0-next.0",
   "description": "CSS-first segmented control — a group of .ui-button labels in a fieldset",
   "type": "module",
   "style": "index.css",
@@ -9,7 +9,8 @@
       "style": "./index.css"
     },
     "./style": "./index.css",
-    "./index.css": "./index.css"
+    "./index.css": "./index.css",
+    "./ui-button-group.css": "./ui-button-group.css"
   },
   "files": [
     "index.css",
@@ -17,7 +18,8 @@
   ],
   "publishConfig": {
     "access": "public",
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://registry.npmjs.org/",
+    "tag": "next"
   },
   "keywords": [
     "browser.style",
@@ -34,6 +36,6 @@
   },
   "homepage": "https://browser.style/ui/button-group",
   "peerDependencies": {
-    "@browser.style/base": "^1.0.11"
+    "@browser.style/base": "^2.0.0-next.0"
   }
 }

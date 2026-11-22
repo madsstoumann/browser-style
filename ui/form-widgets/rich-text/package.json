@@ -14,9 +14,9 @@
     "readme.md"
   ],
   "peerDependencies": {
-    "@browser.style/form-flow": "^0.1.0",
-    "@browser.style/form-rules": "^0.1.0",
-    "@browser.style/rich-text": "^1.0.0"
+    "@browser.style/form-flow": "^0.1.0-next.0",
+    "@browser.style/form-rules": "^0.1.0-next.0",
+    "@browser.style/rich-text": "^1.0.16"
   },
   "publishConfig": {
     "access": "public",

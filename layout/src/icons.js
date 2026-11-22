@@ -42,7 +42,8 @@ export function buildIcons(layoutsDir, outputDir, gap = 2, borderRadius = 4) {
 				icons.forEach((icon, index) => {
 					const layout = data.layouts[index]
 					const layoutId = layout?.id || (index + 1)
-					const fileName = `${prefix}(${layoutId}).svg`
+					/* npm cannot pack a `*` in a file name: stack(*) is stack.svg */
+					const fileName = layoutId === '*' ? `${prefix}.svg` : `${prefix}(${layoutId}).svg`
 					const svgPath = path.join(outputDir, fileName)
 					fs.writeFileSync(svgPath, icon)
 				})

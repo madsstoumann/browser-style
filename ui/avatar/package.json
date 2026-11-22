@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/avatar",
-  "version": "4.0.0",
+  "version": "4.0.0-next.0",
   "description": "CSS-first avatar component with random colors, shape variants, and group layouts",
   "type": "module",
   "module": "index.js",
@@ -11,7 +11,8 @@
       "style": "./index.css"
     },
     "./style": "./index.css",
-    "./index.css": "./index.css"
+    "./index.css": "./index.css",
+    "./ui-avatar.css": "./ui-avatar.css"
   },
   "files": [
     "index.js",
@@ -20,7 +21,8 @@
   ],
   "publishConfig": {
     "access": "public",
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://registry.npmjs.org/",
+    "tag": "next"
   },
   "keywords": [
     "browser.style",
@@ -39,6 +41,6 @@
   },
   "homepage": "https://browser.style/ui/avatar",
   "peerDependencies": {
-    "@browser.style/base": "^1.0.11"
+    "@browser.style/base": "^2.0.0-next.0"
   }
 }

@@ -45,7 +45,7 @@ grouped by role. Paths are relative to `ui/`, matching how the demos link them
 | `ui/breadcrumbs` | `<ol data-breadcrumbs>` — the page trail on `schema.html` and every generated single-entity page, carrying `BreadcrumbList` microdata (`demo/build.shared.js` § `breadcrumb()`). Linked by the demos but **not** a declared peer of `@browser.style/card` — it is page furniture, not card markup | `breadcrumbs/ui-breadcrumbs.css` |
 | `ui/button-group` | `<ui-button-group>` · `.ui-button-group` — the product-page size picker (`details.variants.control: "buttons"`); the card emits the `<fieldset class="ui-button-group">` form, so `data-variant=`/`data-theme=` | `button-group/ui-button-group.css` |
 | `ui/gradient-text` | `<ui-gradient-text>` | `gradient-text/ui-gradient-text.css` |
-| `ui/highlight` | `<high-light>` — pen-marker highlight on inline text. **No `package.json` yet** — repo-only; it cannot be npm-installed and is not a declared peer | `highlight/ui-highlight.css` |
+| `ui/highlight` | `<high-light>` — pen-marker highlight on inline text. `@browser.style/highlight`; not (yet) a declared peer of `@browser.style/card` | `highlight/ui-highlight.css` |
 | `ui/icon` | `<ui-icon>` — reveal + accordion toggles | `icon/index.css` |
 | `ui/progress` | bare `<progress>` — poll / comparison parts | `progress/ui-progress.css` |
 | `ui/progress-circular` | `<ui-progress-circular>` — goal rings on `demo/schema.goals.html` | `progress-circular/ui-progress-circular.css` |

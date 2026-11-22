@@ -1,0 +1,41 @@
+{
+  "name": "@browser.style/step",
+  "version": "1.0.0-next.0",
+  "description": "Numbered steps for a multi-step flow, as a class-based sheet (.ui-step). <form-embed> loads it beside itself. Not yet converted to v4 attributes.",
+  "type": "module",
+  "style": "index.css",
+  "exports": {
+    ".": {
+      "style": "./index.css"
+    },
+    "./style": "./index.css",
+    "./index.css": "./index.css",
+    "./ui-step.css": "./ui-step.css"
+  },
+  "files": [
+    "index.css",
+    "ui-step.css"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/",
+    "tag": "next"
+  },
+  "keywords": [
+    "browser.style",
+    "steps",
+    "progress",
+    "css-first"
+  ],
+  "author": "Mads Stoumann",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/step"
+  },
+  "homepage": "https://browser.style/ui/step",
+  "peerDependencies": {
+    "@browser.style/base": "^2.0.0-next.0"
+  }
+}

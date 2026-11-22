@@ -182,8 +182,10 @@ cd layout && npm run build:all                                # CSS + maps + dem
 | **CMS editors** (`cms/editors/`) | editor-card, editor-csp, editor-manifest |
 | **Interactive** | piano-keys, rich-text, xy, color-picker, color-palette |
 
-A `ui/` directory is only a package if it has a `package.json` — 46 of ~194 do. The rest are
-unconverted v3 components (see § Legacy) or docs-only folders.
+A `ui/` directory is only a package if it has a `package.json` — 57 of ~194 do. The rest are
+unconverted v3 components (see § Legacy) or docs-only folders. Two packages are unconverted on
+purpose: `ui/footer` and `ui/step` keep their class-based sheets (`.ui-footer`, `.ui-step`), packaged
+because the cms and `<form-embed>` load them; converting them is the `convert-to-v4` skill.
 
 ## v4 component conventions
 

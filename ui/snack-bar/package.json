@@ -16,7 +16,7 @@
     "index.css"
   ],
   "dependencies": {
-    "@browser.style/common": "^1.0.1"
+    "@browser.style/common": "^1.0.13-next.0"
   },
   "publishConfig": {
     "access": "public",

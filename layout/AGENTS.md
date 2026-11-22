@@ -576,6 +576,25 @@ What the contract actually consists of:
 </lay-out>
 ```
 
+### A project's own config, from the installed package
+
+A config may sit anywhere. `core/` and `layouts/` are read from beside it when they exist there, and from
+the package otherwise (`src/builder.js` `defaultDir`), so a project keeps only its config:
+
+```bash
+npx browser-style-layout --config ./layout.config.json --output ./dist/layout.css
+```
+
+```javascript
+import { buildLayout } from '@browser.style/layout/builder'
+const { css } = await buildLayout({ configPath: './layout.config.json', outputPath: './dist/layout.css' })
+```
+
+A breakpoint can list single tokens instead of whole families, keyed by the layout's file name:
+`{ "ratios": ["ratio(66:33)"], "autofit": ["auto(fit)"] }`. The rule uses the token's own prefix
+(`ratio`, `auto`, `asym`). `layout.min.css` needs `postcss` and `cssnano` in the project; without them
+the CLI writes `layout.css` only.
+
 ## Build Commands
 
 ```bash

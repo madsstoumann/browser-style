@@ -17,7 +17,7 @@
     "modules/*.js"
   ],
   "dependencies": {
-    "@browser.style/common": "^1.0.1"
+    "@browser.style/common": "^1.0.13-next.0"
   },
   "publishConfig": {
     "access": "public",
@@ -44,7 +44,7 @@
   "homepage": "https://browser.style/ui/data/entry",
   "customElements": "custom-elements.json",
   "peerDependencies": {
-    "@browser.style/base": "^1.0.11",
-    "@browser.style/icon": "^4.0.0"
+    "@browser.style/base": "^2.0.0-next.0",
+    "@browser.style/icon": "^4.1.0-next.0"
   }
 }

@@ -1,0 +1,41 @@
+{
+  "name": "@browser.style/highlight",
+  "version": "1.0.0-next.0",
+  "description": "CSS-only pen-marker highlight: wrap inline text in <high-light> for a feathered highlighter sweep, named presets or any CSS colour, auto-contrast ink. Zero JavaScript.",
+  "type": "module",
+  "style": "index.css",
+  "exports": {
+    ".": {
+      "style": "./index.css"
+    },
+    "./style": "./index.css",
+    "./index.css": "./index.css",
+    "./ui-highlight.css": "./ui-highlight.css"
+  },
+  "files": [
+    "index.css",
+    "ui-highlight.css"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/",
+    "tag": "next"
+  },
+  "keywords": [
+    "browser.style",
+    "highlight",
+    "marker",
+    "css-first"
+  ],
+  "author": "Mads Stoumann",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/highlight"
+  },
+  "homepage": "https://browser.style/ui/highlight",
+  "peerDependencies": {
+    "@browser.style/base": "^2.0.0-next.0"
+  }
+}

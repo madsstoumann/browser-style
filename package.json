@@ -22,9 +22,12 @@
     "dev:demo": "node scripts/dev-demo.js",
     "test": "npm run test --workspaces --if-present",
     "publish-all": "read -p 'OTP: ' otp && node scripts/publish.js $otp",
+    "publish-next": "read -p 'OTP: ' otp && node scripts/publish-next.js --otp $otp",
+    "pack-next": "node scripts/publish-next.js --check",
     "test-packages": "node scripts/test-packages.js",
     "update-peers": "node scripts/update-peer-deps.js",
     "version-all": "npm version patch --workspaces && node scripts/update-peer-deps.js",
     "build:docs": "npm run build -w @browser.style/baseline"
-  }
+  },
+  "version": ""
 }

@@ -13,6 +13,7 @@
     },
     "./style": "./index.css",
     "./index.css": "./index.css",
+    "./ui-energy.css": "./ui-energy.css",
     "./data/scales.json": "./data/scales.json"
   },
   "files": [
@@ -41,6 +42,6 @@
   },
   "homepage": "https://browser.style/ui/energy",
   "peerDependencies": {
-    "@browser.style/base": "^1.0.11"
+    "@browser.style/base": "^2.0.0-next.0"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/lightbox",
-  "version": "1.1.0",
+  "version": "1.1.0-next.0",
   "description": "View-gallery / fullscreen lightbox toggle — an invoker button + ui-icon grid glyph that lifts a ui-media popover frame into the top layer",
   "type": "module",
   "module": "index.js",
@@ -21,7 +21,8 @@
   ],
   "publishConfig": {
     "access": "public",
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://registry.npmjs.org/",
+    "tag": "next"
   },
   "keywords": [
     "browser.style",
@@ -41,8 +42,8 @@
   },
   "homepage": "https://browser.style/ui/lightbox",
   "peerDependencies": {
-    "@browser.style/base": "^1.0.11",
-    "@browser.style/common": "^1.0.13",
-    "@browser.style/icon": "^4.0.0"
+    "@browser.style/base": "^2.0.0-next.0",
+    "@browser.style/common": "^1.0.13-next.0",
+    "@browser.style/icon": "^4.1.0-next.0"
   }
 }

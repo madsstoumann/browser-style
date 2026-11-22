@@ -11,7 +11,8 @@
       "style": "./index.css"
     },
     "./style": "./index.css",
-    "./index.css": "./index.css"
+    "./index.css": "./index.css",
+    "./ui-breadcrumbs.css": "./ui-breadcrumbs.css"
   },
   "files": [
     "index.js",
@@ -38,6 +39,6 @@
   },
   "homepage": "https://browser.style/ui/breadcrumbs",
   "peerDependencies": {
-    "@browser.style/base": "^1.0.11"
+    "@browser.style/base": "^2.0.0-next.0"
   }
 }

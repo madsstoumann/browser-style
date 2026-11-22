@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/base",
-  "version": "1.0.11",
+  "version": "2.0.0-next.0",
   "style": "./dist/base.css",
   "exports": {
     ".": {
@@ -26,7 +26,9 @@
     "./utility.css": "./utility.css",
     "./webcomponents.css": "./webcomponents.css",
     "./assets/*": "./assets/*",
-    "./polyfills/*": "./polyfills/*"
+    "./polyfills/*": "./polyfills/*",
+    "./palette.json": "./palette.json",
+    "./palette.rules.json": "./palette.rules.json"
   },
   "scripts": {
     "build": "node ../../scripts/css-bundle.js . index.css base"
@@ -34,11 +36,15 @@
   "files": [
     "dist/",
     "*.css",
-    "assets/**/*"
+    "assets/**/*",
+    "polyfills/",
+    "palette.json",
+    "palette.rules.json"
   ],
   "publishConfig": {
     "access": "public",
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://registry.npmjs.org/",
+    "tag": "next"
   },
   "repository": {
     "type": "git",

@@ -1,0 +1,40 @@
+{
+  "name": "@browser.style/footer",
+  "version": "1.0.0-next.0",
+  "description": "Site footer: link columns, a bottom row and a sign-off, as a class-based sheet (.ui-footer). Not yet converted to v4 attributes.",
+  "type": "module",
+  "style": "index.css",
+  "exports": {
+    ".": {
+      "style": "./index.css"
+    },
+    "./style": "./index.css",
+    "./index.css": "./index.css",
+    "./ui-footer.css": "./ui-footer.css"
+  },
+  "files": [
+    "index.css",
+    "ui-footer.css"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/",
+    "tag": "next"
+  },
+  "keywords": [
+    "browser.style",
+    "footer",
+    "css-first"
+  ],
+  "author": "Mads Stoumann",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/footer"
+  },
+  "homepage": "https://browser.style/ui/footer",
+  "peerDependencies": {
+    "@browser.style/base": "^2.0.0-next.0"
+  }
+}

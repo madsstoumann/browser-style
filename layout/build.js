@@ -4,8 +4,6 @@ import { LayoutBuilder } from './src/builder.js'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { existsSync, writeFileSync, readFileSync } from 'fs'
-import postcss from 'postcss'
-import cssnano from 'cssnano'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -49,7 +47,13 @@ async function build() {
 		const builder = new LayoutBuilder(configPath, layoutsDir, outputPath)
 		await builder.build(false)
 
-		// Generate minified version
+		// Generate minified version — postcss and cssnano are dev dependencies, so a project that installed the package may not have them
+		const minifier = await Promise.all([import('postcss'), import('cssnano')]).catch(() => null)
+		if (!minifier) {
+			console.log('  (no postcss/cssnano installed: layout.min.css skipped)\n')
+			return
+		}
+		const [{ default: postcss }, { default: cssnano }] = minifier
 		const css = readFileSync(outputPath, 'utf8')
 		const result = await postcss([
 			cssnano({ preset: ['cssnano-preset-advanced', {

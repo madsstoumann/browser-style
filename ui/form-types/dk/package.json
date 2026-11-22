@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/form-types-dk",
-  "version": "0.1.0",
+  "version": "0.1.0-next.0",
   "description": "Danish field types for @browser.style/form-rules: CPR and CVR numbers with their checks.",
   "type": "module",
   "module": "functions.js",
@@ -14,11 +14,12 @@
     "readme.md"
   ],
   "peerDependencies": {
-    "@browser.style/form-rules": "^0.1.0"
+    "@browser.style/form-rules": "^0.1.0-next.0"
   },
   "publishConfig": {
     "access": "public",
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://registry.npmjs.org/",
+    "tag": "next"
   },
   "keywords": [
     "browser.style",

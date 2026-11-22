@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/icon",
-  "version": "4.1.0",
+  "version": "4.1.0-next.0",
   "description": "CSS-first icon component with animated state transitions",
   "type": "module",
   "style": "index.css",
@@ -10,6 +10,7 @@
     },
     "./style": "./index.css",
     "./index.css": "./index.css",
+    "./ui-icon.css": "./ui-icon.css",
     "./icon-font.css": "./icon-font.css",
     "./icons.json": "./icons.json",
     "./icons.data.js": "./icons.data.js"
@@ -23,7 +24,8 @@
   ],
   "publishConfig": {
     "access": "public",
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://registry.npmjs.org/",
+    "tag": "next"
   },
   "keywords": [
     "browser.style",
@@ -41,7 +43,7 @@
   },
   "homepage": "https://browser.style/ui/icon",
   "peerDependencies": {
-    "@browser.style/base": "^1.0.11"
+    "@browser.style/base": "^2.0.0-next.0"
   },
   "scripts": {
     "build:icons": "python3 icons.build.py"

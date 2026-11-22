@@ -21,6 +21,9 @@ const getPackages = async () => {
     }
   }
 
+  // the layout package sits at the repo root
+  packages.push('layout');
+
   const editorsDir = join(__dirname, '..', 'cms', 'editors');
   try {
     const editorsDirs = await readdir(editorsDir, { withFileTypes: true });

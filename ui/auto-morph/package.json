@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/auto-morph",
-  "version": "1.0.0",
+  "version": "1.0.0-next.0",
   "description": "Generic container-query wrapper that morphs descendants between renderer modes (tabs ↔ accordion, etc.) at a breakpoint",
   "type": "module",
   "style": "index.css",
@@ -9,7 +9,8 @@
       "style": "./index.css"
     },
     "./style": "./index.css",
-    "./index.css": "./index.css"
+    "./index.css": "./index.css",
+    "./auto-morph.css": "./auto-morph.css"
   },
   "files": [
     "index.css",
@@ -17,7 +18,8 @@
   ],
   "publishConfig": {
     "access": "public",
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://registry.npmjs.org/",
+    "tag": "next"
   },
   "keywords": [
     "browser.style",
