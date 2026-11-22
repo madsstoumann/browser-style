@@ -13,7 +13,8 @@
   "description": "Common components for browser.style",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/madsstoumann/browser-style.git"
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/common"
   },
   "keywords": [
     "browser.style"

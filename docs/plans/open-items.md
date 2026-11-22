@@ -122,7 +122,11 @@ across **every** package — only the card orbit has been checked.
 packs every package that carries `publishConfig.tag: "next"` (37 of them) and fails when an
 `exports`, `main`, `module` or `style` target is missing from the tarball. Run it before every
 `npm run publish-next`; `npm.md` § Prereleases has the workflow. Packages outside the `next` set
-(the unconverted ones with a `package.json`) are still unchecked.
+(the unconverted ones with a `package.json`) are still unchecked. `ui/footer` and `ui/step` are in the
+set unconverted: class-based sheets, packaged because the cms and `<form-embed>` load them. And
+`<form-embed>` finds `../step/ui-step.css` and `../../form-types/<x>/functions.js` by their place in
+this repo, which `node_modules` does not reproduce (`@browser.style/form-types-dk`), so an npm
+consumer copies the tree back into that layout (the cms does, by each package's `repository.directory`).
 
 ## 4. Design call — per-element axis maps for `pll` / `non`
 

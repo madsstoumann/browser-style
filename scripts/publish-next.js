@@ -17,7 +17,10 @@ if (!otp && !args.includes('--check')) {
 	process.exit(1);
 }
 
-const dirs = ['layout', ...readdirSync(join(root, 'ui')).map((d) => `ui/${d}`)]
+/* every workspace of the root package.json (`ui/*`, `layout`, `ui/form-types/*`, …), as update-peer-deps.js reads them */
+const dirs = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8')).workspaces
+	.flatMap((pattern) => !pattern.endsWith('/*') ? [pattern]
+		: existsSync(join(root, pattern.slice(0, -2))) ? readdirSync(join(root, pattern.slice(0, -2))).map((d) => `${pattern.slice(0, -2)}/${d}`) : [])
 	.filter((d) => existsSync(join(root, d, 'package.json')));
 const packages = dirs
 	.map((dir) => ({ dir, pkg: JSON.parse(readFileSync(join(root, dir, 'package.json'), 'utf8')) }))

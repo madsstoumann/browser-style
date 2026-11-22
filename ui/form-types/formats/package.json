@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/form-types-formats",
-  "version": "0.1.0",
+  "version": "0.1.0-next.0",
   "description": "Format field types for @browser.style/form-rules: ISBN, GTIN/EAN, IPv4, UUID and colour, with their checks.",
   "type": "module",
   "module": "functions.js",
@@ -18,7 +18,8 @@
   },
   "publishConfig": {
     "access": "public",
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://registry.npmjs.org/",
+    "tag": "next"
   },
   "keywords": [
     "browser.style",
