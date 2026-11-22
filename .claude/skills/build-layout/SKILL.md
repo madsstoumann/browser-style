@@ -49,7 +49,8 @@ Goal: a `layout.config.json` that generates only the tokens a project's markup u
 3. **Draft the minimal config.** Per breakpoint, use the object form for sparse usage
    (`{ "grid": ["grid(3a)"] }`) and a bare family string only when most of a family's
    variants are used. **The object key is the JSON filename** — `asymmetrical`, `autofit`,
-   `ratios` — not the token prefix.
+   `ratios` — not the token prefix; the rule it emits uses the prefix (`ratio(66:33)`). Until
+   2026-11-22 it used the file name, so a single `ratio`, `auto` or `asym` token matched nothing.
 
 4. **Trim spacing** to the breakpoints and steps actually used, via `spacing.breakpoints`
    and `spacing.tokens` (or a per-breakpoint `spacing` override; `[]` disables).
@@ -68,12 +69,10 @@ Goal: a `layout.config.json` that generates only the tokens a project's markup u
 
 ## Sharp edges
 
-- **A project-local config with no sibling `core/` builds engine-less CSS.** `coreDir`
-  defaults to `dirname(configPath) + '/core'`; if it is missing the builder only logs
-  `⚠ CSS file not found` and still "succeeds" — you get selector rules with no `lay-out`
-  base rule, so nothing lays out. Either keep the config next to the package `core/`, or
-  call `buildLayout({ configPath, coreDir })` programmatically with an explicit `coreDir`.
-  **Grep the output for the engine before believing a local build.**
+- **A project-local config reads the package's `core/` and `layouts/`** when none sit beside
+  it (`src/builder.js` `defaultDir`, since 2026-11-22). Before that it built engine-less CSS
+  (selector rules, no `lay-out` base rule) and only logged `⚠ CSS file not found`. Still grep
+  the output for the engine before believing a local build.
 - **`build:maps` needs a width for every breakpoint** — it reads `min ?? srcsetMin`. The
   mobile-first base has no `min`, so it must declare `srcsetMin` (shipped: `"240px"`) or
   the srcset map is wrong. `srcsetConfig` (flat) and `layoutConfig` (nested) are different

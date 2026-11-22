@@ -14,6 +14,12 @@ const __dirname = path.dirname(__filename)
  * floor. Only the columns() family is normalised: the pattern layouts (grid/bento/mosaic)
  * intentionally size some tracks to their content.
  */
+/* A project's config may sit without core/ or layouts/ beside it: fall back to the package's own (layout/AGENTS.md § Custom Configuration). */
+const defaultDir = (configPath, name) => {
+	const local = path.join(path.dirname(configPath), name)
+	return fs.existsSync(local) ? local : path.join(__dirname, '..', name)
+}
+
 const equalTracks = (tracks) => tracks.replace(/(^|\s)1fr(?=\s|$)/g, '$1minmax(0, 1fr)')
 
 export class LayoutBuilder {
@@ -21,7 +27,7 @@ export class LayoutBuilder {
 		this.configPath = configPath
 		this.layoutsDir = layoutsDir
 		this.outputPath = outputPath
-		this.coreDir = coreDir || path.join(path.dirname(configPath), 'core')
+		this.coreDir = coreDir || defaultDir(configPath, 'core')
 		this.config = null
 		this.layouts = new Map()
 		this.cssRules = new Map()
@@ -331,7 +337,7 @@ export class LayoutBuilder {
 		if (processedLayouts.has(key)) return
 		processedLayouts.add(key)
 
-		this.generateLayoutCSS(layout, layoutName, layoutId, breakpointName, mediaQuery, processedGlobalRules)
+		this.generateLayoutCSS(layout, this.layouts.get(`${layoutName}_prefix`) || layoutName, layoutId, breakpointName, mediaQuery, processedGlobalRules)
 	}
 
 	extractLayoutId(fullId) {
@@ -655,9 +661,9 @@ export class LayoutBuilder {
 
 export async function buildLayout(options = {}) {
 	const configPath = options.configPath || path.join(process.cwd(), 'layout.config.json')
-	const layoutsPath = options.layoutsPath || path.join(path.dirname(configPath), 'layouts')
+	const layoutsPath = options.layoutsPath || defaultDir(configPath, 'layouts')
 	const outputPath = options.outputPath || path.join(process.cwd(), 'dist', 'layout.css')
-	const coreDir = options.coreDir || path.join(path.dirname(configPath), 'core')
+	const coreDir = options.coreDir || defaultDir(configPath, 'core')
 
 	const builder = new LayoutBuilder(configPath, layoutsPath, outputPath, coreDir)
 	return await builder.build(false)
