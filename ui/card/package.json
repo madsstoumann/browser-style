@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/card",
-  "version": "4.0.0",
+  "version": "4.0.0-next.0",
   "description": "CSS-first card engine built on <ui-media> + <ui-content>, with variant tokens and a container-driven font scale. Shared base for ui-reveal.",
   "type": "module",
   "main": "index.js",
@@ -39,7 +39,8 @@
     "./hover.min.js": "./hover.min.js",
     "./video.min.js": "./video.min.js",
     "./dist/card.css": "./dist/card.css",
-    "./dist/card.min.css": "./dist/card.min.css"
+    "./dist/card.min.css": "./dist/card.min.css",
+    "./demo/recipes/recipe.js": "./demo/recipes/recipe.js"
   },
   "files": [
     "dist/",
@@ -65,7 +66,8 @@
     "render.js",
     "data/",
     "docs/tokens.md",
-    "*.min.js"
+    "*.min.js",
+    "demo/recipes/recipe.js"
   ],
   "scripts": {
     "build": "node build.js",
@@ -78,7 +80,8 @@
   },
   "publishConfig": {
     "access": "public",
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://registry.npmjs.org/",
+    "tag": "next"
   },
   "keywords": [
     "browser.style",
@@ -98,28 +101,28 @@
   },
   "homepage": "https://browser.style/ui/card",
   "peerDependencies": {
-    "@browser.style/base": "^1.0.11",
-    "@browser.style/carousel": "^1.0.0",
-    "@browser.style/common": "^1.0.13",
-    "@browser.style/accordion": "^5.0.0",
-    "@browser.style/ai": "^2.0.0",
-    "@browser.style/avatar": "^4.0.0",
-    "@browser.style/badge": "^4.0.0",
-    "@browser.style/beacon": "^5.0.0",
-    "@browser.style/button-group": "^4.0.0",
-    "@browser.style/chip": "^4.0.0",
-    "@browser.style/gradient-text": "^1.0.0",
-    "@browser.style/icon": "^4.0.0",
-    "@browser.style/lightbox": "^1.0.0",
-    "@browser.style/marquee": "^5.0.0",
-    "@browser.style/play": "^4.1.0",
-    "@browser.style/progress": "^4.0.0",
-    "@browser.style/progress-circular": "^4.0.0",
-    "@browser.style/quote": "^5.0.0",
-    "@browser.style/rating": "^4.0.0",
-    "@browser.style/save": "^5.0.0",
-    "@browser.style/sticker": "^5.0.0",
-    "@browser.style/timeline": "^4.0.0"
+    "@browser.style/base": "^2.0.0-next.0",
+    "@browser.style/carousel": "^1.1.0-next.0",
+    "@browser.style/common": "^1.0.13-next.0",
+    "@browser.style/accordion": "^5.0.0-next.0",
+    "@browser.style/ai": "^2.0.0-next.0",
+    "@browser.style/avatar": "^4.0.0-next.0",
+    "@browser.style/badge": "^4.0.0-next.0",
+    "@browser.style/beacon": "^5.0.0-next.0",
+    "@browser.style/button-group": "^4.1.0-next.0",
+    "@browser.style/chip": "^4.0.0-next.0",
+    "@browser.style/gradient-text": "^1.0.0-next.0",
+    "@browser.style/icon": "^4.1.0-next.0",
+    "@browser.style/lightbox": "^1.1.0-next.0",
+    "@browser.style/marquee": "^5.1.0-next.0",
+    "@browser.style/play": "^4.1.0-next.0",
+    "@browser.style/progress": "^4.0.0-next.0",
+    "@browser.style/progress-circular": "^4.1.0-next.0",
+    "@browser.style/quote": "^5.0.0-next.0",
+    "@browser.style/rating": "^4.0.0-next.0",
+    "@browser.style/save": "^5.1.0-next.0",
+    "@browser.style/sticker": "^5.0.0-next.0",
+    "@browser.style/timeline": "^4.0.0-next.0"
   },
   "peerDependenciesMeta": {
     "@browser.style/carousel": {

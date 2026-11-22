@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/reveal",
-  "version": "4.0.0",
+  "version": "4.0.0-next.0",
   "description": "CSS-only reveal card built on details/summary with cover, flip, slide, and scale animations",
   "type": "module",
   "style": "./dist/reveal.css",
@@ -20,7 +20,8 @@
   ],
   "publishConfig": {
     "access": "public",
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://registry.npmjs.org/",
+    "tag": "next"
   },
   "keywords": [
     "browser.style",
@@ -40,9 +41,9 @@
   },
   "homepage": "https://browser.style/ui/reveal",
   "peerDependencies": {
-    "@browser.style/base": "^1.0.11",
-    "@browser.style/card": "^4.0.0",
-    "@browser.style/icon": "^4.0.0"
+    "@browser.style/base": "^2.0.0-next.0",
+    "@browser.style/card": "^4.0.0-next.0",
+    "@browser.style/icon": "^4.1.0-next.0"
   },
   "scripts": {
     "build": "node ../../scripts/css-bundle.js . index.css reveal"

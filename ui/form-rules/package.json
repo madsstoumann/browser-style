@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/form-rules",
-  "version": "0.1.0",
+  "version": "0.1.0-next.0",
   "description": "A pure, JSON-defined rule engine for multi-step forms: JSON Logic conditions, a closed set of actions, remote patches and events. Same result in the browser and in Node.",
   "type": "module",
   "module": "index.js",
@@ -20,7 +20,8 @@
   },
   "publishConfig": {
     "access": "public",
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://registry.npmjs.org/",
+    "tag": "next"
   },
   "keywords": [
     "browser.style",

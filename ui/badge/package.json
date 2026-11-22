@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/badge",
-  "version": "4.0.0",
+  "version": "4.0.0-next.0",
   "description": "CSS-first badge component with optional web component wrapper",
   "type": "module",
   "module": "index.js",
@@ -20,7 +20,8 @@
   ],
   "publishConfig": {
     "access": "public",
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://registry.npmjs.org/",
+    "tag": "next"
   },
   "keywords": [
     "browser.style",
@@ -38,6 +39,6 @@
   },
   "homepage": "https://browser.style/ui/badge",
   "peerDependencies": {
-    "@browser.style/base": "^1.0.11"
+    "@browser.style/base": "^2.0.0-next.0"
   }
 }

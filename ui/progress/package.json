@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/progress",
-  "version": "4.0.0",
+  "version": "4.0.0-next.0",
   "description": "CSS-first styling for the native <progress> element",
   "type": "module",
   "style": "index.css",
@@ -17,7 +17,8 @@
   ],
   "publishConfig": {
     "access": "public",
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://registry.npmjs.org/",
+    "tag": "next"
   },
   "keywords": [
     "browser.style",
@@ -33,6 +34,6 @@
   },
   "homepage": "https://browser.style/ui/progress",
   "peerDependencies": {
-    "@browser.style/base": "^1.0.11"
+    "@browser.style/base": "^2.0.0-next.0"
   }
 }

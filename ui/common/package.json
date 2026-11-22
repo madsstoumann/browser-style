@@ -1,13 +1,14 @@
 {
   "name": "@browser.style/common",
-  "version": "1.0.13",
+  "version": "1.0.13-next.0",
   "main": "form.element.js",
   "files": [
     "*.js"
   ],
   "publishConfig": {
     "access": "public",
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://registry.npmjs.org/",
+    "tag": "next"
   },
   "description": "Common components for browser.style",
   "repository": {

@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/form-embed",
-  "version": "0.1.0",
+  "version": "0.1.0-next.0",
   "description": "Embed a published @browser.style/form-flow form by id on any site, in Shadow DOM or light DOM, themed with CSS custom properties.",
   "type": "module",
   "module": "index.js",
@@ -17,11 +17,12 @@
     "functions/registry.json"
   ],
   "dependencies": {
-    "@browser.style/form-flow": "^0.1.0"
+    "@browser.style/form-flow": "^0.1.0-next.0"
   },
   "publishConfig": {
     "access": "public",
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://registry.npmjs.org/",
+    "tag": "next"
   },
   "keywords": [
     "browser.style",

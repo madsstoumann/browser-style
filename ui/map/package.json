@@ -1,7 +1,7 @@
 {
   "name": "@browser.style/map",
-  "version": "1.0.0",
-  "description": "CSS-first interactive map \u2014 <ui-map> reads its points from the microdata already on the page, clusters them with Supercluster, and draws them on keyless OpenStreetMap-family raster tiles via Leaflet",
+  "version": "1.0.0-next.0",
+  "description": "CSS-first interactive map — <ui-map> reads its points from the microdata already on the page, clusters them with Supercluster, and draws them on keyless OpenStreetMap-family raster tiles via Leaflet",
   "type": "module",
   "module": "index.js",
   "style": "index.css",
@@ -31,7 +31,8 @@
   },
   "publishConfig": {
     "access": "public",
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://registry.npmjs.org/",
+    "tag": "next"
   },
   "keywords": [
     "browser.style",
@@ -53,7 +54,7 @@
   },
   "homepage": "https://browser.style/ui/map",
   "peerDependencies": {
-    "@browser.style/base": "^1.0.11"
+    "@browser.style/base": "^2.0.0-next.0"
   },
   "devDependencies": {
     "leaflet": "1.9.4",

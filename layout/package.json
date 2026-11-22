@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/layout",
-  "version": "1.5.0",
+  "version": "2.0.0-next.0",
   "description": "Modern CSS layout system with responsive grid patterns and responsive image srcsets",
   "type": "module",
   "main": "index.js",
@@ -11,8 +11,8 @@
     "build:demo": "node -e \"import('./src/demo.js').then(m => m.buildDemoFiles('./layouts', './dist'))\"",
     "build:icons": "node -e \"import('./src/icons.js').then(m => m.buildIcons('./layouts', './dist/icons'))\"",
     "build:all": "npm run build:maps && npm run build && npm run build:demo && npm run build:icons",
-    "test": "node -e \"import('./index.js').then(m => console.log('\u2705 Module exports working:', Object.keys(m)))\"",
-    "prepublishOnly": "npm run build:all && npm test"
+    "test": "node -e \"import('./index.js').then(m => console.log('✅ Module exports working:', Object.keys(m)))\"",
+    "prepublishOnly": "npm test"
   },
   "exports": {
     ".": {
@@ -26,7 +26,9 @@
     "./srcsets": "./src/srcsets.js",
     "./components": "./src/components/index.js",
     "./polyfills/attr-fallback": "./polyfills/attr-fallback.js",
-    "./polyfills/attr-fallback.css": "./polyfills/attr-fallback.css"
+    "./polyfills/attr-fallback.css": "./polyfills/attr-fallback.css",
+    "./builder": "./src/builder.js",
+    "./icons/*": "./dist/icons/*"
   },
   "files": [
     "index.js",
@@ -40,14 +42,16 @@
     "dist/layout.css",
     "dist/layout.min.css",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "dist/icons/"
   ],
   "bin": {
-    "browser-style-layout": "./build.js"
+    "browser-style-layout": "build.js"
   },
   "publishConfig": {
     "access": "public",
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://registry.npmjs.org/",
+    "tag": "next"
   },
   "keywords": [
     "css-grid",
@@ -76,9 +80,9 @@
   },
   "homepage": "https://browser.style/layout",
   "peerDependencies": {
-    "@browser.style/base": "^1.0.11",
-    "@browser.style/carousel": "^1.0.0",
-    "@browser.style/card": "^4.0.0"
+    "@browser.style/base": "^2.0.0-next.0",
+    "@browser.style/carousel": "^1.1.0-next.0",
+    "@browser.style/card": "^4.0.0-next.0"
   },
   "peerDependenciesMeta": {
     "@browser.style/carousel": {

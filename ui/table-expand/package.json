@@ -16,7 +16,7 @@
   },
   "homepage": "https://browser.style/ui/table-expand",
   "peerDependencies": {
-    "@browser.style/base": "^1.0.11",
-    "@browser.style/icon": "^4.0.0"
+    "@browser.style/base": "^2.0.0-next.0",
+    "@browser.style/icon": "^4.1.0-next.0"
   }
 }

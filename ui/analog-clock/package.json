@@ -37,6 +37,6 @@
   },
   "homepage": "https://browser.style/ui/analog-clock",
   "peerDependencies": {
-    "@browser.style/base": "^1.0.0"
+    "@browser.style/base": "^2.0.0-next.0"
   }
 }
