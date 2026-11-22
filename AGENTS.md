@@ -182,7 +182,7 @@ cd layout && npm run build:all                                # CSS + maps + dem
 | **CMS editors** (`cms/editors/`) | editor-card, editor-csp, editor-manifest |
 | **Interactive** | piano-keys, rich-text, xy, color-picker, color-palette |
 
-A `ui/` directory is only a package if it has a `package.json` — 46 of ~194 do. The rest are
+A `ui/` directory is only a package if it has a `package.json` — 55 of ~194 do. The rest are
 unconverted v3 components (see § Legacy) or docs-only folders.
 
 ## v4 component conventions
