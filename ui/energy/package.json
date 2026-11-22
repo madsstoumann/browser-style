@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/energy",
-  "version": "1.0.0-next.0",
+  "version": "1.0.0",
   "description": "CSS-first EU energy label nested display as a visual indicator: the class arrow in its regulated colour with the scale range, for every EPREL product group. Zero JavaScript.",
   "type": "module",
   "style": "index.css",
@@ -24,8 +24,7 @@
   ],
   "publishConfig": {
     "access": "public",
-    "registry": "https://registry.npmjs.org/",
-    "tag": "next"
+    "registry": "https://registry.npmjs.org/"
   },
   "keywords": [
     "browser.style",

@@ -18,7 +18,9 @@ npm publish --access public
 ## Prereleases from v4 (dist-tag `next`)
 
 v4 publishes as `<version>-next.N` under the dist-tag `next`; `latest` stays on the older line until v4 is
-released. Every package in the set carries `"publishConfig": { "tag": "next" }`, so no publish from v4 can
+released. The set is layout and the components a consumer uses today (41: what the cms reads; badge,
+breadcrumbs and energy stay out until something uses them). Every package in it carries
+`"publishConfig": { "tag": "next" }`, so no publish from v4 can
 move `latest`, and npm 11 refuses a prerelease without a tag anyway. `v4` cannot be the tag: npm refuses a
 tag that parses as a semver range.
 

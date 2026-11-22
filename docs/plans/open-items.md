@@ -119,7 +119,7 @@ peer-depended on an unsatisfiable `icon ^1.0.11`. A dry-run gate is still worth 
 across **every** package — only the card orbit has been checked.
 
 **Update (2026-11-22) — the gate exists.** `npm run pack-next` (`scripts/publish-next.js --check`)
-packs every package that carries `publishConfig.tag: "next"` (37 of them) and fails when an
+packs every package that carries `publishConfig.tag: "next"` (41 of them: layout and the components the cms uses) and fails when an
 `exports`, `main`, `module` or `style` target is missing from the tarball. Run it before every
 `npm run publish-next`; `npm.md` § Prereleases has the workflow. Packages outside the `next` set
 (the unconverted ones with a `package.json`) are still unchecked. `ui/footer` and `ui/step` are in the

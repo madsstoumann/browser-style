@@ -107,7 +107,7 @@
     "@browser.style/accordion": "^5.0.0-next.0",
     "@browser.style/ai": "^2.0.0-next.0",
     "@browser.style/avatar": "^4.0.0-next.0",
-    "@browser.style/badge": "^4.0.0-next.0",
+    "@browser.style/badge": "^4.0.0",
     "@browser.style/beacon": "^5.0.0-next.0",
     "@browser.style/button-group": "^4.1.0-next.0",
     "@browser.style/chip": "^4.0.0-next.0",
