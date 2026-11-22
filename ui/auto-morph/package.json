@@ -9,7 +9,8 @@
       "style": "./index.css"
     },
     "./style": "./index.css",
-    "./index.css": "./index.css"
+    "./index.css": "./index.css",
+    "./auto-morph.css": "./auto-morph.css"
   },
   "files": [
     "index.css",

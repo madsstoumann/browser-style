@@ -10,6 +10,7 @@
     },
     "./style": "./index.css",
     "./index.css": "./index.css",
+    "./ui-icon.css": "./ui-icon.css",
     "./icon-font.css": "./icon-font.css",
     "./icons.json": "./icons.json",
     "./icons.data.js": "./icons.data.js"

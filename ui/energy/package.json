@@ -13,6 +13,7 @@
     },
     "./style": "./index.css",
     "./index.css": "./index.css",
+    "./ui-energy.css": "./ui-energy.css",
     "./data/scales.json": "./data/scales.json"
   },
   "files": [

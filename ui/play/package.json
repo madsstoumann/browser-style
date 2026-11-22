@@ -12,7 +12,8 @@
     },
     "./command.js": "./command.js",
     "./style": "./index.css",
-    "./index.css": "./index.css"
+    "./index.css": "./index.css",
+    "./ui-play.css": "./ui-play.css"
   },
   "files": [
     "index.js",

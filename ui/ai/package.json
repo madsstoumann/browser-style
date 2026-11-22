@@ -10,6 +10,7 @@
     },
     "./style": "./index.css",
     "./index.css": "./index.css",
+    "./ui-ai.css": "./ui-ai.css",
     "./data/cases.json": "./data/cases.json"
   },
   "files": [

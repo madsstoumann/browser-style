@@ -11,7 +11,8 @@
       "style": "./index.css"
     },
     "./style": "./index.css",
-    "./index.css": "./index.css"
+    "./index.css": "./index.css",
+    "./ui-chip.css": "./ui-chip.css"
   },
   "files": [
     "index.js",

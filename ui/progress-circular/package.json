@@ -9,7 +9,8 @@
       "style": "./index.css"
     },
     "./style": "./index.css",
-    "./index.css": "./index.css"
+    "./index.css": "./index.css",
+    "./ui-progress-circular.css": "./ui-progress-circular.css"
   },
   "files": [
     "index.css",

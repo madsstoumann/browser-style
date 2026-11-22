@@ -10,6 +10,7 @@
     },
     "./style": "./dist/reveal.css",
     "./index.css": "./index.css",
+    "./ui-reveal.css": "./ui-reveal.css",
     "./dist/reveal.css": "./dist/reveal.css",
     "./dist/reveal.min.css": "./dist/reveal.min.css"
   },

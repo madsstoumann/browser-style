@@ -11,7 +11,8 @@
       "style": "./index.css"
     },
     "./style": "./index.css",
-    "./index.css": "./index.css"
+    "./index.css": "./index.css",
+    "./ui-quote.css": "./ui-quote.css"
   },
   "files": [
     "index.js",

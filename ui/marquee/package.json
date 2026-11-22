@@ -9,7 +9,8 @@
       "style": "./index.css"
     },
     "./style": "./index.css",
-    "./index.css": "./index.css"
+    "./index.css": "./index.css",
+    "./ui-marquee.css": "./ui-marquee.css"
   },
   "files": [
     "index.css",

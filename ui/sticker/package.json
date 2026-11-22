@@ -11,7 +11,8 @@
       "style": "./index.css"
     },
     "./style": "./index.css",
-    "./index.css": "./index.css"
+    "./index.css": "./index.css",
+    "./ui-sticker.css": "./ui-sticker.css"
   },
   "files": [
     "index.js",

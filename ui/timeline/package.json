@@ -9,7 +9,8 @@
       "style": "./index.css"
     },
     "./style": "./index.css",
-    "./index.css": "./index.css"
+    "./index.css": "./index.css",
+    "./ui-timeline.css": "./ui-timeline.css"
   },
   "files": [
     "index.css",
