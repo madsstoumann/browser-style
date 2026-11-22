@@ -118,6 +118,12 @@ published CSS chain 404'd; `lightbox.js` shipped but was blocked by `exports`; `
 peer-depended on an unsatisfiable `icon ^1.0.11`. A dry-run gate is still worth running
 across **every** package — only the card orbit has been checked.
 
+**Update (2026-11-22) — the gate exists.** `npm run pack-next` (`scripts/publish-next.js --check`)
+packs every package that carries `publishConfig.tag: "next"` (37 of them) and fails when an
+`exports`, `main`, `module` or `style` target is missing from the tarball. Run it before every
+`npm run publish-next`; `npm.md` § Prereleases has the workflow. Packages outside the `next` set
+(the unconverted ones with a `package.json`) are still unchecked.
+
 ## 4. Design call — per-element axis maps for `pll` / `non`
 
 **Where:** `ui/card/data/tokens.json` (the `disc` merge class), surfaced by R-13's manifest
@@ -524,11 +530,10 @@ typing, not decisions — recorded so the delete loses nothing.
 
 Audit § B, re-verified 2026-08-19. The gate half has since been fixed; the rest stands.
 
-- **`ui/highlight` is not a package.** No `package.json` — yet it sits under a **Package**
-  column in `ui/card/components.md` and `render.js` emits `<high-light>`. With no manifest
-  it joins no workspace, is never versioned or published, and cannot be the declared peer
-  every other emitted sub-component is. (Referenced from item 7; `ui/button-group`, the
-  other half of the original finding, resolved at `4.1.0`.)
+- **`ui/highlight` is a package since 2026-11-22** (`@browser.style/highlight`
+  `1.0.0-next.0`), but not yet a declared peer of `ui/card`, which `render.js` needs for the
+  `<high-light>` it emits. Adding the peer is the remaining half. (Referenced from item 7;
+  `ui/button-group`, the other half of the original finding, resolved at `4.1.0`.)
 - **`<ui-badge>` is emitted, peer-declared, and styled nowhere a demo can see.**
   `render.js:841` emits it whenever `furniture.chip.badge` is set; `@browser.style/badge`
   is a declared peer of `ui/card`; but `badge` appears in neither `components.md` nor
