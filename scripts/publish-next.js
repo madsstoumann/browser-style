@@ -3,12 +3,11 @@
  *
  *   node scripts/publish-next.js --check     pack every package (dry run) and fail on an export the tarball lacks,
  *                                            or on a packed file git does not track (a local file in a package folder)
- *   node scripts/publish-next.js --publish   check, ask npm which versions it lacks, then publish those one by one:
- *                                            the OTP is asked for right before the first, and again whenever npm
- *                                            says a code expired. A run that stops is resumed by running it again.
+ *   node scripts/publish-next.js --publish   check, ask npm which versions it lacks, then publish those one by one
+ *                                            through npm's own sign-in: one browser 2FA with "remember me for
+ *                                            5 minutes" covers the run. A run that stops is resumed by running it again.
  */
 import { execFile, execFileSync, spawnSync } from 'node:child_process';
-import { createInterface } from 'node:readline/promises';
 import { promisify } from 'node:util';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
@@ -16,8 +15,7 @@ import { fileURLToPath } from 'node:url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const args = process.argv.slice(2);
-const publish = args.includes('--publish') || args.includes('--otp');
-let otp = args.includes('--otp') ? args[args.indexOf('--otp') + 1] : null;
+const publish = args.includes('--publish');
 if (!publish && !args.includes('--check')) {
 	console.error('usage: node scripts/publish-next.js --check | --publish');
 	process.exit(1);
@@ -67,41 +65,34 @@ if (failed) { console.error(`${failed} package(s) export a file the tarball lack
 console.log(`${packages.length} packages under next, every export packed`);
 if (!publish) process.exit(0);
 
-/* which versions npm lacks: eight lookups at a time (a 404 is "lacks") */
+/* which versions npm has, eight lookups at a time: a new package's document lags its dist-tags by minutes, so both are asked */
 console.log('\nasking npm which versions it already has…');
-const view = promisify(execFile);
+const ask = promisify(execFile);
+const onNpm = ({ name, version }) => Promise.all([
+	ask('npm', ['dist-tag', 'ls', name], { cwd: root }).then(({ stdout }) => stdout.split('\n').some((l) => l.endsWith(`: ${version}`)), () => false),
+	ask('npm', ['view', `${name}@${version}`, 'version'], { cwd: root }).then(({ stdout }) => stdout.trim() !== '', () => false),
+]).then((found) => found.some(Boolean));
 const has = new Array(packages.length).fill(false);
 let next = 0;
 await Promise.all(Array.from({ length: 8 }, async () => {
 	while (next < packages.length) {
 		const i = next++;
-		const { pkg } = packages[i];
-		has[i] = await view('npm', ['view', `${pkg.name}@${pkg.version}`, 'version'], { cwd: root })
-			.then(({ stdout }) => stdout.trim() !== '', () => false);
+		has[i] = await onNpm(packages[i].pkg);
 	}
 }));
 const todo = packages.filter((_, i) => !has[i]);
 if (!todo.length) { console.log('npm already has every version'); process.exit(0); }
 console.log(`${packages.length - todo.length} already on npm, ${todo.length} to publish`);
 
-/* one package at a time, so an expired code costs one retry, not the run */
-const rl = createInterface({ input: process.stdin, output: process.stdout });
-otp ??= (await rl.question('OTP: ')).trim();
+/* one package at a time, with npm's own prompts: no --otp, so npm signs in through the browser (one 2FA per OTP is what rate-limits) */
 let done = 0;
 for (const { dir, pkg } of todo) {
-	for (;;) {
-		process.stdout.write(`publishing ${pkg.name}@${pkg.version}… `);
-		const r = spawnSync('npm', ['publish', `--workspace=${dir}`, '--tag', 'next', '--access', 'public', `--otp=${otp}`],
-			{ cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
-		if (r.status === 0) { console.log('done'); done++; break; }
-		const out = `${r.stdout ?? ''}\n${r.stderr ?? ''}`;
-		if (/\bEOTP\b|one-time password/i.test(out)) { otp = (await rl.question('the code expired — a new OTP: ')).trim(); continue; }
-		console.log('failed');
-		console.error(out.trim());
+	console.log(`\npublishing ${pkg.name}@${pkg.version} (${done + 1} of ${todo.length})`);
+	const r = spawnSync('npm', ['publish', `--workspace=${dir}`, '--tag', 'next', '--access', 'public'], { cwd: root, stdio: 'inherit' });
+	if (r.status !== 0) {
 		console.error(`\nstopped at ${pkg.name}@${pkg.version}: ${done} of ${todo.length} published. Run npm run publish-next again to go on.`);
-		rl.close();
 		process.exit(1);
 	}
+	done++;
 }
-rl.close();
 console.log(`\npublished ${done} package(s) under next`);
