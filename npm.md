@@ -25,8 +25,10 @@ move `latest`, and npm 11 refuses a prerelease without a tag anyway. `v4` cannot
 tag that parses as a semver range.
 
 ```bash
-npm run pack-next       # dry-run pack of every `next` package; fails on an export the tarball lacks
-npm run publish-next    # asks for the OTP, then publishes the versions npm does not have yet
+npm run pack-next       # dry-run pack of every `next` package; fails on an export the tarball lacks,
+                        # or on a packed file git does not track (a local file in a package folder)
+npm run publish-next    # the same check, then publishes the versions npm lacks one by one: asks for
+                        # the OTP right before the first, and again when a code expires
 npm dist-tag ls @browser.style/card
 ```
 

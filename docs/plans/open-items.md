@@ -120,7 +120,8 @@ across **every** package — only the card orbit has been checked.
 
 **Update (2026-11-22) — the gate exists.** `npm run pack-next` (`scripts/publish-next.js --check`)
 packs every package that carries `publishConfig.tag: "next"` (41 of them: layout and the components the cms uses) and fails when an
-`exports`, `main`, `module` or `style` target is missing from the tarball. Run it before every
+`exports`, `main`, `module` or `style` target is missing from the tarball, or when it packs a file git
+does not track. Run it before every
 `npm run publish-next`; `npm.md` § Prereleases has the workflow. Packages outside the `next` set
 (the unconverted ones with a `package.json`) are still unchecked. `ui/footer` and `ui/step` are in the
 set unconverted: class-based sheets, packaged because the cms and `<form-embed>` load them. And
