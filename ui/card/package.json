@@ -65,6 +65,8 @@
     "shared.js",
     "render.js",
     "data/",
+    "!data/vimeo-data/",
+    "!data/youtube-data/",
     "docs/tokens.md",
     "*.min.js",
     "demo/recipes/recipe.js"
