@@ -1,19 +1,25 @@
 /* Publish the packages that carry publishConfig.tag "next" — the v4 prereleases — under the dist-tag `next`.
  * Docs: npm.md § Prereleases from v4. `latest` never moves: the tag is explicit here and in each package.json.
  *
- *   node scripts/publish-next.js --check        pack every package (dry run) and fail on an export the tarball lacks
- *   node scripts/publish-next.js --otp <code>   check, then publish the versions npm does not have yet
+ *   node scripts/publish-next.js --check     pack every package (dry run) and fail on an export the tarball lacks,
+ *                                            or on a packed file git does not track (a local file in a package folder)
+ *   node scripts/publish-next.js --publish   check, ask npm which versions it lacks, then publish those one by one:
+ *                                            the OTP is asked for right before the first, and again whenever npm
+ *                                            says a code expired. A run that stops is resumed by running it again.
  */
-import { execFileSync } from 'node:child_process';
+import { execFile, execFileSync, spawnSync } from 'node:child_process';
+import { createInterface } from 'node:readline/promises';
+import { promisify } from 'node:util';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const args = process.argv.slice(2);
-const otp = args.includes('--otp') ? args[args.indexOf('--otp') + 1] : null;
-if (!otp && !args.includes('--check')) {
-	console.error('usage: node scripts/publish-next.js --check | --otp <code>');
+const publish = args.includes('--publish') || args.includes('--otp');
+let otp = args.includes('--otp') ? args[args.indexOf('--otp') + 1] : null;
+if (!publish && !args.includes('--check')) {
+	console.error('usage: node scripts/publish-next.js --check | --publish');
 	process.exit(1);
 }
 
@@ -27,6 +33,7 @@ const packages = dirs
 	.filter(({ pkg }) => pkg.publishConfig?.tag === 'next' && !pkg.private);
 
 const npm = (...a) => execFileSync('npm', a, { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
+const git = (...a) => execFileSync('git', a, { cwd: root, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 });
 
 /* every file an export, `main`, `module` or `style` names must be in the tarball */
 const targets = (pkg) => {
@@ -48,16 +55,53 @@ for (const { dir, pkg } of packages) {
 	const missing = targets(pkg).filter((t) => t.includes('*')
 		? ![...files].some((f) => new RegExp(`^${t.replace(/[.+?^${}()|[\]\\]/g, '\\$&').replace('*', '.+')}$`).test(f))
 		: !files.has(t));
-	if (missing.length) failed++;
-	console.log(`${missing.length ? '✗' : '✓'} ${pkg.name}@${pkg.version}  ${tar.entryCount} files, ${(tar.size / 1024).toFixed(1)} kB${missing.length ? `  missing: ${missing.join(', ')}` : ''}`);
+	/* every packed file is one git tracks (the built files are committed): a local, untracked file never ships */
+	const tracked = new Set(git('ls-files', '-z', '--', dir).split('\0').filter(Boolean).map((f) => f.slice(dir.length + 1)));
+	const untracked = [...files].filter((f) => !tracked.has(f));
+	if (missing.length || untracked.length) failed++;
+	console.log(`${missing.length || untracked.length ? '✗' : '✓'} ${pkg.name}@${pkg.version}  ${tar.entryCount} files, ${(tar.size / 1024).toFixed(1)} kB`
+		+ `${missing.length ? `  missing: ${missing.join(', ')}` : ''}`
+		+ `${untracked.length ? `  not in git (${untracked.length}): ${untracked.slice(0, 5).join(', ')}${untracked.length > 5 ? ', …' : ''}` : ''}`);
 }
-if (failed) { console.error(`${failed} package(s) export a file the tarball lacks`); process.exit(1); }
+if (failed) { console.error(`${failed} package(s) export a file the tarball lacks, or pack a file git does not track`); process.exit(1); }
 console.log(`${packages.length} packages under next, every export packed`);
-if (!otp) process.exit(0);
+if (!publish) process.exit(0);
 
-const todo = packages.filter(({ pkg }) => {
-	try { return !npm('view', `${pkg.name}@${pkg.version}`, 'version').trim(); } catch { return true; }
-});
+/* which versions npm lacks: eight lookups at a time (a 404 is "lacks") */
+console.log('\nasking npm which versions it already has…');
+const view = promisify(execFile);
+const has = new Array(packages.length).fill(false);
+let next = 0;
+await Promise.all(Array.from({ length: 8 }, async () => {
+	while (next < packages.length) {
+		const i = next++;
+		const { pkg } = packages[i];
+		has[i] = await view('npm', ['view', `${pkg.name}@${pkg.version}`, 'version'], { cwd: root })
+			.then(({ stdout }) => stdout.trim() !== '', () => false);
+	}
+}));
+const todo = packages.filter((_, i) => !has[i]);
 if (!todo.length) { console.log('npm already has every version'); process.exit(0); }
-execFileSync('npm', ['publish', ...todo.map(({ dir }) => `--workspace=${dir}`), '--tag', 'next', '--access', 'public', `--otp=${otp}`],
-	{ cwd: root, stdio: 'inherit' });
+console.log(`${packages.length - todo.length} already on npm, ${todo.length} to publish`);
+
+/* one package at a time, so an expired code costs one retry, not the run */
+const rl = createInterface({ input: process.stdin, output: process.stdout });
+otp ??= (await rl.question('OTP: ')).trim();
+let done = 0;
+for (const { dir, pkg } of todo) {
+	for (;;) {
+		process.stdout.write(`publishing ${pkg.name}@${pkg.version}… `);
+		const r = spawnSync('npm', ['publish', `--workspace=${dir}`, '--tag', 'next', '--access', 'public', `--otp=${otp}`],
+			{ cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
+		if (r.status === 0) { console.log('done'); done++; break; }
+		const out = `${r.stdout ?? ''}\n${r.stderr ?? ''}`;
+		if (/\bEOTP\b|one-time password/i.test(out)) { otp = (await rl.question('the code expired — a new OTP: ')).trim(); continue; }
+		console.log('failed');
+		console.error(out.trim());
+		console.error(`\nstopped at ${pkg.name}@${pkg.version}: ${done} of ${todo.length} published. Run npm run publish-next again to go on.`);
+		rl.close();
+		process.exit(1);
+	}
+}
+rl.close();
+console.log(`\npublished ${done} package(s) under next`);

@@ -22,7 +22,7 @@
     "dev:demo": "node scripts/dev-demo.js",
     "test": "npm run test --workspaces --if-present",
     "publish-all": "read -p 'OTP: ' otp && node scripts/publish.js $otp",
-    "publish-next": "read -p 'OTP: ' otp && node scripts/publish-next.js --otp $otp",
+    "publish-next": "node scripts/publish-next.js --publish",
     "pack-next": "node scripts/publish-next.js --check",
     "test-packages": "node scripts/test-packages.js",
     "update-peers": "node scripts/update-peer-deps.js",
