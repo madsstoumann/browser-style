@@ -37,10 +37,13 @@ const targets = (pkg) => {
 	return [...out].map((t) => t.replace(/^\.\//, ''));
 };
 
-const packed = JSON.parse(npm('pack', '--dry-run', '--json', '--ignore-scripts', ...packages.map(({ dir }) => `--workspace=${dir}`)));
+/* npm 10 and 11 print an array of tarballs, npm 12 an object keyed by package name */
+const raw = JSON.parse(npm('pack', '--dry-run', '--json', '--ignore-scripts', ...packages.map(({ dir }) => `--workspace=${dir}`)));
+const packed = Array.isArray(raw) ? raw : Object.values(raw).flat();
 let failed = 0;
 for (const { dir, pkg } of packages) {
 	const tar = packed.find((p) => p.name === pkg.name);
+	if (!tar) { failed++; console.log(`✗ ${pkg.name}@${pkg.version}  not in npm pack's output`); continue; }
 	const files = new Set(tar.files.map((f) => f.path));
 	const missing = targets(pkg).filter((t) => t.includes('*')
 		? ![...files].some((f) => new RegExp(`^${t.replace(/[.+?^${}()|[\]\\]/g, '\\$&').replace('*', '.+')}$`).test(f))
