@@ -5776,28 +5776,6 @@
         min-block-size: 0;
       }
     }
-    &[counter] {
-      counter-reset: layout-counter;
-      & > * {
-        column-gap: var(--ui-counter-gap, 0.5rem);
-        counter-increment: layout-counter;
-        display: grid;
-        grid-template-columns: auto minmax(0, 1fr);
-        & > * {
-          grid-column: 2;
-        }
-      }
-      & > *::before {
-        color: var(--ui-counter-ink, var(--color-text-muted, currentColor));
-        content: counter(layout-counter);
-        font-family: var(--ui-counter-font, var(--font-heading, inherit));
-        font-size: var(--ui-counter-fs, 2rem);
-        font-variant-numeric: tabular-nums;
-        font-weight: var(--ui-counter-weight, var(--font-weight-bold, 700));
-        grid-column: 1;
-        line-height: 1;
-      }
-    }
   }
 }
 @layer layout.reset {

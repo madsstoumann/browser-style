@@ -91,21 +91,6 @@ attributes instead — e.g. `col-gap="2"` → `xs="cg(2)"`, `pad-inline="1"` →
 | `start` / `center` / `end` / `stretch` | as named | keep their media ratio |
 | `fill` | `stretch` | media fills the row; ratio and floor dropped |
 
-### counter
-- Type: boolean attribute
-- Default: not present
-- Description: numbers the layout's children 1, 2, 3 (a CSS counter, `layout-counter`). Each child becomes a two-column grid: the number, then the child's own content. Generated content is read out, so the rank is announced.
-
-| Property | Default |
-|---|---|
-| `--ui-counter-ink` | `var(--color-text-muted)` |
-| `--ui-counter-fs` | `2rem` |
-| `--ui-counter-font` | `var(--font-heading)` |
-| `--ui-counter-weight` | `var(--font-weight-bold)` |
-| `--ui-counter-gap` | `0.5rem` (number to content) |
-
-- Example: `<lay-out counter lg="columns(5)" gap-decorations="cols">` (a Most read row)
-
 ### size
 - Type: <length> | <custom-ident>
 - Default: `auto`
