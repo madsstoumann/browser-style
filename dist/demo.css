@@ -5928,10 +5928,10 @@
   }
 }
 @layer layout.xs {
-  lay-out[xs] {
+  lay-out:is([xs*="auto("], [xs*="stack("]) {
     --_ga: initial;
   }
-  lay-out[xs] > * {
+  lay-out:is([xs*="auto("], [xs*="stack("]) > * {
     --layout-ga: auto;
   }
   lay-out[xs*="auto(fit)"] {
@@ -5946,362 +5946,364 @@
   lay-out[xs*="stack("] > * {
     --layout-ga: 1 / 1;
   }
-  :is(lay-out, lay-out-group)[xs*="p(0)"] {
-    --layout-pi: 0;
-    --layout-pbs: 0;
-    --layout-pbe: 0;
-  }
-  :is(lay-out, lay-out-group)[xs*="p(0.75)"] {
-    --layout-pi: 0.75;
-    --layout-pbs: 0.75;
-    --layout-pbe: 0.75;
-  }
-  :is(lay-out, lay-out-group)[xs*="p(1)"],
-  :is(lay-out, lay-out-group)[xs*="p(md)"] {
-    --layout-pi: 1;
-    --layout-pbs: 1;
-    --layout-pbe: 1;
-  }
-  :is(lay-out, lay-out-group)[xs*="p(2)"],
-  :is(lay-out, lay-out-group)[xs*="p(xl)"] {
-    --layout-pi: 2;
-    --layout-pbs: 2;
-    --layout-pbe: 2;
-  }
-  :is(lay-out, lay-out-group)[xs*="p(3)"],
-  :is(lay-out, lay-out-group)[xs*="p(2xl)"] {
-    --layout-pi: 3;
-    --layout-pbs: 3;
-    --layout-pbe: 3;
-  }
-  :is(lay-out, lay-out-group)[xs*="p(4)"] {
-    --layout-pi: 4;
-    --layout-pbs: 4;
-    --layout-pbe: 4;
-  }
-  :is(lay-out, lay-out-group)[xs*="p(3xs)"] {
-    --layout-pi: 0.0625;
-    --layout-pbs: 0.0625;
-    --layout-pbe: 0.0625;
-  }
-  :is(lay-out, lay-out-group)[xs*="p(2xs)"] {
-    --layout-pi: 0.125;
-    --layout-pbs: 0.125;
-    --layout-pbe: 0.125;
-  }
-  :is(lay-out, lay-out-group)[xs*="p(xs)"] {
-    --layout-pi: 0.25;
-    --layout-pbs: 0.25;
-    --layout-pbe: 0.25;
-  }
-  :is(lay-out, lay-out-group)[xs*="p(sm)"] {
-    --layout-pi: 0.5;
-    --layout-pbs: 0.5;
-    --layout-pbe: 0.5;
-  }
-  :is(lay-out, lay-out-group)[xs*="p(lg)"] {
-    --layout-pi: 1.5;
-    --layout-pbs: 1.5;
-    --layout-pbe: 1.5;
-  }
-  :is(lay-out, lay-out-group)[xs*="pi(0)"] {
-    --layout-pi: 0;
-  }
-  :is(lay-out, lay-out-group)[xs*="pi(0.75)"] {
-    --layout-pi: 0.75;
-  }
-  :is(lay-out, lay-out-group)[xs*="pi(1)"],
-  :is(lay-out, lay-out-group)[xs*="pi(md)"] {
-    --layout-pi: 1;
-  }
-  :is(lay-out, lay-out-group)[xs*="pi(2)"],
-  :is(lay-out, lay-out-group)[xs*="pi(xl)"] {
-    --layout-pi: 2;
-  }
-  :is(lay-out, lay-out-group)[xs*="pi(3)"],
-  :is(lay-out, lay-out-group)[xs*="pi(2xl)"] {
-    --layout-pi: 3;
-  }
-  :is(lay-out, lay-out-group)[xs*="pi(4)"] {
-    --layout-pi: 4;
-  }
-  :is(lay-out, lay-out-group)[xs*="pi(3xs)"] {
-    --layout-pi: 0.0625;
-  }
-  :is(lay-out, lay-out-group)[xs*="pi(2xs)"] {
-    --layout-pi: 0.125;
-  }
-  :is(lay-out, lay-out-group)[xs*="pi(xs)"] {
-    --layout-pi: 0.25;
-  }
-  :is(lay-out, lay-out-group)[xs*="pi(sm)"] {
-    --layout-pi: 0.5;
-  }
-  :is(lay-out, lay-out-group)[xs*="pi(lg)"] {
-    --layout-pi: 1.5;
-  }
-  :is(lay-out, lay-out-group)[xs*="pb(0)"] {
-    --layout-pbs: 0;
-    --layout-pbe: 0;
-  }
-  :is(lay-out, lay-out-group)[xs*="pb(0.75)"] {
-    --layout-pbs: 0.75;
-    --layout-pbe: 0.75;
-  }
-  :is(lay-out, lay-out-group)[xs*="pb(1)"],
-  :is(lay-out, lay-out-group)[xs*="pb(md)"] {
-    --layout-pbs: 1;
-    --layout-pbe: 1;
-  }
-  :is(lay-out, lay-out-group)[xs*="pb(2)"],
-  :is(lay-out, lay-out-group)[xs*="pb(xl)"] {
-    --layout-pbs: 2;
-    --layout-pbe: 2;
-  }
-  :is(lay-out, lay-out-group)[xs*="pb(3)"],
-  :is(lay-out, lay-out-group)[xs*="pb(2xl)"] {
-    --layout-pbs: 3;
-    --layout-pbe: 3;
-  }
-  :is(lay-out, lay-out-group)[xs*="pb(4)"] {
-    --layout-pbs: 4;
-    --layout-pbe: 4;
-  }
-  :is(lay-out, lay-out-group)[xs*="pb(3xs)"] {
-    --layout-pbs: 0.0625;
-    --layout-pbe: 0.0625;
-  }
-  :is(lay-out, lay-out-group)[xs*="pb(2xs)"] {
-    --layout-pbs: 0.125;
-    --layout-pbe: 0.125;
-  }
-  :is(lay-out, lay-out-group)[xs*="pb(xs)"] {
-    --layout-pbs: 0.25;
-    --layout-pbe: 0.25;
-  }
-  :is(lay-out, lay-out-group)[xs*="pb(sm)"] {
-    --layout-pbs: 0.5;
-    --layout-pbe: 0.5;
-  }
-  :is(lay-out, lay-out-group)[xs*="pb(lg)"] {
-    --layout-pbs: 1.5;
-    --layout-pbe: 1.5;
-  }
-  :is(lay-out, lay-out-group)[xs*="pbs(0)"] {
-    --layout-pbs: 0;
-  }
-  :is(lay-out, lay-out-group)[xs*="pbs(0.75)"] {
-    --layout-pbs: 0.75;
-  }
-  :is(lay-out, lay-out-group)[xs*="pbs(1)"],
-  :is(lay-out, lay-out-group)[xs*="pbs(md)"] {
-    --layout-pbs: 1;
-  }
-  :is(lay-out, lay-out-group)[xs*="pbs(2)"],
-  :is(lay-out, lay-out-group)[xs*="pbs(xl)"] {
-    --layout-pbs: 2;
-  }
-  :is(lay-out, lay-out-group)[xs*="pbs(3)"],
-  :is(lay-out, lay-out-group)[xs*="pbs(2xl)"] {
-    --layout-pbs: 3;
-  }
-  :is(lay-out, lay-out-group)[xs*="pbs(4)"] {
-    --layout-pbs: 4;
-  }
-  :is(lay-out, lay-out-group)[xs*="pbs(3xs)"] {
-    --layout-pbs: 0.0625;
-  }
-  :is(lay-out, lay-out-group)[xs*="pbs(2xs)"] {
-    --layout-pbs: 0.125;
-  }
-  :is(lay-out, lay-out-group)[xs*="pbs(xs)"] {
-    --layout-pbs: 0.25;
-  }
-  :is(lay-out, lay-out-group)[xs*="pbs(sm)"] {
-    --layout-pbs: 0.5;
-  }
-  :is(lay-out, lay-out-group)[xs*="pbs(lg)"] {
-    --layout-pbs: 1.5;
-  }
-  :is(lay-out, lay-out-group)[xs*="pbe(0)"] {
-    --layout-pbe: 0;
-  }
-  :is(lay-out, lay-out-group)[xs*="pbe(0.75)"] {
-    --layout-pbe: 0.75;
-  }
-  :is(lay-out, lay-out-group)[xs*="pbe(1)"],
-  :is(lay-out, lay-out-group)[xs*="pbe(md)"] {
-    --layout-pbe: 1;
-  }
-  :is(lay-out, lay-out-group)[xs*="pbe(2)"],
-  :is(lay-out, lay-out-group)[xs*="pbe(xl)"] {
-    --layout-pbe: 2;
-  }
-  :is(lay-out, lay-out-group)[xs*="pbe(3)"],
-  :is(lay-out, lay-out-group)[xs*="pbe(2xl)"] {
-    --layout-pbe: 3;
-  }
-  :is(lay-out, lay-out-group)[xs*="pbe(4)"] {
-    --layout-pbe: 4;
-  }
-  :is(lay-out, lay-out-group)[xs*="pbe(3xs)"] {
-    --layout-pbe: 0.0625;
-  }
-  :is(lay-out, lay-out-group)[xs*="pbe(2xs)"] {
-    --layout-pbe: 0.125;
-  }
-  :is(lay-out, lay-out-group)[xs*="pbe(xs)"] {
-    --layout-pbe: 0.25;
-  }
-  :is(lay-out, lay-out-group)[xs*="pbe(sm)"] {
-    --layout-pbe: 0.5;
-  }
-  :is(lay-out, lay-out-group)[xs*="pbe(lg)"] {
-    --layout-pbe: 1.5;
-  }
-  :is(lay-out, lay-out-group)[xs*="mbs(0)"] {
-    --layout-mbs: 0;
-  }
-  :is(lay-out, lay-out-group)[xs*="mbs(0.75)"] {
-    --layout-mbs: 0.75;
-  }
-  :is(lay-out, lay-out-group)[xs*="mbs(1)"],
-  :is(lay-out, lay-out-group)[xs*="mbs(md)"] {
-    --layout-mbs: 1;
-  }
-  :is(lay-out, lay-out-group)[xs*="mbs(2)"],
-  :is(lay-out, lay-out-group)[xs*="mbs(xl)"] {
-    --layout-mbs: 2;
-  }
-  :is(lay-out, lay-out-group)[xs*="mbs(3)"],
-  :is(lay-out, lay-out-group)[xs*="mbs(2xl)"] {
-    --layout-mbs: 3;
-  }
-  :is(lay-out, lay-out-group)[xs*="mbs(4)"] {
-    --layout-mbs: 4;
-  }
-  :is(lay-out, lay-out-group)[xs*="mbs(3xs)"] {
-    --layout-mbs: 0.0625;
-  }
-  :is(lay-out, lay-out-group)[xs*="mbs(2xs)"] {
-    --layout-mbs: 0.125;
-  }
-  :is(lay-out, lay-out-group)[xs*="mbs(xs)"] {
-    --layout-mbs: 0.25;
-  }
-  :is(lay-out, lay-out-group)[xs*="mbs(sm)"] {
-    --layout-mbs: 0.5;
-  }
-  :is(lay-out, lay-out-group)[xs*="mbs(lg)"] {
-    --layout-mbs: 1.5;
-  }
-  :is(lay-out, lay-out-group)[xs*="mbe(0)"] {
-    --layout-mbe: 0;
-  }
-  :is(lay-out, lay-out-group)[xs*="mbe(0.75)"] {
-    --layout-mbe: 0.75;
-  }
-  :is(lay-out, lay-out-group)[xs*="mbe(1)"],
-  :is(lay-out, lay-out-group)[xs*="mbe(md)"] {
-    --layout-mbe: 1;
-  }
-  :is(lay-out, lay-out-group)[xs*="mbe(2)"],
-  :is(lay-out, lay-out-group)[xs*="mbe(xl)"] {
-    --layout-mbe: 2;
-  }
-  :is(lay-out, lay-out-group)[xs*="mbe(3)"],
-  :is(lay-out, lay-out-group)[xs*="mbe(2xl)"] {
-    --layout-mbe: 3;
-  }
-  :is(lay-out, lay-out-group)[xs*="mbe(4)"] {
-    --layout-mbe: 4;
-  }
-  :is(lay-out, lay-out-group)[xs*="mbe(3xs)"] {
-    --layout-mbe: 0.0625;
-  }
-  :is(lay-out, lay-out-group)[xs*="mbe(2xs)"] {
-    --layout-mbe: 0.125;
-  }
-  :is(lay-out, lay-out-group)[xs*="mbe(xs)"] {
-    --layout-mbe: 0.25;
-  }
-  :is(lay-out, lay-out-group)[xs*="mbe(sm)"] {
-    --layout-mbe: 0.5;
-  }
-  :is(lay-out, lay-out-group)[xs*="mbe(lg)"] {
-    --layout-mbe: 1.5;
-  }
-  :is(lay-out, lay-out-group)[xs*="cg(0)"] {
-    --layout-colmg: 0;
-  }
-  :is(lay-out, lay-out-group)[xs*="cg(0.75)"] {
-    --layout-colmg: 0.75;
-  }
-  :is(lay-out, lay-out-group)[xs*="cg(1)"],
-  :is(lay-out, lay-out-group)[xs*="cg(md)"] {
-    --layout-colmg: 1;
-  }
-  :is(lay-out, lay-out-group)[xs*="cg(2)"],
-  :is(lay-out, lay-out-group)[xs*="cg(xl)"] {
-    --layout-colmg: 2;
-  }
-  :is(lay-out, lay-out-group)[xs*="cg(3)"],
-  :is(lay-out, lay-out-group)[xs*="cg(2xl)"] {
-    --layout-colmg: 3;
-  }
-  :is(lay-out, lay-out-group)[xs*="cg(4)"] {
-    --layout-colmg: 4;
-  }
-  :is(lay-out, lay-out-group)[xs*="cg(3xs)"] {
-    --layout-colmg: 0.0625;
-  }
-  :is(lay-out, lay-out-group)[xs*="cg(2xs)"] {
-    --layout-colmg: 0.125;
-  }
-  :is(lay-out, lay-out-group)[xs*="cg(xs)"] {
-    --layout-colmg: 0.25;
-  }
-  :is(lay-out, lay-out-group)[xs*="cg(sm)"] {
-    --layout-colmg: 0.5;
-  }
-  :is(lay-out, lay-out-group)[xs*="cg(lg)"] {
-    --layout-colmg: 1.5;
-  }
-  :is(lay-out, lay-out-group)[xs*="rg(0)"] {
-    --layout-rg: 0;
-  }
-  :is(lay-out, lay-out-group)[xs*="rg(0.75)"] {
-    --layout-rg: 0.75;
-  }
-  :is(lay-out, lay-out-group)[xs*="rg(1)"],
-  :is(lay-out, lay-out-group)[xs*="rg(md)"] {
-    --layout-rg: 1;
-  }
-  :is(lay-out, lay-out-group)[xs*="rg(2)"],
-  :is(lay-out, lay-out-group)[xs*="rg(xl)"] {
-    --layout-rg: 2;
-  }
-  :is(lay-out, lay-out-group)[xs*="rg(3)"],
-  :is(lay-out, lay-out-group)[xs*="rg(2xl)"] {
-    --layout-rg: 3;
-  }
-  :is(lay-out, lay-out-group)[xs*="rg(4)"] {
-    --layout-rg: 4;
-  }
-  :is(lay-out, lay-out-group)[xs*="rg(3xs)"] {
-    --layout-rg: 0.0625;
-  }
-  :is(lay-out, lay-out-group)[xs*="rg(2xs)"] {
-    --layout-rg: 0.125;
-  }
-  :is(lay-out, lay-out-group)[xs*="rg(xs)"] {
-    --layout-rg: 0.25;
-  }
-  :is(lay-out, lay-out-group)[xs*="rg(sm)"] {
-    --layout-rg: 0.5;
-  }
-  :is(lay-out, lay-out-group)[xs*="rg(lg)"] {
-    --layout-rg: 1.5;
+  :is(lay-out, lay-out-group) {
+    &[xs*="p(0)"] {
+      --layout-pi: 0;
+      --layout-pbs: 0;
+      --layout-pbe: 0;
+    }
+    &[xs*="p(0.75)"] {
+      --layout-pi: 0.75;
+      --layout-pbs: 0.75;
+      --layout-pbe: 0.75;
+    }
+    &[xs*="p(1)"],
+    &[xs*="p(md)"] {
+      --layout-pi: 1;
+      --layout-pbs: 1;
+      --layout-pbe: 1;
+    }
+    &[xs*="p(2)"],
+    &[xs*="p(xl)"] {
+      --layout-pi: 2;
+      --layout-pbs: 2;
+      --layout-pbe: 2;
+    }
+    &[xs*="p(3)"],
+    &[xs*="p(2xl)"] {
+      --layout-pi: 3;
+      --layout-pbs: 3;
+      --layout-pbe: 3;
+    }
+    &[xs*="p(4)"] {
+      --layout-pi: 4;
+      --layout-pbs: 4;
+      --layout-pbe: 4;
+    }
+    &[xs*="p(3xs)"] {
+      --layout-pi: 0.0625;
+      --layout-pbs: 0.0625;
+      --layout-pbe: 0.0625;
+    }
+    &[xs*="p(2xs)"] {
+      --layout-pi: 0.125;
+      --layout-pbs: 0.125;
+      --layout-pbe: 0.125;
+    }
+    &[xs*="p(xs)"] {
+      --layout-pi: 0.25;
+      --layout-pbs: 0.25;
+      --layout-pbe: 0.25;
+    }
+    &[xs*="p(sm)"] {
+      --layout-pi: 0.5;
+      --layout-pbs: 0.5;
+      --layout-pbe: 0.5;
+    }
+    &[xs*="p(lg)"] {
+      --layout-pi: 1.5;
+      --layout-pbs: 1.5;
+      --layout-pbe: 1.5;
+    }
+    &[xs*="pi(0)"] {
+      --layout-pi: 0;
+    }
+    &[xs*="pi(0.75)"] {
+      --layout-pi: 0.75;
+    }
+    &[xs*="pi(1)"],
+    &[xs*="pi(md)"] {
+      --layout-pi: 1;
+    }
+    &[xs*="pi(2)"],
+    &[xs*="pi(xl)"] {
+      --layout-pi: 2;
+    }
+    &[xs*="pi(3)"],
+    &[xs*="pi(2xl)"] {
+      --layout-pi: 3;
+    }
+    &[xs*="pi(4)"] {
+      --layout-pi: 4;
+    }
+    &[xs*="pi(3xs)"] {
+      --layout-pi: 0.0625;
+    }
+    &[xs*="pi(2xs)"] {
+      --layout-pi: 0.125;
+    }
+    &[xs*="pi(xs)"] {
+      --layout-pi: 0.25;
+    }
+    &[xs*="pi(sm)"] {
+      --layout-pi: 0.5;
+    }
+    &[xs*="pi(lg)"] {
+      --layout-pi: 1.5;
+    }
+    &[xs*="pb(0)"] {
+      --layout-pbs: 0;
+      --layout-pbe: 0;
+    }
+    &[xs*="pb(0.75)"] {
+      --layout-pbs: 0.75;
+      --layout-pbe: 0.75;
+    }
+    &[xs*="pb(1)"],
+    &[xs*="pb(md)"] {
+      --layout-pbs: 1;
+      --layout-pbe: 1;
+    }
+    &[xs*="pb(2)"],
+    &[xs*="pb(xl)"] {
+      --layout-pbs: 2;
+      --layout-pbe: 2;
+    }
+    &[xs*="pb(3)"],
+    &[xs*="pb(2xl)"] {
+      --layout-pbs: 3;
+      --layout-pbe: 3;
+    }
+    &[xs*="pb(4)"] {
+      --layout-pbs: 4;
+      --layout-pbe: 4;
+    }
+    &[xs*="pb(3xs)"] {
+      --layout-pbs: 0.0625;
+      --layout-pbe: 0.0625;
+    }
+    &[xs*="pb(2xs)"] {
+      --layout-pbs: 0.125;
+      --layout-pbe: 0.125;
+    }
+    &[xs*="pb(xs)"] {
+      --layout-pbs: 0.25;
+      --layout-pbe: 0.25;
+    }
+    &[xs*="pb(sm)"] {
+      --layout-pbs: 0.5;
+      --layout-pbe: 0.5;
+    }
+    &[xs*="pb(lg)"] {
+      --layout-pbs: 1.5;
+      --layout-pbe: 1.5;
+    }
+    &[xs*="pbs(0)"] {
+      --layout-pbs: 0;
+    }
+    &[xs*="pbs(0.75)"] {
+      --layout-pbs: 0.75;
+    }
+    &[xs*="pbs(1)"],
+    &[xs*="pbs(md)"] {
+      --layout-pbs: 1;
+    }
+    &[xs*="pbs(2)"],
+    &[xs*="pbs(xl)"] {
+      --layout-pbs: 2;
+    }
+    &[xs*="pbs(3)"],
+    &[xs*="pbs(2xl)"] {
+      --layout-pbs: 3;
+    }
+    &[xs*="pbs(4)"] {
+      --layout-pbs: 4;
+    }
+    &[xs*="pbs(3xs)"] {
+      --layout-pbs: 0.0625;
+    }
+    &[xs*="pbs(2xs)"] {
+      --layout-pbs: 0.125;
+    }
+    &[xs*="pbs(xs)"] {
+      --layout-pbs: 0.25;
+    }
+    &[xs*="pbs(sm)"] {
+      --layout-pbs: 0.5;
+    }
+    &[xs*="pbs(lg)"] {
+      --layout-pbs: 1.5;
+    }
+    &[xs*="pbe(0)"] {
+      --layout-pbe: 0;
+    }
+    &[xs*="pbe(0.75)"] {
+      --layout-pbe: 0.75;
+    }
+    &[xs*="pbe(1)"],
+    &[xs*="pbe(md)"] {
+      --layout-pbe: 1;
+    }
+    &[xs*="pbe(2)"],
+    &[xs*="pbe(xl)"] {
+      --layout-pbe: 2;
+    }
+    &[xs*="pbe(3)"],
+    &[xs*="pbe(2xl)"] {
+      --layout-pbe: 3;
+    }
+    &[xs*="pbe(4)"] {
+      --layout-pbe: 4;
+    }
+    &[xs*="pbe(3xs)"] {
+      --layout-pbe: 0.0625;
+    }
+    &[xs*="pbe(2xs)"] {
+      --layout-pbe: 0.125;
+    }
+    &[xs*="pbe(xs)"] {
+      --layout-pbe: 0.25;
+    }
+    &[xs*="pbe(sm)"] {
+      --layout-pbe: 0.5;
+    }
+    &[xs*="pbe(lg)"] {
+      --layout-pbe: 1.5;
+    }
+    &[xs*="mbs(0)"] {
+      --layout-mbs: 0;
+    }
+    &[xs*="mbs(0.75)"] {
+      --layout-mbs: 0.75;
+    }
+    &[xs*="mbs(1)"],
+    &[xs*="mbs(md)"] {
+      --layout-mbs: 1;
+    }
+    &[xs*="mbs(2)"],
+    &[xs*="mbs(xl)"] {
+      --layout-mbs: 2;
+    }
+    &[xs*="mbs(3)"],
+    &[xs*="mbs(2xl)"] {
+      --layout-mbs: 3;
+    }
+    &[xs*="mbs(4)"] {
+      --layout-mbs: 4;
+    }
+    &[xs*="mbs(3xs)"] {
+      --layout-mbs: 0.0625;
+    }
+    &[xs*="mbs(2xs)"] {
+      --layout-mbs: 0.125;
+    }
+    &[xs*="mbs(xs)"] {
+      --layout-mbs: 0.25;
+    }
+    &[xs*="mbs(sm)"] {
+      --layout-mbs: 0.5;
+    }
+    &[xs*="mbs(lg)"] {
+      --layout-mbs: 1.5;
+    }
+    &[xs*="mbe(0)"] {
+      --layout-mbe: 0;
+    }
+    &[xs*="mbe(0.75)"] {
+      --layout-mbe: 0.75;
+    }
+    &[xs*="mbe(1)"],
+    &[xs*="mbe(md)"] {
+      --layout-mbe: 1;
+    }
+    &[xs*="mbe(2)"],
+    &[xs*="mbe(xl)"] {
+      --layout-mbe: 2;
+    }
+    &[xs*="mbe(3)"],
+    &[xs*="mbe(2xl)"] {
+      --layout-mbe: 3;
+    }
+    &[xs*="mbe(4)"] {
+      --layout-mbe: 4;
+    }
+    &[xs*="mbe(3xs)"] {
+      --layout-mbe: 0.0625;
+    }
+    &[xs*="mbe(2xs)"] {
+      --layout-mbe: 0.125;
+    }
+    &[xs*="mbe(xs)"] {
+      --layout-mbe: 0.25;
+    }
+    &[xs*="mbe(sm)"] {
+      --layout-mbe: 0.5;
+    }
+    &[xs*="mbe(lg)"] {
+      --layout-mbe: 1.5;
+    }
+    &[xs*="cg(0)"] {
+      --layout-colmg: 0;
+    }
+    &[xs*="cg(0.75)"] {
+      --layout-colmg: 0.75;
+    }
+    &[xs*="cg(1)"],
+    &[xs*="cg(md)"] {
+      --layout-colmg: 1;
+    }
+    &[xs*="cg(2)"],
+    &[xs*="cg(xl)"] {
+      --layout-colmg: 2;
+    }
+    &[xs*="cg(3)"],
+    &[xs*="cg(2xl)"] {
+      --layout-colmg: 3;
+    }
+    &[xs*="cg(4)"] {
+      --layout-colmg: 4;
+    }
+    &[xs*="cg(3xs)"] {
+      --layout-colmg: 0.0625;
+    }
+    &[xs*="cg(2xs)"] {
+      --layout-colmg: 0.125;
+    }
+    &[xs*="cg(xs)"] {
+      --layout-colmg: 0.25;
+    }
+    &[xs*="cg(sm)"] {
+      --layout-colmg: 0.5;
+    }
+    &[xs*="cg(lg)"] {
+      --layout-colmg: 1.5;
+    }
+    &[xs*="rg(0)"] {
+      --layout-rg: 0;
+    }
+    &[xs*="rg(0.75)"] {
+      --layout-rg: 0.75;
+    }
+    &[xs*="rg(1)"],
+    &[xs*="rg(md)"] {
+      --layout-rg: 1;
+    }
+    &[xs*="rg(2)"],
+    &[xs*="rg(xl)"] {
+      --layout-rg: 2;
+    }
+    &[xs*="rg(3)"],
+    &[xs*="rg(2xl)"] {
+      --layout-rg: 3;
+    }
+    &[xs*="rg(4)"] {
+      --layout-rg: 4;
+    }
+    &[xs*="rg(3xs)"] {
+      --layout-rg: 0.0625;
+    }
+    &[xs*="rg(2xs)"] {
+      --layout-rg: 0.125;
+    }
+    &[xs*="rg(xs)"] {
+      --layout-rg: 0.25;
+    }
+    &[xs*="rg(sm)"] {
+      --layout-rg: 0.5;
+    }
+    &[xs*="rg(lg)"] {
+      --layout-rg: 1.5;
+    }
   }
   lay-out[xs*="items(start)"] {
     --layout-ai: start;
@@ -6326,10 +6328,10 @@
 }
 @media (min-width: 380px) {
   @layer layout.sm {
-    lay-out[sm] {
+    lay-out:is([sm*="auto("], [sm*="lanes("], [sm*="stack("], [sm*="columns("], [sm*="grid("], [sm*="mosaic("]) {
       --_ga: initial;
     }
-    lay-out[sm] > * {
+    lay-out:is([sm*="auto("], [sm*="lanes("], [sm*="stack("], [sm*="columns("], [sm*="grid("], [sm*="mosaic("]) > * {
       --layout-ga: auto;
     }
     lay-out[sm*="auto(fit)"] {
@@ -6421,10 +6423,10 @@
 }
 @media (min-width: 540px) {
   @layer layout.md {
-    lay-out[md] {
+    lay-out:is([md*="columns("], [md*="lanes("], [md*="stack("], [md*="grid("]) {
       --_ga: initial;
     }
-    lay-out[md] > * {
+    lay-out:is([md*="columns("], [md*="lanes("], [md*="stack("], [md*="grid("]) > * {
       --layout-ga: auto;
     }
     lay-out[md*="columns(1)"] {
@@ -6515,10 +6517,10 @@
 }
 @media (min-width: 720px) {
   @layer layout.lg {
-    lay-out[lg] {
+    lay-out:is([lg*="asym("], [lg*="bento("], [lg*="columns("], [lg*="grid("], [lg*="lanes("], [lg*="ratio("], [lg*="stack("]) {
       --_ga: initial;
     }
-    lay-out[lg] > * {
+    lay-out:is([lg*="asym("], [lg*="bento("], [lg*="columns("], [lg*="grid("], [lg*="lanes("], [lg*="ratio("], [lg*="stack("]) > * {
       --layout-ga: auto;
     }
     lay-out[lg*="asym(l-r)"],
@@ -6875,362 +6877,364 @@
     lay-out[lg*="stack("] > * {
       --layout-ga: 1 / 1;
     }
-    :is(lay-out, lay-out-group)[lg*="p(0)"] {
-      --layout-pi: 0;
-      --layout-pbs: 0;
-      --layout-pbe: 0;
-    }
-    :is(lay-out, lay-out-group)[lg*="p(0.75)"] {
-      --layout-pi: 0.75;
-      --layout-pbs: 0.75;
-      --layout-pbe: 0.75;
-    }
-    :is(lay-out, lay-out-group)[lg*="p(1)"],
-    :is(lay-out, lay-out-group)[lg*="p(md)"] {
-      --layout-pi: 1;
-      --layout-pbs: 1;
-      --layout-pbe: 1;
-    }
-    :is(lay-out, lay-out-group)[lg*="p(2)"],
-    :is(lay-out, lay-out-group)[lg*="p(xl)"] {
-      --layout-pi: 2;
-      --layout-pbs: 2;
-      --layout-pbe: 2;
-    }
-    :is(lay-out, lay-out-group)[lg*="p(3)"],
-    :is(lay-out, lay-out-group)[lg*="p(2xl)"] {
-      --layout-pi: 3;
-      --layout-pbs: 3;
-      --layout-pbe: 3;
-    }
-    :is(lay-out, lay-out-group)[lg*="p(4)"] {
-      --layout-pi: 4;
-      --layout-pbs: 4;
-      --layout-pbe: 4;
-    }
-    :is(lay-out, lay-out-group)[lg*="p(3xs)"] {
-      --layout-pi: 0.0625;
-      --layout-pbs: 0.0625;
-      --layout-pbe: 0.0625;
-    }
-    :is(lay-out, lay-out-group)[lg*="p(2xs)"] {
-      --layout-pi: 0.125;
-      --layout-pbs: 0.125;
-      --layout-pbe: 0.125;
-    }
-    :is(lay-out, lay-out-group)[lg*="p(xs)"] {
-      --layout-pi: 0.25;
-      --layout-pbs: 0.25;
-      --layout-pbe: 0.25;
-    }
-    :is(lay-out, lay-out-group)[lg*="p(sm)"] {
-      --layout-pi: 0.5;
-      --layout-pbs: 0.5;
-      --layout-pbe: 0.5;
-    }
-    :is(lay-out, lay-out-group)[lg*="p(lg)"] {
-      --layout-pi: 1.5;
-      --layout-pbs: 1.5;
-      --layout-pbe: 1.5;
-    }
-    :is(lay-out, lay-out-group)[lg*="pi(0)"] {
-      --layout-pi: 0;
-    }
-    :is(lay-out, lay-out-group)[lg*="pi(0.75)"] {
-      --layout-pi: 0.75;
-    }
-    :is(lay-out, lay-out-group)[lg*="pi(1)"],
-    :is(lay-out, lay-out-group)[lg*="pi(md)"] {
-      --layout-pi: 1;
-    }
-    :is(lay-out, lay-out-group)[lg*="pi(2)"],
-    :is(lay-out, lay-out-group)[lg*="pi(xl)"] {
-      --layout-pi: 2;
-    }
-    :is(lay-out, lay-out-group)[lg*="pi(3)"],
-    :is(lay-out, lay-out-group)[lg*="pi(2xl)"] {
-      --layout-pi: 3;
-    }
-    :is(lay-out, lay-out-group)[lg*="pi(4)"] {
-      --layout-pi: 4;
-    }
-    :is(lay-out, lay-out-group)[lg*="pi(3xs)"] {
-      --layout-pi: 0.0625;
-    }
-    :is(lay-out, lay-out-group)[lg*="pi(2xs)"] {
-      --layout-pi: 0.125;
-    }
-    :is(lay-out, lay-out-group)[lg*="pi(xs)"] {
-      --layout-pi: 0.25;
-    }
-    :is(lay-out, lay-out-group)[lg*="pi(sm)"] {
-      --layout-pi: 0.5;
-    }
-    :is(lay-out, lay-out-group)[lg*="pi(lg)"] {
-      --layout-pi: 1.5;
-    }
-    :is(lay-out, lay-out-group)[lg*="pb(0)"] {
-      --layout-pbs: 0;
-      --layout-pbe: 0;
-    }
-    :is(lay-out, lay-out-group)[lg*="pb(0.75)"] {
-      --layout-pbs: 0.75;
-      --layout-pbe: 0.75;
-    }
-    :is(lay-out, lay-out-group)[lg*="pb(1)"],
-    :is(lay-out, lay-out-group)[lg*="pb(md)"] {
-      --layout-pbs: 1;
-      --layout-pbe: 1;
-    }
-    :is(lay-out, lay-out-group)[lg*="pb(2)"],
-    :is(lay-out, lay-out-group)[lg*="pb(xl)"] {
-      --layout-pbs: 2;
-      --layout-pbe: 2;
-    }
-    :is(lay-out, lay-out-group)[lg*="pb(3)"],
-    :is(lay-out, lay-out-group)[lg*="pb(2xl)"] {
-      --layout-pbs: 3;
-      --layout-pbe: 3;
-    }
-    :is(lay-out, lay-out-group)[lg*="pb(4)"] {
-      --layout-pbs: 4;
-      --layout-pbe: 4;
-    }
-    :is(lay-out, lay-out-group)[lg*="pb(3xs)"] {
-      --layout-pbs: 0.0625;
-      --layout-pbe: 0.0625;
-    }
-    :is(lay-out, lay-out-group)[lg*="pb(2xs)"] {
-      --layout-pbs: 0.125;
-      --layout-pbe: 0.125;
-    }
-    :is(lay-out, lay-out-group)[lg*="pb(xs)"] {
-      --layout-pbs: 0.25;
-      --layout-pbe: 0.25;
-    }
-    :is(lay-out, lay-out-group)[lg*="pb(sm)"] {
-      --layout-pbs: 0.5;
-      --layout-pbe: 0.5;
-    }
-    :is(lay-out, lay-out-group)[lg*="pb(lg)"] {
-      --layout-pbs: 1.5;
-      --layout-pbe: 1.5;
-    }
-    :is(lay-out, lay-out-group)[lg*="pbs(0)"] {
-      --layout-pbs: 0;
-    }
-    :is(lay-out, lay-out-group)[lg*="pbs(0.75)"] {
-      --layout-pbs: 0.75;
-    }
-    :is(lay-out, lay-out-group)[lg*="pbs(1)"],
-    :is(lay-out, lay-out-group)[lg*="pbs(md)"] {
-      --layout-pbs: 1;
-    }
-    :is(lay-out, lay-out-group)[lg*="pbs(2)"],
-    :is(lay-out, lay-out-group)[lg*="pbs(xl)"] {
-      --layout-pbs: 2;
-    }
-    :is(lay-out, lay-out-group)[lg*="pbs(3)"],
-    :is(lay-out, lay-out-group)[lg*="pbs(2xl)"] {
-      --layout-pbs: 3;
-    }
-    :is(lay-out, lay-out-group)[lg*="pbs(4)"] {
-      --layout-pbs: 4;
-    }
-    :is(lay-out, lay-out-group)[lg*="pbs(3xs)"] {
-      --layout-pbs: 0.0625;
-    }
-    :is(lay-out, lay-out-group)[lg*="pbs(2xs)"] {
-      --layout-pbs: 0.125;
-    }
-    :is(lay-out, lay-out-group)[lg*="pbs(xs)"] {
-      --layout-pbs: 0.25;
-    }
-    :is(lay-out, lay-out-group)[lg*="pbs(sm)"] {
-      --layout-pbs: 0.5;
-    }
-    :is(lay-out, lay-out-group)[lg*="pbs(lg)"] {
-      --layout-pbs: 1.5;
-    }
-    :is(lay-out, lay-out-group)[lg*="pbe(0)"] {
-      --layout-pbe: 0;
-    }
-    :is(lay-out, lay-out-group)[lg*="pbe(0.75)"] {
-      --layout-pbe: 0.75;
-    }
-    :is(lay-out, lay-out-group)[lg*="pbe(1)"],
-    :is(lay-out, lay-out-group)[lg*="pbe(md)"] {
-      --layout-pbe: 1;
-    }
-    :is(lay-out, lay-out-group)[lg*="pbe(2)"],
-    :is(lay-out, lay-out-group)[lg*="pbe(xl)"] {
-      --layout-pbe: 2;
-    }
-    :is(lay-out, lay-out-group)[lg*="pbe(3)"],
-    :is(lay-out, lay-out-group)[lg*="pbe(2xl)"] {
-      --layout-pbe: 3;
-    }
-    :is(lay-out, lay-out-group)[lg*="pbe(4)"] {
-      --layout-pbe: 4;
-    }
-    :is(lay-out, lay-out-group)[lg*="pbe(3xs)"] {
-      --layout-pbe: 0.0625;
-    }
-    :is(lay-out, lay-out-group)[lg*="pbe(2xs)"] {
-      --layout-pbe: 0.125;
-    }
-    :is(lay-out, lay-out-group)[lg*="pbe(xs)"] {
-      --layout-pbe: 0.25;
-    }
-    :is(lay-out, lay-out-group)[lg*="pbe(sm)"] {
-      --layout-pbe: 0.5;
-    }
-    :is(lay-out, lay-out-group)[lg*="pbe(lg)"] {
-      --layout-pbe: 1.5;
-    }
-    :is(lay-out, lay-out-group)[lg*="mbs(0)"] {
-      --layout-mbs: 0;
-    }
-    :is(lay-out, lay-out-group)[lg*="mbs(0.75)"] {
-      --layout-mbs: 0.75;
-    }
-    :is(lay-out, lay-out-group)[lg*="mbs(1)"],
-    :is(lay-out, lay-out-group)[lg*="mbs(md)"] {
-      --layout-mbs: 1;
-    }
-    :is(lay-out, lay-out-group)[lg*="mbs(2)"],
-    :is(lay-out, lay-out-group)[lg*="mbs(xl)"] {
-      --layout-mbs: 2;
-    }
-    :is(lay-out, lay-out-group)[lg*="mbs(3)"],
-    :is(lay-out, lay-out-group)[lg*="mbs(2xl)"] {
-      --layout-mbs: 3;
-    }
-    :is(lay-out, lay-out-group)[lg*="mbs(4)"] {
-      --layout-mbs: 4;
-    }
-    :is(lay-out, lay-out-group)[lg*="mbs(3xs)"] {
-      --layout-mbs: 0.0625;
-    }
-    :is(lay-out, lay-out-group)[lg*="mbs(2xs)"] {
-      --layout-mbs: 0.125;
-    }
-    :is(lay-out, lay-out-group)[lg*="mbs(xs)"] {
-      --layout-mbs: 0.25;
-    }
-    :is(lay-out, lay-out-group)[lg*="mbs(sm)"] {
-      --layout-mbs: 0.5;
-    }
-    :is(lay-out, lay-out-group)[lg*="mbs(lg)"] {
-      --layout-mbs: 1.5;
-    }
-    :is(lay-out, lay-out-group)[lg*="mbe(0)"] {
-      --layout-mbe: 0;
-    }
-    :is(lay-out, lay-out-group)[lg*="mbe(0.75)"] {
-      --layout-mbe: 0.75;
-    }
-    :is(lay-out, lay-out-group)[lg*="mbe(1)"],
-    :is(lay-out, lay-out-group)[lg*="mbe(md)"] {
-      --layout-mbe: 1;
-    }
-    :is(lay-out, lay-out-group)[lg*="mbe(2)"],
-    :is(lay-out, lay-out-group)[lg*="mbe(xl)"] {
-      --layout-mbe: 2;
-    }
-    :is(lay-out, lay-out-group)[lg*="mbe(3)"],
-    :is(lay-out, lay-out-group)[lg*="mbe(2xl)"] {
-      --layout-mbe: 3;
-    }
-    :is(lay-out, lay-out-group)[lg*="mbe(4)"] {
-      --layout-mbe: 4;
-    }
-    :is(lay-out, lay-out-group)[lg*="mbe(3xs)"] {
-      --layout-mbe: 0.0625;
-    }
-    :is(lay-out, lay-out-group)[lg*="mbe(2xs)"] {
-      --layout-mbe: 0.125;
-    }
-    :is(lay-out, lay-out-group)[lg*="mbe(xs)"] {
-      --layout-mbe: 0.25;
-    }
-    :is(lay-out, lay-out-group)[lg*="mbe(sm)"] {
-      --layout-mbe: 0.5;
-    }
-    :is(lay-out, lay-out-group)[lg*="mbe(lg)"] {
-      --layout-mbe: 1.5;
-    }
-    :is(lay-out, lay-out-group)[lg*="cg(0)"] {
-      --layout-colmg: 0;
-    }
-    :is(lay-out, lay-out-group)[lg*="cg(0.75)"] {
-      --layout-colmg: 0.75;
-    }
-    :is(lay-out, lay-out-group)[lg*="cg(1)"],
-    :is(lay-out, lay-out-group)[lg*="cg(md)"] {
-      --layout-colmg: 1;
-    }
-    :is(lay-out, lay-out-group)[lg*="cg(2)"],
-    :is(lay-out, lay-out-group)[lg*="cg(xl)"] {
-      --layout-colmg: 2;
-    }
-    :is(lay-out, lay-out-group)[lg*="cg(3)"],
-    :is(lay-out, lay-out-group)[lg*="cg(2xl)"] {
-      --layout-colmg: 3;
-    }
-    :is(lay-out, lay-out-group)[lg*="cg(4)"] {
-      --layout-colmg: 4;
-    }
-    :is(lay-out, lay-out-group)[lg*="cg(3xs)"] {
-      --layout-colmg: 0.0625;
-    }
-    :is(lay-out, lay-out-group)[lg*="cg(2xs)"] {
-      --layout-colmg: 0.125;
-    }
-    :is(lay-out, lay-out-group)[lg*="cg(xs)"] {
-      --layout-colmg: 0.25;
-    }
-    :is(lay-out, lay-out-group)[lg*="cg(sm)"] {
-      --layout-colmg: 0.5;
-    }
-    :is(lay-out, lay-out-group)[lg*="cg(lg)"] {
-      --layout-colmg: 1.5;
-    }
-    :is(lay-out, lay-out-group)[lg*="rg(0)"] {
-      --layout-rg: 0;
-    }
-    :is(lay-out, lay-out-group)[lg*="rg(0.75)"] {
-      --layout-rg: 0.75;
-    }
-    :is(lay-out, lay-out-group)[lg*="rg(1)"],
-    :is(lay-out, lay-out-group)[lg*="rg(md)"] {
-      --layout-rg: 1;
-    }
-    :is(lay-out, lay-out-group)[lg*="rg(2)"],
-    :is(lay-out, lay-out-group)[lg*="rg(xl)"] {
-      --layout-rg: 2;
-    }
-    :is(lay-out, lay-out-group)[lg*="rg(3)"],
-    :is(lay-out, lay-out-group)[lg*="rg(2xl)"] {
-      --layout-rg: 3;
-    }
-    :is(lay-out, lay-out-group)[lg*="rg(4)"] {
-      --layout-rg: 4;
-    }
-    :is(lay-out, lay-out-group)[lg*="rg(3xs)"] {
-      --layout-rg: 0.0625;
-    }
-    :is(lay-out, lay-out-group)[lg*="rg(2xs)"] {
-      --layout-rg: 0.125;
-    }
-    :is(lay-out, lay-out-group)[lg*="rg(xs)"] {
-      --layout-rg: 0.25;
-    }
-    :is(lay-out, lay-out-group)[lg*="rg(sm)"] {
-      --layout-rg: 0.5;
-    }
-    :is(lay-out, lay-out-group)[lg*="rg(lg)"] {
-      --layout-rg: 1.5;
+    :is(lay-out, lay-out-group) {
+      &[lg*="p(0)"] {
+        --layout-pi: 0;
+        --layout-pbs: 0;
+        --layout-pbe: 0;
+      }
+      &[lg*="p(0.75)"] {
+        --layout-pi: 0.75;
+        --layout-pbs: 0.75;
+        --layout-pbe: 0.75;
+      }
+      &[lg*="p(1)"],
+      &[lg*="p(md)"] {
+        --layout-pi: 1;
+        --layout-pbs: 1;
+        --layout-pbe: 1;
+      }
+      &[lg*="p(2)"],
+      &[lg*="p(xl)"] {
+        --layout-pi: 2;
+        --layout-pbs: 2;
+        --layout-pbe: 2;
+      }
+      &[lg*="p(3)"],
+      &[lg*="p(2xl)"] {
+        --layout-pi: 3;
+        --layout-pbs: 3;
+        --layout-pbe: 3;
+      }
+      &[lg*="p(4)"] {
+        --layout-pi: 4;
+        --layout-pbs: 4;
+        --layout-pbe: 4;
+      }
+      &[lg*="p(3xs)"] {
+        --layout-pi: 0.0625;
+        --layout-pbs: 0.0625;
+        --layout-pbe: 0.0625;
+      }
+      &[lg*="p(2xs)"] {
+        --layout-pi: 0.125;
+        --layout-pbs: 0.125;
+        --layout-pbe: 0.125;
+      }
+      &[lg*="p(xs)"] {
+        --layout-pi: 0.25;
+        --layout-pbs: 0.25;
+        --layout-pbe: 0.25;
+      }
+      &[lg*="p(sm)"] {
+        --layout-pi: 0.5;
+        --layout-pbs: 0.5;
+        --layout-pbe: 0.5;
+      }
+      &[lg*="p(lg)"] {
+        --layout-pi: 1.5;
+        --layout-pbs: 1.5;
+        --layout-pbe: 1.5;
+      }
+      &[lg*="pi(0)"] {
+        --layout-pi: 0;
+      }
+      &[lg*="pi(0.75)"] {
+        --layout-pi: 0.75;
+      }
+      &[lg*="pi(1)"],
+      &[lg*="pi(md)"] {
+        --layout-pi: 1;
+      }
+      &[lg*="pi(2)"],
+      &[lg*="pi(xl)"] {
+        --layout-pi: 2;
+      }
+      &[lg*="pi(3)"],
+      &[lg*="pi(2xl)"] {
+        --layout-pi: 3;
+      }
+      &[lg*="pi(4)"] {
+        --layout-pi: 4;
+      }
+      &[lg*="pi(3xs)"] {
+        --layout-pi: 0.0625;
+      }
+      &[lg*="pi(2xs)"] {
+        --layout-pi: 0.125;
+      }
+      &[lg*="pi(xs)"] {
+        --layout-pi: 0.25;
+      }
+      &[lg*="pi(sm)"] {
+        --layout-pi: 0.5;
+      }
+      &[lg*="pi(lg)"] {
+        --layout-pi: 1.5;
+      }
+      &[lg*="pb(0)"] {
+        --layout-pbs: 0;
+        --layout-pbe: 0;
+      }
+      &[lg*="pb(0.75)"] {
+        --layout-pbs: 0.75;
+        --layout-pbe: 0.75;
+      }
+      &[lg*="pb(1)"],
+      &[lg*="pb(md)"] {
+        --layout-pbs: 1;
+        --layout-pbe: 1;
+      }
+      &[lg*="pb(2)"],
+      &[lg*="pb(xl)"] {
+        --layout-pbs: 2;
+        --layout-pbe: 2;
+      }
+      &[lg*="pb(3)"],
+      &[lg*="pb(2xl)"] {
+        --layout-pbs: 3;
+        --layout-pbe: 3;
+      }
+      &[lg*="pb(4)"] {
+        --layout-pbs: 4;
+        --layout-pbe: 4;
+      }
+      &[lg*="pb(3xs)"] {
+        --layout-pbs: 0.0625;
+        --layout-pbe: 0.0625;
+      }
+      &[lg*="pb(2xs)"] {
+        --layout-pbs: 0.125;
+        --layout-pbe: 0.125;
+      }
+      &[lg*="pb(xs)"] {
+        --layout-pbs: 0.25;
+        --layout-pbe: 0.25;
+      }
+      &[lg*="pb(sm)"] {
+        --layout-pbs: 0.5;
+        --layout-pbe: 0.5;
+      }
+      &[lg*="pb(lg)"] {
+        --layout-pbs: 1.5;
+        --layout-pbe: 1.5;
+      }
+      &[lg*="pbs(0)"] {
+        --layout-pbs: 0;
+      }
+      &[lg*="pbs(0.75)"] {
+        --layout-pbs: 0.75;
+      }
+      &[lg*="pbs(1)"],
+      &[lg*="pbs(md)"] {
+        --layout-pbs: 1;
+      }
+      &[lg*="pbs(2)"],
+      &[lg*="pbs(xl)"] {
+        --layout-pbs: 2;
+      }
+      &[lg*="pbs(3)"],
+      &[lg*="pbs(2xl)"] {
+        --layout-pbs: 3;
+      }
+      &[lg*="pbs(4)"] {
+        --layout-pbs: 4;
+      }
+      &[lg*="pbs(3xs)"] {
+        --layout-pbs: 0.0625;
+      }
+      &[lg*="pbs(2xs)"] {
+        --layout-pbs: 0.125;
+      }
+      &[lg*="pbs(xs)"] {
+        --layout-pbs: 0.25;
+      }
+      &[lg*="pbs(sm)"] {
+        --layout-pbs: 0.5;
+      }
+      &[lg*="pbs(lg)"] {
+        --layout-pbs: 1.5;
+      }
+      &[lg*="pbe(0)"] {
+        --layout-pbe: 0;
+      }
+      &[lg*="pbe(0.75)"] {
+        --layout-pbe: 0.75;
+      }
+      &[lg*="pbe(1)"],
+      &[lg*="pbe(md)"] {
+        --layout-pbe: 1;
+      }
+      &[lg*="pbe(2)"],
+      &[lg*="pbe(xl)"] {
+        --layout-pbe: 2;
+      }
+      &[lg*="pbe(3)"],
+      &[lg*="pbe(2xl)"] {
+        --layout-pbe: 3;
+      }
+      &[lg*="pbe(4)"] {
+        --layout-pbe: 4;
+      }
+      &[lg*="pbe(3xs)"] {
+        --layout-pbe: 0.0625;
+      }
+      &[lg*="pbe(2xs)"] {
+        --layout-pbe: 0.125;
+      }
+      &[lg*="pbe(xs)"] {
+        --layout-pbe: 0.25;
+      }
+      &[lg*="pbe(sm)"] {
+        --layout-pbe: 0.5;
+      }
+      &[lg*="pbe(lg)"] {
+        --layout-pbe: 1.5;
+      }
+      &[lg*="mbs(0)"] {
+        --layout-mbs: 0;
+      }
+      &[lg*="mbs(0.75)"] {
+        --layout-mbs: 0.75;
+      }
+      &[lg*="mbs(1)"],
+      &[lg*="mbs(md)"] {
+        --layout-mbs: 1;
+      }
+      &[lg*="mbs(2)"],
+      &[lg*="mbs(xl)"] {
+        --layout-mbs: 2;
+      }
+      &[lg*="mbs(3)"],
+      &[lg*="mbs(2xl)"] {
+        --layout-mbs: 3;
+      }
+      &[lg*="mbs(4)"] {
+        --layout-mbs: 4;
+      }
+      &[lg*="mbs(3xs)"] {
+        --layout-mbs: 0.0625;
+      }
+      &[lg*="mbs(2xs)"] {
+        --layout-mbs: 0.125;
+      }
+      &[lg*="mbs(xs)"] {
+        --layout-mbs: 0.25;
+      }
+      &[lg*="mbs(sm)"] {
+        --layout-mbs: 0.5;
+      }
+      &[lg*="mbs(lg)"] {
+        --layout-mbs: 1.5;
+      }
+      &[lg*="mbe(0)"] {
+        --layout-mbe: 0;
+      }
+      &[lg*="mbe(0.75)"] {
+        --layout-mbe: 0.75;
+      }
+      &[lg*="mbe(1)"],
+      &[lg*="mbe(md)"] {
+        --layout-mbe: 1;
+      }
+      &[lg*="mbe(2)"],
+      &[lg*="mbe(xl)"] {
+        --layout-mbe: 2;
+      }
+      &[lg*="mbe(3)"],
+      &[lg*="mbe(2xl)"] {
+        --layout-mbe: 3;
+      }
+      &[lg*="mbe(4)"] {
+        --layout-mbe: 4;
+      }
+      &[lg*="mbe(3xs)"] {
+        --layout-mbe: 0.0625;
+      }
+      &[lg*="mbe(2xs)"] {
+        --layout-mbe: 0.125;
+      }
+      &[lg*="mbe(xs)"] {
+        --layout-mbe: 0.25;
+      }
+      &[lg*="mbe(sm)"] {
+        --layout-mbe: 0.5;
+      }
+      &[lg*="mbe(lg)"] {
+        --layout-mbe: 1.5;
+      }
+      &[lg*="cg(0)"] {
+        --layout-colmg: 0;
+      }
+      &[lg*="cg(0.75)"] {
+        --layout-colmg: 0.75;
+      }
+      &[lg*="cg(1)"],
+      &[lg*="cg(md)"] {
+        --layout-colmg: 1;
+      }
+      &[lg*="cg(2)"],
+      &[lg*="cg(xl)"] {
+        --layout-colmg: 2;
+      }
+      &[lg*="cg(3)"],
+      &[lg*="cg(2xl)"] {
+        --layout-colmg: 3;
+      }
+      &[lg*="cg(4)"] {
+        --layout-colmg: 4;
+      }
+      &[lg*="cg(3xs)"] {
+        --layout-colmg: 0.0625;
+      }
+      &[lg*="cg(2xs)"] {
+        --layout-colmg: 0.125;
+      }
+      &[lg*="cg(xs)"] {
+        --layout-colmg: 0.25;
+      }
+      &[lg*="cg(sm)"] {
+        --layout-colmg: 0.5;
+      }
+      &[lg*="cg(lg)"] {
+        --layout-colmg: 1.5;
+      }
+      &[lg*="rg(0)"] {
+        --layout-rg: 0;
+      }
+      &[lg*="rg(0.75)"] {
+        --layout-rg: 0.75;
+      }
+      &[lg*="rg(1)"],
+      &[lg*="rg(md)"] {
+        --layout-rg: 1;
+      }
+      &[lg*="rg(2)"],
+      &[lg*="rg(xl)"] {
+        --layout-rg: 2;
+      }
+      &[lg*="rg(3)"],
+      &[lg*="rg(2xl)"] {
+        --layout-rg: 3;
+      }
+      &[lg*="rg(4)"] {
+        --layout-rg: 4;
+      }
+      &[lg*="rg(3xs)"] {
+        --layout-rg: 0.0625;
+      }
+      &[lg*="rg(2xs)"] {
+        --layout-rg: 0.125;
+      }
+      &[lg*="rg(xs)"] {
+        --layout-rg: 0.25;
+      }
+      &[lg*="rg(sm)"] {
+        --layout-rg: 0.5;
+      }
+      &[lg*="rg(lg)"] {
+        --layout-rg: 1.5;
+      }
     }
     lay-out[lg~=subgrid] {
       --_subgrid: on;
@@ -7261,10 +7265,10 @@
 }
 @media (min-width: 920px) {
   @layer layout.xl {
-    lay-out[xl] {
+    lay-out:is([xl*="stack("], [xl*="bento("], [xl*="mosaic("]) {
       --_ga: initial;
     }
-    lay-out[xl] > * {
+    lay-out:is([xl*="stack("], [xl*="bento("], [xl*="mosaic("]) > * {
       --layout-ga: auto;
     }
     lay-out[xl*="stack("] {
@@ -7437,10 +7441,10 @@
 }
 @media (min-width: 1140px) {
   @layer layout.xxl {
-    lay-out[xxl] {
+    lay-out:is([xxl*="stack("], [xxl*="bento("]) {
       --_ga: initial;
     }
-    lay-out[xxl] > * {
+    lay-out:is([xxl*="stack("], [xxl*="bento("]) > * {
       --layout-ga: auto;
     }
     lay-out[xxl*="stack("] {
