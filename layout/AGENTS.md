@@ -38,7 +38,7 @@ layout/
 │   └── srcsets.js        # Srcset generation utilities
 ├── polyfills/
 │   └── attr-fallback.js  # Safari/Firefox polyfill
-└── docs/                 # Proposals & integration notes (build docs: § Build Commands below)
+└── docs/                 # The user guide (README.md + 10 chapters, screenshots in assets/), proposals & integration notes
     └── card-integration.md
 ```
 
@@ -101,7 +101,7 @@ Available: `columns(1)` through `columns(6)`
 
 #### Ratios
 ```html
-<lay-out lg="ratios(2:1)">...</lay-out>
+<lay-out lg="ratio(66:33)">...</lay-out>
 ```
 9 variants for aspect ratio-based layouts
 
@@ -753,7 +753,7 @@ the measured cost of the scroll-fade mask and `stack(reveal)`: `docs/performance
 (repo root).
 
 - **Zero JavaScript**: Pure CSS, no runtime overhead
-- **Small Bundle**: ~12 KB gzipped
+- **Small Bundle**: 7–8 KB gzipped for the full build
 - **No Layout Shift**: Grid-based, prevents CLS
 - **Cacheable**: Static CSS, fully cacheable
 

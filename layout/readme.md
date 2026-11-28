@@ -2,6 +2,12 @@
 
 Modern CSS layout system with responsive grid patterns and responsive image srcsets.
 
+> **New here? Read the guide.** [The layout system guide](https://github.com/madsstoumann/browser-style/tree/v4/layout/docs)
+> explains the system from scratch, with screenshots: breakpoints, every layout family,
+> spacing, bleed, themes, animations, carousels and custom builds. It lives in the
+> repository (`layout/docs/`) and is not part of the npm package. This readme is the
+> API reference.
+
 ---
 
 ## Quick Start
@@ -221,7 +227,7 @@ Live demo: `dist/section.html` (loads `ui-card.css` for the header typography).
 - **63 Layout Patterns** - Columns, grids, bento boxes, mosaics, lanes (masonry), and more
 - **Responsive Images** - Automatic srcset generation for optimal image loading
 - **Customizable** - Create custom layouts and breakpoints
-- **Small Bundle** - ~33 KB uncompressed, ~12 KB gzipped
+- **Small Bundle** - about 44 KB minified (7–8 KB gzipped) for the full build, less for a trimmed config
 - **Zero Config** - Works out of the box with sensible defaults
 
 ---
@@ -286,7 +292,7 @@ Asymmetric layouts (6 variants available)
 
 **Ratios:**
 ```html
-<lay-out lg="ratios(2:1)">...</lay-out>
+<lay-out lg="ratio(66:33)">...</lay-out>
 ```
 Aspect ratio layouts (9 variants available)
 
@@ -984,7 +990,7 @@ The polyfill:
 - **Lazy Loading** - Use with native `loading="lazy"` on images
 - **Cacheable** - Static CSS, fully cacheable
 - **No Layout Shift** - Grid-based, prevents CLS
-- **Small Bundle** - ~12 KB gzipped
+- **Small Bundle** - 7–8 KB gzipped for the full build
 
 ---
 
