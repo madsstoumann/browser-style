@@ -24,7 +24,7 @@ From 720px, `lg="bento(6a)"` takes over:
 
 ![The bento(6a) pattern: six items of mixed sizes in a 10 by 5 grid](assets/switch-lg.png)
 
-*Screenshots: `dist/bento.html`, second example, at 360px, 600px and 1000px.*
+*Screenshots: [`bento.html`](https://v4.browser.style/layout/dist/bento.html), second example, at 360px, 600px and 1000px.*
 
 Nothing in the markup changed between these three pictures. Each breakpoint swaps in a new
 arrangement:
@@ -46,7 +46,7 @@ mosaic once there is room for it:
 |---|---|
 | ![grid(4c): wide items on the left, tall items on the right](assets/switch-mosaic-lg.png) | ![mosaic(scatter): eight overlapping items of different sizes](assets/switch-mosaic-xl.png) |
 
-*Screenshots: `dist/mosaic.html`, second example.*
+*Screenshots: [`mosaic.html`](https://v4.browser.style/layout/dist/mosaic.html), second example.*
 
 ## Why this is worth having
 

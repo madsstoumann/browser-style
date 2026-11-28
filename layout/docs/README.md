@@ -1,7 +1,7 @@
 # The layout system guide
 
 This guide explains `@browser.style/layout` from the beginning, using screenshots from the
-demo pages in [`../dist/`](../dist/). Read the chapters in order the first time; after that,
+demo pages in [v4.browser.style/layout/dist](https://v4.browser.style/layout/dist/). Read the chapters in order the first time; after that,
 each one stands on its own.
 
 1. [What is the layout system?](01-introduction.md): one element, a handful of attributes,

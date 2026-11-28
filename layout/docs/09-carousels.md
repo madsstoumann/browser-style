@@ -11,7 +11,7 @@ tablets and four on desktops.
 
 ![Four items in a row, with part of a fifth showing at the edge](assets/carousel-preview.png)
 
-*Screenshot: `dist/overflow.html` at 1000px.*
+*Screenshot: [`overflow.html`](https://v4.browser.style/layout/dist/overflow.html) at 1000px.*
 
 ## Shaping the scroller: `overflow` tokens
 
@@ -32,7 +32,9 @@ A centred "cinematic" carousel with a peek on each side:
 <lay-out md="columns(1)" overflow="preview-2xl center">
 ```
 
-![A centred item with the next item peeking in on the right](assets/carousel-center.png)
+![A centred item with the previous and next items peeking in at both sides](assets/carousel-center.png)
+
+*Screenshot: [`overflow.html`](https://v4.browser.style/layout/dist/overflow.html) at 1200px, scrolled to the second slide.*
 
 ## Controls: arrows and dots
 
@@ -45,7 +47,7 @@ Controls are set with the `media` attribute, using the same tokens as image caro
 
 ![Arrows and dots in their own band above the slide](assets/carousel-controls.png)
 
-*Screenshot: `dist/carousel.html` at 1000px.*
+*Screenshot: [`carousel.html`](https://v4.browser.style/layout/dist/carousel.html) at 1000px.*
 
 | Token | Effect |
 |---|---|
@@ -63,7 +65,7 @@ Controls are set with the `media` attribute, using the same tokens as image caro
          media="nav(blw) arw(bare) mrk(pll) pages auto(4s) loop">
 ```
 
-[`dist/carousel.html`](../dist/carousel.html) shows every control style. The full token reference is in
+[`carousel.html`](https://v4.browser.style/layout/dist/carousel.html) shows every control style. The full token reference is in
 [`ui/card/docs/carousel.md`](../../ui/card/docs/carousel.md).
 
 ## Browser support

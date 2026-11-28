@@ -15,12 +15,12 @@ There are two attributes:
 ## Animating the items
 
 ```html
-<lay-out animate="fade-down-right() trigger-both" lg="columns(3)">
+<lay-out animate="fade-up() trigger-both" lg="columns(3)">
 ```
 
-![Three items fading in and moving into place at different stages](assets/animate-items.png)
+![Three items fading in and moving up, each a little further along than the next](assets/animate-items.png)
 
-*Screenshot: `dist/animate.html` at 1000px, taken while the section scrolls into view. Each
+*Screenshot: [`animate.html`](https://v4.browser.style/layout/dist/animate.html) at 1000px, taken while the section scrolls into view. Each
 item is at a different stage, which is the stagger.*
 
 Each child animates as its own row arrives, and siblings are offset slightly, so a row
@@ -81,7 +81,7 @@ to show the layer beneath:
 
 ![A light panel contracting from all edges to reveal a purple gradient underneath](assets/animate-reveal.jpg)
 
-*Screenshot: `dist/reveal-stack.html` at 1000px, partway through `reveal(inset)`.*
+*Screenshot: [`reveal-stack.html`](https://v4.browser.style/layout/dist/reveal-stack.html) at 1000px, partway through `reveal(inset)`.*
 
 ## Accessibility and support
 

@@ -6,15 +6,15 @@ demo page shows all of them, with an icon for each.
 
 | Family | Variants | Use it for | Demo |
 |---|---|---|---|
-| `columns()` | `1`–`6` | Equal columns | [`columns.html`](../dist/columns.html) |
-| `grid()` | 19 (`3a`–`6b`) | Small patterns with one or two wide or tall items | [`grid.html`](../dist/grid.html) |
-| `bento()` | 10 (`4a`–`9b`) | Fixed patterns with a lead item | [`bento.html`](../dist/bento.html) |
-| `mosaic()` | `photo` `scatter` `hex` `pinwheel` `cornerstone` | Editorial and gallery arrangements, some overlapping | [`mosaic.html`](../dist/mosaic.html) |
-| `asym()` | `l-r` `r-l` `t-b` `b-t` `tl-br` `bl-tr` | Two or three items, offset against each other | [`asymmetrical.html`](../dist/asymmetrical.html) |
-| `ratio()` | `25:75` `33:66` `40:60` `60:40` `66:33` `75:25` `25:25:50` `25:50:25` `50:25:25` | Columns with fixed proportions, such as a sidebar and main content | [`ratios.html`](../dist/ratios.html) |
-| `lanes()` | `auto` `2`–`6` | Masonry: columns of items with different heights | [`lanes.html`](../dist/lanes.html) |
-| `auto()` | `fit` `fill` | As many columns as fit, with no breakpoints needed | [`autofit.html`](../dist/autofit.html) |
-| `stack()` | any name | Children layered on top of each other | [`stack.html`](../dist/stack.html) |
+| `columns()` | `1`–`6` | Equal columns | [`columns.html`](https://v4.browser.style/layout/dist/columns.html) |
+| `grid()` | 19 (`3a`–`6b`) | Small patterns with one or two wide or tall items | [`grid.html`](https://v4.browser.style/layout/dist/grid.html) |
+| `bento()` | 10 (`4a`–`9b`) | Fixed patterns with a lead item | [`bento.html`](https://v4.browser.style/layout/dist/bento.html) |
+| `mosaic()` | `photo` `scatter` `hex` `pinwheel` `cornerstone` | Editorial and gallery arrangements, some overlapping | [`mosaic.html`](https://v4.browser.style/layout/dist/mosaic.html) |
+| `asym()` | `l-r` `r-l` `t-b` `b-t` `tl-br` `bl-tr` | Two or three items, offset against each other | [`asymmetrical.html`](https://v4.browser.style/layout/dist/asymmetrical.html) |
+| `ratio()` | `25:75` `33:66` `40:60` `60:40` `66:33` `75:25` `25:25:50` `25:50:25` `50:25:25` | Columns with fixed proportions, such as a sidebar and main content | [`ratios.html`](https://v4.browser.style/layout/dist/ratios.html) |
+| `lanes()` | `auto` `2`–`6` | Masonry: columns of items with different heights | [`lanes.html`](https://v4.browser.style/layout/dist/lanes.html) |
+| `auto()` | `fit` `fill` | As many columns as fit, with no breakpoints needed | [`autofit.html`](https://v4.browser.style/layout/dist/autofit.html) |
+| `stack()` | any name | Children layered on top of each other | [`stack.html`](https://v4.browser.style/layout/dist/stack.html) |
 
 The patterned families (`grid`, `bento`, `mosaic`, `asym`) are designed for a certain number
 of items, which is the number in their name. Extra items wrap into the next row and repeat
@@ -147,9 +147,31 @@ These work alongside any layout:
 | `items(start\|center\|end\|stretch)` | Aligns items vertically within their row, per breakpoint: `lg="columns(2) items(start)"` |
 | `items(fill)` | Lets the first card set the row height and makes the others fill it |
 | `subgrid` + `subgrid="N"` | Lines up the inner rows of cards (image, title, text) across a row: `subgrid="3" md="columns(3) subgrid"` |
-| `counter` | Numbers the items 1, 2, 3, for a "most read" list |
+| `counter` | Puts a big number (1, 2, 3 …) in front of each item, for ranked lists such as "Most read". See [Numbered lists](#numbered-lists-counter) |
 | `gap-decorations="cols rows"` | Draws lines in the gaps (see [Spacing](05-spacing.md#lines-in-the-gaps)) |
 | `columns="…"` and `rows="…"` | Your own grid templates, when no named layout fits |
+
+### Numbered lists: `counter`
+
+`counter` is a CSS counter, not a script. Each child gets its rank as a large number on its
+start side, and the child's own content moves into a second column next to it. The number is
+generated content, so screen readers announce it with the item.
+
+```html
+<lay-out counter md="columns(2)" lg="columns(5)" gap-decorations="cols">
+  <article>…</article>
+  <article>…</article>
+</lay-out>
+```
+
+![Five ranked headlines in a row, each with a large grey number from 1 to 5 and a rule between them](assets/counter.png)
+
+*Screenshot: [`section.html`](https://v4.browser.style/layout/dist/section.html), the
+"Numbered" group, at 1200px.*
+
+Style the number with `--ui-counter-ink`, `--ui-counter-fs` (2rem), `--ui-counter-font`,
+`--ui-counter-weight` and `--ui-counter-gap` (0.5rem). The reference is
+[`core/base.md` § counter](../core/base.md#counter).
 
 You can also add your own layout families. See
 [Configuration](10-configuration.md#adding-your-own-layouts).

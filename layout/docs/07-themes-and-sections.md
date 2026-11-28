@@ -71,7 +71,7 @@ and a "see all" link. `<lay-out-group>` wraps the header and the layout into one
 
 ![A light green band with a header (label, title, intro, link) above a grid(3a) of three cards](assets/themes-band.png)
 
-*Screenshot: `dist/section.html` at 1200px.*
+*Screenshot: [`section.html`](https://v4.browser.style/layout/dist/section.html) at 1200px.*
 
 How it fits together:
 

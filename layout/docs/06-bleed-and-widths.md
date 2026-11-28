@@ -19,7 +19,7 @@ stay aligned with the content column:
 
 ![A light blue band from edge to edge, with two items inside the centred content column](assets/bleed-basic.png)
 
-*Screenshot: `dist/bleed.html`, "Bleed with Columns", at 1200px.*
+*Screenshot: [`bleed.html`](https://v4.browser.style/layout/dist/bleed.html), "Bleed with Columns", at 1200px.*
 
 This is what makes alternating coloured sections, hero bands and full-width carousels
 possible without wrapper elements. The background comes from `--layout-bg` or from a
@@ -37,11 +37,12 @@ adds that percentage to the start-side space and removes it from the end side, s
 moves towards the end. A negative value does the opposite.
 
 ```html
-<lay-out xs="p(1)" md="columns(1)" bleed="10">
 <lay-out xs="p(1)" md="columns(1)" bleed="25">
 ```
 
-![Two bands where the item is offset by 10 percent and 25 percent](assets/bleed-asymmetric.png)
+![A light blue band with the item pushed towards the end side, leaving a wider gap at the start](assets/bleed-asymmetric.png)
+
+*Screenshot: [`bleed.html`](https://v4.browser.style/layout/dist/bleed.html), `bleed="25"`, at 1200px.*
 
 Directions are logical, so the offset mirrors on right-to-left pages.
 
@@ -74,7 +75,9 @@ On its own, `width` makes a section narrower than the column and centres it:
 <lay-out md="columns(2)" width="md">
 ```
 
-![Three centred sections, each wider than the one before](assets/widths.png)
+![Three centred sections, xs, sm and md, each wider than the one before](assets/widths.png)
+
+*Screenshot: [`widths.html`](https://v4.browser.style/layout/dist/widths.html) at 1200px.*
 
 ### Bleed plus width
 
@@ -88,7 +91,7 @@ dashboard, more room than the rest of the page:
 
 ![Two full-width bands: a dark one with content at 64rem, and a light grey one at 80rem, wider than the page column](assets/themes-widths.png)
 
-*Screenshot: `dist/widths.html` at 1200px, the `width="lg"` and `width="xl"` examples. The
+*Screenshot: [`widths.html`](https://v4.browser.style/layout/dist/widths.html) at 1200px, the `width="lg"` and `width="xl"` examples. The
 page column is 1024px, so the `xl` content reaches further out than the sections around it.*
 
 ## Good to know

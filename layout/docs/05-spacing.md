@@ -60,7 +60,7 @@ grows with the screen:
 |---|---|
 | ![Two columns with 1rem padding](assets/spacing-padding-xs.png) | ![Four columns with 4rem padding](assets/spacing-padding-lg.png) |
 
-*Screenshots: `dist/spacing.html`, first example. The grey is `--layout-bg`, which shows
+*Screenshots: [`spacing.html`](https://v4.browser.style/layout/dist/spacing.html), first example. The grey is `--layout-bg`, which shows
 where the padding is.*
 
 Use `pi()` and `pb()` to set the two axes separately, and `pbs()` and `pbe()` when the top
