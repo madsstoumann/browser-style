@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import { LayoutBuilder } from './src/builder.js'
+import { usageFromFile } from './src/usage.js'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { existsSync, writeFileSync, readFileSync } from 'fs'
@@ -46,6 +47,21 @@ async function build() {
 	try {
 		const builder = new LayoutBuilder(configPath, layoutsDir, outputPath)
 		await builder.build(false)
+
+		// --check <files…>: report breakpoint tokens used in markup/JSON that this config does not emit
+		const checkIndex = args.indexOf('--check')
+		if (checkIndex !== -1) {
+			const rest = args.slice(checkIndex + 1)
+			const files = rest.slice(0, (rest.findIndex(a => a.startsWith('--')) + 1 || rest.length + 1) - 1)
+			const usages = files.flatMap(file => usageFromFile(file, builder.config.element || 'lay-out').map(u => ({ $source: file, ...u })))
+			const missing = builder.missingTokens(usages)
+			for (const { breakpoint, token, count, sources } of missing) {
+				console.warn(`⚠ ${breakpoint}="${token}" is used ${count}× but not in this build: it does nothing in the browser`)
+				for (const source of sources) console.warn(`    ${source}`)
+			}
+			console.log(missing.length ? `\n${missing.length} token(s) missing from layout.config\n` : `✓ Every token in ${usages.length} layout element(s) is in this build\n`)
+			if (missing.length) process.exitCode = 1
+		}
 
 		// Generate minified version — postcss and cssnano are dev dependencies, so a project that installed the package may not have them
 		const minifier = await Promise.all([import('postcss'), import('cssnano')]).catch(() => null)

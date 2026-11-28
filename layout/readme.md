@@ -686,6 +686,32 @@ with its own `spacing` array (an empty array `[]` disables its spacing tokens):
 Valid token names: `p` (all sides), `pi`, `pb`, `pbs`, `pbe`, `mbs`, `mbe`, `cg`,
 `rg`. Tokens are generated for both `<lay-out>` and `<lay-out-group>`.
 
+**Pick steps per token.** `tokens` (and a breakpoint's `spacing`) may also be an
+**object** that maps each token to the steps it needs. An array still means "every
+step in `steps`", so existing configs build unchanged. In the object form a step is
+named by its label or number, and `"*"` means the whole ladder:
+
+```json
+"spacing": {
+  "steps": [0, 0.75, 1, 2, 3, 4, {"label": "2xs", "value": 0.125}, {"label": "sm", "value": 0.5}],
+  "tokens": { "cg": ["sm", 2], "rg": ["sm"], "pb": ["2xs", 3], "p": "*" },
+  "breakpoints": ["xs", "lg"]
+},
+"breakpoints": {
+  "lg": { "min": "720px", "layouts": [...], "spacing": { "cg": [0, "2xs"] } }
+}
+```
+
+Steps must exist in `steps` (that is where a label gets its value); the builder warns
+about one that doesn't and skips it. Output order follows `steps`, not the order you
+list them in. This is the biggest lever on file size: spacing is roughly 40% of the
+generated CSS, and a project rarely uses more than a handful of steps per token.
+
+**Nesting.** The spacing rules of each breakpoint are emitted nested under one
+`:is(lay-out, lay-out-group) { &[lg*="cg(sm)"] { … } }` parent instead of repeating the
+selector, which saves about 13% of the minified file with the same specificity and
+cascade. Set `"nest": false` in the `spacing` block to emit flat selectors instead.
+
 #### `layoutContainer` (required)
 Configuration for the layout container element and CSS custom properties.
 
@@ -743,6 +769,42 @@ This includes all 6 column layouts: `columns(1)` through `columns(6)`
 This includes only those 2 specific grid layouts, keeping your CSS small.
 
 ---
+
+### Checking usage against the config
+
+A token that the config does not generate is not an error in the browser — it just does
+nothing. `build.js --check` builds as usual, then reads the breakpoint attributes of every
+`<lay-out>` and `<lay-out-group>` in the files you pass and lists each token the build has
+no rule for:
+
+```bash
+node node_modules/@browser.style/layout/build.js --config layout.config.json --check pages/*.html usage.json
+```
+
+```
+⚠ xl="grid(3c)" is used 1× but not in this build: it does nothing in the browser
+    pages/index.html
+```
+
+HTML (or any markup) is scanned for start tags; a `.json` file is an array of attribute
+objects, which is the easy shape to export from a CMS:
+
+```json
+[{ "md": "columns(2) cg(sm)", "lg": "bento(6a)" }, { "xs": "stack(layers)" }]
+```
+
+The command exits with code 1 when something is missing, so it can gate CI. Put
+`--check` and its files last, after `--config`/`--output`.
+
+### What the breakpoint reset covers
+
+Each breakpoint that has layouts resets the placement it inherits from smaller
+breakpoints (`--layout-ga` on the children), but **only when its attribute holds a token
+from a layout family configured at that breakpoint**. So `md="grid(3a)" lg="cg(sm)"`
+keeps the `md` grid at `lg`: a spacing-only (or `items()`/`subgrid`-only) value no
+longer wipes it. A layout token the breakpoint doesn't generate (for example
+`xl="grid(3c)"` when `xl` lists no grid layouts) also leaves the smaller breakpoint's
+layout in place; `--check` reports it.
 
 ## Create Custom Layouts
 

@@ -33,6 +33,7 @@ export class LayoutBuilder {
 		this.cssRules = new Map()
 		this.ruleBreakpoints = new Map()
 		this.ruleMeta = new Map()
+		this.emitted = new Map()
 	}
 
 	async loadConfig() {
@@ -156,6 +157,7 @@ export class LayoutBuilder {
 
 		const processedLayouts = new Set()
 		const processedGlobalRules = new Set()
+		this.resetFamilies = this.familiesOf(breakpointConfig)
 
 		for (const layoutRef of breakpointConfig.layouts || []) {
 			if (typeof layoutRef === 'string') {
@@ -172,6 +174,16 @@ export class LayoutBuilder {
 		this.generateSpacingCSS(breakpointName, mediaQuery, breakpointConfig)
 		this.generateSubgridCSS(breakpointName, mediaQuery)
 		this.generateAlignmentCSS(breakpointName, mediaQuery)
+	}
+
+	// Prefixes of every layout family configured at a breakpoint (e.g. ['columns', 'grid']).
+	familiesOf(breakpointConfig) {
+		const prefixes = new Set()
+		for (const ref of breakpointConfig.layouts || []) {
+			const names = typeof ref === 'string' ? [ref] : Object.keys(ref || {})
+			for (const name of names) if (this.layouts.has(name)) prefixes.add(this.layouts.get(`${name}_prefix`) || name)
+		}
+		return [...prefixes]
 	}
 
 	// items — per-breakpoint block-axis alignment of the layout's own children
@@ -252,13 +264,14 @@ export class LayoutBuilder {
 		// generation to just those breakpoints. Omit it to emit for all breakpoints.
 		if (Array.isArray(spacing.breakpoints) && !spacing.breakpoints.includes(breakpointName)) return
 
-		const steps = spacing.steps || [0, 1, 2, 3, 4]
-		// Token set: a per-breakpoint `spacing: [...]` array wins; otherwise the
-		// top-level default. `spacing: []` on a breakpoint disables its tokens.
-		const tokens = breakpointConfig.spacing !== undefined
+		const ladder = spacing.steps || [0, 1, 2, 3, 4]
+		// Token set: a per-breakpoint `spacing` wins; otherwise the top-level default.
+		// An array emits every ladder step per token; an object picks steps per token.
+		const spec = breakpointConfig.spacing !== undefined
 			? breakpointConfig.spacing
 			: (spacing.tokens || [])
-		if (!tokens.length) return
+		const entries = this.spacingEntries(spec, ladder, breakpointName)
+		if (!entries.length) return
 
 		const el = this.config.element || 'lay-out'
 		const groupEl = this.config.groupElement || `${el}-group`
@@ -276,7 +289,7 @@ export class LayoutBuilder {
 			rg:  ['--layout-rg'],
 		}
 
-		for (const token of tokens) {
+		for (const [token, steps] of entries) {
 			const props = TOKEN_PROPS[token]
 			if (!props) {
 				console.warn(`⚠ Unknown spacing token '${token}' in breakpoint '${breakpointName}'`)
@@ -288,9 +301,29 @@ export class LayoutBuilder {
 				const selector = `${scope}[${breakpointName}*="${token}(${label})"]`
 				const properties = {}
 				for (const prop of props) properties[prop] = value
-				this.addRule(mediaQuery, selector, properties, breakpointName, { kind: 'feature', variantKey: `${token}(${label})` })
+				this.addRule(mediaQuery, selector, properties, breakpointName, { kind: 'feature', variantKey: `${token}(${label})`, spacing: true })
 			}
 		}
+	}
+
+	// Spacing spec -> [[token, ladderSteps]]. Array form: every ladder step for each token.
+	// Object form: { cg: ["sm", 2], p: "*" } — steps by label or number, "*" = the whole ladder.
+	spacingEntries(spec, ladder, breakpointName) {
+		if (Array.isArray(spec)) return spec.map(token => [token, ladder])
+		if (!spec || typeof spec !== 'object') return []
+		const labelOf = (step) => String(typeof step === 'object' ? step.label : step)
+		return Object.entries(spec).map(([token, wanted]) => {
+			if (wanted === '*' || wanted === true) return [token, ladder]
+			const list = Array.isArray(wanted) ? wanted : [wanted]
+			const steps = []
+			for (const want of list) {
+				const step = ladder.find(s => labelOf(s) === String(want))
+				if (step === undefined) console.warn(`⚠ Spacing step '${want}' for '${token}' in breakpoint '${breakpointName}' is not in spacing.steps`)
+				else if (!steps.includes(step)) steps.push(step)
+			}
+			// Keep ladder order so output does not depend on how the config lists steps
+			return [token, ladder.filter(s => steps.includes(s))]
+		}).filter(([, steps]) => steps.length)
 	}
 
 	processLayout(layoutName, breakpointName, mediaQuery, processedLayouts, processedGlobalRules) {
@@ -368,7 +401,9 @@ export class LayoutBuilder {
 		const breakpointResetKey = `${mediaQuery}::${breakpointName}`
 		if (!processedGlobalRules.has(breakpointResetKey)) {
 			processedGlobalRules.add(breakpointResetKey)
-			const resetSelector = `${elementSelector}[${breakpointName}]`
+			// Reset only when this attribute holds a layout token, so a spacing-only value keeps the smaller breakpoint's layout
+			const families = this.resetFamilies?.length ? this.resetFamilies : [layoutPrefix]
+			const resetSelector = `${elementSelector}:is(${families.map(f => `[${breakpointName}*="${f}("]`).join(', ')})`
 			this.addRule(mediaQuery, resetSelector, { '--_ga': 'initial' }, breakpointName, { kind: 'reset' })
 			this.addRule(mediaQuery, `${resetSelector} > *`, { '--layout-ga': 'auto' }, breakpointName, { kind: 'reset' })
 		}
@@ -412,10 +447,39 @@ export class LayoutBuilder {
 
 		if (breakpointName) {
 			this.ruleBreakpoints.set(key, breakpointName)
+			if (meta?.variantKey) {
+				if (!this.emitted.has(breakpointName)) this.emitted.set(breakpointName, new Set())
+				this.emitted.get(breakpointName).add(meta.variantKey)
+			}
 		}
 		if (meta) {
 			this.ruleMeta.set(key, meta)
 		}
+	}
+
+	// Tokens in breakpoint attributes that this build emits no rule for — a silent no-op in the browser.
+	// usages: [{ xs: "columns(2) cg(sm)", lg: "bento(6a)", $source?: "page.html" }, …] -> [{ breakpoint, token, count, sources }]
+	missingTokens(usages) {
+		const missing = new Map()
+		for (const usage of usages) {
+			for (const [bp, value] of Object.entries(usage || {})) {
+				if (!(bp in (this.config.breakpoints || {})) || typeof value !== 'string') continue
+				const emitted = this.emitted.get(bp) || new Set()
+				for (const token of value.trim().split(/\s+/).filter(Boolean)) {
+					const prefix = token.includes('(') ? token.slice(0, token.indexOf('(')) : null
+					if (emitted.has(token) || (prefix && emitted.has(`${prefix}(*)`))) continue
+					const key = `${bp} ${token}`
+					const entry = missing.get(key) || { count: 0, sources: new Set() }
+					entry.count++
+					if (usage.$source) entry.sources.add(usage.$source)
+					missing.set(key, entry)
+				}
+			}
+		}
+		return [...missing].map(([key, { count, sources }]) => {
+			const [breakpoint, token] = key.split(' ')
+			return { breakpoint, token, count, sources: [...sources] }
+		})
 	}
 
 	// --- Grouped-selector emission -------------------------------------------
@@ -504,6 +568,26 @@ export class LayoutBuilder {
 		})
 		return groups
 	}
+	// Consecutive spacing groups are nested under one `:is(lay-out, lay-out-group)` parent (`spacing.nest: false` opts out).
+	// `&[…]` keeps the flat selector's specificity, and runs stay in source order.
+	emitGroups(groups) {
+		const el = this.config.element || 'lay-out'
+		const scope = `:is(${el}, ${this.config.groupElement || `${el}-group`})`
+		const nest = this.config.spacing?.nest !== false
+		const nestable = ({ selectors }) => nest && selectors.every(sel => sel.startsWith(`${scope}[`))
+		const flat = ({ selectors, body }) => `  ${selectors.join(',\n  ')} {\n${body}\n  }`
+		const out = []
+		for (let i = 0; i < groups.length;) {
+			if (!nestable(groups[i])) { out.push(flat(groups[i++])); continue }
+			const run = []
+			while (i < groups.length && nestable(groups[i])) run.push(groups[i++])
+			const inner = run.map(({ selectors, body }) =>
+				`    ${selectors.map(sel => '&' + sel.slice(scope.length)).join(',\n    ')} {\n${body.replace(/^/gm, '  ')}\n    }`)
+			out.push(`  ${scope} {\n${inner.join('\n\n')}\n  }`)
+		}
+		return out
+	}
+
 	generateLayerDeclaration() {
 		const baseLayers = ['layout.base', 'layout.reset', 'layout.animations']
 		const breakpointNames = Object.keys(this.config.breakpoints || {})
@@ -611,8 +695,7 @@ export class LayoutBuilder {
 		// mobile-first base breakpoint (no min/max) — emit its rules with NO @media
 		// wrapper, still inside their `@layer layout.<bp>` so cascade order holds.
 		for (const [mediaQuery, { bucket, breakpointName }] of rulesByMediaQuery) {
-			const rules = this.groupBucketRules(bucket)
-				.map(({ selectors, body }) => `  ${selectors.join(',\n  ')} {\n${body}\n  }`)
+			const rules = this.emitGroups(this.groupBucketRules(bucket))
 			if (mediaQuery) css += `\n${mediaQuery} {\n`
 			if (breakpointName) {
 				css += `@layer layout.${breakpointName} {\n`

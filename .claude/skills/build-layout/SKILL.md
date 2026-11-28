@@ -53,13 +53,24 @@ Goal: a `layout.config.json` that generates only the tokens a project's markup u
    2026-11-22 it used the file name, so a single `ratio`, `auto` or `asym` token matched nothing.
 
 4. **Trim spacing** to the breakpoints and steps actually used, via `spacing.breakpoints`
-   and `spacing.tokens` (or a per-breakpoint `spacing` override; `[]` disables).
+   and `spacing.tokens` (or a per-breakpoint `spacing` override; `[]` disables). Use the
+   per-token object form so each token gets only its used steps:
+   `"spacing": { "cg": ["sm", 2], "pb": [3] }`. Steps are named by label or number and
+   must exist in `spacing.steps`.
 
 5. **Ask where it lands.** `AskUserQuestion`: rewrite the global
    `layout/layout.config.json` (affects everything the repo ships) or add a project-local
    `layout.config.json` (affects only that project's build). Include the size delta.
 
-6. **Rebuild and verify** — always verify, the build reports success either way:
+6. **Rebuild and verify** — always verify, the build reports success either way. First
+   let the builder check the markup against the build; it exits 1 and names every token
+   with no rule (`layout/readme.md` § Checking usage against the config):
+
+   ```bash
+   node layout/build.js --config <config> --output <out>/layout.css --check <folder>/*.html
+   ```
+
+   Then confirm the engine is there and the size moved:
 
    ```bash
    grep -c 'lay-out {' <out>/layout.css                 # the engine is present (see trap below)

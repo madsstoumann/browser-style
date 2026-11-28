@@ -482,13 +482,14 @@ Provides:
 | `core` | Core CSS files to include |
 | `common` | Common CSS files to include |
 | `spacing.steps` | Steps generated for each spacing token: numbers (`[0,0.75,1,2,3,4]`) and/or labeled word sizes (`{"label":"2xs","value":0.125}` → `cg(2xs)`) |
-| `spacing.tokens` | Default spacing-token vocabulary emitted for every breakpoint (`p`, `pi`, `pb`, `pbs`, `pbe`, `mbs`, `mbe`, `cg`, `rg`) |
+| `spacing.tokens` | Default spacing-token vocabulary emitted for every breakpoint (`p`, `pi`, `pb`, `pbs`, `pbe`, `mbs`, `mbe`, `cg`, `rg`). An array emits every step per token; an object (`{"cg": ["sm", 2], "p": "*"}`) picks steps per token by label or number |
+| `spacing.nest` | Default `true`: each breakpoint's spacing rules are nested under one `:is(lay-out, lay-out-group)` parent. `false` emits flat selectors |
 | `spacing.breakpoints` | Optional allowlist — generate spacing tokens only for these breakpoints (e.g. `["xs","lg"]`); omit for all |
 | `layoutContainer.maxWidth` | Max container width (generates `--layout-bleed-mw`) |
 | `layoutContainer.margin` | Inline margin (generates `--layout-mi`) |
 | `layoutContainer.setRoot` | Apply margin calculation to element |
 | `breakpoints` | Define breakpoints and included layouts; omit `min`/`max` on the lowest to make it the un-media-queried mobile-first base |
-| `breakpoints.<bp>.spacing` | Per-breakpoint override of the token list (array; `[]` disables spacing tokens for that breakpoint) |
+| `breakpoints.<bp>.spacing` | Per-breakpoint override of the token list (array or per-token object, same forms as `spacing.tokens`; `[]` disables spacing tokens for that breakpoint) |
 
 **The `include` option is deprecated** — it is absent from the shipped config, but the
 builder still honours it for project-local configs (`loadIncludeFiles` in
@@ -594,6 +595,12 @@ A breakpoint can list single tokens instead of whole families, keyed by the layo
 `{ "ratios": ["ratio(66:33)"], "autofit": ["auto(fit)"] }`. The rule uses the token's own prefix
 (`ratio`, `auto`, `asym`). `layout.min.css` needs `postcss` and `cssnano` in the project; without them
 the CLI writes `layout.css` only.
+
+`--check <files…>` (last on the command line) builds, then lists every breakpoint token used in those
+HTML files, or in a `.json` array of attribute objects, that the build emits no rule for, and exits 1
+if there is one (`LayoutBuilder.missingTokens()`, `src/usage.js`). The breakpoint reset fires only for
+layout families configured at that breakpoint (`familiesOf()`), so a spacing-only or unconfigured value
+keeps the smaller breakpoint's placement. Details: `readme.md` § Checking usage against the config.
 
 ## Build Commands
 
