@@ -4,8 +4,8 @@ This guide explains `@browser.style/layout` from the beginning, using screenshot
 demo pages in [v4.browser.style/layout/dist](https://v4.browser.style/layout/dist/). Read the chapters in order the first time; after that,
 each one stands on its own.
 
-1. [What is the layout system?](01-introduction.md): one element, a handful of attributes,
-   and no JavaScript.
+1. [What is the layout system?](01-introduction.md): one element and a handful of
+   attributes.
 2. [Getting started](02-getting-started.md): install it, load it and build your first layout.
 3. [Breakpoints: a different layout at every width](03-breakpoints.md): the idea the whole
    system is built around.

@@ -71,7 +71,7 @@ Controls are set with the `media` attribute, using the same tokens as image caro
 ## Browser support
 
 - **Chrome** draws the arrows and dots natively with `::scroll-button()` and
-  `::scroll-marker`, without JavaScript.
+  `::scroll-marker`.
 - **Safari** doesn't support those yet. Load the carousel polyfill
   (`/ui/carousel/polyfill/`), which adds real buttons styled from the same tokens. Without
   it, Safari visitors still get a working swipeable scroller, just without controls.

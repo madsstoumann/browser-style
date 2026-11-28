@@ -22,7 +22,7 @@ stay aligned with the content column:
 *Screenshot: [`bleed.html`](https://v4.browser.style/layout/dist/bleed.html), "Bleed with Columns", at 1200px.*
 
 This is what makes alternating coloured sections, hero bands and full-width carousels
-possible without wrapper elements. The background comes from `--layout-bg` or from a
+possible. The background comes from `--layout-bg` or from a
 [theme](07-themes-and-sections.md).
 
 ### Edge-to-edge content: `bleed="0"`

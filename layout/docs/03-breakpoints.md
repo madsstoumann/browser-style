@@ -50,13 +50,13 @@ mosaic once there is room for it:
 
 ## Why this is worth having
 
-**Each screen size gets a design, not a squeeze.** A layout built for a desktop rarely
-shrinks well, and a phone layout rarely stretches well. Choosing per breakpoint lets you
-design for each width instead of compromising between them.
+**Each screen size gets its own design.** A layout built for a desktop rarely shrinks
+well, and a phone layout rarely stretches well. Choosing per breakpoint lets you design
+for each width.
 
 **Content stays in reading order.** The HTML order is the order on a phone and for screen
-readers. Bigger layouts move items around visually with grid placement, but the document
-order never changes, so there's nothing to keep in sync.
+readers. Bigger layouts move items around visually with grid placement, and the document
+order stays the same.
 
 **No duplicate markup.** You don't hide a "desktop version" and show a "mobile version".
 It's the same elements, arranged differently.

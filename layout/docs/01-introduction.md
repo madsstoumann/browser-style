@@ -19,15 +19,12 @@ describe its arrangement with attributes:
 Read the attributes like a sentence: *"from medium screens, two columns; from large screens,
 the bento pattern called 6a."* Below medium, the items simply stack, one per row.
 
-That is all the markup there is. There are no wrapper `<div>`s, no grid classes on the
-children, and no JavaScript. The children can be anything: cards, images, plain text or
-another `<lay-out>`.
+The children can be anything: cards, images, plain text or another `<lay-out>`.
 
 ## What you get
 
 **Layouts as a vocabulary.** More than 60 named arrangements, from plain columns to bento
-boxes, mosaics and masonry lanes. You pick a layout by name instead of writing
-`grid-template-areas` for each one. See [The layouts](04-layouts.md).
+boxes, mosaics and masonry lanes. You pick a layout by name. See [The layouts](04-layouts.md).
 
 **A different layout at every breakpoint.** Each breakpoint attribute (`xs`, `sm`, `md`,
 `lg`, `xl`, `xxl`) can hold a *completely different* layout, not just a different column
