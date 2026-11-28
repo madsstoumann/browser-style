@@ -22,7 +22,10 @@ Each entry lists the attribute name, accepted type(s), default (where applicable
 #### `--layout-w` — the width knob bleed writes, and why it does not inherit
 
 `[bleed]` does not set `width` directly. It sets a custom property —
-`--layout-w: calc(100dvi - var(--layout-mi, 0px))` — and the base rule composes it:
+`--layout-w: auto` — and the base rule composes it. `auto` because bleed's negative
+`margin-inline` already reaches the viewport edges and an auto-width box stretches into
+them exactly; the old `calc(100dvi - var(--layout-mi))` left a `--layout-mi` gap on the
+right wherever scrollbars overlay the page (iPad, macOS trackpad):
 
 ```css
 @property --layout-w { syntax: "*"; inherits: false; }

@@ -40,7 +40,7 @@
 		row-gap: var(--layout-page-gap, calc(attr(data-page-gap type(<number>), attr(page-gap type(<number>), 1)) * var(--layout-space-unit, 1rem)));
 	}
 
-	/* Safari-only: kill the sliver of horizontal scroll a bleed band can produce.
+	/* Kill the sliver of horizontal scroll a bleed band can produce.
 	   The page column centres with 50cqw (container units, which EXCLUDE a
 	   space-taking scrollbar) while the bleed maths below uses 100dvi/50dvi
 	   (viewport units, which INCLUDE it). The two agree under overlay scrollbars —
@@ -53,13 +53,11 @@
 	   view-timelines keep working. Only the inline axis is clipped; the block axis
 	   stays `visible`, which is the one combination allowed alongside clip.
 
-	   @supports (-webkit-hyphens: none) is the WebKit gate — true in Safari (and in
-	   any iOS browser, all of which are WebKit and share the behaviour), false in
-	   Chrome/Edge/Firefox. Scoped with :has() so the rule is inert on pages that
-	   never bleed. */
-	@supports (-webkit-hyphens: none) {
-		html:has(:is(lay-out, lay-out-group)[bleed]) { overflow-x: clip; }
-	}
+	   No longer WebKit-gated: since bleed width is `auto` (it stretches into the
+	   100dvi-based margins), Chrome/Firefox with always-visible scrollbars overshoot
+	   by half a scrollbar per side too. Scoped with :has() so the rule is inert on
+	   pages that never bleed. */
+	html:has(:is(lay-out, lay-out-group)[bleed]) { overflow-x: clip; }
 
 	lay-out {
 		--layout-preview-size: 100px;
@@ -141,7 +139,9 @@
 		/* === bleed === */
 		&[bleed] {
 			--layout-mw: 100dvi;
-			--layout-w: calc(100dvi - var(--layout-mi, 0px)); 
+			/* auto, not a 100dvi calc: the negative margins below already reach the viewport
+			   edges, and an auto-width box stretches into them exactly (like lay-out-group). */
+			--layout-w: auto;
 			--_pi: calc((100dvi - var(--layout-bleed-mw, 100dvi)) / 2);
 			background-color: #0000;
 			border-image: conic-gradient(var(--layout-bg, var(--_theme-bg)) 0 0) fill 0//0 100dvi;
